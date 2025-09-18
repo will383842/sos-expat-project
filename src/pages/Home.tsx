@@ -11,6 +11,8 @@ import Layout from '../components/layout/Layout';
 import ProfilesCarousel from '../components/home/ProfileCarousel';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { usePricingConfig, detectUserCurrency, getEffectivePrice } from '@/services/pricingService';
+import { functions, httpsCallable } from '@/config/firebase';
+import { getFunctions } from 'firebase/functions';
 
 /* ================================
    Types
@@ -496,6 +498,38 @@ const OptimizedHomePage: React.FC = () => {
     }
   }, [selectedCurrency]);
 
+  const handleTwilioCall = async () => {
+    try {
+    
+      const functions = getFunctions(undefined, "europe-west1");  
+
+      // note: this function is created to test the twilio instantly 
+      
+      const createCall = httpsCallable(functions, 'testTwilioCall');
+
+      // await createCall({
+      //   providerId: "jhfbGgZjh1OCXCLzqkgTOD41Hj43",
+      //   clientId: 'gcvR69yLFiabIoydBJDLyRV2QTr2',
+      //   providerPhone: '+917415440629',
+      //   clientPhone: '+919667549765',
+      //   serviceType: 'expat_call',   // or 'lawyer_call'
+      //   providerType: 'expat',       // or 'lawyer'
+      //   amount: 1,
+      //   paymentIntentId: "pi_3S8ccCRbcjaCEWrZ1IwEvz2x",
+      // });
+
+      const res = await createCall();
+    if (res.data.ok) {
+      alert("Test call started!");
+    } else {
+      alert("Error: " + res.data.error);
+    }
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <Layout>
       <div className="min-h-screen bg-gray-950">
@@ -529,6 +563,13 @@ const OptimizedHomePage: React.FC = () => {
                   Expatriés & Voyageurs
                 </span>
               </h1>
+
+              <div className='flex justify-center items-center my-2'> 
+              {/* btn to initiate call  */}
+              <div onClick={()=> handleTwilioCall()} className='p-2 bg-green-500 my-2 rounded-md cursor-pointer w-[250px]'>
+                Click here to start call
+              </div>
+              </div>
 
               {/* H2 - inchangé */}
               <h2 className="text-2xl md:text-3xl text-white font-semibold max-w-4xl mx-auto mb-3 leading-relaxed">

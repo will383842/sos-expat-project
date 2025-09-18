@@ -25,6 +25,11 @@ export async function logCallRecord(data: {
       throw new Error('callId and status are required for call record logging');
     }
 
+    // Firestore does not accept undefined values. Sanitize additional data.
+    const sanitizedAdditional = Object.fromEntries(
+      Object.entries(additionalData || {}).map(([key, value]) => [key, value === undefined ? null : value])
+    );
+
     const recordData = {
       callId,
       status,
@@ -34,7 +39,7 @@ export async function logCallRecord(data: {
       duration: duration || null,
       errorMessage: errorMessage || null,
       environment: process.env.NODE_ENV || 'development',
-      ...additionalData
+      ...sanitizedAdditional
     };
 
     await db.collection('call_records').add(recordData);

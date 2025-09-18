@@ -11,7 +11,9 @@ node_modules/
 /dist-ssr/
 /build/
 /.vite/
+**/.vite/
 coverage/
+*.tsbuildinfo
 
 # ================================
 # Environnements & secrets
@@ -33,6 +35,7 @@ coverage/
 
 # Config runtime Firebase Functions
 functions/.runtimeconfig.json
+firebase/functions/.runtimeconfig.json
 backup-functions/.runtimeconfig.json
 
 # Sauvegardes/export locaux éventuels
@@ -50,7 +53,8 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-firebase-debug.log
+firebase-debug*.log
+firestore-debug.log*
 
 # ================================
 # Firebase
@@ -64,15 +68,18 @@ firebase-debug.log
 !storage.rules
 
 # ================================
-# Firebase Functions
+# Firebase Functions (monorepo sous dossier firebase/)
 # ================================
-functions/lib/
-functions/node_modules/
-functions/.env
-functions/.env.*
+firebase/functions/lib/
+firebase/functions/node_modules/
+firebase/functions/.env
+firebase/functions/.env.*
+firebase/functions/backups/
+firebase/functions/npm
+firebase/functions/*.log
 
 # ================================
-# Backup Functions
+# Backup Functions (si présent)
 # ================================
 backup-functions/lib/
 backup-functions/node_modules/
@@ -95,9 +102,22 @@ desktop.ini
 *.sw?
 
 # ================================
+# Fichiers temporaires divers
+# ================================
+**/*.mapbackup
+**/*.bak
+
+# ================================
 # Firebase config frontend
 # ================================
 # fichier réel de config Firebase (ne doit pas être versionné)
 public/firebase-config.js
 # exemple de config Firebase (gardé pour doc)
 !public/firebase-config.example.js
+
+# ================================
+# Lockfiles (user requested to ignore)
+# ================================
+/package-lock.json
+**/package-lock.json
+package-lock.json

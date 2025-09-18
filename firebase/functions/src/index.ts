@@ -347,6 +347,9 @@ export { createAndScheduleCallHTTPS };
 export { createAndScheduleCallHTTPS as createAndScheduleCall };
 export { createPaymentIntent } from './createPaymentIntent'; 
 export { api } from './adminApi';
+export { testTwilioCall } from './testTwilioCall';
+export { enqueueMessageEvent } from './messaging/enqueueMessageEvent';
+
 
 // Webhooks
 export { unifiedWebhook } from './Webhooks/unifiedWebhook';

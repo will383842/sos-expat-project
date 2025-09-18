@@ -4,7 +4,10 @@ import * as admin from "firebase-admin";
 const db = admin.firestore();
 
 export const enqueueMessageEvent = onCall({ region: "europe-west1" }, async (req) => {
-  const authUid = req.auth?.uid || null;
+
+  try {
+    console.log("enqueueMessageEvent called", req);
+    const authUid = req.auth?.uid || null;
   const data = req.data || {};
   const { eventId, locale = "fr-FR", to = {}, context = {} } = data;
 
@@ -25,5 +28,12 @@ export const enqueueMessageEvent = onCall({ region: "europe-west1" }, async (req
     createdAt: admin.firestore.FieldValue.serverTimestamp()};
 
   await db.collection("message_events").add(doc);
-  return { ok: true };
+    return { ok: true };
+    console.log("enqueueMessageEvent done");
+  } catch (error) {
+    if(error instanceof HttpsError) {
+      throw error;
+    }
+    throw new HttpsError("internal", "Failed to enqueue message event");
+  }
 });

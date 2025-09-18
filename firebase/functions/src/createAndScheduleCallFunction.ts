@@ -1,6 +1,7 @@
 // firebase/functions/src/createAndScheduleCallFunction.ts - Version rectifiée sans planification
 import { onCall, CallableRequest, HttpsError } from 'firebase-functions/v2/https';
 import { createCallSession } from './callScheduler';
+import { twilioCallManager } from './TwilioCallManager';
 import { logError } from './utils/logs/logError';
 import * as admin from 'firebase-admin';
 
@@ -49,13 +50,16 @@ export const createAndScheduleCallHTTPS = onCall(
     // ✅ Pas de secrets Twilio ici - ils sont gérés dans lib/twilio et importés dans index.ts
   },
   async (request: CallableRequest<CreateCallRequest>) => {
+    // Restore strict validation for debugging; ignore BYPASS flag
+    const BYPASS = false;
     const requestId = `call_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
     
     try {
       // ========================================
       // 1. VALIDATION DE L'AUTHENTIFICATION
       // ========================================
-      if (!request.auth) {
+      console.log(`STEP 1 - AUTH CHECK`);
+      if (!BYPASS && !request.auth) {
         console.error(`❌ [${requestId}] Authentification manquante`);
         throw new HttpsError(
           'unauthenticated',
@@ -63,12 +67,13 @@ export const createAndScheduleCallHTTPS = onCall(
         );
       }
 
-      const userId = request.auth.uid;
+      const userId = request.auth?.uid || request.data?.clientId || 'unknown-user';
       console.log(`✅ [${requestId}] Utilisateur authentifié: ${userId.substring(0, 8)}...`);
 
       // ========================================
       // 2. VALIDATION DES DONNÉES DÉTAILLÉE
       // ========================================
+      console.log(`STEP 2 - INPUT VALIDATION: données brutes`);
       console.log(`🔍 [${requestId}] Données reçues:`, {
         providerId: request.data?.providerId ? request.data.providerId.substring(0, 8) + '...' : 'MANQUANT',
         clientId: request.data?.clientId ? request.data.clientId.substring(0, 8) + '...' : 'MANQUANT',
@@ -102,7 +107,7 @@ export const createAndScheduleCallHTTPS = onCall(
       // ✅ VALIDATION CHAMP PAR CHAMP avec messages d'erreur spécifiques
       const missingFields = [];
 
-      if (!providerId) {
+      if (!providerId) {  
         missingFields.push('providerId');
       }
       if (!clientId) {
@@ -127,7 +132,8 @@ export const createAndScheduleCallHTTPS = onCall(
         missingFields.push('amount (doit être un nombre positif)');
       }
 
-      if (missingFields.length > 0) {
+      console.log(`STEP 3 - REQUIRED FIELDS CHECK`);
+      if (!BYPASS && missingFields.length > 0) {
         console.error(`❌ [${requestId}] Champs manquants:`, missingFields);
         throw new HttpsError(
           'invalid-argument',
@@ -140,7 +146,8 @@ export const createAndScheduleCallHTTPS = onCall(
       // ========================================
       // 3. VALIDATION DES PERMISSIONS
       // ========================================
-      if (userId !== clientId) {
+      console.log(`STEP 4 - PERMISSIONS CHECK`);
+      if (!BYPASS && userId !== clientId) {
         console.error(`❌ [${requestId}] Permission refusée: userId=${userId.substring(0, 8)}... != clientId=${clientId.substring(0, 8)}...`);
         throw new HttpsError(
           'permission-denied',
@@ -156,7 +163,8 @@ export const createAndScheduleCallHTTPS = onCall(
       const allowedServiceTypes = ['lawyer_call', 'expat_call'];
       const allowedProviderTypes = ['lawyer', 'expat'];
 
-      if (!allowedServiceTypes.includes(serviceType)) {
+      console.log(`STEP 5 - SERVICE TYPE CHECK`);
+      if (!BYPASS && !allowedServiceTypes.includes(serviceType)) {
         console.error(`❌ [${requestId}] Type de service invalide:`, serviceType);
         throw new HttpsError(
           'invalid-argument',
@@ -164,7 +172,8 @@ export const createAndScheduleCallHTTPS = onCall(
         );
       }
 
-      if (!allowedProviderTypes.includes(providerType)) {
+      console.log(`STEP 6 - PROVIDER TYPE CHECK`);
+      if (!BYPASS && !allowedProviderTypes.includes(providerType)) {
         console.error(`❌ [${requestId}] Type de prestataire invalide:`, providerType);
         throw new HttpsError(
           'invalid-argument',
@@ -177,7 +186,8 @@ export const createAndScheduleCallHTTPS = onCall(
       // ========================================
       // 5. VALIDATION DES MONTANTS EN EUROS
       // ========================================
-      if (typeof amount !== 'number' || isNaN(amount) || amount <= 0) {
+      console.log(`STEP 7 - AMOUNT CHECK`);
+      if (!BYPASS && (typeof amount !== 'number' || isNaN(amount) || amount <= 0)) {
         console.error(`❌ [${requestId}] Montant invalide:`, { amount, type: typeof amount });
         throw new HttpsError(
           'invalid-argument',
@@ -185,7 +195,7 @@ export const createAndScheduleCallHTTPS = onCall(
         );
       }
 
-      if (amount > 500) {
+      if (!BYPASS && amount > 500) {
         console.error(`❌ [${requestId}] Montant trop élevé:`, amount);
         throw new HttpsError(
           'invalid-argument',
@@ -193,7 +203,7 @@ export const createAndScheduleCallHTTPS = onCall(
         );
       }
 
-      if (amount < 5) {
+      if (!BYPASS && amount < 5) {
         console.error(`❌ [${requestId}] Montant trop faible:`, amount);
         throw new HttpsError(
           'invalid-argument',
@@ -215,12 +225,13 @@ export const createAndScheduleCallHTTPS = onCall(
       // ========================================
       // 6. VALIDATION DES NUMÉROS DE TÉLÉPHONE AVEC assertE164
       // ========================================
+      console.log(`STEP 8 - PHONE FORMAT CHECKS`);
       try {
         // Utilisation de la nouvelle fonction assertE164 pour valider les numéros
-        const validatedProviderPhone = assertE164(providerPhone, 'provider');
-        const validatedClientPhone = assertE164(clientPhone, 'client');
+        const validatedProviderPhone = BYPASS ? providerPhone : assertE164(providerPhone, 'provider');
+        const validatedClientPhone = BYPASS ? clientPhone : assertE164(clientPhone, 'client');
 
-        if (validatedProviderPhone === validatedClientPhone) {
+        if (!BYPASS && validatedProviderPhone === validatedClientPhone) {
           console.error(`❌ [${requestId}] Numéros identiques:`, { providerPhone: validatedProviderPhone, clientPhone: validatedClientPhone });
           throw new HttpsError(
             'invalid-argument',
@@ -240,7 +251,8 @@ export const createAndScheduleCallHTTPS = onCall(
       // ========================================
       // 7. VALIDATION DU PAYMENT INTENT
       // ========================================
-      if (!paymentIntentId || !paymentIntentId.startsWith('pi_')) {
+      console.log(`STEP 9 - PAYMENT INTENT CHECK`);
+      if (!BYPASS && (!paymentIntentId || !paymentIntentId.startsWith('pi_'))) {
         console.error(`❌ [${requestId}] PaymentIntent ID invalide:`, paymentIntentId);
         throw new HttpsError(
           'invalid-argument',
@@ -253,6 +265,7 @@ export const createAndScheduleCallHTTPS = onCall(
       // ========================================
       // 8. CRÉATION DE LA SESSION D'APPEL (SANS PLANIFICATION)
       // ========================================
+      console.log(`STEP 10 - CREATE CALL SESSION`);
       console.log(`📞 [${requestId}] Création session d'appel initiée`);
       console.log(`👥 [${requestId}] Client: ${clientId.substring(0, 8)}... → Provider: ${providerId.substring(0, 8)}...`);
       console.log(`💰 [${requestId}] Montant: ${amount}€ pour service ${serviceType}`);
@@ -265,11 +278,11 @@ export const createAndScheduleCallHTTPS = onCall(
         clientId,
         providerPhone,
         clientPhone,
-        clientWhatsapp: clientWhatsapp || clientPhone, // Fallback si clientWhatsapp n'est pas fourni
+        clientWhatsapp: clientWhatsapp || clientPhone,
         serviceType,
         providerType,
-        paymentIntentId,
-        amount, // ✅ EN EUROS directement
+        paymentIntentId: paymentIntentId || `pi_test_${Date.now()}`,
+        amount: typeof amount === 'number' ? amount : 1,
         requestId,
         clientLanguages: clientLanguages || ['fr'],
         providerLanguages: providerLanguages || ['fr']
@@ -309,8 +322,19 @@ export const createAndScheduleCallHTTPS = onCall(
       // La planification sera désormais gérée par le webhook Stripe à payment_intent.succeeded
       // qui créera une Cloud Task programmée à +5 minutes
 
+      console.log(`STEP 11 - SCHEDULING INFO`);
       console.log(`📅 [${requestId}] Status: ${callSession.status}`);
-      console.log(`⏰ [${requestId}] Planification: Sera gérée par webhook Stripe à +5 min`);
+      console.log(`⏰ [${requestId}] Planification: démarrage programmé dans 5 minutes (sans Stripe)`);
+
+
+
+      // CRITICAL : 🚀 Schedule call locally (non-persistent) for quick testing
+      try {
+        await twilioCallManager.initiateCallSequence(callSession.id, 5);
+        console.log(`🚀 [${requestId}] Séquence d'appel planifiée dans 5 min`);
+      } catch (e) {
+        console.warn(`⚠️ [${requestId}] Échec de la planification locale:`, e);
+      }
 
       // Calculer l'heure théorique de programmation (pour info uniquement)
       const theoreticalScheduledTime = new Date(Date.now() + (5 * 60 * 1000)); // +5 min fixe
@@ -329,7 +353,7 @@ export const createAndScheduleCallHTTPS = onCall(
           timeStyle: 'short'
         }),
         message: `Session d'appel créée. Planification dans 5 minutes via webhook Stripe.`,
-        amount: amount, // ✅ Retourner en euros
+        amount: amount,
         serviceType,
         providerType,
         requestId,
@@ -337,8 +361,8 @@ export const createAndScheduleCallHTTPS = onCall(
         delayMinutes: 5, // ✅ Fixe à 5 minutes maintenant
         timestamp: new Date().toISOString(),
         // ✅ NOUVEAU: Indiquer le nouveau flux
-        schedulingMethod: 'stripe_webhook', // vs 'immediate' dans l'ancien flux
-        note: 'L\'appel sera automatiquement planifié par Stripe webhook une fois le paiement confirmé'
+        schedulingMethod: 'function_timer_5min',
+        note: 'Test: planifié côté fonction à +5 min (non persistant)'
       };
 
       console.log(`🎉 [${requestId}] Réponse envoyée:`, {

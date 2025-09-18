@@ -38,26 +38,36 @@ const https_1 = require("firebase-functions/v2/https");
 const admin = __importStar(require("firebase-admin"));
 const db = admin.firestore();
 exports.enqueueMessageEvent = (0, https_1.onCall)({ region: "europe-west1" }, async (req) => {
-    const authUid = req.auth?.uid || null;
-    const data = req.data || {};
-    const { eventId, locale = "fr-FR", to = {}, context = {} } = data;
-    if (!eventId || typeof eventId !== "string") {
-        throw new https_1.HttpsError("invalid-argument", "eventId manquant ou invalide");
+    try {
+        console.log("enqueueMessageEvent called", req);
+        const authUid = req.auth?.uid || null;
+        const data = req.data || {};
+        const { eventId, locale = "fr-FR", to = {}, context = {} } = data;
+        if (!eventId || typeof eventId !== "string") {
+            throw new https_1.HttpsError("invalid-argument", "eventId manquant ou invalide");
+        }
+        const doc = {
+            eventId,
+            locale,
+            to: {
+                email: to.email || null,
+                phone: to.phone || null,
+                pushToken: to.pushToken || null,
+                uid: to.uid || null
+            },
+            context,
+            requestedBy: authUid,
+            createdAt: admin.firestore.FieldValue.serverTimestamp()
+        };
+        await db.collection("message_events").add(doc);
+        return { ok: true };
+        console.log("enqueueMessageEvent done");
     }
-    const doc = {
-        eventId,
-        locale,
-        to: {
-            email: to.email || null,
-            phone: to.phone || null,
-            pushToken: to.pushToken || null,
-            uid: to.uid || null
-        },
-        context,
-        requestedBy: authUid,
-        createdAt: admin.firestore.FieldValue.serverTimestamp()
-    };
-    await db.collection("message_events").add(doc);
-    return { ok: true };
+    catch (error) {
+        if (error instanceof https_1.HttpsError) {
+            throw error;
+        }
+        throw new https_1.HttpsError("internal", "Failed to enqueue message event");
+    }
 });
 //# sourceMappingURL=enqueueMessageEvent.js.map

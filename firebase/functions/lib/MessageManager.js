@@ -146,12 +146,14 @@ class MessageManager {
             if (!twilioClient || !twilioPhoneNumber) {
                 throw new Error('Configuration Twilio manquante');
             }
+            console.log("twilioPhoneNumber", twilioPhoneNumber);
             await twilioClient.calls.create({
                 to: params.to,
                 from: twilioPhoneNumber,
                 twiml: twiml,
                 timeout: 30
             });
+            console.log("twillio client logged here ", twilioClient);
             return true;
         }
         catch (error) {
@@ -159,6 +161,7 @@ class MessageManager {
             return false;
         }
     }
+    // test call by aman
     /**
      * Envoie un appel de notification
      */

@@ -5,7 +5,8 @@ import express from 'express';
 import dotenv from 'dotenv';
 import Stripe from 'stripe';
 import cors from 'cors';
-
+import bodyParser from 'body-parser';
+const { Twilio } = require('twilio');
 // Charger les variables d'environnement
 dotenv.config();
 
@@ -20,6 +21,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.json());
 
 // Endpoint de création du PaymentIntent
 app.post('/api/create-payment-intent', async (req, res) => {
@@ -37,7 +39,6 @@ app.post('/api/create-payment-intent', async (req, res) => {
     res.status(500).send({ error: error.message });
   }
 });
-
 // Démarrage du serveur
 app.listen(port, () => {
   console.log(`✅ Serveur Stripe démarré sur http://localhost:${port}`);

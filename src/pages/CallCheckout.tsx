@@ -618,7 +618,9 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(({
               },
             },
           });
+          console.log('Provider notifications enqueued successfully for payment:', paymentIntentId);
         } catch (e) {
+          console.warn("enqueueMessageEvent failed");
           console.warn('enqueueMessageEvent failed:', e);
         }
 
@@ -665,11 +667,16 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(({
         }
       };
 
+  
+        console.log('[createPaymentIntent] data', paymentData);
+
+
       // -------- LOG ciblé sur la callable (sans `any`)
       let resData: PaymentIntentResponse | null = null;
       try {
         const res = await createPaymentIntent(paymentData);
         resData = res.data as PaymentIntentResponse;
+        console.log("[createPaymentIntent] response", resData);
       } catch (e: unknown) {
         logCallableError('[createPaymentIntent:error]', e);
         throw e; // on laisse la gestion d'erreur globale s’occuper de l’affichage
@@ -703,6 +710,7 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(({
       if (!paymentIntent) throw new Error(t('err.paymentFailed'));
 
       const status = paymentIntent.status;
+      console.log("Status in stripe : ", status)
       if (!['succeeded', 'requires_capture', 'processing'].includes(status)) {
         if (status === 'requires_action') throw new Error(t('err.actionRequired'));
         if (status === 'requires_payment_method') throw new Error(t('err.invalidMethod'));
@@ -731,10 +739,11 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(({
       if (!/^\+[1-9]\d{8,14}$/.test(providerPhoneE164)) {
         console.warn('Invalid provider phone:', providerPhoneE164);
       }
+      
 
       void persistPaymentDocs(paymentIntent.id);
       void sendProviderNotifications(paymentIntent.id, clientPhoneE164, providerPhoneE164);
-
+      
       const gtag = getGtag();
       gtag?.('event', 'checkout_success', {
         service_type: service.serviceType,
@@ -767,6 +776,8 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(({
           clientLanguages: [language],
           providerLanguages: provider.languagesSpoken || provider.languages || ['fr'],
         };
+
+        console.log('[createAndScheduleCall] data', callData);
 
         void (async () => {
           try {

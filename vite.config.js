@@ -41,7 +41,12 @@ export default defineConfig(({ mode }) => {
           target,
           changeOrigin: true,
         }
-      }
+      },
+      allowedHosts: [
+        'localhost',
+        '91209985d08e', // Add your ngrok URL
+        '.ngrok-free.app' // Optional: Allow all ngrok subdomains (less secure)
+      ]
     }
   }
 })

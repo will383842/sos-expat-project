@@ -40,7 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.testWebhook = exports.manuallyTriggerCallExecution = exports.getCloudTasksQueueStats = exports.testCloudTasksConnection = exports.getUltraDebugLogs = exports.getSystemHealthStatus = exports.generateSystemDebugReport = exports.scheduledCleanup = exports.scheduledFirestoreExport = exports.stripeWebhook = exports.adminBulkUpdateStatus = exports.adminSoftDeleteUser = exports.adminUpdateStatus = exports.executeCallTask = exports.notifyAfterPayment = exports.initializeMessageTemplates = exports.unifiedWebhook = exports.api = exports.createPaymentIntent = exports.createAndScheduleCall = exports.createAndScheduleCallHTTPS = exports.STRIPE_WEBHOOK_SECRET_LIVE = exports.STRIPE_WEBHOOK_SECRET_TEST = exports.STRIPE_MODE = exports.TASKS_AUTH_SECRET = exports.STRIPE_SECRET_KEY_LIVE = exports.STRIPE_SECRET_KEY_TEST = exports.TWILIO_PHONE_NUMBER = exports.TWILIO_AUTH_TOKEN = exports.TWILIO_ACCOUNT_SID = exports.EMAIL_PASS = exports.EMAIL_USER = void 0;
+exports.testWebhook = exports.manuallyTriggerCallExecution = exports.getCloudTasksQueueStats = exports.testCloudTasksConnection = exports.getUltraDebugLogs = exports.getSystemHealthStatus = exports.generateSystemDebugReport = exports.scheduledCleanup = exports.scheduledFirestoreExport = exports.stripeWebhook = exports.adminBulkUpdateStatus = exports.adminSoftDeleteUser = exports.adminUpdateStatus = exports.executeCallTask = exports.notifyAfterPayment = exports.initializeMessageTemplates = exports.unifiedWebhook = exports.enqueueMessageEvent = exports.testTwilioCall = exports.api = exports.createPaymentIntent = exports.createAndScheduleCall = exports.createAndScheduleCallHTTPS = exports.STRIPE_WEBHOOK_SECRET_LIVE = exports.STRIPE_WEBHOOK_SECRET_TEST = exports.STRIPE_MODE = exports.TASKS_AUTH_SECRET = exports.STRIPE_SECRET_KEY_LIVE = exports.STRIPE_SECRET_KEY_TEST = exports.TWILIO_PHONE_NUMBER = exports.TWILIO_AUTH_TOKEN = exports.TWILIO_ACCOUNT_SID = exports.EMAIL_PASS = exports.EMAIL_USER = void 0;
 // ====== ULTRA DEBUG INITIALIZATION ======
 const ultraDebugLogger_1 = require("./utils/ultraDebugLogger");
 // Tracer tous les imports principaux
@@ -286,6 +286,10 @@ var createPaymentIntent_1 = require("./createPaymentIntent");
 Object.defineProperty(exports, "createPaymentIntent", { enumerable: true, get: function () { return createPaymentIntent_1.createPaymentIntent; } });
 var adminApi_1 = require("./adminApi");
 Object.defineProperty(exports, "api", { enumerable: true, get: function () { return adminApi_1.api; } });
+var testTwilioCall_1 = require("./testTwilioCall");
+Object.defineProperty(exports, "testTwilioCall", { enumerable: true, get: function () { return testTwilioCall_1.testTwilioCall; } });
+var enqueueMessageEvent_1 = require("./messaging/enqueueMessageEvent");
+Object.defineProperty(exports, "enqueueMessageEvent", { enumerable: true, get: function () { return enqueueMessageEvent_1.enqueueMessageEvent; } });
 // Webhooks
 var unifiedWebhook_1 = require("./Webhooks/unifiedWebhook");
 Object.defineProperty(exports, "unifiedWebhook", { enumerable: true, get: function () { return unifiedWebhook_1.unifiedWebhook; } });

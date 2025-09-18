@@ -18,7 +18,7 @@ console.log(`🔄 Bascule en mode: ${MODE.toUpperCase()}...`);
 initializeApp({
   credential: applicationDefault(),
 });
-const db = getFirestore();
+const db = getFirestore(); 
 
 (async () => {
   try {
