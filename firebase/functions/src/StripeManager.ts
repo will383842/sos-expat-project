@@ -153,7 +153,7 @@ export class StripeManager {
       this.initializeStripe(secretKey);
       return;
     }
-
+       
     const envMode: 'live' | 'test' =
       process.env.STRIPE_MODE === 'live' || process.env.STRIPE_MODE === 'test'
         ? (process.env.STRIPE_MODE as 'live' | 'test')
