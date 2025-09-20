@@ -55,7 +55,8 @@ class UltraDebugLogger {
         this.logs = [];
         this.isFirebaseInitialized = false;
         this.db = null;
-        this.sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        // ✅ FIXED: Replace deprecated substr() with substring()
+        this.sessionId = `session_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
         console.log(`🚀 [ULTRA DEBUG] Logger initialisé avec session: ${this.sessionId}`);
         if (IS_LOCAL) {
             console.log(`🔧 [ULTRA DEBUG] Mode local détecté - Firestore logs désactivés`);
@@ -149,13 +150,39 @@ class UltraDebugLogger {
             }
         }
     }
+    // ✅ CRITICAL FIX: Add circular reference handling
+    sanitizeCircularReferences(obj) {
+        const seen = new WeakSet();
+        try {
+            return JSON.parse(JSON.stringify(obj, (_, value) => {
+                if (typeof value === 'object' && value !== null) {
+                    if (seen.has(value)) {
+                        return '[Circular Reference]';
+                    }
+                    seen.add(value);
+                }
+                return value;
+            }));
+        }
+        catch (error) {
+            // If JSON.stringify fails completely, return safe representation
+            return {
+                error: 'Failed to serialize object',
+                type: typeof obj,
+                constructor: obj?.constructor?.name || 'unknown',
+                keys: obj && typeof obj === 'object' ? Object.keys(obj).slice(0, 10) : []
+            };
+        }
+    }
+    // ✅ CRITICAL FIX: Updated createLogEntry method
     createLogEntry(level, source, message, data, stack) {
         return clean({
             timestamp: new Date().toISOString(),
             level,
             source,
             message,
-            data: data ? JSON.parse(JSON.stringify(data, null, 2)) : undefined,
+            // ✅ FIXED: Use sanitizeCircularReferences instead of direct JSON.parse/stringify
+            data: data ? this.sanitizeCircularReferences(data) : undefined,
             stack,
             context: this.getContext()
         });
@@ -171,13 +198,23 @@ class UltraDebugLogger {
         const prefix = `${emoji} [ULTRA DEBUG] [${entry.level}] [${entry.source}]`;
         console.log(`${prefix} ${entry.message}`);
         if (entry.data) {
-            console.log(`${prefix} DATA:`, JSON.stringify(entry.data, null, 2));
+            try {
+                console.log(`${prefix} DATA:`, JSON.stringify(entry.data, null, 2));
+            }
+            catch (e) {
+                console.log(`${prefix} DATA: [Unable to stringify data]`);
+            }
         }
         if (entry.stack) {
             console.log(`${prefix} STACK:`, entry.stack);
         }
         if (entry.context) {
-            console.log(`${prefix} CONTEXT:`, JSON.stringify(entry.context, null, 2));
+            try {
+                console.log(`${prefix} CONTEXT:`, JSON.stringify(entry.context, null, 2));
+            }
+            catch (e) {
+                console.log(`${prefix} CONTEXT: [Unable to stringify context]`);
+            }
         }
     }
     info(source, message, data) {
@@ -324,7 +361,7 @@ function traceFunction(fn, functionName, source) {
             arguments: args.map((arg, index) => ({
                 index,
                 type: typeof arg,
-                value: typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
+                value: typeof arg === 'object' ? '[Object]' : String(arg) // ✅ FIXED: Don't stringify objects in traceFunction
             }))
         });
         try {
@@ -333,7 +370,7 @@ function traceFunction(fn, functionName, source) {
                 return result
                     .then((resolvedResult) => {
                     exports.ultraLogger.trace(`${source}:${functionName}`, 'Promesse résolue', {
-                        result: typeof resolvedResult === 'object' ? JSON.stringify(resolvedResult) : String(resolvedResult)
+                        result: typeof resolvedResult === 'object' ? '[Object/Promise Result]' : String(resolvedResult) // ✅ FIXED
                     });
                     return resolvedResult;
                 })
@@ -347,7 +384,7 @@ function traceFunction(fn, functionName, source) {
             }
             else {
                 exports.ultraLogger.trace(`${source}:${functionName}`, 'Fonction terminée', {
-                    result: typeof result === 'object' ? JSON.stringify(result) : String(result)
+                    result: typeof result === 'object' ? '[Object Result]' : String(result) // ✅ FIXED
                 });
                 return result;
             }

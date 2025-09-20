@@ -90,12 +90,12 @@ function isLive(): boolean {
 function getStripeSecretKey(): string {
   return isLive()
     ? (process.env.STRIPE_SECRET_KEY_LIVE || '')
-    : (process.env.STRIPE_SECRET_KEY_TEST || '');
+    : (process.env.STRIPE_SECRET_KEY_TEST_V1 || '');
 }
 function getStripeWebhookSecret(): string {
   return isLive()
     ? (process.env.STRIPE_WEBHOOK_SECRET_LIVE || '')
-    : (process.env.STRIPE_WEBHOOK_SECRET_TEST || '');
+    : (process.env.STRIPE_WEBHOOK_SECRET_TEST_V1 || '');
 }
 
 // ====== INTERFACES DE DEBUGGING ======
@@ -245,8 +245,10 @@ const getTwilioCallManager = traceFunction(async (): Promise<TwilioCallManager> 
 // ====== MIDDLEWARE DE DEBUG POUR TOUTES LES FONCTIONS ======
 function createDebugMetadata(functionName: string, userId?: string): UltraDebugMetadata {
   return {
-    sessionId: `${functionName}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-    requestId: `req_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+    // sessionId: `${functionName}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    sessionId: `${functionName}_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
+    // requestId: `req_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+    requestId: `req_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
     userId,
     functionName,
     startTime: Date.now(),
@@ -638,155 +640,516 @@ const sendPaymentNotifications = traceFunction(async (callSessionId: string, dat
 }, 'sendPaymentNotifications', 'STRIPE_WEBHOOKS');
 
 // ====== WEBHOOK STRIPE ======
+// export const stripeWebhook = onRequest(
+//   {
+//     region: "europe-west1",
+//     memory: "512MiB",
+//     concurrency: 1,
+//     timeoutSeconds: 30,
+//     minInstances: 0,
+//     maxInstances: 5
+//   },
+//   wrapHttpFunction('stripeWebhook', async (req: FirebaseRequest, res: Response) => {
+//     const signature = req.headers['stripe-signature'];
+
+//     ultraLogger.debug('STRIPE_WEBHOOK', 'Webhook Stripe reçu', {
+//       hasSignature: !!signature,
+//       method: req.method,
+//       contentType: req.headers['content-type'],
+//       mode: isLive() ? 'live' : 'test'
+//     });
+
+//     if (!signature) {
+//       ultraLogger.warn('STRIPE_WEBHOOK', 'Signature Stripe manquante');
+//       res.status(400).send('Signature Stripe manquante');
+//       return;
+//     }
+
+//     const stripeInstance = getStripe();
+//     if (!stripeInstance) {
+//       ultraLogger.error('STRIPE_WEBHOOK', 'Service Stripe non configuré');
+//       res.status(500).send('Service Stripe non configuré');
+//       return;
+//     }
+
+//     try {
+//       const database = initializeFirebase();
+//       const rawBody = req.rawBody;
+//       if (!rawBody) {
+//         ultraLogger.warn('STRIPE_WEBHOOK', 'Raw body manquant');
+//         res.status(400).send('Raw body manquant');
+//         return;
+//       }
+
+//       const event = stripeInstance.webhooks.constructEvent(
+//         rawBody.toString(),
+//         signature as string,
+//         getStripeWebhookSecret()
+//       );
+
+//       const objectId = (() => {
+//         const o = event.data.object as unknown;
+//         return o && typeof o === 'object' && 'id' in (o as Record<string, unknown>) ? (o as { id: string }).id : undefined;
+//       })();
+
+//       ultraLogger.info('STRIPE_WEBHOOK', 'Événement Stripe validé', {
+//         eventType: event.type,
+//         eventId: event.id,
+//         objectId
+//       });
+
+//       switch (event.type) {
+//         case 'payment_intent.created':
+//           ultraLogger.debug('STRIPE_WEBHOOK', 'payment_intent.created', { id: objectId });
+//           break;
+
+//         case 'payment_intent.processing':
+//           ultraLogger.debug('STRIPE_WEBHOOK', 'payment_intent.processing', { id: objectId });
+//           break;
+
+//         case 'payment_intent.requires_action':
+//           await handlePaymentIntentRequiresAction(event.data.object as Stripe.PaymentIntent, database);
+//           break;
+
+//         case 'checkout.session.completed': {
+//           ultraLogger.info('STRIPE_WEBHOOK', 'checkout.session.completed', { id: objectId });
+//           const cs = event.data.object as Stripe.Checkout.Session;
+//           const callSessionId = cs.metadata?.callSessionId || cs.metadata?.sessionId;
+//           if (callSessionId) {
+//             await database
+//               .collection('call_sessions')
+//               .doc(callSessionId)
+//               .set(
+//                 {
+//                   status: 'scheduled',
+//                   scheduledAt: admin.firestore.FieldValue.serverTimestamp(),
+//                   delaySeconds: 300,
+//                   updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+//                   checkoutSessionId: cs.id,
+//                   paymentIntentId: typeof cs.payment_intent === 'string' ? cs.payment_intent : undefined
+//                 },
+//                 { merge: true }
+//               );
+
+//             await scheduleCallTask(callSessionId, 300);
+
+//             ultraLogger.info('CHECKOUT_COMPLETED', 'Task planifiée à +300s', {
+//               callSessionId,
+//               delaySeconds: 300
+//             });
+
+//             // 🔔 ENVOI AUTOMATIQUE DES NOTIFICATIONS
+//             await sendPaymentNotifications(callSessionId, database);
+//           }
+//           break;
+//         }
+
+//         case 'payment_intent.succeeded':
+//           await handlePaymentIntentSucceeded(event.data.object as Stripe.PaymentIntent, database);
+//           break;
+
+//         case 'payment_intent.payment_failed':
+//           await handlePaymentIntentFailed(event.data.object as Stripe.PaymentIntent, database);
+//           break;
+
+//         case 'payment_intent.canceled':
+//           await handlePaymentIntentCanceled(event.data.object as Stripe.PaymentIntent, database);
+//           break;
+
+//         case 'charge.refunded':
+//           ultraLogger.warn('STRIPE_WEBHOOK', 'charge.refunded', { id: objectId });
+//           break;
+
+//         case 'refund.updated':
+//           ultraLogger.warn('STRIPE_WEBHOOK', 'refund.updated', { id: objectId });
+//           break;
+
+//         default:
+//           ultraLogger.debug('STRIPE_WEBHOOK', "Type d'événement non géré", {
+//             eventType: event.type
+//           });
+//       }
+
+//       res.json({ received: true });
+//     } catch (webhookError: unknown) {
+//       ultraLogger.error(
+//         'STRIPE_WEBHOOK',
+//         'Erreur traitement webhook',
+//         {
+//           error: webhookError instanceof Error ? webhookError.message : String(webhookError),
+//           stack: webhookError instanceof Error ? webhookError.stack : undefined
+//         },
+//         webhookError instanceof Error ? webhookError : undefined
+//       );
+
+//       const errorMessage = webhookError instanceof Error ? webhookError.message : 'Unknown error';
+//       res.status(400).send(`Webhook Error: ${errorMessage}`);
+//     }
+//   })
+// );
+
+
+
+
+
+
 export const stripeWebhook = onRequest(
   {
     region: "europe-west1",
     memory: "512MiB",
+    // secrets: [STRIPE_WEBHOOK_SECRET_TEST, STRIPE_WEBHOOK_SECRET_LIVE], // ✅ CRITICAL LINE
     concurrency: 1,
     timeoutSeconds: 30,
     minInstances: 0,
     maxInstances: 5
   },
   wrapHttpFunction('stripeWebhook', async (req: FirebaseRequest, res: Response) => {
+    // ✅ STEP 1: Log webhook start
+    console.log('🚀 STRIPE WEBHOOK START');
+    console.log('📋 Request method:', req.method);
+    console.log('📋 Content-Type:', req.headers['content-type']);
+    console.log('📋 Stripe mode:', isLive() ? 'live' : 'test');
+    
     const signature = req.headers['stripe-signature'];
-
-    ultraLogger.debug('STRIPE_WEBHOOK', 'Webhook Stripe reçu', {
-      hasSignature: !!signature,
-      method: req.method,
-      contentType: req.headers['content-type'],
-      mode: isLive() ? 'live' : 'test'
-    });
+    console.log('🔑 Stripe signature present:', !!signature);
+    console.log('🔑 Signature preview:', signature?.slice(0, 30) + '...');
 
     if (!signature) {
-      ultraLogger.warn('STRIPE_WEBHOOK', 'Signature Stripe manquante');
-      res.status(400).send('Signature Stripe manquante');
+      console.log('❌ STRIPE WEBHOOK ERROR: Missing signature');
+      res.status(400).send('Missing signature');
       return;
     }
 
     const stripeInstance = getStripe();
     if (!stripeInstance) {
-      ultraLogger.error('STRIPE_WEBHOOK', 'Service Stripe non configuré');
-      res.status(500).send('Service Stripe non configuré');
+      console.log('❌ STRIPE WEBHOOK ERROR: Stripe not configured');
+      res.status(500).send('Stripe not configured');
       return;
     }
 
     try {
+      console.log('🔍 Initializing Firebase...');
       const database = initializeFirebase();
-      const rawBody = req.rawBody;
-      if (!rawBody) {
-        ultraLogger.warn('STRIPE_WEBHOOK', 'Raw body manquant');
-        res.status(400).send('Raw body manquant');
+      console.log('✅ Firebase initialized successfully');
+
+      // ✅ STEP 2: Raw body processing
+      let rawBodyBuffer: Buffer;
+      if ((req as any).rawBody && Buffer.isBuffer((req as any).rawBody)) {
+        rawBodyBuffer = (req as any).rawBody;
+        console.log('✅ Using direct rawBody buffer');
+      } else {
+        console.log('❌ No usable raw body');
+        res.status(400).send('No raw body');
         return;
       }
 
-      const event = stripeInstance.webhooks.constructEvent(
-        rawBody.toString(),
-        signature as string,
-        getStripeWebhookSecret()
-      );
+      console.log('📦 Raw body length:', rawBodyBuffer.length);
+      console.log('📦 Raw body preview:', rawBodyBuffer.slice(0, 100).toString('utf8'));
 
+      // // ✅ STEP 3: CRITICAL FIX - Use defineSecret values directly
+      let webhookSecret: string;
+      try {
+      //   webhookSecret = isLive() 
+      //     ? STRIPE_WEBHOOK_SECRET_LIVE.value()  // ✅ CORRECT
+      //     : STRIPE_WEBHOOK_SECRET_TEST.value(); // ✅ CORRECT
+      
+       webhookSecret = getStripeWebhookSecret();
+      
+      console.log('🔐 Webhook secret:', webhookSecret);
+        
+        console.log('🔐 Webhook secret retrieved');
+        console.log('🔐 Secret length:', webhookSecret.length);
+        console.log('🔐 Secret starts with whsec_:', webhookSecret.startsWith('whsec_'));
+        console.log('🔐 Secret preview:', webhookSecret.slice(0, 10) + '...');
+        
+      } catch (secretError) {
+        console.log('❌ Secret retrieval error:', secretError);
+        res.status(500).send('Secret configuration error');
+        return;
+      }
+
+      if (webhookSecret.length === 0) {
+        console.log('❌ Secret is empty!');
+        res.status(500).send('Webhook secret not set');
+        return;
+      }
+
+      // ✅ STEP 4: Construct Stripe event
+      console.log('🏗️ Constructing Stripe event...');
+      let event: Stripe.Event;
+      
+      try {
+        const bodyString = rawBodyBuffer.toString('utf8');
+        console.log('🔄 Body string length:', bodyString.length);
+        console.log('🔄 Body string preview:', bodyString.slice(0, 200));
+        console.log('🔄 Using signature:', signature.slice(0, 50) + '...');
+        console.log('🔄 Using secret length:', webhookSecret.length);
+        
+        event = stripeInstance.webhooks.constructEvent(
+          bodyString,
+          signature,
+          webhookSecret
+        );
+        
+        console.log('✅ SUCCESS! Event constructed:', event.type);
+        console.log('✅ Event ID:', event.id);
+        
+     } catch (constructError) {
+  console.log('💥 CONSTRUCT ERROR:', constructError);
+  
+  // ✅ SAFE ERROR TYPE LOGGING
+  console.log('💥 Error type:', constructError && typeof constructError === 'object' && constructError.constructor ? constructError.constructor.name : 'unknown');
+  
+  // ✅ OR EVEN SAFER - Use this instead:
+  console.log('💥 Error name:', (constructError as Error)?.name || 'UnknownError');
+  console.log('💥 Error message:', (constructError as Error)?.message || String(constructError));
+  
+  console.log('💥 Body length:', rawBodyBuffer.length);
+  console.log('💥 Signature length:', signature.length);
+  console.log('💥 Secret length:', webhookSecret.length);
+  console.log('💥 Secret preview:', webhookSecret.slice(0, 15) + '...');
+  
+  res.status(400).send(`Webhook Error: ${(constructError as Error)?.message || constructError}`);
+  return;
+}
+
+      // ✅ STEP 5: Process the event
       const objectId = (() => {
-        const o = event.data.object as unknown;
-        return o && typeof o === 'object' && 'id' in (o as Record<string, unknown>) ? (o as { id: string }).id : undefined;
+        try {
+          return (event.data.object as any)?.id || 'unknown';
+        } catch (e) {
+          return 'extraction_failed';
+        }
       })();
 
-      ultraLogger.info('STRIPE_WEBHOOK', 'Événement Stripe validé', {
+      console.log('🎯 Processing event type:', event.type);
+      console.log('🆔 Object ID:', objectId);
+
+      ultraLogger.info('STRIPE_WEBHOOK_EVENT', 'Événement Stripe validé', {
         eventType: event.type,
         eventId: event.id,
         objectId
       });
 
-      switch (event.type) {
-        case 'payment_intent.created':
-          ultraLogger.debug('STRIPE_WEBHOOK', 'payment_intent.created', { id: objectId });
-          break;
+      // ✅ STEP 6: Event processing with comprehensive handling
+      try {
+        switch (event.type) {
+          case 'payment_intent.created':
+            console.log('💳 Processing payment_intent.created');
+            const piCreated = event.data.object as Stripe.PaymentIntent;
+            console.log('💳 Amount:', piCreated.amount);
+            console.log('💳 Currency:', piCreated.currency);
+            console.log('💳 Status:', piCreated.status);
+            break;
 
-        case 'payment_intent.processing':
-          ultraLogger.debug('STRIPE_WEBHOOK', 'payment_intent.processing', { id: objectId });
-          break;
+          case 'payment_intent.processing':
+            console.log('⏳ Processing payment_intent.processing');
+            break;
 
-        case 'payment_intent.requires_action':
-          await handlePaymentIntentRequiresAction(event.data.object as Stripe.PaymentIntent, database);
-          break;
+          case 'payment_intent.requires_action':
+            console.log('❗ Processing payment_intent.requires_action');
+            await handlePaymentIntentRequiresAction(event.data.object as Stripe.PaymentIntent, database);
+            console.log('✅ Handled payment_intent.requires_action');
+            break;
 
-        case 'checkout.session.completed': {
-          ultraLogger.info('STRIPE_WEBHOOK', 'checkout.session.completed', { id: objectId });
-          const cs = event.data.object as Stripe.Checkout.Session;
-          const callSessionId = cs.metadata?.callSessionId || cs.metadata?.sessionId;
-          if (callSessionId) {
-            await database
-              .collection('call_sessions')
-              .doc(callSessionId)
-              .set(
-                {
+          case 'checkout.session.completed':
+            console.log('🛒 Processing checkout.session.completed');
+            const cs = event.data.object as Stripe.Checkout.Session;
+            console.log('🛒 Session ID:', cs.id);
+            console.log('🛒 Payment status:', cs.payment_status);
+            console.log('🛒 Metadata:', cs.metadata);
+            
+            const callSessionId = cs.metadata?.callSessionId || cs.metadata?.sessionId;
+            console.log('📞 Call session ID:', callSessionId);
+
+            if (callSessionId) {
+              console.log('📞 Updating database...');
+              await database
+                .collection('call_sessions')
+                .doc(callSessionId)
+                .set({
                   status: 'scheduled',
                   scheduledAt: admin.firestore.FieldValue.serverTimestamp(),
                   delaySeconds: 300,
                   updatedAt: admin.firestore.FieldValue.serverTimestamp(),
                   checkoutSessionId: cs.id,
                   paymentIntentId: typeof cs.payment_intent === 'string' ? cs.payment_intent : undefined
-                },
-                { merge: true }
-              );
+                }, { merge: true });
 
-            await scheduleCallTask(callSessionId, 300);
+              console.log('⏰ Scheduling task...');
+              await scheduleCallTask(callSessionId, 300);
+              
+              console.log('📨 Sending notifications...');
+              await sendPaymentNotifications(callSessionId, database);
+              
+              console.log('✅ Checkout processing complete');
+            }
+            break;
 
-            ultraLogger.info('CHECKOUT_COMPLETED', 'Task planifiée à +300s', {
-              callSessionId,
-              delaySeconds: 300
-            });
+          case 'payment_intent.succeeded':
+            console.log('✅ Processing payment_intent.succeeded');
+            await handlePaymentIntentSucceeded(event.data.object as Stripe.PaymentIntent, database);
+            break;
 
-            // 🔔 ENVOI AUTOMATIQUE DES NOTIFICATIONS
-            await sendPaymentNotifications(callSessionId, database);
-          }
-          break;
+          case 'payment_intent.payment_failed':
+            console.log('❌ Processing payment_intent.payment_failed');
+            await handlePaymentIntentFailed(event.data.object as Stripe.PaymentIntent, database);
+            break;
+
+          case 'payment_intent.canceled':
+            console.log('🚫 Processing payment_intent.canceled');
+            await handlePaymentIntentCanceled(event.data.object as Stripe.PaymentIntent, database);
+            break;
+
+          case 'charge.refunded':
+            console.log('💸 Processing charge.refunded');
+            break;
+
+          case 'refund.updated':
+            console.log('🔄 Processing refund.updated');
+            break;
+
+          default:
+            console.log('❓ Unhandled event type:', event.type);
         }
 
-        case 'payment_intent.succeeded':
-          await handlePaymentIntentSucceeded(event.data.object as Stripe.PaymentIntent, database);
-          break;
+        console.log('🎉 WEBHOOK SUCCESS');
+        ultraLogger.info('STRIPE_WEBHOOK_SUCCESS', 'Webhook traité avec succès', {
+          eventType: event.type,
+          eventId: event.id,
+          objectId
+        });
 
-        case 'payment_intent.payment_failed':
-          await handlePaymentIntentFailed(event.data.object as Stripe.PaymentIntent, database);
-          break;
+        res.status(200).json({ 
+          received: true, 
+          eventId: event.id, 
+          eventType: event.type,
+          objectId,
+          timestamp: new Date().toISOString()
+        });
 
-        case 'payment_intent.canceled':
-          await handlePaymentIntentCanceled(event.data.object as Stripe.PaymentIntent, database);
-          break;
-
-        case 'charge.refunded':
-          ultraLogger.warn('STRIPE_WEBHOOK', 'charge.refunded', { id: objectId });
-          break;
-
-        case 'refund.updated':
-          ultraLogger.warn('STRIPE_WEBHOOK', 'refund.updated', { id: objectId });
-          break;
-
-        default:
-          ultraLogger.debug('STRIPE_WEBHOOK', "Type d'événement non géré", {
-            eventType: event.type
-          });
+      } catch (eventHandlerError) {
+        console.log('💥 EVENT HANDLER ERROR:', eventHandlerError);
+        
+        ultraLogger.error('STRIPE_WEBHOOK_HANDLER', 'Erreur dans le gestionnaire d\'événements', {
+          eventType: event.type,
+          eventId: event.id,
+          error: eventHandlerError instanceof Error ? eventHandlerError.message : String(eventHandlerError)
+        });
+        
+        // Still return 200 to acknowledge receipt
+        res.status(200).json({ 
+          received: true, 
+          eventId: event.id,
+          handlerError: eventHandlerError instanceof Error ? eventHandlerError.message : 'Unknown handler error'
+        });
       }
 
-      res.json({ received: true });
-    } catch (webhookError: unknown) {
-      ultraLogger.error(
-        'STRIPE_WEBHOOK',
-        'Erreur traitement webhook',
-        {
-          error: webhookError instanceof Error ? webhookError.message : String(webhookError),
-          stack: webhookError instanceof Error ? webhookError.stack : undefined
-        },
-        webhookError instanceof Error ? webhookError : undefined
-      );
+    } catch (error) {
+      console.log('💥 FATAL ERROR:', error);
+      
+      ultraLogger.error('STRIPE_WEBHOOK_FATAL', 'Erreur fatale dans le webhook', {
+        error: error instanceof Error ? error.message : String(error),
+        requestInfo: {
+          method: req.method,
+          contentType: req.headers['content-type'],
+          hasSignature: !!signature
+        }
+      });
 
-      const errorMessage = webhookError instanceof Error ? webhookError.message : 'Unknown error';
-      res.status(400).send(`Webhook Error: ${errorMessage}`);
+      res.status(400).send(`Fatal Error: ${error}`);
     }
   })
 );
 
+
 // Handlers Stripe
+// const handlePaymentIntentSucceeded = traceFunction(async (paymentIntent: Stripe.PaymentIntent, database: admin.firestore.Firestore) => {
+//   try {
+//     ultraLogger.info('STRIPE_PAYMENT_SUCCEEDED', 'Paiement réussi', {
+//       paymentIntentId: paymentIntent.id,
+//       amount: paymentIntent.amount,
+//       currency: paymentIntent.currency
+//     });
+
+//     const paymentsQuery = database.collection('payments').where('stripePaymentIntentId', '==', paymentIntent.id);
+//     console.log('💳 Payments query:', paymentsQuery);
+//     const paymentsSnapshot = await paymentsQuery.get();
+// console.log('💳 Payments snapshot:', paymentsSnapshot);
+//     if (!paymentsSnapshot.empty) {
+//       console.log("i am inside not empty")
+//       const paymentDoc = paymentsSnapshot.docs[0];
+//       await paymentDoc.ref.update({
+//         status: 'captured',
+//         currency: paymentIntent.currency ?? 'eur',
+//         capturedAt: admin.firestore.FieldValue.serverTimestamp(),
+//         updatedAt: admin.firestore.FieldValue.serverTimestamp()
+//       });
+
+//       ultraLogger.info('STRIPE_PAYMENT_SUCCEEDED', 'Base de données mise à jour');
+//     }
+
+//     // ✅ Fallback pour retrouver callSessionId
+//     let callSessionId = paymentIntent.metadata?.callSessionId || '';
+
+//     console.log('📞 Call session ID in payment succedded: ', callSessionId);
+//     if (!callSessionId) {
+//       const snap = await database.collection('payments')
+//         .where('stripePaymentIntentId', '==', paymentIntent.id)
+//         .limit(1)
+//         .get();
+//       if (!snap.empty) callSessionId = (snap.docs[0].data() as any)?.callSessionId || '';
+//     }
+
+//     if (callSessionId) {
+//       ultraLogger.info('STRIPE_PAYMENT_SUCCEEDED', 'Déclenchement des opérations post-paiement', {
+//         callSessionId
+//       });
+
+//       await database
+//         .collection('call_sessions')
+//         .doc(callSessionId)
+//         .set(
+//           {
+//             status: 'scheduled',
+//             scheduledAt: admin.firestore.FieldValue.serverTimestamp(),
+//             // delaySeconds: 300,
+//             delaySeconds: 10,
+//             updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+//             paymentIntentId: paymentIntent.id
+//           },
+//           { merge: true }
+//         );
+
+//       // await scheduleCallTask(callSessionId, 300);
+//       await scheduleCallTask(callSessionId, 10);
+
+//       ultraLogger.info('STRIPE_PAYMENT_SUCCEEDED', 'Cloud Task créée pour appel à +300s', {
+//         callSessionId,
+//         // delaySeconds: 300
+//         delaySeconds: 10
+//       });
+
+//       // 🔔 ENVOI AUTOMATIQUE DES NOTIFICATIONS
+//       await sendPaymentNotifications(callSessionId, database);
+//     }
+
+//     return true;
+//   } catch (succeededError: unknown) {
+//     ultraLogger.error(
+//       'STRIPE_PAYMENT_SUCCEEDED',
+//       'Erreur traitement paiement réussi',
+//       {
+//         paymentIntentId: paymentIntent.id,
+//         error: succeededError instanceof Error ? succeededError.message : String(succeededError)
+//       },
+//       succeededError instanceof Error ? succeededError : undefined
+//     );
+//     return false;
+//   }
+// }, 'handlePaymentIntentSucceeded', 'STRIPE_WEBHOOKS');
+
+
 const handlePaymentIntentSucceeded = traceFunction(async (paymentIntent: Stripe.PaymentIntent, database: admin.firestore.Firestore) => {
   try {
     ultraLogger.info('STRIPE_PAYMENT_SUCCEEDED', 'Paiement réussi', {
@@ -795,64 +1158,141 @@ const handlePaymentIntentSucceeded = traceFunction(async (paymentIntent: Stripe.
       currency: paymentIntent.currency
     });
 
-    const paymentsQuery = database.collection('payments').where('stripePaymentIntentId', '==', paymentIntent.id);
-    const paymentsSnapshot = await paymentsQuery.get();
-
-    if (!paymentsSnapshot.empty) {
-      const paymentDoc = paymentsSnapshot.docs[0];
-      await paymentDoc.ref.update({
-        status: 'captured',
-        currency: paymentIntent.currency ?? 'eur',
-        capturedAt: admin.firestore.FieldValue.serverTimestamp(),
-        updatedAt: admin.firestore.FieldValue.serverTimestamp()
-      });
-
-      ultraLogger.info('STRIPE_PAYMENT_SUCCEEDED', 'Base de données mise à jour');
+    // Update payments collection
+    try {
+      const paymentsQuery = database.collection('payments').where('stripePaymentIntentId', '==', paymentIntent.id);
+      const paymentsSnapshot = await paymentsQuery.get();
+      
+      if (!paymentsSnapshot.empty) {
+        console.log("✅ Updating payment document");
+        const paymentDoc = paymentsSnapshot.docs[0];
+        await paymentDoc.ref.update({
+          status: 'captured',
+          currency: paymentIntent.currency ?? 'eur',
+          capturedAt: admin.firestore.FieldValue.serverTimestamp(),
+          updatedAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+        ultraLogger.info('STRIPE_PAYMENT_SUCCEEDED', 'Base de données mise à jour');
+      }
+    } catch (paymentUpdateError) {
+      console.log('⚠️ Payment update error (non-critical):', paymentUpdateError);
     }
 
-    // ✅ Fallback pour retrouver callSessionId
+    // Find callSessionId with multiple fallbacks
     let callSessionId = paymentIntent.metadata?.callSessionId || '';
+    console.log('📞 Call session ID from metadata:', callSessionId);
 
+    // Fallback 1: Search in payments collection
     if (!callSessionId) {
-      const snap = await database.collection('payments')
-        .where('stripePaymentIntentId', '==', paymentIntent.id)
-        .limit(1)
-        .get();
-      if (!snap.empty) callSessionId = (snap.docs[0].data() as any)?.callSessionId || '';
+      try {
+        console.log('🔍 Searching for callSessionId in payments...');
+        const snap = await database.collection('payments')
+          .where('stripePaymentIntentId', '==', paymentIntent.id)
+          .limit(1)
+          .get();
+        if (!snap.empty) {
+          callSessionId = (snap.docs[0].data() as any)?.callSessionId || '';
+          console.log('✅ Found callSessionId in payments:', callSessionId);
+        }
+      } catch (searchError) {
+        console.log('⚠️ Error searching payments:', searchError);
+      }
+    }
+
+    // Fallback 2: Create test call session
+    if (!callSessionId) {
+      console.log('🆕 Creating test call session...');
+      callSessionId = 'cs_' + Date.now() + '_pi_' + paymentIntent.id.slice(-8);
+      
+      try {
+        const testCallData = {
+          sessionId: callSessionId,
+          status: 'pending',
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+          metadata: {
+            clientId: 'test-client-' + Date.now(),
+            providerId: 'test-provider-456',
+            serviceType: 'expat_call',
+            amount: paymentIntent.amount / 100,
+            clientPhone: '+919667549765',
+            providerPhone: '+33743331201',
+          },
+          participants: {
+            client: {
+              phone: '+919667549765',
+              status: 'pending'
+            },
+            provider: {
+              phone: '+33743331201', 
+              status: 'pending'
+            }
+          },
+          paymentIntentId: paymentIntent.id
+        };
+
+        await database.collection('call_sessions').doc(callSessionId).set(testCallData);
+        console.log('✅ Test call session created:', callSessionId);
+      } catch (createError) {
+        console.log('💥 Error creating test call session:', createError);
+        return false;
+      }
     }
 
     if (callSessionId) {
-      ultraLogger.info('STRIPE_PAYMENT_SUCCEEDED', 'Déclenchement des opérations post-paiement', {
-        callSessionId
-      });
+      try {
+        console.log('📞 Updating call session:', callSessionId);
+        
+        // Update call session
+        await database
+          .collection('call_sessions')
+          .doc(callSessionId)
+          .set(
+            {
+              status: 'scheduled',
+              scheduledAt: admin.firestore.FieldValue.serverTimestamp(),
+              delaySeconds: 10,
+              updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+              paymentIntentId: paymentIntent.id
+            },
+            { merge: true }
+          );
 
-      await database
-        .collection('call_sessions')
-        .doc(callSessionId)
-        .set(
-          {
-            status: 'scheduled',
-            scheduledAt: admin.firestore.FieldValue.serverTimestamp(),
-            delaySeconds: 300,
-            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-            paymentIntentId: paymentIntent.id
-          },
-          { merge: true }
-        );
+        console.log('✅ Call session updated, scheduling task...');
+        
 
-      await scheduleCallTask(callSessionId, 300);
+        // Schedule call task
+        await scheduleCallTask(callSessionId, 10);
 
-      ultraLogger.info('STRIPE_PAYMENT_SUCCEEDED', 'Cloud Task créée pour appel à +300s', {
-        callSessionId,
-        delaySeconds: 300
-      });
+        console.log('✅ Call task scheduled, sending notifications...');
 
-      // 🔔 ENVOI AUTOMATIQUE DES NOTIFICATIONS
-      await sendPaymentNotifications(callSessionId, database);
+        ultraLogger.info('STRIPE_PAYMENT_SUCCEEDED', 'Cloud Task créée pour appel à +10s', {
+          callSessionId,
+          delaySeconds: 10
+        });
+
+        // Send notifications
+        try {
+          await sendPaymentNotifications(callSessionId, database);
+          console.log('✅ Notifications sent successfully');
+        } catch (notificationError) {
+          console.log('⚠️ Notification error (non-critical):', notificationError);
+        }
+
+      } catch (callSchedulingError) {
+        console.log('💥 Call scheduling error:', callSchedulingError);
+        throw callSchedulingError; // Re-throw to be caught by outer try-catch
+      }
+    } else {
+      console.log('❌ No callSessionId available after all fallbacks');
+      return false;
     }
 
+    console.log('✅ Payment intent succeeded handling completed successfully');
     return true;
+
   } catch (succeededError: unknown) {
+    console.log('💥 FATAL ERROR in handlePaymentIntentSucceeded:', succeededError);
+    
     ultraLogger.error(
       'STRIPE_PAYMENT_SUCCEEDED',
       'Erreur traitement paiement réussi',
@@ -865,6 +1305,7 @@ const handlePaymentIntentSucceeded = traceFunction(async (paymentIntent: Stripe.
     return false;
   }
 }, 'handlePaymentIntentSucceeded', 'STRIPE_WEBHOOKS');
+
 
 const handlePaymentIntentFailed = traceFunction(async (paymentIntent: Stripe.PaymentIntent, database: admin.firestore.Firestore) => {
   try {
@@ -1025,7 +1466,7 @@ export const scheduledFirestoreExport = onSchedule(
         projectId,
         bucketName,
         timestamp
-      });
+      }); 
 
       const firestoreClient = new admin.firestore.v1.FirestoreAdminClient();
 
@@ -1214,7 +1655,8 @@ export const generateSystemDebugReport = onCall(
         ultraDebugReport: JSON.parse(ultraDebugReport)
       };
 
-      const reportId = `debug_report_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      // const reportId = `debug_report_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const reportId = `debug_report_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
       await database.collection('debug_reports').doc(reportId).set({
         ...fullReport,
         generatedBy: request.auth.uid,

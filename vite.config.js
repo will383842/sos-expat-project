@@ -44,7 +44,7 @@ export default defineConfig(({ mode }) => {
       },
       allowedHosts: [
         'localhost',
-        '91209985d08e', // Add your ngrok URL
+        '47a70449e94b', // Add your ngrok URL
         '.ngrok-free.app' // Optional: Allow all ngrok subdomains (less secure)
       ]
     }

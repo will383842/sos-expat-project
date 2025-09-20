@@ -276,7 +276,8 @@ export class StripeManager {
       const paymentIntent = await this.stripe.paymentIntents.create({
         amount: amountCents,
         currency,
-        capture_method: 'manual', // on capture après la consultation
+        // capture_method: 'manual', // on capture après la consultation
+        capture_method: 'automatic',
         automatic_payment_methods: { enabled: true },
         metadata: {
           clientId: data.clientId,

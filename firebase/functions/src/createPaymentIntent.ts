@@ -483,6 +483,13 @@ export const createPaymentIntent = onCall(
         coupon,
       } = s;
 
+
+      let finalCallSessionId = callSessionId;
+      if (!finalCallSessionId || finalCallSessionId.trim() === '') {
+        finalCallSessionId = `cs_${Date.now()}_${clientId.slice(0, 8)}_${providerId.slice(0, 8)}`;
+        console.log('🆕 Generated callSessionId:', finalCallSessionId);
+      }
+
       const V = getLimits().VALIDATION;
       if (!V.ALLOWED_SERVICE_TYPES.includes(serviceType)) {
         throw new HttpsError('invalid-argument', 'Type de service invalide');
@@ -589,7 +596,7 @@ export const createPaymentIntent = onCall(
         providerType,
         commissionAmount: commissionAmountInMainUnit,
         providerAmount: providerAmountInMainUnit,
-        callSessionId,
+       callSessionId: finalCallSessionId, // ✅ Use generated ID
         metadata: {
           clientEmail: clientEmail || '',
           providerName: providerName || '',
@@ -605,6 +612,7 @@ export const createPaymentIntent = onCall(
           override: String(expected !== cfg.totalAmount),
           promo_active: String(overrideActive),
           promo_stackable: String(stackable),
+           callSessionId: finalCallSessionId || "", 
           ...metadata,
         },
       };
