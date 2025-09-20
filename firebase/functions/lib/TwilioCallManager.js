@@ -303,6 +303,22 @@ class TwilioCallManager {
     async initiateCallSequence(sessionId, delayMinutes = 5) {
         try {
             console.log(`🚀 Init séquence d'appel ${sessionId} dans ${delayMinutes} min`);
+            const callSession = await this.getCallSession(sessionId);
+            if (!callSession) {
+                throw new Error(`Session ${sessionId} not found`);
+            }
+            if (!callSession.metadata) {
+                console.warn(`No metadata found for session ${sessionId}, creating minimal metadata`);
+            }
+            else {
+                // Just update the existing metadata with language defaults
+                if (!callSession.metadata.clientLanguages) {
+                    callSession.metadata.clientLanguages = ['en'];
+                }
+                if (!callSession.metadata.providerLanguages) {
+                    callSession.metadata.providerLanguages = ['en'];
+                }
+            }
             if (delayMinutes > 0) {
                 const timeout = setTimeout(async () => {
                     this.activeCalls.delete(sessionId);
@@ -332,7 +348,27 @@ class TwilioCallManager {
             await this.handleCallFailure(sessionId, 'payment_invalid');
             return;
         }
-        const langKey = pickSessionLanguage(callSession.metadata.clientLanguages || [], callSession.metadata.providerLanguages || []);
+        // 🔧 Add null checks for language arrays
+        if (!callSession.metadata.clientLanguages) {
+            console.log(`🔧 [TwilioCallManager] Adding missing clientLanguages for ${sessionId}`);
+            await this.db.collection('call_sessions').doc(sessionId).update({
+                'metadata.clientLanguages': ['en'],
+                'metadata.providerLanguages': callSession.metadata.providerLanguages || ['en'],
+                'metadata.updatedAt': admin.firestore.Timestamp.now()
+            });
+            // Update local session object
+            callSession.metadata.clientLanguages = ['en'];
+        }
+        if (!callSession.metadata.providerLanguages) {
+            console.log(`🔧 [TwilioCallManager] Adding missing providerLanguages for ${sessionId}`);
+            await this.db.collection('call_sessions').doc(sessionId).update({
+                'metadata.providerLanguages': ['en'],
+                'metadata.updatedAt': admin.firestore.Timestamp.now()
+            });
+            // Update local session object
+            callSession.metadata.providerLanguages = ['en'];
+        }
+        const langKey = pickSessionLanguage(callSession.metadata.clientLanguages || ['en'], callSession.metadata.providerLanguages || ['en']);
         const ttsLocale = localeFor(langKey);
         await this.saveWithRetry(() => this.db.collection('call_sessions').doc(sessionId).update({
             'metadata.selectedLanguage': langKey,
@@ -540,14 +576,57 @@ class TwilioCallManager {
             await (0, logError_1.logError)('TwilioCallManager:handleEarlyDisconnection', error);
         }
     }
+    // async handleCallFailure(sessionId: string, reason: string): Promise<void> {
+    //   try {
+    //     const callSession = await this.getCallSession(sessionId);
+    //     if (!callSession) return;
+    //     await this.updateCallSessionStatus(sessionId, 'failed');
+    //     const clientLanguage = callSession.metadata.clientLanguages?.[0] || 'fr';
+    //     const providerLanguage = callSession.metadata.providerLanguages?.[0] || 'fr';
+    //     try {
+    //       const notificationPromises: Array<Promise<unknown>> = [];
+    //       if (reason === 'client_no_answer' || reason === 'system_error') {
+    //         notificationPromises.push(
+    //           messageManager.sendSmartMessage({
+    //             to: callSession.participants.provider.phone,
+    //             templateId: `call_failure_${reason}_provider`,
+    //             variables: { clientName: 'le client', serviceType: callSession.metadata.serviceType, language: providerLanguage }
+    //           })
+    //         );
+    //       }
+    //       if (reason === 'provider_no_answer' || reason === 'system_error') {
+    //         notificationPromises.push(
+    //           messageManager.sendSmartMessage({
+    //             to: callSession.participants.client.phone,
+    //             templateId: `call_failure_${reason}_client`,
+    //             variables: { providerName: 'votre expert', serviceType: callSession.metadata.serviceType, language: clientLanguage }
+    //           })
+    //         );
+    //       }
+    //       await Promise.allSettled(notificationPromises);
+    //     } catch (notificationError) {
+    //       await logError('TwilioCallManager:handleCallFailure:notification', notificationError as unknown);
+    //     }
+    //     await this.processRefund(sessionId, `failed_${reason}`);
+    //     await logCallRecord({
+    //       callId: sessionId,
+    //       status: `call_failed_${reason}`,
+    //       retryCount: 0,
+    //       additionalData: { reason, paymentIntentId: callSession.payment.intentId }
+    //     });
+    //   } catch (error) {
+    //     await logError('TwilioCallManager:handleCallFailure', error as unknown);
+    //   }
+    // }
     async handleCallFailure(sessionId, reason) {
         try {
             const callSession = await this.getCallSession(sessionId);
             if (!callSession)
                 return;
             await this.updateCallSessionStatus(sessionId, 'failed');
-            const clientLanguage = callSession.metadata.clientLanguages?.[0] || 'fr';
-            const providerLanguage = callSession.metadata.providerLanguages?.[0] || 'fr';
+            // 🛠️ FIX: Always fallback to 'en' if missing
+            const clientLanguage = callSession.metadata?.clientLanguages?.[0] || 'en';
+            const providerLanguage = callSession.metadata?.providerLanguages?.[0] || 'en';
             try {
                 const notificationPromises = [];
                 if (reason === 'client_no_answer' || reason === 'system_error') {

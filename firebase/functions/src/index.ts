@@ -1202,45 +1202,7 @@ const handlePaymentIntentSucceeded = traceFunction(async (paymentIntent: Stripe.
       }
     }
 
-    // Fallback 2: Create test call session
-    if (!callSessionId) {
-      console.log('🆕 Creating test call session...');
-      callSessionId = 'cs_' + Date.now() + '_pi_' + paymentIntent.id.slice(-8);
-      
-      try {
-        const testCallData = {
-          sessionId: callSessionId,
-          status: 'pending',
-          createdAt: admin.firestore.FieldValue.serverTimestamp(),
-          metadata: {
-            clientId: 'test-client-' + Date.now(),
-            providerId: 'test-provider-456',
-            serviceType: 'expat_call',
-            amount: paymentIntent.amount / 100,
-            clientPhone: '+919667549765',
-            providerPhone: '+33743331201',
-          },
-          participants: {
-            client: {
-              phone: '+919667549765',
-              status: 'pending'
-            },
-            provider: {
-              phone: '+33743331201', 
-              status: 'pending'
-            }
-          },
-          paymentIntentId: paymentIntent.id
-        };
-
-        await database.collection('call_sessions').doc(callSessionId).set(testCallData);
-        console.log('✅ Test call session created:', callSessionId);
-      } catch (createError) {
-        console.log('💥 Error creating test call session:', createError);
-        return false;
-      }
-    }
-
+   
     if (callSessionId) {
       try {
         console.log('📞 Updating call session:', callSessionId);
@@ -1253,7 +1215,7 @@ const handlePaymentIntentSucceeded = traceFunction(async (paymentIntent: Stripe.
             {
               status: 'scheduled',
               scheduledAt: admin.firestore.FieldValue.serverTimestamp(),
-              delaySeconds: 10,
+              delaySeconds: 300,
               updatedAt: admin.firestore.FieldValue.serverTimestamp(),
               paymentIntentId: paymentIntent.id
             },
@@ -1264,13 +1226,13 @@ const handlePaymentIntentSucceeded = traceFunction(async (paymentIntent: Stripe.
         
 
         // Schedule call task
-        await scheduleCallTask(callSessionId, 10);
+        await scheduleCallTask(callSessionId, 300);
 
         console.log('✅ Call task scheduled, sending notifications...');
 
-        ultraLogger.info('STRIPE_PAYMENT_SUCCEEDED', 'Cloud Task créée pour appel à +10s', {
+        ultraLogger.info('STRIPE_PAYMENT_SUCCEEDED', 'Cloud Task créée pour appel à +300s', {
           callSessionId,
-          delaySeconds: 10
+          delaySeconds: 300
         });
 
         // Send notifications

@@ -55,6 +55,23 @@ async function beginOutboundCallForSession(callSessionId) {
         }
         const sessionData = sessionDoc.data();
         console.log(`✅ [Adapter] Session trouvée, status: ${sessionData?.status}`);
+        console.log(`✅ [Adapter] Session , Session: ${sessionData}`);
+        // 📱 LOG PHONE NUMBERS HERE:
+        console.log(`📱 [Adapter] PHONE NUMBERS FOUND:`, {
+            clientPhone: sessionData?.participants?.client?.phone || 'MISSING',
+            providerPhone: sessionData?.participants?.provider?.phone || 'MISSING',
+            hasClientPhone: !!sessionData?.participants?.client?.phone,
+            hasProviderPhone: !!sessionData?.participants?.provider?.phone
+        });
+        // 🔧 FIX LANGUAGE ISSUE BEFORE CALLING TwilioCallManager:
+        if (!sessionData?.metadata?.clientLanguages) {
+            console.log(`🔧 [Adapter] Adding missing clientLanguages`);
+            await db.collection("call_sessions").doc(callSessionId).update({
+                'metadata.clientLanguages': ['en'],
+                'metadata.providerLanguages': sessionData?.metadata?.providerLanguages || ['en'],
+                'metadata.updatedAt': new Date()
+            });
+        }
         // ✅ ÉTAPE 2: Vérifier le paiement avant de continuer
         const paymentStatus = sessionData?.payment?.status;
         if (paymentStatus && paymentStatus !== "authorized") {
