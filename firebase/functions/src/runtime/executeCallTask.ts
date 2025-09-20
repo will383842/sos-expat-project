@@ -1,7 +1,7 @@
 // firebase/functions/src/runtime/executeCallTask.ts - VERSION CORRIGÉE
 import { Request, Response } from "express";
 import { defineSecret } from "firebase-functions/params";
-import { onRequest } from "firebase-functions/v2/https";
+// import { onRequest } from "firebase-functions/v2/https";
 import { getTwilioClient, getTwilioPhoneNumber } from "../lib/twilio";
 import { beginOutboundCallForSession } from "../services/twilioCallManagerAdapter";
 import { logError } from "../utils/logs/logError";
@@ -100,7 +100,10 @@ export async function runExecuteCallTask(req: Request, res: Response): Promise<v
     // ✅ ÉTAPE 5: Exécution via l'adapter
     console.log(`🚀 [executeCallTask] Starting call execution for: ${callSessionId}`);
     
+
+    
     const callResult = await beginOutboundCallForSession(callSessionId);
+    console.log('✅ [executeCallTask] Call execution result:', callResult);
 
     const executionTime = Date.now() - startTime;
 
@@ -181,15 +184,15 @@ export async function runExecuteCallTask(req: Request, res: Response): Promise<v
 }
 
 // --- Fonction Firebase v2 avec configuration optimisée ---
-export const executeCallTask = onRequest(
-  {
-    region: "europe-west1",
-    memory: "512MiB",
-    cpu: 0.25,              // réduit la pression CPU
-    maxInstances: 10,       // limite le fan-out
-    minInstances: 0,        // pas de réservation permanente
-    concurrency: 1,         // OK avec cpu < 1
-    timeoutSeconds: 120
-  },
-  (req, res) => runExecuteCallTask(req as Request, res as Response)
-);
+// export const executeCallTask = onRequest(
+//   {
+//     region: "europe-west1",
+//     memory: "512MiB",
+//     cpu: 0.25,              // réduit la pression CPU
+//     maxInstances: 10,       // limite le fan-out
+//     minInstances: 0,        // pas de réservation permanente
+//     concurrency: 1,         // OK avec cpu < 1
+//     timeoutSeconds: 120
+//   },
+//   (req, res) => runExecuteCallTask(req as Request, res as Response)
+// );

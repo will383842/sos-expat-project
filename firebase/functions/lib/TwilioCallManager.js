@@ -172,6 +172,7 @@ class TwilioCallManager {
                 clientLanguages: input.clientLanguages,
                 providerLanguages: input.providerLanguages
             });
+            console.log('🛒 Call session created:', created);
             await mgr.initiateCallSequence(input.sessionId, delayMinutes);
             return created;
         }

@@ -759,6 +759,8 @@ const BookingRequest: React.FC = () => {
 
   const onSubmit: SubmitHandler<BookingFormData> = async (data) => {
     setFormError('');
+    console.log(data, "data === in onSubmit")
+    // return;
 
     // blocage si pas de langue partagée (on log)
     if (!hasLanguageMatchRealTime) {

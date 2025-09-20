@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.executeCallTask = exports.TWILIO_PHONE_NUMBER = exports.TWILIO_AUTH_TOKEN = exports.TWILIO_ACCOUNT_SID = exports.TASKS_AUTH_SECRET = void 0;
+exports.TWILIO_PHONE_NUMBER = exports.TWILIO_AUTH_TOKEN = exports.TWILIO_ACCOUNT_SID = exports.TASKS_AUTH_SECRET = void 0;
 exports.runExecuteCallTask = runExecuteCallTask;
 const params_1 = require("firebase-functions/params");
-const https_1 = require("firebase-functions/v2/https");
+// import { onRequest } from "firebase-functions/v2/https";
 const twilio_1 = require("../lib/twilio");
 const twilioCallManagerAdapter_1 = require("../services/twilioCallManagerAdapter");
 const logError_1 = require("../utils/logs/logError");
@@ -87,6 +87,7 @@ async function runExecuteCallTask(req, res) {
         // ✅ ÉTAPE 5: Exécution via l'adapter
         console.log(`🚀 [executeCallTask] Starting call execution for: ${callSessionId}`);
         const callResult = await (0, twilioCallManagerAdapter_1.beginOutboundCallForSession)(callSessionId);
+        console.log('✅ [executeCallTask] Call execution result:', callResult);
         const executionTime = Date.now() - startTime;
         console.log('✅ [executeCallTask] Call execution completed:', {
             callSessionId,
@@ -155,13 +156,16 @@ async function runExecuteCallTask(req, res) {
     }
 }
 // --- Fonction Firebase v2 avec configuration optimisée ---
-exports.executeCallTask = (0, https_1.onRequest)({
-    region: "europe-west1",
-    memory: "512MiB",
-    cpu: 0.25, // réduit la pression CPU
-    maxInstances: 10, // limite le fan-out
-    minInstances: 0, // pas de réservation permanente
-    concurrency: 1, // OK avec cpu < 1
-    timeoutSeconds: 120
-}, (req, res) => runExecuteCallTask(req, res));
+// export const executeCallTask = onRequest(
+//   {
+//     region: "europe-west1",
+//     memory: "512MiB",
+//     cpu: 0.25,              // réduit la pression CPU
+//     maxInstances: 10,       // limite le fan-out
+//     minInstances: 0,        // pas de réservation permanente
+//     concurrency: 1,         // OK avec cpu < 1
+//     timeoutSeconds: 120
+//   },
+//   (req, res) => runExecuteCallTask(req as Request, res as Response)
+// );
 //# sourceMappingURL=executeCallTask.js.map

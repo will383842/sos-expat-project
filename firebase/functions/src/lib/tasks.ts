@@ -47,7 +47,9 @@ function getFunctionsBaseUrl(): string {
   if (fromParam) return fromParam.replace(/\/$/, "");
 
   const region = CLOUD_TASKS_LOCATION.value() || "europe-west1";
+  console.log("region in the getFunctionsBaseUrl function:", region);
   const projectId = getProjectId();
+  console.log("projectId in the getFunctionsBaseUrl function:", projectId);
   return `https://${region}-${projectId}.cloudfunctions.net`;
 }
 
@@ -101,6 +103,7 @@ export async function scheduleCallTask(
 
     // URL complète de callback
     const callbackUrl = `${cfg.callbackBaseUrl}/${cfg.functionName}`;
+    console.log(`📋 [CloudTasks] URL de callback: ${callbackUrl}`);
 
     // Horodatage d'exécution
     const scheduleTime = new Date();
@@ -118,12 +121,16 @@ export async function scheduleCallTask(
         seconds: Math.floor(scheduleTime.getTime() / 1000)},
       httpRequest: {
         httpMethod: "POST" as const,
-        url: callbackUrl,
+        url: callbackUrl || 'https://europe-west1-sos-urgently-ac307.net/executeCallTask',
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json", 
           // ⚠️ Utilise le secret paramétré (Firebase v2)
           "X-Task-Auth": TASKS_AUTH_SECRET.value()},
-        body: Buffer.from(JSON.stringify(payload))}};
+        body: Buffer.from(JSON.stringify(payload))
+      }
+    };
+    console.log("task created : ", task)
+
 
     console.log(
       `📋 [CloudTasks] Création tâche ${taskId} (queue=${cfg.queueName}, region=${cfg.location}) → ${delaySeconds}s`

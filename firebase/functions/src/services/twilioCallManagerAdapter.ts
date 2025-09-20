@@ -40,6 +40,7 @@ export async function beginOutboundCallForSession(callSessionId: string) {
       sessionId: callSessionId,
       delayMinutes: 0  // Immédiat car déjà programmé par Cloud Tasks
     });
+    console.log(`📞 [Adapter] Résultat de l'appel:`, result);
 
     console.log(`✅ [Adapter] Appel initié avec succès:`, {
       sessionId: callSessionId,
