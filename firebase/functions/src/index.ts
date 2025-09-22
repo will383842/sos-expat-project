@@ -1216,25 +1216,21 @@ const handlePaymentIntentSucceeded = traceFunction(async (paymentIntent: Stripe.
         console.log('📞 Updating call session:', callSessionId);
         
         // // Update call session
-        // await database
-        //   .collection('call_sessions')
-        //   .doc(callSessionId)
-        //   .set(
-        //     {
-        //       status: 'scheduled',
-        //       scheduledAt: admin.firestore.FieldValue.serverTimestamp(),
-        //       delaySeconds: 300,
-        //       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-        //       paymentIntentId: paymentIntent.id
-        //     },
-        //     { merge: true }
-        //   );
+      await database
+  .collection('call_sessions')
+  .doc(callSessionId)
+  .update({
+    status: 'scheduled',  
+    scheduledAt: admin.firestore.FieldValue.serverTimestamp(),
+    updatedAt: admin.firestore.FieldValue.serverTimestamp()
+
+  });
 
         console.log('✅ Call session updated, scheduling task...');
         
 
         // Schedule call task
-        // callSessionId = "call_session_1758524756192_9cyod31g6"
+      
         await scheduleCallTask(callSessionId, 300);
 
         console.log('✅ Call task scheduled, sending notifications...');

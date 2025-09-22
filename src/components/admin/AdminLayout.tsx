@@ -45,7 +45,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const [updateSuccess, setUpdateSuccess] = useState<boolean | null>(null);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Détection mobile/desktop
+  // Détect/admin/loginion mobile/desktop
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 1024);
     checkMobile();

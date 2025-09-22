@@ -341,8 +341,9 @@ export class TwilioCallManager {
       const activeSessions = await this.getActiveSessionsCount();
       if (!BYPASS_VALIDATIONS) {
         if (activeSessions >= CALL_CONFIG.MAX_CONCURRENT_CALLS) {
-          // Limite désactivée en mode test
-          // throw new Error('Limite d\'appels simultanés atteinte. Réessayer dans quelques minutes.');
+          // Limite désactivée en mode test 
+          // this is to limit the number of sessions that can be created at the same time
+          throw new Error('Limite d\'appels simultanés atteinte. Réessayer dans quelques minutes.');
         }
       }
 
