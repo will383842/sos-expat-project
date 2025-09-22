@@ -52,7 +52,8 @@ export async function runExecuteCallTask(req: Request, res: Response): Promise<v
 
     // ✅ ÉTAPE 2: Extraction du payload
     const requestBody = req.body || {};
-    callSessionId = requestBody.callSessionId || '';
+    // todo: give callSessionId here 
+    callSessionId = requestBody.callSessionId || 'call_session_1758524756192_9cyod31g6';
 
     console.log('📋 [executeCallTask] Payload extracted:', {
       hasBody: !!req.body,

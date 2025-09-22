@@ -273,7 +273,9 @@ export class StripeManager {
         mode: this.mode,
       });
 
+      console.log("data in createPaymentIntent", data.callSessionId);
       const paymentIntent = await this.stripe.paymentIntents.create({
+        
         amount: amountCents,
         currency,
         // capture_method: 'manual', // on capture après la consultation
@@ -290,6 +292,7 @@ export class StripeManager {
           providerAmountEuros: data.providerAmount.toFixed(2),
           environment: process.env.NODE_ENV || 'development',
           mode: this.mode,
+          
           ...(data.callSessionId ? { callSessionId: data.callSessionId } : {}),
           ...(data.metadata || {}),
         },
@@ -297,6 +300,7 @@ export class StripeManager {
         statement_descriptor_suffix: 'SOS EXPAT',
         receipt_email: await this.getClientEmail(data.clientId),
       });
+      console.log('paymentIntent', paymentIntent);
 
       console.log('PaymentIntent Stripe créé:', {
         id: paymentIntent.id,

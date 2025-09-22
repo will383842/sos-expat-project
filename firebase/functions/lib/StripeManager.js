@@ -195,6 +195,7 @@ class StripeManager {
                 providerAmountCents,
                 mode: this.mode,
             });
+            console.log("data in createPaymentIntent", data.callSessionId);
             const paymentIntent = await this.stripe.paymentIntents.create({
                 amount: amountCents,
                 currency,
@@ -219,6 +220,7 @@ class StripeManager {
                 statement_descriptor_suffix: 'SOS EXPAT',
                 receipt_email: await this.getClientEmail(data.clientId),
             });
+            console.log('paymentIntent', paymentIntent);
             console.log('PaymentIntent Stripe créé:', {
                 id: paymentIntent.id,
                 amount: paymentIntent.amount,

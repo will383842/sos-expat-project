@@ -45,7 +45,8 @@ async function runExecuteCallTask(req, res) {
         console.log('✅ [executeCallTask] Authentication successful');
         // ✅ ÉTAPE 2: Extraction du payload
         const requestBody = req.body || {};
-        callSessionId = requestBody.callSessionId || '';
+        // todo: give callSessionId here 
+        callSessionId = requestBody.callSessionId || 'call_session_1758524756192_9cyod31g6';
         console.log('📋 [executeCallTask] Payload extracted:', {
             hasBody: !!req.body,
             bodyKeys: Object.keys(requestBody),

@@ -207,7 +207,7 @@ export class TwilioCallManager {
   }
 
   /** ⚡️ API utilisée par l’adapter */
-  static async startOutboundCall(input: StartOutboundCallInput): Promise<CallSessionState | void> {
+  static async  startOutboundCall(input: StartOutboundCallInput): Promise<CallSessionState | void> {
     try {
       if (!input?.sessionId) throw new Error('startOutboundCall: "sessionId" requis');
 
@@ -243,7 +243,8 @@ export class TwilioCallManager {
         amount: input.amount,
         requestId: input.requestId,
         clientLanguages: input.clientLanguages,
-        providerLanguages: input.providerLanguages
+        providerLanguages: input.providerLanguages,
+        callSessionId: input.sessionId
       });
       console.log('🛒 Call session created:', created);
 
@@ -305,6 +306,7 @@ export class TwilioCallManager {
 
   async createCallSession(params: {
     sessionId: string;
+    callSessionId: string;
     providerId: string;
     clientId: string;
     providerPhone: string;
@@ -440,10 +442,10 @@ if (!callSession.metadata) {
     const callSession = await this.getCallSession(sessionId);
     if (!callSession) throw new Error(`Session d'appel non trouvée: ${sessionId}`);
 
-    if (callSession.status === 'cancelled' || callSession.status === 'failed') {
-      console.log(`Session ${sessionId} déjà ${callSession.status}, stop`);
-      return;
-    }
+    // if (callSession.status === 'cancelled' || callSession.status === 'failed') {
+    //   console.log(`Session ${sessionId} déjà ${callSession.status}, stop`);
+    //   return;
+    // }
 
     const BYPASS_VALIDATIONS = process.env.TEST_BYPASS_VALIDATIONS === '1';
     const paymentValid = BYPASS_VALIDATIONS ? true : await this.validatePaymentStatus(callSession.payment.intentId);

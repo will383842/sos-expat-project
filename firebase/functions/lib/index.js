@@ -970,6 +970,21 @@ const handlePaymentIntentSucceeded = (0, ultraDebugLogger_1.traceFunction)(async
         let callSessionId = paymentIntent.metadata?.callSessionId || '';
         console.log('📞 Call session ID from metadata:', callSessionId);
         // Fallback 1: Search in payments collection
+        // if (!callSessionId) {
+        //   try {
+        //     console.log('🔍 Searching for callSessionId in payments...');
+        //     const snap = await database.collection('payments')
+        //       .where('stripePaymentIntentId', '==', paymentIntent.id)
+        //       .limit(1)
+        //       .get();
+        //     if (!snap.empty) {
+        //       callSessionId = (snap.docs[0].data() as any)?.callSessionId || '';
+        //       console.log('✅ Found callSessionId in payments:', callSessionId);
+        //     }
+        //   } catch (searchError) {
+        //     console.log('⚠️ Error searching payments:', searchError);
+        //   }
+        // }
         if (!callSessionId) {
             try {
                 console.log('🔍 Searching for callSessionId in payments...');
@@ -978,8 +993,16 @@ const handlePaymentIntentSucceeded = (0, ultraDebugLogger_1.traceFunction)(async
                     .limit(1)
                     .get();
                 if (!snap.empty) {
-                    callSessionId = snap.docs[0].data()?.callSessionId || '';
-                    console.log('✅ Found callSessionId in payments:', callSessionId);
+                    const docData = snap.docs[0].data();
+                    console.log('📄 Full document data:', JSON.stringify(docData, null, 2));
+                    console.log('🔑 Available fields:', Object.keys(docData));
+                    callSessionId = docData?.callSessionId || '';
+                    console.log('✅ Extracted callSessionId:', callSessionId);
+                    console.log('🔍 Type of callSessionId:', typeof callSessionId);
+                    console.log('🔍 Length of callSessionId:', callSessionId?.length);
+                }
+                else {
+                    console.log('❌ No payment document found for paymentIntentId:', paymentIntent.id);
                 }
             }
             catch (searchError) {
@@ -1002,6 +1025,7 @@ const handlePaymentIntentSucceeded = (0, ultraDebugLogger_1.traceFunction)(async
                 }, { merge: true });
                 console.log('✅ Call session updated, scheduling task...');
                 // Schedule call task
+                callSessionId = "call_session_1758524756192_9cyod31g6";
                 await (0, tasks_1.scheduleCallTask)(callSessionId, 300);
                 console.log('✅ Call task scheduled, sending notifications...');
                 ultraDebugLogger_1.ultraLogger.info('STRIPE_PAYMENT_SUCCEEDED', 'Cloud Task créée pour appel à +300s', {

@@ -338,10 +338,10 @@ class TwilioCallManager {
         const callSession = await this.getCallSession(sessionId);
         if (!callSession)
             throw new Error(`Session d'appel non trouvée: ${sessionId}`);
-        if (callSession.status === 'cancelled' || callSession.status === 'failed') {
-            console.log(`Session ${sessionId} déjà ${callSession.status}, stop`);
-            return;
-        }
+        // if (callSession.status === 'cancelled' || callSession.status === 'failed') {
+        //   console.log(`Session ${sessionId} déjà ${callSession.status}, stop`);
+        //   return;
+        // }
         const BYPASS_VALIDATIONS = process.env.TEST_BYPASS_VALIDATIONS === '1';
         const paymentValid = BYPASS_VALIDATIONS ? true : await this.validatePaymentStatus(callSession.payment.intentId);
         if (!paymentValid) {

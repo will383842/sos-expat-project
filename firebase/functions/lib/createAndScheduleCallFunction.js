@@ -253,6 +253,13 @@ exports.createAndScheduleCallHTTPS = (0, https_1.onCall)({
         // qui créera une Cloud Task programmée à +5 minutes
         console.log(`📅 [${requestId}] Status: ${callSession.status}`);
         console.log(`⏰ [${requestId}] Planification: Sera gérée par webhook Stripe à +5 min`);
+        // CRITICAL : 🚀 Schedule call locally (non-persistent) for quick testing
+        // try {
+        //   await twilioCallManager.initiateCallSequence(callSession.id, 5);
+        //   console.log(`🚀 [${requestId}] Séquence d'appel planifiée dans 5 min`);
+        // } catch (e) {
+        //   console.warn(`⚠️ [${requestId}] Échec de la planification locale:`, e);
+        // }
         // Calculer l'heure théorique de programmation (pour info uniquement)
         const theoreticalScheduledTime = new Date(Date.now() + (5 * 60 * 1000)); // +5 min fixe
         // ========================================
@@ -261,6 +268,7 @@ exports.createAndScheduleCallHTTPS = (0, https_1.onCall)({
         const response = {
             success: true,
             sessionId: callSession.id,
+            callSessionId: callSession.id,
             status: callSession.status,
             scheduledFor: theoreticalScheduledTime.toISOString(), // ✅ Théorique - sera confirmé par webhook
             scheduledForReadable: theoreticalScheduledTime.toLocaleString('fr-FR', {
