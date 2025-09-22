@@ -382,7 +382,7 @@ export const createCallSession = async (
 ): Promise<CallSessionState> => {
   try {
     // Générer un ID unique si non fourni
-    const sessionId =
+   const sessionId =
       params.sessionId ||
       `call_session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 

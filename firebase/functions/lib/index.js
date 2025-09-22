@@ -784,17 +784,17 @@ exports.stripeWebhook = (0, https_1.onRequest)({
                     console.log('📞 Call session ID:', callSessionId);
                     if (callSessionId) {
                         console.log('📞 Updating database...');
-                        await database
-                            .collection('call_sessions')
-                            .doc(callSessionId)
-                            .set({
-                            status: 'scheduled',
-                            scheduledAt: admin.firestore.FieldValue.serverTimestamp(),
-                            delaySeconds: 300,
-                            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-                            checkoutSessionId: cs.id,
-                            paymentIntentId: typeof cs.payment_intent === 'string' ? cs.payment_intent : undefined
-                        }, { merge: true });
+                        // await database
+                        //   .collection('call_sessions')
+                        //   .doc(callSessionId)
+                        //   .set({
+                        //     status: 'scheduled',
+                        //     scheduledAt: admin.firestore.FieldValue.serverTimestamp(),
+                        //     delaySeconds: 300,
+                        //     updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                        //     checkoutSessionId: cs.id,
+                        //     paymentIntentId: typeof cs.payment_intent === 'string' ? cs.payment_intent : undefined
+                        //   }, { merge: true });
                         console.log('⏰ Scheduling task...');
                         await (0, tasks_1.scheduleCallTask)(callSessionId, 300);
                         console.log('📨 Sending notifications...');
@@ -1012,20 +1012,23 @@ const handlePaymentIntentSucceeded = (0, ultraDebugLogger_1.traceFunction)(async
         if (callSessionId) {
             try {
                 console.log('📞 Updating call session:', callSessionId);
-                // Update call session
-                await database
-                    .collection('call_sessions')
-                    .doc(callSessionId)
-                    .set({
-                    status: 'scheduled',
-                    scheduledAt: admin.firestore.FieldValue.serverTimestamp(),
-                    delaySeconds: 300,
-                    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-                    paymentIntentId: paymentIntent.id
-                }, { merge: true });
+                // // Update call session
+                // await database
+                //   .collection('call_sessions')
+                //   .doc(callSessionId)
+                //   .set(
+                //     {
+                //       status: 'scheduled',
+                //       scheduledAt: admin.firestore.FieldValue.serverTimestamp(),
+                //       delaySeconds: 300,
+                //       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                //       paymentIntentId: paymentIntent.id
+                //     },
+                //     { merge: true }
+                //   );
                 console.log('✅ Call session updated, scheduling task...');
                 // Schedule call task
-                callSessionId = "call_session_1758524756192_9cyod31g6";
+                // callSessionId = "call_session_1758524756192_9cyod31g6"
                 await (0, tasks_1.scheduleCallTask)(callSessionId, 300);
                 console.log('✅ Call task scheduled, sending notifications...');
                 ultraDebugLogger_1.ultraLogger.info('STRIPE_PAYMENT_SUCCEEDED', 'Cloud Task créée pour appel à +300s', {

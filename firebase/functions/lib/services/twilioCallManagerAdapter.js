@@ -53,43 +53,47 @@ async function beginOutboundCallForSession(callSessionId) {
             console.error(`❌ [Adapter] Session ${callSessionId} introuvable`);
             throw new Error(`Session ${callSessionId} introuvable dans call_sessions`);
         }
-        // const sessionData = sessionDoc.data();
-        const sessionData = {
-            conference: {
-                name: "conf_call_session_1758524756192_9cyod31g6_1758524760381"
-            },
-            id: "call_session_1758536742049_dnpg0j88n",
-            metadata: {
-                clientId: "wEPWVfzUbDglUINwwmmcEkwzFup1",
-                clientLanguages: ["fr"],
-                createdAt: new Date("2025-09-22T07:06:00.000Z"), // Converting Firestore timestamp
-                maxDuration: 2100,
-                providerId: "jhfbGgZjh1OCXCLzqkgTOD41Hj43",
-                providerLanguages: ["en"],
-                providerType: "expat",
-                requestId: "call_1758524756185_3iy56",
-                serviceType: "expat_call",
-                updatedAt: new Date("2025-09-22T07:06:00.000Z") // Converting Firestore timestamp
-            },
-            participants: {
-                client: {
-                    attemptCount: 0,
-                    phone: "+917415440629",
-                    status: "pending"
-                },
-                provider: {
-                    attemptCount: 0,
-                    phone: "+33743331201",
-                    status: "pending"
-                }
-            },
-            payment: {
-                amount: 39,
-                intentId: "pi_3SA3opRbcjaCEWrZ0y8haSbI",
-                status: "authorized"
-            },
-            status: "pending"
-        };
+        console.log("✅ [Adapter] Session trouvée:", sessionDoc.exists);
+        console.log("✅ [Adapter] Session trouvée:", sessionDoc);
+        const sessionData = sessionDoc.data();
+        //     const sessionData = {
+        //       conference: {
+        //         name: "conf_call_session_1758524756192_9cyod31g6_1758524760381"
+        //       },
+        //       id: "call_session_1758536742049_dnpg0j88n",
+        //       metadata: {
+        //         clientId: "wEPWVfzUbDglUINwwmmcEkwzFup1",
+        //         clientLanguages: ["fr"],
+        //         createdAt: new Date("2025-09-22T07:06:00.000Z"), // Converting Firestore timestamp
+        //         maxDuration: 2100,
+        //         providerId: "jhfbGgZjh1OCXCLzqkgTOD41Hj43",
+        //         providerLanguages: ["en"],
+        //         providerType: "expat",
+        //         requestId: "call_1758524756185_3iy56",
+        //         serviceType: "expat_call",
+        //         updatedAt: new Date("2025-09-22T07:06:00.000Z") // Converting Firestore timestamp
+        //       },
+        //       participants: {
+        //         client: {
+        //           attemptCount: 0,
+        //           phone: "+917415440629",
+        //           status: "pending"
+        //         },
+        //         provider: {
+        //           attemptCount: 0,
+        //           phone: "+33743331201",
+        //           status: "pending"
+        //         }
+        //       },
+        //       payment: {
+        //         amount: 39,
+        //         intentId: "pi_3SA3opRbcjaCEWrZ0y8haSbI",
+        //         status: "authorized"
+        //       },
+        //         status: "pending"
+        // }
+        // console.log(`✅ [Adapter] Session trouvée: ${callSessionId}`);
+        console.log(`✅ [Adapter] Session trouvée: ${sessionData?.id}`);
         console.log(`✅ [Adapter] Session trouvée, status: ${sessionData?.status}`);
         console.log(`✅ [Adapter] Session , Session: ${sessionData}`);
         // 📱 LOG PHONE NUMBERS HERE:

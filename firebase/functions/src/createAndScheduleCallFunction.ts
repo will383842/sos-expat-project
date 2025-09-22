@@ -19,6 +19,7 @@ interface CreateCallRequest {
   clientLanguages?: string[];
   providerLanguages?: string[];
   clientWhatsapp?: string;
+  callSessionId?: string;  
 }
 
 /**
@@ -92,6 +93,7 @@ export const createAndScheduleCallHTTPS = onCall(
         providerType,
         paymentIntentId,
         amount,
+         callSessionId,
         delayMinutes = 5, // ✅ Garde pour compatibilité mais ne sera plus utilisé
         clientLanguages,
         providerLanguages,
@@ -266,6 +268,7 @@ export const createAndScheduleCallHTTPS = onCall(
         clientId,
         providerPhone,
         clientPhone,
+         sessionId: callSessionId,
         clientWhatsapp: clientWhatsapp || clientPhone, // Fallback si clientWhatsapp n'est pas fourni
         serviceType,
         providerType,

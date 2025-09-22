@@ -439,8 +439,10 @@ if (!callSession.metadata) {
   }
 
   private async executeCallSequence(sessionId: string): Promise<void> {
+    console.log("i am in executeCallSequence with the session id", sessionId);
     const callSession = await this.getCallSession(sessionId);
     if (!callSession) throw new Error(`Session d'appel non trouvée: ${sessionId}`);
+    console.log("[executeCallSequence] callSession:", callSession);
 
     // if (callSession.status === 'cancelled' || callSession.status === 'failed') {
     //   console.log(`Session ${sessionId} déjà ${callSession.status}, stop`);
@@ -1194,6 +1196,7 @@ const langKey = pickSessionLanguage(
 
   async getCallSession(sessionId: string): Promise<CallSessionState | null> {
     try {
+      console.log("[getCallSession] this is the sessionId i am searching for : ", sessionId)
       const doc = await this.db.collection('call_sessions').doc(sessionId).get();
       return doc.exists ? (doc.data() as CallSessionState) : null;
     } catch (error) {

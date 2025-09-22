@@ -967,17 +967,17 @@ export const stripeWebhook = onRequest(
 
             if (callSessionId) {
               console.log('📞 Updating database...');
-              await database
-                .collection('call_sessions')
-                .doc(callSessionId)
-                .set({
-                  status: 'scheduled',
-                  scheduledAt: admin.firestore.FieldValue.serverTimestamp(),
-                  delaySeconds: 300,
-                  updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-                  checkoutSessionId: cs.id,
-                  paymentIntentId: typeof cs.payment_intent === 'string' ? cs.payment_intent : undefined
-                }, { merge: true });
+              // await database
+              //   .collection('call_sessions')
+              //   .doc(callSessionId)
+              //   .set({
+              //     status: 'scheduled',
+              //     scheduledAt: admin.firestore.FieldValue.serverTimestamp(),
+              //     delaySeconds: 300,
+              //     updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+              //     checkoutSessionId: cs.id,
+              //     paymentIntentId: typeof cs.payment_intent === 'string' ? cs.payment_intent : undefined
+              //   }, { merge: true });
 
               console.log('⏰ Scheduling task...');
               await scheduleCallTask(callSessionId, 300);
@@ -1186,22 +1186,6 @@ const handlePaymentIntentSucceeded = traceFunction(async (paymentIntent: Stripe.
     console.log('📞 Call session ID from metadata:', callSessionId);
 
     // Fallback 1: Search in payments collection
-    // if (!callSessionId) {
-    //   try {
-    //     console.log('🔍 Searching for callSessionId in payments...');
-    //     const snap = await database.collection('payments')
-    //       .where('stripePaymentIntentId', '==', paymentIntent.id)
-    //       .limit(1)
-    //       .get();
-    //     if (!snap.empty) {
-    //       callSessionId = (snap.docs[0].data() as any)?.callSessionId || '';
-    //       console.log('✅ Found callSessionId in payments:', callSessionId);
-    //     }
-    //   } catch (searchError) {
-    //     console.log('⚠️ Error searching payments:', searchError);
-    //   }
-    // }
-
     if (!callSessionId) {
   try {
     console.log('🔍 Searching for callSessionId in payments...');
@@ -1231,26 +1215,26 @@ const handlePaymentIntentSucceeded = traceFunction(async (paymentIntent: Stripe.
       try {
         console.log('📞 Updating call session:', callSessionId);
         
-        // Update call session
-        await database
-          .collection('call_sessions')
-          .doc(callSessionId)
-          .set(
-            {
-              status: 'scheduled',
-              scheduledAt: admin.firestore.FieldValue.serverTimestamp(),
-              delaySeconds: 300,
-              updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-              paymentIntentId: paymentIntent.id
-            },
-            { merge: true }
-          );
+        // // Update call session
+        // await database
+        //   .collection('call_sessions')
+        //   .doc(callSessionId)
+        //   .set(
+        //     {
+        //       status: 'scheduled',
+        //       scheduledAt: admin.firestore.FieldValue.serverTimestamp(),
+        //       delaySeconds: 300,
+        //       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        //       paymentIntentId: paymentIntent.id
+        //     },
+        //     { merge: true }
+        //   );
 
         console.log('✅ Call session updated, scheduling task...');
         
 
         // Schedule call task
-        callSessionId = "call_session_1758524756192_9cyod31g6"
+        // callSessionId = "call_session_1758524756192_9cyod31g6"
         await scheduleCallTask(callSessionId, 300);
 
         console.log('✅ Call task scheduled, sending notifications...');

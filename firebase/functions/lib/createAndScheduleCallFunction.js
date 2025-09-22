@@ -93,7 +93,7 @@ exports.createAndScheduleCallHTTPS = (0, https_1.onCall)({
             clientWhatsapp: request.data?.clientWhatsapp ? '✅ Fourni' : 'Non fourni (optionnel)',
             delayMinutes: request.data?.delayMinutes || 5
         });
-        const { providerId, clientId, providerPhone, clientPhone, serviceType, providerType, paymentIntentId, amount, delayMinutes = 5, // ✅ Garde pour compatibilité mais ne sera plus utilisé
+        const { providerId, clientId, providerPhone, clientPhone, serviceType, providerType, paymentIntentId, amount, callSessionId, delayMinutes = 5, // ✅ Garde pour compatibilité mais ne sera plus utilisé
         clientLanguages, providerLanguages, clientWhatsapp } = request.data;
         // ✅ Évite l'avertissement TypeScript 6133 (variable assigned but never used)
         void delayMinutes;
@@ -212,6 +212,7 @@ exports.createAndScheduleCallHTTPS = (0, https_1.onCall)({
             clientId,
             providerPhone,
             clientPhone,
+            sessionId: callSessionId,
             clientWhatsapp: clientWhatsapp || clientPhone, // Fallback si clientWhatsapp n'est pas fourni
             serviceType,
             providerType,

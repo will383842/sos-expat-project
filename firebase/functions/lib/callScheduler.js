@@ -389,6 +389,7 @@ const createCallSession = async (params) => {
         const twilioCallManager = await getTwilioCallManager();
         const callSession = await twilioCallManager.createCallSession({
             sessionId,
+            callSessionId: sessionId,
             providerId: params.providerId,
             clientId: params.clientId,
             providerPhone: params.providerPhone,

@@ -170,7 +170,8 @@ class TwilioCallManager {
                 amount: input.amount,
                 requestId: input.requestId,
                 clientLanguages: input.clientLanguages,
-                providerLanguages: input.providerLanguages
+                providerLanguages: input.providerLanguages,
+                callSessionId: input.sessionId
             });
             console.log('🛒 Call session created:', created);
             await mgr.initiateCallSequence(input.sessionId, delayMinutes);
@@ -335,9 +336,11 @@ class TwilioCallManager {
         }
     }
     async executeCallSequence(sessionId) {
+        console.log("i am in executeCallSequence with the session id", sessionId);
         const callSession = await this.getCallSession(sessionId);
         if (!callSession)
             throw new Error(`Session d'appel non trouvée: ${sessionId}`);
+        console.log("[executeCallSequence] callSession:", callSession);
         // if (callSession.status === 'cancelled' || callSession.status === 'failed') {
         //   console.log(`Session ${sessionId} déjà ${callSession.status}, stop`);
         //   return;
@@ -949,6 +952,7 @@ class TwilioCallManager {
     }
     async getCallSession(sessionId) {
         try {
+            console.log("[getCallSession] this is the sessionId i am searching for : ", sessionId);
             const doc = await this.db.collection('call_sessions').doc(sessionId).get();
             return doc.exists ? doc.data() : null;
         }

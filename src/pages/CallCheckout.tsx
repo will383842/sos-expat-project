@@ -106,6 +106,7 @@ interface CreateAndScheduleCallData {
   clientLanguages?: string[];
   providerLanguages?: string[];
   clientWhatsapp?: string;
+  callSessionId?: string;
 }
 
 type StepType = 'payment' | 'calling' | 'completed';
@@ -639,6 +640,9 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(({
       setIsProcessing(true);
       validatePaymentData();
 
+      // ✅ Generate callSessionId FIRST
+    const callSessionId = `call_session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+
       const createPaymentIntent: HttpsCallable<PaymentIntentData, PaymentIntentResponse> =
         httpsCallable(functions, 'createPaymentIntent');
 
@@ -663,7 +667,8 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(({
           clientWhatsapp: '',
           currency: serviceCurrency,
           requestTitle: bookingMeta?.title || '',
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
+          callSessionId: callSessionId
         }
       };
 
@@ -775,6 +780,7 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(({
           delayMinutes: 5,
           clientLanguages: [language],
           providerLanguages: provider.languagesSpoken || provider.languages || ['fr'],
+          callSessionId: callSessionId
         };
 
         console.log('[createAndScheduleCall] data', callData);
