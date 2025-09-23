@@ -251,8 +251,9 @@ class TwilioCallManager {
             const activeSessions = await this.getActiveSessionsCount();
             if (!BYPASS_VALIDATIONS) {
                 if (activeSessions >= CALL_CONFIG.MAX_CONCURRENT_CALLS) {
-                    // Limite désactivée en mode test
-                    // throw new Error('Limite d\'appels simultanés atteinte. Réessayer dans quelques minutes.');
+                    // Limite désactivée en mode test 
+                    // this is to limit the number of sessions that can be created at the same time
+                    throw new Error('Limite d\'appels simultanés atteinte. Réessayer dans quelques minutes.');
                 }
             }
             const maxDuration = params.providerType === 'lawyer' ? 1500 : 2100; // 25/35 min
@@ -341,10 +342,10 @@ class TwilioCallManager {
         if (!callSession)
             throw new Error(`Session d'appel non trouvée: ${sessionId}`);
         console.log("[executeCallSequence] callSession:", callSession);
-        // if (callSession.status === 'cancelled' || callSession.status === 'failed') {
-        //   console.log(`Session ${sessionId} déjà ${callSession.status}, stop`);
-        //   return;
-        // }
+        if (callSession.status === 'cancelled' || callSession.status === 'failed') {
+            console.log(`Session ${sessionId} déjà ${callSession.status}, stop`);
+            return;
+        }
         const BYPASS_VALIDATIONS = process.env.TEST_BYPASS_VALIDATIONS === '1';
         const paymentValid = BYPASS_VALIDATIONS ? true : await this.validatePaymentStatus(callSession.payment.intentId);
         if (!paymentValid) {
