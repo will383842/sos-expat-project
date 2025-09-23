@@ -1,5 +1,6 @@
 // App.tsx
-import React, { useEffect, Suspense, lazy } from 'react';
+import React, { useEffect, Suspense, lazy, useState } from 'react';
+import { IntlProvider } from 'react-intl';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { useDeviceDetection } from './hooks/useDeviceDetection';
@@ -12,6 +13,10 @@ import TemplatesEmails from "./pages/admin/marketing/TemplatesEmails";
 import NotificationsRouting from "./pages/admin/marketing/Notifications";
 import DelivrabiliteLogs from "./pages/admin/marketing/Delivrabilite";
 import MessagesTempsReel from "./pages/admin/marketing/MessagesTempsReel";
+import enMessages from './helper/en.json';
+import esMessages from './helper/es.json';
+import frMessages from './helper/fr.json';
+import { useApp } from './contexts/AppContext';
 
 // --------------------------------------------
 // Types
@@ -72,6 +77,17 @@ const HelpCenter = lazy(() => import('./pages/HelpCenter'));
 const FAQ = lazy(() => import('./pages/FAQ'));
 const Contact = lazy(() => import('./pages/Contact'));
 const HowItWorks = lazy(() => import('./pages/HowItWorks'));
+
+
+
+// -------------------------------------------
+// Laguage config
+// -------------------------------------------
+const messages = {
+  en: enMessages,
+  es: esMessages,
+  fr: frMessages,
+}
 
 // --------------------------------------------
 // Routes config
@@ -195,12 +211,16 @@ const DefaultHelmet: React.FC<{ pathname: string }> = ({ pathname }) => {
   );
 };
 
+
+type Locale = 'en' | 'es' | 'fr';
 // --------------------------------------------
 // App
 // --------------------------------------------
 const App: React.FC = () => {
   const location = useLocation();
+  const {language} = useApp()
   const { isMobile } = useDeviceDetection();
+  const [locale, setLocale] = useState<Locale>('es'); // Default to French since your site is French
 
   // SW + perf
   useEffect(() => {
@@ -225,6 +245,11 @@ const App: React.FC = () => {
     }
   }, [isMobile]);
 
+  useEffect(() => {
+    console.log('language', language)
+    setLocale(language)
+  },[language])
+
   const renderRoute = (config: RouteConfig, index: number) => {
     const { path, component: Component, protected: isProtected, role, alias } = config;
     const routes = [path, ...(alias ? [alias] : [])];
@@ -248,6 +273,7 @@ const App: React.FC = () => {
 
   return (
     <HelmetProvider>
+        <IntlProvider locale={locale} messages={messages[locale]}>
       <div className={`App ${isMobile ? 'mobile-layout' : 'desktop-layout'}`}>
         <DefaultHelmet pathname={location.pathname} />
         <Suspense fallback={<LoadingSpinner size="large" color="red" />}>
@@ -269,7 +295,8 @@ const App: React.FC = () => {
 
           {/* Routes admin gérées par AdminRoutesV2 */}
         </Suspense>
-      </div>
+        </div>
+        </IntlProvider>
     </HelmetProvider>
   );
 };

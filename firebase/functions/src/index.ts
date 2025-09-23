@@ -344,6 +344,7 @@ function wrapHttpFunction(functionName: string, originalFunction: (req: Firebase
   };
 }
 
+
 // ====== EXPORTS DIRECTS ======
 ultraLogger.info('EXPORTS', 'Début du chargement des exports directs');
 

@@ -40,7 +40,7 @@ export const testTwilioCall = onRequest(
       return;
     }
 
-    const to = "+919667549765"; // Destination number
+    const to = "+9111111111"; // Destination number
     const message = "Ceci est un appel test depuis SOS Expat.";
     const twilioNumber = TWILIO_PHONE_NUMBER.value();
 

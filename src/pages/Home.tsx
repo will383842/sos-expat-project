@@ -13,6 +13,8 @@ import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { usePricingConfig, detectUserCurrency, getEffectivePrice } from '@/services/pricingService';
 import { functions, httpsCallable } from '@/config/firebase';
 import { getFunctions } from 'firebase/functions';
+import { FormattedMessage } from 'react-intl';
+import { useApp } from '../contexts/AppContext';
 
 /* ================================
    Types
@@ -460,13 +462,23 @@ const PRICING_PLANS: PricingPlan[] = [
    ================================ */
 const OptimizedHomePage: React.FC = () => {
   const { install, canPrompt } = usePWAInstall();
+  const { language } = useApp();
+  
+  const t = {
+    welcome: language === 'fr' ? 'Bienvenue dans notre application' : 'Welcome to our app',
+    subtitle: language === 'fr' ? 'Besoin d\'aide immédiat ?' : 'Need immediate help?',
+    description: language === 'fr' ? 'Un expert local vous répond en moins de 5 minutes' : 'A local expert responds to you in less than 5 minutes',
+    urgentButton: language === 'fr' ? 'URGENCE 24/7' : '24/7 EMERGENCY',
+    seeExperts: language === 'fr' ? 'Voir les experts' : 'See experts',
+  };
+
   const canInstall = !!canPrompt;
 
   const stats: Stat[] = [
-    { value: '15K+', label: 'Expatriés aidés',    icon: <Users className="w-8 h-8" />, color: 'from-blue-500 to-cyan-500' },
-    { value: '2K+',  label: 'Experts vérifiés',    icon: <Shield className="w-8 h-8" />, color: 'from-green-500 to-emerald-500' },
-    { value: '50+',  label: 'Pays couverts',       icon: <Globe className="w-8 h-8" />,  color: 'from-purple-500 to-pink-500' },
-    { value: '24/7', label: 'Support urgent',      icon: <Clock className="w-8 h-8" />,  color: 'from-orange-500 to-red-500' }
+    { value: '15K+', label: 'statsExpatriatesHelped',    icon: <Users className="w-8 h-8" />, color: 'from-blue-500 to-cyan-500' },
+    { value: '2K+',  label: 'statsCountriesCovered',    icon: <Shield className="w-8 h-8" />, color: 'from-green-500 to-emerald-500' },
+    { value: '50+',  label: 'statsCountriesCovered',       icon: <Globe className="w-8 h-8" />,  color: 'from-purple-500 to-pink-500' },
+    { value: '24/7', label: 'statsUrgentSupport',      icon: <Clock className="w-8 h-8" />,  color: 'from-orange-500 to-red-500' }
   ];
 
   const features = [
@@ -498,37 +510,7 @@ const OptimizedHomePage: React.FC = () => {
     }
   }, [selectedCurrency]);
 
-  const handleTwilioCall = async () => {
-    try {
-    
-      const functions = getFunctions(undefined, "europe-west1");  
-
-      // note: this function is created to test the twilio instantly 
-      
-      const createCall = httpsCallable(functions, 'testTwilioCall');
-
-      // await createCall({
-      //   providerId: "jhfbGgZjh1OCXCLzqkgTOD41Hj43",
-      //   clientId: 'gcvR69yLFiabIoydBJDLyRV2QTr2',
-      //   providerPhone: '+917415440629',
-      //   clientPhone: '+919667549765',
-      //   serviceType: 'expat_call',   // or 'lawyer_call'
-      //   providerType: 'expat',       // or 'lawyer'
-      //   amount: 1,
-      //   paymentIntentId: "pi_3S8ccCRbcjaCEWrZ1IwEvz2x",
-      // });
-
-      const res = await createCall();
-    if (res.data.ok) {
-      alert("Test call started!");
-    } else {
-      alert("Error: " + res.data.error);
-    }
-
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  
 
   return (
     <Layout>
@@ -548,7 +530,9 @@ const OptimizedHomePage: React.FC = () => {
               <div className="inline-flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-full pl-6 pr-2 py-3 border border-white/20 mb-8 touch-manipulation">
                 <Sparkles className="w-5 h-5 text-yellow-400" />
                 <span className="text-white font-medium">
-                  Nouveau — téléchargez l’appli <strong>SOS Expat d’Ulixai</strong> !
+                  {/* Nouveau — téléchargez l’appli <strong>SOS Expat d’Ulixai</strong> ! */}
+                  <FormattedMessage id="appDownloadAnnouncement" />
+                  <strong>SOS Expat d'Ulixai</strong>
                 </span>
                 <PWAInstallIconWithHint canInstall={canInstall} onInstall={onInstallClick} />
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
@@ -556,28 +540,25 @@ const OptimizedHomePage: React.FC = () => {
 
               <h1 className="text-6xl md:text-8xl font-black mb-8 leading-tight">
                 <span className="bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
-                  SOS pour
+                  <FormattedMessage id="welcome" />
                 </span>
                 <br />
                 <span className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text text-transparent">
-                  Expatriés & Voyageurs
+                  {/* Expatriés & Voyageurs */}
+                  <FormattedMessage id="welcomeSubtitle" />
                 </span>
               </h1>
 
-              <div className='flex justify-center items-center my-2'> 
-              {/* btn to initiate call  */}
-              <div onClick={()=> handleTwilioCall()} className='p-2 bg-green-500 my-2 rounded-md cursor-pointer w-[250px]'>
-                Click here to start call
-              </div>
-              </div>
-
               {/* H2 - inchangé */}
               <h2 className="text-2xl md:text-3xl text-white font-semibold max-w-4xl mx-auto mb-3 leading-relaxed">
-                Besoin d’aide, d’une solution, d’un coup de main immédiat ?
+                <FormattedMessage id='heroSubtitle'/>
+                {/* Besoin d’aide, d’une solution, d’un coup de main immédiat ? */}
               </h2>
               {/* H3 - plus fun */}
               <h3 className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto mb-12 leading-relaxed">
-                Un expert local vous répond en moins de 5&nbsp;minutes, partout sur la planète... Et dans votre langue !
+                <FormattedMessage id="heroDescription" />
+
+                {/* Un expert local vous répond en moins de 5&nbsp;minutes, partout sur la planète... Et dans votre langue ! */}
               </h3>
 
               <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
@@ -586,7 +567,10 @@ const OptimizedHomePage: React.FC = () => {
                   className="group relative overflow-hidden bg-gradient-to-r from-red-600 via-red-500 to-orange-500 hover:from-red-700 hover:via-red-600 hover:to-orange-600 text-white px-12 py-6 rounded-3xl font-black text-xl transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:shadow-red-500/50 flex items-center space-x-4 border-2 border-red-400/50 touch-manipulation"
                 >
                   <Phone className="w-8 h-8 group-hover:animate-pulse" />
-                  <span>URGENCE 24/7</span>
+                  <span>
+                    {/* URGENCE 24/7 */}
+                    <FormattedMessage id="urgentButton" />
+                  </span>
                   <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300" />
                   <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/30 via-orange-500/30 to-red-600/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </a>
@@ -596,7 +580,11 @@ const OptimizedHomePage: React.FC = () => {
                   className="group flex items-center space-x-3 px-10 py-6 rounded-3xl bg-white/10 hover:bg-white/20 text-white border-2 border-white/30 hover:border-white/50 transition-all duration-300 hover:scale-105 backdrop-blur-sm font-bold text-lg touch-manipulation"
                 >
                   <Play className="w-6 h-6" />
-                  <span>Voir les experts</span>
+
+                  <span>
+                    {/* Voir les experts */}
+                    <FormattedMessage id="seeExperts" />
+                  </span>
                 </a>
               </div>
             </div>
@@ -612,7 +600,9 @@ const OptimizedHomePage: React.FC = () => {
                     <div className="text-white">{stat.icon}</div>
                   </div>
                   <div className="text-4xl font-black text-white mb-2">{stat.value}</div>
-                  <div className="text-gray-400 font-medium">{stat.label}</div>
+                  <div className="text-gray-400 font-medium">
+                    <FormattedMessage id={stat.label} />
+                  </div>
                 </div>
               ))}
             </div>
@@ -630,17 +620,22 @@ const OptimizedHomePage: React.FC = () => {
             <div className="text-center mb-14">
               <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-red-100 to-orange-100 backdrop-blur-sm rounded-full px-6 py-3 border border-red-200 mb-6">
                 <Shield className="w-5 h-5 text-red-600" />
-                <span className="text-red-700 font-bold">Avocats et Expatriés • Disponibles 24/7</span>
+                <span className="text-red-700 font-bold">
+                  Transparence totale • Pas de frais cachés
+                  {/* <FormattedMessage id="expertsBadge" /> */}
+                </span>
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
               </div>
 
               {/* H2 - inchangé */}
               <h2 className="text-5xl font-black text-gray-900 mb-4">
-                Nos <span className="bg-gradient-to-r from-red-600 to-orange-500 bg-clip-text text-transparent">experts</span> à votre service
+                <FormattedMessage id='no'/> 
+                <span className="bg-gradient-to-r from-red-600 to-orange-500 bg-clip-text text-transparent"> experts</span> <FormattedMessage id="expertsTitle"/>
               </h2>
               {/* intro plus fun */}
               <p className="text-lg text-gray-700 max-w-3xl mx-auto">
-                Moins de 5&nbsp;minutes, et ça sonne : un expert décroche, où que vous soyez, dans votre langue.
+                <FormattedMessage id="expertsDescription" />
+                {/* Moins de 5&nbsp;minutes, et ça sonne : un expert décroche, où que vous soyez, dans votre langue. */}
               </p>
             </div>
 
@@ -840,7 +835,10 @@ const OptimizedHomePage: React.FC = () => {
                   <div className="text-center mb-16">
                     <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-green-500/20 to-blue-500/20 backdrop-blur-sm rounded-full px-6 py-3 border border-green-500/30 mb-6">
                       <DollarSign className="w-5 h-5 text-green-400" />
-                      <span className="text-green-300 font-bold">Transparence totale • Pas de frais cachés</span>
+                      <span className="text-green-300 font-bold">
+                        Transparence totale • Pas de frais cachés
+                        {/* <FormattedMessage id="pricingBadge"/> */}
+                      </span>
                       <Check className="w-5 h-5 text-green-400" />
                     </div>
 
@@ -953,12 +951,17 @@ const OptimizedHomePage: React.FC = () => {
                   <div className="text-center mb-16">
                     <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-green-500/20 to-blue-500/20 backdrop-blur-sm rounded-full px-6 py-3 border border-green-500/30 mb-6">
                       <DollarSign className="w-5 h-5 text-green-400" />
-                      <span className="text-green-300 font-bold">Transparence totale • Pas de frais cachés</span>
+                      <span className="text-green-300 font-bold">
+                        {/* Transparence totale • Pas de frais cachés */}
+                        <FormattedMessage id="pricingBadge"/>
+
+                      </span>
                       <Check className="w-5 h-5 text-green-400" />
                     </div>
 
                     {/* H2 - inchangé */}
                     <h2 id="pricing-title" className="text-5xl font-black text-white mb-4">
+                      
                       Des <span className="bg-gradient-to-r from-green-500 to-blue-500 bg-clip-text text-transparent">tarifs</span> adaptés à vos besoins
                     </h2>
                     {/* intro plus fun */}
