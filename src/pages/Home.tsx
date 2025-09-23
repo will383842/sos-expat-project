@@ -1,6 +1,6 @@
 // src/pages/Home.tsx
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Form, Link } from 'react-router-dom';
 import {
   ArrowRight, Play, Shield, Globe, Users, Zap, DollarSign,
   Check, Star, Phone, Award, Clock, MapPin,
@@ -621,8 +621,8 @@ const OptimizedHomePage: React.FC = () => {
               <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-red-100 to-orange-100 backdrop-blur-sm rounded-full px-6 py-3 border border-red-200 mb-6">
                 <Shield className="w-5 h-5 text-red-600" />
                 <span className="text-red-700 font-bold">
-                  Transparence totale • Pas de frais cachés
-                  {/* <FormattedMessage id="expertsBadge" /> */}
+                  {/* Transparence totale • Pas de frais cachés */}
+                  <FormattedMessage id="expertsBadge" />
                 </span>
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
               </div>
@@ -895,6 +895,7 @@ const OptimizedHomePage: React.FC = () => {
                       {/* H3 - plus fun */}
                       <h3 id="examples-title" className="text-xl md:text-2xl font-extrabold text-white">
                         Situations concrètes
+                        {/* <FormattedMessage id="concreteExamples"/> */}
                       </h3>
                       <p className="text-gray-300 text-sm md:text-base">
                         Un expert pour chaque besoin, point.
@@ -1104,10 +1105,13 @@ const OptimizedHomePage: React.FC = () => {
                           </div>
                           {/* H3 - plus fun */}
                           <h3 id="examples-title" className="text-xl md:text-2xl font-extrabold text-white">
-                            Situations concrètes
+                            {/* Situations concrètes */}
+                        <FormattedMessage id="concreteExamples"/>
+
                           </h3>
                           <p className="text-gray-300 text-sm md:text-base">
-                            Un expert pour chaque besoin, point.
+                                {/* Un expert pour chaque besoin, point. */}
+                                <FormattedMessage id="concreteExamplesDescription"/>
                           </p>
                         </div>
 
@@ -1131,17 +1135,26 @@ const OptimizedHomePage: React.FC = () => {
                         <div className="inline-flex items-center space-x-6 bg-white/5 backdrop-blur-sm rounded-2xl px-8 py-4 border border-white/10">
                           <div className="flex items-center space-x-2 text-green-400">
                             <Shield className="w-5 h-5" />
-                            <span className="font-medium">Confidentialité & sécurité</span>
+                                <span className="font-medium">
+                                  {/* Confidentialité & sécurité */}
+                                <FormattedMessage id="confidentialityGuarantee"/>
+                                </span>
                           </div>
                           <div className="w-px h-6 bg-white/20" />
                           <div className="flex items-center space-x-2 text-blue-400">
                             <Globe className="w-5 h-5" />
-                            <span className="font-medium">Experts dans 150+ pays</span>
+                                <span className="font-medium">
+                                  {/* Experts dans 150+ pays */}
+                                  <FormattedMessage id='expertsIn150Countries'/>
+                                </span>
                           </div>
                           <div className="w-px h-6 bg-white/20" />
                           <div className="flex items-center space-x-2 text-purple-400">
                             <Zap className="w-5 h-5" />
-                            <span className="font-medium">Réservation instantanée — appel en 5 minutes</span>
+                                <span className="font-medium">
+                                  {/* Réservation instantanée — appel en 5 minutes */}
+                                  <FormattedMessage id="instantReservation"/>
+                                </span>
                           </div>
                         </div>
                       </div>
@@ -1401,7 +1414,11 @@ const OptimizedHomePage: React.FC = () => {
               <span className="inline-flex rounded-full p-[1px] bg-gradient-to-r from-yellow-400 to-orange-400 shadow-md mb-5 sm:mb-6">
                 <span className="inline-flex items-center gap-2 rounded-full bg-white px-5 sm:px-6 py-2.5 sm:py-3 border border-yellow-200/70 text-yellow-700">
                   <Star className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span className="font-semibold">4,9/5 • +2 500 avis</span>
+                  <span className="font-semibold">
+                    {/* 4,9/5 • +2 500 avis */}
+                    <FormattedMessage id="reviewsRating"/>
+
+                  </span>
                   <Award className="w-4 h-4 sm:w-5 sm:h-5" />
                 </span>
               </span>
@@ -1412,7 +1429,8 @@ const OptimizedHomePage: React.FC = () => {
               </h2>
               {/* intro plus fun */}
               <p className="mt-3 sm:mt-4 text-base sm:text-xl text-gray-600 max-w-3xl mx-auto">
-                Témoignages réels, situations variées — pour que chacun·e s’identifie.
+                <FormattedMessage id="reviewsDescription"/>
+                {/* Témoignages réels, situations variées — pour que chacun·e s’identifie. */}
               </p>
             </div>
 
@@ -1426,7 +1444,8 @@ const OptimizedHomePage: React.FC = () => {
           <div className="relative z-10 max-w-5xl mx-auto text-center px-6">
             {/* H2 - inchangé */}
             <h2 className="text-5xl md:text-6xl font-black text-white mb-6 md:mb-8">
-              Prêt à être aidé ?
+              {/* Prêt à être aidé ? */}
+              <FormattedMessage id="readyToBeHelped"/>
             </h2>
             {/* intro plus fun */}
             <p className="text-xl md:text-2xl text-white/95 mb-10 md:mb-12 leading-relaxed">
@@ -1436,13 +1455,19 @@ const OptimizedHomePage: React.FC = () => {
             {/* Réassurance */}
             <div className="mb-10 flex flex-wrap items-center justify-center gap-3 text-white/90">
               <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 border border-white/20 backdrop-blur-sm">
-                <Shield className="w-4 h-4" /> Sécurisé
+                <Shield className="w-4 h-4" />
+                <FormattedMessage id='securedLabel'/>
+                {/* Sécurisé */}
               </span>
               <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 border border-white/20 backdrop-blur-sm">
-                <Clock className="w-4 h-4" /> <span>Moins de 5&nbsp;minutes</span>
+                <Clock className="w-4 h-4" /> 
+                {/* <span>Moins de 5&nbsp;minutes</span> */}
+                <FormattedMessage id='lessThan5Minutes' />
               </span>
               <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 border border-white/20 backdrop-blur-sm">
-                <Globe className="w-4 h-4" /> Mondial
+                <Globe className="w-4 h-4" /> 
+                {/* Mondial */}
+                <FormattedMessage id='worldwideLabel' />
               </span>
             </div>
 
@@ -1451,7 +1476,10 @@ const OptimizedHomePage: React.FC = () => {
                 href="/register"
                 className="group relative overflow-hidden bg-white text-red-600 hover:text-red-700 px-12 py-6 rounded-3xl font-black text-xl transition-all duration-300 hover:scale-110 hover:shadow-2xl flex items-center gap-4 touch-manipulation"
               >
-                <span>Commencer gratuitement</span>
+                <span>
+                  {/* Commencer gratuitement */}
+                  <FormattedMessage id="startFree"/>
+                </span>
                 <ArrowRight className="w-6 h-6 group-hover:translate-x-1.5 transition-transform duration-300" />
                 <span className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-black/5" />
               </a>
@@ -1461,7 +1489,10 @@ const OptimizedHomePage: React.FC = () => {
                 className="group relative overflow-hidden border-2 border-white bg-transparent text-white px-12 py-6 rounded-3xl font-bold text-xl transition-all duration-300 hover:scale-105 hover:bg-white/10 flex items-center gap-4 touch-manipulation"
               >
                 <Phone className="w-6 h-6" />
-                <span>Urgence maintenant</span>
+                {/* <span>Urgence maintenant</span> */}
+                <span>
+                  <FormattedMessage id="urgentNow"/>
+                </span>
                 <span className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-white/30" />
               </a>
             </div>
