@@ -88,6 +88,9 @@ exports.DEFAULT_PRICING_CONFIG = {
    Limites de validation par devise
    ──────────────────────────────────────────────────────────────────────────── */
 exports.PAYMENT_LIMITS = {
+    // enable this to remove the limits 
+    // eur: { MIN_AMOUNT: 5, MAX_AMOUNT: 50000, MAX_DAILY: 200000, TOLERANCE: 10 },
+    // usd: { MIN_AMOUNT: 6, MAX_AMOUNT: 60000, MAX_DAILY: 240000, TOLERANCE: 12 },
     eur: { MIN_AMOUNT: 5, MAX_AMOUNT: 500, MAX_DAILY: 2000, TOLERANCE: 10 },
     usd: { MIN_AMOUNT: 6, MAX_AMOUNT: 600, MAX_DAILY: 2400, TOLERANCE: 12 },
     SPLIT_TOLERANCE_CENTS: 1,

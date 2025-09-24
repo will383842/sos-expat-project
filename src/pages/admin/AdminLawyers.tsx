@@ -745,6 +745,7 @@ const AdminLawyers: React.FC = () => {
       });
     } catch (e) {
       console.error("[AdminLawyers] load error", e);
+      
       setErrorMsg((e as Error)?.message || "Failed to load");
     } finally {
       setLoading(false);

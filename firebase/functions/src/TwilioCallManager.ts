@@ -506,6 +506,7 @@ const langKey = pickSessionLanguage(
       ttsLocale,
       langKey
     );
+    console.log("client connected :", clientConnected);
 
     if (!clientConnected) {
       await this.handleCallFailure(sessionId, 'client_no_answer');
@@ -525,6 +526,7 @@ const langKey = pickSessionLanguage(
       langKey,
       15_000
     );
+    console.log("provider connected : ", providerConnected);
 
     if (!providerConnected) {
       await this.handleCallFailure(sessionId, 'provider_no_answer');
@@ -600,13 +602,14 @@ const langKey = pickSessionLanguage(
         const fromNumber = getTwilioPhoneNumber();
         const base = getFunctionsBaseUrl();
 
+      
         const call = await twilioClient.calls.create({
           to: phoneNumber,
           from: fromNumber,
           twiml,
           statusCallback: `${base}/twilioCallWebhook`,
           statusCallbackMethod: 'POST',
-          statusCallbackEvent: ['ringing', 'answered', 'completed', 'failed', 'busy', 'no-answer'],
+          statusCallbackEvent: ['ringing', 'answered', 'completed', 'failed', 'busy', 'no-answer', 'initiated'],
           timeout: CALL_CONFIG.CALL_TIMEOUT,
           record: true,
           recordingStatusCallback: `${base}/twilioRecordingWebhook`,
@@ -614,6 +617,7 @@ const langKey = pickSessionLanguage(
           machineDetection: 'Enable',
           machineDetectionTimeout: 10
         });
+        console.log("call : ", call);
 
         console.log(`📞 Appel créé: ${call.sid} (${participantType})`);
         await this.updateParticipantCallSid(sessionId, participantType, call.sid);
@@ -726,11 +730,11 @@ const langKey = pickSessionLanguage(
       sessionId="${sessionId}"
       waitUrl="${waitUrl}"
       maxParticipants="2"
-      endConferenceOnExit="${participantType === 'provider'}"
       beep="false"
       startConferenceOnEnter="${participantType === 'provider'}"
       trim="trim-silence"
       recordingChannels="dual"
+      endConferenceOnExit="true"
     >${conferenceName}</Conference>
   </Dial>
 </Response>
@@ -1155,6 +1159,7 @@ const langKey = pickSessionLanguage(
     timestamp?: admin.firestore.Timestamp
   ): Promise<void> {
     try {
+      console.log(`[TwilioCallManager] updateParticipantStatus(${sessionId}, ${participantType}, ${status})`);
       const updateData: Record<string, unknown> = {
         [`participants.${participantType}.status`]: status,
         'metadata.updatedAt': admin.firestore.Timestamp.now()

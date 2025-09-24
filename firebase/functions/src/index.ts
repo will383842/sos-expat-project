@@ -353,6 +353,7 @@ export { createAndScheduleCallHTTPS as createAndScheduleCall };
 export { createPaymentIntent } from './createPaymentIntent'; 
 export { api } from './adminApi';
 export { testTwilioCall } from './testTwilioCall';
+export {twilioCallWebhook } from './Webhooks/twilioWebhooks';
 export { enqueueMessageEvent } from './messaging/enqueueMessageEvent';
 
 
@@ -968,6 +969,8 @@ export const stripeWebhook = onRequest(
 
             if (callSessionId) {
               console.log('📞 Updating database...');
+
+              // todo: this is to update the status as scheduled in the call_sessions collection
               // await database
               //   .collection('call_sessions')
               //   .doc(callSessionId)
@@ -1215,17 +1218,17 @@ const handlePaymentIntentSucceeded = traceFunction(async (paymentIntent: Stripe.
     if (callSessionId) {
       try {
         console.log('📞 Updating call session:', callSessionId);
-        
-        // // Update call session
-      await database
-  .collection('call_sessions')
-  .doc(callSessionId)
-  .update({
-    status: 'scheduled',  
-    scheduledAt: admin.firestore.FieldValue.serverTimestamp(),
-    updatedAt: admin.firestore.FieldValue.serverTimestamp()
 
-  });
+        // todo: this is to update the status as scheduled in the call_sessions collection        
+        //  Update call session
+        //  await database
+        // .collection('call_sessions')
+        // .doc(callSessionId)
+        // .update({
+        //   status: 'scheduled',  
+        //   scheduledAt: admin.firestore.FieldValue.serverTimestamp(),
+        //   updatedAt: admin.firestore.FieldValue.serverTimestamp()
+        // });
 
         console.log('✅ Call session updated, scheduling task...');
         

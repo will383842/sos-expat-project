@@ -52,7 +52,9 @@ exports.twilioCallWebhook = (0, https_1.onRequest)({
     concurrency: 1
 }, async (req, res) => {
     try {
+        console.log("[twilioCallWebhook] === Twilio Webhook Execution Started ===");
         const body = req.body;
+        console.log('[twilioCallWebhook] Body : ', body);
         console.log('🔔 Call Webhook reçu:', {
             event: body.CallStatus,
             callSid: body.CallSid,
@@ -67,6 +69,7 @@ exports.twilioCallWebhook = (0, https_1.onRequest)({
             res.status(200).send('Session not found');
             return;
         }
+        console.log('[twilioCallWebhook] Session Result : ', sessionResult);
         const { session, participantType } = sessionResult;
         const sessionId = session.id;
         // Traiter les différents statuts d'appel

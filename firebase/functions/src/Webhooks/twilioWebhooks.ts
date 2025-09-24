@@ -36,7 +36,9 @@ export const twilioCallWebhook = onRequest(
   },
   async (req: Request, res: Response) => {
     try {
+      console.log("[twilioCallWebhook] === Twilio Webhook Execution Started ===");
       const body: TwilioCallWebhookBody = req.body;
+      console.log('[twilioCallWebhook] Body : ', body);
       
       console.log('🔔 Call Webhook reçu:', {
         event: body.CallStatus,
@@ -54,6 +56,7 @@ export const twilioCallWebhook = onRequest(
         res.status(200).send('Session not found');
         return;
       }
+      console.log('[twilioCallWebhook] Session Result : ', sessionResult);
 
       const { session, participantType } = sessionResult;
       const sessionId = session.id;

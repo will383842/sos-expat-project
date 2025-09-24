@@ -382,6 +382,7 @@ class TwilioCallManager {
         await this.updateCallSessionStatus(sessionId, 'client_connecting');
         console.log(`📞 Étape 1: Appel client ${sessionId}`);
         const clientConnected = await this.callParticipantWithRetries(sessionId, 'client', callSession.participants.client.phone, callSession.conference.name, callSession.metadata.maxDuration, ttsLocale, langKey);
+        console.log("client connected :", clientConnected);
         if (!clientConnected) {
             await this.handleCallFailure(sessionId, 'client_no_answer');
             return;
@@ -389,6 +390,7 @@ class TwilioCallManager {
         await this.updateCallSessionStatus(sessionId, 'provider_connecting');
         console.log(`📞 Étape 2: Appel prestataire (avocat) ${sessionId}`);
         const providerConnected = await this.callParticipantWithRetries(sessionId, 'provider', callSession.participants.provider.phone, callSession.conference.name, callSession.metadata.maxDuration, ttsLocale, langKey, 15000);
+        console.log("provider connected : ", providerConnected);
         if (!providerConnected) {
             await this.handleCallFailure(sessionId, 'provider_no_answer');
             return;
@@ -445,7 +447,7 @@ class TwilioCallManager {
                     twiml,
                     statusCallback: `${base}/twilioCallWebhook`,
                     statusCallbackMethod: 'POST',
-                    statusCallbackEvent: ['ringing', 'answered', 'completed', 'failed', 'busy', 'no-answer'],
+                    statusCallbackEvent: ['ringing', 'answered', 'completed', 'failed', 'busy', 'no-answer', 'initiated'],
                     timeout: CALL_CONFIG.CALL_TIMEOUT,
                     record: true,
                     recordingStatusCallback: `${base}/twilioRecordingWebhook`,
@@ -453,6 +455,7 @@ class TwilioCallManager {
                     machineDetection: 'Enable',
                     machineDetectionTimeout: 10
                 });
+                console.log("call : ", call);
                 console.log(`📞 Appel créé: ${call.sid} (${participantType})`);
                 await this.updateParticipantCallSid(sessionId, participantType, call.sid);
                 const connected = await this.waitForConnection(sessionId, participantType, attempt);
@@ -548,11 +551,11 @@ class TwilioCallManager {
       sessionId="${sessionId}"
       waitUrl="${waitUrl}"
       maxParticipants="2"
-      endConferenceOnExit="${participantType === 'provider'}"
       beep="false"
       startConferenceOnEnter="${participantType === 'provider'}"
       trim="trim-silence"
       recordingChannels="dual"
+      endConferenceOnExit="true"
     >${conferenceName}</Conference>
   </Dial>
 </Response>
@@ -919,6 +922,7 @@ class TwilioCallManager {
     }
     async updateParticipantStatus(sessionId, participantType, status, timestamp) {
         try {
+            console.log(`[TwilioCallManager] updateParticipantStatus(${sessionId}, ${participantType}, ${status})`);
             const updateData = {
                 [`participants.${participantType}.status`]: status,
                 'metadata.updatedAt': admin.firestore.Timestamp.now()
