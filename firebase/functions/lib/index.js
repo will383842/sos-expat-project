@@ -786,6 +786,7 @@ exports.stripeWebhook = (0, https_1.onRequest)({
                     console.log('📞 Call session ID:', callSessionId);
                     if (callSessionId) {
                         console.log('📞 Updating database...');
+                        // todo: this is to update the status as scheduled in the call_sessions collection
                         // await database
                         //   .collection('call_sessions')
                         //   .doc(callSessionId)
@@ -999,8 +1000,9 @@ const handlePaymentIntentSucceeded = (0, ultraDebugLogger_1.traceFunction)(async
         if (callSessionId) {
             try {
                 console.log('📞 Updating call session:', callSessionId);
-                // // Update call session
-                //     await database
+                // todo: this is to update the status as scheduled in the call_sessions collection        
+                //  Update call session
+                //  await database
                 // .collection('call_sessions')
                 // .doc(callSessionId)
                 // .update({

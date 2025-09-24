@@ -12,7 +12,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "analyze": "vite build --mode analyze",
-    "gen-env": "node scripts/generate-env-files.cjs"
+    "gen-env": "node scripts/generate-env-files.cjs",
+      "build:force": "vite build"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

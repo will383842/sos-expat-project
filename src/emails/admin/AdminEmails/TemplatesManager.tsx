@@ -1,12 +1,18 @@
 // TemplatesManager.tsx
 import React from 'react';
-import {
-  bookingConfirmation,
-  contactReply,
-  newsletter,
-  promoCode,
-  reminderOnline,
-} from '../../templates';
+// import {
+//   bookingConfirmation,
+//   contactReply,
+//   newsletter,
+//   promoCode,
+//   reminderOnline,
+// } from '../../templates';
+
+import { bookingConfirmation } from '@/emails/templates/bookingConfirmation';
+import { contactReply } from '@/emails/templates/contactReply';
+import { newsletter } from '@/emails/templates/newsletter';
+import { promoCode } from '@/emails/templates/promoCode';
+import { reminderOnline } from '@/emails/templates/reminderOnline';
 
 const templates = [
   {
@@ -73,7 +79,7 @@ const TemplatesManager: React.FC = () => {
             <h3 className="text-lg font-bold mb-2">{tpl.name}</h3>
             <div
               className="prose max-w-none"
-              dangerouslySetInnerHTML={{ __html: tpl.render(tpl.exampleData) }}
+              dangerouslySetInnerHTML={{ __html: tpl.render(tpl.exampleData as any) }}
             />
           </div>
         ))}
