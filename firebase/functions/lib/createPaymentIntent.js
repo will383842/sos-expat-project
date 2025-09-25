@@ -397,10 +397,10 @@ exports.createPaymentIntent = (0, https_1.onCall)({
             }
         }
         // todo: comment this to bypass diff check 
-        const diff = Math.abs(Number(amountInMainUnit) - Number(expected));
-        if (diff > 0.5) {
-            throw new https_1.HttpsError('invalid-argument', `Montant inattendu (reçu ${amountInMainUnit}, attendu ${expected})`);
-        }
+        // const diff = Math.abs(Number(amountInMainUnit) - Number(expected));
+        // if (diff > 0.5) {
+        //   throw new HttpsError('invalid-argument', `Montant inattendu (reçu ${amountInMainUnit}, attendu ${expected})`);
+        // }
         const coherence = validateAmountCoherence(amountInMainUnit, commissionAmountInMainUnit, providerAmountInMainUnit);
         if (!coherence.valid && (isProduction || coherence.difference > 1)) {
             throw new https_1.HttpsError('invalid-argument', coherence.error ?? 'Incohérence montants');

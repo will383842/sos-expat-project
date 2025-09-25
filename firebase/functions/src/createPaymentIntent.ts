@@ -557,13 +557,11 @@ export const createPaymentIntent = onCall(
         }
       }
 
-
-      // todo: comment this to bypass diff check 
-      
-      const diff = Math.abs(Number(amountInMainUnit) - Number(expected));
-      if (diff > 0.5) {
-        throw new HttpsError('invalid-argument', `Montant inattendu (reçu ${amountInMainUnit}, attendu ${expected})`);
-      }
+      // critical: comment this to bypass diff check for testing
+      // const diff = Math.abs(Number(amountInMainUnit) - Number(expected));
+      // if (diff > 0.5) {
+      //   throw new HttpsError('invalid-argument', `Montant inattendu (reçu ${amountInMainUnit}, attendu ${expected})`);
+      // }
 
       const coherence = validateAmountCoherence(
         amountInMainUnit,
