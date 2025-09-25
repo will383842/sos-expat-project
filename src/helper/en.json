@@ -60,5 +60,15 @@
   "urgentNow": "Urgent now",
   "appTipDownload": "Tip: download the {strong}SOS Expat by Ulixai{/strong} app to go online/offline when you want.",
   "installApp": "Install application",
-  "appInstallHint": "The app that feels good!"
+  "appInstallHint": "The app that feels good!",
+  "sosCall":"SOS — emergency call in < 5 minutes",
+  "sosTagline":"Find an",
+  "expert":"expert",
+  "now":"now",
+  "verifiedLawyersExpats": "Verified Lawyers & Expats • Available 24/7 • <strong>150+ countries</strong>",
+   "availableLawyers": "Available Lawyers",
+  "availableExpats": "Available Expats",
+  "availableExperts": "Experts available",
+   "needImmediateHelp": "Need immediate help?",
+    "verifiedExpertsAvailable": "Over 200 verified experts available in <strong>150+ countries</strong> to assist you."
 }

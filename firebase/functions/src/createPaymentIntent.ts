@@ -469,7 +469,7 @@ export const createPaymentIntent = onCall(
         providerId,
         clientId,
         clientEmail,
-        providerName,
+      providerName,
         description,
         callSessionId,
         metadata,

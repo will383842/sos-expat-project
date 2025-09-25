@@ -60,6 +60,7 @@ exports.enqueueMessageEvent = (0, https_1.onCall)({ region: "europe-west1" }, as
             createdAt: admin.firestore.FieldValue.serverTimestamp()
         };
         await db.collection("message_events").add(doc);
+        console.log("enqueueMessageEvent done - Event added to queue");
         return { ok: true };
         console.log("enqueueMessageEvent done");
     }

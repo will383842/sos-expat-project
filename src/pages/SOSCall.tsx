@@ -6,6 +6,7 @@ import { db } from '../config/firebase';
 import Layout from '../components/layout/Layout';
 import SEOHead from '../components/layout/SEOHead';
 import { useApp } from '../contexts/AppContext';
+import { FormattedMessage } from 'react-intl';
 
 /* =========================
    Types
@@ -916,16 +917,33 @@ const SOSCall: React.FC = () => {
           <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
             <div className="inline-flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-full pl-6 pr-3 py-2.5 border border-white/20 mb-7">
               <Phone className="w-5 h-5 text-red-300" />
-              <span className="text-white font-semibold">SOS — appel d'urgence en &lt; 5 minutes</span>
+              {/* <span className="text-white font-semibold">SOS — appel d'urgence en &lt; 5 minutes</span> */}
+              <span className="text-white font-semibold">
+                <FormattedMessage id="sosCall" />
+              </span>
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
             </div>
 
             <h1 className="text-5xl md:text-7xl font-black text-white leading-tight mb-4">
-              Trouvez un <span className="bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500 bg-clip-text text-transparent">expert</span> maintenant
+              {/* Trouvez un */}
+              <FormattedMessage id='sosTagline' />
+              <span className="bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500 bg-clip-text text-transparent">
+                {/* expert */} <FormattedMessage id='expert' /> </span>
+              {/* maintenant */}
+               <FormattedMessage id='now' />
             </h1>
-            <p className="text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto">
+            {/* <p className="text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto">
               Avocats & Expatriés vérifiés • Disponibles 24/7 • <strong>150+ pays</strong>
-            </p>
+            </p> */}
+            <p className="text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto">
+        <FormattedMessage
+          id="verifiedLawyersExpats"
+          defaultMessage="Verified Lawyers & Expats • Available 24/7 • <strong>150+ countries</strong>"
+          values={{
+            strong: (chunks) => <strong>{chunks}</strong>
+          }}
+        />
+      </p>
           </div>
         </section>
 
@@ -934,9 +952,21 @@ const SOSCall: React.FC = () => {
           <div className="max-w-7xl mx-auto px-6">
             {/* Titre + Filtres */}
             <div className="text-center mb-8 sm:mb-6">
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-4">
+              {/* <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-4">
                 {selectedType === 'lawyer' ? 'Avocats disponibles' : selectedType === 'expat' ? 'Expatriés disponibles' : 'Experts disponibles'}
-              </h2>
+              </h2> */}
+
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-4">
+  {selectedType === 'lawyer' && (
+    <FormattedMessage id="availableLawyers" defaultMessage="Available Lawyers" />
+  )}
+  {selectedType === 'expat' && (
+    <FormattedMessage id="availableExpats" defaultMessage="Available Expats" />
+  )}
+  {selectedType !== 'lawyer' && selectedType !== 'expat' && (
+    <FormattedMessage id="availableExperts" defaultMessage="Experts available" />
+  )}
+</h2>
 
               {/* FILTRES */}
               <div className="rounded-[28px] border border-white/10 bg-white/5 backdrop-blur-md p-4 sm:p-6 max-w-6xl mx-auto">
@@ -1246,10 +1276,18 @@ const SOSCall: React.FC = () => {
             <section className="text-center mt-12 sm:mt-16">
               <div className="rounded-[28px] border border-white/10 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-md p-8 sm:p-12">
                 <h3 className="text-2xl sm:text-3xl font-black text-white mb-3">
-                  Besoin d'aide immédiate ?
+                  {/* Besoin d'aide immédiate ? */}
+                  <FormattedMessage id="needImmediateHelp"/>
                 </h3>
                 <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
-                  Plus de 200 experts vérifiés disponibles dans <strong>150+ pays</strong> pour vous accompagner.
+                  <FormattedMessage
+  id="verifiedExpertsAvailable"
+  defaultMessage="Over 200 verified experts available in <strong>150+ countries</strong> to assist you."
+  values={{
+    strong: (chunks) => <strong>{chunks}</strong>
+  }}
+/>
+                  {/* Plus de 200 experts vérifiés disponibles dans <strong>150+ pays</strong> pour vous accompagner. */}
                 </p>
                 <button
                   onClick={() => navigate('/sos-appel')}

@@ -13,7 +13,7 @@ export const enqueueMessageEvent = onCall({ region: "europe-west1" }, async (req
 
   if (!eventId || typeof eventId !== "string") {
     throw new HttpsError("invalid-argument", "eventId manquant ou invalide");
-  }
+    }
 
   const doc = {
     eventId,
@@ -27,7 +27,8 @@ export const enqueueMessageEvent = onCall({ region: "europe-west1" }, async (req
     requestedBy: authUid,
     createdAt: admin.firestore.FieldValue.serverTimestamp()};
 
-  await db.collection("message_events").add(doc);
+    await db.collection("message_events").add(doc);
+    console.log("enqueueMessageEvent done - Event added to queue");
     return { ok: true };
     console.log("enqueueMessageEvent done");
   } catch (error) {

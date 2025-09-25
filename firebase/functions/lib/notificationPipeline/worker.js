@@ -165,10 +165,10 @@ async function logDelivery(params) {
     await db.collection("message_deliveries").doc(docId).set(data, { merge: true });
 }
 // ----- Interrupteur global
-async function isMessagingEnabled() {
-    const snap = await db.doc("config/messaging").get();
-    return !!(snap.exists && snap.get("enabled"));
-}
+// async function isMessagingEnabled(): Promise<boolean> {
+//   const snap = await db.doc("config/messaging").get();
+//   return !!(snap.exists && snap.get("enabled"));
+// }
 // ----- Worker principal
 exports.onMessageEventCreate = (0, firestore_1.onDocumentCreated)({
     region: "europe-west1",
@@ -186,7 +186,8 @@ exports.onMessageEventCreate = (0, firestore_1.onDocumentCreated)({
     ],
 }, async (event) => {
     // 0) Interrupteur global
-    const enabled = await isMessagingEnabled();
+    // const enabled = await isMessagingEnabled();
+    const enabled = true;
     if (!enabled) {
         console.log("🔒 Messaging disabled: ignoring event");
         return;

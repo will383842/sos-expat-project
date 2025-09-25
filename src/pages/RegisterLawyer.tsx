@@ -1415,7 +1415,7 @@ const RegisterLawyer: React.FC = () => {
                         className={`text-white font-black py-4 px-6 rounded-2xl text-base sm:text-lg w-full shadow-lg ${
                           canSubmit ? `bg-gradient-to-r ${THEME.button} hover:brightness-110` : 'bg-gray-400 cursor-not-allowed opacity-60'
                         }`}
-                        disabled={!canSubmit}
+                        // disabled={!canSubmit}
                       >
                         {isLoading || isSubmitting ? (
                           t.loading

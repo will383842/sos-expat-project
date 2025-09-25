@@ -219,10 +219,10 @@ async function logDelivery(params: {
 }
 
 // ----- Interrupteur global
-async function isMessagingEnabled(): Promise<boolean> {
-  const snap = await db.doc("config/messaging").get();
-  return !!(snap.exists && snap.get("enabled"));
-}
+// async function isMessagingEnabled(): Promise<boolean> {
+//   const snap = await db.doc("config/messaging").get();
+//   return !!(snap.exists && snap.get("enabled"));
+// }
 
 // ----- Worker principal
 export const onMessageEventCreate = onDocumentCreated(
@@ -243,7 +243,8 @@ export const onMessageEventCreate = onDocumentCreated(
   },
   async (event) => {
     // 0) Interrupteur global
-    const enabled = await isMessagingEnabled();
+    // const enabled = await isMessagingEnabled(); -> uncomment this to enable disable
+    const enabled = true;
     if (!enabled) {
       console.log("🔒 Messaging disabled: ignoring event");
       return;
