@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { Star } from 'lucide-react';
-import Button from '../common/Button';
-import { useAuth } from '../../contexts/AuthContext';
-import { createReviewRecord } from '../../utils/firestore';
+import React, { useState } from "react";
+import { Star } from "lucide-react";
+import Button from "../common/Button";
+import { useAuth } from "../../contexts/AuthContext";
+import { createReviewRecord } from "../../utils/firestore";
 
 interface ReviewFormProps {
   providerId: string;
   providerName?: string; // optionnel, utilisé dans le titre si fourni
   callId: string;
-  serviceType: 'lawyer_call' | 'expat_call';
+  serviceType: "lawyer_call" | "expat_call";
   onSuccess?: () => void;
   onCancel?: () => void;
 }
@@ -23,11 +23,11 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
 }) => {
   const { user } = useAuth();
   const [rating, setRating] = useState<number>(5);
-  const [comment, setComment] = useState<string>('');
+  const [comment, setComment] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const isLawyer = serviceType === 'lawyer_call';
+  const isLawyer = serviceType === "lawyer_call";
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,29 +36,29 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
     setError(null);
 
     if (!comment.trim()) {
-      setError('Veuillez entrer un commentaire');
+      setError("Veuillez entrer un commentaire");
       setIsSubmitting(false);
       return;
     }
 
     if (!user) {
-      setError('Vous devez être connecté pour laisser un avis');
+      setError("Vous devez être connecté pour laisser un avis");
       setIsSubmitting(false);
       return;
     }
 
     if (rating < 1) {
-      setError('Veuillez sélectionner une note');
+      setError("Veuillez sélectionner une note");
       setIsSubmitting(false);
       return;
     }
-
+    console.log("trying to write the review! ");
     try {
       // ✅ NE PAS forcer status ni isPublic : la logique est dans createReviewRecord
       await createReviewRecord({
         clientId: user.id,
-        clientName: `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim(),
-        clientCountry: user.currentCountry || '',
+        clientName: `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim(),
+        clientCountry: user.currentCountry || "",
         providerId,
         callId,
         rating,
@@ -67,18 +67,20 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
         helpfulVotes: 0,
         reportedCount: 0,
       });
+      console.log("review written! ");
 
       // Scroll vers la section des avis
-      const reviewsSection = document.getElementById('reviews-section');
+      const reviewsSection = document.getElementById("reviews-section");
       if (reviewsSection) {
-        reviewsSection.scrollIntoView({ behavior: 'smooth' });
+        reviewsSection.scrollIntoView({ behavior: "smooth" });
       }
 
       onSuccess?.();
     } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : "Erreur inconnue";
-      setError(`Une erreur est survenue lors de l'envoi de votre avis: ${message}. Veuillez réessayer.`);
+      const message = err instanceof Error ? err.message : "Erreur inconnue";
+      setError(
+        `Une erreur est survenue lors de l'envoi de votre avis: ${message}. Veuillez réessayer.`
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -88,7 +90,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
     <div className="bg-white rounded-lg p-6">
       <h3 className="text-xl font-semibold text-gray-900 mb-4">
         Évaluer {isLawyer ? "l'Avocat" : "l'Expatrié"}
-        {providerName ? ` — ${providerName}` : ''}
+        {providerName ? ` — ${providerName}` : ""}
       </h3>
 
       {error && (
@@ -109,11 +111,15 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
                 type="button"
                 onClick={() => setRating(star)}
                 className="focus:outline-none"
-                aria-label={`Donner ${star} étoile${star > 1 ? 's' : ''}`}
+                aria-label={`Donner ${star} étoile${star > 1 ? "s" : ""}`}
               >
                 <Star
                   size={32}
-                  className={star <= rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}
+                  className={
+                    star <= rating
+                      ? "text-yellow-400 fill-current"
+                      : "text-gray-300"
+                  }
                 />
               </button>
             ))}
@@ -121,26 +127,27 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
         </div>
 
         <div>
-          <label htmlFor="comment" className="block text-sm font-medium text-gray-700 mb-2">
+          <label
+            htmlFor="comment"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
             Votre commentaire
           </label>
           <textarea
             id="comment"
             value={comment}
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setComment(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+              setComment(e.target.value)
+            }
             rows={4}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 text-black"
             placeholder="Partagez votre expérience avec ce prestataire..."
           />
         </div>
 
         <div className="flex justify-end space-x-3">
           {onCancel && (
-            <Button
-              type="button"
-              onClick={onCancel}
-              variant="outline"
-            >
+            <Button type="button" onClick={onCancel} variant="outline">
               Annuler
             </Button>
           )}

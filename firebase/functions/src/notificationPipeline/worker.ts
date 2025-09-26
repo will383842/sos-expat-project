@@ -26,7 +26,8 @@ import { writeInApp } from "./providers/inapp/firestore";
 
 // ➕ NORMALISATION D'EVENTID
 function normalizeEventId(id: string) {
-  if (id === "whatsapp_provider_booking_request") return "request.created.provider";
+  if (id === "whatsapp_provider_booking_request")
+    return "request.created.provider";
   return id.replace(/^whatsapp_/, "").replace(/^sms_/, "");
 }
 
@@ -75,10 +76,17 @@ type MessageEvent = {
 function hasContact(channel: Channel, ctx: Context): boolean {
   if (channel === "email") return !!(ctx?.user?.email || ctx?.to?.email);
   if (channel === "sms") return !!(ctx?.user?.phoneNumber || ctx?.to?.phone);
-  // if (channel === "whatsapp") return !!(ctx?.user?.waNumber || ctx?.user?.phoneNumber || ctx?.to?.whatsapp || ctx?.to?.phone); // ❌ retiré
+  if (channel === "whatsapp")
+    return !!(
+      ctx?.user?.waNumber ||
+      ctx?.user?.phoneNumber ||
+      ctx?.to?.whatsapp ||
+      ctx?.to?.phone
+    ); // ❌ retiré
   if (channel === "push")
     return (
-      (Array.isArray(ctx?.user?.fcmTokens) && (ctx.user?.fcmTokens?.length ?? 0) > 0) ||
+      (Array.isArray(ctx?.user?.fcmTokens) &&
+        (ctx.user?.fcmTokens?.length ?? 0) > 0) ||
       !!ctx?.to?.fcmToken
     );
   if (channel === "inapp") return !!ctx?.user?.uid;
@@ -145,7 +153,16 @@ async function sendOne(
   }
 
   // ❌ Branche WhatsApp complètement retirée
-  // if (channel === "whatsapp") { ... }
+  if (channel === "whatsapp") {
+    const to = ctx?.user?.waNumber || ctx?.user?.phoneNumber || evt.to?.phone;
+    if (!to || !tmpl.whatsapp?.enabled)
+      console.log("🚨 WhatsApp is disabled, skipping");
+    throw new Error("Missing WhatsApp destination or disabled template");
+
+    // const body = render(tmpl.whatsapp.text || "", { ...ctx, ...evt.vars });
+    // const sid = await sendWa(to, body);
+    // return { sid };
+  }
 
   if (channel === "push") {
     const token = ctx?.user?.fcmTokens?.[0] || evt.to?.fcmToken;
@@ -177,7 +194,11 @@ async function sendOne(
 }
 
 // ----- Journalisation des livraisons
-function deliveryDocId(evt: MessageEvent, channel: Channel, to: string | null): string {
+function deliveryDocId(
+  evt: MessageEvent,
+  channel: Channel,
+  to: string | null
+): string {
   const key = evt.dedupeKey || evt.eventId || "noevent";
   const dest = (to || "none").replace(/[^\w@+]/g, "_").slice(0, 80);
   return `${key}_${channel}_${dest}`;
@@ -194,7 +215,8 @@ async function logDelivery(params: {
   to?: string;
   uid?: string;
 }) {
-  const { eventId, channel, status, provider, messageId, sid, error, to, uid } = params;
+  const { eventId, channel, status, provider, messageId, sid, error, to, uid } =
+    params;
   const docId = deliveryDocId({ eventId } as MessageEvent, channel, to || null);
 
   const data: Record<string, unknown> = {
@@ -215,7 +237,10 @@ async function logDelivery(params: {
     data.failedAt = admin.firestore.FieldValue.serverTimestamp();
   }
 
-  await db.collection("message_deliveries").doc(docId).set(data, { merge: true });
+  await db
+    .collection("message_deliveries")
+    .doc(docId)
+    .set(data, { merge: true });
 }
 
 // ----- Interrupteur global
@@ -244,6 +269,8 @@ export const onMessageEventCreate = onDocumentCreated(
   async (event) => {
     // 0) Interrupteur global
     // const enabled = await isMessagingEnabled(); -> uncomment this to enable disable
+    const twilioWhatsappNumber = TWILIO_WHATSAPP_NUMBER.value();
+    console.log(`🚀 TWILIO_WHATSAPP_NUMBER: ${twilioWhatsappNumber}`);
     const enabled = true;
     if (!enabled) {
       console.log("🔒 Messaging disabled: ignoring event");
@@ -253,14 +280,18 @@ export const onMessageEventCreate = onDocumentCreated(
     // 1) Récupérer l'événement
     const evt = event.data?.data() as MessageEvent | undefined;
     if (!evt) {
-      console.log("❌ No event payload, abort");
+      console.log("❌ No event paayload, abort");
       return;
     }
 
-    console.log(`📨 Processing event: ${evt.eventId} | Locale: ${evt.locale || "auto"}`);
+    console.log(
+      `📨 Processing event: ${evt.eventId} | Locale: ${evt.locale || "auto"}`
+    );
 
     // 2) Résolution de la langue
-    const lang = resolveLang(evt?.locale || evt?.context?.user?.preferredLanguage);
+    const lang = resolveLang(
+      evt?.locale || evt?.context?.user?.preferredLanguage
+    );
     console.log(`🌐 Resolved language: ${lang}`);
 
     // 3) Lecture du template Firestore + fallback EN
@@ -278,9 +309,15 @@ export const onMessageEventCreate = onDocumentCreated(
     const uidForLimit = evt?.uid || evt?.context?.user?.uid || "unknown";
 
     // Vérifier rate limit global s'il existe
-    const globalRateLimit = Math.max(...Object.values(routing.channels).map((c) => c.rateLimitH));
+    const globalRateLimit = Math.max(
+      ...Object.values(routing.channels).map((c) => c.rateLimitH)
+    );
     if (globalRateLimit > 0) {
-      const limited = await isRateLimited(uidForLimit, evt.eventId, globalRateLimit);
+      const limited = await isRateLimited(
+        uidForLimit,
+        evt.eventId,
+        globalRateLimit
+      );
       if (limited) {
         console.log(`🚫 Rate-limited: ${uidForLimit} for ${evt.eventId}`);
         return;
@@ -288,7 +325,11 @@ export const onMessageEventCreate = onDocumentCreated(
     }
 
     // 5) Sélection des canaux à tenter
-    const context: Context = { ...(evt.context ?? {}), locale: lang, to: evt.to };
+    const context: Context = {
+      ...(evt.context ?? {}),
+      locale: lang,
+      to: evt.to,
+    };
     const channelsToTry = channelsToAttempt(
       routing.strategy,
       routing.order,
@@ -375,7 +416,9 @@ export const onMessageEventCreate = onDocumentCreated(
             uid: uidForLimit,
           });
 
-          console.log(`✅ [${channel}] Sent successfully - stopping fallback chain`);
+          console.log(
+            `✅ [${channel}] Sent successfully - stopping fallback chain`
+          );
           success = true;
         } catch (e: unknown) {
           const msg = e instanceof Error ? e.message : "Unknown error";
@@ -412,10 +455,18 @@ function getDestinationForChannel(
       return ctx?.user?.email || evt.to?.email;
     case "sms":
       return ctx?.user?.phoneNumber || evt.to?.phone;
-    // case "whatsapp":
-    //   return ctx?.user?.waNumber || ctx?.user?.phoneNumber || evt.to?.whatsapp || evt.to?.phone; // ❌ retiré
+    case "whatsapp":
+      return (
+        ctx?.user?.waNumber ||
+        ctx?.user?.phoneNumber ||
+        evt.to?.whatsapp ||
+        evt.to?.phone
+      ); // ❌ retiré
     case "push":
-      return ((ctx?.user?.fcmTokens?.[0] || evt.to?.fcmToken) ?? "").slice(0, 20) + "...";
+      return (
+        ((ctx?.user?.fcmTokens?.[0] || evt.to?.fcmToken) ?? "").slice(0, 20) +
+        "..."
+      );
     case "inapp":
       return ctx?.user?.uid;
     default:

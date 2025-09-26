@@ -72,9 +72,14 @@ function hasContact(channel, ctx) {
         return !!(ctx?.user?.email || ctx?.to?.email);
     if (channel === "sms")
         return !!(ctx?.user?.phoneNumber || ctx?.to?.phone);
-    // if (channel === "whatsapp") return !!(ctx?.user?.waNumber || ctx?.user?.phoneNumber || ctx?.to?.whatsapp || ctx?.to?.phone); // ❌ retiré
+    if (channel === "whatsapp")
+        return !!(ctx?.user?.waNumber ||
+            ctx?.user?.phoneNumber ||
+            ctx?.to?.whatsapp ||
+            ctx?.to?.phone); // ❌ retiré
     if (channel === "push")
-        return ((Array.isArray(ctx?.user?.fcmTokens) && (ctx.user?.fcmTokens?.length ?? 0) > 0) ||
+        return ((Array.isArray(ctx?.user?.fcmTokens) &&
+            (ctx.user?.fcmTokens?.length ?? 0) > 0) ||
             !!ctx?.to?.fcmToken);
     if (channel === "inapp")
         return !!ctx?.user?.uid;
@@ -113,7 +118,15 @@ tmpl, ctx, evt) {
         return { sid };
     }
     // ❌ Branche WhatsApp complètement retirée
-    // if (channel === "whatsapp") { ... }
+    if (channel === "whatsapp") {
+        const to = ctx?.user?.waNumber || ctx?.user?.phoneNumber || evt.to?.phone;
+        if (!to || !tmpl.whatsapp?.enabled)
+            console.log("🚨 WhatsApp is disabled, skipping");
+        throw new Error("Missing WhatsApp destination or disabled template");
+        // const body = render(tmpl.whatsapp.text || "", { ...ctx, ...evt.vars });
+        // const sid = await sendWa(to, body);
+        // return { sid };
+    }
     if (channel === "push") {
         const token = ctx?.user?.fcmTokens?.[0] || evt.to?.fcmToken;
         if (!token || !tmpl.push?.enabled)
@@ -162,7 +175,10 @@ async function logDelivery(params) {
     else if (status === "failed") {
         data.failedAt = admin.firestore.FieldValue.serverTimestamp();
     }
-    await db.collection("message_deliveries").doc(docId).set(data, { merge: true });
+    await db
+        .collection("message_deliveries")
+        .doc(docId)
+        .set(data, { merge: true });
 }
 // ----- Interrupteur global
 // async function isMessagingEnabled(): Promise<boolean> {
@@ -186,7 +202,9 @@ exports.onMessageEventCreate = (0, firestore_1.onDocumentCreated)({
     ],
 }, async (event) => {
     // 0) Interrupteur global
-    // const enabled = await isMessagingEnabled();
+    // const enabled = await isMessagingEnabled(); -> uncomment this to enable disable
+    const twilioWhatsappNumber = TWILIO_WHATSAPP_NUMBER.value();
+    console.log(`🚀 TWILIO_WHATSAPP_NUMBER: ${twilioWhatsappNumber}`);
     const enabled = true;
     if (!enabled) {
         console.log("🔒 Messaging disabled: ignoring event");
@@ -195,7 +213,7 @@ exports.onMessageEventCreate = (0, firestore_1.onDocumentCreated)({
     // 1) Récupérer l'événement
     const evt = event.data?.data();
     if (!evt) {
-        console.log("❌ No event payload, abort");
+        console.log("❌ No event paayload, abort");
         return;
     }
     console.log(`📨 Processing event: ${evt.eventId} | Locale: ${evt.locale || "auto"}`);
@@ -223,7 +241,11 @@ exports.onMessageEventCreate = (0, firestore_1.onDocumentCreated)({
         }
     }
     // 5) Sélection des canaux à tenter
-    const context = { ...(evt.context ?? {}), locale: lang, to: evt.to };
+    const context = {
+        ...(evt.context ?? {}),
+        locale: lang,
+        to: evt.to,
+    };
     const channelsToTry = channelsToAttempt(routing.strategy, routing.order, routing.channels, templates, { ...context, user: context.user });
     console.log(`📋 Channels to attempt: ${channelsToTry.join(", ")} (strategy: ${routing.strategy})`);
     if (channelsToTry.length === 0) {
@@ -313,10 +335,14 @@ function getDestinationForChannel(channel, ctx, evt) {
             return ctx?.user?.email || evt.to?.email;
         case "sms":
             return ctx?.user?.phoneNumber || evt.to?.phone;
-        // case "whatsapp":
-        //   return ctx?.user?.waNumber || ctx?.user?.phoneNumber || evt.to?.whatsapp || evt.to?.phone; // ❌ retiré
+        case "whatsapp":
+            return (ctx?.user?.waNumber ||
+                ctx?.user?.phoneNumber ||
+                evt.to?.whatsapp ||
+                evt.to?.phone); // ❌ retiré
         case "push":
-            return ((ctx?.user?.fcmTokens?.[0] || evt.to?.fcmToken) ?? "").slice(0, 20) + "...";
+            return (((ctx?.user?.fcmTokens?.[0] || evt.to?.fcmToken) ?? "").slice(0, 20) +
+                "...");
         case "inapp":
             return ctx?.user?.uid;
         default:

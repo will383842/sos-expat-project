@@ -1,9 +1,18 @@
 // src/pages/CallCheckout.tsx
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { ArrowLeft, Clock, Shield, AlertCircle, CreditCard, Lock, Calendar, X } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { loadStripe, Stripe } from '@stripe/stripe-js';
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import {
+  ArrowLeft,
+  Clock,
+  Shield,
+  AlertCircle,
+  CreditCard,
+  Lock,
+  Calendar,
+  X,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+import { loadStripe, Stripe } from "@stripe/stripe-js";
 import {
   Elements,
   CardNumberElement,
@@ -11,17 +20,20 @@ import {
   CardCvcElement,
   CardElement,
   useStripe,
-  useElements
-} from '@stripe/react-stripe-js';
-import { functions, db } from '../config/firebase';
-import { httpsCallable, HttpsCallable } from 'firebase/functions';
-import { doc, setDoc, serverTimestamp, getDoc } from 'firebase/firestore';
-import { Provider, normalizeProvider } from '../types/provider';
-import Layout from '../components/layout/Layout';
-import { detectUserCurrency, usePricingConfig } from '../services/pricingService';
-import { parsePhoneNumberFromString } from 'libphonenumber-js';
-import { useForm } from 'react-hook-form';
-import { saveProviderMessage } from '@/firebase/saveProviderMessage';
+  useElements,
+} from "@stripe/react-stripe-js";
+import { functions, db } from "../config/firebase";
+import { httpsCallable, HttpsCallable } from "firebase/functions";
+import { doc, setDoc, serverTimestamp, getDoc } from "firebase/firestore";
+import { Provider, normalizeProvider } from "../types/provider";
+import Layout from "../components/layout/Layout";
+import {
+  detectUserCurrency,
+  usePricingConfig,
+} from "../services/pricingService";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
+import { useForm } from "react-hook-form";
+import { saveProviderMessage } from "@/firebase/saveProviderMessage";
 
 /* -------------------------- Stripe singleton (HMR-safe) ------------------ */
 // Conserve la même Promise Stripe à travers les rechargements HMR.
@@ -40,13 +52,13 @@ const getStripePromise = (): Promise<Stripe | null> => {
 const stripePromise = getStripePromise();
 
 /* --------------------------------- Types --------------------------------- */
-type Currency = 'eur' | 'usd';
-type ServiceKind = 'lawyer' | 'expat';
-type Lang = 'fr' | 'en';
+type Currency = "eur" | "usd";
+type ServiceKind = "lawyer" | "expat";
+type Lang = "fr" | "en";
 
 interface ServiceData {
   providerId: string;
-  serviceType: 'lawyer_call' | 'expat_call';
+  serviceType: "lawyer_call" | "expat_call";
   providerRole: ServiceKind;
   amount: number;
   duration: number;
@@ -69,7 +81,7 @@ interface User {
 interface PaymentIntentData {
   amount: number;
   currency?: string;
-  serviceType: 'lawyer_call' | 'expat_call';
+  serviceType: "lawyer_call" | "expat_call";
   providerId: string;
   clientId: string;
   clientEmail?: string;
@@ -97,11 +109,11 @@ interface CreateAndScheduleCallData {
   clientId: string;
   providerPhone: string;
   clientPhone: string;
-  serviceType: 'lawyer_call' | 'expat_call';
+  serviceType: "lawyer_call" | "expat_call";
   providerType: ServiceKind;
   paymentIntentId: string;
   amount: number;
-  currency: 'EUR' | 'USD';
+  currency: "EUR" | "USD";
   delayMinutes?: number;
   clientLanguages?: string[];
   providerLanguages?: string[];
@@ -109,7 +121,7 @@ interface CreateAndScheduleCallData {
   callSessionId?: string;
 }
 
-type StepType = 'payment' | 'calling' | 'completed';
+type StepType = "payment" | "calling" | "completed";
 
 interface CallCheckoutProps {
   selectedProvider?: Provider;
@@ -143,79 +155,170 @@ const logCallableError = (label: string, e: unknown): void => {
 
 /* --------------------------------- gtag ---------------------------------- */
 type GtagFunction = (...args: unknown[]) => void;
-interface GtagWindow { gtag?: GtagFunction; }
+interface GtagWindow {
+  gtag?: GtagFunction;
+}
 const getGtag = (): GtagFunction | undefined =>
-  (typeof window !== 'undefined' ? (window as unknown as GtagWindow).gtag : undefined);
+  typeof window !== "undefined"
+    ? (window as unknown as GtagWindow).gtag
+    : undefined;
 
 /* -------------------------------- i18n ----------------------------------- */
 const useTranslation = () => {
-  const { language: ctxLang } = { language: 'fr' as Lang };
-  const language: Lang = (ctxLang === 'en' ? 'en' : 'fr');
+  const { language: ctxLang } = { language: "fr" as Lang };
+  const language: Lang = ctxLang === "en" ? "en" : "fr";
 
   const dict: Record<string, Record<Lang, string>> = {
-    'meta.title': { fr: 'Paiement & Mise en relation - SOS Expats', en: 'Checkout & Connection - SOS Expats' },
-    'meta.description': { fr: "Réglez en toute sécurité et lancez votre consultation avec l'expert sélectionné.", en: 'Pay securely and start your consultation with the selected expert.' },
-    'meta.keywords': { fr: 'paiement, consultation, avocat, expatriés, SOS Expats, appel', en: 'payment, consultation, lawyer, expats, call' },
-    'meta.og_title': { fr: 'Paiement sécurisé - SOS Expats', en: 'Secure Checkout - SOS Expats' },
-    'meta.og_description': { fr: 'Paiement SSL, mise en relation automatique avec votre expert.', en: 'SSL payment, automatic connection with your expert.' },
-    'meta.og_image_alt': { fr: 'Paiement SOS Expats', en: 'SOS Expats Checkout' },
-    'meta.twitter_image_alt': { fr: 'Interface de paiement SOS Expats', en: 'SOS Expats checkout interface' },
-
-    'ui.back': { fr: 'Retour', en: 'Back' },
-    'ui.securePayment': { fr: 'Paiement sécurisé', en: 'Secure payment' },
-    'ui.connecting': { fr: 'Mise en relation', en: 'Connecting' },
-    'ui.completed': { fr: 'Consultation terminée', en: 'Consultation completed' },
-    'ui.payToStart': { fr: 'Validez pour lancer la consultation', en: 'Confirm to start the consultation' },
-    'ui.connectingExpert': { fr: 'Connexion avec votre expert', en: 'Connecting to your expert' },
-    'ui.thanks': { fr: "Merci d'avoir utilisé nos services", en: 'Thank you for using our services' },
-
-    'card.title': { fr: 'Paiement', en: 'Payment' },
-    'card.number': { fr: 'Numéro de carte', en: 'Card number' },
-    'card.expiry': { fr: 'Expiration', en: 'Expiry' },
-    'card.cvc': { fr: 'CVC', en: 'CVC' },
-
-    'summary.title': { fr: 'Récapitulatif', en: 'Summary' },
-    'summary.expert': { fr: 'Expert', en: 'Expert' },
-    'summary.service': { fr: 'Service', en: 'Service' },
-    'summary.duration': { fr: 'Durée', en: 'Duration' },
-    'summary.total': { fr: 'Total', en: 'Total' },
-
-    'btn.pay': { fr: 'Payer', en: 'Pay' },
-    'btn.evaluate': { fr: 'Évaluer', en: 'Review' },
-    'btn.receipt': { fr: 'Télécharger le reçu', en: 'Download receipt' },
-    'btn.home': { fr: "Retour à l'accueil", en: 'Back to home' },
-
-    'status.paid': { fr: 'Paiement confirmé', en: 'Payment confirmed' },
-    'status.expertContacted': { fr: 'Expert contacté(e)', en: 'Expert contacted' },
-    'status.callStarted': { fr: 'Consultation démarrée', en: 'Consultation started' },
-
-    'alert.missingDataTitle': { fr: 'Données manquantes', en: 'Missing data' },
-    'alert.missingDataText': { fr: 'Veuillez sélectionner à nouveau un expert.', en: 'Please select an expert again.' },
-    'alert.loginRequiredTitle': { fr: 'Connexion requise', en: 'Login required' },
-    'alert.loginRequiredText': { fr: 'Connectez-vous pour lancer une consultation.', en: 'Sign in to start a consultation.' },
-
-    'banner.secure': { fr: 'Paiement sécurisé', en: 'Secure payment' },
-    'banner.ssl': {
-      fr: 'Données protégées par SSL. Appel lancé automatiquement après paiement.',
-      en: 'Data protected by SSL. Call launched automatically after payment.'
+    "meta.title": {
+      fr: "Paiement & Mise en relation - SOS Expats",
+      en: "Checkout & Connection - SOS Expats",
+    },
+    "meta.description": {
+      fr: "Réglez en toute sécurité et lancez votre consultation avec l'expert sélectionné.",
+      en: "Pay securely and start your consultation with the selected expert.",
+    },
+    "meta.keywords": {
+      fr: "paiement, consultation, avocat, expatriés, SOS Expats, appel",
+      en: "payment, consultation, lawyer, expats, call",
+    },
+    "meta.og_title": {
+      fr: "Paiement sécurisé - SOS Expats",
+      en: "Secure Checkout - SOS Expats",
+    },
+    "meta.og_description": {
+      fr: "Paiement SSL, mise en relation automatique avec votre expert.",
+      en: "SSL payment, automatic connection with your expert.",
+    },
+    "meta.og_image_alt": {
+      fr: "Paiement SOS Expats",
+      en: "SOS Expats Checkout",
+    },
+    "meta.twitter_image_alt": {
+      fr: "Interface de paiement SOS Expats",
+      en: "SOS Expats checkout interface",
     },
 
-    'err.invalidConfig': { fr: 'Configuration de paiement invalide', en: 'Invalid payment configuration' },
-    'err.unauth': { fr: 'Utilisateur non authentifié', en: 'Unauthenticated user' },
-    'err.sameUser': { fr: "Vous ne pouvez pas réserver avec vous-même", en: "You can't book yourself" },
-    'err.minAmount': { fr: 'Montant minimum 5€', en: 'Minimum amount €5' },
-    'err.maxAmount': { fr: 'Montant maximum 500€', en: 'Maximum amount €500' },
-    'err.amountMismatch': { fr: 'Montant invalide. Merci de réessayer.', en: 'Invalid amount. Please try again.' },
-    'err.noClientSecret': { fr: 'ClientSecret manquant', en: 'Missing ClientSecret' },
-    'err.noCardElement': { fr: 'Champ carte introuvable', en: 'Card field not found' },
-    'err.stripe': { fr: 'Erreur de paiement Stripe', en: 'Stripe payment error' },
-    'err.paymentFailed': { fr: 'Le paiement a échoué', en: 'Payment failed' },
-    'err.actionRequired': { fr: 'Authentification supplémentaire requise', en: 'Additional authentication required' },
-    'err.invalidMethod': { fr: 'Méthode de paiement invalide', en: 'Invalid payment method' },
-    'err.canceled': { fr: 'Le paiement a été annulé', en: 'Payment was canceled' },
-    'err.unexpectedStatus': { fr: 'Statut de paiement inattendu', en: 'Unexpected payment status' },
-    'err.genericPayment': { fr: 'Une erreur est survenue lors du paiement', en: 'An error occurred during payment' },
-    'err.invalidPhone': { fr: 'Numéro de téléphone invalide', en: 'Invalid phone number' },
+    "ui.back": { fr: "Retour", en: "Back" },
+    "ui.securePayment": { fr: "Paiement sécurisé", en: "Secure payment" },
+    "ui.connecting": { fr: "Mise en relation", en: "Connecting" },
+    "ui.completed": {
+      fr: "Consultation terminée",
+      en: "Consultation completed",
+    },
+    "ui.payToStart": {
+      fr: "Validez pour lancer la consultation",
+      en: "Confirm to start the consultation",
+    },
+    "ui.connectingExpert": {
+      fr: "Connexion avec votre expert",
+      en: "Connecting to your expert",
+    },
+    "ui.thanks": {
+      fr: "Merci d'avoir utilisé nos services",
+      en: "Thank you for using our services",
+    },
+
+    "card.title": { fr: "Paiement", en: "Payment" },
+    "card.number": { fr: "Numéro de carte", en: "Card number" },
+    "card.expiry": { fr: "Expiration", en: "Expiry" },
+    "card.cvc": { fr: "CVC", en: "CVC" },
+
+    "summary.title": { fr: "Récapitulatif", en: "Summary" },
+    "summary.expert": { fr: "Expert", en: "Expert" },
+    "summary.service": { fr: "Service", en: "Service" },
+    "summary.duration": { fr: "Durée", en: "Duration" },
+    "summary.total": { fr: "Total", en: "Total" },
+
+    "btn.pay": { fr: "Payer", en: "Pay" },
+    "btn.evaluate": { fr: "Évaluer", en: "Review" },
+    "btn.receipt": { fr: "Télécharger le reçu", en: "Download receipt" },
+    "btn.home": { fr: "Retour à l'accueil", en: "Back to home" },
+
+    "status.paid": { fr: "Paiement confirmé", en: "Payment confirmed" },
+    "status.expertContacted": {
+      fr: "Expert contacté(e)",
+      en: "Expert contacted",
+    },
+    "status.callStarted": {
+      fr: "Consultation démarrée",
+      en: "Consultation started",
+    },
+
+    "alert.missingDataTitle": { fr: "Données manquantes", en: "Missing data" },
+    "alert.missingDataText": {
+      fr: "Veuillez sélectionner à nouveau un expert.",
+      en: "Please select an expert again.",
+    },
+    "alert.loginRequiredTitle": {
+      fr: "Connexion requise",
+      en: "Login required",
+    },
+    "alert.loginRequiredText": {
+      fr: "Connectez-vous pour lancer une consultation.",
+      en: "Sign in to start a consultation.",
+    },
+
+    "banner.secure": { fr: "Paiement sécurisé", en: "Secure payment" },
+    "banner.ssl": {
+      fr: "Données protégées par SSL. Appel lancé automatiquement après paiement.",
+      en: "Data protected by SSL. Call launched automatically after payment.",
+    },
+
+    "err.invalidConfig": {
+      fr: "Configuration de paiement invalide",
+      en: "Invalid payment configuration",
+    },
+    "err.unauth": {
+      fr: "Utilisateur non authentifié",
+      en: "Unauthenticated user",
+    },
+    "err.sameUser": {
+      fr: "Vous ne pouvez pas réserver avec vous-même",
+      en: "You can't book yourself",
+    },
+    "err.minAmount": { fr: "Montant minimum 5€", en: "Minimum amount €5" },
+    "err.maxAmount": { fr: "Montant maximum 500€", en: "Maximum amount €500" },
+    "err.amountMismatch": {
+      fr: "Montant invalide. Merci de réessayer.",
+      en: "Invalid amount. Please try again.",
+    },
+    "err.noClientSecret": {
+      fr: "ClientSecret manquant",
+      en: "Missing ClientSecret",
+    },
+    "err.noCardElement": {
+      fr: "Champ carte introuvable",
+      en: "Card field not found",
+    },
+    "err.stripe": {
+      fr: "Erreur de paiement Stripe",
+      en: "Stripe payment error",
+    },
+    "err.paymentFailed": { fr: "Le paiement a échoué", en: "Payment failed" },
+    "err.actionRequired": {
+      fr: "Authentification supplémentaire requise",
+      en: "Additional authentication required",
+    },
+    "err.invalidMethod": {
+      fr: "Méthode de paiement invalide",
+      en: "Invalid payment method",
+    },
+    "err.canceled": {
+      fr: "Le paiement a été annulé",
+      en: "Payment was canceled",
+    },
+    "err.unexpectedStatus": {
+      fr: "Statut de paiement inattendu",
+      en: "Unexpected payment status",
+    },
+    "err.genericPayment": {
+      fr: "Une erreur est survenue lors du paiement",
+      en: "An error occurred during payment",
+    },
+    "err.invalidPhone": {
+      fr: "Numéro de téléphone invalide",
+      en: "Invalid phone number",
+    },
   };
 
   const t = (key: keyof typeof dict, fallback?: string) =>
@@ -226,70 +329,112 @@ const useTranslation = () => {
 
 /* ------------------------------ SEO helpers ------------------------------ */
 const useSEO = (meta: {
-  title: string; description: string; keywords: string; ogTitle: string; ogDescription: string;
-  canonicalUrl: string; alternateUrls: Record<'fr' | 'en', string>; structuredData: Record<string, unknown>;
-  locale: Lang; ogImagePath: string; twitterImagePath: string; ogImageAlt: string; twitterImageAlt: string;
+  title: string;
+  description: string;
+  keywords: string;
+  ogTitle: string;
+  ogDescription: string;
+  canonicalUrl: string;
+  alternateUrls: Record<"fr" | "en", string>;
+  structuredData: Record<string, unknown>;
+  locale: Lang;
+  ogImagePath: string;
+  twitterImagePath: string;
+  ogImageAlt: string;
+  twitterImageAlt: string;
 }) => {
   useEffect(() => {
     document.title = meta.title;
     const updateMeta = (name: string, content: string, property = false) => {
-      const attr = property ? 'property' : 'name';
-      let el = document.querySelector(`meta[${attr}="${name}"]`) as HTMLMetaElement | null;
-      if (!el) { el = document.createElement('meta'); el.setAttribute(attr, name); document.head.appendChild(el); }
+      const attr = property ? "property" : "name";
+      let el = document.querySelector(
+        `meta[${attr}="${name}"]`
+      ) as HTMLMetaElement | null;
+      if (!el) {
+        el = document.createElement("meta");
+        el.setAttribute(attr, name);
+        document.head.appendChild(el);
+      }
       el.content = content;
     };
 
-    updateMeta('description', meta.description);
-    updateMeta('keywords', meta.keywords);
-    updateMeta('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
-    updateMeta('og:type', 'website', true);
-    updateMeta('og:title', meta.ogTitle, true);
-    updateMeta('og:description', meta.ogDescription, true);
-    updateMeta('og:url', meta.canonicalUrl, true);
-    updateMeta('og:site_name', 'SOS Expats', true);
+    updateMeta("description", meta.description);
+    updateMeta("keywords", meta.keywords);
+    updateMeta(
+      "robots",
+      "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    );
+    updateMeta("og:type", "website", true);
+    updateMeta("og:title", meta.ogTitle, true);
+    updateMeta("og:description", meta.ogDescription, true);
+    updateMeta("og:url", meta.canonicalUrl, true);
+    updateMeta("og:site_name", "SOS Expats", true);
 
     const ogLocale =
-      meta.locale === 'fr' ? 'fr_FR' :
-      meta.locale === 'en' ? 'en_US' :
-      `${String(meta.locale)}_${String(meta.locale).toUpperCase()}`;
-    updateMeta('og:locale', ogLocale, true);
+      meta.locale === "fr"
+        ? "fr_FR"
+        : meta.locale === "en"
+          ? "en_US"
+          : `${String(meta.locale)}_${String(meta.locale).toUpperCase()}`;
+    updateMeta("og:locale", ogLocale, true);
 
-    updateMeta('og:image', meta.ogImagePath, true);
-    updateMeta('og:image:alt', meta.ogImageAlt, true);
-    updateMeta('og:image:width', '1200', true);
-    updateMeta('og:image:height', '630', true);
+    updateMeta("og:image", meta.ogImagePath, true);
+    updateMeta("og:image:alt", meta.ogImageAlt, true);
+    updateMeta("og:image:width", "1200", true);
+    updateMeta("og:image:height", "630", true);
 
-    updateMeta('twitter:card', 'summary_large_image');
-    updateMeta('twitter:site', '@sosexpats');
-    updateMeta('twitter:creator', '@sosexpats');
-    updateMeta('twitter:title', meta.ogTitle);
-    updateMeta('twitter:description', meta.ogDescription);
-    updateMeta('twitter:image', meta.twitterImagePath);
-    updateMeta('twitter:image:alt', meta.twitterImageAlt);
+    updateMeta("twitter:card", "summary_large_image");
+    updateMeta("twitter:site", "@sosexpats");
+    updateMeta("twitter:creator", "@sosexpats");
+    updateMeta("twitter:title", meta.ogTitle);
+    updateMeta("twitter:description", meta.ogDescription);
+    updateMeta("twitter:image", meta.twitterImagePath);
+    updateMeta("twitter:image:alt", meta.twitterImageAlt);
 
-    let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
-    if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.appendChild(canonical); }
+    let canonical = document.querySelector(
+      'link[rel="canonical"]'
+    ) as HTMLLinkElement | null;
+    if (!canonical) {
+      canonical = document.createElement("link");
+      canonical.rel = "canonical";
+      document.head.appendChild(canonical);
+    }
     canonical.href = meta.canonicalUrl;
 
-    document.querySelectorAll('link[rel="alternate"][hreflang]').forEach(l => l.parentElement?.removeChild(l));
+    document
+      .querySelectorAll('link[rel="alternate"][hreflang]')
+      .forEach((l) => l.parentElement?.removeChild(l));
     Object.entries(meta.alternateUrls).forEach(([lang, url]) => {
-      const el = document.createElement('link');
-      el.rel = 'alternate'; el.hreflang = lang; el.href = url; document.head.appendChild(el);
+      const el = document.createElement("link");
+      el.rel = "alternate";
+      el.hreflang = lang;
+      el.href = url;
+      document.head.appendChild(el);
     });
-    const xDef = document.createElement('link');
-    xDef.rel = 'alternate'; xDef.hreflang = 'x-default'; xDef.href = meta.alternateUrls.fr; document.head.appendChild(xDef);
+    const xDef = document.createElement("link");
+    xDef.rel = "alternate";
+    xDef.hreflang = "x-default";
+    xDef.href = meta.alternateUrls.fr;
+    document.head.appendChild(xDef);
 
-    let ld = document.querySelector('#structured-data') as HTMLScriptElement | null;
-    if (!ld) { ld = document.createElement('script'); ld.id = 'structured-data'; ld.type = 'application/ld+json'; document.head.appendChild(ld); }
+    let ld = document.querySelector(
+      "#structured-data"
+    ) as HTMLScriptElement | null;
+    if (!ld) {
+      ld = document.createElement("script");
+      ld.id = "structured-data";
+      ld.type = "application/ld+json";
+      document.head.appendChild(ld);
+    }
     ld.textContent = JSON.stringify(meta.structuredData);
   }, [meta]);
 };
 
 /* ------------------------ Helpers: device & phone utils ------------------ */
 const toE164 = (raw?: string) => {
-  if (!raw) return '';
+  if (!raw) return "";
   const p = parsePhoneNumberFromString(raw);
-  return p?.isValid() ? p.number : '';
+  return p?.isValid() ? p.number : "";
 };
 
 /* ------------------- Hook mobile (corrige la règle des hooks) ------------ */
@@ -297,14 +442,14 @@ function useIsMobile(): boolean {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    if (typeof window === 'undefined' || !window.matchMedia) return;
-    const mq = window.matchMedia('(max-width: 640px), (pointer: coarse)');
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(max-width: 640px), (pointer: coarse)");
     const update = () => setIsMobile(!!mq.matches);
     update();
 
-    if ('addEventListener' in mq) {
-      mq.addEventListener('change', update);
-      return () => mq.removeEventListener('change', update);
+    if ("addEventListener" in mq) {
+      mq.addEventListener("change", update);
+      return () => mq.removeEventListener("change", update);
     } else {
       // @ts-expect-error legacy Safari
       mq.addListener(update);
@@ -325,14 +470,17 @@ interface PricingEntryTrace {
 }
 interface PricingConfigShape {
   lawyer: Record<Currency, PricingEntryTrace>;
-  expat:  Record<Currency, PricingEntryTrace>;
+  expat: Record<Currency, PricingEntryTrace>;
 }
 type TraceAttributes = {
   [K in `data-${string}`]?: string | number;
 } & { title?: string };
 
 function usePriceTracing() {
-  const { pricing, loading } = usePricingConfig() as { pricing?: PricingConfigShape; loading: boolean };
+  const { pricing, loading } = usePricingConfig() as {
+    pricing?: PricingConfigShape;
+    loading: boolean;
+  };
 
   const getTraceAttributes = (
     serviceType: ServiceKind,
@@ -341,39 +489,39 @@ function usePriceTracing() {
   ): TraceAttributes => {
     if (loading) {
       return {
-        'data-price-source': 'loading',
-        'data-currency': currency,
-        title: 'Prix en cours de chargement...',
+        "data-price-source": "loading",
+        "data-currency": currency,
+        title: "Prix en cours de chargement...",
       };
     }
 
-    if (typeof providerOverride === 'number') {
+    if (typeof providerOverride === "number") {
       return {
-        'data-price-source': 'provider',
-        'data-currency': currency,
-        'data-service-type': serviceType,
-        title: `Prix personnalisé prestataire (${providerOverride}${currency === 'eur' ? '€' : '$'})`,
+        "data-price-source": "provider",
+        "data-currency": currency,
+        "data-service-type": serviceType,
+        title: `Prix personnalisé prestataire (${providerOverride}${currency === "eur" ? "€" : "$"})`,
       };
     }
 
     if (pricing) {
       const cfg = pricing[serviceType][currency];
       return {
-        'data-price-source': 'admin',
-        'data-currency': currency,
-        'data-service-type': serviceType,
-        'data-total-amount': cfg.totalAmount,
-        'data-connection-fee': cfg.connectionFeeAmount,
-        'data-provider-amount': cfg.providerAmount,
-        'data-duration': cfg.duration,
-        title: `Prix admin: ${cfg.totalAmount}${currency === 'eur' ? '€' : '$'} • Frais: ${cfg.connectionFeeAmount}${currency === 'eur' ? '€' : '$'} • Provider: ${cfg.providerAmount}${currency === 'eur' ? '€' : '$'} • ${cfg.duration}min`,
+        "data-price-source": "admin",
+        "data-currency": currency,
+        "data-service-type": serviceType,
+        "data-total-amount": cfg.totalAmount,
+        "data-connection-fee": cfg.connectionFeeAmount,
+        "data-provider-amount": cfg.providerAmount,
+        "data-duration": cfg.duration,
+        title: `Prix admin: ${cfg.totalAmount}${currency === "eur" ? "€" : "$"} • Frais: ${cfg.connectionFeeAmount}${currency === "eur" ? "€" : "$"} • Provider: ${cfg.providerAmount}${currency === "eur" ? "€" : "$"} • ${cfg.duration}min`,
       };
     }
 
     return {
-      'data-price-source': 'fallback',
-      'data-currency': currency,
-      title: 'Prix de secours (admin indisponible)',
+      "data-price-source": "fallback",
+      "data-currency": currency,
+      title: "Prix de secours (admin indisponible)",
     };
   };
 
@@ -384,15 +532,15 @@ function usePriceTracing() {
 const cardElementOptions = {
   style: {
     base: {
-      fontSize: '16px',
-      color: '#1f2937',
-      letterSpacing: '0.025em',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      fontWeight: '500',
-      '::placeholder': { color: '#9ca3af', fontWeight: '400' },
+      fontSize: "16px",
+      color: "#1f2937",
+      letterSpacing: "0.025em",
+      fontFamily: "system-ui, -apple-system, sans-serif",
+      fontWeight: "500",
+      "::placeholder": { color: "#9ca3af", fontWeight: "400" },
     },
-    invalid: { color: '#ef4444', iconColor: '#ef4444' },
-    complete: { color: '#10b981', iconColor: '#10b981' }
+    invalid: { color: "#ef4444", iconColor: "#ef4444" },
+    complete: { color: "#10b981", iconColor: "#10b981" },
   },
 } as const;
 
@@ -427,8 +575,18 @@ const ConfirmModal: React.FC<{
           </button>
         </div>
         <div className="mt-4 grid grid-cols-2 gap-2">
-          <button onClick={onCancel} className="px-3 py-2 rounded-lg border bg-white text-gray-700 hover:bg-gray-50">Annuler</button>
-          <button onClick={onConfirm} className="px-3 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">Confirmer</button>
+          <button
+            onClick={onCancel}
+            className="px-3 py-2 rounded-lg border bg-white text-gray-700 hover:bg-gray-50"
+          >
+            Annuler
+          </button>
+          <button
+            onClick={onConfirm}
+            className="px-3 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+          >
+            Confirmer
+          </button>
         </div>
       </div>
     </div>
@@ -438,8 +596,9 @@ const ConfirmModal: React.FC<{
 /* ------------------------------ Payment Form ----------------------------- */
 interface PaymentFormSuccessPayload {
   paymentIntentId: string;
-  call: 'scheduled' | 'skipped';
+  call: "scheduled" | "skipped";
   callId?: string;
+  orderId: string;
 }
 interface PaymentFormProps {
   user: User;
@@ -458,614 +617,867 @@ type PhoneFormValues = {
   currentCountry?: string;
 };
 
-type BookingMeta = { title?: string; description?: string; country?: string; clientFirstName?: string };
+type BookingMeta = {
+  title?: string;
+  description?: string;
+  country?: string;
+  clientFirstName?: string;
+};
 
 /* ---------------------- HttpsError type guard (front) -------------------- */
 type HttpsErrorCode =
-  | 'cancelled' | 'unknown' | 'invalid-argument' | 'deadline-exceeded' | 'not-found' | 'already-exists'
-  | 'permission-denied' | 'resource-exhausted' | 'failed-precondition' | 'aborted' | 'out-of-range'
-  | 'unimplemented' | 'internal' | 'unavailable' | 'data-loss' | 'unauthenticated';
+  | "cancelled"
+  | "unknown"
+  | "invalid-argument"
+  | "deadline-exceeded"
+  | "not-found"
+  | "already-exists"
+  | "permission-denied"
+  | "resource-exhausted"
+  | "failed-precondition"
+  | "aborted"
+  | "out-of-range"
+  | "unimplemented"
+  | "internal"
+  | "unavailable"
+  | "data-loss"
+  | "unauthenticated";
 
 interface FirebaseHttpsError extends Error {
   code: HttpsErrorCode;
   details?: unknown;
 }
 const isHttpsError = (e: unknown): e is FirebaseHttpsError => {
-  if (!e || typeof e !== 'object') return false;
+  if (!e || typeof e !== "object") return false;
   const r = e as Record<string, unknown>;
-  return typeof r.code === 'string' && typeof r.message === 'string';
+  return typeof r.code === "string" && typeof r.message === "string";
 };
 
-const PaymentForm: React.FC<PaymentFormProps> = React.memo(({
-  user, provider, service, adminPricing, onSuccess, onError, isProcessing, setIsProcessing, isMobile
-}) => {
-  const stripe = useStripe();
-  const elements = useElements();
-  const { t, language } = useTranslation();
-  const { getTraceAttributes } = usePriceTracing();
+const PaymentForm: React.FC<PaymentFormProps> = React.memo(
+  ({
+    user,
+    provider,
+    service,
+    adminPricing,
+    onSuccess,
+    onError,
+    isProcessing,
+    setIsProcessing,
+    isMobile,
+  }) => {
+    const stripe = useStripe();
+    const elements = useElements();
+    const { t, language } = useTranslation();
+    const { getTraceAttributes } = usePriceTracing();
 
-  const bookingMeta: BookingMeta = useMemo(() => {
-    try {
-      const raw = sessionStorage.getItem('bookingMeta');
-      return raw ? (JSON.parse(raw) as BookingMeta) : {};
-    } catch {
-      return {};
-    }
-  }, []);
-
-  const serviceCurrency = (service.currency || 'eur').toLowerCase() as Currency;
-  const currencySymbol = serviceCurrency === 'usd' ? '$' : '€';
-  const stripeCurrency = serviceCurrency;
-
-  const priceInfo = useMemo(
-    () => getTraceAttributes(service.serviceType === 'lawyer_call' ? 'lawyer' : 'expat', serviceCurrency),
-    [getTraceAttributes, service.serviceType, serviceCurrency]
-  );
-
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [pendingSubmit, setPendingSubmit] = useState<(() => Promise<void>) | null>(null);
-
-  const { watch, setError } = useForm<PhoneFormValues>({
-    defaultValues: {
-      clientPhone: service?.clientPhone || '',
-      currentCountry: '',
-    }
-  });
-
-  const validatePaymentData = useCallback(() => {
-    if (!stripe || !elements) throw new Error(t('err.invalidConfig'));
-    if (!user?.uid) throw new Error(t('err.unauth'));
-    if (provider.id === user.uid) throw new Error(t('err.sameUser'));
-    if (adminPricing.totalAmount < 5) throw new Error(t('err.minAmount'));
-    if (adminPricing.totalAmount > 500) throw new Error(t('err.maxAmount'));
-    const eq = Math.abs(service.amount - adminPricing.totalAmount) < 0.01;
-    if (!eq) throw new Error(t('err.amountMismatch'));
-  }, [stripe, elements, user, provider.id, service.amount, adminPricing.totalAmount, t]);
-
-  const persistPaymentDocs = useCallback(
-    async (paymentIntentId: string) => {
-      const baseDoc = {
-        paymentIntentId,
-        providerId: provider.id,
-        providerName: provider.fullName || provider.name || '',
-        providerRole: provider.role || provider.type || 'expat',
-        clientId: user.uid!,
-        clientEmail: user.email || '',
-        clientName: `${user.firstName || ''} ${user.lastName || ''}`.trim(),
-        clientPhone: watch('clientPhone'),
-        clientWhatsapp: '',
-        serviceType: service.serviceType,
-        duration: adminPricing.duration,
-        amount: adminPricing.totalAmount,
-        commissionAmount: adminPricing.connectionFeeAmount,
-        providerAmount: adminPricing.providerAmount,
-        currency: serviceCurrency,
-        status: 'pending',
-        createdAt: serverTimestamp(),
-        notifiedAt: null,
-      };
-
-      try { await setDoc(doc(db, 'payments', paymentIntentId), baseDoc, { merge: true }); } catch { /* no-op */ }
-      try { await setDoc(doc(db, 'users', user.uid!, 'payments', paymentIntentId), baseDoc, { merge: true }); } catch { /* no-op */ }
-      try { await setDoc(doc(db, 'providers', provider.id, 'payments', paymentIntentId), baseDoc, { merge: true }); } catch { /* no-op */ }
-    },
-    [provider, user, adminPricing, serviceCurrency, service.serviceType, watch]
-  );
-
-  const sendProviderNotifications = useCallback(
-    async (paymentIntentId: string, clientPhoneE164: string, providerPhoneE164: string) => {
+    const bookingMeta: BookingMeta = useMemo(() => {
       try {
-        // Anti-doublon
-        const paymentDocRef = doc(db, 'payments', paymentIntentId);
-        const paymentSnap = await getDoc(paymentDocRef);
-        if (paymentSnap.exists() && paymentSnap.data()?.notifiedAt) {
-          console.log('Notifications already sent for payment:', paymentIntentId);
+        const raw = sessionStorage.getItem("bookingMeta");
+        return raw ? (JSON.parse(raw) as BookingMeta) : {};
+      } catch {
+        return {};
+      }
+    }, []);
+
+    const serviceCurrency = (
+      service.currency || "eur"
+    ).toLowerCase() as Currency;
+    const currencySymbol = serviceCurrency === "usd" ? "$" : "€";
+    const stripeCurrency = serviceCurrency;
+
+    const priceInfo = useMemo(
+      () =>
+        getTraceAttributes(
+          service.serviceType === "lawyer_call" ? "lawyer" : "expat",
+          serviceCurrency
+        ),
+      [getTraceAttributes, service.serviceType, serviceCurrency]
+    );
+
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [pendingSubmit, setPendingSubmit] = useState<
+      (() => Promise<void>) | null
+    >(null);
+
+    const { watch, setError } = useForm<PhoneFormValues>({
+      defaultValues: {
+        clientPhone: service?.clientPhone || "",
+        currentCountry: "",
+      },
+    });
+
+    const validatePaymentData = useCallback(() => {
+      if (!stripe || !elements) throw new Error(t("err.invalidConfig"));
+      if (!user?.uid) throw new Error(t("err.unauth"));
+      if (provider.id === user.uid) throw new Error(t("err.sameUser"));
+      if (adminPricing.totalAmount < 5) throw new Error(t("err.minAmount"));
+      if (adminPricing.totalAmount > 500) throw new Error(t("err.maxAmount"));
+      const eq = Math.abs(service.amount - adminPricing.totalAmount) < 0.01;
+      if (!eq) throw new Error(t("err.amountMismatch"));
+    }, [
+      stripe,
+      elements,
+      user,
+      provider.id,
+      service.amount,
+      adminPricing.totalAmount,
+      t,
+    ]);
+
+    const persistPaymentDocs = useCallback(
+      async (paymentIntentId: string) => {
+        const orderId = `order_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+
+        const baseDoc = {
+          paymentIntentId,
+          providerId: provider.id,
+          providerName: provider.fullName || provider.name || "",
+          providerRole: provider.role || provider.type || "expat",
+          clientId: user.uid!,
+          clientEmail: user.email || "",
+          clientName: `${user.firstName || ""} ${user.lastName || ""}`.trim(),
+          clientPhone: watch("clientPhone"),
+          clientWhatsapp: "",
+          serviceType: service.serviceType,
+          duration: adminPricing.duration,
+          amount: adminPricing.totalAmount,
+          commissionAmount: adminPricing.connectionFeeAmount,
+          providerAmount: adminPricing.providerAmount,
+          currency: serviceCurrency,
+          status: "pending",
+          createdAt: serverTimestamp(),
+          notifiedAt: null,
+        };
+
+        const orderDoc = {
+          id: orderId,
+          amount: adminPricing.totalAmount,
+          currency: serviceCurrency as "eur" | "usd",
+          paymentIntentId: paymentIntentId,
+          providerId: provider.id,
+          providerName: provider.fullName || provider.name,
+          clientId: user.uid!,
+          clientEmail: user.email,
+          serviceType: service.serviceType,
+          status: "pending",
+          createdAt: serverTimestamp(),
+
+          // ✅ Fixed metadata with correct field names
+          metadata: {
+            price_origin: "standard", // or "override" if custom pricing
+            override_label: null, // Set to string if you have custom pricing labels
+            original_standard_amount: adminPricing.totalAmount, // ✅ With underscores
+            effective_base_amount: adminPricing.totalAmount, // ✅ With underscores
+          },
+
+          // ✅ Add coupon support (null for now, but ready for discounts)
+          coupon: null, // Will be: { code: "SAVE10", discountAmount: 5.00 }
+
+          // ✅ Add additional fields that might be useful
+          totalSaved: 0, // Will calculate: original_standard_amount - amount
+          appliedDiscounts: [], // Array of applied discounts
+        };
+
+        try {
+          await setDoc(doc(db, "payments", paymentIntentId), baseDoc, {
+            merge: true,
+          });
+        } catch {
+          /* no-op */
+        }
+        try {
+          await setDoc(
+            doc(db, "users", user.uid!, "payments", paymentIntentId),
+            baseDoc,
+            { merge: true }
+          );
+        } catch {
+          /* no-op */
+        }
+        try {
+          await setDoc(
+            doc(db, "providers", provider.id, "payments", paymentIntentId),
+            baseDoc,
+            { merge: true }
+          );
+        } catch {
+          /* no-op */
+        }
+        try {
+          await setDoc(doc(db, "orders", orderId), orderDoc, { merge: true });
+        } catch (error) {
+          // no-op
+          console.warn("Error creating order:", error);
+        }
+
+        console.log("✅ [CALL CHECKOUT] Order created:", orderId);
+
+        return orderId;
+      },
+      [
+        provider,
+        user,
+        adminPricing,
+        serviceCurrency,
+        service.serviceType,
+        watch,
+      ]
+    );
+
+    const sendProviderNotifications = useCallback(
+      async (
+        paymentIntentId: string,
+        clientPhoneE164: string,
+        providerPhoneE164: string
+      ) => {
+        try {
+          // Anti-doublon
+          const paymentDocRef = doc(db, "payments", paymentIntentId);
+          const paymentSnap = await getDoc(paymentDocRef);
+          if (paymentSnap.exists() && paymentSnap.data()?.notifiedAt) {
+            console.log(
+              "Notifications already sent for payment:",
+              paymentIntentId
+            );
+            return;
+          }
+
+          // ---- Données de la demande
+          const title = (
+            bookingMeta?.title ||
+            (language === "fr" ? "Demande sans titre" : "Untitled request")
+          ).toString();
+          const desc = (bookingMeta?.description || "").toString();
+          const country = (
+            bookingMeta?.country ||
+            provider.country ||
+            ""
+          ).toString();
+          const clientFirstName = (
+            user.firstName ||
+            bookingMeta?.clientFirstName ||
+            ""
+          ).toString();
+
+          // 1) In-app message
+          try {
+            await saveProviderMessage(
+              provider.id,
+              `🔔 ${language === "fr" ? "Demande payée" : "Paid request"} — ${title}\n\n${desc.slice(0, 600)}${
+                country
+                  ? `\n\n${language === "fr" ? "Pays" : "Country"}: ${country}`
+                  : ""
+              }`,
+              {
+                clientFirstName,
+                requestTitle: title,
+                requestDescription: desc,
+                requestCountry: country,
+                paymentIntentId,
+                providerPhone: providerPhoneE164 || null,
+              }
+            );
+          } catch (e) {
+            console.warn("saveProviderMessage failed:", e);
+          }
+
+          // 2) SMS + Email via pipeline
+          try {
+            const enqueueMessageEvent = httpsCallable(
+              functions,
+              "enqueueMessageEvent"
+            );
+            await enqueueMessageEvent({
+              eventId: "booking_paid_provider",
+              // eventId: "handoff.to.provider", -> to check the whatsapp messaging
+              locale: language === "fr" ? "fr-FR" : "en",
+              to: {
+                email: provider.email || null,
+                phone: providerPhoneE164 || null,
+                uid: provider.id,
+              },
+              context: {
+                provider: {
+                  id: provider.id,
+                  name: provider.fullName || provider.name,
+                },
+                client: {
+                  id: user.uid,
+                  firstName: clientFirstName,
+                  name: `${user.firstName || ""} ${user.lastName || ""}`.trim(),
+                  country,
+                  phone: clientPhoneE164 || null,
+                },
+                request: { title, description: desc, country },
+                booking: {
+                  paymentIntentId,
+                  amount: adminPricing.totalAmount,
+                  currency: serviceCurrency.toUpperCase(),
+                  serviceType: service.serviceType,
+                  createdAt: new Date().toISOString(),
+                },
+              },
+            });
+            console.log(
+              "Provider notifications enqueued successfully for payment:",
+              paymentIntentId
+            );
+          } catch (e) {
+            console.warn("enqueueMessageEvent failed");
+            console.warn("enqueueMessageEvent failed:", e);
+          }
+
+          // Marque comme notifié
+          await setDoc(
+            paymentDocRef,
+            { notifiedAt: serverTimestamp() },
+            { merge: true }
+          );
+          console.log(
+            "Provider notifications sent successfully for payment:",
+            paymentIntentId
+          );
+        } catch (notificationError) {
+          console.warn(
+            "Failed to send provider notifications:",
+            notificationError
+          );
+        }
+      },
+      [
+        provider,
+        user,
+        service,
+        adminPricing,
+        serviceCurrency,
+        language,
+        bookingMeta,
+      ]
+    );
+
+    const actuallySubmitPayment = useCallback(async () => {
+      try {
+        setIsProcessing(true);
+        validatePaymentData();
+
+        // ✅ Generate callSessionId FIRST
+        const callSessionId = `call_session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+
+        const createPaymentIntent: HttpsCallable<
+          PaymentIntentData,
+          PaymentIntentResponse
+        > = httpsCallable(functions, "createPaymentIntent");
+
+        const paymentData: PaymentIntentData = {
+          amount: adminPricing.totalAmount,
+          commissionAmount: adminPricing.connectionFeeAmount,
+          providerAmount: adminPricing.providerAmount,
+          currency: stripeCurrency,
+          serviceType: service.serviceType,
+          providerId: provider.id,
+          clientId: user.uid!,
+          clientEmail: user.email || "",
+          providerName: provider.fullName || provider.name || "",
+          description:
+            service.serviceType === "lawyer_call"
+              ? language === "fr"
+                ? "Consultation avocat"
+                : "Lawyer consultation"
+              : language === "fr"
+                ? "Consultation expatriation"
+                : "Expat consultation",
+          metadata: {
+            providerType: provider.role || provider.type || "expat",
+            duration: String(adminPricing.duration),
+            clientName: `${user.firstName || ""} ${user.lastName || ""}`.trim(),
+            clientPhone: watch("clientPhone"),
+            clientWhatsapp: "",
+            currency: serviceCurrency,
+            requestTitle: bookingMeta?.title || "",
+            timestamp: new Date().toISOString(),
+            callSessionId: callSessionId,
+          },
+        };
+
+        console.log("[createPaymentIntent] data", paymentData);
+
+        // -------- LOG ciblé sur la callable (sans `any`)
+        let resData: PaymentIntentResponse | null = null;
+        try {
+          const res = await createPaymentIntent(paymentData);
+          resData = res.data as PaymentIntentResponse;
+          console.log("[createPaymentIntent] response", resData);
+        } catch (e: unknown) {
+          logCallableError("[createPaymentIntent:error]", e);
+          throw e; // on laisse la gestion d'erreur globale s’occuper de l’affichage
+        }
+
+        if (import.meta.env.DEV) {
+          console.log("[createPaymentIntent] response", resData);
+        }
+
+        const clientSecret = resData?.clientSecret;
+        if (!clientSecret) throw new Error(t("err.noClientSecret"));
+
+        const chosenCardElement = isMobile
+          ? elements!.getElement(CardElement)
+          : elements!.getElement(CardNumberElement);
+
+        if (!chosenCardElement) throw new Error(t("err.noCardElement"));
+
+        const result = await stripe!.confirmCardPayment(clientSecret, {
+          payment_method: {
+            card: chosenCardElement,
+            billing_details: {
+              name: `${user.firstName || ""} ${user.lastName || ""}`.trim(),
+              email: user.email || "",
+            },
+          },
+        });
+
+        if (result.error)
+          throw new Error(result.error.message || t("err.stripe"));
+        const paymentIntent = result.paymentIntent;
+        if (!paymentIntent) throw new Error(t("err.paymentFailed"));
+
+        const status = paymentIntent.status;
+        console.log("Status in stripe : ", status);
+        if (!["succeeded", "requires_capture", "processing"].includes(status)) {
+          if (status === "requires_action")
+            throw new Error(t("err.actionRequired"));
+          if (status === "requires_payment_method")
+            throw new Error(t("err.invalidMethod"));
+          if (status === "canceled") throw new Error(t("err.canceled"));
+          throw new Error(`${t("err.unexpectedStatus")}: ${status}`);
+        }
+
+        const clientPhoneE164 = toE164(
+          user?.phone || watch("clientPhone") || ""
+        );
+        const providerPhoneE164 = toE164(
+          provider.phoneNumber || provider.phone || ""
+        );
+
+        // Debug
+        console.log("Debug phones:", {
+          clientPhoneE164,
+          providerPhoneE164,
+          userPhone: user?.phone,
+          serviceClientPhone: service.clientPhone,
+          providerPhone: provider.phone,
+          providerPhoneNumber: provider.phoneNumber,
+        });
+
+        if (!/^\+[1-9]\d{8,14}$/.test(clientPhoneE164)) {
+          console.warn("Invalid client phone:", clientPhoneE164);
+          setError("clientPhone", {
+            type: "validate",
+            message: t("err.invalidPhone"),
+          });
+        }
+
+        if (!/^\+[1-9]\d{8,14}$/.test(providerPhoneE164)) {
+          console.warn("Invalid provider phone:", providerPhoneE164);
+        }
+
+        let callStatus: "scheduled" | "skipped" = "skipped";
+        let callId: string | undefined;
+
+        // Planifier l'appel si les numéros sont valides
+        if (
+          /^\+[1-9]\d{8,14}$/.test(clientPhoneE164) &&
+          /^\+[1-9]\d{8,14}$/.test(providerPhoneE164)
+        ) {
+          const createAndScheduleCall: HttpsCallable<
+            CreateAndScheduleCallData,
+            { success: boolean; callId?: string }
+          > = httpsCallable(functions, "createAndScheduleCall");
+
+          const callData: CreateAndScheduleCallData = {
+            providerId: provider.id,
+            clientId: user.uid!,
+            providerPhone: providerPhoneE164,
+            clientPhone: clientPhoneE164,
+            clientWhatsapp: "",
+            serviceType: service.serviceType,
+            providerType: (provider.role ||
+              provider.type ||
+              "expat") as ServiceKind,
+            paymentIntentId: paymentIntent.id,
+            amount: adminPricing.totalAmount,
+            currency: serviceCurrency.toUpperCase() as "EUR" | "USD",
+            delayMinutes: 5,
+            clientLanguages: [language],
+            providerLanguages: provider.languagesSpoken ||
+              provider.languages || ["fr"],
+            callSessionId: callSessionId,
+          };
+
+          console.log("[createAndScheduleCall] data", callData);
+
+          void (async () => {
+            try {
+              const callResult = await createAndScheduleCall(callData);
+              console.log(callResult, " == this is the call result");
+              if (callResult && callResult.data && callResult.data.success) {
+                console.log("[createAndScheduleCall] success");
+                callStatus = "scheduled";
+                callId = callResult.data.callId || callSessionId;
+              }
+            } catch (cfErr: unknown) {
+              logCallableError("createAndScheduleCall:error", cfErr);
+            }
+          })();
+        } else {
+          console.warn("Missing/invalid phone(s). Skipping call scheduling.");
+        }
+
+        const orderId = await persistPaymentDocs(paymentIntent.id);
+        void sendProviderNotifications(
+          paymentIntent.id,
+          clientPhoneE164,
+          providerPhoneE164
+        );
+
+        const gtag = getGtag();
+        gtag?.("event", "checkout_success", {
+          service_type: service.serviceType,
+          provider_id: provider.id,
+          payment_intent: paymentIntent.id,
+          currency: serviceCurrency,
+          amount: adminPricing.totalAmount,
+          call_status: callStatus,
+        });
+        setTimeout(() => {
+          onSuccess({
+            paymentIntentId: paymentIntent.id,
+            call: callStatus,
+            callId: callId,
+            orderId: orderId,
+          });
+        }, 3000);
+      } catch (err: unknown) {
+        console.error("Payment error:", err);
+
+        let msg = t("err.genericPayment");
+
+        if (isHttpsError(err)) {
+          if (
+            err.code === "failed-precondition" ||
+            err.code === "invalid-argument" ||
+            err.code === "unauthenticated"
+          ) {
+            msg = err.message || msg;
+          } else {
+            msg = err.message || msg;
+          }
+        } else if (err instanceof Error) {
+          msg = err.message || msg;
+        } else if (typeof err === "string") {
+          msg = err;
+        }
+
+        onError(msg);
+      } finally {
+        setIsProcessing(false);
+      }
+    }, [
+      setIsProcessing,
+      validatePaymentData,
+      adminPricing.totalAmount,
+      adminPricing.connectionFeeAmount,
+      adminPricing.providerAmount,
+      stripeCurrency,
+      service.serviceType,
+      service.clientPhone,
+      provider,
+      user.uid,
+      user.email,
+      user.firstName,
+      user.lastName,
+      user?.phone,
+      language,
+      adminPricing.duration,
+      serviceCurrency,
+      isMobile,
+      elements,
+      stripe,
+      onSuccess,
+      onError,
+      persistPaymentDocs,
+      sendProviderNotifications,
+      setError,
+      watch,
+      bookingMeta,
+      t,
+    ]);
+
+    const handlePaymentSubmit = useCallback(
+      async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (isProcessing) return;
+
+        if (adminPricing.totalAmount > 100) {
+          setPendingSubmit(() => actuallySubmitPayment);
+          setShowConfirm(true);
           return;
         }
 
-        // ---- Données de la demande
-        const title = (bookingMeta?.title || (language === 'fr' ? 'Demande sans titre' : 'Untitled request')).toString();
-        const desc  = (bookingMeta?.description || '').toString();
-        const country = (bookingMeta?.country || provider.country || '').toString();
-        const clientFirstName = (user.firstName || bookingMeta?.clientFirstName || '').toString();
+        await actuallySubmitPayment();
+      },
+      [isProcessing, adminPricing.totalAmount, actuallySubmitPayment]
+    );
 
-        // 1) In-app message
-        try {
-          await saveProviderMessage(
-            provider.id,
-            `🔔 ${language === 'fr' ? 'Demande payée' : 'Paid request'} — ${title}\n\n${desc.slice(0, 600)}${
-              country ? `\n\n${language === 'fr' ? 'Pays' : 'Country'}: ${country}` : ''
-            }`,
-            {
-              clientFirstName,
-              requestTitle: title,
-              requestDescription: desc,
-              requestCountry: country,
-              paymentIntentId,
-              providerPhone: providerPhoneE164 || null,
-            }
-          );
-        } catch (e) {
-          console.warn('saveProviderMessage failed:', e);
-        }
+    const providerDisplayName = useMemo(
+      () =>
+        provider?.fullName ||
+        provider?.name ||
+        `${provider?.firstName || ""} ${provider?.lastName || ""}`.trim() ||
+        "Expert",
+      [provider]
+    );
 
-        // 2) SMS + Email via pipeline
-        try {
-          const enqueueMessageEvent = httpsCallable(functions, 'enqueueMessageEvent');
-          await enqueueMessageEvent({
-            eventId: 'booking_paid_provider',
-            locale: language === 'fr' ? 'fr-FR' : 'en',
-            to: {
-              email: provider.email || null,
-              phone: providerPhoneE164 || null,
-              uid: provider.id,
-            },
-            context: {
-              provider: { id: provider.id, name: provider.fullName || provider.name },
-              client: {
-                id: user.uid,
-                firstName: clientFirstName,
-                name: `${user.firstName || ''} ${user.lastName || ''}`.trim(),
-                country,
-                phone: clientPhoneE164 || null,
-              },
-              request: { title, description: desc, country },
-              booking: {
-                paymentIntentId,
-                amount: adminPricing.totalAmount,
-                currency: serviceCurrency.toUpperCase(),
-                serviceType: service.serviceType,
-                createdAt: new Date().toISOString(),
-              },
-            },
-          });
-          console.log('Provider notifications enqueued successfully for payment:', paymentIntentId);
-        } catch (e) {
-          console.warn("enqueueMessageEvent failed");
-          console.warn('enqueueMessageEvent failed:', e);
-        }
+    const serviceTypeDisplay = useMemo(
+      () =>
+        service.serviceType === "lawyer_call"
+          ? language === "fr"
+            ? "Consultation Avocat"
+            : "Lawyer Consultation"
+          : language === "fr"
+            ? "Consultation Expatrié"
+            : "Expat Consultation",
+      [service.serviceType, language]
+    );
 
-        // Marque comme notifié
-        await setDoc(paymentDocRef, { notifiedAt: serverTimestamp() }, { merge: true });
-        console.log('Provider notifications sent successfully for payment:', paymentIntentId);
-      } catch (notificationError) {
-        console.warn('Failed to send provider notifications:', notificationError);
-      }
-    },
-    [provider, user, service, adminPricing, serviceCurrency, language, bookingMeta]
-  );
-
-  const actuallySubmitPayment = useCallback(async () => {
-    try {
-      setIsProcessing(true);
-      validatePaymentData();
-
-      // ✅ Generate callSessionId FIRST
-    const callSessionId = `call_session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
-
-      const createPaymentIntent: HttpsCallable<PaymentIntentData, PaymentIntentResponse> =
-        httpsCallable(functions, 'createPaymentIntent');
-
-      const paymentData: PaymentIntentData = {
-        amount: adminPricing.totalAmount,
-        commissionAmount: adminPricing.connectionFeeAmount,
-        providerAmount: adminPricing.providerAmount,
-        currency: stripeCurrency,
-        serviceType: service.serviceType,
-        providerId: provider.id,
-        clientId: user.uid!,
-        clientEmail: user.email || '',
-        providerName: provider.fullName || provider.name || '',
-        description: service.serviceType === 'lawyer_call'
-          ? (language === 'fr' ? 'Consultation avocat' : 'Lawyer consultation')
-          : (language === 'fr' ? 'Consultation expatriation' : 'Expat consultation'),
-        metadata: {
-          providerType: provider.role || provider.type || 'expat',
-          duration: String(adminPricing.duration),
-          clientName: `${user.firstName || ''} ${user.lastName || ''}`.trim(),
-          clientPhone: watch('clientPhone'),
-          clientWhatsapp: '',
-          currency: serviceCurrency,
-          requestTitle: bookingMeta?.title || '',
-          timestamp: new Date().toISOString(),
-          callSessionId: callSessionId
-        }
-      };
-
-  
-        console.log('[createPaymentIntent] data', paymentData);
-
-
-      // -------- LOG ciblé sur la callable (sans `any`)
-      let resData: PaymentIntentResponse | null = null;
-      try {
-        const res = await createPaymentIntent(paymentData);
-        resData = res.data as PaymentIntentResponse;
-        console.log("[createPaymentIntent] response", resData);
-      } catch (e: unknown) {
-        logCallableError('[createPaymentIntent:error]', e);
-        throw e; // on laisse la gestion d'erreur globale s’occuper de l’affichage
-      }
-
-      if (import.meta.env.DEV) {
-        console.log('[createPaymentIntent] response', resData);
-      }
-
-      const clientSecret = resData?.clientSecret;
-      if (!clientSecret) throw new Error(t('err.noClientSecret'));
-
-      const chosenCardElement = isMobile
-        ? elements!.getElement(CardElement)
-        : elements!.getElement(CardNumberElement);
-
-      if (!chosenCardElement) throw new Error(t('err.noCardElement'));
-
-      const result = await stripe!.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: chosenCardElement,
-          billing_details: {
-            name: `${user.firstName || ''} ${user.lastName || ''}`.trim(),
-            email: user.email || '',
-          },
-        },
-      });
-
-      if (result.error) throw new Error(result.error.message || t('err.stripe'));
-      const paymentIntent = result.paymentIntent;
-      if (!paymentIntent) throw new Error(t('err.paymentFailed'));
-
-      const status = paymentIntent.status;
-      console.log("Status in stripe : ", status)
-      if (!['succeeded', 'requires_capture', 'processing'].includes(status)) {
-        if (status === 'requires_action') throw new Error(t('err.actionRequired'));
-        if (status === 'requires_payment_method') throw new Error(t('err.invalidMethod'));
-        if (status === 'canceled') throw new Error(t('err.canceled'));
-        throw new Error(`${t('err.unexpectedStatus')}: ${status}`);
-      }
-
-      const clientPhoneE164 = toE164(user?.phone || watch('clientPhone') || '');
-      const providerPhoneE164 = toE164(provider.phoneNumber || provider.phone || '');
-
-      // Debug
-      console.log('Debug phones:', {
-        clientPhoneE164,
-        providerPhoneE164,
-        userPhone: user?.phone,
-        serviceClientPhone: service.clientPhone,
-        providerPhone: provider.phone,
-        providerPhoneNumber: provider.phoneNumber
-      });
-
-      if (!/^\+[1-9]\d{8,14}$/.test(clientPhoneE164)) {
-        console.warn('Invalid client phone:', clientPhoneE164);
-        setError('clientPhone', { type: 'validate', message: t('err.invalidPhone') });
-      }
-
-      if (!/^\+[1-9]\d{8,14}$/.test(providerPhoneE164)) {
-        console.warn('Invalid provider phone:', providerPhoneE164);
-      }
-      
-
-      void persistPaymentDocs(paymentIntent.id);
-      void sendProviderNotifications(paymentIntent.id, clientPhoneE164, providerPhoneE164);
-      
-      const gtag = getGtag();
-      gtag?.('event', 'checkout_success', {
-        service_type: service.serviceType,
-        provider_id: provider.id,
-        payment_intent: paymentIntent.id,
-        currency: serviceCurrency,
-        amount: adminPricing.totalAmount,
-        call_status: 'skipped',
-      });
-
-      onSuccess({ paymentIntentId: paymentIntent.id, call: 'skipped' });
-
-      // Planifier l'appel si les numéros sont valides
-      if (/^\+[1-9]\d{8,14}$/.test(clientPhoneE164) && /^\+[1-9]\d{8,14}$/.test(providerPhoneE164)) {
-        const createAndScheduleCall: HttpsCallable<CreateAndScheduleCallData, { success: boolean; callId?: string }> =
-          httpsCallable(functions, 'createAndScheduleCall');
-
-        const callData: CreateAndScheduleCallData = {
-          providerId: provider.id,
-          clientId: user.uid!,
-          providerPhone: providerPhoneE164,
-          clientPhone: clientPhoneE164,
-          clientWhatsapp: '',
-          serviceType: service.serviceType,
-          providerType: (provider.role || provider.type || 'expat') as ServiceKind,
-          paymentIntentId: paymentIntent.id,
-          amount: adminPricing.totalAmount,
-          currency: serviceCurrency.toUpperCase() as 'EUR' | 'USD',
-          delayMinutes: 5,
-          clientLanguages: [language],
-          providerLanguages: provider.languagesSpoken || provider.languages || ['fr'],
-          callSessionId: callSessionId
-        };
-
-        console.log('[createAndScheduleCall] data', callData);
-
-        void (async () => {
-          try {
-            await createAndScheduleCall(callData);
-          } catch (cfErr: unknown) {
-            logCallableError('createAndScheduleCall:error', cfErr);
-          }
-        })();
-      } else {
-        console.warn('Missing/invalid phone(s). Skipping call scheduling.');
-      }
-    } catch (err: unknown) {
-      console.error('Payment error:', err);
-
-      let msg = t('err.genericPayment');
-
-      if (isHttpsError(err)) {
-        if (
-          err.code === 'failed-precondition' ||
-          err.code === 'invalid-argument' ||
-          err.code === 'unauthenticated'
-        ) {
-          msg = err.message || msg;
-        } else {
-          msg = err.message || msg;
-        }
-      } else if (err instanceof Error) {
-        msg = err.message || msg;
-      } else if (typeof err === 'string') {
-        msg = err;
-      }
-
-      onError(msg);
-    } finally {
-      setIsProcessing(false);
-    }
-  }, [
-    setIsProcessing,
-    validatePaymentData,
-    adminPricing.totalAmount,
-    adminPricing.connectionFeeAmount,
-    adminPricing.providerAmount,
-    stripeCurrency,
-    service.serviceType,
-    service.clientPhone,
-    provider,
-    user.uid,
-    user.email,
-    user.firstName,
-    user.lastName,
-    user?.phone,
-    language,
-    adminPricing.duration,
-    serviceCurrency,
-    isMobile,
-    elements,
-    stripe,
-    onSuccess,
-    onError,
-    persistPaymentDocs,
-    sendProviderNotifications,
-    setError,
-    watch,
-    bookingMeta,
-    t,
-  ]);
-
-  const handlePaymentSubmit = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (isProcessing) return;
-
-    if (adminPricing.totalAmount > 100) {
-      setPendingSubmit(() => actuallySubmitPayment);
-      setShowConfirm(true);
-      return;
-    }
-
-    await actuallySubmitPayment();
-  }, [isProcessing, adminPricing.totalAmount, actuallySubmitPayment]);
-
-  const providerDisplayName = useMemo(
-    () => provider?.fullName || provider?.name || `${provider?.firstName || ''} ${provider?.lastName || ''}`.trim() || 'Expert',
-    [provider]
-  );
-
-  const serviceTypeDisplay = useMemo(
-    () => service.serviceType === 'lawyer_call'
-      ? (language === 'fr' ? 'Consultation Avocat' : 'Lawyer Consultation')
-      : (language === 'fr' ? 'Consultation Expatrié' : 'Expat Consultation'),
-    [service.serviceType, language]
-  );
-
-  return (
-    <>
-      <form onSubmit={handlePaymentSubmit} className="space-y-4" noValidate>
-        <div className="space-y-4">
-          <label className="block text-sm font-semibold text-gray-700">
-            <div className="flex items-center space-x-2">
-              <CreditCard className="w-4 h-4 text-blue-600" aria-hidden="true" />
-              <span className="sr-only">{t('card.title')}</span>
-            </div>
-          </label>
-
-          {isMobile ? (
-            <div className="space-y-2" aria-live="polite">
-              <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
-                {t('card.number')}
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <CreditCard className="h-4 w-4 text-gray-400" aria-hidden="true" />
-                </div>
-                <div className="pl-10 pr-3 py-3.5 border-2 border-gray-200 rounded-lg bg-white focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all duration-200 hover:border-gray-300">
-                  <CardElement options={singleCardElementOptions} />
-                </div>
-                <p className="mt-2 text-xs text-gray-500">
-                  {language === 'fr'
-                    ? 'Saisie simplifiée pour mobile. Sécurisé par Stripe.'
-                    : 'Simplified entry on mobile. Secured by Stripe.'}
-                </p>
+    return (
+      <>
+        <form onSubmit={handlePaymentSubmit} className="space-y-4" noValidate>
+          <div className="space-y-4">
+            <label className="block text-sm font-semibold text-gray-700">
+              <div className="flex items-center space-x-2">
+                <CreditCard
+                  className="w-4 h-4 text-blue-600"
+                  aria-hidden="true"
+                />
+                <span className="sr-only">{t("card.title")}</span>
               </div>
-            </div>
-          ) : (
-            <>
-              <div className="space-y-2">
+            </label>
+
+            {isMobile ? (
+              <div className="space-y-2" aria-live="polite">
                 <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
-                  {t('card.number')}
+                  {t("card.number")}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <CreditCard className="h-4 w-4 text-gray-400" aria-hidden="true" />
+                    <CreditCard
+                      className="h-4 w-4 text-gray-400"
+                      aria-hidden="true"
+                    />
                   </div>
                   <div className="pl-10 pr-3 py-3.5 border-2 border-gray-200 rounded-lg bg-white focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all duration-200 hover:border-gray-300">
-                    <CardNumberElement options={cardElementOptions} />
+                    <CardElement options={singleCardElementOptions} />
                   </div>
+                  <p className="mt-2 text-xs text-gray-500">
+                    {language === "fr"
+                      ? "Saisie simplifiée pour mobile. Sécurisé par Stripe."
+                      : "Simplified entry on mobile. Secured by Stripe."}
+                  </p>
                 </div>
               </div>
-
-              <div className="grid grid-cols-2 gap-3">
+            ) : (
+              <>
                 <div className="space-y-2">
                   <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
-                    {t('card.expiry')}
+                    {t("card.number")}
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Calendar className="h-4 w-4 text-gray-400" aria-hidden="true" />
+                      <CreditCard
+                        className="h-4 w-4 text-gray-400"
+                        aria-hidden="true"
+                      />
                     </div>
                     <div className="pl-10 pr-3 py-3.5 border-2 border-gray-200 rounded-lg bg-white focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all duration-200 hover:border-gray-300">
-                      <CardExpiryElement options={cardElementOptions} />
+                      <CardNumberElement options={cardElementOptions} />
                     </div>
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
-                    {t('card.cvc')}
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Shield className="h-4 w-4 text-gray-400" aria-hidden="true" />
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
+                    <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
+                      {t("card.expiry")}
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Calendar
+                          className="h-4 w-4 text-gray-400"
+                          aria-hidden="true"
+                        />
+                      </div>
+                      <div className="pl-10 pr-3 py-3.5 border-2 border-gray-200 rounded-lg bg-white focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all duration-200 hover:border-gray-300">
+                        <CardExpiryElement options={cardElementOptions} />
+                      </div>
                     </div>
-                    <div className="pl-10 pr-3 py-3.5 border-2 border-gray-200 rounded-lg bg-white focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all duration-200 hover:border-gray-300">
-                      <CardCvcElement options={cardElementOptions} />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="block text-xs font-medium text-gray-600 uppercase tracking-wide">
+                      {t("card.cvc")}
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Shield
+                          className="h-4 w-4 text-gray-400"
+                          aria-hidden="true"
+                        />
+                      </div>
+                      <div className="pl-10 pr-3 py-3.5 border-2 border-gray-200 rounded-lg bg-white focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all duration-200 hover:border-gray-300">
+                        <CardCvcElement options={cardElementOptions} />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </>
-          )}
-        </div>
+              </>
+            )}
+          </div>
 
-        <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-          <h4 className="font-semibold text-gray-900 mb-3 text-sm">Summary</h4>
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Expert</span>
-              <div className="flex items-center space-x-2">
-                <img
-                  src={provider.avatar || provider.profilePhoto || '/default-avatar.png'}
-                  className="w-5 h-5 rounded-full object-cover"
-                  onError={(e) => {
-                    const target = e.currentTarget as HTMLImageElement;
-                    const name = providerDisplayName;
-                    target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&size=40`;
-                  }}
-                  alt=""
-                  loading="lazy"
-                />
-                <span className="font-medium text-gray-900 text-xs">{providerDisplayName}</span>
-              </div>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Service</span>
-              <span className="font-medium text-gray-800 text-xs">{serviceTypeDisplay}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Durée</span>
-              <span className="font-medium text-gray-800 text-xs">{adminPricing.duration} min</span>
-            </div>
-
-            <div className="border-t-2 border-gray-400 pt-2 mt-2">
+          <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <h4 className="font-semibold text-gray-900 mb-3 text-sm">
+              Summary
+            </h4>
+            <div className="space-y-2 text-sm">
               <div className="flex justify-between items-center">
-                <span className="font-bold text-gray-900">Total</span>
-                <span
-                  className="text-lg font-black bg-gradient-to-r from-red-500 to-pink-600 bg-clip-text text-transparent"
-                  {...priceInfo}
-                >
-                  {adminPricing.totalAmount.toFixed(2)} {currencySymbol}
+                <span className="text-gray-600">Expert</span>
+                <div className="flex items-center space-x-2">
+                  <img
+                    src={
+                      provider.avatar ||
+                      provider.profilePhoto ||
+                      "/default-avatar.png"
+                    }
+                    className="w-5 h-5 rounded-full object-cover"
+                    onError={(e) => {
+                      const target = e.currentTarget as HTMLImageElement;
+                      const name = providerDisplayName;
+                      target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&size=40`;
+                    }}
+                    alt=""
+                    loading="lazy"
+                  />
+                  <span className="font-medium text-gray-900 text-xs">
+                    {providerDisplayName}
+                  </span>
+                </div>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Service</span>
+                <span className="font-medium text-gray-800 text-xs">
+                  {serviceTypeDisplay}
                 </span>
               </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-600">Durée</span>
+                <span className="font-medium text-gray-800 text-xs">
+                  {adminPricing.duration} min
+                </span>
+              </div>
+
+              <div className="border-t-2 border-gray-400 pt-2 mt-2">
+                <div className="flex justify-between items-center">
+                  <span className="font-bold text-gray-900">Total</span>
+                  <span
+                    className="text-lg font-black bg-gradient-to-r from-red-500 to-pink-600 bg-clip-text text-transparent"
+                    {...priceInfo}
+                  >
+                    {adminPricing.totalAmount.toFixed(2)} {currencySymbol}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <button
-          type="submit"
-          disabled={!stripe || isProcessing}
-          className={
-            "w-full py-4 rounded-xl font-bold text-white transition-all duration-300 " +
-            "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 " +
-            "active:scale-[0.98] touch-manipulation relative overflow-hidden " +
-            ((!stripe || isProcessing)
-              ? "bg-gray-400 cursor-not-allowed opacity-60"
-              : "bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 shadow-lg hover:shadow-xl")
+          <button
+            type="submit"
+            disabled={!stripe || isProcessing}
+            className={
+              "w-full py-4 rounded-xl font-bold text-white transition-all duration-300 " +
+              "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 " +
+              "active:scale-[0.98] touch-manipulation relative overflow-hidden " +
+              (!stripe || isProcessing
+                ? "bg-gray-400 cursor-not-allowed opacity-60"
+                : "bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 shadow-lg hover:shadow-xl")
+            }
+            aria-label={`${
+              language === "fr" ? "Payer " : "Pay "
+            }${new Intl.NumberFormat(language === "fr" ? "fr-FR" : "en-US", {
+              style: "currency",
+              currency: serviceCurrency.toUpperCase(),
+              minimumFractionDigits: 2,
+            }).format(adminPricing.totalAmount)}`}
+          >
+            {isProcessing ? (
+              <div className="flex items-center justify-center space-x-2">
+                <div className="animate-spin rounded-full border-2 border-white border-t-transparent w-5 h-5" />
+                <span>...</span>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center space-x-2">
+                <Lock className="w-5 h-5" aria-hidden="true" />
+                <span>
+                  {language === "fr" ? "Payer " : "Pay "}
+                  {new Intl.NumberFormat(
+                    language === "fr" ? "fr-FR" : "en-US",
+                    {
+                      style: "currency",
+                      currency: serviceCurrency.toUpperCase(),
+                      minimumFractionDigits: 2,
+                    }
+                  ).format(adminPricing.totalAmount)}
+                </span>
+              </div>
+            )}
+          </button>
+
+          <div className="flex items-center justify-center">
+            <div className="flex items-center space-x-2 bg-green-50 px-3 py-1.5 rounded-full border border-green-200">
+              <Shield className="w-3 h-3 text-green-600" aria-hidden={true} />
+              <span className="text-xs font-medium text-gray-700">Stripe</span>
+              <div
+                className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"
+                aria-hidden={true}
+              />
+            </div>
+          </div>
+        </form>
+
+        {/* Modale de confirmation */}
+        <ConfirmModal
+          open={showConfirm}
+          title={
+            language === "fr" ? "Confirmer le paiement" : "Confirm payment"
           }
-          aria-label={`${
-            language === 'fr' ? 'Payer ' : 'Pay '
-          }${new Intl.NumberFormat(language === 'fr' ? 'fr-FR' : 'en-US', {
-            style: 'currency',
-            currency: serviceCurrency.toUpperCase(),
-            minimumFractionDigits: 2,
-          }).format(adminPricing.totalAmount)}`}
-        >
-          {isProcessing ? (
-            <div className="flex items-center justify-center space-x-2">
-              <div className="animate-spin rounded-full border-2 border-white border-t-transparent w-5 h-5" />
-              <span>...</span>
-            </div>
-          ) : (
-            <div className="flex items-center justify-center space-x-2">
-              <Lock className="w-5 h-5" aria-hidden="true" />
-              <span>
-                {language === 'fr' ? 'Payer ' : 'Pay '}
-                {new Intl.NumberFormat(language === 'fr' ? 'fr-FR' : 'en-US', {
-                  style: 'currency',
-                  currency: serviceCurrency.toUpperCase(),
-                  minimumFractionDigits: 2,
-                }).format(adminPricing.totalAmount)}
-              </span>
-            </div>
-          )}
-        </button>
-
-        <div className="flex items-center justify-center">
-          <div className="flex items-center space-x-2 bg-green-50 px-3 py-1.5 rounded-full border border-green-200">
-            <Shield className="w-3 h-3 text-green-600" aria-hidden={true} />
-            <span className="text-xs font-medium text-gray-700">Stripe</span>
-            <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" aria-hidden={true} />
-          </div>
-        </div>
-      </form>
-
-      {/* Modale de confirmation */}
-      <ConfirmModal
-        open={showConfirm}
-        title={language === 'fr' ? 'Confirmer le paiement' : 'Confirm payment'}
-        message={
-          language === 'fr'
-            ? `Confirmer le paiement de ${adminPricing.totalAmount.toFixed(2)}${currencySymbol} en ${serviceCurrency.toUpperCase()} ?`
-            : `Confirm payment of ${adminPricing.totalAmount.toFixed(2)}${currencySymbol} in ${serviceCurrency.toUpperCase()}?`
-        }
-        onCancel={() => { setShowConfirm(false); setPendingSubmit(null); }}
-        onConfirm={async () => {
-          setShowConfirm(false);
-          const fn = pendingSubmit;
-          setPendingSubmit(null);
-          if (fn) await fn();
-        }}
-      />
-    </>
-  );
-});
-PaymentForm.displayName = 'PaymentForm';
+          message={
+            language === "fr"
+              ? `Confirmer le paiement de ${adminPricing.totalAmount.toFixed(2)}${currencySymbol} en ${serviceCurrency.toUpperCase()} ?`
+              : `Confirm payment of ${adminPricing.totalAmount.toFixed(2)}${currencySymbol} in ${serviceCurrency.toUpperCase()}?`
+          }
+          onCancel={() => {
+            setShowConfirm(false);
+            setPendingSubmit(null);
+          }}
+          onConfirm={async () => {
+            setShowConfirm(false);
+            const fn = pendingSubmit;
+            setPendingSubmit(null);
+            if (fn) await fn();
+          }}
+        />
+      </>
+    );
+  }
+);
+PaymentForm.displayName = "PaymentForm";
 
 interface DebugPriceEntry {
   element: Element;
@@ -1076,7 +1488,9 @@ interface DebugPriceEntry {
 }
 interface DebugPricingAPI {
   showAllPrices: () => DebugPriceEntry[];
-  highlightBySource: (source: 'admin' | 'provider' | 'fallback' | 'loading') => void;
+  highlightBySource: (
+    source: "admin" | "provider" | "fallback" | "loading"
+  ) => void;
   clearHighlights: () => void;
 }
 declare global {
@@ -1085,7 +1499,11 @@ declare global {
   }
 }
 
-const CallCheckout: React.FC<CallCheckoutProps> = ({ selectedProvider, serviceData, onGoBack }) => {
+const CallCheckout: React.FC<CallCheckoutProps> = ({
+  selectedProvider,
+  serviceData,
+  onGoBack,
+}) => {
   const { t, language } = useTranslation();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -1093,34 +1511,52 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({ selectedProvider, serviceDa
   const isMobile = useIsMobile();
 
   const { getTraceAttributes } = usePriceTracing();
-  const { pricing, error: pricingError, loading: pricingLoading } = usePricingConfig() as {
-    pricing?: { lawyer: Record<Currency, PricingEntryTrace>; expat: Record<Currency, PricingEntryTrace> };
+  const {
+    pricing,
+    error: pricingError,
+    loading: pricingLoading,
+  } = usePricingConfig() as {
+    pricing?: {
+      lawyer: Record<Currency, PricingEntryTrace>;
+      expat: Record<Currency, PricingEntryTrace>;
+    };
     error?: string | Error | null;
     loading: boolean;
   };
 
-  const [selectedCurrency, setSelectedCurrency] = useState<Currency>('eur');
+  const [selectedCurrency, setSelectedCurrency] = useState<Currency>("eur");
 
   useEffect(() => {
     const initializeCurrency = () => {
-      if (serviceData?.currency && ['eur', 'usd'].includes(serviceData.currency)) {
+      if (
+        serviceData?.currency &&
+        ["eur", "usd"].includes(serviceData.currency)
+      ) {
         setSelectedCurrency(serviceData.currency as Currency);
         return;
       }
       try {
-        const saved = sessionStorage.getItem('selectedCurrency') as Currency | null;
-        if (saved && ['eur', 'usd'].includes(saved)) {
+        const saved = sessionStorage.getItem(
+          "selectedCurrency"
+        ) as Currency | null;
+        if (saved && ["eur", "usd"].includes(saved)) {
           setSelectedCurrency(saved);
           return;
         }
-      } catch { /* no-op */ }
+      } catch {
+        /* no-op */
+      }
       try {
-        const preferred = localStorage.getItem('preferredCurrency') as Currency | null;
-        if (preferred && ['eur', 'usd'].includes(preferred)) {
+        const preferred = localStorage.getItem(
+          "preferredCurrency"
+        ) as Currency | null;
+        if (preferred && ["eur", "usd"].includes(preferred)) {
           setSelectedCurrency(preferred);
           return;
         }
-      } catch { /* no-op */ }
+      } catch {
+        /* no-op */
+      }
       const detected = detectUserCurrency();
       setSelectedCurrency(detected);
     };
@@ -1129,30 +1565,40 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({ selectedProvider, serviceDa
 
   useEffect(() => {
     try {
-      sessionStorage.setItem('selectedCurrency', selectedCurrency);
-      localStorage.setItem('preferredCurrency', selectedCurrency);
-    } catch { /* no-op */ }
+      sessionStorage.setItem("selectedCurrency", selectedCurrency);
+      localStorage.setItem("preferredCurrency", selectedCurrency);
+    } catch {
+      /* no-op */
+    }
   }, [selectedCurrency]);
 
   const provider = useMemo<ProviderWithExtras | null>(() => {
-    if (selectedProvider?.id) return normalizeProvider(selectedProvider) as ProviderWithExtras;
+    if (selectedProvider?.id)
+      return normalizeProvider(selectedProvider) as ProviderWithExtras;
     try {
-      const saved = sessionStorage.getItem('selectedProvider');
+      const saved = sessionStorage.getItem("selectedProvider");
       if (saved) {
         const p = JSON.parse(saved) as ProviderWithExtras;
-        if (p?.id) return normalizeProvider(p as Provider) as ProviderWithExtras;
+        if (p?.id)
+          return normalizeProvider(p as Provider) as ProviderWithExtras;
       }
-    } catch { /* no-op */ }
+    } catch {
+      /* no-op */
+    }
     return null;
   }, [selectedProvider]);
 
   const providerRole: ServiceKind | null = useMemo(() => {
     if (!provider) return null;
-    return ((provider.role || provider.type || 'expat') as ServiceKind);
+    return (provider.role || provider.type || "expat") as ServiceKind;
   }, [provider]);
 
   const storedClientPhone = useMemo(() => {
-    try { return sessionStorage.getItem('clientPhone') || ''; } catch { return ''; }
+    try {
+      return sessionStorage.getItem("clientPhone") || "";
+    } catch {
+      return "";
+    }
   }, []);
 
   const adminPricing: PricingEntryTrace | null = useMemo(() => {
@@ -1164,149 +1610,186 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({ selectedProvider, serviceDa
     if (!provider || !adminPricing || !providerRole) return null;
     return {
       providerId: provider.id,
-      serviceType: providerRole === 'lawyer' ? 'lawyer_call' : 'expat_call',
+      serviceType: providerRole === "lawyer" ? "lawyer_call" : "expat_call",
       providerRole,
       amount: adminPricing.totalAmount,
       duration: adminPricing.duration,
-      clientPhone: toE164(storedClientPhone || user?.phone || ''),
+      clientPhone: toE164(storedClientPhone || user?.phone || ""),
       commissionAmount: adminPricing.connectionFeeAmount,
       providerAmount: adminPricing.providerAmount,
       currency: selectedCurrency,
     };
-  }, [provider, adminPricing, providerRole, user?.phone, selectedCurrency, storedClientPhone]);
+  }, [
+    provider,
+    adminPricing,
+    providerRole,
+    user?.phone,
+    selectedCurrency,
+    storedClientPhone,
+  ]);
 
   const cardTraceAttrs = useMemo(
-    () => getTraceAttributes((providerRole || 'expat') as ServiceKind, selectedCurrency),
+    () =>
+      getTraceAttributes(
+        (providerRole || "expat") as ServiceKind,
+        selectedCurrency
+      ),
     [getTraceAttributes, providerRole, selectedCurrency]
   );
 
   // Expose debug helpers (DEV only)
-  if (import.meta.env.DEV && typeof window !== 'undefined') {
+  if (import.meta.env.DEV && typeof window !== "undefined") {
     if (!window.debugPricing) {
       window.debugPricing = {
         showAllPrices: () => {
-          const elements = document.querySelectorAll('[data-price-source]');
+          const elements = document.querySelectorAll("[data-price-source]");
           const prices: DebugPriceEntry[] = [];
-          elements.forEach(el => {
+          elements.forEach((el) => {
             prices.push({
               element: el,
-              source: el.getAttribute('data-price-source') || 'unknown',
-              currency: el.getAttribute('data-currency') || 'unknown',
-              serviceType: el.getAttribute('data-service-type') || undefined,
-              text: (el.textContent || '').trim()
+              source: el.getAttribute("data-price-source") || "unknown",
+              currency: el.getAttribute("data-currency") || "unknown",
+              serviceType: el.getAttribute("data-service-type") || undefined,
+              text: (el.textContent || "").trim(),
             });
           });
           console.table(prices);
           return prices;
         },
         highlightBySource: (source) => {
-          document.querySelectorAll('.debug-price-highlight').forEach(el => {
-            el.classList.remove('debug-price-highlight');
-            (el as HTMLElement).style.outline = '';
-            (el as HTMLElement).style.backgroundColor = '';
+          document.querySelectorAll(".debug-price-highlight").forEach((el) => {
+            el.classList.remove("debug-price-highlight");
+            (el as HTMLElement).style.outline = "";
+            (el as HTMLElement).style.backgroundColor = "";
           });
-          document.querySelectorAll(`[data-price-source="${source}"]`).forEach(el => {
-            (el as HTMLElement).classList.add('debug-price-highlight');
-            (el as HTMLElement).style.outline = '3px solid red';
-            (el as HTMLElement).style.backgroundColor = 'rgba(255, 0, 0, 0.1)';
-          });
+          document
+            .querySelectorAll(`[data-price-source="${source}"]`)
+            .forEach((el) => {
+              (el as HTMLElement).classList.add("debug-price-highlight");
+              (el as HTMLElement).style.outline = "3px solid red";
+              (el as HTMLElement).style.backgroundColor =
+                "rgba(255, 0, 0, 0.1)";
+            });
         },
         clearHighlights: () => {
-          document.querySelectorAll('.debug-price-highlight').forEach(el => {
-            el.classList.remove('debug-price-highlight');
-            (el as HTMLElement).style.outline = '';
-            (el as HTMLElement).style.backgroundColor = '';
+          document.querySelectorAll(".debug-price-highlight").forEach((el) => {
+            el.classList.remove("debug-price-highlight");
+            (el as HTMLElement).style.outline = "";
+            (el as HTMLElement).style.backgroundColor = "";
           });
-        }
+        },
       };
-      console.log('Debug pricing disponible: window.debugPricing');
+      console.log("Debug pricing disponible: window.debugPricing");
     }
   }
 
-  const seoMeta = useMemo(() => ({
-    title: t('meta.title'),
-    description: t('meta.description'),
-    keywords: t('meta.keywords'),
-    ogTitle: t('meta.og_title'),
-    ogDescription: t('meta.og_description'),
-    ogImagePath: `${window.location.origin}/images/og-checkout-${language}.jpg`,
-    twitterImagePath: `${window.location.origin}/images/twitter-checkout-${language}.jpg`,
-    ogImageAlt: t('meta.og_image_alt'),
-    twitterImageAlt: t('meta.twitter_image_alt'),
-    canonicalUrl: `${window.location.origin}/${language}/checkout`,
-    alternateUrls: {
-      fr: `${window.location.origin}/fr/checkout`,
-      en: `${window.location.origin}/en/checkout`
-    } as Record<'fr' | 'en', string>,
-    locale: language as Lang,
-    structuredData: {
-      '@context': 'https://schema.org',
-      '@type': 'WebPage',
-      '@id': `${window.location.origin}/${language}/checkout#webpage`,
-      name: t('meta.title'),
-      description: t('meta.description'),
-      url: `${window.location.origin}/${language}/checkout`,
-      inLanguage: language,
-      mainEntity: {
-        '@type': 'Action',
-        '@id': `${window.location.origin}/${language}/checkout#action`,
-        name: t('meta.title'),
-        target: `${window.location.origin}/${language}/checkout`,
-        object: { '@type': 'Service', name: 'Call consultation' }
-      },
-      breadcrumb: {
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: window.location.origin },
-          { '@type': 'ListItem', position: 2, name: 'Checkout', item: `${window.location.origin}/${language}/checkout` }
-        ]
-      },
-      author: {
-        '@type': 'Organization',
-        '@id': `${window.location.origin}#organization`,
-        name: 'SOS Expats',
-        url: window.location.origin,
-        logo: `${window.location.origin}/images/logo.png`
-      },
-      publisher: { '@id': `${window.location.origin}#organization` }
-    } as Record<string, unknown>
-  }), [language, t]);
+  const seoMeta = useMemo(
+    () => ({
+      title: t("meta.title"),
+      description: t("meta.description"),
+      keywords: t("meta.keywords"),
+      ogTitle: t("meta.og_title"),
+      ogDescription: t("meta.og_description"),
+      ogImagePath: `${window.location.origin}/images/og-checkout-${language}.jpg`,
+      twitterImagePath: `${window.location.origin}/images/twitter-checkout-${language}.jpg`,
+      ogImageAlt: t("meta.og_image_alt"),
+      twitterImageAlt: t("meta.twitter_image_alt"),
+      canonicalUrl: `${window.location.origin}/${language}/checkout`,
+      alternateUrls: {
+        fr: `${window.location.origin}/fr/checkout`,
+        en: `${window.location.origin}/en/checkout`,
+      } as Record<"fr" | "en", string>,
+      locale: language as Lang,
+      structuredData: {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": `${window.location.origin}/${language}/checkout#webpage`,
+        name: t("meta.title"),
+        description: t("meta.description"),
+        url: `${window.location.origin}/${language}/checkout`,
+        inLanguage: language,
+        mainEntity: {
+          "@type": "Action",
+          "@id": `${window.location.origin}/${language}/checkout#action`,
+          name: t("meta.title"),
+          target: `${window.location.origin}/${language}/checkout`,
+          object: { "@type": "Service", name: "Call consultation" },
+        },
+        breadcrumb: {
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            {
+              "@type": "ListItem",
+              position: 1,
+              name: "Home",
+              item: window.location.origin,
+            },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: "Checkout",
+              item: `${window.location.origin}/${language}/checkout`,
+            },
+          ],
+        },
+        author: {
+          "@type": "Organization",
+          "@id": `${window.location.origin}#organization`,
+          name: "SOS Expats",
+          url: window.location.origin,
+          logo: `${window.location.origin}/images/logo.png`,
+        },
+        publisher: { "@id": `${window.location.origin}#organization` },
+      } as Record<string, unknown>,
+    }),
+    [language, t]
+  );
 
   useSEO(seoMeta);
 
   const goBack = useCallback(() => {
     if (onGoBack) return onGoBack();
     if (window.history.length > 1) navigate(-1);
-    else navigate('/', { replace: true });
+    else navigate("/", { replace: true });
   }, [onGoBack, navigate]);
 
-  const [currentStep, setCurrentStep] = useState<StepType>('payment');
+  const [currentStep, setCurrentStep] = useState<StepType>("payment");
   const [callProgress, setCallProgress] = useState<number>(0);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string>("");
 
-  const handlePaymentSuccess = useCallback((payload: { paymentIntentId: string; call: 'scheduled' | 'skipped'; callId?: string }) => {
-    setCurrentStep('calling');
-    setCallProgress(1);
+  const handlePaymentSuccess = useCallback(
+    (payload: {
+      paymentIntentId: string;
+      call: "scheduled" | "skipped";
+      callId?: string;
+      orderId?: string;
+    }) => {
+      setCurrentStep("calling");
+      setCallProgress(1);
 
-    const params = new URLSearchParams({
-      paymentIntentId: payload.paymentIntentId,
-      providerId: (provider?.id || ''),
-      call: payload.call,
-    });
-    if (payload.callId) params.set('callId', payload.callId);
+      const params = new URLSearchParams({
+        paymentIntentId: payload.paymentIntentId,
+        providerId: provider?.id || "",
+        call: payload.call,
+        orderId: payload.orderId || "",
+      });
+      if (payload.callId) params.set("callId", payload.callId);
+      if (payload.orderId) params.set("orderId", payload.orderId);
 
-    navigate(`/payment-success?${params.toString()}`, { replace: true });
-  }, [navigate, provider?.id]);
+      navigate(`/payment-success?${params.toString()}`, { replace: false });
+    },
+    [navigate, provider?.id]
+  );
 
   const handlePaymentError = useCallback((msg: string) => setError(msg), []);
 
   useEffect(() => {
-    if (currentStep === 'calling' && callProgress < 5) {
+    if (currentStep === "calling" && callProgress < 5) {
       const timer = setTimeout(() => {
-        setCallProgress(prev => {
+        setCallProgress((prev) => {
           const next = prev + 1;
-          if (next === 5) setTimeout(() => setCurrentStep('completed'), 2500);
+          if (next === 5) setTimeout(() => setCurrentStep("completed"), 2500);
           return next;
         });
       }, 1800);
@@ -1329,21 +1812,30 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({ selectedProvider, serviceDa
       <Layout>
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-red-100 px-4">
           <div className="bg-white rounded-2xl shadow-xl p-6 text-center max-w-sm mx-auto">
-            <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" aria-hidden="true" />
-            <h2 className="text-lg font-bold text-gray-900 mb-2">{t('alert.missingDataTitle')}</h2>
-            <p className="text-gray-600 text-sm mb-4">{t('alert.missingDataText')}</p>
+            <AlertCircle
+              className="w-12 h-12 text-red-500 mx-auto mb-4"
+              aria-hidden="true"
+            />
+            <h2 className="text-lg font-bold text-gray-900 mb-2">
+              {t("alert.missingDataTitle")}
+            </h2>
+            <p className="text-gray-600 text-sm mb-4">
+              {t("alert.missingDataText")}
+            </p>
             <div className="space-y-2">
               <button
-                onClick={() => navigate('/experts')}
+                onClick={() => navigate("/experts")}
                 className="w-full px-4 py-3 rounded-xl font-semibold text-sm bg-gradient-to-r from-red-500 to-red-600 text-white"
               >
-                {language === 'fr' ? 'Sélectionner un expert' : 'Select an expert'}
+                {language === "fr"
+                  ? "Sélectionner un expert"
+                  : "Select an expert"}
               </button>
               <button
                 onClick={goBack}
                 className="w-full px-4 py-3 rounded-xl font-semibold text-sm bg-gray-500 text-white"
               >
-                {t('ui.back')}
+                {t("ui.back")}
               </button>
             </div>
           </div>
@@ -1357,21 +1849,28 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({ selectedProvider, serviceDa
       <Layout>
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-red-100 px-4">
           <div className="bg-white rounded-2xl shadow-xl p-6 text-center max-w-sm mx-auto">
-            <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" aria-hidden="true" />
-            <h2 className="text-lg font-bold text-gray-900 mb-2">{t('alert.loginRequiredTitle')}</h2>
-            <p className="text-gray-600 text-sm mb-4">{t('alert.loginRequiredText')}</p>
+            <AlertCircle
+              className="w-12 h-12 text-red-500 mx-auto mb-4"
+              aria-hidden="true"
+            />
+            <h2 className="text-lg font-bold text-gray-900 mb-2">
+              {t("alert.loginRequiredTitle")}
+            </h2>
+            <p className="text-gray-600 text-sm mb-4">
+              {t("alert.loginRequiredText")}
+            </p>
             <div className="space-y-2">
               <button
-                onClick={() => navigate('/login')}
+                onClick={() => navigate("/login")}
                 className="w-full px-4 py-3 rounded-xl font-semibold text-sm bg-gradient-to-r from-red-500 to-red-600 text-white"
               >
-                {language === 'fr' ? 'Se connecter' : 'Sign in'}
+                {language === "fr" ? "Se connecter" : "Sign in"}
               </button>
               <button
                 onClick={goBack}
                 className="w-full px-4 py-3 rounded-xl font-semibold text-sm bg-gray-500 text-white"
               >
-                {t('ui.back')}
+                {t("ui.back")}
               </button>
             </div>
           </div>
@@ -1386,9 +1885,9 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({ selectedProvider, serviceDa
         <div className="max-w-lg mx-auto px-4 py-4">
           {!!pricingError && (
             <div className="mb-3 rounded-lg border border-yellow-300 bg-yellow-50 px-3 py-2 text-xs text-yellow-800">
-              {language === 'fr'
-                ? 'Les tarifs affichés proviennent d\'une configuration de secours. La configuration centrale sera rechargée automatiquement.'
-                : 'Displayed prices are using a fallback configuration. Central pricing will be reloaded automatically.'}
+              {language === "fr"
+                ? "Les tarifs affichés proviennent d'une configuration de secours. La configuration centrale sera rechargée automatiquement."
+                : "Displayed prices are using a fallback configuration. Central pricing will be reloaded automatically."}
             </div>
           )}
 
@@ -1396,19 +1895,17 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({ selectedProvider, serviceDa
             <button
               onClick={goBack}
               className="flex items-center gap-2 text-red-600 hover:text-red-700 mb-3 transition-colors text-sm font-medium focus:outline-none focus:ring-2 focus:ring-red-500 rounded p-1 touch-manipulation"
-              aria-label={t('ui.back')}
+              aria-label={t("ui.back")}
             >
               <ArrowLeft size={16} aria-hidden={true} />
-              <span>{t('ui.back')}</span>
+              <span>{t("ui.back")}</span>
             </button>
 
             <div className="text-center">
               <h1 className="text-xl font-bold text-gray-900 mb-1">
-                {t('ui.securePayment')}
+                {t("ui.securePayment")}
               </h1>
-              <p className="text-gray-600 text-sm">
-                {t('ui.payToStart')}
-              </p>
+              <p className="text-gray-600 text-sm">{t("ui.payToStart")}</p>
             </div>
           </div>
 
@@ -1416,47 +1913,75 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({ selectedProvider, serviceDa
             <div className="flex items-center gap-3">
               <div className="relative flex-shrink-0">
                 <img
-                  src={provider.avatar || provider.profilePhoto || '/default-avatar.png'}
-                  alt={provider.fullName || provider.name || 'Expert'}
+                  src={
+                    provider.avatar ||
+                    provider.profilePhoto ||
+                    "/default-avatar.png"
+                  }
+                  alt={provider.fullName || provider.name || "Expert"}
                   className="w-12 h-12 rounded-lg object-cover ring-2 ring-white shadow-sm"
                   onError={(e) => {
                     const target = e.currentTarget as HTMLImageElement;
-                    const name = provider.fullName || provider.name || 'Expert';
+                    const name = provider.fullName || provider.name || "Expert";
                     target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&size=100&background=4F46E5&color=fff`;
                   }}
                   loading="lazy"
                 />
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white" aria-label="online" />
+                <div
+                  className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"
+                  aria-label="online"
+                />
               </div>
 
               <div className="flex-1 min-w-0">
-                <h3 className="font-bold text-gray-900 truncate text-sm">{provider.fullName || provider.name || 'Expert'}</h3>
+                <h3 className="font-bold text-gray-900 truncate text-sm">
+                  {provider.fullName || provider.name || "Expert"}
+                </h3>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className={
-                    "px-2 py-0.5 rounded-md text-xs font-medium " +
-                    ((provider.role || provider.type) === 'lawyer' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800')
-                  }>
-                    {(provider.role || provider.type) === 'lawyer' ? (language === 'fr' ? 'Avocat' : 'Lawyer') : (language === 'fr' ? 'Expert' : 'Expert')}
+                  <span
+                    className={
+                      "px-2 py-0.5 rounded-md text-xs font-medium " +
+                      ((provider.role || provider.type) === "lawyer"
+                        ? "bg-blue-100 text-blue-800"
+                        : "bg-green-100 text-green-800")
+                    }
+                  >
+                    {(provider.role || provider.type) === "lawyer"
+                      ? language === "fr"
+                        ? "Avocat"
+                        : "Lawyer"
+                      : language === "fr"
+                        ? "Expert"
+                        : "Expert"}
                   </span>
-                  <span className="text-gray-600 text-xs">{provider.country || 'FR'}</span>
+                  <span className="text-gray-600 text-xs">
+                    {provider.country || "FR"}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
                   <Clock size={12} aria-hidden={true} />
                   <span>{adminPricing.duration} min</span>
                   <span>•</span>
-                  <span className="text-green-600 font-medium">{language === 'fr' ? 'Disponible' : 'Available'}</span>
+                  <span className="text-green-600 font-medium">
+                    {language === "fr" ? "Disponible" : "Available"}
+                  </span>
                 </div>
               </div>
 
               <div className="text-right flex-shrink-0" {...cardTraceAttrs}>
                 <div className="text-2xl font-black bg-gradient-to-r from-red-500 to-pink-600 bg-clip-text text-transparent">
-                  {new Intl.NumberFormat(language === 'fr' ? 'fr-FR' : 'en-US', {
-                    style: 'currency',
-                    currency: selectedCurrency.toUpperCase(),
-                    minimumFractionDigits: 2,
-                  }).format(adminPricing.totalAmount)}
+                  {new Intl.NumberFormat(
+                    language === "fr" ? "fr-FR" : "en-US",
+                    {
+                      style: "currency",
+                      currency: selectedCurrency.toUpperCase(),
+                      minimumFractionDigits: 2,
+                    }
+                  ).format(adminPricing.totalAmount)}
                 </div>
-                <div className="text-xs text-gray-500">{adminPricing.duration} min</div>
+                <div className="text-xs text-gray-500">
+                  {adminPricing.duration} min
+                </div>
               </div>
             </div>
           </section>
@@ -1464,23 +1989,23 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({ selectedProvider, serviceDa
           <section className="bg-white rounded-xl shadow-md border p-4 mb-4">
             <div className="flex items-center justify-center space-x-4">
               <button
-                onClick={() => setSelectedCurrency('eur')}
+                onClick={() => setSelectedCurrency("eur")}
                 className={
                   "px-4 py-2 rounded-lg font-medium transition-all " +
-                  (selectedCurrency === 'eur'
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200')
+                  (selectedCurrency === "eur"
+                    ? "bg-blue-600 text-white shadow-md"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200")
                 }
               >
                 EUR (€)
               </button>
               <button
-                onClick={() => setSelectedCurrency('usd')}
+                onClick={() => setSelectedCurrency("usd")}
                 className={
                   "px-4 py-2 rounded-lg font-medium transition-all " +
-                  (selectedCurrency === 'usd'
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200')
+                  (selectedCurrency === "usd"
+                    ? "bg-blue-600 text-white shadow-md"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200")
                 }
               >
                 USD ($)
@@ -1492,15 +2017,25 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({ selectedProvider, serviceDa
             <div className="p-4">
               <div className="flex items-center gap-2 mb-4">
                 <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg">
-                  <CreditCard className="w-4 h-4 text-white" aria-hidden={true} />
+                  <CreditCard
+                    className="w-4 h-4 text-white"
+                    aria-hidden={true}
+                  />
                 </div>
                 <h4 className="text-lg font-bold text-gray-900">Paiement</h4>
               </div>
 
               {error && (
-                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg" role="alert" aria-live="assertive">
+                <div
+                  className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg"
+                  role="alert"
+                  aria-live="assertive"
+                >
                   <div className="flex items-center">
-                    <AlertCircle className="w-4 h-4 text-red-500 mr-2 flex-shrink-0" aria-hidden={true} />
+                    <AlertCircle
+                      className="w-4 h-4 text-red-500 mr-2 flex-shrink-0"
+                      aria-hidden={true}
+                    />
                     <span className="text-sm text-red-700">{error}</span>
                   </div>
                 </div>
@@ -1516,7 +2051,7 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({ selectedProvider, serviceDa
                   onError={handlePaymentError}
                   isProcessing={isProcessing}
                   setIsProcessing={(p) => {
-                    setError('');
+                    setError("");
                     setIsProcessing(p);
                   }}
                   isMobile={isMobile}
@@ -1527,10 +2062,18 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({ selectedProvider, serviceDa
 
           <aside className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-3">
             <div className="flex items-start gap-2">
-              <Shield className="w-4 h-4 text-blue-600 mt-0.5" aria-hidden={true} />
+              <Shield
+                className="w-4 h-4 text-blue-600 mt-0.5"
+                aria-hidden={true}
+              />
               <div>
-                <h4 className="font-semibold text-blue-900 text-sm">Paiement sécurisé</h4>
-                <p className="text-xs text-blue-800 mt-1">Données protégées par SSL. Appel lancé automatiquement après paiement.</p>
+                <h4 className="font-semibold text-blue-900 text-sm">
+                  Paiement sécurisé
+                </h4>
+                <p className="text-xs text-blue-800 mt-1">
+                  Données protégées par SSL. Appel lancé automatiquement après
+                  paiement.
+                </p>
               </div>
             </div>
           </aside>
@@ -1540,5 +2083,5 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({ selectedProvider, serviceDa
   );
 };
 
-CallCheckout.displayName = 'CallCheckout';
+CallCheckout.displayName = "CallCheckout";
 export default React.memo(CallCheckout);
