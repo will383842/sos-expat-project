@@ -108,6 +108,7 @@ const SuccessPayment: React.FC = () => {
 
   // UI state (appel)
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const [reviewModelShown, setReviewModelShown] = useState(false);
   const [callState, setCallState] = useState<CallState>(
     callStatus === "failed" ? "failed" : "connecting"
   );
@@ -398,13 +399,16 @@ const SuccessPayment: React.FC = () => {
           break;
       }
 
-      if (data.status === "completed" && !showReviewModal) {
-        setTimeout(() => setShowReviewModal(true), 1500);
+      if (data.status === "completed" && !reviewModelShown) {
+        setTimeout(() => {
+          setShowReviewModal(true);
+          setReviewModelShown(true);
+        }, 1500);
       }
     });
 
     return () => unsub();
-  }, [callId, showReviewModal, callState]);
+  }, [callId, callState]);
 
   /* =========================
      Utils

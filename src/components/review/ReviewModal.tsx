@@ -1,6 +1,6 @@
-import React from 'react';
-import Modal from '../common/Modal';
-import ReviewForm from './ReviewForm'; 
+import React from "react";
+import Modal from "../common/Modal";
+import ReviewForm from "./ReviewForm";
 
 interface ReviewModalProps {
   isOpen: boolean;
@@ -8,7 +8,7 @@ interface ReviewModalProps {
   providerId: string;
   providerName: string;
   callId: string;
-  serviceType: 'lawyer_call' | 'expat_call';
+  serviceType: "lawyer_call" | "expat_call";
 }
 
 const ReviewModal: React.FC<ReviewModalProps> = ({
@@ -17,7 +17,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
   providerId,
   providerName,
   callId,
-  serviceType
+  serviceType,
 }) => {
   const handleSuccess = () => {
     onClose();
@@ -44,4 +44,3 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
 };
 
 export default ReviewModal;
-

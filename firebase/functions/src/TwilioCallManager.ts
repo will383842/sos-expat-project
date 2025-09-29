@@ -1490,9 +1490,7 @@ export class TwilioCallManager {
     }
   }
 
-  async findSessionByCallSid(
-    callSid: string
-  ): Promise<{
+  async findSessionByCallSid(callSid: string): Promise<{
     session: CallSessionState;
     participantType: "provider" | "client";
   } | null> {
