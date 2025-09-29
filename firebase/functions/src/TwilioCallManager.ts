@@ -38,6 +38,7 @@ interface VoicePrompts {
 
 // 🔊 Textes d'intro multilingues (incluent S.O.S Expat)
 import promptsJson from "./content/voicePrompts.json";
+import { InvoiceRecord } from "./utils/types";
 const prompts = promptsJson as VoicePrompts;
 
 export interface CallSessionState {
@@ -1166,6 +1167,8 @@ export class TwilioCallManager {
 
         await this.createReviewRequest(session);
 
+        await this.createInvoices(sessionId, session);
+
         await logCallRecord({
           callId: sessionId,
           status: "payment_captured",
@@ -1187,6 +1190,68 @@ export class TwilioCallManager {
         error as unknown
       );
       return false;
+    }
+  }
+
+  private async createInvoices(
+    sessionId: string,
+    session: CallSessionState
+  ): Promise<void> {
+    try {
+      console.log(`📄 Creating invoices for session: ${sessionId}`);
+
+      // Import your invoice function - adjust path as needed
+      const { generateInvoice } = await import("./utils/generateInvoice");
+
+      const platformFee = Math.round(session.payment.amount * 0.15);
+      const providerAmount = Math.round(session.payment.amount * 0.85);
+
+      // Create platform invoice
+      const platformInvoice: InvoiceRecord = {
+        invoiceNumber: `PLT-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
+        type: "platform",
+        callId: sessionId,
+        clientId: session.metadata.clientId,
+        providerId: session.metadata.providerId,
+        amount: platformFee,
+        currency: "EUR",
+        downloadUrl: "",
+        status: "issued",
+        sentToAdmin: true,
+        locale: session.metadata.selectedLanguage || "fr",
+        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        createdAt: new Date(),
+        environment: process.env.NODE_ENV || "development",
+      };
+
+      // Create provider invoice
+      const providerInvoice: InvoiceRecord = {
+        invoiceNumber: `PRV-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
+        type: "provider",
+        callId: sessionId,
+        clientId: session.metadata.clientId,
+        providerId: session.metadata.providerId,
+        amount: providerAmount,
+        currency: "EUR",
+        downloadUrl: "",
+        status: "issued",
+        sentToAdmin: true,
+        locale: session.metadata.selectedLanguage || "fr",
+        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        createdAt: new Date(),
+        environment: process.env.NODE_ENV || "development",
+      };
+
+      // Generate both invoices
+      await Promise.all([
+        generateInvoice(platformInvoice),
+        generateInvoice(providerInvoice),
+      ]);
+
+      console.log(`✅ Invoices created successfully for ${sessionId}`);
+    } catch (error) {
+      console.error("❌ Error creating invoices:", error);
+      await logError("TwilioCallManager:createInvoices", error as unknown);
     }
   }
 

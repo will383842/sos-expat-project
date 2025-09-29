@@ -836,19 +836,18 @@ exports.stripeWebhook = (0, https_1.onRequest)({
                         //     checkoutSessionId: cs.id,
                         //     paymentIntentId: typeof cs.payment_intent === 'string' ? cs.payment_intent : undefined
                         //   }, { merge: true });
-                        try {
-                            await database
-                                .collection("call_sessions")
-                                .doc(callSessionId)
-                                .update({
-                                status: "scheduled",
-                                updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-                                scheduledAt: admin.firestore.FieldValue.serverTimestamp(),
-                            });
-                        }
-                        catch (error) {
-                            console.log("💥 Error updating call session:", error);
-                        }
+                        // try {
+                        //   await database
+                        //     .collection("call_sessions")
+                        //     .doc(callSessionId)
+                        //     .update({
+                        //       status: "scheduled",
+                        //       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                        //       scheduledAt: admin.firestore.FieldValue.serverTimestamp(),
+                        //     });
+                        // } catch (error) {
+                        //   console.log("💥 Error updating call session:", error);
+                        // }
                         console.log("⏰ Scheduling task...");
                         await (0, tasks_1.scheduleCallTask)(callSessionId, 300);
                         console.log("📨 Sending notifications...");
@@ -1068,19 +1067,18 @@ const handlePaymentIntentSucceeded = (0, ultraDebugLogger_1.traceFunction)(async
                 //   scheduledAt: admin.firestore.FieldValue.serverTimestamp(),
                 //   updatedAt: admin.firestore.FieldValue.serverTimestamp()
                 // });
-                try {
-                    await database
-                        .collection("call_sessions")
-                        .doc(callSessionId)
-                        .update({
-                        status: "scheduled",
-                        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-                        scheduledAt: admin.firestore.FieldValue.serverTimestamp(),
-                    });
-                }
-                catch (error) {
-                    console.log("💥 Error updating call session:", error);
-                }
+                // try {
+                //   await database
+                //     .collection("call_sessions")
+                //     .doc(callSessionId)
+                //     .update({
+                //       status: "scheduled",
+                //       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                //       scheduledAt: admin.firestore.FieldValue.serverTimestamp(),
+                //     });
+                // } catch (error) {
+                //   console.log("💥 Error updating call session:", error);
+                // }
                 console.log("✅ Call session updated, scheduling task...");
                 // Schedule call task
                 await (0, tasks_1.scheduleCallTask)(callSessionId, 300);
