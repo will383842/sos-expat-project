@@ -105,7 +105,7 @@ const AdminInvoices = () => {
 
   return (
     <AdminLayout>
-      <div className="p-6">
+      <div className="p-6 text-black">
         <h1 className="text-2xl font-bold mb-4">Factures générées</h1>
 
         <div className="mb-4">
@@ -124,7 +124,7 @@ const AdminInvoices = () => {
           />
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto text-black">
           <table className="min-w-full text-sm text-left border">
             <thead>
               <tr className="bg-gray-100">

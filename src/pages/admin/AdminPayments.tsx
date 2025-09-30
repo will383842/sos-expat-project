@@ -171,7 +171,7 @@ const AdminPayments: React.FC = () => {
 
   return (
     <AdminLayout>
-      <div className="p-6">
+      <div className="p-6 text-black">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold">Paiements</h1>
           <div className="flex items-center gap-2">
@@ -183,7 +183,7 @@ const AdminPayments: React.FC = () => {
         </div>
 
         {/* Filtres */}
-        <div className="bg-white border rounded-lg p-4 mb-4">
+        <div className="bg-white border rounded-lg p-4 mb-4 text-black">
           <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
             <div className="md:col-span-1">
               <label className="block text-sm font-medium mb-1">Statut</label>
