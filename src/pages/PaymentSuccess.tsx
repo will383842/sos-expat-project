@@ -341,14 +341,13 @@ const SuccessPayment: React.FC = () => {
     if (!callId) return;
 
     // const ref = doc(db, "calls", callId);
-    console.log("changing ui based on the call state...");
+    // console.log("changing ui based on the call state...");
     const ref = doc(db, "call_sessions", callId);
-    console.log("📄 Document reference:", ref);
     const unsub = onSnapshot(ref, (snap) => {
       const data = snap.data() as any;
 
       if (!data) return;
-      console.log("📄 data status to change Ui:", data.status);
+      // console.log("📄 data status to change Ui:", data.status);
       // CHANGE_BACK : remove this call State console
       // switch (data.status) {
       //   case "scheduled":

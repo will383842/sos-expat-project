@@ -1,12 +1,38 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
-import { Phone, Star, MapPin, Search, ChevronDown, Wifi, WifiOff, Heart, ChevronLeft, ChevronRight, Eye, ArrowRight, Globe, Users, Zap } from 'lucide-react';
-import { collection, query, limit, onSnapshot, where, DocumentData, doc, getDoc, getDocs } from 'firebase/firestore';
-import { db } from '../config/firebase';
-import Layout from '../components/layout/Layout';
-import SEOHead from '../components/layout/SEOHead';
-import { useApp } from '../contexts/AppContext';
-import { FormattedMessage } from 'react-intl';
+import React, { useState, useEffect, useMemo } from "react";
+import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
+import {
+  Phone,
+  Star,
+  MapPin,
+  Search,
+  ChevronDown,
+  Wifi,
+  WifiOff,
+  Heart,
+  ChevronLeft,
+  ChevronRight,
+  Eye,
+  ArrowRight,
+  Globe,
+  Users,
+  Zap,
+} from "lucide-react";
+import {
+  collection,
+  query,
+  limit,
+  onSnapshot,
+  where,
+  DocumentData,
+  doc,
+  getDoc,
+  getDocs,
+} from "firebase/firestore";
+import { db } from "../config/firebase";
+import Layout from "../components/layout/Layout";
+import SEOHead from "../components/layout/SEOHead";
+import { useApp } from "../contexts/AppContext";
+import { FormattedMessage } from "react-intl";
 
 /* =========================
    Types
@@ -16,7 +42,7 @@ interface Provider {
   name: string;
   firstName?: string;
   lastName?: string;
-  type: 'lawyer' | 'expat';
+  type: "lawyer" | "expat";
   country: string;
   languages: string[];
   reviewCount: number;
@@ -41,7 +67,7 @@ interface RawProfile extends DocumentData {
   fullName?: string;
   firstName?: string;
   lastName?: string;
-  type?: 'lawyer' | 'expat' | string;
+  type?: "lawyer" | "expat" | string;
   currentPresenceCountry?: string;
   country?: string;
   languages?: string[];
@@ -70,137 +96,143 @@ const CARD_DIMENSIONS = {
   width: 320,
   height: 520,
   imageHeight: 288,
-  contentHeight: 232
+  contentHeight: 232,
 } as const;
 
 const LANGUAGE_MAP: Record<string, string> = {
-  'Français': 'Français',
-  'French': 'Français',
-  'fr': 'Français',
-  'FR': 'Français',
-  'Anglais': 'Anglais',
-  'English': 'Anglais',
-  'en': 'Anglais',
-  'EN': 'Anglais',
-  'Espagnol': 'Espagnol',
-  'Spanish': 'Espagnol',
-  'Español': 'Espagnol',
-  'es': 'Espagnol',
-  'ES': 'Espagnol',
-  'Português': 'Portugais',
-  'Portuguese': 'Portugais',
-  'pt': 'Portugais',
-  'PT': 'Portugais',
-  'Deutsch': 'Allemand',
-  'German': 'Allemand',
-  'de': 'Allemand',
-  'DE': 'Allemand',
-  'Italiano': 'Italien',
-  'Italian': 'Italien',
-  'it': 'Italien',
-  'IT': 'Italien'
+  Français: "Français",
+  French: "Français",
+  fr: "Français",
+  FR: "Français",
+  Anglais: "Anglais",
+  English: "Anglais",
+  en: "Anglais",
+  EN: "Anglais",
+  Espagnol: "Espagnol",
+  Spanish: "Espagnol",
+  Español: "Espagnol",
+  es: "Espagnol",
+  ES: "Espagnol",
+  Português: "Portugais",
+  Portuguese: "Portugais",
+  pt: "Portugais",
+  PT: "Portugais",
+  Deutsch: "Allemand",
+  German: "Allemand",
+  de: "Allemand",
+  DE: "Allemand",
+  Italiano: "Italien",
+  Italian: "Italien",
+  it: "Italien",
+  IT: "Italien",
 };
 
 const FLAG_MAP: Record<string, string> = {
-  'France': '🇫🇷',
-  'Espagne': '🇪🇸',
-  'Spain': '🇪🇸',
-  'Canada': '🇨🇦',
-  'Portugal': '🇵🇹',
-  'Allemagne': '🇩🇪',
-  'Germany': '🇩🇪',
-  'Italie': '🇮🇹',
-  'Italy': '🇮🇹',
-  'Belgique': '🇧🇪',
-  'Belgium': '🇧🇪',
-  'Suisse': '🇨🇭',
-  'Switzerland': '🇨🇭',
-  'Royaume-Uni': '🇬🇧',
-  'United Kingdom': '🇬🇧',
-  'États-Unis': '🇺🇸',
-  'United States': '🇺🇸',
-  'Pays-Bas': '🇳🇱',
-  'Netherlands': '🇳🇱'
+  France: "🇫🇷",
+  Espagne: "🇪🇸",
+  Spain: "🇪🇸",
+  Canada: "🇨🇦",
+  Portugal: "🇵🇹",
+  Allemagne: "🇩🇪",
+  Germany: "🇩🇪",
+  Italie: "🇮🇹",
+  Italy: "🇮🇹",
+  Belgique: "🇧🇪",
+  Belgium: "🇧🇪",
+  Suisse: "🇨🇭",
+  Switzerland: "🇨🇭",
+  "Royaume-Uni": "🇬🇧",
+  "United Kingdom": "🇬🇧",
+  "États-Unis": "🇺🇸",
+  "United States": "🇺🇸",
+  "Pays-Bas": "🇳🇱",
+  Netherlands: "🇳🇱",
 };
 
-const PROFESSION_ICONS: Record<string, { icon: string; bgColor: string; textColor: string }> = {
-  'lawyer': { 
-    icon: '⚖️', 
-    bgColor: 'bg-slate-100', 
-    textColor: 'text-slate-800'
+const PROFESSION_ICONS: Record<
+  string,
+  { icon: string; bgColor: string; textColor: string }
+> = {
+  lawyer: {
+    icon: "⚖️",
+    bgColor: "bg-slate-100",
+    textColor: "text-slate-800",
   },
-  'expat': { 
-    icon: '🌍', 
-    bgColor: 'bg-blue-100', 
-    textColor: 'text-blue-800' 
-  }
+  expat: {
+    icon: "🌍",
+    bgColor: "bg-blue-100",
+    textColor: "text-blue-800",
+  },
 };
 
 const TRANSLATIONS = {
   fr: {
     professions: {
-      lawyer: 'Avocat',
-      expat: 'Expat'
+      lawyer: "Avocat",
+      expat: "Expat",
     },
     labels: {
-      online: 'En ligne',
-      offline: 'Hors ligne',
-      languages: 'Langues',
-      years: 'ans',
-      reviews: 'avis',
-      viewProfile: 'Voir le profil',
-      others: 'autres'
-    }
+      online: "En ligne",
+      offline: "Hors ligne",
+      languages: "Langues",
+      years: "ans",
+      reviews: "avis",
+      viewProfile: "Voir le profil",
+      others: "autres",
+    },
   },
   en: {
     professions: {
-      lawyer: 'Lawyer',
-      expat: 'Expat'
+      lawyer: "Lawyer",
+      expat: "Expat",
     },
     labels: {
-      online: 'Online',
-      offline: 'Offline',
-      languages: 'Languages',
-      years: 'years',
-      reviews: 'reviews',
-      viewProfile: 'View profile',
-      others: 'others'
-    }
-  }
+      online: "Online",
+      offline: "Offline",
+      languages: "Languages",
+      years: "years",
+      reviews: "reviews",
+      viewProfile: "View profile",
+      others: "others",
+    },
+  },
 } as const;
 
-const getBrowserLanguage = (): 'fr' | 'en' => {
-  if (typeof window === 'undefined') return 'fr';
+const getBrowserLanguage = (): "fr" | "en" => {
+  if (typeof window === "undefined") return "fr";
   const browserLang = navigator.language.toLowerCase();
-  return browserLang.startsWith('fr') ? 'fr' : 'en';
+  return browserLang.startsWith("fr") ? "fr" : "en";
 };
 
-const getLanguage = (userLanguage?: string): 'fr' | 'en' => {
-  if (userLanguage) return userLanguage as 'fr' | 'en';
+const getLanguage = (userLanguage?: string): "fr" | "en" => {
+  if (userLanguage) return userLanguage as "fr" | "en";
   return getBrowserLanguage();
 };
 
-const t = (lang: 'fr' | 'en', key: string, subKey?: string): string => {
-  const translation = TRANSLATIONS[lang] as Record<string, Record<string, string> | string>;
+const t = (lang: "fr" | "en", key: string, subKey?: string): string => {
+  const translation = TRANSLATIONS[lang] as Record<
+    string,
+    Record<string, string> | string
+  >;
   let text: string;
-  
+
   if (subKey) {
     const section = translation[key];
-    if (typeof section === 'object' && section !== null) {
+    if (typeof section === "object" && section !== null) {
       text = section[subKey] || key;
     } else {
       text = key;
     }
   } else {
     const value = translation[key];
-    text = typeof value === 'string' ? value : key;
+    text = typeof value === "string" ? value : key;
   }
-  
+
   return text;
 };
 
 const getProfessionInfo = (type: string) => {
-  return PROFESSION_ICONS[type] || PROFESSION_ICONS['expat'];
+  return PROFESSION_ICONS[type] || PROFESSION_ICONS["expat"];
 };
 
 const getLanguageLabel = (language: string): string => {
@@ -208,84 +240,308 @@ const getLanguageLabel = (language: string): string => {
 };
 
 const getCountryFlag = (country: string): string => {
-  return FLAG_MAP[country] || '🌍';
+  return FLAG_MAP[country] || "🌍";
 };
 
 const useStatusColors = (isOnline: boolean) => {
-  return useMemo(() => 
-    isOnline ? {
-      border: 'border-green-300',
-      shadow: 'shadow-green-100',
-      glow: 'shadow-green-200/50',
-      borderShadow: 'drop-shadow-[0_0_8px_rgba(34,197,94,0.3)]',
-      badge: 'bg-green-100 text-green-800 border-green-300',
-      button: 'bg-green-700 hover:bg-green-800 active:bg-green-900 border-green-700',
-      accent: 'text-green-700'
-    } : {
-      border: 'border-red-300',
-      shadow: 'shadow-red-100',
-      glow: 'shadow-red-200/50',
-      borderShadow: 'drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]',
-      badge: 'bg-red-100 text-red-800 border-red-300',
-      button: 'bg-red-700 hover:bg-red-800 active:bg-red-900 border-red-700',
-      accent: 'text-red-700'
-    }, [isOnline]
+  return useMemo(
+    () =>
+      isOnline
+        ? {
+            border: "border-green-300",
+            shadow: "shadow-green-100",
+            glow: "shadow-green-200/50",
+            borderShadow: "drop-shadow-[0_0_8px_rgba(34,197,94,0.3)]",
+            badge: "bg-green-100 text-green-800 border-green-300",
+            button:
+              "bg-green-700 hover:bg-green-800 active:bg-green-900 border-green-700",
+            accent: "text-green-700",
+          }
+        : {
+            border: "border-red-300",
+            shadow: "shadow-red-100",
+            glow: "shadow-red-200/50",
+            borderShadow: "drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]",
+            badge: "bg-red-100 text-red-800 border-red-300",
+            button:
+              "bg-red-700 hover:bg-red-800 active:bg-red-900 border-red-700",
+            accent: "text-red-700",
+          },
+    [isOnline]
   );
 };
 
 const slugify = (s: string) =>
-  (s || '')
+  (s || "")
     .toString()
     .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '');
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
 
 /* =========================
    Options filtres
 ========================= */
 const countryOptions = [
-  'Afghanistan','Afrique du Sud','Albanie','Algérie','Allemagne','Andorre','Angola',
-  'Arabie Saoudite','Argentine','Arménie','Australie','Autriche','Azerbaïdjan',
-  'Bahamas','Bahreïn','Bangladesh','Barbade','Belgique','Belize','Bénin',
-  'Bhoutan','Biélorussie','Birmanie','Bolivie','Bosnie-Herzégovine','Botswana',
-  'Brésil','Brunei','Bulgarie','Burkina Faso','Burundi','Cambodge','Cameroun',
-  'Canada','Cap-Vert','Chili','Chine','Chypre','Colombie','Comores',
-  'Congo','Corée du Nord','Corée du Sud','Costa Rica','Côte d\'Ivoire','Croatie','Cuba',
-  'Danemark','Djibouti','Dominique','Égypte','Émirats arabes unis','Équateur','Érythrée',
-  'Espagne','Estonie','États-Unis','Éthiopie','Fidji','Finlande','France',
-  'Gabon','Gambie','Géorgie','Ghana','Grèce','Grenade','Guatemala','Guinée',
-  'Guinée-Bissau','Guinée équatoriale','Guyana','Haïti','Honduras','Hongrie',
-  'Îles Cook','Îles Marshall','Îles Salomon','Inde','Indonésie','Irak','Iran',
-  'Irlande','Islande','Israël','Italie','Jamaïque','Japon','Jordanie',
-  'Kazakhstan','Kenya','Kirghizistan','Kiribati','Koweït','Laos','Lesotho',
-  'Lettonie','Liban','Liberia','Libye','Liechtenstein','Lituanie','Luxembourg',
-  'Macédoine du Nord','Madagascar','Malaisie','Malawi','Maldives','Mali','Malte',
-  'Maroc','Maurice','Mauritanie','Mexique','Micronésie','Moldavie','Monaco',
-  'Mongolie','Monténégro','Mozambique','Namibie','Nauru','Népal','Nicaragua',
-  'Niger','Nigeria','Niue','Norvège','Nouvelle-Zélande','Oman','Ouganda',
-  'Ouzbékistan','Pakistan','Palaos','Palestine','Panama','Papouasie-Nouvelle-Guinée',
-  'Paraguay','Pays-Bas','Pérou','Philippines','Pologne','Portugal','Qatar',
-  'République centrafricaine','République démocratique du Congo','République dominicaine',
-  'République tchèque','Roumanie','Royaume-Uni','Russie','Rwanda','Saint-Kitts-et-Nevis',
-  'Saint-Marin','Saint-Vincent-et-les-Grenadines','Sainte-Lucie','Salvador','Samoa',
-  'São Tomé-et-Principe','Sénégal','Serbie','Seychelles','Sierra Leone','Singapour',
-  'Slovaquie','Slovénie','Somalie','Soudan','Soudan du Sud','Sri Lanka','Suède',
-  'Suisse','Suriname','Syrie','Tadjikistan','Tanzanie','Tchad','Thaïlande',
-  'Timor oriental','Togo','Tonga','Trinité-et-Tobago','Tunisie','Turkménistan',
-  'Turquie','Tuvalu','Ukraine','Uruguay','Vanuatu','Vatican','Venezuela',
-  'Vietnam','Yémen','Zambie','Zimbabwe'
+  "Afghanistan",
+  "Afrique du Sud",
+  "Albanie",
+  "Algérie",
+  "Allemagne",
+  "Andorre",
+  "Angola",
+  "Arabie Saoudite",
+  "Argentine",
+  "Arménie",
+  "Australie",
+  "Autriche",
+  "Azerbaïdjan",
+  "Bahamas",
+  "Bahreïn",
+  "Bangladesh",
+  "Barbade",
+  "Belgique",
+  "Belize",
+  "Bénin",
+  "Bhoutan",
+  "Biélorussie",
+  "Birmanie",
+  "Bolivie",
+  "Bosnie-Herzégovine",
+  "Botswana",
+  "Brésil",
+  "Brunei",
+  "Bulgarie",
+  "Burkina Faso",
+  "Burundi",
+  "Cambodge",
+  "Cameroun",
+  "Canada",
+  "Cap-Vert",
+  "Chili",
+  "Chine",
+  "Chypre",
+  "Colombie",
+  "Comores",
+  "Congo",
+  "Corée du Nord",
+  "Corée du Sud",
+  "Costa Rica",
+  "Côte d'Ivoire",
+  "Croatie",
+  "Cuba",
+  "Danemark",
+  "Djibouti",
+  "Dominique",
+  "Égypte",
+  "Émirats arabes unis",
+  "Équateur",
+  "Érythrée",
+  "Espagne",
+  "Estonie",
+  "États-Unis",
+  "Éthiopie",
+  "Fidji",
+  "Finlande",
+  "France",
+  "Gabon",
+  "Gambie",
+  "Géorgie",
+  "Ghana",
+  "Grèce",
+  "Grenade",
+  "Guatemala",
+  "Guinée",
+  "Guinée-Bissau",
+  "Guinée équatoriale",
+  "Guyana",
+  "Haïti",
+  "Honduras",
+  "Hongrie",
+  "Îles Cook",
+  "Îles Marshall",
+  "Îles Salomon",
+  "Inde",
+  "Indonésie",
+  "Irak",
+  "Iran",
+  "Irlande",
+  "Islande",
+  "Israël",
+  "Italie",
+  "Jamaïque",
+  "Japon",
+  "Jordanie",
+  "Kazakhstan",
+  "Kenya",
+  "Kirghizistan",
+  "Kiribati",
+  "Koweït",
+  "Laos",
+  "Lesotho",
+  "Lettonie",
+  "Liban",
+  "Liberia",
+  "Libye",
+  "Liechtenstein",
+  "Lituanie",
+  "Luxembourg",
+  "Macédoine du Nord",
+  "Madagascar",
+  "Malaisie",
+  "Malawi",
+  "Maldives",
+  "Mali",
+  "Malte",
+  "Maroc",
+  "Maurice",
+  "Mauritanie",
+  "Mexique",
+  "Micronésie",
+  "Moldavie",
+  "Monaco",
+  "Mongolie",
+  "Monténégro",
+  "Mozambique",
+  "Namibie",
+  "Nauru",
+  "Népal",
+  "Nicaragua",
+  "Niger",
+  "Nigeria",
+  "Niue",
+  "Norvège",
+  "Nouvelle-Zélande",
+  "Oman",
+  "Ouganda",
+  "Ouzbékistan",
+  "Pakistan",
+  "Palaos",
+  "Palestine",
+  "Panama",
+  "Papouasie-Nouvelle-Guinée",
+  "Paraguay",
+  "Pays-Bas",
+  "Pérou",
+  "Philippines",
+  "Pologne",
+  "Portugal",
+  "Qatar",
+  "République centrafricaine",
+  "République démocratique du Congo",
+  "République dominicaine",
+  "République tchèque",
+  "Roumanie",
+  "Royaume-Uni",
+  "Russie",
+  "Rwanda",
+  "Saint-Kitts-et-Nevis",
+  "Saint-Marin",
+  "Saint-Vincent-et-les-Grenadines",
+  "Sainte-Lucie",
+  "Salvador",
+  "Samoa",
+  "São Tomé-et-Principe",
+  "Sénégal",
+  "Serbie",
+  "Seychelles",
+  "Sierra Leone",
+  "Singapour",
+  "Slovaquie",
+  "Slovénie",
+  "Somalie",
+  "Soudan",
+  "Soudan du Sud",
+  "Sri Lanka",
+  "Suède",
+  "Suisse",
+  "Suriname",
+  "Syrie",
+  "Tadjikistan",
+  "Tanzanie",
+  "Tchad",
+  "Thaïlande",
+  "Timor oriental",
+  "Togo",
+  "Tonga",
+  "Trinité-et-Tobago",
+  "Tunisie",
+  "Turkménistan",
+  "Turquie",
+  "Tuvalu",
+  "Ukraine",
+  "Uruguay",
+  "Vanuatu",
+  "Vatican",
+  "Venezuela",
+  "Vietnam",
+  "Yémen",
+  "Zambie",
+  "Zimbabwe",
 ];
 
 const languageOptions = [
-  'Français','Anglais','Espagnol','Allemand','Italien','Portugais','Russe','Chinois','Japonais','Coréen',
-  'Arabe','Hindi','Thaï','Néerlandais','Polonais','Roumain','Turc','Vietnamien','Suédois','Norvégien',
-  'Danois','Finnois','Tchèque','Slovaque','Ukrainien','Grec','Hébreu','Indonésien','Malais','Persan',
-  'Ourdou','Tamoul','Telugu','Gujarati','Bengali','Punjabi','Serbe','Croate','Bulgarie','Hongrois',
-  'Letton','Lituanien','Estonien','Slovène','Albanais','Islandais','Irlandais','Maltais','Macédonien',
-  'Swahili','Afrikaans','Azéri','Arménien','Géorgien','Khmer','Laotien','Mongol','Népalais','Singhalais',
+  "Français",
+  "Anglais",
+  "Espagnol",
+  "Allemand",
+  "Italien",
+  "Portugais",
+  "Russe",
+  "Chinois",
+  "Japonais",
+  "Coréen",
+  "Arabe",
+  "Hindi",
+  "Thaï",
+  "Néerlandais",
+  "Polonais",
+  "Roumain",
+  "Turc",
+  "Vietnamien",
+  "Suédois",
+  "Norvégien",
+  "Danois",
+  "Finnois",
+  "Tchèque",
+  "Slovaque",
+  "Ukrainien",
+  "Grec",
+  "Hébreu",
+  "Indonésien",
+  "Malais",
+  "Persan",
+  "Ourdou",
+  "Tamoul",
+  "Telugu",
+  "Gujarati",
+  "Bengali",
+  "Punjabi",
+  "Serbe",
+  "Croate",
+  "Bulgarie",
+  "Hongrois",
+  "Letton",
+  "Lituanien",
+  "Estonien",
+  "Slovène",
+  "Albanais",
+  "Islandais",
+  "Irlandais",
+  "Maltais",
+  "Macédonien",
+  "Swahili",
+  "Afrikaans",
+  "Azéri",
+  "Arménien",
+  "Géorgien",
+  "Khmer",
+  "Laotien",
+  "Mongol",
+  "Népalais",
+  "Singhalais",
 ];
 
 /* =========================
@@ -296,34 +552,35 @@ const ModernProfileCard: React.FC<{
   onProfileClick: (provider: Provider) => void;
   index?: number;
   language?: string;
-}> = React.memo(({ 
-  provider, 
-  onProfileClick, 
-  index = 0,
-  language 
-}) => {
+}> = React.memo(({ provider, onProfileClick, index = 0, language }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
   const currentLang = useMemo(() => getLanguage(language), [language]);
   const statusColors = useStatusColors(provider.isOnline);
-  const professionInfo = useMemo(() => getProfessionInfo(provider.type), [provider.type]);
-  
-  const handleImageError = React.useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
-    const target = e.currentTarget;
-    if (target.src !== '/default-avatar.png' && !imageError) {
-      setImageError(true);
-      target.src = '/default-avatar.png';
-    }
-  }, [imageError]);
+  const professionInfo = useMemo(
+    () => getProfessionInfo(provider.type),
+    [provider.type]
+  );
+
+  const handleImageError = React.useCallback(
+    (e: React.SyntheticEvent<HTMLImageElement>) => {
+      const target = e.currentTarget;
+      if (target.src !== "/default-avatar.png" && !imageError) {
+        setImageError(true);
+        target.src = "/default-avatar.png";
+      }
+    },
+    [imageError]
+  );
 
   const handleClick = React.useCallback(() => {
     onProfileClick(provider);
   }, [provider, onProfileClick]);
 
   const handleMouseEnter = React.useCallback(() => {
-    if (window.matchMedia('(hover: hover)').matches) {
+    if (window.matchMedia("(hover: hover)").matches) {
       setIsHovered(true);
     }
   }, []);
@@ -333,19 +590,24 @@ const ModernProfileCard: React.FC<{
   }, []);
 
   const formattedLanguages = useMemo(() => {
-    const mappedLanguages = provider.languages.map(lang => getLanguageLabel(lang));
+    const mappedLanguages = provider.languages.map((lang) =>
+      getLanguageLabel(lang)
+    );
     if (mappedLanguages.length <= 3) {
-      return mappedLanguages.join(' • ');
+      return mappedLanguages.join(" • ");
     }
-    return `${mappedLanguages.slice(0, 2).join(' • ')} +${mappedLanguages.length - 2} ${t(currentLang, 'labels', 'others')}`;
+    return `${mappedLanguages.slice(0, 2).join(" • ")} +${mappedLanguages.length - 2} ${t(currentLang, "labels", "others")}`;
   }, [provider.languages, currentLang]);
 
-  const ariaLabels = useMemo(() => ({
-    card: `Carte de profil de ${provider.name}`,
-    status: `Statut en ligne : ${provider.isOnline ? t(currentLang, 'labels', 'online') : t(currentLang, 'labels', 'offline')}`,
-    rating: `Note ${provider.rating.toFixed(1)} sur 5`,
-    viewProfile: `Voir le profil de ${provider.name}`
-  }), [currentLang, provider.name, provider.isOnline, provider.rating]);
+  const ariaLabels = useMemo(
+    () => ({
+      card: `Carte de profil de ${provider.name}`,
+      status: `Statut en ligne : ${provider.isOnline ? t(currentLang, "labels", "online") : t(currentLang, "labels", "offline")}`,
+      rating: `Note ${provider.rating.toFixed(1)} sur 5`,
+      viewProfile: `Voir le profil de ${provider.name}`,
+    }),
+    [currentLang, provider.name, provider.isOnline, provider.rating]
+  );
 
   return (
     <div className="flex-shrink-0 p-2 sm:p-4">
@@ -355,7 +617,7 @@ const ModernProfileCard: React.FC<{
           transition-all duration-300 ease-out border-2 shadow-lg
           w-80 h-[520px] sm:w-80 md:w-80
           ${statusColors.border} ${statusColors.shadow} ${statusColors.borderShadow}
-          ${isHovered ? `scale-[1.02] ${statusColors.glow} shadow-xl` : ''}
+          ${isHovered ? `scale-[1.02] ${statusColors.glow} shadow-xl` : ""}
           focus:outline-none focus:ring-4 focus:ring-blue-500/50
           hover:shadow-xl
         `}
@@ -363,7 +625,7 @@ const ModernProfileCard: React.FC<{
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
+          if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
             handleClick();
           }
@@ -375,19 +637,18 @@ const ModernProfileCard: React.FC<{
           animationDelay: `${index * 100}ms`,
         }}
       >
-        
         {/* Header avec photo et statut - Dimensions explicites pour éviter layout shift */}
-        <div 
+        <div
           className="relative overflow-hidden bg-slate-100"
           style={{ height: `${CARD_DIMENSIONS.imageHeight}px` }}
         >
           <img
-            src={provider.avatar || '/default-avatar.png'}
+            src={provider.avatar || "/default-avatar.png"}
             alt={`Photo de profil de ${provider.name}`}
             className={`
               w-full h-full object-cover transition-all duration-300
-              ${imageLoaded ? 'opacity-100' : 'opacity-0'}
-              ${isHovered ? 'scale-105' : ''}
+              ${imageLoaded ? "opacity-100" : "opacity-0"}
+              ${isHovered ? "scale-105" : ""}
             `}
             onLoad={() => setImageLoaded(true)}
             onError={handleImageError}
@@ -396,13 +657,13 @@ const ModernProfileCard: React.FC<{
             width={CARD_DIMENSIONS.width}
             height={CARD_DIMENSIONS.imageHeight}
           />
-          
+
           {/* Overlay gradient amélioré */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-          
+
           {/* Statut en ligne - Taille tactile optimisée */}
           <div className="absolute top-3 left-3">
-            <div 
+            <div
               className={`
                 inline-flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium
                 backdrop-blur-sm border shadow-sm transition-colors
@@ -416,42 +677,53 @@ const ModernProfileCard: React.FC<{
               ) : (
                 <WifiOff className="w-4 h-4" aria-hidden="true" />
               )}
-              <span>{provider.isOnline ? t(currentLang, 'labels', 'online') : t(currentLang, 'labels', 'offline')}</span>
+              <span>
+                {provider.isOnline
+                  ? t(currentLang, "labels", "online")
+                  : t(currentLang, "labels", "offline")}
+              </span>
             </div>
           </div>
-          
+
           {/* Badge métier avec contraste amélioré */}
           <div className="absolute top-3 right-3">
-            <div className={`
+            <div
+              className={`
               inline-flex items-center gap-2 px-3 py-2 rounded-full 
               backdrop-blur-sm border shadow-sm border-white/30
               ${professionInfo.bgColor} ${professionInfo.textColor}
               min-h-[36px]
-            `}>
+            `}
+            >
               <span className="text-sm font-medium">
-                <span aria-hidden="true">{professionInfo.icon}</span> {t(currentLang, 'professions', provider.type)}
+                <span aria-hidden="true">{professionInfo.icon}</span>{" "}
+                {t(currentLang, "professions", provider.type)}
               </span>
             </div>
           </div>
-          
+
           {/* Note avec accessibilité améliorée */}
           <div className="absolute bottom-3 right-3">
-            <div 
+            <div
               className="flex items-center gap-1 px-3 py-2 rounded-lg bg-white/95 backdrop-blur-sm border border-slate-200 shadow-sm"
               aria-label={ariaLabels.rating}
             >
-              <Star className="w-4 h-4 text-amber-500 fill-current" aria-hidden="true" />
-              <span className="text-slate-800 text-sm font-medium">{provider.rating.toFixed(1)}</span>
+              <Star
+                className="w-4 h-4 text-amber-500 fill-current"
+                aria-hidden="true"
+              />
+              <span className="text-slate-800 text-sm font-medium">
+                {provider.rating.toFixed(1)}
+              </span>
             </div>
           </div>
         </div>
-        
+
         {/* Contenu principal - Hauteur fixe pour éviter layout shift */}
-        <div 
+        <div
           className="p-3 flex flex-col"
           style={{ height: `${CARD_DIMENSIONS.contentHeight}px` }}
         >
-          
           {/* Nom et expérience */}
           <div className="space-y-2 mb-3">
             <div className="flex items-center justify-between gap-2">
@@ -461,59 +733,69 @@ const ModernProfileCard: React.FC<{
               <div className="flex items-center gap-1 px-2 py-1 rounded-md bg-teal-50 border border-teal-200 flex-shrink-0">
                 <Zap className="w-3 h-3 text-teal-600" aria-hidden="true" />
                 <span className="text-teal-600 text-xs font-medium">
-                  {provider.yearsOfExperience} {t(currentLang, 'labels', 'years')}
+                  {provider.yearsOfExperience}{" "}
+                  {t(currentLang, "labels", "years")}
                 </span>
               </div>
             </div>
-            
+
             {/* Nationalité avec drapeau */}
             {provider.country && (
               <div className="flex items-center gap-2">
                 <span className="text-lg" aria-hidden="true">
                   {getCountryFlag(provider.country)}
                 </span>
-                <span className="text-slate-600 text-xs font-medium">{provider.country}</span>
+                <span className="text-slate-600 text-xs font-medium">
+                  {provider.country}
+                </span>
               </div>
             )}
           </div>
 
           {/* Informations organisées - Hauteur fixe avec overflow */}
           <div className="space-y-2 h-28 overflow-hidden">
-            
             {/* Pays */}
             <div className="flex items-center gap-2">
-              <span className="text-lg" aria-hidden="true">{getCountryFlag(provider.country)}</span>
-              <span className="text-blue-600 text-xs font-medium truncate">{provider.country}</span>
+              <span className="text-lg" aria-hidden="true">
+                {getCountryFlag(provider.country)}
+              </span>
+              <span className="text-blue-600 text-xs font-medium truncate">
+                {provider.country}
+              </span>
             </div>
-            
+
             {/* Langues */}
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <Globe className="w-3 h-3 text-indigo-600" aria-hidden="true" />
-                <span className="text-slate-800 font-semibold text-xs">{t(currentLang, 'labels', 'languages')}</span>
+                <span className="text-slate-800 font-semibold text-xs">
+                  {t(currentLang, "labels", "languages")}
+                </span>
               </div>
               <div className="pl-5">
-                <span className="text-indigo-600 text-xs">{formattedLanguages}</span>
+                <span className="text-indigo-600 text-xs">
+                  {formattedLanguages}
+                </span>
               </div>
             </div>
           </div>
-          
+
           {/* Stats */}
           <div className="flex items-center justify-between pt-2 border-t border-slate-200 mt-auto">
             <div className="flex items-center gap-1">
               <Users className="w-3 h-3 text-amber-600" aria-hidden="true" />
               <span className="text-amber-600 text-xs font-medium">
-                {provider.reviewCount} {t(currentLang, 'labels', 'reviews')}
+                {provider.reviewCount} {t(currentLang, "labels", "reviews")}
               </span>
             </div>
             <div className="text-slate-500 text-xs">
-              {t(currentLang, 'professions', provider.type)}
+              {t(currentLang, "professions", provider.type)}
             </div>
           </div>
-          
+
           {/* Bouton CTA - Taille tactile optimisée */}
           <div className="mt-3">
-            <button 
+            <button
               className={`
                 w-full rounded-lg font-bold text-sm text-white
                 transition-all duration-300 flex items-center justify-center gap-2
@@ -523,9 +805,9 @@ const ModernProfileCard: React.FC<{
                 focus:outline-none focus:ring-4 focus:ring-blue-500/50
                 disabled:opacity-50 disabled:cursor-not-allowed
               `}
-              style={{ 
-                minHeight: '48px',
-                padding: '12px 16px'
+              style={{
+                minHeight: "48px",
+                padding: "12px 16px",
               }}
               onClick={(e) => {
                 e.stopPropagation();
@@ -535,7 +817,9 @@ const ModernProfileCard: React.FC<{
               aria-label={ariaLabels.viewProfile}
             >
               <Eye className="w-4 h-4" aria-hidden="true" />
-              <span className="font-bold">{t(currentLang, 'labels', 'viewProfile')}</span>
+              <span className="font-bold">
+                {t(currentLang, "labels", "viewProfile")}
+              </span>
               <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </button>
           </div>
@@ -581,7 +865,7 @@ const ModernProfileCard: React.FC<{
   );
 });
 
-ModernProfileCard.displayName = 'ModernProfileCard';
+ModernProfileCard.displayName = "ModernProfileCard";
 
 /* =========================
    Composant principal
@@ -593,19 +877,24 @@ const SOSCall: React.FC = () => {
   const location = useLocation();
 
   // États filtres
-  const [selectedType, setSelectedType] = useState<'all' | 'lawyer' | 'expat'>(
-    searchParams.get('type') === 'lawyer' ? 'lawyer' :
-    searchParams.get('type') === 'expat' ? 'expat' : 'all'
+  const [selectedType, setSelectedType] = useState<"all" | "lawyer" | "expat">(
+    searchParams.get("type") === "lawyer"
+      ? "lawyer"
+      : searchParams.get("type") === "expat"
+        ? "expat"
+        : "all"
   );
-  const [selectedCountry, setSelectedCountry] = useState<string>('all');
-  const [selectedLanguage, setSelectedLanguage] = useState<string>('all');
-  const [customCountry, setCustomCountry] = useState<string>('');
-  const [customLanguage, setCustomLanguage] = useState<string>('');
+  const [selectedCountry, setSelectedCountry] = useState<string>("all");
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("all");
+  const [customCountry, setCustomCountry] = useState<string>("");
+  const [customLanguage, setCustomLanguage] = useState<string>("");
   const [showCustomCountry, setShowCustomCountry] = useState<boolean>(false);
   const [showCustomLanguage, setShowCustomLanguage] = useState<boolean>(false);
 
   // Statut
-  const [statusFilter, setStatusFilter] = useState<'all' | 'online' | 'offline'>('all');
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "online" | "offline"
+  >("all");
   const [onlineOnly, setOnlineOnly] = useState<boolean>(false);
 
   // Données
@@ -618,63 +907,68 @@ const SOSCall: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const [favorites, setFavorites] = useState<Set<string>>(() => {
     try {
-      const raw = localStorage.getItem('sos_favorites');
+      const raw = localStorage.getItem("sos_favorites");
       if (!raw) return new Set<string>();
       const parsed: unknown = JSON.parse(raw);
-      return new Set(Array.isArray(parsed) ? parsed.filter((x) => typeof x === 'string') : []);
+      return new Set(
+        Array.isArray(parsed) ? parsed.filter((x) => typeof x === "string") : []
+      );
     } catch {
       return new Set<string>();
     }
   });
 
-  const lang = (language as 'fr' | 'en') || 'fr';
-  
-  const cardTranslations = useMemo(() => ({
-    fr: {
-      lawyer: 'Avocat',
-      expat: 'Expatrié', 
-      languages: 'Langues',
-      about: 'À propos',
-      readMore: 'Lire plus',
-      online: 'En ligne',
-      offline: 'Hors ligne',
-      contactNow: 'Contacter maintenant',
-      viewProfile: 'Voir le profil',
-      years: 'ans',
-      rating: 'Note',
-      country: 'Pays',
-      experience: 'Années'
-    },
-    en: {
-      lawyer: 'Lawyer',
-      expat: 'Expat',
-      languages: 'Languages', 
-      about: 'About',
-      readMore: 'Read more',
-      online: 'Online',
-      offline: 'Offline',
-      contactNow: 'Contact now',
-      viewProfile: 'View profile',
-      years: 'years',
-      rating: 'Rating',
-      country: 'Country',
-      experience: 'Years'
-    }
-  }), []);
+  const lang = (language as "fr" | "en") || "fr";
+
+  const cardTranslations = useMemo(
+    () => ({
+      fr: {
+        lawyer: "Avocat",
+        expat: "Expatrié",
+        languages: "Langues",
+        about: "À propos",
+        readMore: "Lire plus",
+        online: "En ligne",
+        offline: "Hors ligne",
+        contactNow: "Contacter maintenant",
+        viewProfile: "Voir le profil",
+        years: "ans",
+        rating: "Note",
+        country: "Pays",
+        experience: "Années",
+      },
+      en: {
+        lawyer: "Lawyer",
+        expat: "Expat",
+        languages: "Languages",
+        about: "About",
+        readMore: "Read more",
+        online: "Online",
+        offline: "Offline",
+        contactNow: "Contact now",
+        viewProfile: "View profile",
+        years: "years",
+        rating: "Rating",
+        country: "Country",
+        experience: "Years",
+      },
+    }),
+    []
+  );
 
   const tt = cardTranslations[lang];
 
   // Charger providers
   useEffect(() => {
-    const typeParam = searchParams.get('type');
-    if (typeParam === 'lawyer' || typeParam === 'expat') {
+    const typeParam = searchParams.get("type");
+    if (typeParam === "lawyer" || typeParam === "expat") {
       setSelectedType(typeParam);
       setSearchParams({ type: typeParam });
     }
 
     const sosProfilesQuery = query(
-      collection(db, 'sos_profiles'),
-      where('type', 'in', ['lawyer', 'expat']),
+      collection(db, "sos_profiles"),
+      where("type", "in", ["lawyer", "expat"]),
       limit(100)
     );
 
@@ -695,16 +989,14 @@ const SOSCall: React.FC = () => {
 
           const fullName =
             data.fullName ||
-            `${data.firstName || ''} ${data.lastName || ''}`.trim() ||
-            'Expert';
+            `${data.firstName || ""} ${data.lastName || ""}`.trim() ||
+            "Expert";
 
-          const type: 'lawyer' | 'expat' =
-            data.type === 'lawyer' ? 'lawyer' : 'expat';
+          const type: "lawyer" | "expat" =
+            data.type === "lawyer" ? "lawyer" : "expat";
 
           const country =
-            data.currentPresenceCountry ||
-            data.country ||
-            'Monde';
+            data.currentPresenceCountry || data.country || "Monde";
 
           const provider: Provider = {
             id: docSnap.id,
@@ -713,38 +1005,62 @@ const SOSCall: React.FC = () => {
             lastName: data.lastName,
             type,
             country,
-            languages: Array.isArray(data.languages) && data.languages.length > 0 ? data.languages : ['fr'],
-            specialties: Array.isArray(data.specialties) ? data.specialties : [],
-            rating: typeof data.rating === 'number' ? data.rating : 4.5,
-            reviewCount: typeof data.reviewCount === 'number' ? data.reviewCount : 0,
+            languages:
+              Array.isArray(data.languages) && data.languages.length > 0
+                ? data.languages
+                : ["fr"],
+            specialties: Array.isArray(data.specialties)
+              ? data.specialties
+              : [],
+            rating: typeof data.rating === "number" ? data.rating : 4.5,
+            reviewCount:
+              typeof data.reviewCount === "number" ? data.reviewCount : 0,
             yearsOfExperience:
-              (typeof data.yearsOfExperience === 'number' ? data.yearsOfExperience : undefined) ??
-              (typeof data.yearsAsExpat === 'number' ? data.yearsAsExpat : 0),
+              (typeof data.yearsOfExperience === "number"
+                ? data.yearsOfExperience
+                : undefined) ??
+              (typeof data.yearsAsExpat === "number" ? data.yearsAsExpat : 0),
             isOnline: data.isOnline === true,
             isActive: data.isActive !== false,
             isVisible: data.isVisible !== false,
             isApproved: data.isApproved !== false,
             isBanned: data.isBanned === true,
-            role: typeof data.role === 'string' ? String(data.role).toLowerCase() : undefined,
+            role:
+              typeof data.role === "string"
+                ? String(data.role).toLowerCase()
+                : undefined,
             isAdmin: data.isAdmin === true,
-            description: typeof data.bio === 'string' ? data.bio : '',
-            price: typeof data.price === 'number' ? data.price : (type === 'lawyer' ? 49 : 19),
+            description: typeof data.bio === "string" ? data.bio : "",
+            price:
+              typeof data.price === "number"
+                ? data.price
+                : type === "lawyer"
+                  ? 49
+                  : 19,
             duration: data.duration,
             avatar:
-              typeof data.profilePhoto === 'string' && data.profilePhoto.trim() !== ''
+              typeof data.profilePhoto === "string" &&
+              data.profilePhoto.trim() !== ""
                 ? data.profilePhoto
-                : '/default-avatar.png',
+                : "/default-avatar.png",
           };
 
-          const notAdmin = (provider.role ?? '') !== 'admin' && provider.isAdmin !== true;
+          const notAdmin =
+            (provider.role ?? "") !== "admin" && provider.isAdmin !== true;
           const notBanned = provider.isBanned !== true;
-          const hasBasicInfo = provider.name.trim() !== '';
-          const hasCountry = provider.country.trim() !== '';
+          const hasBasicInfo = provider.name.trim() !== "";
+          const hasCountry = provider.country.trim() !== "";
           const visible = provider.isVisible !== false;
-          const lawyerApproved = provider.type !== 'lawyer' || provider.isApproved === true;
+          const lawyerApproved =
+            provider.type !== "lawyer" || provider.isApproved === true;
 
           const shouldInclude =
-            notAdmin && notBanned && hasBasicInfo && hasCountry && visible && lawyerApproved;
+            notAdmin &&
+            notBanned &&
+            hasBasicInfo &&
+            hasCountry &&
+            visible &&
+            lawyerApproved;
 
           if (shouldInclude) {
             allProfiles.push(provider);
@@ -756,7 +1072,7 @@ const SOSCall: React.FC = () => {
         setIsLoadingProviders(false);
       },
       (error) => {
-        console.error('[SOSCall] Firebase error:', error);
+        console.error("[SOSCall] Firebase error:", error);
         setRealProviders([]);
         setFilteredProviders([]);
         setIsLoadingProviders(false);
@@ -774,14 +1090,25 @@ const SOSCall: React.FC = () => {
     }
 
     const next = realProviders.filter((provider) => {
-      const matchesType = selectedType === 'all' || provider.type === selectedType;
-      const matchesCountry = countryMatches(provider.country, selectedCountry, customCountry);
-      const matchesLanguage = langMatches(provider.languages, selectedLanguage, customLanguage);
+      const matchesType =
+        selectedType === "all" || provider.type === selectedType;
+      const matchesCountry = countryMatches(
+        provider.country,
+        selectedCountry,
+        customCountry
+      );
+      const matchesLanguage = langMatches(
+        provider.languages,
+        selectedLanguage,
+        customLanguage
+      );
 
       const matchesStatus =
-        statusFilter === 'all' ? true :
-        statusFilter === 'online' ? provider.isOnline :
-        !provider.isOnline;
+        statusFilter === "all"
+          ? true
+          : statusFilter === "online"
+            ? provider.isOnline
+            : !provider.isOnline;
 
       return matchesType && matchesCountry && matchesLanguage && matchesStatus;
     });
@@ -790,9 +1117,17 @@ const SOSCall: React.FC = () => {
       if (a.isOnline !== b.isOnline) {
         return (b.isOnline ? 1 : 0) - (a.isOnline ? 1 : 0);
       }
-      if (selectedCountry !== 'all') {
-        const aCountryMatch = countryMatches(a.country, selectedCountry, customCountry);
-        const bCountryMatch = countryMatches(b.country, selectedCountry, customCountry);
+      if (selectedCountry !== "all") {
+        const aCountryMatch = countryMatches(
+          a.country,
+          selectedCountry,
+          customCountry
+        );
+        const bCountryMatch = countryMatches(
+          b.country,
+          selectedCountry,
+          customCountry
+        );
         if (aCountryMatch !== bCountryMatch) return aCountryMatch ? -1 : 1;
       }
       return b.rating - a.rating;
@@ -800,7 +1135,7 @@ const SOSCall: React.FC = () => {
 
     setFilteredProviders(next);
     setPage(1);
-    setOnlineOnly(statusFilter === 'online');
+    setOnlineOnly(statusFilter === "online");
   }, [
     realProviders,
     selectedType,
@@ -808,21 +1143,28 @@ const SOSCall: React.FC = () => {
     selectedLanguage,
     customCountry,
     customLanguage,
-    statusFilter
+    statusFilter,
   ]);
 
   // Pagination
-  const totalPages = Math.max(1, Math.ceil(filteredProviders.length / PAGE_SIZE));
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredProviders.length / PAGE_SIZE)
+  );
   const paginatedProviders = useMemo(() => {
     const start = (page - 1) * PAGE_SIZE;
     return filteredProviders.slice(start, start + PAGE_SIZE);
   }, [filteredProviders, page]);
 
   // Normalisation pays
-  const countryMatches = (providerCountry: string, selected: string, custom: string): boolean => {
-    if (selected === 'all') return true;
-    const prov = providerCountry || '';
-    if (selected === 'Autre') {
+  const countryMatches = (
+    providerCountry: string,
+    selected: string,
+    custom: string
+  ): boolean => {
+    if (selected === "all") return true;
+    const prov = providerCountry || "";
+    if (selected === "Autre") {
       if (!custom) return true;
       return prov.toLowerCase().includes(custom.toLowerCase());
     }
@@ -831,10 +1173,16 @@ const SOSCall: React.FC = () => {
   };
 
   // Normalisation langues
-  const langMatches = (langs: string[], selected: string, custom: string): boolean => {
-    if (selected === 'all') return true;
-    const normalizedProv = (langs || []).map((l) => getLanguageLabel(l).toLowerCase());
-    if (selected === 'Autre') {
+  const langMatches = (
+    langs: string[],
+    selected: string,
+    custom: string
+  ): boolean => {
+    if (selected === "all") return true;
+    const normalizedProv = (langs || []).map((l) =>
+      getLanguageLabel(l).toLowerCase()
+    );
+    if (selected === "Autre") {
       if (!custom) return true;
       const needle = custom.toLowerCase();
       return normalizedProv.some((v) => v.includes(needle));
@@ -846,31 +1194,31 @@ const SOSCall: React.FC = () => {
   // Handlers filtres
   const handleCountryChange = (value: string) => {
     setSelectedCountry(value);
-    setShowCustomCountry(value === 'Autre');
-    if (value !== 'Autre') setCustomCountry('');
+    setShowCustomCountry(value === "Autre");
+    if (value !== "Autre") setCustomCountry("");
   };
 
   const handleLanguageChange = (value: string) => {
     setSelectedLanguage(value);
-    setShowCustomLanguage(value === 'Autre');
-    if (value !== 'Autre') setCustomLanguage('');
+    setShowCustomLanguage(value === "Autre");
+    if (value !== "Autre") setCustomLanguage("");
   };
 
   // Navigation
   const handleProviderClick = (provider: Provider) => {
-    const typeSlug = provider.type === 'lawyer' ? 'avocat' : 'expatrie';
+    const typeSlug = provider.type === "lawyer" ? "avocat" : "expatrie";
     const countrySlug = slugify(provider.country);
     const nameSlug = slugify(provider.name);
     const seoUrl = `/${typeSlug}/${countrySlug}/francais/${nameSlug}-${provider.id}`;
 
     if (location.pathname !== seoUrl) {
       try {
-        sessionStorage.setItem('selectedProvider', JSON.stringify(provider));
+        sessionStorage.setItem("selectedProvider", JSON.stringify(provider));
       } catch {
         // noop
       }
       navigate(seoUrl, {
-        state: { selectedProvider: provider, navigationSource: 'sos_call' },
+        state: { selectedProvider: provider, navigationSource: "sos_call" },
       });
     }
   };
@@ -882,7 +1230,7 @@ const SOSCall: React.FC = () => {
       if (next.has(id)) next.delete(id);
       else next.add(id);
       try {
-        localStorage.setItem('sos_favorites', JSON.stringify(Array.from(next)));
+        localStorage.setItem("sos_favorites", JSON.stringify(Array.from(next)));
       } catch {
         // noop
       }
@@ -894,14 +1242,18 @@ const SOSCall: React.FC = () => {
     <Layout>
       <SEOHead
         title={`${
-          selectedType === 'lawyer'
-            ? 'Avocats'
-            : selectedType === 'expat'
-            ? 'Expatriés'
-            : 'Experts'
+          selectedType === "lawyer"
+            ? "Avocats"
+            : selectedType === "expat"
+              ? "Expatriés"
+              : "Experts"
         } disponibles | SOS Expat & Travelers`}
         description={`Trouvez un ${
-          selectedType === 'lawyer' ? 'avocat' : selectedType === 'expat' ? 'expatrié' : 'expert'
+          selectedType === "lawyer"
+            ? "avocat"
+            : selectedType === "expat"
+              ? "expatrié"
+              : "expert"
         } vérifié disponible immédiatement. Consultation en ligne 24h/24, 7j/7 dans plus de 150 pays.`}
         canonicalUrl="/sos-appel"
       />
@@ -926,24 +1278,25 @@ const SOSCall: React.FC = () => {
 
             <h1 className="text-5xl md:text-7xl font-black text-white leading-tight mb-4">
               {/* Trouvez un */}
-              <FormattedMessage id='sosTagline' />
+              <FormattedMessage id="sosTagline" />
               <span className="bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500 bg-clip-text text-transparent">
-                {/* expert */} <FormattedMessage id='expert' /> </span>
+                {/* expert */} <FormattedMessage id="expert" />{" "}
+              </span>
               {/* maintenant */}
-               <FormattedMessage id='now' />
+              <FormattedMessage id="now" />
             </h1>
             {/* <p className="text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto">
               Avocats & Expatriés vérifiés • Disponibles 24/7 • <strong>150+ pays</strong>
             </p> */}
             <p className="text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto">
-        <FormattedMessage
-          id="verifiedLawyersExpats"
-          defaultMessage="Verified Lawyers & Expats • Available 24/7 • <strong>150+ countries</strong>"
-          values={{
-            strong: (chunks) => <strong>{chunks}</strong>
-          }}
-        />
-      </p>
+              <FormattedMessage
+                id="verifiedLawyersExpats"
+                defaultMessage="Verified Lawyers & Expats • Available 24/7 • <strong>150+ countries</strong>"
+                values={{
+                  strong: (chunks) => <strong>{chunks}</strong>,
+                }}
+              />
+            </p>
           </div>
         </section>
 
@@ -957,30 +1310,46 @@ const SOSCall: React.FC = () => {
               </h2> */}
 
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-4">
-  {selectedType === 'lawyer' && (
-    <FormattedMessage id="availableLawyers" defaultMessage="Available Lawyers" />
-  )}
-  {selectedType === 'expat' && (
-    <FormattedMessage id="availableExpats" defaultMessage="Available Expats" />
-  )}
-  {selectedType !== 'lawyer' && selectedType !== 'expat' && (
-    <FormattedMessage id="availableExperts" defaultMessage="Experts available" />
-  )}
-</h2>
+                {selectedType === "lawyer" && (
+                  <FormattedMessage
+                    id="availableLawyers"
+                    defaultMessage="Available Lawyers"
+                  />
+                )}
+                {selectedType === "expat" && (
+                  <FormattedMessage
+                    id="availableExpats"
+                    defaultMessage="Available Expats"
+                  />
+                )}
+                {selectedType !== "lawyer" && selectedType !== "expat" && (
+                  <FormattedMessage
+                    id="availableExperts"
+                    defaultMessage="Experts available"
+                  />
+                )}
+              </h2>
 
               {/* FILTRES */}
               <div className="rounded-[28px] border border-white/10 bg-white/5 backdrop-blur-md p-4 sm:p-6 max-w-6xl mx-auto">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
                   {/* Type */}
                   <div className="space-y-1">
-                    <label htmlFor="expert-type" className="block text-xs font-semibold text-gray-300 uppercase tracking-wide">
+                    <label
+                      htmlFor="expert-type"
+                      className="block text-xs font-semibold text-gray-300 uppercase tracking-wide"
+                    >
                       Type
                     </label>
                     <div className="relative">
                       <select
                         id="expert-type"
                         value={selectedType}
-                        onChange={(e) => setSelectedType(e.target.value as 'all' | 'lawyer' | 'expat')}
+                        onChange={(e) =>
+                          setSelectedType(
+                            e.target.value as "all" | "lawyer" | "expat"
+                          )
+                        }
                         className="
                           w-full px-3 py-2
                           bg-white text-gray-900
@@ -1003,7 +1372,10 @@ const SOSCall: React.FC = () => {
 
                   {/* Pays */}
                   <div className="space-y-1">
-                    <label htmlFor="country-filter" className="block text-xs font-semibold text-gray-300 uppercase tracking-wide">
+                    <label
+                      htmlFor="country-filter"
+                      className="block text-xs font-semibold text-gray-300 uppercase tracking-wide"
+                    >
                       Pays
                     </label>
                     <div className="relative">
@@ -1022,7 +1394,9 @@ const SOSCall: React.FC = () => {
                       >
                         <option value="all">Tous les pays</option>
                         {countryOptions.map((country) => (
-                          <option key={country} value={country}>{country}</option>
+                          <option key={country} value={country}>
+                            {country}
+                          </option>
                         ))}
                         <option value="Autre">Autre</option>
                       </select>
@@ -1044,7 +1418,10 @@ const SOSCall: React.FC = () => {
 
                   {/* Langue */}
                   <div className="space-y-1">
-                    <label htmlFor="language-filter" className="block text-xs font-semibold text-gray-300 uppercase tracking-wide">
+                    <label
+                      htmlFor="language-filter"
+                      className="block text-xs font-semibold text-gray-300 uppercase tracking-wide"
+                    >
                       Langue
                     </label>
                     <div className="relative">
@@ -1063,7 +1440,9 @@ const SOSCall: React.FC = () => {
                       >
                         <option value="all">Toutes</option>
                         {languageOptions.map((lang) => (
-                          <option key={lang} value={lang}>{lang}</option>
+                          <option key={lang} value={lang}>
+                            {lang}
+                          </option>
                         ))}
                         <option value="Autre">Autre</option>
                       </select>
@@ -1091,26 +1470,26 @@ const SOSCall: React.FC = () => {
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
-                        onClick={() => setStatusFilter('all')}
+                        onClick={() => setStatusFilter("all")}
                         className={`flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl border transition ${
-                          statusFilter === 'all'
-                            ? 'bg-white/20 text-white border-white/30'
-                            : 'bg-white/10 text-gray-200 border-white/20 hover:bg-white/15'
+                          statusFilter === "all"
+                            ? "bg-white/20 text-white border-white/30"
+                            : "bg-white/10 text-gray-200 border-white/20 hover:bg-white/15"
                         }`}
-                        aria-pressed={statusFilter === 'all'}
+                        aria-pressed={statusFilter === "all"}
                       >
                         <span className="w-2 h-2 rounded-full bg-gray-300" />
                         Tous
                       </button>
                       <button
                         type="button"
-                        onClick={() => setStatusFilter('online')}
+                        onClick={() => setStatusFilter("online")}
                         className={`flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl border transition ${
-                          statusFilter === 'online'
-                            ? 'bg-white/20 text-white border-white/30'
-                            : 'bg-white/10 text-gray-200 border-white/20 hover:bg-white/15'
+                          statusFilter === "online"
+                            ? "bg-white/20 text-white border-white/30"
+                            : "bg-white/10 text-gray-200 border-white/20 hover:bg-white/15"
                         }`}
-                        aria-pressed={statusFilter === 'online'}
+                        aria-pressed={statusFilter === "online"}
                         title="En ligne"
                       >
                         <Wifi className="w-4 h-4" />
@@ -1118,13 +1497,13 @@ const SOSCall: React.FC = () => {
                       </button>
                       <button
                         type="button"
-                        onClick={() => setStatusFilter('offline')}
+                        onClick={() => setStatusFilter("offline")}
                         className={`flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl border transition ${
-                          statusFilter === 'offline'
-                            ? 'bg-white/20 text-white border-white/30'
-                            : 'bg-white/10 text-gray-200 border-white/20 hover:bg-white/15'
+                          statusFilter === "offline"
+                            ? "bg-white/20 text-white border-white/30"
+                            : "bg-white/10 text-gray-200 border-white/20 hover:bg-white/15"
                         }`}
-                        aria-pressed={statusFilter === 'offline'}
+                        aria-pressed={statusFilter === "offline"}
                         title="Hors ligne"
                       >
                         <WifiOff className="w-4 h-4" />
@@ -1140,14 +1519,14 @@ const SOSCall: React.FC = () => {
                     </label>
                     <button
                       onClick={() => {
-                        setSelectedType('all');
-                        setSelectedCountry('all');
-                        setSelectedLanguage('all');
-                        setCustomCountry('');
-                        setCustomLanguage('');
+                        setSelectedType("all");
+                        setSelectedCountry("all");
+                        setSelectedLanguage("all");
+                        setCustomCountry("");
+                        setCustomLanguage("");
                         setShowCustomCountry(false);
                         setShowCustomLanguage(false);
-                        setStatusFilter('all');
+                        setStatusFilter("all");
                         setOnlineOnly(false);
                       }}
                       className="w-full px-3 py-2 border border-white/15 rounded-xl text-gray-100 hover:bg-white/10 active:bg-white/15 transition-colors text-sm font-semibold h-10"
@@ -1160,7 +1539,8 @@ const SOSCall: React.FC = () => {
                 <div className="mt-4 text-center text-xs text-gray-300">
                   <span className="inline-flex items-center gap-2 rounded-full px-3 py-1 bg-white/10 border border-white/15">
                     <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                    {filteredProviders.filter((p) => p.isOnline).length} en ligne
+                    {filteredProviders.filter((p) => p.isOnline).length} en
+                    ligne
                   </span>
                   <span className="mx-2 text-white/30">•</span>
                   {filteredProviders.length} au total
@@ -1171,7 +1551,11 @@ const SOSCall: React.FC = () => {
             {/* PAGINATION (haut) */}
             {!isLoadingProviders && filteredProviders.length > 0 && (
               <div className="flex items-center justify-end mb-4">
-                <Pagination page={page} totalPages={totalPages} onChange={setPage} />
+                <Pagination
+                  page={page}
+                  totalPages={totalPages}
+                  onChange={setPage}
+                />
               </div>
             )}
 
@@ -1179,7 +1563,10 @@ const SOSCall: React.FC = () => {
             {isLoadingProviders ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {Array.from({ length: PAGE_SIZE }).map((_, index) => (
-                  <div key={`sk-${index}`} className="bg-white/5 rounded-[28px] border border-white/10 overflow-hidden animate-pulse">
+                  <div
+                    key={`sk-${index}`}
+                    className="bg-white/5 rounded-[28px] border border-white/10 overflow-hidden animate-pulse"
+                  >
                     <div className="w-full h-80 bg-white/10" />
                     <div className="p-4 space-y-3">
                       <div className="h-4 bg-white/10 rounded w-3/4" />
@@ -1192,7 +1579,7 @@ const SOSCall: React.FC = () => {
             ) : filteredProviders.length > 0 ? (
               <>
                 {/* DESIGN EXACT DE ModernProfileCard - MOBILE FIRST */}
-                
+
                 {/* Version Mobile - Scroll horizontal */}
                 <div className="md:hidden">
                   <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
@@ -1235,9 +1622,14 @@ const SOSCall: React.FC = () => {
                 {/* Pagination (bas) */}
                 <div className="flex items-center justify-between mt-8">
                   <div className="text-sm text-gray-300">
-                    Page <strong>{page}</strong> / {totalPages} — {filteredProviders.length} résultats
+                    Page <strong>{page}</strong> / {totalPages} —{" "}
+                    {filteredProviders.length} résultats
                   </div>
-                  <Pagination page={page} totalPages={totalPages} onChange={setPage} />
+                  <Pagination
+                    page={page}
+                    totalPages={totalPages}
+                    onChange={setPage}
+                  />
                 </div>
               </>
             ) : (
@@ -1250,18 +1642,19 @@ const SOSCall: React.FC = () => {
                     Aucun expert trouvé
                   </h3>
                   <p className="text-gray-300 mb-6">
-                    Aucun expert ne correspond à vos critères de recherche actuels.
+                    Aucun expert ne correspond à vos critères de recherche
+                    actuels.
                   </p>
                   <button
                     onClick={() => {
-                      setSelectedType('all');
-                      setSelectedCountry('all');
-                      setSelectedLanguage('all');
-                      setCustomCountry('');
-                      setCustomLanguage('');
+                      setSelectedType("all");
+                      setSelectedCountry("all");
+                      setSelectedLanguage("all");
+                      setCustomCountry("");
+                      setCustomLanguage("");
                       setShowCustomCountry(false);
                       setShowCustomLanguage(false);
-                      setStatusFilter('all');
+                      setStatusFilter("all");
                       setOnlineOnly(false);
                     }}
                     className="px-6 py-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white font-semibold rounded-xl transition-colors"
@@ -1277,20 +1670,20 @@ const SOSCall: React.FC = () => {
               <div className="rounded-[28px] border border-white/10 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-md p-8 sm:p-12">
                 <h3 className="text-2xl sm:text-3xl font-black text-white mb-3">
                   {/* Besoin d'aide immédiate ? */}
-                  <FormattedMessage id="needImmediateHelp"/>
+                  <FormattedMessage id="needImmediateHelp" />
                 </h3>
                 <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
                   <FormattedMessage
-  id="verifiedExpertsAvailable"
-  defaultMessage="Over 200 verified experts available in <strong>150+ countries</strong> to assist you."
-  values={{
-    strong: (chunks) => <strong>{chunks}</strong>
-  }}
-/>
+                    id="verifiedExpertsAvailable"
+                    defaultMessage="Over 200 verified experts available in <strong>150+ countries</strong> to assist you."
+                    values={{
+                      strong: (chunks) => <strong>{chunks}</strong>,
+                    }}
+                  />
                   {/* Plus de 200 experts vérifiés disponibles dans <strong>150+ pays</strong> pour vous accompagner. */}
                 </p>
                 <button
-                  onClick={() => navigate('/sos-appel')}
+                  onClick={() => navigate("/sos-appel")}
                   className="inline-flex items-center gap-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-0.5"
                 >
                   <Phone className="w-5 h-5" />
@@ -1320,8 +1713,8 @@ const Pagination: React.FC<{
     if (np !== page) onChange(np);
   };
 
-  const makePages = (): Array<number | 'ellipsis'> => {
-    const pages: Array<number | 'ellipsis'> = [];
+  const makePages = (): Array<number | "ellipsis"> => {
+    const pages: Array<number | "ellipsis"> = [];
     const add = (n: number) => pages.push(n);
 
     const windowSize = 1;
@@ -1332,15 +1725,20 @@ const Pagination: React.FC<{
     if (totalPages > 1) add(totalPages);
 
     const sorted = Array.from(new Set(pages)).sort((a, b) =>
-      typeof a === 'number' && typeof b === 'number' ? a - b : 0
+      typeof a === "number" && typeof b === "number" ? a - b : 0
     );
 
-    const withEllipses: Array<number | 'ellipsis'> = [];
+    const withEllipses: Array<number | "ellipsis"> = [];
     for (let i = 0; i < sorted.length; i++) {
       const cur = sorted[i] as number;
       const prev = sorted[i - 1] as number | undefined;
-      if (i > 0 && prev !== undefined && typeof prev === 'number' && cur - prev > 1) {
-        withEllipses.push('ellipsis');
+      if (
+        i > 0 &&
+        prev !== undefined &&
+        typeof prev === "number" &&
+        cur - prev > 1
+      ) {
+        withEllipses.push("ellipsis");
       }
       withEllipses.push(cur);
     }
@@ -1362,17 +1760,19 @@ const Pagination: React.FC<{
       </button>
 
       {items.map((it, idx) =>
-        it === 'ellipsis' ? (
-          <span key={`el-${idx}`} className="px-2 text-gray-300">…</span>
+        it === "ellipsis" ? (
+          <span key={`el-${idx}`} className="px-2 text-gray-300">
+            …
+          </span>
         ) : (
           <button
             key={`p-${it}`}
             onClick={() => go(it)}
-            aria-current={it === page ? 'page' : undefined}
+            aria-current={it === page ? "page" : undefined}
             className={`w-9 h-9 rounded-xl border text-sm font-semibold transition ${
               it === page
-                ? 'bg-white/20 text-white border-white/30'
-                : 'bg-white/10 text-gray-200 border-white/20 hover:bg-white/15'
+                ? "bg-white/20 text-white border-white/30"
+                : "bg-white/10 text-gray-200 border-white/20 hover:bg-white/15"
             }`}
             title={`Aller à la page ${it}`}
           >
