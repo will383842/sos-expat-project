@@ -636,7 +636,7 @@ const AdminPromoCodes: React.FC = () => {
                   placeholder="Rechercher un code promo..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  className="pl-10 pr-4 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                 />
                 <Search
                   className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
@@ -891,8 +891,9 @@ const AdminPromoCodes: React.FC = () => {
           }}
           title={showAddModal ? "Ajouter un code promo" : "Modifier un code promo"}
           size="large"
+          
         >
-          <div className="space-y-4">
+          <div className="space-y-4 text-black">
             <div>
               <label htmlFor="code" className="block text-sm font-medium text-gray-700 mb-1">
                 Code promo *
