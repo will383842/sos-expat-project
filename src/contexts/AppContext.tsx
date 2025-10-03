@@ -3,24 +3,21 @@ import React, {
   useContext,
   useState,
   useEffect,
-  ReactNode
-} from 'react';
-import {
-  Service,
-  AppSettings,
-  Notification,
-  EnhancedSettings
-} from './types';
-import { ensureCollectionsExist } from '../utils/firestore'; // ✅ Actif maintenant
+  ReactNode,
+} from "react";
+import { Service, AppSettings, Notification, EnhancedSettings } from "./types";
+import { ensureCollectionsExist } from "../utils/firestore"; // ✅ Actif maintenant
 
 interface AppContextType {
   services: Service[];
   settings: AppSettings;
   enhancedSettings: EnhancedSettings;
   notifications: Notification[];
-  language: 'fr' | 'en';
-  setLanguage: (lang: 'fr' | 'en') => void;
-  addNotification: (notification: Omit<Notification, 'id' | 'createdAt'>) => void;
+  language: "fr" | "en";
+  setLanguage: (lang: "fr" | "en") => void;
+  addNotification: (
+    notification: Omit<Notification, "id" | "createdAt">
+  ) => void;
   markNotificationAsRead: (id: string) => void;
   getUnreadNotificationsCount: () => number;
   updateEnhancedSettings: (settings: Partial<EnhancedSettings>) => void;
@@ -31,7 +28,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const useApp = (): AppContextType => {
   const context = useContext(AppContext);
   if (!context) {
-    throw new Error('useApp must be used within an AppProvider');
+    throw new Error("useApp must be used within an AppProvider");
   }
   return context;
 };
@@ -43,111 +40,124 @@ interface AppProviderProps {
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [services, setServices] = useState<Service[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [language, setLanguage] = useState<'fr' | 'en'>('fr');
+  const [language, setLanguage] = useState<"fr" | "en">("fr");
 
   const [settings] = useState<AppSettings>({
     servicesEnabled: {
       lawyerCalls: true,
-      expatCalls: true
+      expatCalls: true,
     },
     pricing: {
       lawyerCall: 49,
-      expatCall: 19
+      expatCall: 19,
     },
     platformCommission: 0.15,
     maxCallDuration: 30,
     callTimeout: 30,
-    supportedCountries: ['CA', 'UK', 'DE', 'ES', 'IT', 'BE', 'CH', 'LU', 'NL', 'AT'],
-    supportedLanguages: ['fr', 'en']
+    supportedCountries: [
+      "CA",
+      "UK",
+      "DE",
+      "ES",
+      "IT",
+      "BE",
+      "CH",
+      "LU",
+      "NL",
+      "AT",
+    ],
+    supportedLanguages: ["fr", "en"],
   });
 
   const [enhancedSettings, setEnhancedSettings] = useState<EnhancedSettings>({
     notifications: {
       email: true,
       push: true,
-      sms: false
+      sms: false,
     },
     privacy: {
-      profileVisibility: 'public',
+      profileVisibility: "public",
       allowContact: true,
-      showOnMap: true
+      showOnMap: true,
     },
     language: {
-      primary: 'fr',
-      secondary: 'en',
-      preferredCommunication: 'fr'
+      primary: "fr",
+      secondary: "en",
+      preferredCommunication: "fr",
     },
     rateLimit: {
       apiCallsPerMinute: 60,
       lastApiCall: new Date(),
-      callCount: 0
+      callCount: 0,
     },
     audit: {
       lastLogin: new Date(),
       lastProfileUpdate: new Date(),
-      loginHistory: []
-    }
+      loginHistory: [],
+    },
   });
 
   useEffect(() => {
     const defaultServices: Service[] = [
       {
-        id: 'lawyer_call',
-        type: 'lawyer_call',
-        name: 'Appel Avocat',
+        id: "lawyer_call",
+        type: "lawyer_call",
+        name: "Appel Avocat",
         price: 49,
         duration: 20,
-        description: 'Consultation juridique urgente par téléphone avec avocat certifié',
-        isActive: true
+        description:
+          "Consultation juridique urgente par téléphone avec avocat certifié",
+        isActive: true,
       },
       {
-        id: 'expat_call',
-        type: 'expat_call',
-        name: 'Appel Expatrié',
+        id: "expat_call",
+        type: "expat_call",
+        name: "Appel Expatrié",
         price: 19,
         duration: 30,
-        description: 'Conseil pratique d\'un expatrié francophone qui connaît le pays',
-        isActive: true
-      }
+        description:
+          "Conseil pratique d'un expatrié francophone qui connaît le pays",
+        isActive: true,
+      },
     ];
 
     setServices(defaultServices);
 
-    const savedLanguage = localStorage.getItem('sos_language') as 'fr' | 'en';
+    const savedLanguage = localStorage.getItem("sos_language") as "fr" | "en";
     if (savedLanguage) {
       setLanguage(savedLanguage);
     }
   }, []); // ✅ AJOUTÉ : Array de dépendances manquant
 
-  const handleSetLanguage = (lang: 'fr' | 'en') => {
+  const handleSetLanguage = (lang: "fr" | "en") => {
     setLanguage(lang);
-    localStorage.setItem('sos_language', lang);
+    localStorage.setItem("sos_language", lang);
   };
 
   const addNotification = (
-    notification: Omit<Notification, 'id' | 'createdAt'>
+    notification: Omit<Notification, "id" | "createdAt">
   ) => {
     const newNotification: Notification = {
       ...notification,
       id: Date.now().toString(),
       createdAt: new Date(),
-      isRead: false
+      isRead: false,
     };
-    setNotifications(prev => [newNotification, ...prev]);
+    setNotifications((prev) => [newNotification, ...prev]);
   };
 
   const markNotificationAsRead = (id: string) => {
-    setNotifications(prev =>
-      prev.map(n => (n.id === id ? { ...n, isRead: true } : n))
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
     );
   };
 
   const getUnreadNotificationsCount = () => {
-    return notifications.filter(n => !n.isRead).length;
+    return notifications.filter((n) => !n.isRead).length;
   };
 
   const updateEnhancedSettings = (partial: Partial<EnhancedSettings>) => {
-    setEnhancedSettings(prev => ({
+    setEnhancedSettings((prev) => ({
       ...prev,
       ...partial,
       notifications: partial.notifications
@@ -162,13 +172,13 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       rateLimit: partial.rateLimit
         ? { ...prev.rateLimit, ...partial.rateLimit }
         : prev.rateLimit,
-      audit: partial.audit ? { ...prev.audit, ...partial.audit } : prev.audit
+      audit: partial.audit ? { ...prev.audit, ...partial.audit } : prev.audit,
     }));
 
-    console.log('Settings updated:', {
-      action: 'settings_updated',
+    console.log("Settings updated:", {
+      action: "settings_updated",
       timestamp: new Date(),
-      details: { settings: JSON.stringify(partial) }
+      details: { settings: JSON.stringify(partial) },
     });
   };
 
@@ -193,4 +203,3 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 };
 
 export default AppProvider;
-

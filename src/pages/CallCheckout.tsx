@@ -1,5 +1,11 @@
 // src/pages/CallCheckout.tsx
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useContext,
+} from "react";
 import {
   ArrowLeft,
   Clock,
@@ -34,6 +40,7 @@ import {
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { useForm } from "react-hook-form";
 import { saveProviderMessage } from "@/firebase/saveProviderMessage";
+import { useApp } from "@/contexts/AppContext";
 
 /* -------------------------- Stripe singleton (HMR-safe) ------------------ */
 // Conserve la même Promise Stripe à travers les rechargements HMR.
@@ -165,7 +172,8 @@ const getGtag = (): GtagFunction | undefined =>
 
 /* -------------------------------- i18n ----------------------------------- */
 const useTranslation = () => {
-  const { language: ctxLang } = { language: "fr" as Lang };
+  // const { language: ctxLang } = { language: "fr" as Lang };
+  const { language: ctxLang } = useApp();
   const language: Lang = ctxLang === "en" ? "en" : "fr";
 
   const dict: Record<string, Record<Lang, string>> = {

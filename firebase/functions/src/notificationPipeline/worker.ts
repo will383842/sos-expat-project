@@ -298,6 +298,8 @@ export const onMessageEventCreate = onDocumentCreated(
     console.log(`🌐 Detected locale: ${debugLocale}`);
     console.log(`🌐 Detected user locale: ${debugUserLocale}`);
     console.log(`🌐 Resolved language: ${lang}`);
+    
+    
 
     // 3) Lecture du template Firestore + fallback EN
     const canonicalId = normalizeEventId(evt.eventId);
