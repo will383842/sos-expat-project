@@ -37,7 +37,7 @@ exports.onMessageEventCreate = void 0;
 const firestore_1 = require("firebase-functions/v2/firestore");
 const params_1 = require("firebase-functions/params");
 const admin = __importStar(require("firebase-admin"));
-const i18n_1 = require("./i18n");
+// import { resolveLang } from "./i18n";
 // 🔐 SECRETS
 const EMAIL_USER = (0, params_1.defineSecret)("EMAIL_USER");
 const EMAIL_PASS = (0, params_1.defineSecret)("EMAIL_PASS");
@@ -55,6 +55,7 @@ const twilioSms_1 = require("./providers/sms/twilioSms");
 // import { sendWhatsApp } from "./providers/whatsapp/twilio"; // ❌ retiré : WhatsApp non géré ici
 const fcm_1 = require("./providers/push/fcm");
 const firestore_2 = require("./providers/inapp/firestore");
+const i18n_1 = require("./i18n");
 // ➕ NORMALISATION D'EVENTID
 function normalizeEventId(id) {
     if (id === "whatsapp_provider_booking_request")
@@ -72,11 +73,13 @@ function hasContact(channel, ctx) {
         return !!(ctx?.user?.email || ctx?.to?.email);
     if (channel === "sms")
         return !!(ctx?.user?.phoneNumber || ctx?.to?.phone);
-    if (channel === "whatsapp")
-        return !!(ctx?.user?.waNumber ||
-            ctx?.user?.phoneNumber ||
-            ctx?.to?.whatsapp ||
-            ctx?.to?.phone); // ❌ retiré
+    // if (channel === "whatsapp")
+    //   return !!(
+    //     ctx?.user?.waNumber ||
+    //     ctx?.user?.phoneNumber ||
+    //     ctx?.to?.whatsapp ||
+    //     ctx?.to?.phone
+    //   ); // ❌ retiré
     if (channel === "push")
         return ((Array.isArray(ctx?.user?.fcmTokens) &&
             (ctx.user?.fcmTokens?.length ?? 0) > 0) ||
@@ -118,15 +121,15 @@ tmpl, ctx, evt) {
         return { sid };
     }
     // ❌ Branche WhatsApp complètement retirée
-    if (channel === "whatsapp") {
-        const to = ctx?.user?.waNumber || ctx?.user?.phoneNumber || evt.to?.phone;
-        if (!to || !tmpl.whatsapp?.enabled)
-            console.log("🚨 WhatsApp is disabled, skipping");
-        throw new Error("Missing WhatsApp destination or disabled template");
-        // const body = render(tmpl.whatsapp.text || "", { ...ctx, ...evt.vars });
-        // const sid = await sendWa(to, body);
-        // return { sid };
-    }
+    // if (channel === "whatsapp") {
+    //   const to = ctx?.user?.waNumber || ctx?.user?.phoneNumber || evt.to?.phone;
+    //   if (!to || !tmpl.whatsapp?.enabled)
+    //     console.log("🚨 WhatsApp is disabled, skipping");
+    //   throw new Error("Missing WhatsApp destination or disabled template");
+    //   // const body = render(tmpl.whatsapp.text || "", { ...ctx, ...evt.vars });
+    //   // const sid = await sendWa(to, body);
+    //   // return { sid };
+    // }
     if (channel === "push") {
         const token = ctx?.user?.fcmTokens?.[0] || evt.to?.fcmToken;
         if (!token || !tmpl.push?.enabled)
@@ -219,6 +222,10 @@ exports.onMessageEventCreate = (0, firestore_1.onDocumentCreated)({
     console.log(`📨 Processing event: ${evt.eventId} | Locale: ${evt.locale || "auto"}`);
     // 2) Résolution de la langue
     const lang = (0, i18n_1.resolveLang)(evt?.locale || evt?.context?.user?.preferredLanguage);
+    const debugLocale = (0, i18n_1.resolveLang)(evt?.locale);
+    const debugUserLocale = (0, i18n_1.resolveLang)(evt?.context?.user?.preferredLanguage);
+    console.log(`🌐 Detected locale: ${debugLocale}`);
+    console.log(`🌐 Detected user locale: ${debugUserLocale}`);
     console.log(`🌐 Resolved language: ${lang}`);
     // 3) Lecture du template Firestore + fallback EN
     const canonicalId = normalizeEventId(evt.eventId);
@@ -335,11 +342,13 @@ function getDestinationForChannel(channel, ctx, evt) {
             return ctx?.user?.email || evt.to?.email;
         case "sms":
             return ctx?.user?.phoneNumber || evt.to?.phone;
-        case "whatsapp":
-            return (ctx?.user?.waNumber ||
-                ctx?.user?.phoneNumber ||
-                evt.to?.whatsapp ||
-                evt.to?.phone); // ❌ retiré
+        // case "whatsapp":
+        //   return (
+        //     ctx?.user?.waNumber ||
+        //     ctx?.user?.phoneNumber ||
+        //     evt.to?.whatsapp ||
+        //     evt.to?.phone
+        //   ); // ❌ retiré
         case "push":
             return (((ctx?.user?.fcmTokens?.[0] || evt.to?.fcmToken) ?? "").slice(0, 20) +
                 "...");

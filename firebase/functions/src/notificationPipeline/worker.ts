@@ -1,7 +1,7 @@
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import { defineSecret } from "firebase-functions/params";
 import * as admin from "firebase-admin";
-import { resolveLang } from "./i18n";
+// import { resolveLang } from "./i18n";
 
 // 🔐 SECRETS
 const EMAIL_USER = defineSecret("EMAIL_USER");
@@ -23,6 +23,7 @@ import { sendSms } from "./providers/sms/twilioSms";
 // import { sendWhatsApp } from "./providers/whatsapp/twilio"; // ❌ retiré : WhatsApp non géré ici
 import { sendPush } from "./providers/push/fcm";
 import { writeInApp } from "./providers/inapp/firestore";
+import { resolveLang } from "./i18n";
 
 // ➕ NORMALISATION D'EVENTID
 function normalizeEventId(id: string) {
@@ -76,13 +77,13 @@ type MessageEvent = {
 function hasContact(channel: Channel, ctx: Context): boolean {
   if (channel === "email") return !!(ctx?.user?.email || ctx?.to?.email);
   if (channel === "sms") return !!(ctx?.user?.phoneNumber || ctx?.to?.phone);
-  if (channel === "whatsapp")
-    return !!(
-      ctx?.user?.waNumber ||
-      ctx?.user?.phoneNumber ||
-      ctx?.to?.whatsapp ||
-      ctx?.to?.phone
-    ); // ❌ retiré
+  // if (channel === "whatsapp")
+  //   return !!(
+  //     ctx?.user?.waNumber ||
+  //     ctx?.user?.phoneNumber ||
+  //     ctx?.to?.whatsapp ||
+  //     ctx?.to?.phone
+  //   ); // ❌ retiré
   if (channel === "push")
     return (
       (Array.isArray(ctx?.user?.fcmTokens) &&
@@ -153,16 +154,16 @@ async function sendOne(
   }
 
   // ❌ Branche WhatsApp complètement retirée
-  if (channel === "whatsapp") {
-    const to = ctx?.user?.waNumber || ctx?.user?.phoneNumber || evt.to?.phone;
-    if (!to || !tmpl.whatsapp?.enabled)
-      console.log("🚨 WhatsApp is disabled, skipping");
-    throw new Error("Missing WhatsApp destination or disabled template");
+  // if (channel === "whatsapp") {
+  //   const to = ctx?.user?.waNumber || ctx?.user?.phoneNumber || evt.to?.phone;
+  //   if (!to || !tmpl.whatsapp?.enabled)
+  //     console.log("🚨 WhatsApp is disabled, skipping");
+  //   throw new Error("Missing WhatsApp destination or disabled template");
 
-    // const body = render(tmpl.whatsapp.text || "", { ...ctx, ...evt.vars });
-    // const sid = await sendWa(to, body);
-    // return { sid };
-  }
+  //   // const body = render(tmpl.whatsapp.text || "", { ...ctx, ...evt.vars });
+  //   // const sid = await sendWa(to, body);
+  //   // return { sid };
+  // }
 
   if (channel === "push") {
     const token = ctx?.user?.fcmTokens?.[0] || evt.to?.fcmToken;
@@ -292,6 +293,10 @@ export const onMessageEventCreate = onDocumentCreated(
     const lang = resolveLang(
       evt?.locale || evt?.context?.user?.preferredLanguage
     );
+    const debugLocale = resolveLang(evt?.locale);
+    const debugUserLocale = resolveLang(evt?.context?.user?.preferredLanguage);
+    console.log(`🌐 Detected locale: ${debugLocale}`);
+    console.log(`🌐 Detected user locale: ${debugUserLocale}`);
     console.log(`🌐 Resolved language: ${lang}`);
 
     // 3) Lecture du template Firestore + fallback EN
@@ -455,13 +460,13 @@ function getDestinationForChannel(
       return ctx?.user?.email || evt.to?.email;
     case "sms":
       return ctx?.user?.phoneNumber || evt.to?.phone;
-    case "whatsapp":
-      return (
-        ctx?.user?.waNumber ||
-        ctx?.user?.phoneNumber ||
-        evt.to?.whatsapp ||
-        evt.to?.phone
-      ); // ❌ retiré
+    // case "whatsapp":
+    //   return (
+    //     ctx?.user?.waNumber ||
+    //     ctx?.user?.phoneNumber ||
+    //     evt.to?.whatsapp ||
+    //     evt.to?.phone
+    //   ); // ❌ retiré
     case "push":
       return (
         ((ctx?.user?.fcmTokens?.[0] || evt.to?.fcmToken) ?? "").slice(0, 20) +

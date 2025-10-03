@@ -825,6 +825,7 @@ class TwilioCallManager {
                     "metadata.updatedAt": admin.firestore.Timestamp.now(),
                 });
                 await this.createReviewRequest(session);
+                await this.createInvoices(sessionId, session);
                 await (0, logCallRecord_1.logCallRecord)({
                     callId: sessionId,
                     status: "payment_captured",
@@ -844,6 +845,59 @@ class TwilioCallManager {
         catch (error) {
             await (0, logError_1.logError)("TwilioCallManager:capturePaymentForSession", error);
             return false;
+        }
+    }
+    async createInvoices(sessionId, session) {
+        try {
+            console.log(`📄 Creating invoices for session: ${sessionId}`);
+            // Import your invoice function - adjust path as needed
+            const { generateInvoice } = await Promise.resolve().then(() => __importStar(require("./utils/generateInvoice")));
+            const platformFee = Math.round(session.payment.amount * 0.15);
+            const providerAmount = Math.round(session.payment.amount * 0.85);
+            // Create platform invoice
+            const platformInvoice = {
+                invoiceNumber: `PLT-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
+                type: "platform",
+                callId: sessionId,
+                clientId: session.metadata.clientId,
+                providerId: session.metadata.providerId,
+                amount: platformFee,
+                currency: "EUR",
+                downloadUrl: "",
+                status: "issued",
+                sentToAdmin: true,
+                locale: session.metadata.selectedLanguage || "fr",
+                timestamp: admin.firestore.FieldValue.serverTimestamp(),
+                createdAt: new Date(),
+                environment: process.env.NODE_ENV || "development",
+            };
+            // Create provider invoice
+            const providerInvoice = {
+                invoiceNumber: `PRV-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
+                type: "provider",
+                callId: sessionId,
+                clientId: session.metadata.clientId,
+                providerId: session.metadata.providerId,
+                amount: providerAmount,
+                currency: "EUR",
+                downloadUrl: "",
+                status: "issued",
+                sentToAdmin: true,
+                locale: session.metadata.selectedLanguage || "fr",
+                timestamp: admin.firestore.FieldValue.serverTimestamp(),
+                createdAt: new Date(),
+                environment: process.env.NODE_ENV || "development",
+            };
+            // Generate both invoices
+            await Promise.all([
+                generateInvoice(platformInvoice),
+                generateInvoice(providerInvoice),
+            ]);
+            console.log(`✅ Invoices created successfully for ${sessionId}`);
+        }
+        catch (error) {
+            console.error("❌ Error creating invoices:", error);
+            await (0, logError_1.logError)("TwilioCallManager:createInvoices", error);
         }
     }
     async createReviewRequest(session) {
