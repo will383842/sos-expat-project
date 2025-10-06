@@ -146,7 +146,6 @@ const Pricing: React.FC = () => {
 
   const validatePromoCode = useCallback(
     async (code: string = promoCode) => {
-      
       const trimmedCode = code.trim();
       if (!trimmedCode) {
         setError(
@@ -631,13 +630,13 @@ const Pricing: React.FC = () => {
                               {/* Cas 1: Override présent (prix admin réduit) */}
                               {hasOverride ? (
                                 <div className="flex flex-col">
-                                  <div className="flex items-end gap-3">
+                                  {/* <div className="flex items-end gap-3">
                                     <span className="text-gray-500 line-through text-2xl">
                                       {currencySymbol}
                                       {
                                         service.effectivePrice.standard
                                           .totalAmount
-                                      }
+                                    }
                                     </span>
                                     <span className="text-5xl font-black text-red-600 leading-none">
                                       {currencySymbol}
@@ -647,6 +646,42 @@ const Pricing: React.FC = () => {
                                           : originalPrice
                                       )}
                                     </span>
+                                  </div> */}
+
+                                  <div className="flex items-end gap-3">
+                                    <span className="text-gray-500 line-through text-2xl">
+                                      {currencySymbol}
+                                      {Math.round(
+                                        hasPromoDiscount
+                                          ? discountedPrice
+                                          : originalPrice
+                                      )}
+                                    </span>
+                                    <span className="text-5xl font-black text-red-600 leading-none">
+                                      {currencySymbol}
+                                      {Math.round(
+                                        hasPromoDiscount
+                                          ? service.effectivePrice.standard
+                                              .totalAmount -
+                                              (activePromo.discountType ===
+                                              "percentage"
+                                                ? service.effectivePrice
+                                                    .standard.totalAmount *
+                                                  (activePromo.discountValue /
+                                                    100)
+                                                : activePromo.discountValue) // ← For fixed discount (€5), subtracts directly
+                                          : service.effectivePrice.standard
+                                              .totalAmount
+                                      )}
+                                    </span>
+
+                                    {/* <span className="text-5xl font-black text-red-600 leading-none">
+                                      {currencySymbol}
+                                      {
+                                        service.effectivePrice.standard
+                                          .totalAmount
+                                      }
+                                    </span> */}
                                   </div>
                                   {service.effectivePrice.override.label && (
                                     <span className="mt-2 text-xs px-2 py-1 rounded-full bg-red-100 text-red-700 self-start">

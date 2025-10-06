@@ -69,12 +69,32 @@ const CACHE_MS = 5 * 60 * 1000;
 /** Fallback */
 const DEFAULT_FALLBACK: PricingConfig = {
   lawyer: {
-    eur: makeConfigFromBase({ base: 50, feePercent: 20, duration: 20, currency: "eur" }),
-    usd: makeConfigFromBase({ base: 55, feePercent: 20, duration: 20, currency: "usd" }),
+    eur: makeConfigFromBase({
+      base: 50,
+      feePercent: 20,
+      duration: 20,
+      currency: "eur",
+    }),
+    usd: makeConfigFromBase({
+      base: 55,
+      feePercent: 20,
+      duration: 20,
+      currency: "usd",
+    }),
   },
   expat: {
-    eur: makeConfigFromBase({ base: 50, feePercent: 20, duration: 30, currency: "eur" }),
-    usd: makeConfigFromBase({ base: 55, feePercent: 20, duration: 30, currency: "usd" }),
+    eur: makeConfigFromBase({
+      base: 50,
+      feePercent: 20,
+      duration: 30,
+      currency: "eur",
+    }),
+    usd: makeConfigFromBase({
+      base: 55,
+      feePercent: 20,
+      duration: 30,
+      currency: "usd",
+    }),
   },
 };
 
@@ -137,6 +157,7 @@ export async function getPricingConfig(): Promise<PricingConfig> {
     }
 
     const data = snap.data() as FirestorePricingDoc;
+    console.log(data, " == data from firestore");
     const normalized = normalizeFirestoreDocument(data);
 
     if (!isValidPricingConfig(normalized)) {
@@ -162,19 +183,27 @@ function normalizeFirestoreDocument(raw: FirestorePricingDoc): PricingConfig {
   ): ServiceConfig => {
     if (!node) return DEFAULT_FALLBACK[service][currency];
 
-    if (typeof node.totalAmount === "number" && typeof node.platformFeePercent === "number") {
+    if (
+      typeof node.totalAmount === "number" &&
+      typeof node.platformFeePercent === "number"
+    ) {
       return makeConfigFromBase({
         base: node.totalAmount,
         feePercent: node.platformFeePercent,
-        duration: typeof node.duration === "number" ? node.duration : defaultDuration,
+        duration:
+          typeof node.duration === "number" ? node.duration : defaultDuration,
         currency,
       });
     }
 
     const total = round2(Number(node.totalAmount));
     const fee = round2(Number(node.connectionFeeAmount));
-    const provider = Math.max(0, round2(Number(node.providerAmount ?? total - fee)));
-    const duration = typeof node.duration === "number" ? node.duration : defaultDuration;
+    const provider = Math.max(
+      0,
+      round2(Number(node.providerAmount ?? total - fee))
+    );
+    const duration =
+      typeof node.duration === "number" ? node.duration : defaultDuration;
 
     const config: ServiceConfig = {
       totalAmount: total,
@@ -184,10 +213,15 @@ function normalizeFirestoreDocument(raw: FirestorePricingDoc): PricingConfig {
       currency,
     };
 
-    return isValidServiceConfig(config) ? config : DEFAULT_FALLBACK[service][currency];
+    return isValidServiceConfig(config)
+      ? config
+      : DEFAULT_FALLBACK[service][currency];
   };
 
-  const defaultDurations: Record<ServiceType, number> = { lawyer: 20, expat: 30 };
+  const defaultDurations: Record<ServiceType, number> = {
+    lawyer: 20,
+    expat: 30,
+  };
 
   return {
     lawyer: {
@@ -217,6 +251,7 @@ export function usePricingConfig() {
     setError(null);
     try {
       const cfg = await getPricingConfig();
+      console.log("pricing in service ===", cfg);
       setPricing(cfg);
     } catch (e) {
       console.error("[usePricingConfig] load error:", e);
@@ -271,7 +306,8 @@ export function detectUserCurrency(): Currency {
 // === Overrides Helpers ===
 function toMillis(v?: number | { seconds: number }): number | undefined {
   if (typeof v === "number") return v;
-  if (v && typeof (v as any).seconds === "number") return (v as any).seconds * 1000;
+  if (v && typeof (v as any).seconds === "number")
+    return (v as any).seconds * 1000;
   return undefined;
 }
 
@@ -333,7 +369,11 @@ export async function setStackableDefault(value: boolean): Promise<void> {
 export async function simulateTotal(params: {
   service: ServiceType;
   currency: Currency;
-  coupon?: { type: "fixed" | "percentage"; amount: number; maxDiscount?: number };
+  coupon?: {
+    type: "fixed" | "percentage";
+    amount: number;
+    maxDiscount?: number;
+  };
 }) {
   const { service, currency, coupon } = params;
   const cfg = await getPricingConfig();
