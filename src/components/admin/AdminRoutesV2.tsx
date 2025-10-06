@@ -578,6 +578,21 @@ const AdminRoutesV2: React.FC = () => {
         }
       />
 
+      {/* NOTE : new handling for the messages that are coming directly from the contact page  */}
+
+      <Route
+        path="contact-messages"
+        element={
+          <Suspense
+            fallback={
+              <LoadingSpinner message="Chargement des messages de contact..." />
+            }
+          >
+            <AdminContactMessages />
+          </Suspense>
+        }
+      />
+
       {/* 🤝 AFFILIATION & AMBASSADEURS */}
       <Route
         path="affiliates"
@@ -918,6 +933,7 @@ export const useAdminRouteValidation = () => {
       "/admin/comms/ab",
       "/admin/comms/messages",
       "/admin/comms/notifications",
+      "/admin/contact-messages",
       "/admin/affiliates",
       "/admin/affiliates/commissions",
       "/admin/affiliates/payouts",

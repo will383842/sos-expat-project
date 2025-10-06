@@ -356,6 +356,13 @@ export const adminMenuTree: AdminMenuItem[] = [
         description: 'Push, SMS et notifications'
       },
       {
+        id:"Contacts",
+        label: "Contact Requests",
+        path: "/admin/contact-messages",
+        icon: MessageSquare,
+        description: "Gestion des contacts"
+      },
+      {
         id: 'deliverability',
         label: 'Délivrabilité',
         path: '/admin/comms/deliverability',

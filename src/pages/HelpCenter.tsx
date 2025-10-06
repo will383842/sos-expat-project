@@ -588,7 +588,7 @@ As soon as an **expert** (lawyer/expat) speaking your language is available, you
     // Paragraphes
     html = html.replace(
       /^(?!<h\d|<ul|<\/ul>|<li>|<\/li>|\s*$)(.+)$/gm,
-      '<p class="leading-relaxed text-gray-700">$1</p>'
+      '<p class="leading-relaxed text-gray-300">$1</p>'
     );
 
     return html;
@@ -615,7 +615,7 @@ As soon as an **expert** (lawyer/expat) speaking your language is available, you
           </div>
 
           {/* Carte contenu */}
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 mt-12">
             <article className="relative rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 sm:p-10 text-white shadow-2xl">
               <div className="mb-6">
                 <h1 className="text-3xl md:text-4xl font-black tracking-tight">
@@ -640,7 +640,7 @@ As soon as an **expert** (lawyer/expat) speaking your language is available, you
               </div>
 
               <div
-                className="prose prose-invert max-w-none"
+                className="text-white prose prose-invert max-w-none"
                 dangerouslySetInnerHTML={{ __html: mdToHtml(selectedArticle.content) }}
               />
             </article>

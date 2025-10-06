@@ -128,8 +128,8 @@ const AdminContactMessages: React.FC = () => {
             {msg.reply ? (
               <div className="mt-4 bg-green-50 p-3 rounded border text-sm">
                 <p className="text-green-700 font-semibold">Réponse envoyée :</p>
-                <p className="whitespace-pre-wrap">{msg.reply}</p>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="whitespace-pre-wrap text-black">{msg.reply}</p>
+                <p className="text-xs text-black mt-1">
                   Répondu le{' '}
                   {msg.repliedAt
                     ? msg.repliedAt.toDate().toLocaleString()
@@ -147,7 +147,7 @@ const AdminContactMessages: React.FC = () => {
                     }))
                   }
                   placeholder="Votre réponse..."
-                  className="w-full p-2 border rounded mb-2"
+                  className="w-full p-2 border rounded mb-2 text-black"
                   rows={3}
                 />
                 <button

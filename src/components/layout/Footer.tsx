@@ -1,9 +1,18 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Phone, MapPin, Facebook, Twitter, Linkedin, ArrowUp, LucideIcon, Globe } from 'lucide-react';
-import { useApp } from '../../contexts/AppContext';
-import { Link } from 'react-router-dom';
-import { collection, query, where, getDocs } from 'firebase/firestore';
-import { db } from '../../config/firebase';
+import React, { useState, useEffect, useMemo, useCallback } from "react";
+import {
+  Phone,
+  MapPin,
+  Facebook,
+  Twitter,
+  Linkedin,
+  ArrowUp,
+  LucideIcon,
+  Globe,
+} from "lucide-react";
+import { useApp } from "../../contexts/AppContext";
+import { Link } from "react-router-dom";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "../../config/firebase";
 
 type LegalLink = {
   label: string;
@@ -21,174 +30,214 @@ type FooterSection = {
   links: LegalLink[];
 };
 
-const IS_DEV = import.meta.env.MODE !== 'production';
+const IS_DEV = import.meta.env.MODE !== "production";
 const SOCIAL = {
-  fb: (import.meta.env.VITE_FACEBOOK_URL as string | undefined) || '',
-  tw: (import.meta.env.VITE_TWITTER_URL as string | undefined) || '',
-  li: (import.meta.env.VITE_LINKEDIN_URL as string | undefined) || ''
+  fb: (import.meta.env.VITE_FACEBOOK_URL as string | undefined) || "",
+  tw: (import.meta.env.VITE_TWITTER_URL as string | undefined) || "",
+  li: (import.meta.env.VITE_LINKEDIN_URL as string | undefined) || "",
 };
 
 // Petite utilitaire: normalise fr/en à partir du navigateur
-const detectBrowserLang = (): 'fr' | 'en' => {
-  if (typeof navigator === 'undefined') return 'fr';
-  const raw = (navigator.language || (navigator as any).userLanguage || 'fr').toLowerCase();
-  if (raw.startsWith('fr')) return 'fr';
-  return 'en';
+const detectBrowserLang = (): "fr" | "en" => {
+  if (typeof navigator === "undefined") return "fr";
+  const raw = (
+    navigator.language ||
+    (navigator as any).userLanguage ||
+    "fr"
+  ).toLowerCase();
+  if (raw.startsWith("fr")) return "fr";
+  return "en";
 };
 
 const Footer: React.FC = () => {
   const { language: ctxLang } = useApp();
-  const resolvedLang: 'fr' | 'en' = (ctxLang === 'fr' || ctxLang === 'en') ? ctxLang : detectBrowserLang();
+  const resolvedLang: "fr" | "en" =
+    ctxLang === "fr" || ctxLang === "en" ? ctxLang : detectBrowserLang();
 
   const [legalLinks, setLegalLinks] = useState<LegalLink[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showTop, setShowTop] = useState(false);
 
   // ---------- i18n minimal & future-proof ----------
-  const t = useCallback((key: string): string => {
-    const translations: Record<'fr' | 'en', Record<string, string>> = {
-      fr: {
-        'footer.services.title': 'Services',
-        'footer.services.sosCall': 'S.O.S Appel',
-        'footer.services.expatCall': 'Appel expatrié',
-        'footer.services.pricing': 'Tarifs',
-        'footer.services.experts': 'Nos experts',
-        'footer.services.testimonials': 'Témoignages',
-        'footer.support.title': 'Support',
-        'footer.support.contact': 'Contact',
-        'footer.support.helpCenter': 'Centre d\'aide',
-        'footer.support.serviceStatus': 'Statut du service',
-        'footer.contact.title': 'Contact',
-        'footer.contact.emailAria': 'Envoyer un email',
-        'footer.contact.presence': 'Présence internationale dans plus de 120 pays',
-        'footer.contact.locationAria': 'Notre présence internationale',
-        'footer.contact.callUs': 'Contactez-nous',
-        'footer.contact.phoneAria': 'Nous contacter',
-        'footer.social.facebookAria': 'Suivez-nous sur Facebook',
-        'footer.social.twitterAria': 'Suivez-nous sur Twitter',
-        'footer.social.linkedinAria': 'Suivez-nous sur LinkedIn',
-        'footer.social.ariaLabel': 'Réseaux sociaux',
-        'footer.company.description': 'Plateforme d\'appel d\'urgence connectant les expatriés francophones avec des avocats et conseillers vérifiés partout dans le monde.',
-        'footer.services.navAria': 'Navigation des services',
-        'footer.support.navAria': 'Navigation du support',
-        'footer.ariaLabel': 'Pied de page du site',
-        'footer.legal.privacy': 'Politique de confidentialité',
-        'footer.legal.termsClients': 'CGU Clients',
-        'footer.legal.termsLawyers': 'CGU Avocats',
-        'footer.legal.termsExpats': 'CGU Expatriés',
-        'footer.legal.consumers': 'Consommateurs',
-        'footer.legal.seo': 'Référencement',
-        'footer.legal.navAria': 'Liens légaux',
-        'footer.copyright': 'Tous droits réservés.',
-        'common.loading': 'Chargement...'
-      },
-      en: {
-        'footer.services.title': 'Services',
-        'footer.services.sosCall': 'S.O.S Call',
-        'footer.services.expatCall': 'Expat Call',
-        'footer.services.pricing': 'Pricing',
-        'footer.services.experts': 'Our Experts',
-        'footer.services.testimonials': 'Testimonials',
-        'footer.support.title': 'Support',
-        'footer.support.contact': 'Contact',
-        'footer.support.helpCenter': 'Help Center',
-        'footer.support.serviceStatus': 'Service Status',
-        'footer.contact.title': 'Contact',
-        'footer.contact.emailAria': 'Send an email',
-        'footer.contact.presence': 'International presence in over 120 countries',
-        'footer.contact.locationAria': 'Our international presence',
-        'footer.contact.callUs': 'Contact us',
-        'footer.contact.phoneAria': 'Contact us',
-        'footer.social.facebookAria': 'Follow us on Facebook',
-        'footer.social.twitterAria': 'Follow us on Twitter',
-        'footer.social.linkedinAria': 'Follow us on LinkedIn',
-        'footer.social.ariaLabel': 'Social media',
-        'footer.company.description': 'Emergency call platform connecting French-speaking expats with verified lawyers and advisors worldwide.',
-        'footer.services.navAria': 'Services navigation',
-        'footer.support.navAria': 'Support navigation',
-        'footer.ariaLabel': 'Site footer',
-        'footer.legal.privacy': 'Privacy Policy',
-        'footer.legal.termsClients': 'Terms of Service',
-        'footer.legal.termsLawyers': 'Lawyer Terms',
-        'footer.legal.termsExpats': 'Expat Terms',
-        'footer.legal.consumers': 'Consumers',
-        'footer.legal.seo': 'SEO',
-        'footer.legal.navAria': 'Legal links',
-        'footer.copyright': 'All rights reserved.',
-        'common.loading': 'Loading...'
-      }
-    };
-    return translations[resolvedLang][key] || translations.fr[key] || key;
-  }, [resolvedLang]);
+  const t = useCallback(
+    (key: string): string => {
+      const translations: Record<"fr" | "en", Record<string, string>> = {
+        fr: {
+          "footer.services.title": "Services",
+          "footer.services.sosCall": "S.O.S Appel",
+          "footer.services.expatCall": "Appel expatrié",
+          "footer.services.pricing": "Tarifs",
+          "footer.services.experts": "Nos experts",
+          "footer.services.testimonials": "Témoignages",
+          "footer.support.title": "Support",
+          "footer.support.contact": "Contact",
+          "footer.support.helpCenter": "Centre d'aide",
+          "footer.support.serviceStatus": "Statut du service",
+          "footer.contact.title": "Contact",
+          "footer.contact.emailAria": "Envoyer un email",
+          "footer.contact.presence":
+            "Présence internationale dans plus de 120 pays",
+          "footer.contact.locationAria": "Notre présence internationale",
+          "footer.contact.callUs": "Contactez-nous",
+          "footer.contact.ulixai": "Ulixai",
+          "footer.contact.ulixaiAria": "Ulixai",
+          "footer.contact.phoneAria": "Nous contacter",
+          "footer.social.facebookAria": "Suivez-nous sur Facebook",
+          "footer.social.twitterAria": "Suivez-nous sur Twitter",
+          "footer.social.linkedinAria": "Suivez-nous sur LinkedIn",
+          "footer.social.ariaLabel": "Réseaux sociaux",
+          "footer.company.description":
+            "Plateforme d'appel d'urgence connectant les expatriés francophones avec des avocats et conseillers vérifiés partout dans le monde.",
+          "footer.services.navAria": "Navigation des services",
+          "footer.support.navAria": "Navigation du support",
+          "footer.ariaLabel": "Pied de page du site",
+          "footer.legal.privacy": "Politique de confidentialité",
+          "footer.legal.termsClients": "CGU Clients",
+          "footer.legal.termsLawyers": "CGU Avocats",
+          "footer.legal.termsExpats": "CGU Expatriés",
+          "footer.legal.consumers": "Consommateurs",
+          "footer.legal.seo": "Référencement",
+          "footer.legal.navAria": "Liens légaux",
+          "footer.copyright": "Tous droits réservés.",
+          "common.loading": "Chargement...",
+        },
+        en: {
+          "footer.services.title": "Services",
+          "footer.services.sosCall": "S.O.S Call",
+          "footer.services.expatCall": "Expat Call",
+          "footer.services.pricing": "Pricing",
+          "footer.services.experts": "Our Experts",
+          "footer.services.testimonials": "Testimonials",
+          "footer.support.title": "Support",
+          "footer.support.contact": "Contact",
+          "footer.support.helpCenter": "Help Center",
+          "footer.support.serviceStatus": "Service Status",
+          "footer.contact.title": "Contact",
+          "footer.contact.emailAria": "Send an email",
+          "footer.contact.presence":
+            "International presence in over 120 countries",
+          "footer.contact.locationAria": "Our international presence",
+          "footer.contact.callUs": "Contact us",
+          "footer.contact.ulixai": "Ulixai",
+          "footer.contact.ulixaiAria": "Ulixai",
+          "footer.contact.phoneAria": "Contact us",
+          "footer.social.facebookAria": "Follow us on Facebook",
+          "footer.social.twitterAria": "Follow us on Twitter",
+          "footer.social.linkedinAria": "Follow us on LinkedIn",
+          "footer.social.ariaLabel": "Social media",
+          "footer.company.description":
+            "Emergency call platform connecting French-speaking expats with verified lawyers and advisors worldwide.",
+          "footer.services.navAria": "Services navigation",
+          "footer.support.navAria": "Support navigation",
+          "footer.ariaLabel": "Site footer",
+          "footer.legal.privacy": "Privacy Policy",
+          "footer.legal.termsClients": "Terms of Service",
+          "footer.legal.termsLawyers": "Lawyer Terms",
+          "footer.legal.termsExpats": "Expat Terms",
+          "footer.legal.consumers": "Consumers",
+          "footer.legal.seo": "SEO",
+          "footer.legal.navAria": "Legal links",
+          "footer.copyright": "All rights reserved.",
+          "common.loading": "Loading...",
+        },
+      };
+      return translations[resolvedLang][key] || translations.fr[key] || key;
+    },
+    [resolvedLang]
+  );
 
   // ---------- Liens légaux par défaut (fallback) ----------
-  const defaultLegalLinks = useMemo<LegalLink[]>(() => (
-    [
-      { label: t('footer.legal.privacy'), href: '/politique-confidentialite', order: 10 },
-      { label: t('footer.legal.termsClients'), href: '/cgu-clients', order: 20 },
+  const defaultLegalLinks = useMemo<LegalLink[]>(
+    () => [
+      {
+        label: t("footer.legal.privacy"),
+        href: "/politique-confidentialite",
+        order: 10,
+      },
+      {
+        label: t("footer.legal.termsClients"),
+        href: "/cgu-clients",
+        order: 20,
+      },
       // CGU Avocats et CGU Expatriés supprimés du fallback
-      { label: 'Cookies', href: '/cookies', order: 50 },
-      { label: t('footer.legal.consumers'), href: '/consommateurs', order: 60 }
-    ]
-  ), [t]);
+      { label: "Cookies", href: "/cookies", order: 50 },
+      { label: t("footer.legal.consumers"), href: "/consommateurs", order: 60 },
+    ],
+    [t]
+  );
 
   // ---------- Sections ----------
-  const footerSections = useMemo<Record<string, FooterSection>>(() => ({
-    services: {
-      title: t('footer.services.title'),
-      links: [
-        { label: t('footer.services.sosCall'), href: '/sos-appel' },
-        { label: t('footer.services.expatCall'), href: '/appel-expatrie' },
-        { label: t('footer.services.pricing'), href: '/tarifs' },
-        { label: t('footer.services.experts'), href: '/nos-experts' },
-        { label: t('footer.services.testimonials'), href: '/temoignages' }
-      ]
-    },
-    support: {
-      title: t('footer.support.title'),
-      links: [
-        { label: 'FAQ', href: '/faq' },
-        { label: t('footer.support.contact'), href: '/contact' },
-        { label: t('footer.support.helpCenter'), href: '/centre-aide' },
-        { label: t('footer.support.serviceStatus'), href: '/statut-service' }
-      ]
-    }
-  }), [t]);
+  const footerSections = useMemo<Record<string, FooterSection>>(
+    () => ({
+      services: {
+        title: t("footer.services.title"),
+        links: [
+          { label: t("footer.services.sosCall"), href: "/sos-appel" },
+          { label: t("footer.services.expatCall"), href: "/appel-expatrie" },
+          { label: t("footer.services.pricing"), href: "/tarifs" },
+          { label: t("footer.services.experts"), href: "/nos-experts" },
+          { label: t("footer.services.testimonials"), href: "/temoignages" },
+        ],
+      },
+      support: {
+        title: t("footer.support.title"),
+        links: [
+          { label: "FAQ", href: "/faq" },
+          { label: t("footer.support.contact"), href: "/contact" },
+          { label: t("footer.support.helpCenter"), href: "/centre-aide" },
+          { label: t("footer.support.serviceStatus"), href: "/statut-service" },
+        ],
+      },
+    }),
+    [t]
+  );
 
-  const contactInfo = useMemo<ContactInfo[]>(() => ([
-    {
-      icon: Globe,
-      text: t('footer.contact.presence'),
-      ariaLabel: t('footer.contact.locationAria')
-    },
-    {
-      icon: Phone,
-      text: t('footer.contact.callUs'),
-      href: '/contact',
-      ariaLabel: t('footer.contact.phoneAria')
-    }
-  ]), [t]);
+  const contactInfo = useMemo<ContactInfo[]>(
+    () => [
+      {
+        icon: Globe,
+        text: t("footer.contact.presence"),
+        ariaLabel: t("footer.contact.locationAria"),
+      },
+      {
+        icon: Phone,
+        text: t("footer.contact.callUs"),
+        href: "/contact",
+        ariaLabel: t("footer.contact.phoneAria"),
+      },
+      {
+        icon: Globe,
+        text: t("footer.contact.ulixai"),
+        href: "https://www.ulixai.com/",
+        ariaLabel: t("footer.contact.siteAria"),
+      },
+    ],
+    [t]
+  );
 
-  const socialLinks = useMemo(() => ([
-    {
-      icon: Facebook,
-      href: SOCIAL.fb || '#',
-      ariaLabel: t('footer.social.facebookAria'),
-      name: 'Facebook'
-    },
-    {
-      icon: Twitter,
-      href: SOCIAL.tw || '#',
-      ariaLabel: t('footer.social.twitterAria'),
-      name: 'Twitter'
-    },
-    {
-      icon: Linkedin,
-      href: SOCIAL.li || '#',
-      ariaLabel: t('footer.social.linkedinAria'),
-      name: 'LinkedIn'
-    }
-  ]), [t]);
+  const socialLinks = useMemo(
+    () => [
+      {
+        icon: Facebook,
+        href: SOCIAL.fb || "#",
+        ariaLabel: t("footer.social.facebookAria"),
+        name: "Facebook",
+      },
+      {
+        icon: Twitter,
+        href: SOCIAL.tw || "#",
+        ariaLabel: t("footer.social.twitterAria"),
+        name: "Twitter",
+      },
+      {
+        icon: Linkedin,
+        href: SOCIAL.li || "#",
+        ariaLabel: t("footer.social.linkedinAria"),
+        name: "LinkedIn",
+      },
+    ],
+    [t]
+  );
 
   // ---------- Chargement des liens légaux depuis Firestore (avec cache + fallback) ----------
   useEffect(() => {
@@ -211,20 +260,36 @@ const Footer: React.FC = () => {
 
     const writeCache = (data: LegalLink[]) => {
       try {
-        sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data }));
-      } catch { /* ignore */ }
+        sessionStorage.setItem(
+          CACHE_KEY,
+          JSON.stringify({ ts: Date.now(), data })
+        );
+      } catch {
+        /* ignore */
+      }
     };
 
     const loadLegalDocuments = async () => {
       const cached = readCache();
       if (cached && cached.length) {
-        setLegalLinks(cached.filter(l => !['CGU Avocats', 'CGU Expatriés', 'Lawyer Terms', 'Expat Terms'].includes(l.label)));
+        setLegalLinks(
+          cached.filter(
+            (l) =>
+              ![
+                "CGU Avocats",
+                "CGU Expatriés",
+                "Lawyer Terms",
+                "Expat Terms",
+              ].includes(l.label)
+          )
+        );
         setIsLoading(false);
       }
 
       try {
         if (!db) {
-          if (IS_DEV) console.log('[Footer] Firebase indisponible, fallback par défaut');
+          if (IS_DEV)
+            console.log("[Footer] Firebase indisponible, fallback par défaut");
           if (isMounted && !cached) {
             setLegalLinks(defaultLegalLinks);
             setIsLoading(false);
@@ -234,9 +299,17 @@ const Footer: React.FC = () => {
 
         setIsLoading(!cached);
 
-        const col = collection(db, 'legal_documents');
-        const qLang = query(col, where('language', '==', resolvedLang), where('isActive', '==', true));
-        const qLocale = query(col, where('locale', '==', resolvedLang), where('isActive', '==', true));
+        const col = collection(db, "legal_documents");
+        const qLang = query(
+          col,
+          where("language", "==", resolvedLang),
+          where("isActive", "==", true)
+        );
+        const qLocale = query(
+          col,
+          where("locale", "==", resolvedLang),
+          where("isActive", "==", true)
+        );
 
         let snapshot = await getDocs(qLang);
         if (snapshot.empty) snapshot = await getDocs(qLocale);
@@ -244,43 +317,64 @@ const Footer: React.FC = () => {
         if (!isMounted) return;
 
         if (snapshot.empty) {
-          if (IS_DEV) console.log('[Footer] Aucun doc légal en base, fallback');
+          if (IS_DEV) console.log("[Footer] Aucun doc légal en base, fallback");
           if (!cached) setLegalLinks(defaultLegalLinks);
           writeCache(defaultLegalLinks);
         } else {
           const items: LegalLink[] = snapshot.docs
             .map((d) => {
               const data = d.data() as Record<string, unknown>;
-              const title = String((data.title || data.type || 'Document') ?? 'Document');
-              const order = typeof data.order === 'number' ? (data.order as number) : 999;
+              const title = String(
+                (data.title || data.type || "Document") ?? "Document"
+              );
+              const order =
+                typeof data.order === "number" ? (data.order as number) : 999;
 
-              const slug = typeof data.slug === 'string' ? data.slug : undefined;
-              const path = typeof data.path === 'string' ? data.path : undefined;
-              const type = typeof data.type === 'string' ? data.type : '';
+              const slug =
+                typeof data.slug === "string" ? data.slug : undefined;
+              const path =
+                typeof data.path === "string" ? data.path : undefined;
+              const type = typeof data.type === "string" ? data.type : "";
 
-              const href =
-                path ? path :
-                slug ? `/${slug}` :
-                type === 'terms' ? '/cgu-clients' :
-                type === 'privacy' ? '/politique-confidentialite' :
-                type === 'cookies' ? '/cookies' :
-                type === 'legal' ? '/consommateurs' :
-                type === 'faq' ? '/faq' :
-                type === 'help' ? '/centre-aide' :
-                type === 'seo' ? '/referencement' :
-                `/${type || 'legal'}`;
+              const href = path
+                ? path
+                : slug
+                  ? `/${slug}`
+                  : type === "terms"
+                    ? "/cgu-clients"
+                    : type === "privacy"
+                      ? "/politique-confidentialite"
+                      : type === "cookies"
+                        ? "/cookies"
+                        : type === "legal"
+                          ? "/consommateurs"
+                          : type === "faq"
+                            ? "/faq"
+                            : type === "help"
+                              ? "/centre-aide"
+                              : type === "seo"
+                                ? "/referencement"
+                                : `/${type || "legal"}`;
 
               return { label: title, href, order };
             })
             .sort((a, b) => (a.order ?? 999) - (b.order ?? 999))
             // filtre ici aussi
-            .filter(l => !['CGU Avocats', 'CGU Expatriés', 'Lawyer Terms', 'Expat Terms'].includes(l.label));
+            .filter(
+              (l) =>
+                ![
+                  "CGU Avocats",
+                  "CGU Expatriés",
+                  "Lawyer Terms",
+                  "Expat Terms",
+                ].includes(l.label)
+            );
 
           setLegalLinks(items);
           writeCache(items);
         }
       } catch (err) {
-        console.error('[Footer] Erreur Firestore legal_documents:', err);
+        console.error("[Footer] Erreur Firestore legal_documents:", err);
         if (!isMounted && cached) return;
         if (!cached) setLegalLinks(defaultLegalLinks);
         writeCache(defaultLegalLinks);
@@ -290,7 +384,9 @@ const Footer: React.FC = () => {
     };
 
     loadLegalDocuments();
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, [resolvedLang, defaultLegalLinks]);
 
   // ---------- UX: bouton scroll to top ----------
@@ -304,34 +400,44 @@ const Footer: React.FC = () => {
         ticking = false;
       });
     };
-    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const scrollToTop = useCallback(() => {
-    if ('scrollTo' in window) {
-      const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+    if ("scrollTo" in window) {
+      const reduceMotion =
+        window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
     }
   }, []);
 
   const jsonLd = useMemo(() => {
     const sameAs: string[] = [SOCIAL.fb, SOCIAL.tw, SOCIAL.li].filter(Boolean);
     return {
-      '@context': 'https://schema.org',
-      '@type': 'Organization',
-      name: 'SOS Urgently',
-      url: typeof window !== 'undefined' ? window.location.origin : 'https://sos-urgently.example',
-      logo: typeof window !== 'undefined' ? `${window.location.origin}/logo.svg` : undefined,
-      description: t('footer.company.description'),
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: "SOS Urgently",
+      url:
+        typeof window !== "undefined"
+          ? window.location.origin
+          : "https://sos-urgently.example",
+      logo:
+        typeof window !== "undefined"
+          ? `${window.location.origin}/logo.svg`
+          : undefined,
+      description: t("footer.company.description"),
       sameAs,
-      contactPoint: [{
-        '@type': 'ContactPoint',
-        contactType: 'customer support',
-        areaServed: ['FR', 'EN'],
-        availableLanguage: ['French', 'English'],
-      }]
+      contactPoint: [
+        {
+          "@type": "ContactPoint",
+          contactType: "customer support",
+          areaServed: ["FR", "EN"],
+          availableLanguage: ["French", "English"],
+        },
+      ],
     };
   }, [t]);
 
@@ -341,7 +447,7 @@ const Footer: React.FC = () => {
     <footer
       className="relative bg-gradient-to-br from-slate-950 via-slate-900 to-black text-white overflow-hidden"
       role="contentinfo"
-      aria-label={t('footer.ariaLabel')}
+      aria-label={t("footer.ariaLabel")}
     >
       <script
         type="application/ld+json"
@@ -365,10 +471,16 @@ const Footer: React.FC = () => {
                     transition-all duration-300 ease-out
                     focus:outline-none focus:ring-2 focus:ring-red-500/50
                     backdrop-blur-sm border border-red-400/20"
-          style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 0.75rem)' }}
+          style={{
+            paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.75rem)",
+          }}
           aria-label="Remonter en haut de la page"
         >
-          <ArrowUp size={18} className="transform group-hover:translate-y-[-2px] transition-transform duration-300" aria-hidden />
+          <ArrowUp
+            size={18}
+            className="transform group-hover:translate-y-[-2px] transition-transform duration-300"
+            aria-hidden
+          />
         </button>
       )}
 
@@ -393,23 +505,33 @@ const Footer: React.FC = () => {
                 </div>
 
                 <p className="text-gray-300 text-sm leading-relaxed mb-6">
-                  {t('footer.company.description')}
+                  {t("footer.company.description")}
                 </p>
               </div>
 
-              <div className="flex space-x-3" role="list" aria-label={t('footer.social.ariaLabel')}>
+              <div
+                className="flex space-x-3"
+                role="list"
+                aria-label={t("footer.social.ariaLabel")}
+              >
                 {socialLinks.map((social) => (
                   <a
                     key={social.name}
-                    href={social.href || '#'}
+                    href={social.href || "#"}
                     className="group p-2.5 rounded-xl bg-white/5 border border-white/10 
                                hover:bg-white/10 hover:border-white/20 hover:scale-105 
                                focus:bg-white/10 focus:border-white/20 focus:scale-105 
                                transition-all duration-300 focus:outline-none 
                                touch-manipulation active:scale-95"
                     aria-label={social.ariaLabel}
-                    target={social.href.startsWith('http') ? '_blank' : undefined}
-                    rel={social.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                    target={
+                      social.href.startsWith("http") ? "_blank" : undefined
+                    }
+                    rel={
+                      social.href.startsWith("http")
+                        ? "noopener noreferrer"
+                        : undefined
+                    }
                   >
                     <social.icon
                       size={16}
@@ -426,7 +548,7 @@ const Footer: React.FC = () => {
                 {footerSections.services.title}
                 <div className="w-6 h-px bg-gradient-to-r from-red-500 to-red-600" />
               </h3>
-              <nav aria-label={t('footer.services.navAria')}>
+              <nav aria-label={t("footer.services.navAria")}>
                 <ul className="space-y-2">
                   {footerSections.services.links.map((link, index) => (
                     <li key={index}>
@@ -437,9 +559,11 @@ const Footer: React.FC = () => {
                                    focus:outline-none py-1.5 px-2 -mx-2 rounded-lg 
                                    hover:bg-white/5 focus:bg-white/5 touch-manipulation"
                       >
-                        <span className="w-1 h-1 bg-gray-600 rounded-full mr-3 
+                        <span
+                          className="w-1 h-1 bg-gray-600 rounded-full mr-3 
                                        group-hover:bg-red-400 group-focus:bg-red-400 
-                                       transition-colors duration-300" />
+                                       transition-colors duration-300"
+                        />
                         {link.label}
                       </Link>
                     </li>
@@ -453,7 +577,7 @@ const Footer: React.FC = () => {
                 {footerSections.support.title}
                 <div className="w-6 h-px bg-gradient-to-r from-red-500 to-red-600" />
               </h3>
-              <nav aria-label={t('footer.support.navAria')}>
+              <nav aria-label={t("footer.support.navAria")}>
                 <ul className="space-y-2">
                   {footerSections.support.links.map((link, index) => (
                     <li key={index}>
@@ -464,9 +588,11 @@ const Footer: React.FC = () => {
                                    focus:outline-none py-1.5 px-2 -mx-2 rounded-lg 
                                    hover:bg-white/5 focus:bg-white/5 touch-manipulation"
                       >
-                        <span className="w-1 h-1 bg-gray-600 rounded-full mr-3 
+                        <span
+                          className="w-1 h-1 bg-gray-600 rounded-full mr-3 
                                        group-hover:bg-red-400 group-focus:bg-red-400 
-                                       transition-colors duration-300" />
+                                       transition-colors duration-300"
+                        />
                         {link.label}
                       </Link>
                     </li>
@@ -477,18 +603,26 @@ const Footer: React.FC = () => {
 
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                {t('footer.contact.title')}
+                {t("footer.contact.title")}
                 <div className="w-6 h-px bg-gradient-to-r from-red-500 to-red-600" />
               </h3>
               <ul className="space-y-3">
                 {contactInfo.map((item, index) => (
                   <li key={index} className="group">
-                    <div className="flex items-start space-x-3 p-2 rounded-lg transition-all duration-300 
-                                    hover:bg-white/5 focus-within:bg-white/5">
-                      <div className="flex-shrink-0 p-1.5 rounded-lg bg-white/5 border border-white/10 
+                    <div
+                      className="flex items-start space-x-3 p-2 rounded-lg transition-all duration-300 
+                                    hover:bg-white/5 focus-within:bg-white/5"
+                    >
+                      <div
+                        className="flex-shrink-0 p-1.5 rounded-lg bg-white/5 border border-white/10 
                                       group-hover:bg-white/10 group-hover:border-white/20 
-                                      transition-all duration-300">
-                        <item.icon size={14} className="text-red-400" aria-hidden />
+                                      transition-all duration-300"
+                      >
+                        <item.icon
+                          size={14}
+                          className="text-red-400"
+                          aria-hidden
+                        />
                       </div>
                       {item.href ? (
                         <Link
@@ -525,22 +659,27 @@ const Footer: React.FC = () => {
 
           <div className="flex flex-col lg:flex-row justify-between items-center gap-6">
             <div className="text-gray-400 text-sm text-center lg:text-left order-2 lg:order-1">
-              <span className="font-medium text-white">© {currentYear} SOS Urgently.</span>
-              <span className="ml-1">{t('footer.copyright')}</span>
+              <span className="font-medium text-white">
+                © {currentYear} SOS Urgently.
+              </span>
+              <span className="ml-1">{t("footer.copyright")}</span>
             </div>
 
             <nav
               className="order-1 lg:order-2"
-              aria-label={t('footer.legal.navAria')}
+              aria-label={t("footer.legal.navAria")}
             >
               {isLoading ? (
-                <div className="flex items-center gap-3 text-gray-400 animate-pulse" aria-live="polite">
+                <div
+                  className="flex items-center gap-3 text-gray-400 animate-pulse"
+                  aria-live="polite"
+                >
                   <div className="flex gap-1">
                     <div className="w-2 h-2 bg-red-400 rounded-full animate-bounce" />
                     <div className="w-2 h-2 bg-red-400 rounded-full animate-bounce delay-100" />
                     <div className="w-2 h-2 bg-red-400 rounded-full animate-bounce delay-200" />
                   </div>
-                  <span className="text-sm">{t('common.loading')}</span>
+                  <span className="text-sm">{t("common.loading")}</span>
                 </div>
               ) : (
                 <div className="flex flex-wrap justify-center lg:justify-end gap-1 text-sm">
@@ -553,12 +692,17 @@ const Footer: React.FC = () => {
                                    hover:bg-white/5 focus:bg-white/5 focus:outline-none
                                    touch-manipulation relative group overflow-hidden"
                       >
-                        <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 to-red-600/10 
-                                      opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
+                        <div
+                          className="absolute inset-0 bg-gradient-to-r from-red-500/10 to-red-600/10 
+                                      opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg"
+                        />
                         <span className="relative z-10">{link.label}</span>
                       </Link>
                       {index < legalLinks.length - 1 && (
-                        <span className="text-gray-600 select-none flex items-center px-1" aria-hidden>
+                        <span
+                          className="text-gray-600 select-none flex items-center px-1"
+                          aria-hidden
+                        >
                           <div className="w-1 h-1 bg-gray-600 rounded-full" />
                         </span>
                       )}

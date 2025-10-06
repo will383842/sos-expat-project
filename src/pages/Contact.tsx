@@ -1,10 +1,36 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Send, CheckCircle, Mail, Globe, MapPin, MessageCircle, User, Calendar, Flag, Languages as LanguagesIcon, AlertCircle, ChevronDown, Heart, Zap, Sparkles, Phone, Star, ArrowRight } from 'lucide-react';
-import Layout from '../components/layout/Layout';
-import Button from '../components/common/Button';
-import { useApp } from '../contexts/AppContext';
-import { collection, addDoc, query, where, getDocs, serverTimestamp } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import React, { useState, useEffect, useMemo, useCallback } from "react";
+import {
+  Send,
+  CheckCircle,
+  Mail,
+  Globe,
+  MapPin,
+  MessageCircle,
+  User,
+  Calendar,
+  Flag,
+  Languages as LanguagesIcon,
+  AlertCircle,
+  ChevronDown,
+  Heart,
+  Zap,
+  Sparkles,
+  Phone,
+  Star,
+  ArrowRight,
+} from "lucide-react";
+import Layout from "../components/layout/Layout";
+import Button from "../components/common/Button";
+import { useApp } from "../contexts/AppContext";
+import {
+  collection,
+  addDoc,
+  query,
+  where,
+  getDocs,
+  serverTimestamp,
+} from "firebase/firestore";
+import { db } from "../config/firebase";
 
 // Interface pour Navigator avec connection
 interface NavigatorConnection {
@@ -36,23 +62,23 @@ interface FormErrors {
 
 const Contact: React.FC = () => {
   const { language } = useApp();
-  const lang = (language as 'fr' | 'en') || 'fr';
-  
+  const lang = (language as "fr" | "en") || "fr";
+
   const [formData, setFormData] = useState<FormData>({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phoneCountryCode: '+33',
-    customCountryCode: '',
-    phoneNumber: '',
-    originCountry: '',
-    interventionCountry: '',
-    nationalities: '',
-    subject: '',
-    category: '',
-    message: ''
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneCountryCode: "+33",
+    customCountryCode: "",
+    phoneNumber: "",
+    originCountry: "",
+    interventionCountry: "",
+    nationalities: "",
+    subject: "",
+    category: "",
+    message: "",
   });
-  
+
   // State séparé pour les langues parlées (format array simple)
   const [spokenLanguages, setSpokenLanguages] = useState<string[]>([]);
   const [languagesDropdownOpen, setLanguagesDropdownOpen] = useState(false);
@@ -68,7 +94,10 @@ const Contact: React.FC = () => {
   useEffect(() => {
     const viewport = document.querySelector('meta[name="viewport"]');
     if (viewport) {
-      viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes');
+      viewport.setAttribute(
+        "content",
+        "width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"
+      );
     }
   }, []);
 
@@ -76,133 +105,205 @@ const Contact: React.FC = () => {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Element;
-      if (!target.closest('.group')) {
+      if (!target.closest(".group")) {
         setLanguagesDropdownOpen(false);
       }
     };
 
     if (languagesDropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [languagesDropdownOpen]);
 
   // Scroll vers le haut lors de la soumission réussie
   useEffect(() => {
     if (isSubmitted) {
-      window.scrollTo({ 
-        top: 0, 
-        behavior: 'smooth' 
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
       });
     }
   }, [isSubmitted]);
 
   // Textes i18n avec ton fun et jovial
-  const t = useMemo(() => ({
-    // Meta & SEO
-    metaTitle: lang === 'fr' ? 'On vous écoute ! • SOS Expats' : 'We\'re all ears! • SOS Expats',
-    metaDesc: lang === 'fr' 
-      ? 'Une question ? Un souci ? Notre équipe sympa est là pour vous aider avec le sourire ✨'
-      : 'Got a question? Need help? Our friendly team is here to help with a smile ✨',
-    
-    // Header fun
-    pageTitle: lang === 'fr' ? 'On vous écoute !' : 'We\'re all ears!',
-    pageSubtitle: lang === 'fr' 
-      ? 'Notre équipe super sympa est là pour vous 🤗'
-      : 'Our super friendly team is here for you 🤗',
-    pageDescription: lang === 'fr' 
-      ? 'Une question ? Un pépin ? Envoyez-nous un petit message et on revient vers vous en mode turbo ! 🚀'
-      : 'Got a question? A little hiccup? Drop us a message and we\'ll get back to you super fast! 🚀',
-    
-    // Form labels avec émojis
-    firstName: lang === 'fr' ? 'Votre prénom' : 'Your first name',
-    lastName: lang === 'fr' ? 'Votre nom' : 'Your last name',
-    email: lang === 'fr' ? 'Votre email' : 'Your email',
-    phoneNumber: lang === 'fr' ? 'Votre téléphone' : 'Your phone',
-    customCode: lang === 'fr' ? 'Indicatif personnalisé' : 'Custom country code',
-    originCountry: lang === 'fr' ? 'D\'où venez-vous ?' : 'Where are you from?',
-    interventionCountry: lang === 'fr' ? 'Où vous faut-il de l\'aide ?' : 'Where do you need help?',
-    spokenLanguages: lang === 'fr' ? 'Vos langues magiques' : 'Your magical languages',
-    nationalities: lang === 'fr' ? 'Vos nationalités' : 'Your nationalities',
-    category: lang === 'fr' ? 'Type de demande' : 'Request type',
-    subject: lang === 'fr' ? 'Le sujet en bref' : 'Subject in brief',
-    message: lang === 'fr' ? 'Votre message' : 'Your message',
-    
-    // Placeholders fun
-    firstNamePlaceholder: lang === 'fr' ? 'Comment on vous appelle ? 😊' : 'What should we call you? 😊',
-    lastNamePlaceholder: lang === 'fr' ? 'Votre nom de famille...' : 'Your family name...',
-    emailPlaceholder: lang === 'fr' ? 'votre@email.com' : 'your@email.com',
-    phonePlaceholder: '06 12 34 56 78',
-    customCodePlaceholder: lang === 'fr' ? 'Ex: +225' : 'Ex: +225',
-    originCountryPlaceholder: lang === 'fr' ? 'France' : 'France',
-    interventionCountryPlaceholder: lang === 'fr' ? 'Où avez-vous besoin d\'un coup de main ?' : 'Where do you need a helping hand?',
-    nationalitiesPlaceholder: lang === 'fr' ? 'Française, Belge...' : 'French, Belgian...',
-    subjectPlaceholder: lang === 'fr' ? 'En quelques mots... ✨' : 'In a few words... ✨',
-    messagePlaceholder: lang === 'fr' 
-      ? 'Racontez-nous tout ! Plus c\'est détaillé, mieux on peut vous aider 🎯'
-      : 'Tell us everything! The more detailed, the better we can help you 🎯',
-    
-    // Buttons
-    sendMessage: lang === 'fr' ? 'Envoyer avec amour' : 'Send with love',
-    sending: lang === 'fr' ? 'Envoi en cours... ⏳' : 'Sending... ⏳',
-    sendAnother: lang === 'fr' ? 'Envoyer un autre message' : 'Send another message',
-    backHome: lang === 'fr' ? 'Retour à l\'accueil' : 'Back to home',
-    
-    // Success messages
-    messageSent: lang === 'fr' ? 'Message envoyé ! 🎉' : 'Message sent! 🎉',
-    messageReceived: lang === 'fr'
-      ? 'Super ! On a bien reçu votre message. Notre équipe va vous répondre très vite !'
-      : 'Great! We received your message. Our team will respond very quickly!',
-    
-    // Contact info fun
-    contactInfo: lang === 'fr' ? 'Comment on peut vous aider' : 'How we can help you',
-    sosService: lang === 'fr' ? 'Service S.O.S Express' : 'S.O.S Express Service',
-    available247: lang === 'fr' ? 'Toujours là pour vous !' : 'Always here for you!',
-    quickResponse: lang === 'fr' ? 'Réponse ultra-rapide' : 'Lightning-fast response',
-    usually24h: lang === 'fr' ? 'Généralement sous 24h !' : 'Usually within 24h!',
-    multilingualSupport: lang === 'fr' ? 'Support multilingue' : 'Multilingual support',
-    multipleLanguages: lang === 'fr' ? 'Français maintenant, autres langues très bientôt !' : 'French now, other languages very soon!',
-    
-    // Form
-    formTitle: lang === 'fr' ? 'Envoyez-nous un petit message !' : 'Drop us a little message!',
-    formDescription: lang === 'fr' ? 'Quelques infos et c\'est parti 🚀' : 'Just a few details and we\'re off! 🚀',
-    selectCategory: lang === 'fr' ? 'Choisissez votre catégorie...' : 'Pick your category...',
-    responseTime: lang === 'fr' ? 'Temps de réponse' : 'Response time',
-    maxTime: lang === 'fr' ? 'Super rapide ⚡' : 'Super fast ⚡',
-    secureData: lang === 'fr' 
-      ? 'Vos données sont en sécurité absolue avec nous 🔒' 
-      : 'Your data is absolutely safe with us 🔒',
-    
-    // Progress
-    progressTitle: lang === 'fr' ? 'Votre progression' : 'Your progress',
-    almostThere: lang === 'fr' ? 'Vous y êtes presque !' : 'You\'re almost there!',
-    
-    // Errors fun
-    errorSending: lang === 'fr' 
-      ? 'Oups ! Petit souci technique. Pouvez-vous réessayer ? 🙏'
-      : 'Oops! Small technical hiccup. Can you try again? 🙏',
-    
-    // Validation errors with emojis
-    required: lang === 'fr' ? 'Ce petit champ nous manque 🥺' : 'We need this little field 🥺',
-    invalidEmail: lang === 'fr' ? 'Cette adresse email a l\'air bizarre 🤔' : 'This email looks a bit off 🤔',
-    invalidPhone: lang === 'fr' ? 'Ce numéro ne nous semble pas correct 📱' : 'This number doesn\'t look right 📱',
-    invalidCustomCode: lang === 'fr' ? 'L\'indicatif doit commencer par + 📞' : 'Country code must start with + 📞',
-    selectLanguages: lang === 'fr' ? 'Choisissez au moins une langue 🗣️' : 'Pick at least one language 🗣️',
-    acceptTermsRequired: lang === 'fr' ? 'Un petit clic sur les conditions, s\'il vous plaît 📋' : 'A little click on the terms, please 📋',
-    formHasErrors: lang === 'fr' ? 'Quelques petites retouches et c\'est parfait ! ✨' : 'A few little tweaks and it\'s perfect! ✨',
-    
-    // Terms and conditions
-    acceptTerms: lang === 'fr' ? 'J\'accepte les' : 'I accept the',
-    termsAndConditions: lang === 'fr' ? 'conditions générales' : 'terms and conditions',
-    termsLink: '/conditions-generales-clients',
-    
-    // Other
-    other: lang === 'fr' ? 'Autre' : 'Other',
-    
-    // Fun helpers
-    helpTitle: lang === 'fr' ? 'Petite aide' : 'Little help',
-    completeFields: lang === 'fr' ? 'Champs à compléter' : 'Fields to complete',
-  }), [lang]);
+  const t = useMemo(
+    () => ({
+      // Meta & SEO
+      metaTitle:
+        lang === "fr"
+          ? "On vous écoute ! • SOS Expats"
+          : "We're all ears! • SOS Expats",
+      metaDesc:
+        lang === "fr"
+          ? "Une question ? Un souci ? Notre équipe sympa est là pour vous aider avec le sourire ✨"
+          : "Got a question? Need help? Our friendly team is here to help with a smile ✨",
+
+      // Header fun
+      pageTitle: lang === "fr" ? "On vous écoute !" : "We're all ears!",
+      pageSubtitle:
+        lang === "fr"
+          ? "Notre équipe super sympa est là pour vous 🤗"
+          : "Our super friendly team is here for you 🤗",
+      pageDescription:
+        lang === "fr"
+          ? "Une question ? Un pépin ? Envoyez-nous un petit message et on revient vers vous en mode turbo ! 🚀"
+          : "Got a question? A little hiccup? Drop us a message and we'll get back to you super fast! 🚀",
+
+      // Form labels avec émojis
+      firstName: lang === "fr" ? "Votre prénom" : "Your first name",
+      lastName: lang === "fr" ? "Votre nom" : "Your last name",
+      email: lang === "fr" ? "Votre email" : "Your email",
+      phoneNumber: lang === "fr" ? "Votre téléphone" : "Your phone",
+      customCode:
+        lang === "fr" ? "Indicatif personnalisé" : "Custom country code",
+      originCountry:
+        lang === "fr" ? "D'où venez-vous ?" : "Where are you from?",
+      interventionCountry:
+        lang === "fr"
+          ? "Où vous faut-il de l'aide ?"
+          : "Where do you need help?",
+      spokenLanguages:
+        lang === "fr" ? "Vos langues magiques" : "Your magical languages",
+      nationalities: lang === "fr" ? "Vos nationalités" : "Your nationalities",
+      category: lang === "fr" ? "Type de demande" : "Request type",
+      subject: lang === "fr" ? "Le sujet en bref" : "Subject in brief",
+      message: lang === "fr" ? "Votre message" : "Your message",
+
+      // Placeholders fun
+      firstNamePlaceholder:
+        lang === "fr"
+          ? "Comment on vous appelle ? 😊"
+          : "What should we call you? 😊",
+      lastNamePlaceholder:
+        lang === "fr" ? "Votre nom de famille..." : "Your family name...",
+      emailPlaceholder: lang === "fr" ? "votre@email.com" : "your@email.com",
+      phonePlaceholder: "06 12 34 56 78",
+      customCodePlaceholder: lang === "fr" ? "Ex: +225" : "Ex: +225",
+      originCountryPlaceholder: lang === "fr" ? "France" : "France",
+      interventionCountryPlaceholder:
+        lang === "fr"
+          ? "Où avez-vous besoin d'un coup de main ?"
+          : "Where do you need a helping hand?",
+      nationalitiesPlaceholder:
+        lang === "fr" ? "Française, Belge..." : "French, Belgian...",
+      subjectPlaceholder:
+        lang === "fr" ? "En quelques mots... ✨" : "In a few words... ✨",
+      messagePlaceholder:
+        lang === "fr"
+          ? "Racontez-nous tout ! Plus c'est détaillé, mieux on peut vous aider 🎯"
+          : "Tell us everything! The more detailed, the better we can help you 🎯",
+
+      // Buttons
+      sendMessage: lang === "fr" ? "Envoyer avec amour" : "Send with love",
+      sending: lang === "fr" ? "Envoi en cours... ⏳" : "Sending... ⏳",
+      sendAnother:
+        lang === "fr" ? "Envoyer un autre message" : "Send another message",
+      backHome: lang === "fr" ? "Retour à l'accueil" : "Back to home",
+
+      // Success messages
+      messageSent: lang === "fr" ? "Message envoyé ! 🎉" : "Message sent! 🎉",
+      messageReceived:
+        lang === "fr"
+          ? "Super ! On a bien reçu votre message. Notre équipe va vous répondre très vite !"
+          : "Great! We received your message. Our team will respond very quickly!",
+
+      // Contact info fun
+      contactInfo:
+        lang === "fr" ? "Comment on peut vous aider" : "How we can help you",
+      sosService:
+        lang === "fr" ? "Service S.O.S Express" : "S.O.S Express Service",
+      available247:
+        lang === "fr" ? "Toujours là pour vous !" : "Always here for you!",
+      quickResponse:
+        lang === "fr" ? "Réponse ultra-rapide" : "Lightning-fast response",
+      usually24h:
+        lang === "fr" ? "Généralement sous 24h !" : "Usually within 24h!",
+      multilingualSupport:
+        lang === "fr" ? "Support multilingue" : "Multilingual support",
+      multipleLanguages:
+        lang === "fr"
+          ? "Français maintenant, autres langues très bientôt !"
+          : "French now, other languages very soon!",
+
+      // Form
+      formTitle:
+        lang === "fr"
+          ? "Envoyez-nous un petit message !"
+          : "Drop us a little message!",
+      formDescription:
+        lang === "fr"
+          ? "Quelques infos et c'est parti 🚀"
+          : "Just a few details and we're off! 🚀",
+      selectCategory:
+        lang === "fr"
+          ? "Choisissez votre catégorie..."
+          : "Pick your category...",
+      responseTime: lang === "fr" ? "Temps de réponse" : "Response time",
+      maxTime: lang === "fr" ? "Super rapide ⚡" : "Super fast ⚡",
+      secureData:
+        lang === "fr"
+          ? "Vos données sont en sécurité absolue avec nous 🔒"
+          : "Your data is absolutely safe with us 🔒",
+
+      // Progress
+      progressTitle: lang === "fr" ? "Votre progression" : "Your progress",
+      almostThere:
+        lang === "fr" ? "Vous y êtes presque !" : "You're almost there!",
+
+      // Errors fun
+      errorSending:
+        lang === "fr"
+          ? "Oups ! Petit souci technique. Pouvez-vous réessayer ? 🙏"
+          : "Oops! Small technical hiccup. Can you try again? 🙏",
+
+      // Validation errors with emojis
+      required:
+        lang === "fr"
+          ? "Ce petit champ nous manque 🥺"
+          : "We need this little field 🥺",
+      invalidEmail:
+        lang === "fr"
+          ? "Cette adresse email a l'air bizarre 🤔"
+          : "This email looks a bit off 🤔",
+      invalidPhone:
+        lang === "fr"
+          ? "Ce numéro ne nous semble pas correct 📱"
+          : "This number doesn't look right 📱",
+      invalidCustomCode:
+        lang === "fr"
+          ? "L'indicatif doit commencer par + 📞"
+          : "Country code must start with + 📞",
+      selectLanguages:
+        lang === "fr"
+          ? "Choisissez au moins une langue 🗣️"
+          : "Pick at least one language 🗣️",
+      acceptTermsRequired:
+        lang === "fr"
+          ? "Un petit clic sur les conditions, s'il vous plaît 📋"
+          : "A little click on the terms, please 📋",
+      formHasErrors:
+        lang === "fr"
+          ? "Quelques petites retouches et c'est parfait ! ✨"
+          : "A few little tweaks and it's perfect! ✨",
+
+      // Terms and conditions
+      acceptTerms: lang === "fr" ? "J'accepte les" : "I accept the",
+      termsAndConditions:
+        lang === "fr" ? "conditions générales" : "terms and conditions",
+      termsLink: "/conditions-generales-clients",
+
+      // Other
+      other: lang === "fr" ? "Autre" : "Other",
+
+      // Fun helpers
+      helpTitle: lang === "fr" ? "Petite aide" : "Little help",
+      completeFields:
+        lang === "fr" ? "Champs à compléter" : "Fields to complete",
+    }),
+    [lang]
+  );
 
   // Validation du formulaire
   const validateForm = useCallback((): boolean => {
@@ -214,7 +315,8 @@ const Contact: React.FC = () => {
     if (!formData.email.trim()) errors.email = t.required;
     if (!formData.phoneNumber.trim()) errors.phoneNumber = t.required;
     if (!formData.originCountry.trim()) errors.originCountry = t.required;
-    if (!formData.interventionCountry.trim()) errors.interventionCountry = t.required;
+    if (!formData.interventionCountry.trim())
+      errors.interventionCountry = t.required;
     if (!formData.nationalities.trim()) errors.nationalities = t.required;
     if (!formData.subject.trim()) errors.subject = t.required;
     if (!formData.category) errors.category = t.required;
@@ -226,15 +328,18 @@ const Contact: React.FC = () => {
     }
 
     // Validation du téléphone
-    if (formData.phoneNumber && !/^[\d\s\-+()]{6,}$/.test(formData.phoneNumber)) {
+    if (
+      formData.phoneNumber &&
+      !/^[\d\s\-+()]{6,}$/.test(formData.phoneNumber)
+    ) {
       errors.phoneNumber = t.invalidPhone;
     }
 
     // Validation de l'indicatif personnalisé
-    if (formData.phoneCountryCode === '+other') {
+    if (formData.phoneCountryCode === "+other") {
       if (!formData.customCountryCode.trim()) {
         errors.customCountryCode = t.required;
-      } else if (!formData.customCountryCode.startsWith('+')) {
+      } else if (!formData.customCountryCode.startsWith("+")) {
         errors.customCountryCode = t.invalidCustomCode;
       }
     }
@@ -253,68 +358,113 @@ const Contact: React.FC = () => {
     return Object.keys(errors).length === 0;
   }, [formData, spokenLanguages, t]);
 
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    
-    // Effacer l'erreur du champ quand l'utilisateur commence à taper
-    if (formErrors[name]) {
-      setFormErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors[name];
-        return newErrors;
-      });
-    }
-  }, [formErrors]);
+  const handleInputChange = useCallback(
+    (
+      e: React.ChangeEvent<
+        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+      >
+    ) => {
+      const { name, value } = e.target;
+      setFormData((prev) => ({ ...prev, [name]: value }));
+
+      // Effacer l'erreur du champ quand l'utilisateur commence à taper
+      if (formErrors[name]) {
+        setFormErrors((prev) => {
+          const newErrors = { ...prev };
+          delete newErrors[name];
+          return newErrors;
+        });
+      }
+    },
+    [formErrors]
+  );
 
   // Liste des langues disponibles
-  const availableLanguages = useMemo(() => [
-    'Français', 'English', 'العربية', 'Español', 'Italiano', 'Deutsch', 
-    'Português', '中文', '日本語', '한국어', 'Русский', 'Nederlands', 
-    'Polski', 'Türkçe', 'Svenska', 'Norsk', 'Dansk', 'Suomi',
-    'Ελληνικά', 'हिन्दी', 'Čeština', 'Slovenčina', 'Magyar',
-    'Română', 'Hrvatski', 'Srpski', 'Български', 'Lietuvių',
-    'Latviešu', 'Eesti', 'Slovenščina', 'עברית', 'فارسی',
-    'ไทย', 'Tiếng Việt', 'Bahasa Indonesia', 'Bahasa Malaysia',
-    'Filipino'
-  ], []);
+  const availableLanguages = useMemo(
+    () => [
+      "Français",
+      "English",
+      "العربية",
+      "Español",
+      "Italiano",
+      "Deutsch",
+      "Português",
+      "中文",
+      "日本語",
+      "한국어",
+      "Русский",
+      "Nederlands",
+      "Polski",
+      "Türkçe",
+      "Svenska",
+      "Norsk",
+      "Dansk",
+      "Suomi",
+      "Ελληνικά",
+      "हिन्दी",
+      "Čeština",
+      "Slovenčina",
+      "Magyar",
+      "Română",
+      "Hrvatski",
+      "Srpski",
+      "Български",
+      "Lietuvių",
+      "Latviešu",
+      "Eesti",
+      "Slovenščina",
+      "עברית",
+      "فارسی",
+      "ไทย",
+      "Tiếng Việt",
+      "Bahasa Indonesia",
+      "Bahasa Malaysia",
+      "Filipino",
+    ],
+    []
+  );
 
   // Fonction pour gérer les changements de langues
-  const handleLanguageToggle = useCallback((language: string) => {
-    setSpokenLanguages(prev => {
-      if (prev.includes(language)) {
-        return prev.filter(lang => lang !== language);
-      } else {
-        return [...prev, language];
-      }
-    });
-    
-    // Effacer l'erreur des langues
-    if (formErrors.spokenLanguages) {
-      setFormErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors.spokenLanguages;
-        return newErrors;
+  const handleLanguageToggle = useCallback(
+    (language: string) => {
+      setSpokenLanguages((prev) => {
+        if (prev.includes(language)) {
+          return prev.filter((lang) => lang !== language);
+        } else {
+          return [...prev, language];
+        }
       });
-    }
-  }, [formErrors.spokenLanguages]);
+
+      // Effacer l'erreur des langues
+      if (formErrors.spokenLanguages) {
+        setFormErrors((prev) => {
+          const newErrors = { ...prev };
+          delete newErrors.spokenLanguages;
+          return newErrors;
+        });
+      }
+    },
+    [formErrors.spokenLanguages]
+  );
 
   const getPhoneCode = useCallback(() => {
-    return formData.phoneCountryCode === '+other' ? formData.customCountryCode : formData.phoneCountryCode;
+    return formData.phoneCountryCode === "+other"
+      ? formData.customCountryCode
+      : formData.phoneCountryCode;
   }, [formData.phoneCountryCode, formData.customCountryCode]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validation du formulaire
     if (!validateForm()) {
       setShowErrors(true);
       // Scroll vers la première erreur
-      const firstErrorElement = document.querySelector('.error-field');
+      const firstErrorElement = document.querySelector(".error-field");
       if (firstErrorElement) {
-        firstErrorElement.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'center' 
+        firstErrorElement.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
         });
       }
       return;
@@ -329,11 +479,11 @@ const Contact: React.FC = () => {
 
       // Vérifier si l'utilisateur existe déjà
       const usersQuery = query(
-        collection(db, 'users'), 
-        where('email', '==', formData.email)
+        collection(db, "users"),
+        where("email", "==", formData.email)
       );
       const usersSnapshot = await getDocs(usersQuery);
-      
+
       let userInfo = null;
       if (!usersSnapshot.empty) {
         const userData = usersSnapshot.docs[0].data();
@@ -341,19 +491,19 @@ const Contact: React.FC = () => {
           isExistingUser: true,
           userId: usersSnapshot.docs[0].id,
           userSince: userData.createdAt || userData.registrationDate || null,
-          userType: userData.userType || 'unknown'
+          userType: userData.userType || "unknown",
         };
       } else {
         userInfo = {
           isExistingUser: false,
           userId: null,
           userSince: null,
-          userType: null
+          userType: null,
         };
       }
 
       // Convertir les langues sélectionnées
-      const spokenLanguagesString = spokenLanguages.join(', ');
+      const spokenLanguagesString = spokenLanguages.join(", ");
       const finalPhoneCode = getPhoneCode();
 
       // Préparer les données complètes pour Firebase
@@ -373,68 +523,75 @@ const Contact: React.FC = () => {
         spokenLanguages: spokenLanguagesString,
         acceptedTerms: acceptTerms,
         acceptedTermsAt: new Date().toISOString(),
-        
+
         // Métadonnées système
         createdAt: serverTimestamp(),
         submittedAt: new Date().toISOString(),
-        status: 'new',
+        status: "new",
         responded: false,
-        priority: formData.category === 'urgent' ? 'high' : 'normal',
-        
+        priority: formData.category === "urgent" ? "high" : "normal",
+
         // Informations utilisateur
         user: userInfo,
-        
+
         // Analytics et métadonnées techniques
         userAgent: navigator.userAgent,
         language: language,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         screenResolution: `${window.screen.width}x${window.screen.height}`,
         browserLanguage: navigator.language,
-        deviceType: /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
-        
+        deviceType: /Mobi|Android/i.test(navigator.userAgent)
+          ? "mobile"
+          : "desktop",
+
         // Console d'administration
-        type: 'contact_message',
+        type: "contact_message",
         adminNotified: false,
         adminTags: [],
-        adminNotes: '',
-        estimatedResponseTime: '24h',
-        formVersion: '3.2',
-        source: 'contact_form_web_fun',
-        
+        adminNotes: "",
+        estimatedResponseTime: "24h",
+        formVersion: "3.2",
+        source: "contact_form_web_fun",
+
         // Métadonnées enrichies
         metadata: {
-          version: '3.2',
-          source: 'contact_form_fun',
+          version: "3.2",
+          source: "contact_form_fun",
           ipAddress: null,
           referrer: document.referrer || null,
-          spokenLanguagesStructured: spokenLanguages.map(lang => ({
-            code: lang.toLowerCase().replace(/\s+/g, '_'),
-            name: lang
+          spokenLanguagesStructured: spokenLanguages.map((lang) => ({
+            code: lang.toLowerCase().replace(/\s+/g, "_"),
+            name: lang,
           })),
           completionTime: Math.round(completionTime / 1000), // en secondes
           deviceInfo: {
             width: window.screen.width,
             height: window.screen.height,
             colorDepth: window.screen.colorDepth,
-            pixelRatio: window.devicePixelRatio
+            pixelRatio: window.devicePixelRatio,
           },
           performanceMetrics: {
             loadTime: performance.now(),
-            connectionType: (navigator as NavigatorConnection & Navigator).connection?.effectiveType || 'unknown'
-          }
-        }
+            connectionType:
+              (navigator as NavigatorConnection & Navigator).connection
+                ?.effectiveType || "unknown",
+          },
+        },
       };
 
       // Sauvegarder dans Firebase
-      const docRef = await addDoc(collection(db, 'contact_messages'), contactData);
+      const docRef = await addDoc(
+        collection(db, "contact_messages"),
+        contactData
+      );
 
       // Notification admin
-      await addDoc(collection(db, 'admin_notifications'), {
-        type: 'new_contact_message',
+      await addDoc(collection(db, "admin_notifications"), {
+        type: "new_contact_message",
         title: `${t.pageTitle} - ${formData.firstName} ${formData.lastName}`,
         message: `${formData.firstName} ${formData.lastName} - ${formData.subject}`,
         category: formData.category,
-        priority: formData.category === 'urgent' ? 'high' : 'normal',
+        priority: formData.category === "urgent" ? "high" : "normal",
         isExistingUser: userInfo.isExistingUser,
         contactMessageId: docRef.id,
         userEmail: formData.email,
@@ -450,75 +607,100 @@ const Contact: React.FC = () => {
           languages: spokenLanguagesString,
           originCountry: formData.originCountry,
           interventionCountry: formData.interventionCountry,
-          message: formData.message.substring(0, 150) + '...'
-        }
+          message: formData.message.substring(0, 150) + "...",
+        },
       });
 
       setIsSubmitted(true);
-      
+
       // Reset du formulaire
       setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phoneCountryCode: '+33',
-        customCountryCode: '',
-        phoneNumber: '',
-        originCountry: '',
-        interventionCountry: '',
-        nationalities: '',
-        subject: '',
-        category: '',
-        message: ''
+        firstName: "",
+        lastName: "",
+        email: "",
+        phoneCountryCode: "+33",
+        customCountryCode: "",
+        phoneNumber: "",
+        originCountry: "",
+        interventionCountry: "",
+        nationalities: "",
+        subject: "",
+        category: "",
+        message: "",
       });
       setSpokenLanguages([]);
       setAcceptTerms(false);
       setFormErrors({});
       setShowErrors(false);
     } catch (error) {
-      console.error('Error sending message:', error);
+      console.error("Error sending message:", error);
       alert(t.errorSending);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const categories = useMemo(() => [
-    { value: 'technical', label: lang === 'fr' ? '🔧 Problème technique' : '🔧 Technical issue' },
-    { value: 'billing', label: lang === 'fr' ? '💳 Facturation' : '💳 Billing' },
-    { value: 'account', label: lang === 'fr' ? '👤 Compte utilisateur' : '👤 User account' },
-    { value: 'expert', label: lang === 'fr' ? '🎓 Question sur les experts' : '🎓 Expert question' },
-    { value: 'service', label: lang === 'fr' ? '⭐ Qualité de service' : '⭐ Service quality' },
-    { value: 'partnership', label: lang === 'fr' ? '🤝 Partenariat' : '🤝 Partnership' },
-    { value: 'urgent', label: lang === 'fr' ? '🚨 Urgent' : '🚨 Urgent' },
-    { value: 'other', label: `💬 ${t.other}` }
-  ], [lang, t.other]);
+  const categories = useMemo(
+    () => [
+      {
+        value: "technical",
+        label: lang === "fr" ? "🔧 Problème technique" : "🔧 Technical issue",
+      },
+      {
+        value: "billing",
+        label: lang === "fr" ? "💳 Facturation" : "💳 Billing",
+      },
+      {
+        value: "account",
+        label: lang === "fr" ? "👤 Compte utilisateur" : "👤 User account",
+      },
+      {
+        value: "expert",
+        label:
+          lang === "fr" ? "🎓 Question sur les experts" : "🎓 Expert question",
+      },
+      {
+        value: "service",
+        label: lang === "fr" ? "⭐ Qualité de service" : "⭐ Service quality",
+      },
+      {
+        value: "partnership",
+        label: lang === "fr" ? "🤝 Partenariat" : "🤝 Partnership",
+      },
+      { value: "urgent", label: lang === "fr" ? "🚨 Urgent" : "🚨 Urgent" },
+      { value: "other", label: `💬 ${t.other}` },
+    ],
+    [lang, t.other]
+  );
 
-  const countryCodes = useMemo(() => [
-    { value: '+33', label: '🇫🇷 +33 (France)' },
-    { value: '+1', label: '🇺🇸 +1 (USA/Canada)' },
-    { value: '+44', label: '🇬🇧 +44 (UK)' },
-    { value: '+49', label: '🇩🇪 +49 (Germany)' },
-    { value: '+39', label: '🇮🇹 +39 (Italy)' },
-    { value: '+34', label: '🇪🇸 +34 (Spain)' },
-    { value: '+32', label: '🇧🇪 +32 (Belgium)' },
-    { value: '+41', label: '🇨🇭 +41 (Switzerland)' },
-    { value: '+31', label: '🇳🇱 +31 (Netherlands)' },
-    { value: '+352', label: '🇱🇺 +352 (Luxembourg)' },
-    { value: '+213', label: '🇩🇿 +213 (Algeria)' },
-    { value: '+212', label: '🇲🇦 +212 (Morocco)' },
-    { value: '+216', label: '🇹🇳 +216 (Tunisia)' },
-    { value: '+86', label: '🇨🇳 +86 (China)' },
-    { value: '+91', label: '🇮🇳 +91 (India)' },
-    { value: '+55', label: '🇧🇷 +55 (Brazil)' },
-    { value: '+other', label: `🌍 ${t.other}` }
-  ], [t.other]);
+  const countryCodes = useMemo(
+    () => [
+      { value: "+33", label: "🇫🇷 +33 (France)" },
+      { value: "+1", label: "🇺🇸 +1 (USA/Canada)" },
+      { value: "+44", label: "🇬🇧 +44 (UK)" },
+      { value: "+49", label: "🇩🇪 +49 (Germany)" },
+      { value: "+39", label: "🇮🇹 +39 (Italy)" },
+      { value: "+34", label: "🇪🇸 +34 (Spain)" },
+      { value: "+32", label: "🇧🇪 +32 (Belgium)" },
+      { value: "+41", label: "🇨🇭 +41 (Switzerland)" },
+      { value: "+31", label: "🇳🇱 +31 (Netherlands)" },
+      { value: "+352", label: "🇱🇺 +352 (Luxembourg)" },
+      { value: "+213", label: "🇩🇿 +213 (Algeria)" },
+      { value: "+212", label: "🇲🇦 +212 (Morocco)" },
+      { value: "+216", label: "🇹🇳 +216 (Tunisia)" },
+      { value: "+86", label: "🇨🇳 +86 (China)" },
+      { value: "+91", label: "🇮🇳 +91 (India)" },
+      { value: "+55", label: "🇧🇷 +55 (Brazil)" },
+      { value: "+other", label: `🌍 ${t.other}` },
+    ],
+    [t.other]
+  );
 
   // Progress calculation
   const progress = useMemo(() => {
     const fields = [
       formData.firstName,
-      formData.lastName, 
+      formData.lastName,
       formData.email,
       formData.phoneNumber,
       formData.originCountry,
@@ -527,72 +709,86 @@ const Contact: React.FC = () => {
       formData.subject,
       formData.category,
       formData.message,
-      spokenLanguages.length > 0 ? 'ok' : '',
-      acceptTerms ? 'ok' : ''
+      spokenLanguages.length > 0 ? "ok" : "",
+      acceptTerms ? "ok" : "",
     ];
-    const completed = fields.filter(field => !!field).length;
+    const completed = fields.filter((field) => !!field).length;
     return Math.round((completed / fields.length) * 100);
   }, [formData, spokenLanguages, acceptTerms]);
 
   // Validation states
-  const validStates = useMemo(() => ({
-    firstName: !!formData.firstName.trim(),
-    lastName: !!formData.lastName.trim(),
-    email: formData.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email),
-    phone: !!formData.phoneNumber.trim(),
-    originCountry: !!formData.originCountry,
-    interventionCountry: !!formData.interventionCountry,
-    nationalities: !!formData.nationalities,
-    subject: !!formData.subject,
-    category: !!formData.category,
-    message: formData.message.trim().length >= 10,
-    languages: spokenLanguages.length > 0,
-    terms: acceptTerms
-  }), [formData, spokenLanguages, acceptTerms]);
+  const validStates = useMemo(
+    () => ({
+      firstName: !!formData.firstName.trim(),
+      lastName: !!formData.lastName.trim(),
+      email:
+        formData.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email),
+      phone: !!formData.phoneNumber.trim(),
+      originCountry: !!formData.originCountry,
+      interventionCountry: !!formData.interventionCountry,
+      nationalities: !!formData.nationalities,
+      subject: !!formData.subject,
+      category: !!formData.category,
+      message: formData.message.trim().length >= 10,
+      languages: spokenLanguages.length > 0,
+      terms: acceptTerms,
+    }),
+    [formData, spokenLanguages, acceptTerms]
+  );
 
   // Meta tags pour SEO
   useEffect(() => {
     document.title = t.metaTitle;
     const updateOrCreateMeta = (property: string, content: string) => {
-      let meta = document.querySelector(`meta[property="${property}"]`) as HTMLMetaElement;
+      let meta = document.querySelector(
+        `meta[property="${property}"]`
+      ) as HTMLMetaElement;
       if (!meta) {
-        meta = document.createElement('meta');
-        meta.setAttribute('property', property);
+        meta = document.createElement("meta");
+        meta.setAttribute("property", property);
         document.head.appendChild(meta);
       }
       meta.content = content;
     };
 
     const updateOrCreateMetaName = (name: string, content: string) => {
-      let meta = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement;
+      let meta = document.querySelector(
+        `meta[name="${name}"]`
+      ) as HTMLMetaElement;
       if (!meta) {
-        meta = document.createElement('meta');
-        meta.setAttribute('name', name);
+        meta = document.createElement("meta");
+        meta.setAttribute("name", name);
         document.head.appendChild(meta);
       }
       meta.content = content;
     };
 
     // Meta tags essentiels
-    updateOrCreateMeta('og:title', t.metaTitle);
-    updateOrCreateMeta('og:description', t.metaDesc);
-    updateOrCreateMetaName('description', t.metaDesc);
-    updateOrCreateMetaName('twitter:title', t.metaTitle);
-    updateOrCreateMetaName('twitter:description', t.metaDesc);
+    updateOrCreateMeta("og:title", t.metaTitle);
+    updateOrCreateMeta("og:description", t.metaDesc);
+    updateOrCreateMetaName("description", t.metaDesc);
+    updateOrCreateMetaName("twitter:title", t.metaTitle);
+    updateOrCreateMetaName("twitter:description", t.metaDesc);
   }, [t.metaTitle, t.metaDesc]);
 
   // Composant pour afficher les erreurs avec style fun
-  const ErrorMessage: React.FC<{ error?: string; fieldName?: string }> = ({ error, fieldName }) => {
+  const ErrorMessage: React.FC<{ error?: string; fieldName?: string }> = ({
+    error,
+    fieldName,
+  }) => {
     if (!error || !showErrors) return null;
-    
+
     return (
-      <div 
-        className={`mt-2 text-red-500 text-sm ${fieldName ? 'error-field' : ''}`}
+      <div
+        className={`mt-2 text-red-500 text-sm ${fieldName ? "error-field" : ""}`}
         role="alert"
         aria-live="polite"
       >
         <div className="flex items-center bg-red-50 border border-red-200 rounded-xl px-3 py-2">
-          <AlertCircle className="w-4 h-4 mr-2 flex-shrink-0" aria-hidden="true" />
+          <AlertCircle
+            className="w-4 h-4 mr-2 flex-shrink-0"
+            aria-hidden="true"
+          />
           <span>{error}</span>
         </div>
       </div>
@@ -600,7 +796,10 @@ const Contact: React.FC = () => {
   };
 
   // Success field indicator
-  const FieldSuccess: React.FC<{ show: boolean; children: React.ReactNode }> = ({ show, children }) =>
+  const FieldSuccess: React.FC<{
+    show: boolean;
+    children: React.ReactNode;
+  }> = ({ show, children }) =>
     show ? (
       <div className="mt-2 text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2 inline-flex items-center">
         <CheckCircle className="w-4 h-4 mr-2" /> {children}
@@ -626,19 +825,27 @@ const Contact: React.FC = () => {
                   <CheckCircle className="w-12 h-12 text-white" />
                 </div>
               </div>
-              
+
               {/* Confetti effect */}
               <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-8 left-8 text-2xl animate-ping">🎉</div>
-                <div className="absolute top-12 right-12 text-xl animate-pulse delay-300">✨</div>
-                <div className="absolute bottom-16 left-12 text-lg animate-bounce delay-500">🌟</div>
-                <div className="absolute bottom-20 right-8 text-xl animate-pulse delay-700">💫</div>
+                <div className="absolute top-8 left-8 text-2xl animate-ping">
+                  🎉
+                </div>
+                <div className="absolute top-12 right-12 text-xl animate-pulse delay-300">
+                  ✨
+                </div>
+                <div className="absolute bottom-16 left-12 text-lg animate-bounce delay-500">
+                  🌟
+                </div>
+                <div className="absolute bottom-20 right-8 text-xl animate-pulse delay-700">
+                  💫
+                </div>
               </div>
-              
+
               <h2 className="text-3xl font-black text-gray-900 mb-4">
                 {t.messageSent}
               </h2>
-              
+
               <p className="text-gray-700 mb-8 leading-relaxed text-lg">
                 {t.messageReceived}
               </p>
@@ -660,7 +867,7 @@ const Contact: React.FC = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="space-y-4">
                 <button
                   onClick={() => setIsSubmitted(false)}
@@ -670,7 +877,7 @@ const Contact: React.FC = () => {
                   <ArrowRight className="w-5 h-5 mr-2 inline" />
                   {t.sendAnother}
                 </button>
-                
+
                 <a
                   href="/"
                   className="block w-full bg-white hover:bg-gray-50 text-emerald-700 border-2 border-emerald-200 hover:border-emerald-300 py-4 px-6 rounded-2xl font-bold transition-all duration-300 text-center shadow-md hover:shadow-lg transform hover:-translate-y-1 active:scale-95 touch-manipulation"
@@ -697,7 +904,7 @@ const Contact: React.FC = () => {
             <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-green-400/20 to-emerald-500/20 rounded-full blur-3xl animate-pulse delay-1000" />
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-r from-emerald-300/10 to-green-300/10 rounded-full blur-3xl animate-pulse delay-500" />
           </div>
-          
+
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             {/* Badge fun */}
             <div className="inline-flex items-center justify-center mb-6">
@@ -705,23 +912,25 @@ const Contact: React.FC = () => {
                 <div className="flex items-center space-x-2">
                   <Heart className="w-5 h-5 text-emerald-600 animate-pulse" />
                   <span className="text-sm font-bold text-emerald-700">
-                    {lang === 'fr' ? 'Équipe super sympa' : 'Super friendly team'}
+                    {lang === "fr"
+                      ? "Équipe super sympa"
+                      : "Super friendly team"}
                   </span>
                   <Sparkles className="w-5 h-5 text-emerald-600 animate-pulse delay-300" />
                 </div>
               </div>
             </div>
-            
+
             <h1 className="text-4xl md:text-6xl font-black mb-6 tracking-tight">
               <span className="bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-700 bg-clip-text text-transparent">
                 {t.pageTitle}
               </span>
             </h1>
-            
+
             <p className="text-xl md:text-2xl text-gray-700 max-w-3xl mx-auto leading-relaxed mb-4">
               {t.pageSubtitle}
             </p>
-            
+
             <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
               {t.pageDescription}
             </p>
@@ -732,7 +941,7 @@ const Contact: React.FC = () => {
                 <div className="flex items-center space-x-2">
                   <Zap className="w-5 h-5 text-emerald-600" />
                   <span className="text-sm font-bold text-gray-800">
-                    {lang === 'fr' ? 'Réponse < 24h' : 'Response < 24h'}
+                    {lang === "fr" ? "Réponse < 24h" : "Response < 24h"}
                   </span>
                 </div>
               </div>
@@ -740,7 +949,7 @@ const Contact: React.FC = () => {
                 <div className="flex items-center space-x-2">
                   <Globe className="w-5 h-5 text-emerald-600" />
                   <span className="text-sm font-bold text-gray-800">
-                    {lang === 'fr' ? '24/7 Partout' : '24/7 Anywhere'}
+                    {lang === "fr" ? "24/7 Partout" : "24/7 Anywhere"}
                   </span>
                 </div>
               </div>
@@ -748,7 +957,7 @@ const Contact: React.FC = () => {
                 <div className="flex items-center space-x-2">
                   <Star className="w-5 h-5 text-emerald-600" />
                   <span className="text-sm font-bold text-gray-800">
-                    {lang === 'fr' ? '100% Humain' : '100% Human'}
+                    {lang === "fr" ? "100% Humain" : "100% Human"}
                   </span>
                 </div>
               </div>
@@ -769,7 +978,7 @@ const Contact: React.FC = () => {
                     {t.contactInfo}
                   </h3>
                 </div>
-                
+
                 <div className="space-y-4">
                   <div className="bg-gradient-to-r from-emerald-50 to-green-50 rounded-2xl p-4 border border-emerald-200">
                     <div className="flex items-start space-x-3">
@@ -779,7 +988,7 @@ const Contact: React.FC = () => {
                       <div>
                         <h4 className="font-bold text-gray-900 mb-1">
                           {t.sosService}
-                        </h4> 
+                        </h4>
                         <p className="text-gray-600 text-sm">
                           {t.available247}
                         </p>
@@ -795,10 +1004,8 @@ const Contact: React.FC = () => {
                       <div>
                         <h4 className="font-bold text-gray-900 mb-1">
                           {t.quickResponse}
-                        </h4> 
-                        <p className="text-gray-600 text-sm">
-                          {t.usually24h}
-                        </p>
+                        </h4>
+                        <p className="text-gray-600 text-sm">{t.usually24h}</p>
                       </div>
                     </div>
                   </div>
@@ -811,7 +1018,7 @@ const Contact: React.FC = () => {
                       <div>
                         <h4 className="font-bold text-gray-900 mb-1">
                           {t.multilingualSupport}
-                        </h4> 
+                        </h4>
                         <p className="text-gray-600 text-sm">
                           {t.multipleLanguages}
                         </p>
@@ -824,12 +1031,14 @@ const Contact: React.FC = () => {
                 <div className="mt-6">
                   <div className="bg-gradient-to-r from-emerald-500 to-green-500 rounded-2xl p-4 text-white">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-bold">{t.progressTitle}</span>
+                      <span className="text-sm font-bold">
+                        {t.progressTitle}
+                      </span>
                       <span className="text-sm font-bold">{progress}%</span>
                     </div>
                     <div className="w-full bg-white/20 rounded-full h-3">
-                      <div 
-                        className="bg-white h-3 rounded-full transition-all duration-700 shadow-sm" 
+                      <div
+                        className="bg-white h-3 rounded-full transition-all duration-700 shadow-sm"
                         style={{ width: `${progress}%` }}
                       />
                     </div>
@@ -847,22 +1056,23 @@ const Contact: React.FC = () => {
             <section className="lg:col-span-2">
               <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl border border-emerald-100 overflow-hidden">
                 <div className="bg-gradient-to-r from-emerald-500 to-green-500 p-6 text-white text-center">
-                  <h2 className="text-3xl font-black mb-2">
-                    {t.formTitle}
-                  </h2>
-                  <p className="text-emerald-100">
-                    {t.formDescription}
-                  </p>
+                  <h2 className="text-3xl font-black mb-2">{t.formTitle}</h2>
+                  <p className="text-emerald-100">{t.formDescription}</p>
                 </div>
 
                 {/* Message d'erreur global avec style fun */}
                 {showErrors && Object.keys(formErrors).length > 0 && (
-                  <div className="m-6 p-4 bg-red-50 border-2 border-red-200 rounded-2xl" role="alert">
+                  <div
+                    className="m-6 p-4 bg-red-50 border-2 border-red-200 rounded-2xl"
+                    role="alert"
+                  >
                     <div className="flex items-center mb-3">
                       <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center mr-3">
                         <AlertCircle className="w-5 h-5 text-white" />
                       </div>
-                      <h3 className="font-bold text-red-800">{t.formHasErrors}</h3>
+                      <h3 className="font-bold text-red-800">
+                        {t.formHasErrors}
+                      </h3>
                     </div>
                     <div className="text-sm text-red-700 space-y-1 ml-11">
                       {Object.entries(formErrors).map(([field, error]) => (
@@ -875,18 +1085,28 @@ const Contact: React.FC = () => {
                   </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="p-6 space-y-6" noValidate>
+                <form
+                  onSubmit={handleSubmit}
+                  className="p-6 space-y-6"
+                  noValidate
+                >
                   {/* Section 1: Qui êtes-vous ? */}
                   <div className="bg-gradient-to-r from-emerald-50 to-green-50 rounded-2xl p-6 border border-emerald-200">
                     <h3 className="text-xl font-black text-gray-900 mb-4 flex items-center">
                       <User className="w-6 h-6 mr-2 text-emerald-600" />
-                      {lang === 'fr' ? 'Qui êtes-vous ? 😊' : 'Who are you? 😊'}
+                      {lang === "fr" ? "Qui êtes-vous ? 😊" : "Who are you? 😊"}
                     </h3>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="group">
-                        <label htmlFor="firstName" className="text-sm font-bold text-gray-800 mb-2 flex items-center">
-                          <Sparkles className="w-4 h-4 mr-1 text-emerald-600" aria-hidden="true" />
+                        <label
+                          htmlFor="firstName"
+                          className="text-sm font-bold text-gray-800 mb-2 flex items-center"
+                        >
+                          <Sparkles
+                            className="w-4 h-4 mr-1 text-emerald-600"
+                            aria-hidden="true"
+                          />
                           {t.firstName} *
                         </label>
                         <input
@@ -895,32 +1115,41 @@ const Contact: React.FC = () => {
                           name="firstName"
                           value={formData.firstName}
                           onChange={handleInputChange}
-                          onFocus={() => setFocusedField('firstName')}
+                          onFocus={() => setFocusedField("firstName")}
                           onBlur={() => setFocusedField(null)}
                           required
                           autoComplete="given-name"
                           className={`w-full px-4 py-4 bg-white border-2 rounded-2xl focus:outline-none transition-all duration-300 touch-manipulation text-gray-900 placeholder-gray-500 ${
                             formErrors.firstName
-                              ? 'border-red-400 bg-red-50'
+                              ? "border-red-400 bg-red-50"
                               : validStates.firstName
-                              ? 'border-emerald-400 bg-emerald-50 shadow-md'
-                              : focusedField === 'firstName' 
-                              ? 'border-emerald-400 bg-emerald-50 shadow-lg transform scale-[1.02]' 
-                              : 'border-gray-300 hover:border-emerald-300'
+                                ? "border-emerald-400 bg-emerald-50 shadow-md"
+                                : focusedField === "firstName"
+                                  ? "border-emerald-400 bg-emerald-50 shadow-lg transform scale-[1.02]"
+                                  : "border-gray-300 hover:border-emerald-300"
                           }`}
                           placeholder={t.firstNamePlaceholder}
                           aria-describedby="firstName-error"
                           aria-invalid={!!formErrors.firstName}
                         />
                         <FieldSuccess show={validStates.firstName}>
-                          {lang === 'fr' ? 'Parfait ! ✨' : 'Perfect! ✨'}
+                          {lang === "fr" ? "Parfait ! ✨" : "Perfect! ✨"}
                         </FieldSuccess>
-                        <ErrorMessage error={formErrors.firstName} fieldName="firstName" />
+                        <ErrorMessage
+                          error={formErrors.firstName}
+                          fieldName="firstName"
+                        />
                       </div>
 
                       <div className="group">
-                        <label htmlFor="lastName" className="text-sm font-bold text-gray-800 mb-2 flex items-center">
-                          <User className="w-4 h-4 mr-1 text-emerald-600" aria-hidden="true" />
+                        <label
+                          htmlFor="lastName"
+                          className="text-sm font-bold text-gray-800 mb-2 flex items-center"
+                        >
+                          <User
+                            className="w-4 h-4 mr-1 text-emerald-600"
+                            aria-hidden="true"
+                          />
                           {t.lastName} *
                         </label>
                         <input
@@ -929,34 +1158,43 @@ const Contact: React.FC = () => {
                           name="lastName"
                           value={formData.lastName}
                           onChange={handleInputChange}
-                          onFocus={() => setFocusedField('lastName')}
+                          onFocus={() => setFocusedField("lastName")}
                           onBlur={() => setFocusedField(null)}
                           required
                           autoComplete="family-name"
                           className={`w-full px-4 py-4 bg-white border-2 rounded-2xl focus:outline-none transition-all duration-300 touch-manipulation text-gray-900 placeholder-gray-500 ${
                             formErrors.lastName
-                              ? 'border-red-400 bg-red-50'
+                              ? "border-red-400 bg-red-50"
                               : validStates.lastName
-                              ? 'border-emerald-400 bg-emerald-50 shadow-md'
-                              : focusedField === 'lastName' 
-                              ? 'border-emerald-400 bg-emerald-50 shadow-lg transform scale-[1.02]' 
-                              : 'border-gray-300 hover:border-emerald-300'
+                                ? "border-emerald-400 bg-emerald-50 shadow-md"
+                                : focusedField === "lastName"
+                                  ? "border-emerald-400 bg-emerald-50 shadow-lg transform scale-[1.02]"
+                                  : "border-gray-300 hover:border-emerald-300"
                           }`}
                           placeholder={t.lastNamePlaceholder}
                           aria-describedby="lastName-error"
                           aria-invalid={!!formErrors.lastName}
                         />
                         <FieldSuccess show={validStates.lastName}>
-                          {lang === 'fr' ? 'Parfait ! ✨' : 'Perfect! ✨'}
+                          {lang === "fr" ? "Parfait ! ✨" : "Perfect! ✨"}
                         </FieldSuccess>
-                        <ErrorMessage error={formErrors.lastName} fieldName="lastName" />
+                        <ErrorMessage
+                          error={formErrors.lastName}
+                          fieldName="lastName"
+                        />
                       </div>
                     </div>
 
                     {/* Email */}
                     <div className="mt-4 group">
-                      <label htmlFor="email" className="text-sm font-bold text-gray-800 mb-2 flex items-center">
-                        <Mail className="w-4 h-4 mr-1 text-emerald-600" aria-hidden="true" />
+                      <label
+                        htmlFor="email"
+                        className="text-sm font-bold text-gray-800 mb-2 flex items-center"
+                      >
+                        <Mail
+                          className="w-4 h-4 mr-1 text-emerald-600"
+                          aria-hidden="true"
+                        />
                         {t.email} *
                       </label>
                       <input
@@ -965,27 +1203,32 @@ const Contact: React.FC = () => {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        onFocus={() => setFocusedField('email')}
+                        onFocus={() => setFocusedField("email")}
                         onBlur={() => setFocusedField(null)}
                         required
                         autoComplete="email"
                         className={`w-full px-4 py-4 bg-white border-2 rounded-2xl focus:outline-none transition-all duration-300 touch-manipulation text-gray-900 placeholder-gray-500 ${
                           formErrors.email
-                            ? 'border-red-400 bg-red-50'
+                            ? "border-red-400 bg-red-50"
                             : validStates.email
-                            ? 'border-emerald-400 bg-emerald-50 shadow-md'
-                            : focusedField === 'email' 
-                            ? 'border-emerald-400 bg-emerald-50 shadow-lg transform scale-[1.02]' 
-                            : 'border-gray-300 hover:border-emerald-300'
+                              ? "border-emerald-400 bg-emerald-50 shadow-md"
+                              : focusedField === "email"
+                                ? "border-emerald-400 bg-emerald-50 shadow-lg transform scale-[1.02]"
+                                : "border-gray-300 hover:border-emerald-300"
                         }`}
                         placeholder={t.emailPlaceholder}
                         aria-describedby="email-error"
                         aria-invalid={!!formErrors.email}
                       />
                       <FieldSuccess show={!!validStates.email}>
-                        {lang === 'fr' ? 'Email nickel ! 📧' : 'Perfect email! 📧'}
+                        {lang === "fr"
+                          ? "Email nickel ! 📧"
+                          : "Perfect email! 📧"}
                       </FieldSuccess>
-                      <ErrorMessage error={formErrors.email} fieldName="email" />
+                      <ErrorMessage
+                        error={formErrors.email}
+                        fieldName="email"
+                      />
                     </div>
                   </div>
 
@@ -993,39 +1236,49 @@ const Contact: React.FC = () => {
                   <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200">
                     <h3 className="text-xl font-black text-gray-900 mb-4 flex items-center">
                       <Phone className="w-6 h-6 mr-2 text-green-600" />
-                      {lang === 'fr' ? 'Comment vous joindre ? 📞' : 'How to reach you? 📞'}
+                      {lang === "fr"
+                        ? "Comment vous joindre ? 📞"
+                        : "How to reach you? 📞"}
                     </h3>
 
                     <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
                       <div className="sm:col-span-2">
                         <label className="text-sm font-bold text-gray-800 mb-2 block">
-                          {lang === 'fr' ? 'Indicatif' : 'Country code'}
+                          {lang === "fr" ? "Indicatif" : "Country code"}
                         </label>
                         <select
                           name="phoneCountryCode"
                           value={formData.phoneCountryCode}
                           onChange={handleInputChange}
-                          onFocus={() => setFocusedField('phoneCountryCode')}
+                          onFocus={() => setFocusedField("phoneCountryCode")}
                           onBlur={() => setFocusedField(null)}
                           required
                           className={`w-full px-4 py-4 bg-white border-2 rounded-2xl focus:outline-none transition-all duration-300 touch-manipulation text-gray-900 ${
                             formErrors.phoneCountryCode
-                              ? 'border-red-400 bg-red-50'
-                              : focusedField === 'phoneCountryCode' 
-                              ? 'border-emerald-400 bg-emerald-50 shadow-lg' 
-                              : 'border-gray-300 hover:border-emerald-300'
+                              ? "border-red-400 bg-red-50"
+                              : focusedField === "phoneCountryCode"
+                                ? "border-emerald-400 bg-emerald-50 shadow-lg"
+                                : "border-gray-300 hover:border-emerald-300"
                           }`}
-                          aria-label={lang === 'fr' ? 'Sélectionner l\'indicatif pays' : 'Select country code'}
+                          aria-label={
+                            lang === "fr"
+                              ? "Sélectionner l'indicatif pays"
+                              : "Select country code"
+                          }
                         >
-                          {countryCodes.map(code => (
-                            <option key={code.value} value={code.value} className="bg-white text-gray-900">
+                          {countryCodes.map((code) => (
+                            <option
+                              key={code.value}
+                              value={code.value}
+                              className="bg-white text-gray-900"
+                            >
                               {code.label}
                             </option>
                           ))}
                         </select>
                       </div>
 
-                      {formData.phoneCountryCode === '+other' && (
+                      {formData.phoneCountryCode === "+other" && (
                         <div className="sm:col-span-2">
                           <label className="text-sm font-bold text-gray-800 mb-2 block">
                             {t.customCode}
@@ -1035,16 +1288,16 @@ const Contact: React.FC = () => {
                             name="customCountryCode"
                             value={formData.customCountryCode}
                             onChange={handleInputChange}
-                            onFocus={() => setFocusedField('customCountryCode')}
+                            onFocus={() => setFocusedField("customCountryCode")}
                             onBlur={() => setFocusedField(null)}
                             required
                             placeholder={t.customCodePlaceholder}
                             className={`w-full px-4 py-4 bg-white border-2 rounded-2xl focus:outline-none transition-all duration-300 touch-manipulation text-gray-900 placeholder-gray-500 ${
                               formErrors.customCountryCode
-                                ? 'border-red-400 bg-red-50'
-                                : focusedField === 'customCountryCode' 
-                                ? 'border-emerald-400 bg-emerald-50 shadow-lg transform scale-[1.02]' 
-                                : 'border-gray-300 hover:border-emerald-300'
+                                ? "border-red-400 bg-red-50"
+                                : focusedField === "customCountryCode"
+                                  ? "border-emerald-400 bg-emerald-50 shadow-lg transform scale-[1.02]"
+                                  : "border-gray-300 hover:border-emerald-300"
                             }`}
                             aria-label={t.customCode}
                             aria-invalid={!!formErrors.customCountryCode}
@@ -1052,7 +1305,13 @@ const Contact: React.FC = () => {
                         </div>
                       )}
 
-                      <div className={formData.phoneCountryCode === '+other' ? 'sm:col-span-1' : 'sm:col-span-3'}>
+                      <div
+                        className={
+                          formData.phoneCountryCode === "+other"
+                            ? "sm:col-span-1"
+                            : "sm:col-span-3"
+                        }
+                      >
                         <label className="text-sm font-bold text-gray-800 mb-2 block">
                           {t.phoneNumber} *
                         </label>
@@ -1061,19 +1320,19 @@ const Contact: React.FC = () => {
                           name="phoneNumber"
                           value={formData.phoneNumber}
                           onChange={handleInputChange}
-                          onFocus={() => setFocusedField('phoneNumber')}
+                          onFocus={() => setFocusedField("phoneNumber")}
                           onBlur={() => setFocusedField(null)}
                           required
                           autoComplete="tel"
                           placeholder={t.phonePlaceholder}
                           className={`w-full px-4 py-4 bg-white border-2 rounded-2xl focus:outline-none transition-all duration-300 touch-manipulation text-gray-900 placeholder-gray-500 ${
                             formErrors.phoneNumber
-                              ? 'border-red-400 bg-red-50'
+                              ? "border-red-400 bg-red-50"
                               : validStates.phone
-                              ? 'border-emerald-400 bg-emerald-50 shadow-md'
-                              : focusedField === 'phoneNumber' 
-                              ? 'border-emerald-400 bg-emerald-50 shadow-lg transform scale-[1.02]' 
-                              : 'border-gray-300 hover:border-emerald-300'
+                                ? "border-emerald-400 bg-emerald-50 shadow-md"
+                                : focusedField === "phoneNumber"
+                                  ? "border-emerald-400 bg-emerald-50 shadow-lg transform scale-[1.02]"
+                                  : "border-gray-300 hover:border-emerald-300"
                           }`}
                           aria-label={t.phoneNumber}
                           aria-invalid={!!formErrors.phoneNumber}
@@ -1081,22 +1340,36 @@ const Contact: React.FC = () => {
                       </div>
                     </div>
                     <FieldSuccess show={validStates.phone}>
-                      {lang === 'fr' ? 'Super ! On pourra vous appeler 📱' : 'Great! We can call you 📱'}
+                      {lang === "fr"
+                        ? "Super ! On pourra vous appeler 📱"
+                        : "Great! We can call you 📱"}
                     </FieldSuccess>
-                    <ErrorMessage error={formErrors.phoneNumber || formErrors.customCountryCode} />
+                    <ErrorMessage
+                      error={
+                        formErrors.phoneNumber || formErrors.customCountryCode
+                      }
+                    />
                   </div>
 
                   {/* Section 3: Géographie */}
                   <div className="bg-gradient-to-r from-emerald-50 to-green-50 rounded-2xl p-6 border border-emerald-200">
                     <h3 className="text-xl font-black text-gray-900 mb-4 flex items-center">
                       <MapPin className="w-6 h-6 mr-2 text-emerald-600" />
-                      {lang === 'fr' ? 'Votre géographie 🌍' : 'Your geography 🌍'}
+                      {lang === "fr"
+                        ? "Votre géographie 🌍"
+                        : "Your geography 🌍"}
                     </h3>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                       <div className="group">
-                        <label htmlFor="originCountry" className="text-sm font-bold text-gray-800 mb-2 flex items-center">
-                          <MapPin className="w-4 h-4 mr-1 text-emerald-600" aria-hidden="true" />
+                        <label
+                          htmlFor="originCountry"
+                          className="text-sm font-bold text-gray-800 mb-2 flex items-center"
+                        >
+                          <MapPin
+                            className="w-4 h-4 mr-1 text-emerald-600"
+                            aria-hidden="true"
+                          />
                           {t.originCountry} *
                         </label>
                         <input
@@ -1105,32 +1378,41 @@ const Contact: React.FC = () => {
                           name="originCountry"
                           value={formData.originCountry}
                           onChange={handleInputChange}
-                          onFocus={() => setFocusedField('originCountry')}
+                          onFocus={() => setFocusedField("originCountry")}
                           onBlur={() => setFocusedField(null)}
                           required
                           autoComplete="country"
                           placeholder={t.originCountryPlaceholder}
                           className={`w-full px-4 py-4 bg-white border-2 rounded-2xl focus:outline-none transition-all duration-300 touch-manipulation text-gray-900 placeholder-gray-500 ${
                             formErrors.originCountry
-                              ? 'border-red-400 bg-red-50'
+                              ? "border-red-400 bg-red-50"
                               : validStates.originCountry
-                              ? 'border-emerald-400 bg-emerald-50 shadow-md'
-                              : focusedField === 'originCountry' 
-                              ? 'border-emerald-400 bg-emerald-50 shadow-lg transform scale-[1.02]' 
-                              : 'border-gray-300 hover:border-emerald-300'
+                                ? "border-emerald-400 bg-emerald-50 shadow-md"
+                                : focusedField === "originCountry"
+                                  ? "border-emerald-400 bg-emerald-50 shadow-lg transform scale-[1.02]"
+                                  : "border-gray-300 hover:border-emerald-300"
                           }`}
                           aria-describedby="originCountry-error"
                           aria-invalid={!!formErrors.originCountry}
                         />
                         <FieldSuccess show={validStates.originCountry}>
-                          {lang === 'fr' ? 'Noté ! 🌍' : 'Got it! 🌍'}
+                          {lang === "fr" ? "Noté ! 🌍" : "Got it! 🌍"}
                         </FieldSuccess>
-                        <ErrorMessage error={formErrors.originCountry} fieldName="originCountry" />
+                        <ErrorMessage
+                          error={formErrors.originCountry}
+                          fieldName="originCountry"
+                        />
                       </div>
 
                       <div className="group">
-                        <label htmlFor="interventionCountry" className="text-sm font-bold text-gray-800 mb-2 flex items-center">
-                          <Globe className="w-4 h-4 mr-1 text-emerald-600" aria-hidden="true" />
+                        <label
+                          htmlFor="interventionCountry"
+                          className="text-sm font-bold text-gray-800 mb-2 flex items-center"
+                        >
+                          <Globe
+                            className="w-4 h-4 mr-1 text-emerald-600"
+                            aria-hidden="true"
+                          />
                           {t.interventionCountry} *
                         </label>
                         <input
@@ -1139,32 +1421,43 @@ const Contact: React.FC = () => {
                           name="interventionCountry"
                           value={formData.interventionCountry}
                           onChange={handleInputChange}
-                          onFocus={() => setFocusedField('interventionCountry')}
+                          onFocus={() => setFocusedField("interventionCountry")}
                           onBlur={() => setFocusedField(null)}
                           required
                           placeholder={t.interventionCountryPlaceholder}
                           className={`w-full px-4 py-4 bg-white border-2 rounded-2xl focus:outline-none transition-all duration-300 touch-manipulation text-gray-900 placeholder-gray-500 ${
                             formErrors.interventionCountry
-                              ? 'border-red-400 bg-red-50'
+                              ? "border-red-400 bg-red-50"
                               : validStates.interventionCountry
-                              ? 'border-emerald-400 bg-emerald-50 shadow-md'
-                              : focusedField === 'interventionCountry' 
-                              ? 'border-emerald-400 bg-emerald-50 shadow-lg transform scale-[1.02]' 
-                              : 'border-gray-300 hover:border-emerald-300'
+                                ? "border-emerald-400 bg-emerald-50 shadow-md"
+                                : focusedField === "interventionCountry"
+                                  ? "border-emerald-400 bg-emerald-50 shadow-lg transform scale-[1.02]"
+                                  : "border-gray-300 hover:border-emerald-300"
                           }`}
                           aria-describedby="interventionCountry-error"
                           aria-invalid={!!formErrors.interventionCountry}
                         />
                         <FieldSuccess show={validStates.interventionCountry}>
-                          {lang === 'fr' ? 'On va vous aider là-bas ! 🎯' : 'We\'ll help you there! 🎯'}
+                          {lang === "fr"
+                            ? "On va vous aider là-bas ! 🎯"
+                            : "We'll help you there! 🎯"}
                         </FieldSuccess>
-                        <ErrorMessage error={formErrors.interventionCountry} fieldName="interventionCountry" />
+                        <ErrorMessage
+                          error={formErrors.interventionCountry}
+                          fieldName="interventionCountry"
+                        />
                       </div>
                     </div>
 
                     <div className="mt-4 group">
-                      <label htmlFor="nationalities" className="text-sm font-bold text-gray-800 mb-2 flex items-center">
-                        <Flag className="w-4 h-4 mr-1 text-emerald-600" aria-hidden="true" />
+                      <label
+                        htmlFor="nationalities"
+                        className="text-sm font-bold text-gray-800 mb-2 flex items-center"
+                      >
+                        <Flag
+                          className="w-4 h-4 mr-1 text-emerald-600"
+                          aria-hidden="true"
+                        />
                         {t.nationalities} *
                       </label>
                       <input
@@ -1173,26 +1466,29 @@ const Contact: React.FC = () => {
                         name="nationalities"
                         value={formData.nationalities}
                         onChange={handleInputChange}
-                        onFocus={() => setFocusedField('nationalities')}
+                        onFocus={() => setFocusedField("nationalities")}
                         onBlur={() => setFocusedField(null)}
                         required
                         placeholder={t.nationalitiesPlaceholder}
                         className={`w-full px-4 py-4 bg-white border-2 rounded-2xl focus:outline-none transition-all duration-300 touch-manipulation text-gray-900 placeholder-gray-500 ${
                           formErrors.nationalities
-                            ? 'border-red-400 bg-red-50'
+                            ? "border-red-400 bg-red-50"
                             : validStates.nationalities
-                            ? 'border-emerald-400 bg-emerald-50 shadow-md'
-                            : focusedField === 'nationalities' 
-                            ? 'border-emerald-400 bg-emerald-50 shadow-lg transform scale-[1.02]' 
-                            : 'border-gray-300 hover:border-emerald-300'
+                              ? "border-emerald-400 bg-emerald-50 shadow-md"
+                              : focusedField === "nationalities"
+                                ? "border-emerald-400 bg-emerald-50 shadow-lg transform scale-[1.02]"
+                                : "border-gray-300 hover:border-emerald-300"
                         }`}
                         aria-describedby="nationalities-error"
                         aria-invalid={!!formErrors.nationalities}
                       />
                       <FieldSuccess show={validStates.nationalities}>
-                        {lang === 'fr' ? 'Parfait ! 🏳️' : 'Perfect! 🏳️'}
+                        {lang === "fr" ? "Parfait ! 🏳️" : "Perfect! 🏳️"}
                       </FieldSuccess>
-                      <ErrorMessage error={formErrors.nationalities} fieldName="nationalities" />
+                      <ErrorMessage
+                        error={formErrors.nationalities}
+                        fieldName="nationalities"
+                      />
                     </div>
                   </div>
 
@@ -1200,35 +1496,44 @@ const Contact: React.FC = () => {
                   <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200">
                     <h3 className="text-xl font-black text-gray-900 mb-4 flex items-center">
                       <LanguagesIcon className="w-6 h-6 mr-2 text-green-600" />
-                      {t.spokenLanguages} * {lang === 'fr' ? '🗣️' : '🗣️'}
+                      {t.spokenLanguages} * {lang === "fr" ? "🗣️" : "🗣️"}
                     </h3>
 
                     <div className="relative group">
                       <button
                         type="button"
-                        onClick={() => setLanguagesDropdownOpen(!languagesDropdownOpen)}
+                        onClick={() =>
+                          setLanguagesDropdownOpen(!languagesDropdownOpen)
+                        }
                         className={`w-full px-4 py-4 bg-white border-2 rounded-2xl focus:outline-none transition-all duration-300 touch-manipulation text-left flex items-center justify-between ${
                           formErrors.spokenLanguages
-                            ? 'border-red-400 bg-red-50'
+                            ? "border-red-400 bg-red-50"
                             : validStates.languages
-                            ? 'border-emerald-400 bg-emerald-50 shadow-md'
-                            : languagesDropdownOpen
-                            ? 'border-emerald-400 bg-emerald-50 shadow-lg'
-                            : 'border-gray-300 hover:border-emerald-300'
+                              ? "border-emerald-400 bg-emerald-50 shadow-md"
+                              : languagesDropdownOpen
+                                ? "border-emerald-400 bg-emerald-50 shadow-lg"
+                                : "border-gray-300 hover:border-emerald-300"
                         }`}
                         aria-expanded={languagesDropdownOpen}
                         aria-haspopup="listbox"
                       >
-                        <span className={spokenLanguages.length > 0 ? 'text-gray-900 font-medium' : 'text-gray-500'}>
-                          {spokenLanguages.length > 0 
-                            ? `${spokenLanguages.length} ${lang === 'fr' ? 'langue(s) sélectionnée(s)' : 'language(s) selected'} ✨`
-                            : lang === 'fr' ? 'Choisissez vos langues magiques...' : 'Choose your magical languages...'
+                        <span
+                          className={
+                            spokenLanguages.length > 0
+                              ? "text-gray-900 font-medium"
+                              : "text-gray-500"
                           }
+                        >
+                          {spokenLanguages.length > 0
+                            ? `${spokenLanguages.length} ${lang === "fr" ? "langue(s) sélectionnée(s)" : "language(s) selected"} ✨`
+                            : lang === "fr"
+                              ? "Choisissez vos langues magiques..."
+                              : "Choose your magical languages..."}
                         </span>
-                        <ChevronDown 
+                        <ChevronDown
                           className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${
-                            languagesDropdownOpen ? 'rotate-180' : ''
-                          }`} 
+                            languagesDropdownOpen ? "rotate-180" : ""
+                          }`}
                         />
                       </button>
 
@@ -1247,7 +1552,9 @@ const Contact: React.FC = () => {
                                   onChange={() => handleLanguageToggle(lang)}
                                   className="w-5 h-5 text-emerald-500 border-2 border-gray-300 rounded focus:ring-emerald-500 focus:ring-2 mr-3"
                                 />
-                                <span className="text-sm text-gray-800 font-medium">{lang}</span>
+                                <span className="text-sm text-gray-800 font-medium">
+                                  {lang}
+                                </span>
                               </label>
                             ))}
                           </div>
@@ -1277,22 +1584,33 @@ const Contact: React.FC = () => {
                       )}
                     </div>
                     <FieldSuccess show={validStates.languages}>
-                      {lang === 'fr' ? 'Super ! On peut discuter dans votre langue ! 🌐' : 'Great! We can chat in your language! 🌐'}
+                      {lang === "fr"
+                        ? "Super ! On peut discuter dans votre langue ! 🌐"
+                        : "Great! We can chat in your language! 🌐"}
                     </FieldSuccess>
-                    <ErrorMessage error={formErrors.spokenLanguages} fieldName="spokenLanguages" />
+                    <ErrorMessage
+                      error={formErrors.spokenLanguages}
+                      fieldName="spokenLanguages"
+                    />
                   </div>
 
                   {/* Section 5: Votre demande */}
                   <div className="bg-gradient-to-r from-emerald-50 to-green-50 rounded-2xl p-6 border border-emerald-200">
                     <h3 className="text-xl font-black text-gray-900 mb-4 flex items-center">
                       <MessageCircle className="w-6 h-6 mr-2 text-emerald-600" />
-                      {lang === 'fr' ? 'Votre demande 💬' : 'Your request 💬'}
+                      {lang === "fr" ? "Votre demande 💬" : "Your request 💬"}
                     </h3>
 
                     {/* Category */}
                     <div className="mb-4 group">
-                      <label htmlFor="category" className="text-sm font-bold text-gray-800 mb-2 flex items-center">
-                        <Star className="w-4 h-4 mr-1 text-emerald-600" aria-hidden="true" />
+                      <label
+                        htmlFor="category"
+                        className="text-sm font-bold text-gray-800 mb-2 flex items-center"
+                      >
+                        <Star
+                          className="w-4 h-4 mr-1 text-emerald-600"
+                          aria-hidden="true"
+                        />
                         {t.category} *
                       </label>
                       <select
@@ -1300,17 +1618,17 @@ const Contact: React.FC = () => {
                         name="category"
                         value={formData.category}
                         onChange={handleInputChange}
-                        onFocus={() => setFocusedField('category')}
+                        onFocus={() => setFocusedField("category")}
                         onBlur={() => setFocusedField(null)}
                         required
                         className={`w-full px-4 py-4 bg-white border-2 rounded-2xl focus:outline-none transition-all duration-300 touch-manipulation text-gray-900 ${
                           formErrors.category
-                            ? 'border-red-400 bg-red-50'
+                            ? "border-red-400 bg-red-50"
                             : validStates.category
-                            ? 'border-emerald-400 bg-emerald-50 shadow-md'
-                            : focusedField === 'category' 
-                            ? 'border-emerald-400 bg-emerald-50 shadow-lg transform scale-[1.02]' 
-                            : 'border-gray-300 hover:border-emerald-300'
+                              ? "border-emerald-400 bg-emerald-50 shadow-md"
+                              : focusedField === "category"
+                                ? "border-emerald-400 bg-emerald-50 shadow-lg transform scale-[1.02]"
+                                : "border-gray-300 hover:border-emerald-300"
                         }`}
                         aria-describedby="category-error"
                         aria-invalid={!!formErrors.category}
@@ -1318,22 +1636,37 @@ const Contact: React.FC = () => {
                         <option value="" className="text-gray-500">
                           {t.selectCategory}
                         </option>
-                        {categories.map(category => (
-                          <option key={category.value} value={category.value} className="text-gray-900">
+                        {categories.map((category) => (
+                          <option
+                            key={category.value}
+                            value={category.value}
+                            className="text-gray-900"
+                          >
                             {category.label}
                           </option>
                         ))}
                       </select>
                       <FieldSuccess show={validStates.category}>
-                        {lang === 'fr' ? 'Catégorie choisie ! 🎯' : 'Category selected! 🎯'}
+                        {lang === "fr"
+                          ? "Catégorie choisie ! 🎯"
+                          : "Category selected! 🎯"}
                       </FieldSuccess>
-                      <ErrorMessage error={formErrors.category} fieldName="category" />
+                      <ErrorMessage
+                        error={formErrors.category}
+                        fieldName="category"
+                      />
                     </div>
 
                     {/* Subject */}
                     <div className="mb-4 group">
-                      <label htmlFor="subject" className="text-sm font-bold text-gray-800 mb-2 flex items-center">
-                        <Sparkles className="w-4 h-4 mr-1 text-emerald-600" aria-hidden="true" />
+                      <label
+                        htmlFor="subject"
+                        className="text-sm font-bold text-gray-800 mb-2 flex items-center"
+                      >
+                        <Sparkles
+                          className="w-4 h-4 mr-1 text-emerald-600"
+                          aria-hidden="true"
+                        />
                         {t.subject} *
                       </label>
                       <input
@@ -1342,32 +1675,43 @@ const Contact: React.FC = () => {
                         name="subject"
                         value={formData.subject}
                         onChange={handleInputChange}
-                        onFocus={() => setFocusedField('subject')}
+                        onFocus={() => setFocusedField("subject")}
                         onBlur={() => setFocusedField(null)}
                         required
                         placeholder={t.subjectPlaceholder}
                         className={`w-full px-4 py-4 bg-white border-2 rounded-2xl focus:outline-none transition-all duration-300 touch-manipulation text-gray-900 placeholder-gray-500 ${
                           formErrors.subject
-                            ? 'border-red-400 bg-red-50'
+                            ? "border-red-400 bg-red-50"
                             : validStates.subject
-                            ? 'border-emerald-400 bg-emerald-50 shadow-md'
-                            : focusedField === 'subject' 
-                            ? 'border-emerald-400 bg-emerald-50 shadow-lg transform scale-[1.02]' 
-                            : 'border-gray-300 hover:border-emerald-300'
+                              ? "border-emerald-400 bg-emerald-50 shadow-md"
+                              : focusedField === "subject"
+                                ? "border-emerald-400 bg-emerald-50 shadow-lg transform scale-[1.02]"
+                                : "border-gray-300 hover:border-emerald-300"
                         }`}
                         aria-describedby="subject-error"
                         aria-invalid={!!formErrors.subject}
                       />
                       <FieldSuccess show={validStates.subject}>
-                        {lang === 'fr' ? 'Sujet clair ! 📝' : 'Clear subject! 📝'}
+                        {lang === "fr"
+                          ? "Sujet clair ! 📝"
+                          : "Clear subject! 📝"}
                       </FieldSuccess>
-                      <ErrorMessage error={formErrors.subject} fieldName="subject" />
+                      <ErrorMessage
+                        error={formErrors.subject}
+                        fieldName="subject"
+                      />
                     </div>
 
                     {/* Message */}
                     <div className="group">
-                      <label htmlFor="message" className="text-sm font-bold text-gray-800 mb-2 flex items-center">
-                        <MessageCircle className="w-4 h-4 mr-1 text-emerald-600" aria-hidden="true" />
+                      <label
+                        htmlFor="message"
+                        className="text-sm font-bold text-gray-800 mb-2 flex items-center"
+                      >
+                        <MessageCircle
+                          className="w-4 h-4 mr-1 text-emerald-600"
+                          aria-hidden="true"
+                        />
                         {t.message} *
                       </label>
                       <textarea
@@ -1375,53 +1719,69 @@ const Contact: React.FC = () => {
                         name="message"
                         value={formData.message}
                         onChange={handleInputChange}
-                        onFocus={() => setFocusedField('message')}
+                        onFocus={() => setFocusedField("message")}
                         onBlur={() => setFocusedField(null)}
                         required
                         rows={6}
                         placeholder={t.messagePlaceholder}
                         className={`w-full px-4 py-4 bg-white border-2 rounded-2xl focus:outline-none transition-all duration-300 resize-none touch-manipulation text-gray-900 placeholder-gray-500 ${
                           formErrors.message
-                            ? 'border-red-400 bg-red-50'
+                            ? "border-red-400 bg-red-50"
                             : validStates.message
-                            ? 'border-emerald-400 bg-emerald-50 shadow-md'
-                            : focusedField === 'message' 
-                            ? 'border-emerald-400 bg-emerald-50 shadow-lg transform scale-[1.02]' 
-                            : 'border-gray-300 hover:border-emerald-300'
+                              ? "border-emerald-400 bg-emerald-50 shadow-md"
+                              : focusedField === "message"
+                                ? "border-emerald-400 bg-emerald-50 shadow-lg transform scale-[1.02]"
+                                : "border-gray-300 hover:border-emerald-300"
                         }`}
                         aria-describedby="message-error"
                         aria-invalid={!!formErrors.message}
                       />
-                      
+
                       {/* Message length indicator */}
                       <div className="mt-2">
                         <div className="flex items-center justify-between text-xs mb-1">
-                          <span className={`font-medium ${
-                            formData.message.length >= 10 ? 'text-emerald-600' : 'text-gray-500'
-                          }`}>
-                            {formData.message.length >= 10 
-                              ? lang === 'fr' ? '✓ Message assez détaillé' : '✓ Message detailed enough'
-                              : lang === 'fr' ? `Encore ${10 - formData.message.length} caractères...` : `${10 - formData.message.length} more characters...`
-                            }
+                          <span
+                            className={`font-medium ${
+                              formData.message.length >= 10
+                                ? "text-emerald-600"
+                                : "text-gray-500"
+                            }`}
+                          >
+                            {formData.message.length >= 10
+                              ? lang === "fr"
+                                ? "✓ Message assez détaillé"
+                                : "✓ Message detailed enough"
+                              : lang === "fr"
+                                ? `Encore ${10 - formData.message.length} caractères...`
+                                : `${10 - formData.message.length} more characters...`}
                           </span>
                           <span className="text-gray-400">
                             {formData.message.length}/1000
                           </span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div 
+                          <div
                             className={`h-2 rounded-full transition-all duration-300 ${
-                              formData.message.length >= 10 ? 'bg-emerald-500' : 'bg-orange-400'
+                              formData.message.length >= 10
+                                ? "bg-emerald-500"
+                                : "bg-orange-400"
                             }`}
-                            style={{ width: `${Math.min((formData.message.length / 1000) * 100, 100)}%` }}
+                            style={{
+                              width: `${Math.min((formData.message.length / 1000) * 100, 100)}%`,
+                            }}
                           />
                         </div>
                       </div>
-                      
+
                       <FieldSuccess show={validStates.message}>
-                        {lang === 'fr' ? 'Message parfait ! On va pouvoir bien vous aider ! 🎯' : 'Perfect message! We\'ll be able to help you well! 🎯'}
+                        {lang === "fr"
+                          ? "Message parfait ! On va pouvoir bien vous aider ! 🎯"
+                          : "Perfect message! We'll be able to help you well! 🎯"}
                       </FieldSuccess>
-                      <ErrorMessage error={formErrors.message} fieldName="message" />
+                      <ErrorMessage
+                        error={formErrors.message}
+                        fieldName="message"
+                      />
                     </div>
                   </div>
 
@@ -1431,16 +1791,22 @@ const Contact: React.FC = () => {
                       <div className="flex items-center">
                         <Calendar className="w-6 h-6 mr-3" />
                         <div>
-                          <h4 className="font-bold text-lg">{t.responseTime}</h4>
+                          <h4 className="font-bold text-lg">
+                            {t.responseTime}
+                          </h4>
                           <p className="text-green-100 text-sm">
-                            {lang === 'fr' ? 'On revient vers vous rapidement !' : 'We\'ll get back to you quickly!'}
+                            {lang === "fr"
+                              ? "On revient vers vous rapidement !"
+                              : "We'll get back to you quickly!"}
                           </p>
                         </div>
                       </div>
                       <div className="text-right">
                         <div className="text-2xl font-black">{t.maxTime}</div>
                         <div className="text-green-100 text-xs">
-                          {lang === 'fr' ? 'Souvent bien plus vite !' : 'Often much faster!'}
+                          {lang === "fr"
+                            ? "Souvent bien plus vite !"
+                            : "Often much faster!"}
                         </div>
                       </div>
                     </div>
@@ -1454,21 +1820,27 @@ const Contact: React.FC = () => {
                     <div className="bg-white rounded-2xl p-6">
                       {/* Terms */}
                       <div className="mb-6">
-                        <div className={`flex items-start gap-3 p-4 rounded-2xl border-2 transition-all duration-300 ${
-                          formErrors.acceptTerms
-                            ? 'border-red-400 bg-red-50'
-                            : acceptTerms
-                            ? 'border-emerald-400 bg-emerald-50'
-                            : 'border-gray-300 bg-gray-50 hover:border-emerald-300'
-                        }`}>
+                        <div
+                          className={`flex items-start gap-3 p-4 rounded-2xl border-2 transition-all duration-300 ${
+                            formErrors.acceptTerms
+                              ? "border-red-400 bg-red-50"
+                              : acceptTerms
+                                ? "border-emerald-400 bg-emerald-50"
+                                : "border-gray-300 bg-gray-50 hover:border-emerald-300"
+                          }`}
+                        >
                           <input
                             type="checkbox"
                             id="acceptTerms"
                             checked={acceptTerms}
                             onChange={(e) => {
+                              console.log(
+                                e.target.checked,
+                                ": is it checked ?"
+                              );
                               setAcceptTerms(e.target.checked);
                               if (e.target.checked && formErrors.acceptTerms) {
-                                setFormErrors(prev => {
+                                setFormErrors((prev) => {
                                   const newErrors = { ...prev };
                                   delete newErrors.acceptTerms;
                                   return newErrors;
@@ -1479,8 +1851,11 @@ const Contact: React.FC = () => {
                             aria-describedby="acceptTerms-error"
                             aria-invalid={!!formErrors.acceptTerms}
                           />
-                          <label htmlFor="acceptTerms" className="text-sm text-gray-800 flex-1 cursor-pointer font-medium">
-                            {t.acceptTerms}{' '}
+                          <label
+                            htmlFor="acceptTerms"
+                            className="text-sm text-gray-800 flex-1 cursor-pointer font-medium"
+                          >
+                            {t.acceptTerms}{" "}
                             <a
                               href={t.termsLink}
                               target="_blank"
@@ -1490,13 +1865,18 @@ const Contact: React.FC = () => {
                             >
                               {t.termsAndConditions}
                             </a>
-                            {' *'}
+                            {" *"}
                           </label>
                         </div>
                         <FieldSuccess show={acceptTerms}>
-                          {lang === 'fr' ? 'Merci ! Tout est en ordre ! ✅' : 'Thanks! Everything is in order! ✅'}
+                          {lang === "fr"
+                            ? "Merci ! Tout est en ordre ! ✅"
+                            : "Thanks! Everything is in order! ✅"}
                         </FieldSuccess>
-                        <ErrorMessage error={formErrors.acceptTerms} fieldName="acceptTerms" />
+                        <ErrorMessage
+                          error={formErrors.acceptTerms}
+                          fieldName="acceptTerms"
+                        />
                       </div>
 
                       {/* Submit Button */}
@@ -1510,13 +1890,20 @@ const Contact: React.FC = () => {
                         aria-label={t.sendMessage}
                       >
                         {isLoading ? (
-                          <div className="flex items-center justify-center" aria-hidden="true">
+                          <div
+                            className="flex items-center justify-center"
+                            aria-hidden="true"
+                          >
                             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white mr-3"></div>
                             {t.sending}
                           </div>
                         ) : (
                           <div className="flex items-center justify-center">
-                            <Send size={24} className="mr-3" aria-hidden="true" />
+                            <Send
+                              size={24}
+                              className="mr-3"
+                              aria-hidden="true"
+                            />
                             {t.sendMessage}
                             <Heart className="w-5 h-5 ml-2 animate-pulse" />
                           </div>
@@ -1526,7 +1913,10 @@ const Contact: React.FC = () => {
                       {/* Security note fun */}
                       <div className="text-center text-sm text-gray-600 mt-4">
                         <div className="flex items-center justify-center bg-gray-50 rounded-xl py-3 px-4">
-                          <div className="w-3 h-3 bg-emerald-400 rounded-full mr-2 animate-pulse" aria-hidden="true"></div>
+                          <div
+                            className="w-3 h-3 bg-emerald-400 rounded-full mr-2 animate-pulse"
+                            aria-hidden="true"
+                          ></div>
                           {t.secureData}
                         </div>
                       </div>
@@ -1548,26 +1938,42 @@ const Contact: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="text-xl font-black text-gray-900">
-                    {lang === 'fr' ? 'Une communauté qui vous veut du bien' : 'A community that wants the best for you'}
+                    {lang === "fr"
+                      ? "Une communauté qui vous veut du bien"
+                      : "A community that wants the best for you"}
                   </h3>
                   <p className="text-gray-600">
-                    {lang === 'fr' ? 'Des experts passionnés, partout dans le monde' : 'Passionate experts, all around the world'}
+                    {lang === "fr"
+                      ? "Des experts passionnés, partout dans le monde"
+                      : "Passionate experts, all around the world"}
                   </p>
                 </div>
               </div>
-              
+
               <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-500">
-                <a href="/politique-confidentialite" className="hover:text-emerald-600 underline transition-colors">
-                  🔒 {lang === 'fr' ? 'Confidentialité' : 'Privacy'}
+                <a
+                  href="/politique-confidentialite"
+                  className="hover:text-emerald-600 underline transition-colors"
+                >
+                  🔒 {lang === "fr" ? "Confidentialité" : "Privacy"}
                 </a>
-                <a href="/centre-aide" className="hover:text-emerald-600 underline transition-colors">
-                  💬 {lang === 'fr' ? 'Centre d\'aide' : 'Help Center'}
+                <a
+                  href="/centre-aide"
+                  className="hover:text-emerald-600 underline transition-colors"
+                >
+                  💬 {lang === "fr" ? "Centre d'aide" : "Help Center"}
                 </a>
-                <a href="/conditions-generales-clients" className="hover:text-emerald-600 underline transition-colors">
-                  📋 {lang === 'fr' ? 'Conditions générales' : 'Terms & Conditions'}
+                <a
+                  href="/conditions-generales-clients"
+                  className="hover:text-emerald-600 underline transition-colors"
+                >
+                  📋{" "}
+                  {lang === "fr"
+                    ? "Conditions générales"
+                    : "Terms & Conditions"}
                 </a>
               </div>
-              
+
               <div className="mt-6 flex justify-center space-x-4 text-2xl">
                 <span className="animate-bounce">🌍</span>
                 <span className="animate-bounce delay-100">❤️</span>
