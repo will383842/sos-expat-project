@@ -533,7 +533,9 @@ const Pricing: React.FC = () => {
                     <CheckCircle className="w-5 h-5 mr-3" />
                     <span className="font-semibold">
                       {`${currentText.applied} "${activePromo.code}" : ${activePromo.discountValue}${
-                        activePromo.discountType === "percentage" ? "%" : "$"
+                        activePromo.discountType === "percentage"
+                          ? "%"
+                          : currencySymbol
                       } ${currentText.discount}`}
                     </span>
                   </div>

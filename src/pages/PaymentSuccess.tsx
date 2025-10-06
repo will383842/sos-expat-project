@@ -967,7 +967,11 @@ const SuccessPayment: React.FC = () => {
                       {t.price}:
                     </span>
                     <span className="font-black text-2xl text-green-800">
-                      €{paidAmount || (isLawyer ? "49" : "19")}
+                      {/* <span className="font-bold text-green-900"> */}
+                      {C}
+                      {fmt(toNum(order.amount))}
+                      {/* </span> */}
+                      {/* €{paidAmount || (isLawyer ? "49" : "19")} */}
                     </span>
                   </div>
 
