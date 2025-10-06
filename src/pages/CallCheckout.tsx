@@ -98,6 +98,12 @@ interface PaymentIntentData {
   providerAmount: number;
   callSessionId?: string;
   metadata?: Record<string, string>;
+  coupon?: {
+    code: string;
+    type: "fixed" | "percentage";
+    amount: number;
+    maxDiscount?: number;
+  };
 }
 
 interface PaymentIntentResponse {
@@ -618,6 +624,12 @@ interface PaymentFormProps {
   isProcessing: boolean;
   setIsProcessing: (processing: boolean) => void;
   isMobile: boolean;
+  activePromo?: {
+    code: string;
+    discountType: "percentage" | "fixed";
+    discountValue: number;
+    services: string[];
+  } | null;
 }
 
 type PhoneFormValues = {
@@ -672,6 +684,7 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
     isProcessing,
     setIsProcessing,
     isMobile,
+    activePromo,
   }) => {
     const stripe = useStripe();
     const elements = useElements();
@@ -976,6 +989,13 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
           PaymentIntentResponse
         > = httpsCallable(functions, "createPaymentIntent");
 
+        // Prepare coupon data
+        const couponData = activePromo ? {
+          code: activePromo.code,
+          type: activePromo.discountType,
+          amount: activePromo.discountValue,
+        } : undefined;
+
         const paymentData: PaymentIntentData = {
           amount: adminPricing.totalAmount,
           commissionAmount: adminPricing.connectionFeeAmount,
@@ -1005,6 +1025,8 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
             timestamp: new Date().toISOString(),
             callSessionId: callSessionId,
           },
+          // Include coupon information if active
+          ...(couponData && { coupon: couponData }),
         };
 
         console.log("[createPaymentIntent] data", paymentData);
@@ -1218,6 +1240,7 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
       watch,
       bookingMeta,
       t,
+      activePromo,
     ]);
 
     const handlePaymentSubmit = useCallback(
@@ -1533,6 +1556,25 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({
   };
 
   const [selectedCurrency, setSelectedCurrency] = useState<Currency>("eur");
+  const [activePromo, setActivePromo] = useState<{
+    code: string;
+    discountType: "percentage" | "fixed";
+    discountValue: number;
+    services: string[];
+  } | null>(null);
+
+  // Load promo code from sessionStorage
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem("activePromoCode");
+      if (saved) {
+        const promoData = JSON.parse(saved);
+        setActivePromo(promoData);
+      }
+    } catch (error) {
+      console.error("Error loading active promo:", error);
+    }
+  }, []);
 
   useEffect(() => {
     const initializeCurrency = () => {
@@ -1611,8 +1653,37 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({
 
   const adminPricing: PricingEntryTrace | null = useMemo(() => {
     if (!pricing || !providerRole) return null;
-    return pricing[providerRole]?.[selectedCurrency] ?? null;
-  }, [pricing, providerRole, selectedCurrency]);
+    
+    const basePricing = pricing[providerRole]?.[selectedCurrency];
+    if (!basePricing) return null;
+
+    // Check if promo applies to this service
+    const serviceKey = providerRole === "lawyer" ? "lawyer_call" : "expat_call";
+    const promoApplies = activePromo && activePromo.services.includes(serviceKey);
+
+    if (!promoApplies) {
+      return basePricing;
+    }
+
+    // Apply discount
+    let discount = 0;
+    if (activePromo.discountType === "percentage") {
+      discount = basePricing.totalAmount * (activePromo.discountValue / 100);
+    } else {
+      // Fixed discount
+      discount = Math.min(activePromo.discountValue, basePricing.totalAmount);
+    }
+
+    const discountedTotal = Math.max(0, Math.round(basePricing.totalAmount - discount));
+    const discountAmount = basePricing.totalAmount - discountedTotal;
+
+    return {
+      ...basePricing,
+      totalAmount: discountedTotal,
+      // Adjust provider amount proportionally
+      providerAmount: Math.max(0, basePricing.providerAmount - discountAmount),
+    };
+  }, [pricing, providerRole, selectedCurrency, activePromo]);
 
   const service: ServiceData | null = useMemo(() => {
     if (!provider || !adminPricing || !providerRole) return null;
@@ -1977,6 +2048,31 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({
               </div>
 
               <div className="text-right flex-shrink-0" {...cardTraceAttrs}>
+                {/* Show original price and discount if promo is active */}
+                {activePromo && pricing && providerRole && (
+                  <div className="mb-2 text-sm">
+                    <div className="text-gray-500 line-through">
+                      {new Intl.NumberFormat(
+                        language === "fr" ? "fr-FR" : "en-US",
+                        {
+                          style: "currency",
+                          currency: selectedCurrency.toUpperCase(),
+                          minimumFractionDigits: 2,
+                        }
+                      ).format(pricing[providerRole]?.[selectedCurrency]?.totalAmount || 0)}
+                    </div>
+                    <div className="text-green-600 font-medium">
+                      -{new Intl.NumberFormat(
+                        language === "fr" ? "fr-FR" : "en-US",
+                        {
+                          style: "currency",
+                          currency: selectedCurrency.toUpperCase(),
+                          minimumFractionDigits: 2,
+                        }
+                      ).format((pricing[providerRole]?.[selectedCurrency]?.totalAmount || 0) - adminPricing.totalAmount)} ({activePromo.code})
+                    </div>
+                  </div>
+                )}
                 <div className="text-2xl font-black bg-gradient-to-r from-red-500 to-pink-600 bg-clip-text text-transparent">
                   {new Intl.NumberFormat(
                     language === "fr" ? "fr-FR" : "en-US",
@@ -2063,6 +2159,7 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({
                     setIsProcessing(p);
                   }}
                   isMobile={isMobile}
+                  activePromo={activePromo}
                 />
               </Elements>
             </div>
