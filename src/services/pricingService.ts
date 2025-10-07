@@ -157,7 +157,7 @@ export async function getPricingConfig(): Promise<PricingConfig> {
     }
 
     const data = snap.data() as FirestorePricingDoc;
-    console.log(data, " == data from firestore");
+    // console.log(data, " == data from firestore");
     const normalized = normalizeFirestoreDocument(data);
 
     if (!isValidPricingConfig(normalized)) {
@@ -251,7 +251,7 @@ export function usePricingConfig() {
     setError(null);
     try {
       const cfg = await getPricingConfig();
-      console.log("pricing in service ===", cfg);
+      // console.log("pricing in service ===", cfg);
       setPricing(cfg);
     } catch (e) {
       console.error("[usePricingConfig] load error:", e);
