@@ -52,6 +52,8 @@ import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { createBookingRequest } from "../services/booking";
 // ✅ composant RHF pour le téléphone
 import PhoneField from "@/components/PhoneField";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 
 /** ===== Types complémentaires ===== */
 type LangKey = keyof typeof I18N;
@@ -698,7 +700,12 @@ const BookingRequest: React.FC = () => {
   const refCGU = useRef<HTMLDivElement | null>(null);
 
   const inputClass = (hasErr?: boolean) =>
-    `w-full px-3 py-3 border-2 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:outline-none transition-all duration-200 text-base ${
+    `w-full px-3 py-3 border-2 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:outline-none transition-all duration-200 text-base 
+  
+    [&_input]:border-0 [&_input]:outline-none [&_input]:shadow-none
+    [&_input:focus]:border-0 [&_input:focus]:outline-none [&_input:focus]:shadow-none
+    [&_select]:outline-none [&_select:focus]:outline-none
+  ${
       hasErr
         ? "border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-red-50"
         : "border-gray-200 hover:border-gray-300 focus:border-red-600"
@@ -1760,7 +1767,7 @@ const BookingRequest: React.FC = () => {
                 />
 
                 {/* Téléphone client via PhoneField (RHF) */}
-                <div>
+                {/* <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     <Phone size={16} className="inline mr-1" /> {t.fields.phone}{" "}
                     <span className="text-red-500">*</span>
@@ -1808,10 +1815,60 @@ const BookingRequest: React.FC = () => {
                   <div className="mt-2 text-sm text-gray-700">
                     ⏱️ <strong>{t.callTiming}</strong>
                   </div>
+                </div> */}
+
+                {/* Téléphone client avec sélecteur de pays */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <Phone size={16} className="inline mr-1" />
+                    {t.fields.phone}
+                    <span className="text-red-500">*</span>
+                  </label>
+                  <Controller
+                    control={control}
+                    name="clientPhone"
+                    rules={{
+                      required: t.validators.phone,
+                      validate: (v) => {
+                        if (!v) return t.validators.phone;
+                        try {
+                          const p = parsePhoneNumberFromString(v);
+                          return p && p.isValid() ? true : t.validators.phone;
+                        } catch {
+                          return t.validators.phone;
+                        }
+                      },
+                    }}
+                    render={({ field }) => (
+                      <PhoneInput
+                        {...field}
+                        defaultCountry="FR"
+                        international
+                        countryCallingCodeEditable={false}
+                        className={inputClass(Boolean(errors.clientPhone))}
+                        placeholder="+33 6 12 34 56 78"
+                      />
+                    )}
+                  />
+                  <div className="mt-2 text-xs text-gray-600 flex items-center gap-1">
+                    <Info className={`w-4 h-4 ${THEME.icon}`} />
+                    {t.hints.phone}
+                  </div>
+                  {errors.clientPhone && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {String(errors.clientPhone.message)}
+                    </p>
+                  )}
+                  {Boolean(watch("clientPhone")) && (
+                    <div className="mt-1 text-xs text-gray-500">
+                      International:{" "}
+                      <span className="font-mono">{watch("clientPhone")}</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* WhatsApp optionnel */}
-                <div className="mt-5">
+                {/* <div className="mt-5">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     <MessageCircle size={16} className="inline mr-1" />{" "}
                     {t.fields.whatsapp}
@@ -1857,6 +1914,62 @@ const BookingRequest: React.FC = () => {
                     <Info className={`w-4 h-4 ${THEME.icon}`} />{" "}
                     {t.hints.whatsapp}
                   </div>
+                </div> */}
+
+                {/* WhatsApp optionnel avec sélecteur de pays */}
+                <div className="mt-5">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <MessageCircle size={16} className="inline mr-1" />
+                    {t.fields.whatsapp}
+                  </label>
+                  <Controller
+                    control={control}
+                    name="whatsapp"
+                    rules={{
+                      validate: (v) => {
+                        // Optional field - skip validation if empty
+                        if (!v || v.trim() === "") return true;
+
+                        try {
+                          const p = parsePhoneNumberFromString(v);
+                          return p && p.isValid()
+                            ? true
+                            : lang === "fr"
+                              ? "Numéro WhatsApp invalide"
+                              : "Invalid WhatsApp number";
+                        } catch {
+                          return lang === "fr"
+                            ? "Numéro WhatsApp invalide"
+                            : "Invalid WhatsApp number";
+                        }
+                      },
+                    }}
+                    render={({ field }) => (
+                      <PhoneInput
+                        {...field}
+                        defaultCountry="FR"
+                        international
+                        countryCallingCodeEditable={false}
+                        placeholder="+33 6 12 34 56 78"
+                        className={inputClass(Boolean(errors.clientPhone))}
+                      />
+                    )}
+                  />
+                  <div className="mt-2 text-xs text-gray-600 flex items-center gap-1">
+                    <Info className={`w-4 h-4 ${THEME.icon}`} />
+                    {t.hints.whatsapp}
+                  </div>
+                  {errors.whatsapp && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {String(errors.whatsapp.message)}
+                    </p>
+                  )}
+                  {Boolean(watch("whatsapp")) && (
+                    <div className="mt-1 text-xs text-gray-500">
+                      WhatsApp:{" "}
+                      <span className="font-mono">{watch("whatsapp")}</span>
+                    </div>
+                  )}
                 </div>
               </section>
 

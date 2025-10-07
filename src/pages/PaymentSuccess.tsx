@@ -343,10 +343,15 @@ const SuccessPayment: React.FC = () => {
     // const ref = doc(db, "calls", callId);
     // console.log("changing ui based on the call state...");
     const ref = doc(db, "call_sessions", callId);
+    // console.log(ref, ": ref to change Ui");
     const unsub = onSnapshot(ref, (snap) => {
+      // console.log("🔍 [call_sessions] Snapshot exists:", snap.exists());
+      // console.log("🔍 [call_sessions] Snapshot ID:", snap.id);
+      // console.log("🔍 [call_sessions] Full data:", snap.data());
       const data = snap.data() as any;
+      // console.log("📄 data status to change Ui:", data.status);
 
-      if (!data) return;
+      // if (!data) return;
       // console.log("📄 data status to change Ui:", data.status);
       // CHANGE_BACK : remove this call State console
       // switch (data.status) {
@@ -966,13 +971,18 @@ const SuccessPayment: React.FC = () => {
                     <span className="text-green-700 font-medium">
                       {t.price}:
                     </span>
+
                     <span className="font-black text-2xl text-green-800">
-                      {/* <span className="font-bold text-green-900"> */}
                       {C}
-                      {fmt(toNum(order.amount))}
-                      {/* </span> */}
-                      {/* €{paidAmount || (isLawyer ? "49" : "19")} */}
+                      {fmt(toNum(order?.amount || paidAmount))}
                     </span>
+                    {/* <span className="font-black text-2xl text-green-800">
+                      <span className="font-bold text-green-900">
+                      {C}
+                      {fmt(toNum(order?.amount))}
+                      </span>
+                      €{paidAmount || (isLawyer ? "49" : "19")}
+                    </span> */}
                   </div>
 
                   <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">

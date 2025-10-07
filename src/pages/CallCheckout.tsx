@@ -691,11 +691,35 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
     const { t, language } = useTranslation();
     const { getTraceAttributes } = usePriceTracing();
 
+    // const bookingMeta: BookingMeta = useMemo(() => {
+    //   try {
+    //     const raw = sessionStorage.getItem("bookingMeta");
+    //     const printingRawData = JSON.parse(raw);
+    //     console.log("📋 Booking meta:", printingRawData);
+    //     return raw ? (JSON.parse(raw) as BookingMeta) : {};
+    //   } catch {
+    //     return {};
+    //   }
+    // }, []);
+
     const bookingMeta: BookingMeta = useMemo(() => {
+      console.log("🔍 Loading bookingMeta from sessionStorage...");
+
       try {
         const raw = sessionStorage.getItem("bookingMeta");
-        return raw ? (JSON.parse(raw) as BookingMeta) : {};
-      } catch {
+        console.log("📋 Raw value:", raw); // ✅ Log BEFORE parsing
+
+        if (!raw) {
+          console.warn("⚠️ bookingMeta not found in sessionStorage");
+          return {};
+        }
+
+        const parsed = JSON.parse(raw) as BookingMeta;
+        console.log("✅ Parsed bookingMeta:", parsed);
+
+        return parsed;
+      } catch (error) {
+        console.error("❌ Error parsing bookingMeta:", error); // ✅ Log errors
         return {};
       }
     }, []);
@@ -902,6 +926,8 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
             console.warn("saveProviderMessage failed:", e);
           }
 
+          console.log("admin pricing : ", adminPricing.totalAmount);
+          // return;
           // 2) SMS + Email via pipeline
           try {
             const enqueueMessageEvent = httpsCallable(
@@ -990,11 +1016,13 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
         > = httpsCallable(functions, "createPaymentIntent");
 
         // Prepare coupon data
-        const couponData = activePromo ? {
-          code: activePromo.code,
-          type: activePromo.discountType,
-          amount: activePromo.discountValue,
-        } : undefined;
+        const couponData = activePromo
+          ? {
+              code: activePromo.code,
+              type: activePromo.discountType,
+              amount: activePromo.discountValue,
+            }
+          : undefined;
 
         const paymentData: PaymentIntentData = {
           amount: adminPricing.totalAmount,
@@ -1082,7 +1110,8 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
         }
 
         const clientPhoneE164 = toE164(
-          user?.phone || watch("clientPhone") || ""
+          // user?.phone || watch("clientPhone") || ""
+          watch("clientPhone")
         );
         const providerPhoneE164 = toE164(
           provider.phoneNumber || provider.phone || ""
@@ -1653,13 +1682,14 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({
 
   const adminPricing: PricingEntryTrace | null = useMemo(() => {
     if (!pricing || !providerRole) return null;
-    
+
     const basePricing = pricing[providerRole]?.[selectedCurrency];
     if (!basePricing) return null;
 
     // Check if promo applies to this service
     const serviceKey = providerRole === "lawyer" ? "lawyer_call" : "expat_call";
-    const promoApplies = activePromo && activePromo.services.includes(serviceKey);
+    const promoApplies =
+      activePromo && activePromo.services.includes(serviceKey);
 
     if (!promoApplies) {
       return basePricing;
@@ -1674,7 +1704,10 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({
       discount = Math.min(activePromo.discountValue, basePricing.totalAmount);
     }
 
-    const discountedTotal = Math.max(0, Math.round(basePricing.totalAmount - discount));
+    const discountedTotal = Math.max(
+      0,
+      Math.round(basePricing.totalAmount - discount)
+    );
     const discountAmount = basePricing.totalAmount - discountedTotal;
 
     return {
@@ -2059,17 +2092,25 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({
                           currency: selectedCurrency.toUpperCase(),
                           minimumFractionDigits: 2,
                         }
-                      ).format(pricing[providerRole]?.[selectedCurrency]?.totalAmount || 0)}
+                      ).format(
+                        pricing[providerRole]?.[selectedCurrency]
+                          ?.totalAmount || 0
+                      )}
                     </div>
                     <div className="text-green-600 font-medium">
-                      -{new Intl.NumberFormat(
+                      -
+                      {new Intl.NumberFormat(
                         language === "fr" ? "fr-FR" : "en-US",
                         {
                           style: "currency",
                           currency: selectedCurrency.toUpperCase(),
                           minimumFractionDigits: 2,
                         }
-                      ).format((pricing[providerRole]?.[selectedCurrency]?.totalAmount || 0) - adminPricing.totalAmount)} ({activePromo.code})
+                      ).format(
+                        (pricing[providerRole]?.[selectedCurrency]
+                          ?.totalAmount || 0) - adminPricing.totalAmount
+                      )}{" "}
+                      ({activePromo.code})
                     </div>
                   </div>
                 )}

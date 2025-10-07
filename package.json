@@ -13,7 +13,7 @@
     "lint": "eslint .",
     "analyze": "vite build --mode analyze",
     "gen-env": "node scripts/generate-env-files.cjs",
-      "build:force": "vite build"
+    "build:force": "vite build"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -52,6 +52,7 @@
     "react-i18next": "^15.6.1",
     "react-intl": "^7.1.11",
     "react-leaflet-cluster": "^2.1.0",
+    "react-phone-number-input": "^3.4.12",
     "react-router-dom": "^6.30.1",
     "react-select": "^5.10.2",
     "react-toastify": "^11.0.5",
