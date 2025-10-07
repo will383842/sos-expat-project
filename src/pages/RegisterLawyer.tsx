@@ -954,7 +954,7 @@ const RegisterLawyer: React.FC = () => {
 
             {/* FORM */}
             <div className="lg:col-span-2">
-              <div className="bg-white rounded-2xl shadow-lg border border-gray-100">
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 text-black">
                 <form onSubmit={handleSubmit} noValidate>
                   {/* Personal */}
                   <section className="p-5 sm:p-6">

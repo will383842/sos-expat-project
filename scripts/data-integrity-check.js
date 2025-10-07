@@ -13,7 +13,7 @@ const os = require('os');
 const CONFIG = {
   collections: {
     users: 'users',
-    sosProfiles: 'sos_profiles', 
+    sosProfiles: 'sos_profiles',
     calls: 'calls'
   },
   requiredFields: {
@@ -23,7 +23,7 @@ const CONFIG = {
   },
   roles: {
     client: 'client',
-    lawyer: 'lawyer', 
+    lawyer: 'lawyer',
     expat: 'expat'
   },
   pricing: {
@@ -105,7 +105,7 @@ class PerformanceMonitor {
     const duration = (Date.now() - this.metrics.startTime) / 1000;
     const avgQueryTime = this.metrics.queryTimes.reduce((a, b) => a + b, 0) / this.metrics.queryTimes.length;
     const maxMemory = Math.max(...this.metrics.memoryUsage.map(m => m.heapUsed));
-    
+
     return {
       totalDuration: duration,
       operationsPerSecond: this.metrics.operationsCount / duration,
@@ -121,30 +121,30 @@ class PerformanceMonitor {
 class RetryHandler {
   static async executeWithRetry(operation, maxRetries = CONFIG.performance.maxRetries) {
     let lastError;
-    
+
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
         return await operation();
       } catch (error) {
         lastError = error;
-        
+
         // Erreurs non retriables
         if (error.code === 'permission-denied' || error.code === 'invalid-argument') {
           throw error;
         }
-        
+
         if (attempt < maxRetries) {
-          const delay = CONFIG.performance.rateLimitDelay * 
-                       Math.pow(CONFIG.performance.backoffMultiplier, attempt - 1);
+          const delay = CONFIG.performance.rateLimitDelay *
+            Math.pow(CONFIG.performance.backoffMultiplier, attempt - 1);
           console.log(`⚠️ Retry ${attempt}/${maxRetries} in ${delay}ms: ${error.message}`);
           await this.sleep(delay);
         }
       }
     }
-    
+
     throw lastError;
   }
-  
+
   static sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
@@ -156,7 +156,7 @@ class FirebaseManager {
     if (admin.apps.length === 0) {
       const serviceAccountPath = process.env.SERVICE_ACCOUNT_KEY_PATH || './serviceAccountKey.json';
       const projectId = process.env.FIREBASE_PROJECT_ID;
-      
+
       if (!projectId) {
         throw new Error('FIREBASE_PROJECT_ID environment variable is required');
       }
@@ -170,14 +170,14 @@ class FirebaseManager {
           databaseURL: `https://${projectId}-default-rtdb.firebaseio.com`,
           storageBucket: `${projectId}.appspot.com`
         });
-        
+
         // Configuration optimisée Firestore
         const db = admin.firestore();
         db.settings({
           ignoreUndefinedProperties: true,
           timestampsInSnapshots: true
         });
-        
+
       } catch (error) {
         throw new Error(`Failed to initialize Firebase: ${error.message}`);
       }
@@ -191,7 +191,7 @@ class ScalableIntegrityChecker {
   constructor() {
     const { db, auth } = FirebaseManager.initialize();
     this.db = db;
-    this.auth = auth; 
+    this.auth = auth;
     this.issues = [];
     this.fixes = [];
     this.monitor = new PerformanceMonitor();
@@ -203,7 +203,7 @@ class ScalableIntegrityChecker {
     const authUsers = new Map();
     let nextPageToken;
     let processed = 0;
-    
+
     try {
       do {
         // Pause si mémoire saturée
@@ -217,22 +217,22 @@ class ScalableIntegrityChecker {
         const result = await RetryHandler.executeWithRetry(
           () => this.auth.listUsers(CONFIG.performance.authPageSize, nextPageToken)
         );
-        
+
         result.users.forEach(user => authUsers.set(user.uid, user));
         processed += result.users.length;
         nextPageToken = result.pageToken;
-        
+
         this.monitor.recordOperation(Date.now() - startTime);
         this.monitor.recordMemoryUsage();
-        
+
         // Rate limiting pour éviter throttling
         await RetryHandler.sleep(CONFIG.performance.rateLimitDelay);
-        
+
       } while (nextPageToken);
-      
+
       console.log(`✅ Auth users loaded: ${authUsers.size}`);
       return authUsers;
-      
+
     } catch (error) {
       throw new Error(`Failed to fetch Auth users: ${error.message}`);
     }
@@ -243,24 +243,24 @@ class ScalableIntegrityChecker {
     console.log(`🔍 Streaming ${collectionName} collection...`);
     const data = new Map();
     let processed = 0;
-    
+
     try {
       // Query avec pagination pour grandes collections  
       let query = this.db.collection(collectionName);
       let lastDoc = null;
-      
+
       do {
         if (lastDoc) {
           query = query.startAfter(lastDoc);
         }
-        
+
         const startTime = Date.now();
         const snapshot = await RetryHandler.executeWithRetry(
           () => query.limit(CONFIG.performance.batchSize).get()
         );
-        
+
         if (snapshot.empty) break;
-        
+
         snapshot.docs.forEach(doc => {
           const docData = doc.data();
           if (!filterFn || filterFn(docData)) {
@@ -268,26 +268,26 @@ class ScalableIntegrityChecker {
           }
           processed++;
         });
-        
+
         lastDoc = snapshot.docs[snapshot.docs.length - 1];
-        
+
         this.monitor.recordOperation(Date.now() - startTime);
         this.monitor.recordMemoryUsage();
-        
+
         // Gestion mémoire proactive
         if (this.monitor.shouldPauseForMemory()) {
           console.log(`⏸️ Memory threshold reached, optimizing... (${processed} processed)`);
           global.gc && global.gc();
           await RetryHandler.sleep(1000);
         }
-        
+
         await RetryHandler.sleep(CONFIG.performance.rateLimitDelay);
-        
+
       } while (lastDoc);
-      
+
       console.log(`✅ ${collectionName} loaded: ${data.size} documents`);
       return data;
-      
+
     } catch (error) {
       throw new Error(`Failed to stream ${collectionName}: ${error.message}`);
     }
@@ -296,15 +296,15 @@ class ScalableIntegrityChecker {
   // Validation avec métriques de performance
   validateRequiredFields(data, requiredFields, entityType, entityId) {
     const startTime = Date.now();
-    
+
     const missingFields = requiredFields.filter(field => {
       const value = data[field];
-      return value === undefined || value === null || 
-             (typeof value === 'string' && value.trim() === '');
+      return value === undefined || value === null ||
+        (typeof value === 'string' && value.trim() === '');
     });
-    
+
     this.monitor.recordOperation(Date.now() - startTime);
-    
+
     if (missingFields.length > 0) {
       this.issues.push(`${entityType} ${entityId}: Missing [${missingFields.join(', ')}]`);
       return { isValid: false, missingFields };
@@ -315,7 +315,7 @@ class ScalableIntegrityChecker {
   // Vérification utilisateurs avec parallélisation
   async checkUserIntegrity() {
     console.log('🔍 Checking user integrity with parallel processing...');
-    
+
     // Chargement parallèle optimisé
     const [authUsers, firestoreUsers] = await Promise.all([
       this.getAllAuthUsers(),
@@ -326,10 +326,10 @@ class ScalableIntegrityChecker {
 
     // Traitement par chunks pour éviter la saturation mémoire
     const authUserChunks = this.chunkMap(authUsers, CONFIG.performance.batchSize);
-    
+
     for (let i = 0; i < authUserChunks.length; i++) {
       const chunk = authUserChunks[i];
-      
+
       // Parallélisation du traitement par chunk
       await Promise.all(
         chunk.map(async ([uid, authUser]) => {
@@ -345,10 +345,10 @@ class ScalableIntegrityChecker {
           }
         })
       );
-      
+
       this.monitor.reportProgress(
-        (i + 1) * CONFIG.performance.batchSize, 
-        authUsers.size, 
+        (i + 1) * CONFIG.performance.batchSize,
+        authUsers.size,
         'Auth user validation'
       );
     }
@@ -358,21 +358,21 @@ class ScalableIntegrityChecker {
     for (const [uid, userData] of firestoreUsers) {
       if (!authUsers.has(uid)) {
         this.issues.push(`Firestore doc ${uid} (${userData.email}) missing Auth user`);
-        this.fixes.push({ 
-          type: 'deleteOrphanDoc', 
-          uid, 
+        this.fixes.push({
+          type: 'deleteOrphanDoc',
+          uid,
           email: userData.email,
           priority: 'medium'
         });
       } else {
         // Validation des champs avec métriques
         const validation = this.validateRequiredFields(
-          userData, 
-          CONFIG.requiredFields.users, 
-          'User', 
+          userData,
+          CONFIG.requiredFields.users,
+          'User',
           uid
         );
-        
+
         if (!validation.isValid) {
           this.fixes.push({
             type: 'fixUserFields',
@@ -395,7 +395,7 @@ class ScalableIntegrityChecker {
           });
         }
       }
-      
+
       processedFirestore++;
       this.monitor.reportProgress(processedFirestore, firestoreUsers.size, 'Firestore user validation');
     }
@@ -404,7 +404,7 @@ class ScalableIntegrityChecker {
   // Vérification SOS profiles avec optimisations
   async checkSOSProfilesIntegrity() {
     console.log('🔍 Checking SOS profiles with optimized queries...');
-    
+
     // Requête optimisée avec index composite
     const providersPromise = this.db.collection(CONFIG.collections.users)
       .where('role', 'in', [CONFIG.roles.lawyer, CONFIG.roles.expat])
@@ -414,7 +414,7 @@ class ScalableIntegrityChecker {
         snapshot.docs.forEach(doc => data.set(doc.id, doc.data()));
         return data;
       });
-    
+
     const [providers, sosProfiles] = await Promise.all([
       providersPromise,
       this.getCollectionDataStream(CONFIG.collections.sosProfiles)
@@ -430,9 +430,9 @@ class ScalableIntegrityChecker {
     for (const [uid, userData] of providers) {
       if (!sosProfiles.has(uid)) {
         this.issues.push(`Provider ${uid} (${userData.email}) missing SOS profile`);
-        this.fixes.push({ 
-          type: 'createSOSProfile', 
-          uid, 
+        this.fixes.push({
+          type: 'createSOSProfile',
+          uid,
           userData,
           priority: 'high'
         });
@@ -446,14 +446,14 @@ class ScalableIntegrityChecker {
     for (const [uid, sosData] of sosProfiles) {
       if (!providers.has(uid)) {
         this.issues.push(`SOS profile ${uid} missing provider user`);
-        this.fixes.push({ 
-          type: 'deleteOrphanSOS', 
+        this.fixes.push({
+          type: 'deleteOrphanSOS',
           uid,
           priority: 'medium'
         });
       } else {
         const userData = providers.get(uid);
-        
+
         // Validation avec métriques
         this.validateRequiredFields(
           sosData,
@@ -465,9 +465,9 @@ class ScalableIntegrityChecker {
         // Cohérence type
         if (sosData.type !== userData.role) {
           this.issues.push(`SOS profile ${uid}: Type mismatch SOS(${sosData.type}) vs User(${userData.role})`);
-          this.fixes.push({ 
-            type: 'syncSOSType', 
-            uid, 
+          this.fixes.push({
+            type: 'syncSOSType',
+            uid,
             correctType: userData.role,
             priority: 'medium'
           });
@@ -481,7 +481,7 @@ class ScalableIntegrityChecker {
   // Vérification calls avec optimisations de requêtes
   async checkCallsIntegrity() {
     console.log('🔍 Checking calls with indexed queries...');
-    
+
     const [calls, users] = await Promise.all([
       this.getCollectionDataStream(CONFIG.collections.calls),
       this.getCollectionDataStream(CONFIG.collections.users)
@@ -494,9 +494,9 @@ class ScalableIntegrityChecker {
       // Vérification existence avec early return
       if (!users.has(callData.clientId)) {
         this.issues.push(`Call ${callId}: Missing client ${callData.clientId}`);
-        this.fixes.push({ 
-          type: 'deleteOrphanCall', 
-          callId, 
+        this.fixes.push({
+          type: 'deleteOrphanCall',
+          callId,
           reason: 'Missing client',
           priority: 'high'
         });
@@ -505,9 +505,9 @@ class ScalableIntegrityChecker {
 
       if (!users.has(callData.providerId)) {
         this.issues.push(`Call ${callId}: Missing provider ${callData.providerId}`);
-        this.fixes.push({ 
-          type: 'deleteOrphanCall', 
-          callId, 
+        this.fixes.push({
+          type: 'deleteOrphanCall',
+          callId,
           reason: 'Missing provider',
           priority: 'high'
         });
@@ -530,7 +530,7 @@ class ScalableIntegrityChecker {
           priority: 'low'
         });
       }
-      
+
       processed++;
       this.monitor.reportProgress(processed, calls.size, 'Call validation');
     }
@@ -566,13 +566,13 @@ class ScalableIntegrityChecker {
           await RetryHandler.executeWithRetry(() => batch.commit());
           batchCount = 0;
           this.monitor.batchOperations++;
-          
+
           // Rate limiting entre batches
           await RetryHandler.sleep(CONFIG.performance.rateLimitDelay);
         }
-        
+
         this.monitor.reportProgress(processed, this.fixes.length, 'Applying fixes');
-        
+
       } catch (error) {
         console.error(`❌ Fix failed for ${fix.type}:`, error.message);
         this.monitor.recordOperation(0, false);
@@ -644,7 +644,7 @@ class ScalableIntegrityChecker {
 
       case 'syncEmail':
         batch.update(
-          this.db.collection(CONFIG.collections.users).doc(fix.uid), 
+          this.db.collection(CONFIG.collections.users).doc(fix.uid),
           { email: fix.authEmail, updatedAt: timestamp }
         );
         break;
@@ -662,22 +662,22 @@ class ScalableIntegrityChecker {
   chunkMap(map, size) {
     const chunks = [];
     const entries = Array.from(map.entries());
-    
+
     for (let i = 0; i < entries.length; i += size) {
       chunks.push(entries.slice(i, i + size));
     }
-    
+
     return chunks;
   }
 
   // Exécution principale avec monitoring complet
   async run() {
     console.log('🚀 Starting scalable integrity check...\n');
-    
+
     try {
       // Monitoring initial
       this.monitor.recordMemoryUsage();
-      
+
       // Exécution avec gestion d'erreurs robuste
       await Promise.all([
         this.checkUserIntegrity().catch(e => console.error('❌ User check failed:', e.message)),
@@ -727,18 +727,18 @@ class ScalableIntegrityChecker {
 // Point d'entrée avec gestion des signaux système
 if (require.main === module) {
   const checker = new ScalableIntegrityChecker();
-  
+
   // Graceful shutdown
   process.on('SIGINT', () => {
     console.log('\n⏹️ Graceful shutdown initiated...');
     process.exit(0);
   });
-  
+
   process.on('SIGTERM', () => {
     console.log('\n⏹️ Process terminated gracefully');
     process.exit(0);
   });
-  
+
   checker.run()
     .then(() => process.exit(0))
     .catch(error => {
