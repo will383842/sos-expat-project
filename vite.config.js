@@ -21,6 +21,7 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
+        '@firebase/auth': fileURLToPath(new URL('./node_modules/firebase/node_modules/@firebase/auth', import.meta.url)),
       },
       dedupe: [
         'firebase',
@@ -30,6 +31,36 @@ export default defineConfig(({ mode }) => {
         '@firebase/functions',
         '@firebase/storage',
       ],
+    },
+    optimizeDeps: {
+      include: [
+        'firebase/app',
+        'firebase/auth',
+        'firebase/firestore',
+        'firebase/functions',
+        'firebase/storage',
+        'firebase/analytics',
+      ],
+    },
+    build: {
+      commonjsOptions: {
+        include: [/node_modules/],
+        transformMixedEsModules: true,
+      },
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            // Keep all firebase modules together in one chunk
+            if (id.includes('firebase') || id.includes('@firebase')) {
+              return 'firebase';
+            }
+            // Vendor chunk for other node_modules
+            if (id.includes('node_modules')) {
+              return 'vendor';
+            }
+          },
+        },
+      },
     },
     server: {
       cors: {
