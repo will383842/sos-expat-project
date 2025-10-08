@@ -247,7 +247,6 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       fr: "Incroyable ! En 3 minutes j'avais un expatrié français au bout du fil depuis Bangkok. Il m'a expliqué toute la procédure visa Thaïlandais, les pièges à éviter et m'a même donné les contacts de son agent immobilier. Service qui change la vie !",
       en: "Incredible! In 3 minutes I had a French expat on the phone from Bangkok. He explained the entire Thai visa procedure, pitfalls to avoid, and even gave me his real estate agent's contacts. Life-changing service!",
     },
-    // avatar:"https://images.unsplash.com/photo-1494790108755-2616b74193d4?auto=format&fit=crop&w=400&h=400&q=80",
     avatar:
       "https://images.unsplash.com/photo-1643842730000-db266bbc1b28?q=80&w=400&h=400&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 
@@ -279,8 +278,6 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       fr: "Génial ! L'expatrié m'a aidé avec mon installation à Vancouver. Banque, logement, assurance santé, transport... tout en 30 minutes ! Il connaissait tous les bons plans et m'a évité des mois de galère administrative.",
       en: "Brilliant! The expat helped me with my Vancouver setup. Banking, housing, health insurance, transport... everything in 30 minutes! He knew all the insider tips and saved me months of administrative hassle.",
     },
-    // avatar:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
-    // avatar:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
     avatar:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
 
@@ -312,7 +309,6 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       fr: "Super expérience ! Expatrié à Melbourne depuis 8 ans, il m'a donné tous les conseils pour mon working holiday visa. Écoles, quartiers, jobs... Une mine d'or d'informations pratiques !",
       en: "Great experience! Expat in Melbourne for 8 years, he gave me all the advice for my working holiday visa. Schools, neighborhoods, jobs... A goldmine of practical information!",
     },
-    // avatar:"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
     avatar:
       "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
 
@@ -344,7 +340,6 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       fr: "Excellent ! L'expatrié vivant à Dubaï depuis 5 ans m'a tout expliqué : visa, compte bancaire, logement, culture locale. Il m'a même mis en contact avec sa communauté d'expats français !",
       en: "Excellent! The expat living in Dubai for 5 years explained everything: visa, bank account, housing, local culture. He even connected me with his French expat community!",
     },
-    // avatar:"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
     avatar:
       "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
 
@@ -376,7 +371,6 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       fr: "Parfait ! En urgence depuis Tokyo, j'ai eu un expatrié en 2 minutes. Il m'a aidé avec la paperasse japonaise complexe et m'a orienté vers les bonnes administrations. Très rassurant !",
       en: "Perfect! In urgent situation from Tokyo, I got an expat in 2 minutes. He helped me with complex Japanese paperwork and directed me to the right administrations. Very reassuring!",
     },
-    // avatar:"https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
     avatar:
       "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
 
@@ -408,7 +402,6 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       fr: "Très utile ! L'expatrié français en Norvège m'a donné tous les tips pour Oslo : logement étudiant, jobs d'appoint, transports. Il m'a fait gagner un temps précieux pour mes études !",
       en: "Very useful! The French expat in Norway gave me all the tips for Oslo: student housing, part-time jobs, transport. He saved me precious time for my studies!",
     },
-    // avatar:"https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
     avatar:
       "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
 
@@ -440,7 +433,6 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       fr: "Formidable ! Depuis le Brésil, l'expatrié m'a tout expliqué sur São Paulo : quartiers sûrs, carte de transports, meilleures écoles pour mes enfants. Une aide inestimable !",
       en: "Wonderful! From Brazil, the expat explained everything about São Paulo: safe neighborhoods, transport cards, best schools for my children. Invaluable help!",
     },
-    // avatar:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
     avatar:
       "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
 
@@ -472,7 +464,6 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       fr: "Extraordinaire ! L'expatrié à Singapour m'a guidé pas à pas pour mon installation. Permis de travail, logement, banque locale... Tout était clair et détaillé. Service top !",
       en: "Extraordinary! The expat in Singapore guided me step by step for my installation. Work permit, housing, local bank... Everything was clear and detailed. Top service!",
     },
-    // avatar:"https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&h=400&q=80",
     avatar:
       "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&h=400&q=80",
 
@@ -504,7 +495,6 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       fr: "Très professionnel ! L'expatrié français en Corée du Sud m'a donné tous les conseils pour Séoul : visa étudiant, logement universitaire, culture coréenne. Parfait pour mon échange !",
       en: "Very professional! The French expat in South Korea gave me all the advice for Seoul: student visa, university housing, Korean culture. Perfect for my exchange!",
     },
-    // avatar:"https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80",
     avatar:
       "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80",
 
@@ -536,7 +526,6 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       fr: "Avocat exceptionnel ! Depuis Londres, problème urgent avec mon propriétaire. L'avocat m'a expliqué mes droits en droit anglais, les démarches à suivre et m'a orienté vers un solicitor local. Précis et efficace !",
       en: "Exceptional lawyer! From London, urgent problem with my landlord. The lawyer explained my rights in English law, the steps to follow and directed me to a local solicitor. Precise and efficient!",
     },
-    // avatar:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
     avatar:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
 
@@ -568,7 +557,6 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       fr: "Consultation remarquable ! Accident de voiture en Allemagne, l'avocat spécialisé en droit international m'a tout expliqué : assurances, procédures, droits. Il m'a évité des erreurs coûteuses !",
       en: "Remarkable consultation! Car accident in Germany, the lawyer specialized in international law explained everything: insurance, procedures, rights. He saved me from costly mistakes!",
     },
-    // avatar:"https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
     avatar:
       "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
 
@@ -600,7 +588,6 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       fr: "Très compétent ! Litige commercial en Italie, l'avocat m'a donné une analyse claire de ma situation juridique et les options disponibles. Conseil précieux pour mon business !",
       en: "Very competent! Commercial dispute in Italy, the lawyer gave me a clear analysis of my legal situation and available options. Valuable advice for my business!",
     },
-    // avatar:"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
     avatar:
       "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
 
@@ -632,7 +619,6 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       fr: "Avocat brillant ! Problème de visa aux États-Unis, il m'a expliqué toutes les procédures d'immigration, les risques et solutions. Grâce à lui, j'ai évité l'expulsion !",
       en: "Brilliant lawyer! Visa problem in the United States, he explained all immigration procedures, risks and solutions. Thanks to him, I avoided deportation!",
     },
-    // avatar:"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
     avatar:
       "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
 
@@ -664,7 +650,6 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       fr: "Service juridique excellent ! Divorce international complexe, l'avocat a su naviguer entre droit français et espagnol. Conseil clair, stratégie efficace. Je recommande vivement !",
       en: "Excellent legal service! Complex international divorce, the lawyer navigated between French and Spanish law. Clear advice, effective strategy. Highly recommend!",
     },
-    // avatar:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
     avatar:
       "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
 
@@ -696,7 +681,6 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       fr: "Très professionnel ! Contrat de travail au Mexique, l'avocat m'a expliqué toutes les clauses, mes droits et obligations. Il m'a aidé à négocier de meilleures conditions !",
       en: "Very professional! Employment contract in Mexico, the lawyer explained all clauses, my rights and obligations. He helped me negotiate better conditions!",
     },
-    // avatar:"https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
     avatar:
       "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
 
@@ -728,9 +712,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       fr: "Avocat remarquable ! Problème fiscal en Suisse, il m'a expliqué les implications légales, les démarches et m'a orienté vers un fiscaliste local. Service impeccable !",
       en: "Remarkable lawyer! Tax issue in Switzerland, he explained legal implications, procedures and directed me to a local tax specialist. Impeccable service!",
     },
-    // avatar:"https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80",
     avatar:
-      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80",
+    "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YXZhdGFyfGVufDB8fDB8fHww",
     verified: true,
     serviceUsed: {
       fr: "Consultation Avocat",
