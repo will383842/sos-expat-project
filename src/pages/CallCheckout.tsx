@@ -703,11 +703,11 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
     // }, []);
 
     const bookingMeta: BookingMeta = useMemo(() => {
-      console.log("🔍 Loading bookingMeta from sessionStorage...");
+      // console.log("🔍 Loading bookingMeta from sessionStorage...");
 
       try {
         const raw = sessionStorage.getItem("bookingMeta");
-        console.log("📋 Raw value:", raw); // ✅ Log BEFORE parsing
+        // console.log("📋 Raw value:", raw); // ✅ Log BEFORE parsing
 
         if (!raw) {
           console.warn("⚠️ bookingMeta not found in sessionStorage");
@@ -715,7 +715,7 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
         }
 
         const parsed = JSON.parse(raw) as BookingMeta;
-        console.log("✅ Parsed bookingMeta:", parsed);
+        // console.log("✅ Parsed bookingMeta:", parsed);
 
         return parsed;
       } catch (error) {

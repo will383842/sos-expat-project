@@ -1,259 +1,319 @@
 // src/pages/RegisterExpat.tsx
-import React, { useState, useCallback, useMemo, lazy, Suspense, useEffect, useRef } from 'react';
-import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
+import React, {
+  useState,
+  useCallback,
+  useMemo,
+  lazy,
+  Suspense,
+  useEffect,
+  useRef,
+} from "react";
 import {
-  Mail, Lock, Eye, EyeOff, AlertCircle, Globe, Phone as PhoneIcon,
-  CheckCircle, Users, Camera, X, ArrowRight, Info, MapPin
-} from 'lucide-react';
-import Layout from '../components/layout/Layout';
-import Button from '../components/common/Button';
-import { useAuth } from '../contexts/AuthContext';
-import { useApp } from '../contexts/AppContext';
-import type { MultiValue } from 'react-select';
-import type { Provider } from '../types/provider';
+  Link,
+  useNavigate,
+  useLocation,
+  useSearchParams,
+} from "react-router-dom";
+import {
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  AlertCircle,
+  Globe,
+  Phone as PhoneIcon,
+  CheckCircle,
+  Users,
+  Camera,
+  X,
+  ArrowRight,
+  Info,
+  MapPin,
+} from "lucide-react";
+import Layout from "../components/layout/Layout";
+import Button from "../components/common/Button";
+import { useAuth } from "../contexts/AuthContext";
+import { useApp } from "../contexts/AppContext";
+import type { MultiValue } from "react-select";
+import type { Provider } from "../types/provider";
 
 // 🔌 Champ téléphone normalisé (E.164)
-import PhoneField from '@/components/PhoneField';
-import { useForm } from 'react-hook-form';
+import PhoneField from "@/components/PhoneField";
+import { useForm } from "react-hook-form";
 
 // ===== Lazy (perf) =====
-const ImageUploader = lazy(() => import('../components/common/ImageUploader'));
-const MultiLanguageSelect = lazy(() => import('../components/forms-data/MultiLanguageSelect'));
+const ImageUploader = lazy(() => import("../components/common/ImageUploader"));
+const MultiLanguageSelect = lazy(
+  () => import("../components/forms-data/MultiLanguageSelect")
+);
 
 // ===== Theme (vert/emerald) =====
 const THEME = {
-  gradFrom: 'from-emerald-600',
-  gradTo: 'to-green-600',
-  ring: 'focus:border-emerald-600',
-  border: 'border-emerald-200',
-  icon: 'text-emerald-600',
-  chip: 'border-emerald-200',
-  subtle: 'bg-emerald-50',
-  button: 'from-emerald-600 via-green-600 to-teal-700',
+  gradFrom: "from-emerald-600",
+  gradTo: "to-green-600",
+  ring: "focus:border-emerald-600",
+  border: "border-emerald-200",
+  icon: "text-emerald-600",
+  chip: "border-emerald-200",
+  subtle: "bg-emerald-50",
+  button: "from-emerald-600 via-green-600 to-teal-700",
 } as const;
 
 // ===== Country options FR/EN (bilingue) =====
 type Duo = { fr: string; en: string };
 const COUNTRIES: Duo[] = [
-  { fr: 'Afghanistan', en: 'Afghanistan' },
-  { fr: 'Afrique du Sud', en: 'South Africa' },
-  { fr: 'Albanie', en: 'Albania' },
-  { fr: 'Algérie', en: 'Algeria' },
-  { fr: 'Allemagne', en: 'Germany' },
-  { fr: 'Andorre', en: 'Andorra' },
-  { fr: 'Angola', en: 'Angola' },
-  { fr: 'Arabie Saoudite', en: 'Saudi Arabia' },
-  { fr: 'Argentine', en: 'Argentina' },
-  { fr: 'Arménie', en: 'Armenia' },
-  { fr: 'Australie', en: 'Australia' },
-  { fr: 'Autriche', en: 'Austria' },
-  { fr: 'Azerbaïdjan', en: 'Azerbaijan' },
-  { fr: 'Bahamas', en: 'Bahamas' },
-  { fr: 'Bahreïn', en: 'Bahrain' },
-  { fr: 'Bangladesh', en: 'Bangladesh' },
-  { fr: 'Barbade', en: 'Barbados' },
-  { fr: 'Belgique', en: 'Belgium' },
-  { fr: 'Belize', en: 'Belize' },
-  { fr: 'Bénin', en: 'Benin' },
-  { fr: 'Bhoutan', en: 'Bhutan' },
-  { fr: 'Biélorussie', en: 'Belarus' },
-  { fr: 'Birmanie', en: 'Myanmar' },
-  { fr: 'Bolivie', en: 'Bolivia' },
-  { fr: 'Bosnie-Herzégovine', en: 'Bosnia and Herzegovina' },
-  { fr: 'Botswana', en: 'Botswana' },
-  { fr: 'Brésil', en: 'Brazil' },
-  { fr: 'Brunei', en: 'Brunei' },
-  { fr: 'Bulgarie', en: 'Bulgaria' },
-  { fr: 'Burkina Faso', en: 'Burkina Faso' },
-  { fr: 'Burundi', en: 'Burundi' },
-  { fr: 'Cambodge', en: 'Cambodia' },
-  { fr: 'Cameroun', en: 'Cameroon' },
-  { fr: 'Canada', en: 'Canada' },
-  { fr: 'Cap-Vert', en: 'Cape Verde' },
-  { fr: 'Chili', en: 'Chile' },
-  { fr: 'Chine', en: 'China' },
-  { fr: 'Chypre', en: 'Cyprus' },
-  { fr: 'Colombie', en: 'Colombia' },
-  { fr: 'Comores', en: 'Comoros' },
-  { fr: 'Congo', en: 'Congo' },
-  { fr: 'Corée du Nord', en: 'North Korea' },
-  { fr: 'Corée du Sud', en: 'South Korea' },
-  { fr: 'Costa Rica', en: 'Costa Rica' },
-  { fr: "Côte d'Ivoire", en: 'Ivory Coast' },
-  { fr: 'Croatie', en: 'Croatia' },
-  { fr: 'Cuba', en: 'Cuba' },
-  { fr: 'Danemark', en: 'Denmark' },
-  { fr: 'Djibouti', en: 'Djibouti' },
-  { fr: 'Dominique', en: 'Dominica' },
-  { fr: 'Égypte', en: 'Egypt' },
-  { fr: 'Émirats arabes unis', en: 'United Arab Emirates' },
-  { fr: 'Équateur', en: 'Ecuador' },
-  { fr: 'Érythrée', en: 'Eritrea' },
-  { fr: 'Espagne', en: 'Spain' },
-  { fr: 'Estonie', en: 'Estonia' },
-  { fr: 'États-Unis', en: 'United States' },
-  { fr: 'Éthiopie', en: 'Ethiopia' },
-  { fr: 'Fidji', en: 'Fiji' },
-  { fr: 'Finlande', en: 'Finland' },
-  { fr: 'France', en: 'France' },
-  { fr: 'Autre', en: 'Other' },
+  { fr: "Afghanistan", en: "Afghanistan" },
+  { fr: "Afrique du Sud", en: "South Africa" },
+  { fr: "Albanie", en: "Albania" },
+  { fr: "Algérie", en: "Algeria" },
+  { fr: "Allemagne", en: "Germany" },
+  { fr: "Andorre", en: "Andorra" },
+  { fr: "Angola", en: "Angola" },
+  { fr: "Arabie Saoudite", en: "Saudi Arabia" },
+  { fr: "Argentine", en: "Argentina" },
+  { fr: "Arménie", en: "Armenia" },
+  { fr: "Australie", en: "Australia" },
+  { fr: "Autriche", en: "Austria" },
+  { fr: "Azerbaïdjan", en: "Azerbaijan" },
+  { fr: "Bahamas", en: "Bahamas" },
+  { fr: "Bahreïn", en: "Bahrain" },
+  { fr: "Bangladesh", en: "Bangladesh" },
+  { fr: "Barbade", en: "Barbados" },
+  { fr: "Belgique", en: "Belgium" },
+  { fr: "Belize", en: "Belize" },
+  { fr: "Bénin", en: "Benin" },
+  { fr: "Bhoutan", en: "Bhutan" },
+  { fr: "Biélorussie", en: "Belarus" },
+  { fr: "Birmanie", en: "Myanmar" },
+  { fr: "Bolivie", en: "Bolivia" },
+  { fr: "Bosnie-Herzégovine", en: "Bosnia and Herzegovina" },
+  { fr: "Botswana", en: "Botswana" },
+  { fr: "Brésil", en: "Brazil" },
+  { fr: "Brunei", en: "Brunei" },
+  { fr: "Bulgarie", en: "Bulgaria" },
+  { fr: "Burkina Faso", en: "Burkina Faso" },
+  { fr: "Burundi", en: "Burundi" },
+  { fr: "Cambodge", en: "Cambodia" },
+  { fr: "Cameroun", en: "Cameroon" },
+  { fr: "Canada", en: "Canada" },
+  { fr: "Cap-Vert", en: "Cape Verde" },
+  { fr: "Chili", en: "Chile" },
+  { fr: "Chine", en: "China" },
+  { fr: "Chypre", en: "Cyprus" },
+  { fr: "Colombie", en: "Colombia" },
+  { fr: "Comores", en: "Comoros" },
+  { fr: "Congo", en: "Congo" },
+  { fr: "Corée du Nord", en: "North Korea" },
+  { fr: "Corée du Sud", en: "South Korea" },
+  { fr: "Costa Rica", en: "Costa Rica" },
+  { fr: "Côte d'Ivoire", en: "Ivory Coast" },
+  { fr: "Croatie", en: "Croatia" },
+  { fr: "Cuba", en: "Cuba" },
+  { fr: "Danemark", en: "Denmark" },
+  { fr: "Djibouti", en: "Djibouti" },
+  { fr: "Dominique", en: "Dominica" },
+  { fr: "Égypte", en: "Egypt" },
+  { fr: "Émirats arabes unis", en: "United Arab Emirates" },
+  { fr: "Équateur", en: "Ecuador" },
+  { fr: "Érythrée", en: "Eritrea" },
+  { fr: "Espagne", en: "Spain" },
+  { fr: "Estonie", en: "Estonia" },
+  { fr: "États-Unis", en: "United States" },
+  { fr: "Éthiopie", en: "Ethiopia" },
+  { fr: "Fidji", en: "Fiji" },
+  { fr: "Finlande", en: "Finland" },
+  { fr: "France", en: "France" },
+  { fr: "Autre", en: "Other" },
 ];
 
 const HELP_TYPES: Duo[] = [
-  { fr: 'Démarches administratives', en: 'Administrative procedures' },
-  { fr: 'Recherche de logement', en: 'Housing search' },
-  { fr: 'Ouverture de compte bancaire', en: 'Bank account opening' },
-  { fr: 'Système de santé', en: 'Healthcare system' },
-  { fr: 'Éducation et écoles', en: 'Education & schools' },
-  { fr: 'Transport', en: 'Transport' },
-  { fr: "Recherche d'emploi", en: 'Job search' },
-  { fr: "Création d'entreprise", en: 'Company creation' },
-  { fr: 'Fiscalité locale', en: 'Local taxation' },
-  { fr: 'Culture et intégration', en: 'Culture & integration' },
-  { fr: 'Visa et immigration', en: 'Visa & immigration' },
-  { fr: 'Assurances', en: 'Insurances' },
-  { fr: 'Téléphonie et internet', en: 'Phone & internet' },
-  { fr: 'Alimentation et courses', en: 'Groceries & food' },
-  { fr: 'Loisirs et sorties', en: 'Leisure & going out' },
-  { fr: 'Sports et activités', en: 'Sports & activities' },
-  { fr: 'Sécurité', en: 'Safety' },
-  { fr: 'Urgences', en: 'Emergencies' },
-  { fr: 'Autre', en: 'Other' },
+  { fr: "Démarches administratives", en: "Administrative procedures" },
+  { fr: "Recherche de logement", en: "Housing search" },
+  { fr: "Ouverture de compte bancaire", en: "Bank account opening" },
+  { fr: "Système de santé", en: "Healthcare system" },
+  { fr: "Éducation et écoles", en: "Education & schools" },
+  { fr: "Transport", en: "Transport" },
+  { fr: "Recherche d'emploi", en: "Job search" },
+  { fr: "Création d'entreprise", en: "Company creation" },
+  { fr: "Fiscalité locale", en: "Local taxation" },
+  { fr: "Culture et intégration", en: "Culture & integration" },
+  { fr: "Visa et immigration", en: "Visa & immigration" },
+  { fr: "Assurances", en: "Insurances" },
+  { fr: "Téléphonie et internet", en: "Phone & internet" },
+  { fr: "Alimentation et courses", en: "Groceries & food" },
+  { fr: "Loisirs et sorties", en: "Leisure & going out" },
+  { fr: "Sports et activités", en: "Sports & activities" },
+  { fr: "Sécurité", en: "Safety" },
+  { fr: "Urgences", en: "Emergencies" },
+  { fr: "Autre", en: "Other" },
 ];
 
 // ===== Types =====
-interface LanguageOption { value: string; label: string }
+interface LanguageOption {
+  value: string;
+  label: string;
+}
 interface ExpatFormData {
-  firstName: string; lastName: string; email: string; password: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
   phone: string; // E.164 (via PhoneField)
-  currentCountry: string; currentPresenceCountry: string; interventionCountry: string;
-  preferredLanguage: 'fr' | 'en';
-  helpTypes: string[]; customHelpType: string;
-  yearsAsExpat: number; profilePhoto: string; bio: string;
-  availability: 'available' | 'busy' | 'offline'; acceptTerms: boolean;
+  currentCountry: string;
+  currentPresenceCountry: string;
+  interventionCountry: string;
+  preferredLanguage: "fr" | "en";
+  helpTypes: string[];
+  customHelpType: string;
+  yearsAsExpat: number;
+  profilePhoto: string;
+  bio: string;
+  availability: "available" | "busy" | "offline";
+  acceptTerms: boolean;
 }
 
 // ===== i18n =====
 const I18N = {
   fr: {
-    metaTitle: 'Inscription Expat Aidant • SOS Expats',
-    metaDesc: 'Partagez vos bons plans, filez des coups de main et rendez la vie à l’étranger plus simple ✨',
-    heroTitle: 'Inscription Expat Aidant',
-    heroSubtitle: 'On crée votre profil en 3 petites étapes — facile, fluide, friendly 🌍',
-    already: 'Déjà inscrit ?', login: 'Se connecter',
-    personalInfo: 'On fait connaissance',
-    geoInfo: 'Où vous êtes & expérience',
+    metaTitle: "Inscription Expat Aidant • SOS Expats",
+    metaDesc:
+      "Partagez vos bons plans, filez des coups de main et rendez la vie à l’étranger plus simple ✨",
+    heroTitle: "Inscription Expat Aidant",
+    heroSubtitle:
+      "On crée votre profil en 3 petites étapes — facile, fluide, friendly 🌍",
+    already: "Déjà inscrit ?",
+    login: "Se connecter",
+    personalInfo: "On fait connaissance",
+    geoInfo: "Où vous êtes & expérience",
     helpInfo: "Comment vous aimez aider ?",
-    firstName: 'Prénom', lastName: 'Nom', email: 'Adresse email', password: 'Mot de passe',
-    phone: 'Téléphone',
-    countryCode: 'Indicatif pays',
-    residenceCountry: 'Pays de résidence',
-    presenceCountry: 'Pays où vous êtes en ce moment',
+    firstName: "Prénom",
+    lastName: "Nom",
+    email: "Adresse email",
+    password: "Mot de passe",
+    phone: "Téléphone",
+    countryCode: "Indicatif pays",
+    residenceCountry: "Pays de résidence",
+    presenceCountry: "Pays où vous êtes en ce moment",
     interventionCountry: "Pays d'intervention principal",
     yearsAsExpat: "Années d'expatriation",
-    bio: 'Votre expérience (bio)', profilePhoto: 'Photo de profil',
-    languages: 'Langues parlées', selectedLanguages: 'Langues sélectionnées',
-    helpDomains: "Domaines d'aide", addHelp: "Ajouter un domaine d'aide", specifyHelp: "Précisez le domaine d'aide",
+    bio: "Votre expérience (bio)",
+    profilePhoto: "Photo de profil",
+    languages: "Langues parlées",
+    selectedLanguages: "Langues sélectionnées",
+    helpDomains: "Domaines d'aide",
+    addHelp: "Ajouter un domaine d'aide",
+    specifyHelp: "Précisez le domaine d'aide",
     help: {
-      minPassword: '6 caractères et c’est parti (pas de prise de tête) 💃',
-      emailPlaceholder: 'vous@example.com',
-      firstNamePlaceholder: 'Comment on vous appelle ? 🥰',
-      bioHint: 'En 2–3 lignes, dites comment vous aidez (50 caractères mini).',
+      minPassword: "6 caractères et c’est parti (pas de prise de tête) 💃",
+      emailPlaceholder: "vous@example.com",
+      firstNamePlaceholder: "Comment on vous appelle ? 🥰",
+      bioHint: "En 2–3 lignes, dites comment vous aidez (50 caractères mini).",
     },
     errors: {
-      title: 'Petites retouches avant le grand saut ✨',
-      firstNameRequired: 'On veut bien vous appeler… mais comment ? 😄',
-      lastNameRequired: 'Un nom de famille pour faire pro ? 👔',
-      emailRequired: 'Votre email pour rester en contact 📬',
-      emailInvalid: 'Cette adresse a l’air louche… Essayez nom@exemple.com 🧐',
-      emailTaken: 'Oups, cet email est déjà pris. Vous avez peut-être déjà un compte ? 🔑',
-      passwordTooShort: '6 caractères minimum — easy ! 💪',
-      phoneRequired: 'Quel numéro on compose ? 📞',
-      needCountry: 'Votre pays de résidence, s’il vous plaît 🌍',
-      needPresence: 'Où êtes-vous en ce moment ? ✈️',
+      title: "Petites retouches avant le grand saut ✨",
+      firstNameRequired: "On veut bien vous appeler… mais comment ? 😄",
+      lastNameRequired: "Un nom de famille pour faire pro ? 👔",
+      emailRequired: "Votre email pour rester en contact 📬",
+      emailInvalid: "Cette adresse a l’air louche… Essayez nom@exemple.com 🧐",
+      emailTaken:
+        "Oups, cet email est déjà pris. Vous avez peut-être déjà un compte ? 🔑",
+      passwordTooShort: "6 caractères minimum — easy ! 💪",
+      phoneRequired: "Quel numéro on compose ? 📞",
+      needCountry: "Votre pays de résidence, s’il vous plaît 🌍",
+      needPresence: "Où êtes-vous en ce moment ? ✈️",
       needIntervention: "Choisissez un pays d'intervention 🗺️",
-      needLang: 'Ajoutez au moins une langue (polyglotte ? 🗣️)',
+      needLang: "Ajoutez au moins une langue (polyglotte ? 🗣️)",
       needHelp: "Ajoutez au moins un domaine d'aide 🤝",
-      needBio: 'Encore un petit effort : 50 caractères minimum 📝',
-      needPhoto: 'Une photo pro, et c’est 100% plus rassurant 📸',
-      needYears: 'Au moins 1 an d’expatriation pour guider les autres 🌍',
-      acceptTermsRequired: 'Un petit clic sur les conditions et on y va ✅',
+      needBio: "Encore un petit effort : 50 caractères minimum 📝",
+      needPhoto: "Une photo pro, et c’est 100% plus rassurant 📸",
+      needYears: "Au moins 1 an d’expatriation pour guider les autres 🌍",
+      acceptTermsRequired: "Un petit clic sur les conditions et on y va ✅",
     },
-    success: 'Inscription réussie ! Bienvenue à bord 🎉',
-    secureNote: '🔒 Données protégées • Support 24/7',
-    progress: 'Progression',
+    success: "Inscription réussie ! Bienvenue à bord 🎉",
+    secureNote: "🔒 Données protégées • Support 24/7",
+    progress: "Progression",
     footerTitle: "🌍 Une communauté d'entraide à portée de main",
-    footerText: 'Des expats qui s’entraident, partout.',
-    cguLabel: '📋 CGU Expatriés',
-    privacy: '🔒 Confidentialité',
-    helpLink: '💬 Aide',
-    contact: '📧 Contact',
-    create: 'Créer mon compte expat aidant',
-    loading: 'On prépare tout… ⏳',
-    previewTitle: 'Aperçu live de votre profil',
-    previewHint: 'C’est ce que les autres verront. Peaufinez à votre goût ✨',
-    previewToggleOpen: 'Masquer l’aperçu',
-    previewToggleClose: 'Voir l’aperçu',
+    footerText: "Des expats qui s’entraident, partout.",
+    cguLabel: "📋 CGU Expatriés",
+    privacy: "🔒 Confidentialité",
+    helpLink: "💬 Aide",
+    contact: "📧 Contact",
+    create: "Créer mon compte expat aidant",
+    loading: "On prépare tout… ⏳",
+    previewTitle: "Aperçu live de votre profil",
+    previewHint: "C’est ce que les autres verront. Peaufinez à votre goût ✨",
+    previewToggleOpen: "Masquer l’aperçu",
+    previewToggleClose: "Voir l’aperçu",
   },
   en: {
-    metaTitle: 'Expat Helper Registration • SOS Expats',
-    metaDesc: 'Share your tips, lend a hand, and make life abroad feel easy ✨',
-    heroTitle: 'Expat Helper Registration',
-    heroSubtitle: 'Create your profile in 3 smooth steps — easy, friendly, fun 🌍',
-    already: 'Already registered?', login: 'Log in',
-    personalInfo: 'Let’s get to know you',
-    geoInfo: 'Where you are & experience',
-    helpInfo: 'How do you like to help?',
-    firstName: 'First name', lastName: 'Last name', email: 'Email', password: 'Password',
-    phone: 'Phone',
-    countryCode: 'Country code',
-    residenceCountry: 'Country of residence',
-    presenceCountry: 'Where you are right now',
-    interventionCountry: 'Main intervention country',
-    yearsAsExpat: 'Years as an expat',
-    bio: 'Your experience (bio)', profilePhoto: 'Profile photo',
-    languages: 'Spoken languages', selectedLanguages: 'Selected languages',
-    helpDomains: 'Help domains', addHelp: 'Add a help domain', specifyHelp: 'Specify the help domain',
+    metaTitle: "Expat Helper Registration • SOS Expats",
+    metaDesc: "Share your tips, lend a hand, and make life abroad feel easy ✨",
+    heroTitle: "Expat Helper Registration",
+    heroSubtitle:
+      "Create your profile in 3 smooth steps — easy, friendly, fun 🌍",
+    already: "Already registered?",
+    login: "Log in",
+    personalInfo: "Let’s get to know you",
+    geoInfo: "Where you are & experience",
+    helpInfo: "How do you like to help?",
+    firstName: "First name",
+    lastName: "Last name",
+    email: "Email",
+    password: "Password",
+    phone: "Phone",
+    countryCode: "Country code",
+    residenceCountry: "Country of residence",
+    presenceCountry: "Where you are right now",
+    interventionCountry: "Main intervention country",
+    yearsAsExpat: "Years as an expat",
+    bio: "Your experience (bio)",
+    profilePhoto: "Profile photo",
+    languages: "Spoken languages",
+    selectedLanguages: "Selected languages",
+    helpDomains: "Help domains",
+    addHelp: "Add a help domain",
+    specifyHelp: "Specify the help domain",
     help: {
-      minPassword: '6+ characters and you’re good 💃',
-      emailPlaceholder: 'you@example.com',
-      firstNamePlaceholder: 'How should we call you? 🥰',
-      bioHint: 'In 2–3 lines, say how you help (min 50 chars).',
+      minPassword: "6+ characters and you’re good 💃",
+      emailPlaceholder: "you@example.com",
+      firstNamePlaceholder: "How should we call you? 🥰",
+      bioHint: "In 2–3 lines, say how you help (min 50 chars).",
     },
     errors: {
-      title: 'Tiny tweaks and we’re there ✨',
-      firstNameRequired: 'We’d love to address you… what’s your name? 😄',
-      lastNameRequired: 'A last name keeps it professional 👔',
-      emailRequired: 'We need your email to stay in touch 📬',
-      emailInvalid: 'That email looks off. Try name@example.com 🧐',
-      emailTaken: 'This email is already in use. Maybe you already have an account? 🔑',
-      passwordTooShort: 'At least 6 characters — easy! 💪',
-      phoneRequired: 'What number should we call? 📞',
-      needCountry: 'Your residence country, please 🌍',
-      needPresence: 'Where are you at the moment? ✈️',
-      needIntervention: 'Pick a main intervention country 🗺️',
-      needLang: 'Add at least one language 🗣️',
-      needHelp: 'Add at least one help domain 🤝',
-      needBio: 'Push it to 50 characters — you got this 📝',
-      needPhoto: 'A professional photo builds trust 📸',
-      needYears: 'At least 1 year abroad to guide others 🌍',
-      acceptTermsRequired: 'Tick the box and we’re rolling ✅',
+      title: "Tiny tweaks and we’re there ✨",
+      firstNameRequired: "We’d love to address you… what’s your name? 😄",
+      lastNameRequired: "A last name keeps it professional 👔",
+      emailRequired: "We need your email to stay in touch 📬",
+      emailInvalid: "That email looks off. Try name@example.com 🧐",
+      emailTaken:
+        "This email is already in use. Maybe you already have an account? 🔑",
+      passwordTooShort: "At least 6 characters — easy! 💪",
+      phoneRequired: "What number should we call? 📞",
+      needCountry: "Your residence country, please 🌍",
+      needPresence: "Where are you at the moment? ✈️",
+      needIntervention: "Pick a main intervention country 🗺️",
+      needLang: "Add at least one language 🗣️",
+      needHelp: "Add at least one help domain 🤝",
+      needBio: "Push it to 50 characters — you got this 📝",
+      needPhoto: "A professional photo builds trust 📸",
+      needYears: "At least 1 year abroad to guide others 🌍",
+      acceptTermsRequired: "Tick the box and we’re rolling ✅",
     },
-    success: 'Registration successful! Welcome aboard 🎉',
-    secureNote: '🔒 Data protected • 24/7 support',
-    progress: 'Progress',
-    footerTitle: '🌍 A community of helpful expats',
-    footerText: 'Expats helping expats, everywhere.',
-    cguLabel: '📋 CGU Expats',
-    privacy: '🔒 Privacy',
-    helpLink: '💬 Help',
-    contact: '📧 Contact',
-    create: 'Create my expat helper account',
-    loading: 'Getting things ready… ⏳',
-    previewTitle: 'Live profile preview',
-    previewHint: 'This is what others will see. Make it shine ✨',
-    previewToggleOpen: 'Hide preview',
-    previewToggleClose: 'Show preview',
+    success: "Registration successful! Welcome aboard 🎉",
+    secureNote: "🔒 Data protected • 24/7 support",
+    progress: "Progress",
+    footerTitle: "🌍 A community of helpful expats",
+    footerText: "Expats helping expats, everywhere.",
+    cguLabel: "📋 CGU Expats",
+    privacy: "🔒 Privacy",
+    helpLink: "💬 Help",
+    contact: "📧 Contact",
+    create: "Create my expat helper account",
+    loading: "Getting things ready… ⏳",
+    previewTitle: "Live profile preview",
+    previewHint: "This is what others will see. Make it shine ✨",
+    previewToggleOpen: "Hide preview",
+    previewToggleClose: "Show preview",
   },
 } as const;
 
@@ -262,10 +322,17 @@ type I18NMap = typeof I18N;
 type AnyI18N = I18NMap[keyof I18NMap];
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const mapDuo = (list: Duo[], lang: 'fr' | 'en') => list.map((item) => item[lang]);
+const mapDuo = (list: Duo[], lang: "fr" | "en") =>
+  list.map((item) => item[lang]);
 
 // Petit composant succès
-const FieldSuccess = ({ show, children }: { show: boolean; children: React.ReactNode }) =>
+const FieldSuccess = ({
+  show,
+  children,
+}: {
+  show: boolean;
+  children: React.ReactNode;
+}) =>
   show ? (
     <div className="mt-1 text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg px-2 py-1 inline-flex items-center">
       <CheckCircle className="w-4 h-4 mr-1" /> {children}
@@ -284,7 +351,11 @@ const TagSelector = React.memo(
               className={`bg-emerald-100 text-emerald-800 ${THEME.chip} px-3 py-1 rounded-xl text-sm border-2 flex items-center`}
             >
               {v}
-              <button type="button" onClick={() => onRemove(v)} className="ml-2 hover:opacity-70">
+              <button
+                type="button"
+                onClick={() => onRemove(v)}
+                className="ml-2 hover:opacity-70"
+              >
                 <X className="w-4 h-4" />
               </button>
             </span>
@@ -294,24 +365,46 @@ const TagSelector = React.memo(
     );
   }
 );
-TagSelector.displayName = 'TagSelector';
+TagSelector.displayName = "TagSelector";
 
 const SectionHeader = React.memo(
-  ({ icon, title, subtitle }: { icon: React.ReactNode; title: string; subtitle?: string }) => (
+  ({
+    icon,
+    title,
+    subtitle,
+  }: {
+    icon: React.ReactNode;
+    title: string;
+    subtitle?: string;
+  }) => (
     <div className="flex items-center space-x-3 mb-5">
-      <div className={`bg-gradient-to-br ${THEME.gradFrom} ${THEME.gradTo} rounded-2xl p-3 shadow-md text-white`}>{icon}</div>
+      <div
+        className={`bg-gradient-to-br ${THEME.gradFrom} ${THEME.gradTo} rounded-2xl p-3 shadow-md text-white`}
+      >
+        {icon}
+      </div>
       <div>
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900">{title}</h2>
-        {subtitle && <p className="text-gray-600 text-sm sm:text-base mt-0.5">{subtitle}</p>}
+        {subtitle && (
+          <p className="text-gray-600 text-sm sm:text-base mt-0.5">
+            {subtitle}
+          </p>
+        )}
       </div>
     </div>
   )
 );
-SectionHeader.displayName = 'SectionHeader';
+SectionHeader.displayName = "SectionHeader";
 
 // ===== Helpers =====
 const computePasswordStrength = (pw: string) => {
-  if (!pw) return { percent: 0, labelFr: 'Vide', labelEn: 'Empty', color: 'bg-gray-300' };
+  if (!pw)
+    return {
+      percent: 0,
+      labelFr: "Vide",
+      labelEn: "Empty",
+      color: "bg-gray-300",
+    };
   let score = 0;
   if (pw.length >= 6) score++;
   if (pw.length >= 10) score++;
@@ -319,33 +412,66 @@ const computePasswordStrength = (pw: string) => {
   if (/\d/.test(pw) || /[^A-Za-z]/.test(pw)) score++;
   const clamp = Math.min(score, 4);
   const percentMap = [10, 35, 60, 80, 100] as const;
-  const colorMap = ['bg-red-400', 'bg-orange-400', 'bg-yellow-400', 'bg-green-500', 'bg-green-600'] as const;
-  const frMap = ['Très faible', 'Faible', 'Correct', 'Bien', 'Très solide'] as const;
-  const enMap = ['Very weak', 'Weak', 'Okay', 'Good', 'Very strong'] as const;
-  return { percent: percentMap[clamp], labelFr: frMap[clamp], labelEn: enMap[clamp], color: colorMap[clamp] };
+  const colorMap = [
+    "bg-red-400",
+    "bg-orange-400",
+    "bg-yellow-400",
+    "bg-green-500",
+    "bg-green-600",
+  ] as const;
+  const frMap = [
+    "Très faible",
+    "Faible",
+    "Correct",
+    "Bien",
+    "Très solide",
+  ] as const;
+  const enMap = ["Very weak", "Weak", "Okay", "Good", "Very strong"] as const;
+  return {
+    percent: percentMap[clamp],
+    labelFr: frMap[clamp],
+    labelEn: enMap[clamp],
+    color: colorMap[clamp],
+  };
 };
 
 const Avatar = ({ src, name }: { src?: string; name: string }) => {
   if (src) {
-    return <img src={src} alt={name} className="w-16 h-16 rounded-full object-cover ring-2 ring-emerald-200" />;
+    return (
+      <img
+        src={src}
+        alt={name}
+        className="w-16 h-16 rounded-full object-cover ring-2 ring-emerald-200"
+      />
+    );
   }
   const initials = name
-    .split(' ')
+    .split(" ")
     .map((p) => p.charAt(0).toUpperCase())
     .slice(0, 2)
-    .join('');
+    .join("");
   return (
     <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 grid place-items-center font-bold ring-2 ring-emerald-200">
-      {initials || '🙂'}
+      {initials || "🙂"}
     </div>
   );
 };
 
 // ===== Live Preview =====
 const PreviewCard = ({
-  lang, t, progress, fullName, photo, currentCountry, presenceCountry, interventionCountry, yearsAsExpat, languages, helpTypes,
+  lang,
+  t,
+  progress,
+  fullName,
+  photo,
+  currentCountry,
+  presenceCountry,
+  interventionCountry,
+  yearsAsExpat,
+  languages,
+  helpTypes,
 }: {
-  lang: 'fr' | 'en';
+  lang: "fr" | "en";
   t: AnyI18N; // <- générique (fix 21)
   progress: number;
   fullName: string;
@@ -363,17 +489,21 @@ const PreviewCard = ({
         <Avatar src={photo} name={fullName} />
         <div>
           <h3 className="text-lg font-extrabold text-gray-900 leading-tight">
-            {fullName || (lang === 'en' ? 'Your Name' : 'Votre nom')}
+            {fullName || (lang === "en" ? "Your Name" : "Votre nom")}
           </h3>
           <p className="text-xs text-gray-500">
-            {lang === 'en' ? 'Expat Helper' : 'Expat Aidant'} • {progress}% {lang === 'en' ? 'complete' : 'complet'}
+            {lang === "en" ? "Expat Helper" : "Expat Aidant"} • {progress}%{" "}
+            {lang === "en" ? "complete" : "complet"}
           </p>
         </div>
       </div>
 
       <div className="mt-3">
         <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
-          <div className="h-2 bg-emerald-500" style={{ width: `${progress}%` }} />
+          <div
+            className="h-2 bg-emerald-500"
+            style={{ width: `${progress}%` }}
+          />
         </div>
       </div>
 
@@ -382,7 +512,7 @@ const PreviewCard = ({
           <div className="flex items-center gap-2 text-gray-700">
             <MapPin className="w-4 h-4 text-emerald-600" />
             <span className="font-medium">
-              {currentCountry || (lang === 'en' ? 'Residence' : 'Résidence')}
+              {currentCountry || (lang === "en" ? "Residence" : "Résidence")}
             </span>
             {presenceCountry && (
               <span className="ml-auto rounded-full px-2 py-0.5 text-xs bg-emerald-50 border border-emerald-200">
@@ -395,16 +525,16 @@ const PreviewCard = ({
           <div className="flex items-center gap-2 text-gray-700">
             <Globe className="w-4 h-4 text-emerald-600" />
             <span className="font-medium">
-              {lang === 'en' ? 'Main help in' : 'Intervention'}:
+              {lang === "en" ? "Main help in" : "Intervention"}:
             </span>
             <span className="ml-auto rounded-full px-2 py-0.5 text-xs bg-emerald-50 border border-emerald-200">
               {interventionCountry}
             </span>
           </div>
         )}
-        {typeof yearsAsExpat === 'number' && yearsAsExpat > 0 && (
+        {typeof yearsAsExpat === "number" && yearsAsExpat > 0 && (
           <div className="text-gray-700">
-            {lang === 'en' ? 'Years abroad:' : 'Années à l’étranger :'}{' '}
+            {lang === "en" ? "Years abroad:" : "Années à l’étranger :"}{" "}
             <strong>{yearsAsExpat}</strong>
           </div>
         )}
@@ -412,10 +542,15 @@ const PreviewCard = ({
 
       {!!languages.length && (
         <div className="mt-4">
-          <p className="text-xs font-semibold text-gray-700 mb-1">{t.selectedLanguages}</p>
+          <p className="text-xs font-semibold text-gray-700 mb-1">
+            {t.selectedLanguages}
+          </p>
           <div className="flex flex-wrap gap-2">
             {languages.map((l) => (
-              <span key={l} className="px-2 py-1 rounded-lg bg-emerald-100 text-emerald-800 text-xs border border-emerald-200">
+              <span
+                key={l}
+                className="px-2 py-1 rounded-lg bg-emerald-100 text-emerald-800 text-xs border border-emerald-200"
+              >
                 {l.toUpperCase()}
               </span>
             ))}
@@ -425,10 +560,15 @@ const PreviewCard = ({
 
       {!!helpTypes.length && (
         <div className="mt-3">
-          <p className="text-xs font-semibold text-gray-700 mb-1">{t.helpDomains}</p>
+          <p className="text-xs font-semibold text-gray-700 mb-1">
+            {t.helpDomains}
+          </p>
           <div className="flex flex-wrap gap-2">
             {helpTypes.map((h, i) => (
-              <span key={`${h}-${i}`} className="px-2 py-1 rounded-lg bg-white text-gray-800 text-xs border-emerald-200 border">
+              <span
+                key={`${h}-${i}`}
+                className="px-2 py-1 rounded-lg bg-white text-gray-800 text-xs border-emerald-200 border"
+              >
                 {h}
               </span>
             ))}
@@ -443,18 +583,26 @@ const PreviewCard = ({
 
 // --- Panneau checklist vert en bas ---
 const BottomChecklist = ({
-  items, progress, lang, onJump,
+  items,
+  progress,
+  lang,
+  onJump,
 }: {
-  items: { key: string; label: string; ok: boolean; ref?: React.MutableRefObject<HTMLElement | null> }[];
+  items: {
+    key: string;
+    label: string;
+    ok: boolean;
+    ref?: React.MutableRefObject<HTMLElement | null>;
+  }[];
   progress: number;
-  lang: 'fr' | 'en';
+  lang: "fr" | "en";
   onJump: (r?: React.MutableRefObject<HTMLElement | null>) => void;
 }) => (
   <div className="mt-6">
     <div className="rounded-2xl bg-gradient-to-br from-emerald-600 via-green-600 to-teal-600 p-[10px] shadow-lg">
       <div className="rounded-xl bg-white/90 backdrop-blur-sm p-4 sm:p-5">
         <p className="font-bold text-gray-900 mb-3">
-          {lang === 'en' ? 'To complete:' : 'À compléter :'}
+          {lang === "en" ? "To complete:" : "À compléter :"}
         </p>
 
         <div className="grid sm:grid-cols-2 gap-y-2">
@@ -465,7 +613,9 @@ const BottomChecklist = ({
               onClick={() => onJump(it.ref)}
               className="text-left rounded-lg px-2 py-1 hover:bg-emerald-50/70 focus:outline-none"
             >
-              <span className={`inline-flex items-center text-sm ${it.ok ? 'text-emerald-700' : 'text-gray-600'}`}>
+              <span
+                className={`inline-flex items-center text-sm ${it.ok ? "text-emerald-700" : "text-gray-600"}`}
+              >
                 {it.ok ? (
                   <CheckCircle className="w-4 h-4 mr-2 text-emerald-600" />
                 ) : (
@@ -479,7 +629,9 @@ const BottomChecklist = ({
 
         <div className="mt-4">
           <span className="text-xs text-gray-700 bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-1 inline-block">
-            {lang === 'en' ? `Completion: ${progress}%` : `Complétion : ${progress}%`}
+            {lang === "en"
+              ? `Completion: ${progress}%`
+              : `Complétion : ${progress}%`}
           </span>
         </div>
       </div>
@@ -494,27 +646,35 @@ const RegisterExpat: React.FC = () => {
   // --- Types sûrs ---
   type LocalNavState = Readonly<{ selectedProvider?: Provider }>;
   function isProviderLike(v: unknown): v is Provider {
-    if (typeof v !== 'object' || v === null) return false;
+    if (typeof v !== "object" || v === null) return false;
     const o = v as Record<string, unknown>;
-    return typeof o.id === 'string' && typeof o.name === 'string' && (o.type === 'lawyer' || o.type === 'expat');
+    return (
+      typeof o.id === "string" &&
+      typeof o.name === "string" &&
+      (o.type === "lawyer" || o.type === "expat")
+    );
   }
 
   const location = useLocation();
   const [searchParams] = useSearchParams();
-  const redirect = searchParams.get('redirect') || '/dashboard';
+  const redirect = searchParams.get("redirect") || "/dashboard";
 
   useEffect(() => {
     const rawState: unknown = location.state;
     const state = (rawState ?? null) as LocalNavState | null;
     const sp = state?.selectedProvider;
     if (isProviderLike(sp)) {
-      try { sessionStorage.setItem('selectedProvider', JSON.stringify(sp)); } catch { /* no-op */ }
+      try {
+        sessionStorage.setItem("selectedProvider", JSON.stringify(sp));
+      } catch {
+        /* no-op */
+      }
     }
   }, [location.state]);
 
   const { register, isLoading, error } = useAuth();
   const { language } = useApp(); // 'fr' | 'en'
-  const lang = (language as 'fr' | 'en') || 'fr';
+  const lang = (language as "fr" | "en") || "fr";
   const t: AnyI18N = I18N[lang]; // <- annotation explicite
 
   // ---- SEO / OG meta ----
@@ -524,37 +684,49 @@ const RegisterExpat: React.FC = () => {
       const sel = prop ? `meta[property="${name}"]` : `meta[name="${name}"]`;
       let el = document.querySelector(sel) as HTMLMetaElement | null;
       if (!el) {
-        el = document.createElement('meta');
-        if (prop) el.setAttribute('property', name); else el.setAttribute('name', name);
+        el = document.createElement("meta");
+        if (prop) el.setAttribute("property", name);
+        else el.setAttribute("name", name);
         document.head.appendChild(el);
       }
       el.content = content;
     };
-    ensure('description', t.metaDesc);
-    ensure('og:title', t.metaTitle, true);
-    ensure('og:description', t.metaDesc, true);
-    ensure('og:type', 'website', true);
-    ensure('twitter:card', 'summary_large_image');
-    ensure('twitter:title', t.metaTitle);
-    ensure('twitter:description', t.metaDesc);
+    ensure("description", t.metaDesc);
+    ensure("og:title", t.metaTitle, true);
+    ensure("og:description", t.metaDesc, true);
+    ensure("og:type", "website", true);
+    ensure("twitter:card", "summary_large_image");
+    ensure("twitter:title", t.metaTitle);
+    ensure("twitter:description", t.metaDesc);
   }, [t]);
 
   // ---- Initial state ----
   const initial: ExpatFormData = {
-    firstName: '', lastName: '', email: '', password: '',
-    phone: '', // E.164 (via PhoneField)
-    currentCountry: '', currentPresenceCountry: '', interventionCountry: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    phone: "", // E.164 (via PhoneField)
+    currentCountry: "",
+    currentPresenceCountry: "",
+    interventionCountry: "",
     preferredLanguage: lang,
-    helpTypes: [], customHelpType: '',
-    yearsAsExpat: 0, profilePhoto: '', bio: '',
-    availability: 'available', acceptTerms: false
+    helpTypes: [],
+    customHelpType: "",
+    yearsAsExpat: 0,
+    profilePhoto: "",
+    bio: "",
+    availability: "available",
+    acceptTerms: false,
   };
 
   const [form, setForm] = useState<ExpatFormData>(initial);
-  const [selectedLanguages, setSelectedLanguages] = useState<MultiValue<LanguageOption>>([]);
+  const [selectedLanguages, setSelectedLanguages] = useState<
+    MultiValue<LanguageOption>
+  >([]);
   const [showPassword, setShowPassword] = useState(false);
   const [capsPassword, setCapsPassword] = useState(false);
-  const [formError, setFormError] = useState('');
+  const [formError, setFormError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [showCustomHelp, setShowCustomHelp] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -562,10 +734,10 @@ const RegisterExpat: React.FC = () => {
 
   // react-hook-form pour le téléphone uniquement (normalisation E.164 par PhoneField)
   const { control, getValues, watch } = useForm<{ phone: string }>({
-    defaultValues: { phone: '' },
-    mode: 'onBlur',
+    defaultValues: { phone: "" },
+    mode: "onBlur",
   });
-  const watchedPhone = watch('phone'); // e164 si valide
+  const watchedPhone = watch("phone"); // e164 si valide
 
   // Refs pour scroll/jump
   const refFirstName = useRef<HTMLDivElement | null>(null);
@@ -588,25 +760,35 @@ const RegisterExpat: React.FC = () => {
   const helpTypeOptions = useMemo(() => mapDuo(HELP_TYPES, lang), [lang]);
 
   // ---- Password strength ----
-  const pwdStrength = useMemo(() => computePasswordStrength(form.password), [form.password]);
+  const pwdStrength = useMemo(
+    () => computePasswordStrength(form.password),
+    [form.password]
+  );
 
   // ---- Validations (pour messages & checklist) ----
-  const valid = useMemo(() => ({
-    firstName: !!form.firstName.trim(),
-    lastName: !!form.lastName.trim(),
-    email: EMAIL_REGEX.test(form.email), // ✅ format uniquement
-    password: form.password.length >= 6,
-    phone: !!(watchedPhone && watchedPhone.startsWith('+') && watchedPhone.length >= 10), // E.164 détecté
-    currentCountry: !!form.currentCountry,
-    currentPresenceCountry: !!form.currentPresenceCountry,
-    interventionCountry: !!form.interventionCountry,
-    yearsAsExpat: form.yearsAsExpat >= 1,
-    bio: form.bio.trim().length >= 50,
-    profilePhoto: !!form.profilePhoto,
-    languages: (selectedLanguages as LanguageOption[]).length > 0,
-    helpTypes: form.helpTypes.length > 0,
-    acceptTerms: form.acceptTerms,
-  }), [form, selectedLanguages, watchedPhone]);
+  const valid = useMemo(
+    () => ({
+      firstName: !!form.firstName.trim(),
+      lastName: !!form.lastName.trim(),
+      email: EMAIL_REGEX.test(form.email), // ✅ format uniquement
+      password: form.password.length >= 6,
+      phone: !!(
+        watchedPhone &&
+        watchedPhone.startsWith("+") &&
+        watchedPhone.length >= 10
+      ), // E.164 détecté
+      currentCountry: !!form.currentCountry,
+      currentPresenceCountry: !!form.currentPresenceCountry,
+      interventionCountry: !!form.interventionCountry,
+      yearsAsExpat: form.yearsAsExpat >= 1,
+      bio: form.bio.trim().length >= 50,
+      profilePhoto: !!form.profilePhoto,
+      languages: (selectedLanguages as LanguageOption[]).length > 0,
+      helpTypes: form.helpTypes.length > 0,
+      acceptTerms: form.acceptTerms,
+    }),
+    [form, selectedLanguages, watchedPhone]
+  );
 
   // ---- Progress (sans emailStatus) ----
   const progress = useMemo(() => {
@@ -615,7 +797,7 @@ const RegisterExpat: React.FC = () => {
       !!form.lastName.trim(),
       EMAIL_REGEX.test(form.email),
       form.password.length >= 6,
-      !!(watchedPhone && watchedPhone.startsWith('+')),
+      !!(watchedPhone && watchedPhone.startsWith("+")),
       !!form.currentCountry,
       !!form.currentPresenceCountry,
       !!form.interventionCountry,
@@ -632,9 +814,24 @@ const RegisterExpat: React.FC = () => {
 
   // ---- Handlers ----
   const onChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    (
+      e: React.ChangeEvent<
+        HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+      >
+    ) => {
       const { name, value, type, checked } = e.target as HTMLInputElement;
-      setForm((prev) => ({ ...prev, [name]: type === 'checkbox' ? checked : type === 'number' ? Number(value) : value } as ExpatFormData));
+      setForm(
+        (prev) =>
+          ({
+            ...prev,
+            [name]:
+              type === "checkbox"
+                ? checked
+                : type === "number"
+                  ? Number(value)
+                  : value,
+          }) as ExpatFormData
+      );
       if (fieldErrors[name]) {
         setFieldErrors((prev) => {
           const rest = { ...prev };
@@ -642,7 +839,7 @@ const RegisterExpat: React.FC = () => {
           return rest;
         });
       }
-      if (formError) setFormError('');
+      if (formError) setFormError("");
     },
     [fieldErrors, formError]
   );
@@ -651,16 +848,16 @@ const RegisterExpat: React.FC = () => {
     (e: React.ChangeEvent<HTMLSelectElement>) => {
       const v = e.target.value;
       if (!v) return;
-      const other = lang === 'en' ? 'Other' : 'Autre';
+      const other = lang === "en" ? "Other" : "Autre";
       if (v === other) {
         setShowCustomHelp(true);
-        e.target.value = '';
+        e.target.value = "";
         return;
       }
       if (!form.helpTypes.includes(v)) {
         setForm((prev) => ({ ...prev, helpTypes: [...prev.helpTypes, v] }));
       }
-      e.target.value = '';
+      e.target.value = "";
       if (fieldErrors.helpTypes) {
         const rest = { ...fieldErrors };
         delete rest.helpTypes;
@@ -671,12 +868,19 @@ const RegisterExpat: React.FC = () => {
   );
 
   const removeHelp = useCallback((v: string) => {
-    setForm((prev) => ({ ...prev, helpTypes: prev.helpTypes.filter((x) => x !== v) }));
+    setForm((prev) => ({
+      ...prev,
+      helpTypes: prev.helpTypes.filter((x) => x !== v),
+    }));
   }, []);
   const addCustomHelp = useCallback(() => {
     const v = form.customHelpType.trim();
     if (v && !form.helpTypes.includes(v)) {
-      setForm((prev) => ({ ...prev, helpTypes: [...prev.helpTypes, v], customHelpType: '' }));
+      setForm((prev) => ({
+        ...prev,
+        helpTypes: [...prev.helpTypes, v],
+        customHelpType: "",
+      }));
       setShowCustomHelp(false);
     }
   }, [form.customHelpType, form.helpTypes]);
@@ -692,8 +896,10 @@ const RegisterExpat: React.FC = () => {
     if (!valid.password) e.password = t.errors.passwordTooShort;
     if (!valid.phone) e.phone = t.errors.phoneRequired;
     if (!valid.currentCountry) e.currentCountry = t.errors.needCountry;
-    if (!valid.currentPresenceCountry) e.currentPresenceCountry = t.errors.needPresence;
-    if (!valid.interventionCountry) e.interventionCountry = t.errors.needIntervention;
+    if (!valid.currentPresenceCountry)
+      e.currentPresenceCountry = t.errors.needPresence;
+    if (!valid.interventionCountry)
+      e.interventionCountry = t.errors.needIntervention;
     if (!valid.languages) e.languages = t.errors.needLang;
     if (!valid.helpTypes) e.helpTypes = t.errors.needHelp;
     if (!valid.bio) e.bio = t.errors.needBio;
@@ -711,7 +917,9 @@ const RegisterExpat: React.FC = () => {
 
   // Scroll vers le premier champ incomplet
   const scrollToFirstIncomplete = useCallback(() => {
-    const pairs: Array<[boolean, React.MutableRefObject<HTMLElement | null> | null]> = [
+    const pairs: Array<
+      [boolean, React.MutableRefObject<HTMLElement | null> | null]
+    > = [
       [!valid.firstName, refFirstName],
       [!valid.lastName, refLastName],
       [!valid.email, refEmail],
@@ -729,7 +937,7 @@ const RegisterExpat: React.FC = () => {
     ];
     const target = pairs.find(([need]) => need)?.[1];
     const el = target?.current || null;
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
   }, [valid]);
 
   // ---- Submit ----
@@ -738,19 +946,21 @@ const RegisterExpat: React.FC = () => {
       ev.preventDefault();
       if (isSubmitting) return;
       setIsSubmitting(true);
-      setFormError('');
+      setFormError("");
       if (!validate()) {
         setIsSubmitting(false);
         scrollToFirstIncomplete();
         return;
       }
       try {
-        const languageCodes = (selectedLanguages as LanguageOption[]).map((l) => l.value);
-        const e164Phone = getValues('phone') || ''; // déjà normalisé par PhoneField
+        const languageCodes = (selectedLanguages as LanguageOption[]).map(
+          (l) => l.value
+        );
+        const e164Phone = getValues("phone") || ""; // déjà normalisé par PhoneField
 
         const userData = {
-          role: 'expat' as const,
-          type: 'expat' as const,
+          role: "expat" as const,
+          type: "expat" as const,
           email: form.email.trim().toLowerCase(),
           fullName: `${form.firstName.trim()} ${form.lastName.trim()}`.trim(),
           firstName: form.firstName.trim(),
@@ -770,7 +980,7 @@ const RegisterExpat: React.FC = () => {
           bio: form.bio.trim(),
           description: form.bio.trim(),
           availability: form.availability,
-          isOnline: form.availability === 'available',
+          isOnline: form.availability === "available",
           isApproved: true,
           isVisible: true,
           isActive: true,
@@ -780,15 +990,29 @@ const RegisterExpat: React.FC = () => {
         };
 
         await register(userData, form.password);
-        navigate(redirect, { replace: true, state: { message: t.success, type: 'success' } });
+        navigate(redirect, {
+          replace: true,
+          state: { message: t.success, type: "success" },
+        });
       } catch (err: unknown) {
-        const msg = err instanceof Error ? err.message : 'Error';
+        const msg = err instanceof Error ? err.message : "Error";
         setFormError(msg);
       } finally {
         setIsSubmitting(false);
       }
     },
-    [isSubmitting, validate, register, form, selectedLanguages, navigate, redirect, t, scrollToFirstIncomplete, getValues]
+    [
+      isSubmitting,
+      validate,
+      register,
+      form,
+      selectedLanguages,
+      navigate,
+      redirect,
+      t,
+      scrollToFirstIncomplete,
+      getValues,
+    ]
   );
 
   // ---- Can submit ----
@@ -817,20 +1041,96 @@ const RegisterExpat: React.FC = () => {
   // ---- Checklist items ----
   const checklist = useMemo(
     () => [
-      { key: 'firstName', label: lang === 'en' ? 'First name' : 'Prénom', ok: valid.firstName, ref: refFirstName },
-      { key: 'lastName', label: lang === 'en' ? 'Last name' : 'Nom', ok: valid.lastName, ref: refLastName },
-      { key: 'email', label: lang === 'en' ? 'Valid email' : 'Email valide', ok: valid.email, ref: refEmail },
-      { key: 'password', label: lang === 'en' ? 'Password (≥ 6 chars)' : 'Mot de passe (≥ 6 caractères)', ok: valid.password, ref: refPwd },
-      { key: 'phone', label: lang === 'en' ? 'Phone (E.164)' : 'Téléphone (E.164)', ok: valid.phone, ref: refPhone },
-      { key: 'currentCountry', label: lang === 'en' ? 'Country of residence' : 'Pays de résidence', ok: valid.currentCountry, ref: refCountry },
-      { key: 'currentPresenceCountry', label: lang === 'en' ? 'Presence country' : 'Pays de présence', ok: valid.currentPresenceCountry, ref: refPresence },
-      { key: 'interventionCountry', label: lang === 'en' ? 'Main intervention country' : "Pays d'intervention", ok: valid.interventionCountry, ref: refInterv },
-      { key: 'languages', label: lang === 'en' ? 'At least one language' : 'Au moins une langue', ok: valid.languages, ref: refLangs },
-      { key: 'helpTypes', label: lang === 'en' ? 'At least one specialty' : 'Au moins une spécialité', ok: valid.helpTypes, ref: refHelp },
-      { key: 'profilePhoto', label: lang === 'en' ? 'Profile photo' : 'Photo de profil', ok: valid.profilePhoto, ref: refPhoto },
-      { key: 'bio', label: lang === 'en' ? 'Bio (≥ 50 chars)' : 'Bio (≥ 50 caractères)', ok: valid.bio, ref: refBio },
-      { key: 'yearsAsExpat', label: lang === 'en' ? 'Years abroad (≥ 1)' : "Années d'expatriation (≥ 1)", ok: valid.yearsAsExpat, ref: refYears },
-      { key: 'acceptTerms', label: lang === 'en' ? 'Accept T&Cs' : 'Accepter les CGU', ok: valid.acceptTerms, ref: refCGU },
+      {
+        key: "firstName",
+        label: lang === "en" ? "First name" : "Prénom",
+        ok: valid.firstName,
+        ref: refFirstName,
+      },
+      {
+        key: "lastName",
+        label: lang === "en" ? "Last name" : "Nom",
+        ok: valid.lastName,
+        ref: refLastName,
+      },
+      {
+        key: "email",
+        label: lang === "en" ? "Valid email" : "Email valide",
+        ok: valid.email,
+        ref: refEmail,
+      },
+      {
+        key: "password",
+        label:
+          lang === "en"
+            ? "Password (≥ 6 chars)"
+            : "Mot de passe (≥ 6 caractères)",
+        ok: valid.password,
+        ref: refPwd,
+      },
+      {
+        key: "phone",
+        label: lang === "en" ? "Phone (E.164)" : "Téléphone (E.164)",
+        ok: valid.phone,
+        ref: refPhone,
+      },
+      {
+        key: "currentCountry",
+        label: lang === "en" ? "Country of residence" : "Pays de résidence",
+        ok: valid.currentCountry,
+        ref: refCountry,
+      },
+      {
+        key: "currentPresenceCountry",
+        label: lang === "en" ? "Presence country" : "Pays de présence",
+        ok: valid.currentPresenceCountry,
+        ref: refPresence,
+      },
+      {
+        key: "interventionCountry",
+        label:
+          lang === "en" ? "Main intervention country" : "Pays d'intervention",
+        ok: valid.interventionCountry,
+        ref: refInterv,
+      },
+      {
+        key: "languages",
+        label: lang === "en" ? "At least one language" : "Au moins une langue",
+        ok: valid.languages,
+        ref: refLangs,
+      },
+      {
+        key: "helpTypes",
+        label:
+          lang === "en" ? "At least one specialty" : "Au moins une spécialité",
+        ok: valid.helpTypes,
+        ref: refHelp,
+      },
+      {
+        key: "profilePhoto",
+        label: lang === "en" ? "Profile photo" : "Photo de profil",
+        ok: valid.profilePhoto,
+        ref: refPhoto,
+      },
+      {
+        key: "bio",
+        label: lang === "en" ? "Bio (≥ 50 chars)" : "Bio (≥ 50 caractères)",
+        ok: valid.bio,
+        ref: refBio,
+      },
+      {
+        key: "yearsAsExpat",
+        label:
+          lang === "en" ? "Years abroad (≥ 1)" : "Années d'expatriation (≥ 1)",
+        ok: valid.yearsAsExpat,
+        ref: refYears,
+      },
+      {
+        key: "acceptTerms",
+        label: lang === "en" ? "Accept T&Cs" : "Accepter les CGU",
+        ok: valid.acceptTerms,
+        ref: refCGU,
+      },
     ],
     [valid, lang]
   );
@@ -843,12 +1143,12 @@ const RegisterExpat: React.FC = () => {
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': ['WebPage', 'RegisterAction'],
+            "@context": "https://schema.org",
+            "@type": ["WebPage", "RegisterAction"],
             name: t.metaTitle,
             description: t.metaDesc,
-            inLanguage: lang === 'en' ? 'en-US' : 'fr-FR',
-            publisher: { '@type': 'Organization', name: 'SOS Expats' },
+            inLanguage: lang === "en" ? "en-US" : "fr-FR",
+            publisher: { "@type": "Organization", name: "SOS Expats" },
           }),
         }}
       />
@@ -857,17 +1157,25 @@ const RegisterExpat: React.FC = () => {
         {/* Hero */}
         <header className="pt-6 sm:pt-8 text-center">
           <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-gray-900">
-            <span className={`bg-gradient-to-r ${THEME.gradFrom} ${THEME.gradTo} bg-clip-text text-transparent`}>
+            <span
+              className={`bg-gradient-to-r ${THEME.gradFrom} ${THEME.gradTo} bg-clip-text text-transparent`}
+            >
               {t.heroTitle}
             </span>
           </h1>
-          <p className="mt-3 sm:mt-4 text-sm sm:text-base text-gray-700 px-4">{t.heroSubtitle}</p>
+          <p className="mt-3 sm:mt-4 text-sm sm:text-base text-gray-700 px-4">
+            {t.heroSubtitle}
+          </p>
           <div className="mt-3 inline-flex items-center gap-2">
-            <span className="text-xs sm:text-sm px-3 py-1 rounded-full bg-white border shadow-sm">24/7</span>
-            <span className="text-xs sm:text-sm px-3 py-1 rounded-full bg-white border shadow-sm">{lang === 'en' ? 'Multilingual' : 'Multilingue'}</span>
+            <span className="text-xs sm:text-sm px-3 py-1 rounded-full bg-white border shadow-sm">
+              24/7
+            </span>
+            <span className="text-xs sm:text-sm px-3 py-1 rounded-full bg-white border shadow-sm">
+              {lang === "en" ? "Multilingual" : "Multilingue"}
+            </span>
           </div>
           <div className="mt-3 text-xs sm:text-sm text-gray-600">
-            {t.already}{' '}
+            {t.already}{" "}
             <Link
               to={`/login?redirect=${encodeURIComponent(redirect)}`}
               className="font-semibold text-emerald-700 underline decoration-2 underline-offset-2 hover:text-emerald-800"
@@ -893,11 +1201,18 @@ const RegisterExpat: React.FC = () => {
           {/* Progress */}
           <div className="mb-6 max-w-2xl">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-bold text-gray-700">{t.progress}</span>
-              <span className="text-sm font-bold text-emerald-600">{progress}%</span>
+              <span className="text-sm font-bold text-gray-700">
+                {t.progress}
+              </span>
+              <span className="text-sm font-bold text-emerald-600">
+                {progress}%
+              </span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2.5">
-              <div className="h-2.5 rounded-full bg-gradient-to-r from-emerald-500 to-green-500 transition-all duration-700" style={{ width: `${progress}%` }} />
+              <div
+                className="h-2.5 rounded-full bg-gradient-to-r from-emerald-500 to-green-500 transition-all duration-700"
+                style={{ width: `${progress}%` }}
+              />
             </div>
           </div>
 
@@ -915,30 +1230,39 @@ const RegisterExpat: React.FC = () => {
             </div>
 
             {/* PREVIEW */}
-            <aside className={`${isPreviewOpen ? 'block' : 'hidden'} lg:block lg:col-span-1 lg:order-last lg:sticky lg:top-6 mb-6`}>
-              <h3 className="text-sm font-semibold text-gray-800 mb-2">{t.previewTitle}</h3>
+            <aside
+              className={`${isPreviewOpen ? "block" : "hidden"} lg:block lg:col-span-1 lg:order-last lg:sticky lg:top-6 mb-6`}
+            >
+              <h3 className="text-sm font-semibold text-gray-800 mb-2">
+                {t.previewTitle}
+              </h3>
               <PreviewCard
                 lang={lang}
                 t={t}
                 progress={progress}
-                fullName={`${form.firstName || (lang === 'en' ? 'First' : 'Prénom')} ${form.lastName || (lang === 'en' ? 'Last' : 'Nom')}`.trim()}
+                fullName={`${form.firstName || (lang === "en" ? "First" : "Prénom")} ${form.lastName || (lang === "en" ? "Last" : "Nom")}`.trim()}
                 photo={form.profilePhoto}
                 currentCountry={form.currentCountry}
                 presenceCountry={form.currentPresenceCountry}
                 interventionCountry={form.interventionCountry}
                 yearsAsExpat={form.yearsAsExpat}
-                languages={(selectedLanguages as LanguageOption[]).map((l) => l.value)}
+                languages={(selectedLanguages as LanguageOption[]).map(
+                  (l) => l.value
+                )}
                 helpTypes={form.helpTypes}
               />
             </aside>
 
             {/* FORM */}
             <div className="lg:col-span-2">
-              <div className="bg-white rounded-2xl shadow-lg border border-gray-100">
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 text-black">
                 <form onSubmit={handleSubmit} noValidate>
                   {/* Step 1: Personal */}
                   <section className="p-5 sm:p-6">
-                    <SectionHeader icon={<Users className="w-5 h-5" />} title={t.personalInfo} />
+                    <SectionHeader
+                      icon={<Users className="w-5 h-5" />}
+                      title={t.personalInfo}
+                    />
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {/* First name */}
@@ -947,11 +1271,16 @@ const RegisterExpat: React.FC = () => {
                           {t.firstName} <span className="text-red-500">*</span>
                         </label>
                         <input
-                          name="firstName" autoComplete="given-name" value={form.firstName} onChange={onChange}
-                          className={`w-full px-4 py-3 border-2 rounded-xl bg-gray-50 hover:bg-white ${THEME.ring} focus:bg-white transition ${fieldErrors.firstName ? 'border-red-500 bg-red-50' : valid.firstName ? 'border-green-300 bg-green-50' : 'border-gray-200'}`}
+                          name="firstName"
+                          autoComplete="given-name"
+                          value={form.firstName}
+                          onChange={onChange}
+                          className={`w-full px-4 py-3 border-2 rounded-xl bg-gray-50 hover:bg-white ${THEME.ring} focus:bg-white transition ${fieldErrors.firstName ? "border-red-500 bg-red-50" : valid.firstName ? "border-green-300 bg-green-50" : "border-gray-200"}`}
                           placeholder={t.help.firstNamePlaceholder}
                         />
-                        <FieldSuccess show={valid.firstName}>{lang === 'en' ? 'Perfect! ✨' : 'Parfait ! ✨'}</FieldSuccess>
+                        <FieldSuccess show={valid.firstName}>
+                          {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"}
+                        </FieldSuccess>
                       </div>
 
                       {/* Last name */}
@@ -960,21 +1289,31 @@ const RegisterExpat: React.FC = () => {
                           {t.lastName} <span className="text-red-500">*</span>
                         </label>
                         <input
-                          name="lastName" autoComplete="family-name" value={form.lastName} onChange={onChange}
-                          className={`w-full px-4 py-3 border-2 rounded-xl bg-gray-50 hover:bg-white ${THEME.ring} focus:bg-white transition ${fieldErrors.lastName ? 'border-red-500 bg-red-50' : valid.lastName ? 'border-green-300 bg-green-50' : 'border-gray-200'}`}
-                          placeholder={lang === 'en' ? 'Doe' : 'Dupont'}
+                          name="lastName"
+                          autoComplete="family-name"
+                          value={form.lastName}
+                          onChange={onChange}
+                          className={`w-full px-4 py-3 border-2 rounded-xl bg-gray-50 hover:bg-white ${THEME.ring} focus:bg-white transition ${fieldErrors.lastName ? "border-red-500 bg-red-50" : valid.lastName ? "border-green-300 bg-green-50" : "border-gray-200"}`}
+                          placeholder={lang === "en" ? "Doe" : "Dupont"}
                         />
-                        <FieldSuccess show={valid.lastName}>{lang === 'en' ? 'Perfect! ✨' : 'Parfait ! ✨'}</FieldSuccess>
+                        <FieldSuccess show={valid.lastName}>
+                          {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"}
+                        </FieldSuccess>
                       </div>
                     </div>
 
                     {/* Email */}
                     <div className="mt-4" ref={refEmail}>
-                      <label htmlFor="email" className="block text-sm font-semibold text-gray-800 mb-1">
+                      <label
+                        htmlFor="email"
+                        className="block text-sm font-semibold text-gray-800 mb-1"
+                      >
                         {t.email} <span className="text-red-500">*</span>
                       </label>
                       <div className="relative">
-                        <Mail className={`pointer-events-none w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 ${THEME.icon}`} />
+                        <Mail
+                          className={`pointer-events-none w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 ${THEME.icon}`}
+                        />
                         <input
                           id="email"
                           name="email"
@@ -984,15 +1323,23 @@ const RegisterExpat: React.FC = () => {
                           onChange={onChange}
                           aria-describedby="email-help"
                           className={`w-full block z-[1] pl-11 pr-4 py-3 rounded-xl border-2 ${THEME.ring} focus:bg-white transition
-                                      ${fieldErrors.email ? '!border-red-500 bg-red-50' : valid.email ? '!border-green-300 bg-green-50' : '!border-gray-300'}`}
+                                      ${fieldErrors.email ? "!border-red-500 bg-red-50" : valid.email ? "!border-green-300 bg-green-50" : "!border-gray-300"}`}
                           placeholder={t.help.emailPlaceholder}
                         />
                       </div>
                       <p id="email-help" className="mt-1 text-xs text-gray-500">
-                        {lang === 'en' ? 'We only email for your account & connections. 🤝' : 'On vous écrit seulement pour le compte & les mises en relation. 🤝'}
+                        {lang === "en"
+                          ? "We only email for your account & connections. 🤝"
+                          : "On vous écrit seulement pour le compte & les mises en relation. 🤝"}
                       </p>
-                      {fieldErrors.email && <p className="mt-1 text-sm text-red-600">{fieldErrors.email}</p>}
-                      <FieldSuccess show={valid.email}>{lang === 'en' ? 'Looks good! 👌' : 'Email au top ! 👌'}</FieldSuccess>
+                      {fieldErrors.email && (
+                        <p className="mt-1 text-sm text-red-600">
+                          {fieldErrors.email}
+                        </p>
+                      )}
+                      <FieldSuccess show={valid.email}>
+                        {lang === "en" ? "Looks good! 👌" : "Email au top ! 👌"}
+                      </FieldSuccess>
                     </div>
 
                     {/* Password */}
@@ -1001,141 +1348,252 @@ const RegisterExpat: React.FC = () => {
                         {t.password} <span className="text-red-500">*</span>
                       </label>
                       <div className="relative">
-                        <Lock className={`w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 ${THEME.icon}`} />
+                        <Lock
+                          className={`w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 ${THEME.icon}`}
+                        />
                         <input
-                          name="password" type={showPassword ? 'text' : 'password'} value={form.password} onChange={onChange}
-                          onKeyUp={(e) => setCapsPassword(e.getModifierState('CapsLock'))}
+                          name="password"
+                          type={showPassword ? "text" : "password"}
+                          value={form.password}
+                          onChange={onChange}
+                          onKeyUp={(e) =>
+                            setCapsPassword(e.getModifierState("CapsLock"))
+                          }
                           autoComplete="new-password"
                           aria-describedby="pwd-meter"
-                          className={`w-full pl-10 pr-12 py-3 border-2 rounded-xl bg-gray-50 hover:bg-white ${THEME.ring} focus:bg-white transition ${fieldErrors.password ? 'border-red-500 bg-red-50' : valid.password ? 'border-green-300 bg-green-50' : 'border-gray-200'}`}
+                          className={`w-full pl-10 pr-12 py-3 border-2 rounded-xl bg-gray-50 hover:bg-white ${THEME.ring} focus:bg-white transition ${fieldErrors.password ? "border-red-500 bg-red-50" : valid.password ? "border-green-300 bg-green-50" : "border-gray-200"}`}
                           placeholder={t.help.minPassword}
                         />
-                        <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500" onClick={() => setShowPassword((s) => !s)} aria-label={showPassword ? 'Hide password' : 'Show password'}>
-                          {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                        <button
+                          type="button"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                          onClick={() => setShowPassword((s) => !s)}
+                          aria-label={
+                            showPassword ? "Hide password" : "Show password"
+                          }
+                        >
+                          {showPassword ? (
+                            <EyeOff className="w-5 h-5" />
+                          ) : (
+                            <Eye className="w-5 h-5" />
+                          )}
                         </button>
                       </div>
                       <div id="pwd-meter" className="mt-2">
                         <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
-                          <div className={`h-2 ${pwdStrength.color} transition-all`} style={{ width: `${pwdStrength.percent}%` }} aria-hidden />
+                          <div
+                            className={`h-2 ${pwdStrength.color} transition-all`}
+                            style={{ width: `${pwdStrength.percent}%` }}
+                            aria-hidden
+                          />
                         </div>
                         <div className="mt-1 text-xs flex items-center justify-between">
                           <span className="text-gray-600">
-                            {lang === 'en' ? 'Strength:' : 'Qualité :'} <strong>{lang === 'en' ? pwdStrength.labelEn : pwdStrength.labelFr}</strong>
+                            {lang === "en" ? "Strength:" : "Qualité :"}{" "}
+                            <strong>
+                              {lang === "en"
+                                ? pwdStrength.labelEn
+                                : pwdStrength.labelFr}
+                            </strong>
                           </span>
                           <span className="text-gray-500">
-                            {lang === 'en' ? 'Tip: mix A-z, 0-9 & symbols' : 'Astuce : mixez A-z, 0-9 & symboles'}
+                            {lang === "en"
+                              ? "Tip: mix A-z, 0-9 & symbols"
+                              : "Astuce : mixez A-z, 0-9 & symboles"}
                           </span>
                         </div>
-                        {capsPassword && <p className="text-xs text-orange-600 mt-1">↥ {lang === 'en' ? 'Caps Lock is ON' : 'Verr. Maj activée'}</p>}
+                        {capsPassword && (
+                          <p className="text-xs text-orange-600 mt-1">
+                            ↥{" "}
+                            {lang === "en"
+                              ? "Caps Lock is ON"
+                              : "Verr. Maj activée"}
+                          </p>
+                        )}
                       </div>
-                      <FieldSuccess show={valid.password}>{lang === 'en' ? 'Nice password! 🔒' : 'Mot de passe OK ! 🔒'}</FieldSuccess>
+                      <FieldSuccess show={valid.password}>
+                        {lang === "en"
+                          ? "Nice password! 🔒"
+                          : "Mot de passe OK ! 🔒"}
+                      </FieldSuccess>
                     </div>
 
                     {/* Contact (Téléphone E.164) */}
-                    <div className={`mt-5 rounded-xl border ${THEME.border} ${THEME.subtle} p-4`} ref={refPhone}>
+                    <div
+                      className={`mt-5 rounded-xl border ${THEME.border} ${THEME.subtle} p-4`}
+                      ref={refPhone}
+                    >
                       <h3 className="text-sm font-bold text-gray-900 mb-3 flex items-center">
-                        <PhoneIcon className={`w-4 h-4 mr-2 ${THEME.icon}`} /> {t.phone}
+                        <PhoneIcon className={`w-4 h-4 mr-2 ${THEME.icon}`} />{" "}
+                        {t.phone}
                       </h3>
 
                       {/* Champ unique normalisé */}
                       <PhoneField
                         name="phone"
                         control={control}
-                        label={lang === 'en' ? 'Phone (international format)' : 'Téléphone (format international)'}
+                        label={
+                          lang === "en"
+                            ? "Phone (international format)"
+                            : "Téléphone (format international)"
+                        }
                         required
                         defaultCountry="FR"
                         placeholder="+33612345678"
                       />
 
                       <FieldSuccess show={valid.phone}>
-                        {lang === 'en' ? 'Phone number valid (E.164) 🔒' : 'Numéro valide (E.164) 🔒'}
+                        {lang === "en"
+                          ? "Phone number valid (E.164) 🔒"
+                          : "Numéro valide (E.164) 🔒"}
                       </FieldSuccess>
 
                       <p className="mt-3 text-xs text-gray-600 flex items-center">
                         <Info className="w-3.5 h-3.5 mr-1" />
-                        {lang === 'en'
-                          ? 'We only use your phone to connect you with people who need help. No spam.'
-                          : 'Votre numéro sert uniquement à des mises en relation. Aucun spam.'}
+                        {lang === "en"
+                          ? "We only use your phone to connect you with people who need help. No spam."
+                          : "Votre numéro sert uniquement à des mises en relation. Aucun spam."}
                       </p>
                     </div>
                   </section>
 
                   {/* Step 2: Geographic & Experience */}
                   <section className="p-5 sm:p-6 border-t border-gray-50">
-                    <SectionHeader icon={<Globe className="w-5 h-5" />} title={t.geoInfo} />
+                    <SectionHeader
+                      icon={<Globe className="w-5 h-5" />}
+                      title={t.geoInfo}
+                    />
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div ref={refCountry}>
                         <label className="block text-sm font-semibold text-gray-800 mb-1">
-                          {t.residenceCountry} <span className="text-red-500">*</span>
+                          {t.residenceCountry}{" "}
+                          <span className="text-red-500">*</span>
                         </label>
                         <select
-                          name="currentCountry" value={form.currentCountry} onChange={onChange}
-                          className={`w-full px-4 py-3 border-2 rounded-xl bg-white ${THEME.ring} ${fieldErrors.currentCountry ? 'border-red-500' : valid.currentCountry ? 'border-green-300 bg-green-50' : 'border-gray-200'}`}
+                          name="currentCountry"
+                          value={form.currentCountry}
+                          onChange={onChange}
+                          className={`w-full px-4 py-3 border-2 rounded-xl bg-white ${THEME.ring} ${fieldErrors.currentCountry ? "border-red-500" : valid.currentCountry ? "border-green-300 bg-green-50" : "border-gray-200"}`}
                         >
-                          <option value="">{lang === 'en' ? 'Select your country' : 'Sélectionnez votre pays'}</option>
-                          {countryOptions.map((c) => <option key={c} value={c}>{c}</option>)}
+                          <option value="">
+                            {lang === "en"
+                              ? "Select your country"
+                              : "Sélectionnez votre pays"}
+                          </option>
+                          {countryOptions.map((c) => (
+                            <option key={c} value={c}>
+                              {c}
+                            </option>
+                          ))}
                         </select>
-                        <FieldSuccess show={valid.currentCountry}>{lang === 'en' ? 'Perfect! ✨' : 'Parfait ! ✨'}</FieldSuccess>
+                        <FieldSuccess show={valid.currentCountry}>
+                          {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"}
+                        </FieldSuccess>
                       </div>
 
                       <div ref={refPresence}>
                         <label className="block text-sm font-semibold text-gray-800 mb-1">
-                          {t.presenceCountry} <span className="text-red-500">*</span>
+                          {t.presenceCountry}{" "}
+                          <span className="text-red-500">*</span>
                         </label>
                         <select
-                          name="currentPresenceCountry" value={form.currentPresenceCountry} onChange={onChange}
-                          className={`w-full px-4 py-3 border-2 rounded-xl bg-white ${THEME.ring} ${fieldErrors.currentPresenceCountry ? 'border-red-500' : valid.currentPresenceCountry ? 'border-green-300 bg-green-50' : 'border-gray-200'}`}
+                          name="currentPresenceCountry"
+                          value={form.currentPresenceCountry}
+                          onChange={onChange}
+                          className={`w-full px-4 py-3 border-2 rounded-xl bg-white ${THEME.ring} ${fieldErrors.currentPresenceCountry ? "border-red-500" : valid.currentPresenceCountry ? "border-green-300 bg-green-50" : "border-gray-200"}`}
                         >
-                          <option value="">{lang === 'en' ? 'Select your presence country' : 'Sélectionnez votre pays de présence'}</option>
-                          {countryOptions.map((c) => <option key={c} value={c}>{c}</option>)}
+                          <option value="">
+                            {lang === "en"
+                              ? "Select your presence country"
+                              : "Sélectionnez votre pays de présence"}
+                          </option>
+                          {countryOptions.map((c) => (
+                            <option key={c} value={c}>
+                              {c}
+                            </option>
+                          ))}
                         </select>
-                        <FieldSuccess show={valid.currentPresenceCountry}>{lang === 'en' ? 'Perfect! ✨' : 'Parfait ! ✨'}</FieldSuccess>
+                        <FieldSuccess show={valid.currentPresenceCountry}>
+                          {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"}
+                        </FieldSuccess>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                       <div ref={refInterv}>
                         <label className="block text-sm font-semibold text-gray-800 mb-1">
-                          {t.interventionCountry} <span className="text-red-500">*</span>
+                          {t.interventionCountry}{" "}
+                          <span className="text-red-500">*</span>
                         </label>
                         <select
-                          name="interventionCountry" value={form.interventionCountry} onChange={onChange}
-                          className={`w-full px-4 py-3 border-2 rounded-xl bg-white ${THEME.ring} ${fieldErrors.interventionCountry ? 'border-red-500' : valid.interventionCountry ? 'border-green-300 bg-green-50' : 'border-gray-200'}`}
+                          name="interventionCountry"
+                          value={form.interventionCountry}
+                          onChange={onChange}
+                          className={`w-full px-4 py-3 border-2 rounded-xl bg-white ${THEME.ring} ${fieldErrors.interventionCountry ? "border-red-500" : valid.interventionCountry ? "border-green-300 bg-green-50" : "border-gray-200"}`}
                         >
-                          <option value="">{lang === 'en' ? 'Select your intervention country' : "Sélectionnez votre pays d'intervention"}</option>
-                          {countryOptions.map((c) => <option key={c} value={c}>{c}</option>)}
+                          <option value="">
+                            {lang === "en"
+                              ? "Select your intervention country"
+                              : "Sélectionnez votre pays d'intervention"}
+                          </option>
+                          {countryOptions.map((c) => (
+                            <option key={c} value={c}>
+                              {c}
+                            </option>
+                          ))}
                         </select>
-                        <FieldSuccess show={valid.interventionCountry}>{lang === 'en' ? 'Perfect! ✨' : 'Parfait ! ✨'}</FieldSuccess>
+                        <FieldSuccess show={valid.interventionCountry}>
+                          {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"}
+                        </FieldSuccess>
                       </div>
 
                       <div ref={refYears}>
                         <label className="block text-sm font-semibold text-gray-800 mb-1">
-                          {t.yearsAsExpat} <span className="text-red-500">*</span>
+                          {t.yearsAsExpat}{" "}
+                          <span className="text-red-500">*</span>
                         </label>
                         <input
-                          name="yearsAsExpat" type="number" min={1} max={60} value={form.yearsAsExpat || ''} onChange={onChange}
-                          className={`w-full px-4 py-3 border-2 rounded-xl bg-gray-50 hover:bg-white ${THEME.ring} ${fieldErrors.yearsAsExpat ? 'border-red-500 bg-red-50' : valid.yearsAsExpat ? 'border-green-300 bg-green-50' : 'border-gray-200'}`}
+                          name="yearsAsExpat"
+                          type="number"
+                          min={1}
+                          max={60}
+                          value={form.yearsAsExpat || ""}
+                          onChange={onChange}
+                          className={`w-full px-4 py-3 border-2 rounded-xl bg-gray-50 hover:bg-white ${THEME.ring} ${fieldErrors.yearsAsExpat ? "border-red-500 bg-red-50" : valid.yearsAsExpat ? "border-green-300 bg-green-50" : "border-gray-200"}`}
                           placeholder="5"
                         />
-                        <FieldSuccess show={valid.yearsAsExpat}>{lang === 'en' ? 'Perfect! ✨' : 'Parfait ! ✨'}</FieldSuccess>
+                        <FieldSuccess show={valid.yearsAsExpat}>
+                          {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"}
+                        </FieldSuccess>
                       </div>
                     </div>
 
                     {/* Languages */}
-                    <div className={`mt-4 rounded-xl border ${THEME.border} p-4 ${THEME.subtle}`} ref={refLangs}>
+                    <div
+                      className={`mt-4 rounded-xl border ${THEME.border} p-4 ${THEME.subtle}`}
+                      ref={refLangs}
+                    >
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
                         {t.languages} <span className="text-red-500">*</span>
                       </label>
 
                       {(selectedLanguages as LanguageOption[]).length > 0 && (
                         <div className="mb-2 text-xs text-gray-700">
-                          <span className="font-medium">{t.selectedLanguages}:</span>{' '}
-                          {(selectedLanguages as LanguageOption[]).map((l) => l.value.toUpperCase()).join(', ')}
+                          <span className="font-medium">
+                            {t.selectedLanguages}:
+                          </span>{" "}
+                          {(selectedLanguages as LanguageOption[])
+                            .map((l) => l.value.toUpperCase())
+                            .join(", ")}
                         </div>
                       )}
 
-                      <Suspense fallback={<div className="h-10 rounded-lg bg-gray-100 animate-pulse" />}>
+                      <Suspense
+                        fallback={
+                          <div className="h-10 rounded-lg bg-gray-100 animate-pulse" />
+                        }
+                      >
                         <MultiLanguageSelect
                           value={selectedLanguages}
                           onChange={(v: MultiValue<LanguageOption>) => {
@@ -1149,12 +1607,22 @@ const RegisterExpat: React.FC = () => {
                             }
                           }}
                           locale={lang}
-                          placeholder={lang === 'fr' ? "Rechercher et sélectionner les langues..." : "Search and select languages..."}
+                          placeholder={
+                            lang === "fr"
+                              ? "Rechercher et sélectionner les langues..."
+                              : "Search and select languages..."
+                          }
                         />
                       </Suspense>
 
-                      {fieldErrors.languages && <p className="text-sm text-red-600 mt-2">{fieldErrors.languages}</p>}
-                      <FieldSuccess show={valid.languages}>{lang === 'en' ? 'Perfect! ✨' : 'Parfait ! ✨'}</FieldSuccess>
+                      {fieldErrors.languages && (
+                        <p className="text-sm text-red-600 mt-2">
+                          {fieldErrors.languages}
+                        </p>
+                      )}
+                      <FieldSuccess show={valid.languages}>
+                        {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"}
+                      </FieldSuccess>
                     </div>
 
                     {/* Bio */}
@@ -1163,44 +1631,85 @@ const RegisterExpat: React.FC = () => {
                         {t.bio} <span className="text-red-500">*</span>
                       </label>
                       <textarea
-                        name="bio" rows={5} maxLength={500} value={form.bio} onChange={onChange}
-                        className={`w-full px-4 py-3 border-2 rounded-xl bg-gray-50 hover:bg-white ${THEME.ring} min-h-[120px] ${fieldErrors.bio ? 'border-red-500 bg-red-50' : valid.bio ? 'border-green-300 bg-green-50' : 'border-gray-200'}`}
-                        placeholder={lang === 'en' ? 'In a few lines, share your journey + how you help (friendly + specific).' : 'En quelques lignes, racontez votre parcours + comment vous aidez (sympa & concret).'}
+                        name="bio"
+                        rows={5}
+                        maxLength={500}
+                        value={form.bio}
+                        onChange={onChange}
+                        className={`w-full px-4 py-3 border-2 rounded-xl bg-gray-50 hover:bg-white ${THEME.ring} min-h-[120px] ${fieldErrors.bio ? "border-red-500 bg-red-50" : valid.bio ? "border-green-300 bg-green-50" : "border-gray-200"}`}
+                        placeholder={
+                          lang === "en"
+                            ? "In a few lines, share your journey + how you help (friendly + specific)."
+                            : "En quelques lignes, racontez votre parcours + comment vous aidez (sympa & concret)."
+                        }
                       />
                       <div className="mt-2">
                         <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
-                          <div className={`h-2 ${form.bio.length < 50 ? 'bg-orange-400' : 'bg-green-500'} transition-all`} style={{ width: `${Math.min((form.bio.length / 500) * 100, 100)}%` }} aria-hidden />
+                          <div
+                            className={`h-2 ${form.bio.length < 50 ? "bg-orange-400" : "bg-green-500"} transition-all`}
+                            style={{
+                              width: `${Math.min((form.bio.length / 500) * 100, 100)}%`,
+                            }}
+                            aria-hidden
+                          />
                         </div>
                         <div className="flex justify-between text-xs mt-1">
-                          <span className={form.bio.length < 50 ? 'text-orange-600' : 'text-green-600'}>
+                          <span
+                            className={
+                              form.bio.length < 50
+                                ? "text-orange-600"
+                                : "text-green-600"
+                            }
+                          >
                             {form.bio.length < 50
-                              ? lang === 'en'
+                              ? lang === "en"
                                 ? `Just ${50 - form.bio.length} chars to go — you’ve got this! 💪`
                                 : `Encore ${50 - form.bio.length} caractères — vous y êtes presque ! 💪`
-                              : lang === 'en'
-                              ? '✓ Nice! Field validated.'
-                              : '✓ Top ! Champ validé.'}
+                              : lang === "en"
+                                ? "✓ Nice! Field validated."
+                                : "✓ Top ! Champ validé."}
                           </span>
-                          <span className={form.bio.length > 450 ? 'text-orange-500' : 'text-gray-500'}>
+                          <span
+                            className={
+                              form.bio.length > 450
+                                ? "text-orange-500"
+                                : "text-gray-500"
+                            }
+                          >
                             {form.bio.length}/500
                           </span>
                         </div>
-                        <p className="mt-1 text-xs text-gray-500">{t.help.bioHint}</p>
+                        <p className="mt-1 text-xs text-gray-500">
+                          {t.help.bioHint}
+                        </p>
                       </div>
                     </div>
 
                     {/* Photo */}
-                    <div className={`mt-4 rounded-xl border ${THEME.border} p-4 ${THEME.subtle}`} ref={refPhoto}>
+                    <div
+                      className={`mt-4 rounded-xl border ${THEME.border} p-4 ${THEME.subtle}`}
+                      ref={refPhoto}
+                    >
                       <label className="text-sm font-semibold text-gray-900 mb-2 flex items-center">
-                        <Camera className={`w-4 h-4 mr-2 ${THEME.icon}`} /> {t.profilePhoto} <span className="text-red-500 ml-1">*</span>
+                        <Camera className={`w-4 h-4 mr-2 ${THEME.icon}`} />{" "}
+                        {t.profilePhoto}{" "}
+                        <span className="text-red-500 ml-1">*</span>
                       </label>
-                      <Suspense fallback={<div className="py-6"><div className="h-24 bg-gray-100 animate-pulse rounded-xl" /></div>}>
+                      <Suspense
+                        fallback={
+                          <div className="py-6">
+                            <div className="h-24 bg-gray-100 animate-pulse rounded-xl" />
+                          </div>
+                        }
+                      >
                         <ImageUploader
                           locale={lang}
                           currentImage={form.profilePhoto}
                           onImageUploaded={(url: string) => {
                             setForm((prev) => ({ ...prev, profilePhoto: url }));
-                            setTimeout(() => { scrollToFirstIncomplete(); }, 150);
+                            setTimeout(() => {
+                              scrollToFirstIncomplete();
+                            }, 150);
                           }}
                           hideNativeFileLabel
                           cropShape="round"
@@ -1209,40 +1718,73 @@ const RegisterExpat: React.FC = () => {
                           isRegistration={true}
                         />
                       </Suspense>
-                      {fieldErrors.profilePhoto && <p className="text-sm text-red-600 mt-2">{fieldErrors.profilePhoto}</p>}
+                      {fieldErrors.profilePhoto && (
+                        <p className="text-sm text-red-600 mt-2">
+                          {fieldErrors.profilePhoto}
+                        </p>
+                      )}
                       <p className="text-xs text-gray-500 mt-1">
-                        {lang === 'en' ? 'Professional photo (JPG/PNG) required' : 'Photo professionnelle (JPG/PNG) obligatoire'}
+                        {lang === "en"
+                          ? "Professional photo (JPG/PNG) required"
+                          : "Photo professionnelle (JPG/PNG) obligatoire"}
                       </p>
-                      <FieldSuccess show={valid.profilePhoto}>{lang === 'en' ? 'Nice photo! 📸' : 'Belle photo ! 📸'}</FieldSuccess>
+                      <FieldSuccess show={valid.profilePhoto}>
+                        {lang === "en" ? "Nice photo! 📸" : "Belle photo ! 📸"}
+                      </FieldSuccess>
                     </div>
                   </section>
 
                   {/* Step 3: Help domains */}
-                  <section className="p-5 sm:p-6 border-t border-gray-50" ref={refHelp}>
-                    <SectionHeader icon={<CheckCircle className="w-5 h-5" />} title={t.helpInfo} />
-                    <div className={`rounded-xl border ${THEME.border} p-4 ${THEME.subtle}`}>
+                  <section
+                    className="p-5 sm:p-6 border-t border-gray-50"
+                    ref={refHelp}
+                  >
+                    <SectionHeader
+                      icon={<CheckCircle className="w-5 h-5" />}
+                      title={t.helpInfo}
+                    />
+                    <div
+                      className={`rounded-xl border ${THEME.border} p-4 ${THEME.subtle}`}
+                    >
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
                         {t.helpDomains} <span className="text-red-500">*</span>
                       </label>
-                      <TagSelector items={form.helpTypes} onRemove={removeHelp} />
+                      <TagSelector
+                        items={form.helpTypes}
+                        onRemove={removeHelp}
+                      />
                       <select
-                        onChange={onHelpSelect} value=""
+                        onChange={onHelpSelect}
+                        value=""
                         className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl bg-white focus:outline-none focus:border-green-600"
                       >
                         <option value="">{t.addHelp}</option>
-                        {helpTypeOptions.map((c) => <option key={c} value={c}>{c}</option>)}
+                        {helpTypeOptions.map((c) => (
+                          <option key={c} value={c}>
+                            {c}
+                          </option>
+                        ))}
                       </select>
-                      {fieldErrors.helpTypes && <p className="text-sm text-red-600 mt-2">{fieldErrors.helpTypes}</p>}
+                      {fieldErrors.helpTypes && (
+                        <p className="text-sm text-red-600 mt-2">
+                          {fieldErrors.helpTypes}
+                        </p>
+                      )}
 
                       {showCustomHelp && (
                         <div className="flex gap-2 mt-3">
                           <input
                             value={form.customHelpType}
-                            onChange={(e) => setForm((p) => ({ ...p, customHelpType: e.target.value }))}
+                            onChange={(e) =>
+                              setForm((p) => ({
+                                ...p,
+                                customHelpType: e.target.value,
+                              }))
+                            }
                             className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl"
                             placeholder={t.specifyHelp}
                             onKeyDown={(e) => {
-                              if (e.key === 'Enter') {
+                              if (e.key === "Enter") {
                                 e.preventDefault();
                                 addCustomHelp();
                               }
@@ -1259,29 +1801,58 @@ const RegisterExpat: React.FC = () => {
                         </div>
                       )}
 
-                      <FieldSuccess show={valid.helpTypes}>{lang === 'en' ? 'Perfect! ✨' : 'Parfait ! ✨'}</FieldSuccess>
+                      <FieldSuccess show={valid.helpTypes}>
+                        {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"}
+                      </FieldSuccess>
                     </div>
                   </section>
 
                   {/* Terms + Submit */}
-                  <section className={`p-5 sm:p-6 border-t border-gray-50 bg-gradient-to-br ${THEME.gradFrom} ${THEME.gradTo}`}>
-                    <div className="bg-white rounded-xl p-4 sm:p-5 shadow-md" ref={refCGU}>
+                  <section
+                    className={`p-5 sm:p-6 border-t border-gray-50 bg-gradient-to-br ${THEME.gradFrom} ${THEME.gradTo}`}
+                  >
+                    <div
+                      className="bg-white rounded-xl p-4 sm:p-5 shadow-md"
+                      ref={refCGU}
+                    >
                       <div className="flex items-start gap-3">
                         <input
-                          type="checkbox" id="acceptTerms" checked={form.acceptTerms}
-                          onChange={(e) => setForm((p) => ({ ...p, acceptTerms: e.target.checked }))}
-                          className="h-5 w-5 text-emerald-600 border-gray-300 rounded mt-0.5" required
+                          type="checkbox"
+                          id="acceptTerms"
+                          checked={form.acceptTerms}
+                          onChange={(e) =>
+                            setForm((p) => ({
+                              ...p,
+                              acceptTerms: e.target.checked,
+                            }))
+                          }
+                          className="h-5 w-5 text-emerald-600 border-gray-300 rounded mt-0.5"
+                          required
                         />
-                        <label htmlFor="acceptTerms" className="text-sm text-gray-800">
-                          {lang === 'en' ? 'I accept the' : "J'accepte les"}{' '}
-                          <Link to="/cgu-expatries" className="text-emerald-700 underline font-semibold" target="_blank" rel="noopener noreferrer">
-                            {lang === 'en' ? 'Expat T&Cs' : 'CGU Expatriés'}
-                          </Link>{' '}
+                        <label
+                          htmlFor="acceptTerms"
+                          className="text-sm text-gray-800"
+                        >
+                          {lang === "en" ? "I accept the" : "J'accepte les"}{" "}
+                          <Link
+                            to="/cgu-expatries"
+                            className="text-emerald-700 underline font-semibold"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {lang === "en" ? "Expat T&Cs" : "CGU Expatriés"}
+                          </Link>{" "}
                           <span className="text-red-500">*</span>
                         </label>
                       </div>
-                      {fieldErrors.acceptTerms && <p className="text-sm text-red-600 mt-2">{fieldErrors.acceptTerms}</p>}
-                      <FieldSuccess show={valid.acceptTerms}>{lang === 'en' ? 'Perfect! ✨' : 'Parfait ! ✨'}</FieldSuccess>
+                      {fieldErrors.acceptTerms && (
+                        <p className="text-sm text-red-600 mt-2">
+                          {fieldErrors.acceptTerms}
+                        </p>
+                      )}
+                      <FieldSuccess show={valid.acceptTerms}>
+                        {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"}
+                      </FieldSuccess>
                     </div>
 
                     <div className="mt-4">
@@ -1291,7 +1862,7 @@ const RegisterExpat: React.FC = () => {
                         fullWidth
                         size="large"
                         className={`text-white font-black py-4 px-6 rounded-2xl text-base sm:text-lg w-full shadow-lg
-                          ${canSubmit ? `bg-gradient-to-r ${THEME.button} hover:brightness-110` : 'bg-gray-400 cursor-not-allowed opacity-60'}`}
+                          ${canSubmit ? `bg-gradient-to-r ${THEME.button} hover:brightness-110` : "bg-gray-400 cursor-not-allowed opacity-60"}`}
                         disabled={!canSubmit}
                       >
                         {isLoading || isSubmitting ? (
@@ -1302,7 +1873,9 @@ const RegisterExpat: React.FC = () => {
                           </span>
                         )}
                       </Button>
-                      <p className="text-center text-xs text-white/90 mt-4">{t.secureNote}</p>
+                      <p className="text-center text-xs text-white/90 mt-4">
+                        {t.secureNote}
+                      </p>
                     </div>
                   </section>
                 </form>
@@ -1315,27 +1888,42 @@ const RegisterExpat: React.FC = () => {
                 lang={lang}
                 onJump={(r) => {
                   const el = (r?.current as HTMLElement | null) || null;
-                  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  if (el)
+                    el.scrollIntoView({ behavior: "smooth", block: "center" });
                 }}
               />
 
               {/* Footer */}
               <footer className="text-center mt-8">
                 <div className="bg-white rounded-xl p-5 shadow border">
-                  <h3 className="text-lg sm:text-xl font-black text-gray-900 mb-1">{t.footerTitle}</h3>
+                  <h3 className="text-lg sm:text-xl font-black text-gray-900 mb-1">
+                    {t.footerTitle}
+                  </h3>
                   <p className="text-sm text-gray-700">{t.footerText}</p>
                 </div>
                 <div className="mt-4 flex flex-wrap justify-center gap-4 text-xs text-gray-500">
-                  <Link to="/politique-confidentialite" className="hover:text-emerald-700 underline">
+                  <Link
+                    to="/politique-confidentialite"
+                    className="hover:text-emerald-700 underline"
+                  >
                     {t.privacy}
                   </Link>
-                  <Link to="/cgu-expatries" className="hover:text-emerald-700 underline">
+                  <Link
+                    to="/cgu-expatries"
+                    className="hover:text-emerald-700 underline"
+                  >
                     {t.cguLabel}
                   </Link>
-                  <Link to="/centre-aide" className="hover:text-emerald-700 underline">
+                  <Link
+                    to="/centre-aide"
+                    className="hover:text-emerald-700 underline"
+                  >
                     {t.helpLink}
                   </Link>
-                  <Link to="/contact" className="hover:text-emerald-700 underline">
+                  <Link
+                    to="/contact"
+                    className="hover:text-emerald-700 underline"
+                  >
                     {t.contact}
                   </Link>
                 </div>
