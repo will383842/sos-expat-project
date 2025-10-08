@@ -1,4 +1,3 @@
-// vite.config.js
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import { fileURLToPath, URL } from 'node:url'
@@ -9,9 +8,6 @@ export default defineConfig(({ mode }) => {
   const PROJECT_ID = env.VITE_FIREBASE_PROJECT_ID || 'sos-urgently-ac307'
   const REGION = env.VITE_FUNCTIONS_REGION || 'europe-west1'
 
-  // Choix de la cible API :
-  // - si émulateurs : http://127.0.0.1:5001/{project}/{region}
-  // - sinon :        https://{region}-{project}.cloudfunctions.net
   const target = USE_EMULATORS
     ? `http://127.0.0.1:5001/${PROJECT_ID}/${REGION}`
     : `https://${REGION}-${PROJECT_ID}.cloudfunctions.net`
@@ -21,19 +17,11 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
-        '@firebase/auth': fileURLToPath(new URL('./node_modules/firebase/node_modules/@firebase/auth', import.meta.url)),
       },
-      dedupe: [
-        'firebase',
-        '@firebase/app',
-        '@firebase/auth',
-        '@firebase/firestore',
-        '@firebase/functions',
-        '@firebase/storage',
-      ],
     },
     optimizeDeps: {
-      include: [
+      exclude: [
+        'firebase',
         'firebase/app',
         'firebase/auth',
         'firebase/firestore',
@@ -41,8 +29,12 @@ export default defineConfig(({ mode }) => {
         'firebase/storage',
         'firebase/analytics',
       ],
+      esbuildOptions: {
+        target: 'esnext'
+      }
     },
     build: {
+      target: 'esnext',
       commonjsOptions: {
         include: [/node_modules/],
         transformMixedEsModules: true,
@@ -50,11 +42,9 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks(id) {
-            // Keep all firebase modules together in one chunk
             if (id.includes('firebase') || id.includes('@firebase')) {
               return 'firebase';
             }
-            // Vendor chunk for other node_modules
             if (id.includes('node_modules')) {
               return 'vendor';
             }
