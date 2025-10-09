@@ -393,6 +393,7 @@ const REVIEWS: Review[] = [
    ================================ */
 function ReviewsSlider({ theme = "dark" }: { theme?: "dark" | "light" }) {
   const [current, setCurrent] = useState(0);
+  const intl = useIntl();
   const [paused, setPaused] = useState(false);
   const touchStartX = useRef<number | null>(null);
 
@@ -426,8 +427,13 @@ function ReviewsSlider({ theme = "dark" }: { theme?: "dark" | "light" }) {
     touchStartX.current = null;
   };
 
-  const labelType = (t: TypeEchange) =>
-    t === "avocat" ? "Appel avec un avocat" : "Appel avec un·e expatrié·e";
+  // const labelType = (t: TypeEchange) =>
+  //   t === "avocat" ? "Appel avec un avocat" : "Appel avec un·e expatrié·e";
+  const labelType = (t: TypeEchange): string => {
+    return t === "avocat"
+      ? intl.formatMessage({ id: "call.type.lawyer" })
+      : intl.formatMessage({ id: "call.type.expat" });
+  };
 
   // handler de fallback d’image
   const onImgError = (

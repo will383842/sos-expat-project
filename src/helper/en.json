@@ -237,5 +237,7 @@
   "join.expat.benefit7": "I want to help: expats, travelers, vacationers",
   "join.expat.benefit8": "Sign up and describe your experience & local knowledge",
   "join.expat.cta": "I'm an expat",
-  "join.appTip": "Tip: download the <strong>SOS Expat by Ulixai</strong> app to go online/offline whenever you want."
+  "join.appTip": "Tip: download the <strong>SOS Expat by Ulixai</strong> app to go online/offline whenever you want.",
+   "call.type.lawyer": "Call with a lawyer",
+  "call.type.expat": "Call with an expat"
 }

@@ -238,5 +238,7 @@
   "join.expat.benefit7": "Je veux aider : expats, voyageurs, vacanciers",
   "join.expat.benefit8": "Inscrivez-vous et décrivez votre expérience & vos connaissances locales",
   "join.expat.cta": "Je suis expatrié",
-  "join.appTip": "Astuce : téléchargez l'appli <strong>SOS Expat d'Ulixai</strong> pour passer en ligne/hors ligne quand vous le souhaitez."
+  "join.appTip": "Astuce : téléchargez l'appli <strong>SOS Expat d'Ulixai</strong> pour passer en ligne/hors ligne quand vous le souhaitez.",
+  "call.type.lawyer": "Appel avec un avocat",
+  "call.type.expat": "Appel avec un·e expatrié·e"
 }
