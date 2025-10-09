@@ -60,5 +60,43 @@
   "urgentNow": "Urgente ahora",
   "appTipDownload": "Consejo: descarga la aplicación {strong}SOS Expat de Ulixai{/strong} para estar en línea/fuera de línea cuando quieras.",
   "installApp": "Instalar aplicación",
-  "appInstallHint": "¡La aplicación que te hace bien!"
+  "appInstallHint": "¡La aplicación que te hace bien!",
+  "nav.home": "Inicio",
+  "nav.viewProfiles": "Perfiles de ayuda",
+  "nav.testimonials": "Opiniones",
+  "nav.howItWorks": "Cómo funciona",
+  "nav.pricing": "Precios",
+  "nav.sosCall": "SOS Llamada",
+
+  "status.online": "En línea",
+  "status.offline": "Fuera de línea",
+
+  "auth.login": "Iniciar sesión",
+  "auth.signup": "Registrarse",
+
+  "user.dashboard": "Panel de control",
+  "user.adminConsole": "Consola Admin",
+  "user.logout": "Cerrar sesión",
+
+  "language.label": "Idioma",
+
+  "app.installNow": "Instalar ahora",
+  "app.downloadApp": "Descargar app",
+  "app.downloadPrompt": "📱 ¡Descarga la app SOS Expats!",
+  "app.description": "¡Ayuda de emergencia en tu bolsillo! Acceso instantáneo a expertos, incluso sin conexión.",
+  "app.badge.freeSecure": "100% gratis y seguro",
+
+  "benefits.expat.housing": "Instalación: vivienda, plan móvil, banco",
+  "benefits.expat.procedures": "Escolaridad y seguros locales",
+  "benefits.expat.cultural": "Prefectura / inmigración: citas y documentos",
+  "benefits.expat.network": "Red local (contactos útiles)",
+  "benefits.expat.experience": "Experiencias concretas",
+  "benefits.expat.support": "Apoyo atento",
+
+  "benefits.lawyer.analysis": "Análisis rápido de tu situación",
+  "benefits.lawyer.advice": "Asesoramiento jurídico personalizado",
+  "benefits.lawyer.confidentiality": "Confidencialidad y seguridad garantizadas",
+  "benefits.lawyer.response": "Respuesta en < 5 minutos",
+  "benefits.lawyer.expertise": "Experiencia en el país en cuestión",
+  "benefits.lawyer.guidance": "Orientación hacia los procedimientos correctos"
 }

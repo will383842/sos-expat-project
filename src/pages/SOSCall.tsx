@@ -1731,7 +1731,8 @@ const SOSCall: React.FC = () => {
                   className="inline-flex items-center gap-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-0.5"
                 >
                   <Phone className="w-5 h-5" />
-                  Trouver un expert
+                  {/* Trouver un expert */}
+                  <FormattedMessage id="findExpert" />
                 </button>
               </div>
             </section>

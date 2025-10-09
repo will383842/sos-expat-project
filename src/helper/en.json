@@ -257,5 +257,6 @@
   "preview.hide": "Hide preview",
   "preview.show": "Show quick preview",
   "payment.secure.title": "Secure payment",
-  "payment.secure.description": "Data protected by SSL. Call automatically initiated after payment."
+  "payment.secure.description": "Data protected by SSL. Call automatically initiated after payment.",
+  "findExpert": "Find an expert"
 }
