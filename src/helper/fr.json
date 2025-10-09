@@ -263,5 +263,8 @@
   "user.dashboard": "Panel de control",
   "user.adminConsole": "Consola Admin",
   "user.logout": "Cerrar sesión",
-   "findExpert": "Trouver un expert"
+  "findExpert": "Trouver un expert",
+  "Code promo invalide ou expiré":"Code promo invalide ou expiré",
+    "bookMyConsultation": "Réserver ma consultation",
+     "callIn5Min": "Appel en ~5 min"
 }

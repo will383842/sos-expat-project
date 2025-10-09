@@ -1109,7 +1109,8 @@ const OptimizedHomePage: React.FC = () => {
                         className={`inline-flex items-center justify-center w-full px-6 py-4 rounded-2xl font-bold text-lg text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white ${`bg-gradient-to-r ${accentGradient}`} hover:scale-105`}
                         aria-label={`Réserver ma consultation – ${title}`}
                       >
-                        Réserver ma consultation
+                        {/* Réserver ma consultation */}
+                        <FormattedMessage id="bookMyConsultation" />
                       </Link>
                     </div>
                   </div>

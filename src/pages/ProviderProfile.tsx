@@ -47,6 +47,7 @@ import { formatLanguages } from "@/i18n";
 
 // 👉 Pricing admin (source de vérité)
 import { usePricingConfig } from "../services/pricingService";
+import { FormattedMessage } from "react-intl";
 
 /* ===================================================================== */
 
@@ -1580,7 +1581,10 @@ const ProviderProfile: React.FC = () => {
                     <div className="text-center mb-6">
                       <div className="inline-flex items-center gap-2 bg-gray-900 text-white rounded-full px-3 py-1 text-xs font-semibold">
                         <Phone size={14} />
-                        <span>Appel en ~5 min</span>
+                        {/* <span>Appel en ~5 min</span> */}
+                        <span>
+                          <FormattedMessage id="callIn5Min" />
+                        </span>
                       </div>
 
                       {/* ✅ Prix uniquement depuis admin_config/pricing */}

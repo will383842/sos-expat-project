@@ -258,5 +258,8 @@
   "preview.show": "Show quick preview",
   "payment.secure.title": "Secure payment",
   "payment.secure.description": "Data protected by SSL. Call automatically initiated after payment.",
-  "findExpert": "Find an expert"
+  "findExpert": "Find an expert",
+  "Code promo invalide ou expiré": "Invalid or expired promo code",
+  "bookMyConsultation": "Book my consultation",
+  "callIn5Min": "Call in ~5 min"
 }
