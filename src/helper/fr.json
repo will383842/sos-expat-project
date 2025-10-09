@@ -254,5 +254,9 @@
   "pwa.hintFallback": "Essayez avec Chrome/Edge (ordinateur) ou Safari/Chrome (mobile).",
   "pwa.touchHint": "L'app qui change la vie des expats ! 🚀",
   "pwa.ariaLabel": "Télécharger l'application SOS Expats",
-  "pwa.tooltipTitle": "L'app qui change tout ! 🚀"
+  "pwa.tooltipTitle": "L'app qui change tout ! 🚀",
+    "preview.hide": "Masquer l'aperçu",
+  "preview.show": "Afficher l'aperçu rapide",
+   "payment.secure.title": "Paiement sécurisé",
+  "payment.secure.description": "Données protégées par SSL. Appel lancé automatiquement après paiement."
 }

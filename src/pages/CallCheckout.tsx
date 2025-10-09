@@ -41,6 +41,7 @@ import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { useForm } from "react-hook-form";
 import { saveProviderMessage } from "@/firebase/saveProviderMessage";
 import { useApp } from "@/contexts/AppContext";
+import { FormattedMessage } from "react-intl";
 
 /* -------------------------- Stripe singleton (HMR-safe) ------------------ */
 // Conserve la même Promise Stripe à travers les rechargements HMR.
@@ -2207,18 +2208,20 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({
           </section>
 
           <aside className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-3">
-            <div className="flex items-start gap-2">
+            <div className="flex items-center gap-2">
               <Shield
                 className="w-4 h-4 text-blue-600 mt-0.5"
                 aria-hidden={true}
               />
               <div>
                 <h4 className="font-semibold text-blue-900 text-sm">
-                  Paiement sécurisé
+                  {/* Paiement sécurisé */}
+                  <FormattedMessage id="payment.secure.title" />
                 </h4>
                 <p className="text-xs text-blue-800 mt-1">
-                  Données protégées par SSL. Appel lancé automatiquement après
-                  paiement.
+                  <FormattedMessage id="payment.secure.description" />
+                  {/* Données protégées par SSL. Appel lancé automatiquement après
+                  paiement. */}
                 </p>
               </div>
             </div>

@@ -54,6 +54,7 @@ import { createBookingRequest } from "../services/booking";
 import PhoneField from "@/components/PhoneField";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
+import { FormattedMessage } from "react-intl";
 
 /** ===== Types complémentaires ===== */
 type LangKey = keyof typeof I18N;
@@ -706,10 +707,10 @@ const BookingRequest: React.FC = () => {
     [&_input:focus]:border-0 [&_input:focus]:outline-none [&_input:focus]:shadow-none
     [&_select]:outline-none [&_select:focus]:outline-none
   ${
-      hasErr
-        ? "border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-red-50"
-        : "border-gray-200 hover:border-gray-300 focus:border-red-600"
-    }`;
+    hasErr
+      ? "border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-red-50"
+      : "border-gray-200 hover:border-gray-300 focus:border-red-600"
+  }`;
 
   // Rediriger vers login si non connecté
   useEffect(() => {
@@ -2043,9 +2044,14 @@ const BookingRequest: React.FC = () => {
                   onClick={() => setShowPreview((v) => !v)}
                   className="inline-flex items-center px-3 py-2 text-sm font-semibold rounded-lg border border-gray-300 hover:bg-gray-50"
                 >
-                  {showPreview
+                  {/* {showPreview
                     ? "Masquer l’aperçu"
-                    : "Afficher l’aperçu rapide"}
+                    : "Afficher l’aperçu rapide"} */}
+                  {showPreview ? (
+                    <FormattedMessage id="preview.hide" />
+                  ) : (
+                    <FormattedMessage id="preview.show" />
+                  )}
                 </button>
 
                 {showPreview && (
