@@ -1,22 +1,48 @@
 // src/pages/Login.tsx - VERSION COMPLÈTE AVEC TOUTES LES FONCTIONNALITÉS
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { Link, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
-import { Eye, EyeOff, AlertCircle, LogIn, Shield, Smartphone, Globe, CheckCircle, Sparkles, Star, Lock, Mail, User } from 'lucide-react';
-import LoadingSpinner from '../components/common/LoadingSpinner';
-import Layout from '../components/layout/Layout';
-import Button from '../components/common/Button';
-import { useAuth } from '../contexts/AuthContext';
-import { useApp } from '../contexts/AppContext';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
+import {
+  Link,
+  useNavigate,
+  useSearchParams,
+  useLocation,
+} from "react-router-dom";
+import {
+  Eye,
+  EyeOff,
+  AlertCircle,
+  LogIn,
+  Shield,
+  Smartphone,
+  Globe,
+  CheckCircle,
+  Sparkles,
+  Star,
+  Lock,
+  Mail,
+  User,
+} from "lucide-react";
+import LoadingSpinner from "../components/common/LoadingSpinner";
+import Layout from "../components/layout/Layout";
+import Button from "../components/common/Button";
+import { useAuth } from "../contexts/AuthContext";
+import { useApp } from "../contexts/AppContext";
 // ✅ CORRECTION: Import correct du type Provider
-import type { Provider } from '../contexts/types';
+import type { Provider } from "../contexts/types";
 // ✅ CORRECTION: Imports Firebase corrects (suppression des imports non utilisés)
-import { 
-  setPersistence, 
-  browserLocalPersistence, 
+import {
+  setPersistence,
+  browserLocalPersistence,
   browserSessionPersistence,
-  getRedirectResult
-} from 'firebase/auth';
-import { auth } from '../config/firebase';
+  getRedirectResult,
+} from "firebase/auth";
+import { auth } from "../config/firebase";
+import { FormattedMessage } from "react-intl";
 
 // ✅ CORRECTION: Interface LoginFormData corrigée
 interface LoginFormData {
@@ -45,14 +71,16 @@ interface GtagWindow {
   gtag?: GtagFunction;
 }
 const getGtag = (): GtagFunction | undefined =>
-  (typeof window !== 'undefined' ? (window as unknown as GtagWindow).gtag : undefined);
+  typeof window !== "undefined"
+    ? (window as unknown as GtagWindow).gtag
+    : undefined;
 
 /* ================================
    PWA install hook (réutilisé de HomePage)
    ================================ */
 type BIPEvent = Event & {
   prompt: () => Promise<void>;
-  userChoice?: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
+  userChoice?: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
 };
 
 const usePWAInstall = () => {
@@ -69,14 +97,14 @@ const usePWAInstall = () => {
       setDeferredPrompt(null);
       const gtag = getGtag();
       if (gtag) {
-        gtag('event', 'pwa_installed', { event_category: 'engagement' });
+        gtag("event", "pwa_installed", { event_category: "engagement" });
       }
     };
-    window.addEventListener('beforeinstallprompt', onBeforeInstallPrompt);
-    window.addEventListener('appinstalled', onAppInstalled);
+    window.addEventListener("beforeinstallprompt", onBeforeInstallPrompt);
+    window.addEventListener("appinstalled", onAppInstalled);
     return () => {
-      window.removeEventListener('beforeinstallprompt', onBeforeInstallPrompt);
-      window.removeEventListener('appinstalled', onAppInstalled);
+      window.removeEventListener("beforeinstallprompt", onBeforeInstallPrompt);
+      window.removeEventListener("appinstalled", onAppInstalled);
     };
   }, []);
 
@@ -88,8 +116,8 @@ const usePWAInstall = () => {
       if (choice) {
         const gtag = getGtag();
         if (gtag) {
-          gtag('event', 'pwa_install_prompt', {
-            event_category: 'engagement',
+          gtag("event", "pwa_install_prompt", {
+            event_category: "engagement",
             outcome: choice.outcome,
             platform: choice.platform,
           });
@@ -107,56 +135,147 @@ const usePWAInstall = () => {
 /* ================================
    Bouton PWA + hint sympa (réutilisé de HomePage)
    ================================ */
+// function PWAInstallIconWithHint({
+//   canInstall,
+//   onInstall
+// }: {
+//   canInstall: boolean;
+//   onInstall: () => void;
+// }) {
+//   const [showHint, setShowHint] = useState(false);
+//   const [hintText, setHintText] = useState('');
+//   const hideTimer = useRef<number | null>(null);
+
+//   const computeHint = () => {
+//     const ua = typeof navigator !== 'undefined' ? navigator.userAgent : '';
+
+//     // Détection iOS avec typage sûr
+//     const isIOS = /iPad|iPhone|iPod/.test(ua) ||
+//       (typeof navigator !== 'undefined' &&
+//        'platform' in navigator &&
+//        navigator.platform === 'MacIntel' &&
+//        'maxTouchPoints' in navigator &&
+//        (navigator.maxTouchPoints as number) > 1);
+
+//     const isAndroid = /Android/i.test(ua);
+//     const isDesktop = !isIOS && !isAndroid;
+
+//     if (isIOS) {
+//       return "📱 Pour installer l'app sur iPhone/iPad :\n1. Ouvrez cette page dans Safari\n2. Appuyez sur l'icône Partage (carré avec flèche)\n3. Choisissez « Sur l'écran d'accueil »\n4. Appuyez sur « Ajouter »";
+//     }
+//     if (isAndroid) {
+//       return "📱 Pour installer l'app sur Android :\n1. Ouvrez cette page dans Chrome\n2. Appuyez sur le menu ⋮ (3 points)\n3. Choisissez « Installer l'application »\n4. Confirmez l'installation";
+//     }
+//     if (isDesktop) {
+//       return "💻 Pour installer l'app sur votre ordinateur :\n1. Utilisez Chrome ou Edge\n2. Cliquez sur l'icône d'installation dans la barre d'adresse (à droite)\n3. Ou utilisez le menu ⋮ → « Installer SOS Expats »\n4. L'app s'ouvrira comme une application native";
+//     }
+//     return "🌐 Pour installer l'app :\nUtilisez Chrome ou Edge sur ordinateur, ou Safari (iPhone) / Chrome (Android) sur mobile.";
+//   };
+
+//   const reveal = (text?: string) => {
+//     if (hideTimer.current) { window.clearTimeout(hideTimer.current); hideTimer.current = null; }
+//     setHintText(text ?? computeHint());
+//     setShowHint(true);
+//   };
+//   const scheduleHide = (delay = 1600) => {
+//     if (hideTimer.current) window.clearTimeout(hideTimer.current);
+//     hideTimer.current = window.setTimeout(() => setShowHint(false), delay) as unknown as number;
+//   };
+
+//   const onClick = () => {
+//     if (canInstall) onInstall();
+//     else { reveal(); scheduleHide(2800); }
+//   };
+
+//   return (
+//     <div className="relative select-none">
+//       <button
+//         type="button"
+//         onClick={onClick}
+//         onMouseEnter={() => { reveal("L'application qui fait du bien !"); }}
+//         onMouseLeave={() => scheduleHide()}
+//         onTouchStart={() => { reveal("L'application qui fait du bien !"); scheduleHide(1400); }}
+//         className="ml-1 w-12 h-12 sm:w-14 sm:h-14 rounded-2xl overflow-hidden border border-white/20 hover:border-white/40 transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/40 touch-manipulation"
+//         title="Installer l'application"
+//         aria-label="Installer l'application"
+//       >
+//         <img
+//           src="/icons/icon-512x512-maskable.png"
+//           alt="Icône appli SOS Expat"
+//           className={`${canInstall ? 'animate-bounce' : 'animate-pulse'} w-full h-full object-cover`}
+//         />
+//       </button>
+
+//       <div
+//         className={`absolute left-1/2 -translate-x-1/2 mt-3 w-[260px] sm:w-[320px] text-sm rounded-2xl shadow-2xl border transition-all duration-200 ${
+//           showHint ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-1 pointer-events-none'
+//         } bg-white/95 backdrop-blur-xl border-gray-200 text-gray-900`}
+//         role="status"
+//       >
+//         <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-3 h-3 bg-white/95 rotate-45 border-l border-t border-gray-200" />
+//         <div className="px-4 py-3">
+//           <div className="font-extrabold text-gray-900">
+//             L&apos;application qui fait du bien !
+//           </div>
+//           {hintText && <div className="mt-1 leading-relaxed text-gray-700">{hintText}</div>}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+// Hook de traduction optimisé avec contexte App
+
 function PWAInstallIconWithHint({
   canInstall,
-  onInstall
+  onInstall,
 }: {
   canInstall: boolean;
   onInstall: () => void;
 }) {
   const [showHint, setShowHint] = useState(false);
-  const [hintText, setHintText] = useState('');
+  const [hintMessageId, setHintMessageId] = useState(""); // ✅ Store message ID instead
   const hideTimer = useRef<number | null>(null);
 
-  const computeHint = () => {
-    const ua = typeof navigator !== 'undefined' ? navigator.userAgent : '';
-    
-    // Détection iOS avec typage sûr
-    const isIOS = /iPad|iPhone|iPod/.test(ua) || 
-      (typeof navigator !== 'undefined' && 
-       'platform' in navigator && 
-       navigator.platform === 'MacIntel' && 
-       'maxTouchPoints' in navigator && 
-       (navigator.maxTouchPoints as number) > 1);
-    
+  // ✅ Return message ID instead of full text
+  const computeHintMessageId = (): string => {
+    const ua = typeof navigator !== "undefined" ? navigator.userAgent : "";
+    const isIOS =
+      /iPad|iPhone|iPod/.test(ua) ||
+      (navigator.platform === "MacIntel" &&
+        (navigator.maxTouchPoints ?? 0) > 1);
     const isAndroid = /Android/i.test(ua);
     const isDesktop = !isIOS && !isAndroid;
 
-    if (isIOS) {
-      return "📱 Pour installer l'app sur iPhone/iPad :\n1. Ouvrez cette page dans Safari\n2. Appuyez sur l'icône Partage (carré avec flèche)\n3. Choisissez « Sur l'écran d'accueil »\n4. Appuyez sur « Ajouter »";
-    }
-    if (isAndroid) {
-      return "📱 Pour installer l'app sur Android :\n1. Ouvrez cette page dans Chrome\n2. Appuyez sur le menu ⋮ (3 points)\n3. Choisissez « Installer l'application »\n4. Confirmez l'installation";
-    }
-    if (isDesktop) {
-      return "💻 Pour installer l'app sur votre ordinateur :\n1. Utilisez Chrome ou Edge\n2. Cliquez sur l'icône d'installation dans la barre d'adresse (à droite)\n3. Ou utilisez le menu ⋮ → « Installer SOS Expats »\n4. L'app s'ouvrira comme une application native";
-    }
-    return "🌐 Pour installer l'app :\nUtilisez Chrome ou Edge sur ordinateur, ou Safari (iPhone) / Chrome (Android) sur mobile.";
+    if (isIOS) return "installHintIOS";
+    if (isAndroid) return "installHintAndroid";
+    if (isDesktop) return "installHintDesktop";
+    return "installHintGeneric";
   };
 
-  const reveal = (text?: string) => {
-    if (hideTimer.current) { window.clearTimeout(hideTimer.current); hideTimer.current = null; }
-    setHintText(text ?? computeHint());
+  const reveal = (messageId?: string) => {
+    if (hideTimer.current) {
+      window.clearTimeout(hideTimer.current);
+      hideTimer.current = null;
+    }
+    setHintMessageId(messageId ?? computeHintMessageId());
     setShowHint(true);
   };
+
   const scheduleHide = (delay = 1600) => {
     if (hideTimer.current) window.clearTimeout(hideTimer.current);
-    hideTimer.current = window.setTimeout(() => setShowHint(false), delay) as unknown as number;
+    hideTimer.current = window.setTimeout(
+      () => setShowHint(false),
+      delay
+    ) as unknown as number;
   };
 
   const onClick = () => {
     if (canInstall) onInstall();
-    else { reveal(); scheduleHide(2800); }
+    else {
+      reveal();
+      scheduleHide(2800);
+    }
   };
 
   return (
@@ -164,114 +283,205 @@ function PWAInstallIconWithHint({
       <button
         type="button"
         onClick={onClick}
-        onMouseEnter={() => { reveal("L'application qui fait du bien !"); }}
+        onMouseEnter={() => {
+          reveal("toggleDownloadApp"); // ✅ Use message ID
+        }}
         onMouseLeave={() => scheduleHide()}
-        onTouchStart={() => { reveal("L'application qui fait du bien !"); scheduleHide(1400); }}
-        className="ml-1 w-12 h-12 sm:w-14 sm:h-14 rounded-2xl overflow-hidden border border-white/20 hover:border-white/40 transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/40 touch-manipulation"
+        onTouchStart={() => {
+          reveal("toggleDownloadApp"); // ✅ Use message ID
+          scheduleHide(1400);
+        }}
+        className="ml-1 w-14 h-14 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-2xl overflow-hidden border border-white/20 hover:border-white/40 transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/40 touch-manipulation"
         title="Installer l'application"
         aria-label="Installer l'application"
       >
         <img
           src="/icons/icon-512x512-maskable.png"
           alt="Icône appli SOS Expat"
-          className={`${canInstall ? 'animate-bounce' : 'animate-pulse'} w-full h-full object-cover`}
+          className={`${canInstall ? "animate-bounce" : "animate-pulse"} w-full h-full object-cover`}
         />
       </button>
 
       <div
         className={`absolute left-1/2 -translate-x-1/2 mt-3 w-[260px] sm:w-[320px] text-sm rounded-2xl shadow-2xl border transition-all duration-200 ${
-          showHint ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-1 pointer-events-none'
+          showHint
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 -translate-y-1 pointer-events-none"
         } bg-white/95 backdrop-blur-xl border-gray-200 text-gray-900`}
         role="status"
       >
         <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-3 h-3 bg-white/95 rotate-45 border-l border-t border-gray-200" />
         <div className="px-4 py-3">
-          <div className="font-extrabold text-gray-900">L&apos;application qui fait du bien !</div>
-          {hintText && <div className="mt-1 leading-relaxed text-gray-700">{hintText}</div>}
+          <div className="font-extrabold text-gray-900">
+            <FormattedMessage id="toggleDownloadApp" />
+          </div>
+          {hintMessageId && (
+            <div className="mt-1 leading-relaxed text-gray-700">
+              {/* ✅ Now using message ID correctly */}
+              <FormattedMessage id={hintMessageId} />
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-// Hook de traduction optimisé avec contexte App
 const useTranslation = () => {
   const { language } = useApp();
 
-  const t = useCallback((key: string, defaultValue?: string): string => {
-    const translations: Record<string, Record<string, string>> = {
-      'meta.title': {
-        fr: "Connexion - SOS Expats | Services d'assistance aux expatriés",
-        en: 'Login - SOS Expats | Expat assistance services'
-      },
-      'meta.description': {
-        fr: "Connectez-vous à votre compte SOS Expats pour accéder à tous nos services d'assistance personnalisés aux expatriés. Support 24/7, démarches administratives, conseils juridiques.",
-        en: 'Sign in to your SOS Expats account to access all our personalized expat assistance services. 24/7 support, administrative procedures, legal advice.'
-      },
-      'meta.keywords': {
-        fr: 'connexion, login, SOS Expats, expatriés, assistance, services, support 24/7',
-        en: 'login, SOS Expats, expats, assistance, services, 24/7 support'
-      },
-      'meta.og_title': {
-        fr: 'Connexion SOS Expats - Votre portail expatrié sécurisé',
-        en: 'SOS Expats Login - Your secure expat portal'
-      },
-      'meta.og_description': {
-        fr: "Accédez instantanément à votre espace personnel SOS Expats. Services d'accompagnement premium pour expatriés dans le monde entier.",
-        en: 'Instantly access your personal SOS Expats space. Premium support services for expats worldwide.'
-      },
-      'meta.og_image_alt': { fr: 'Connexion SOS Expats', en: 'SOS Expats Login' },
-      'meta.twitter_image_alt': { fr: 'Interface de connexion SOS Expats', en: 'SOS Expats login interface' },
-      'login.title': { fr: 'Connexion à votre compte', en: 'Sign in to your account' },
-      'login.subtitle': { fr: 'Accédez à votre espace personnel et gérez vos services', en: 'Access your personal space and manage your services' },
-      'login.or': { fr: 'Ou', en: 'Or' },
-      'login.create_account': { fr: 'créez un nouveau compte', en: 'create a new account' },
-      'login.create_account_aria': { fr: 'Créer un nouveau compte utilisateur', en: 'Create a new user account' },
-      'login.email_label': { fr: 'Adresse email', en: 'Email address' },
-      'login.email_placeholder': { fr: 'votre@email.com', en: 'your@email.com' },
-      'login.email_help': { fr: "Utilisez l'email de votre compte", en: 'Use your account email' },
-      'login.password_label': { fr: 'Mot de passe', en: 'Password' },
-      'login.password_placeholder': { fr: 'Votre mot de passe', en: 'Your password' },
-      'login.password_help': { fr: 'Minimum 6 caractères', en: 'Minimum 6 characters' },
-      'login.show_password': { fr: 'Afficher le mot de passe', en: 'Show password' },
-      'login.hide_password': { fr: 'Hide password', en: 'Hide password' },
-      'login.remember_me': { fr: 'Se souvenir de moi', en: 'Remember me' },
-      'login.forgot_password': { fr: 'Mot de passe oublié ?', en: 'Forgot password?' },
-      'login.forgot_password_help': { fr: 'Mot de passe oublié ?', en: 'Forgot password?' },
-      'login.submit_button': { fr: 'Se connecter', en: 'Sign in' },
-      'login.submit_button_description': { fr: 'Cliquez pour vous connecter avec vos identifiants', en: 'Click to sign in with your credentials' },
-      'login.logging_in': { fr: 'Connexion...', en: 'Signing in...' },
-      'login.or_divider': { fr: 'OU', en: 'OR' },
-      'login.google_login': { fr: 'Continuer avec Google', en: 'Continue with Google' },
-      'login.new_user': { fr: 'Nouveau sur SOS Expats ?', en: 'New to SOS Expats?' },
-      'validation.email_required': { fr: "L'adresse email est requise", en: 'Email address is required' },
-      'validation.email_invalid': { fr: "Format d'email invalide", en: 'Invalid email format' },
-      'validation.password_required': { fr: 'Le mot de passe est requis', en: 'Password is required' },
-      'validation.password_min_length': { fr: 'Le mot de passe doit contenir au moins 6 caractères', en: 'Password must be at least 6 characters' },
-      'error.title': { fr: 'Erreur de connexion', en: 'Login error' },
-      'error.description': { fr: 'Nous nous excusons pour ce désagrément. Veuillez réessayer.', en: 'We apologize for this inconvenience. Please try again.' },
-      'error.retry': { fr: 'Réessayer', en: 'Retry' },
-      'error.offline': { fr: 'Connexion internet requise', en: 'Internet connection required' },
-      'loading.message': { fr: 'Connexion en cours...', en: 'Signing in...' },
-      'offline.message': { fr: 'Mode hors ligne - Certaines fonctionnalités peuvent être limitées', en: 'Offline mode - Some features may be limited' },
-      'pwa.install': { fr: "Installer l'app", en: 'Install app' },
-      'pwa.install_button': { fr: 'Installer', en: 'Install' },
-      'security.ssl': { fr: 'Connexion sécurisée SSL', en: 'Secure SSL connection' },
-      'trust.secure': { fr: 'Sécurisé', en: 'Secure' },
-      'trust.support_24_7': { fr: 'Support 24/7', en: '24/7 Support' },
-      'language.selector': { fr: 'Changer la langue', en: 'Change language' },
-      'form.required': { fr: 'requis', en: 'required' },
-      'redirect.message': {
-        fr: 'Après connexion, vous serez redirigé pour finaliser votre réservation',
-        en: 'After login, you will be redirected to complete your booking'
-      },
-      'create_account.button': { fr: 'Créer un nouveau compte', en: 'Create a new account' },
-      'remember_me.saved': { fr: 'Sauvegardé', en: 'Saved' },
-      'remember_me.clear': { fr: 'Effacer', en: 'Clear' }
-    };
+  const t = useCallback(
+    (key: string, defaultValue?: string): string => {
+      const translations: Record<string, Record<string, string>> = {
+        "meta.title": {
+          fr: "Connexion - SOS Expats | Services d'assistance aux expatriés",
+          en: "Login - SOS Expats | Expat assistance services",
+        },
+        "meta.description": {
+          fr: "Connectez-vous à votre compte SOS Expats pour accéder à tous nos services d'assistance personnalisés aux expatriés. Support 24/7, démarches administratives, conseils juridiques.",
+          en: "Sign in to your SOS Expats account to access all our personalized expat assistance services. 24/7 support, administrative procedures, legal advice.",
+        },
+        "meta.keywords": {
+          fr: "connexion, login, SOS Expats, expatriés, assistance, services, support 24/7",
+          en: "login, SOS Expats, expats, assistance, services, 24/7 support",
+        },
+        "meta.og_title": {
+          fr: "Connexion SOS Expats - Votre portail expatrié sécurisé",
+          en: "SOS Expats Login - Your secure expat portal",
+        },
+        "meta.og_description": {
+          fr: "Accédez instantanément à votre espace personnel SOS Expats. Services d'accompagnement premium pour expatriés dans le monde entier.",
+          en: "Instantly access your personal SOS Expats space. Premium support services for expats worldwide.",
+        },
+        "meta.og_image_alt": {
+          fr: "Connexion SOS Expats",
+          en: "SOS Expats Login",
+        },
+        "meta.twitter_image_alt": {
+          fr: "Interface de connexion SOS Expats",
+          en: "SOS Expats login interface",
+        },
+        "login.title": {
+          fr: "Connexion à votre compte",
+          en: "Sign in to your account",
+        },
+        "login.subtitle": {
+          fr: "Accédez à votre espace personnel et gérez vos services",
+          en: "Access your personal space and manage your services",
+        },
+        "login.or": { fr: "Ou", en: "Or" },
+        "login.create_account": {
+          fr: "créez un nouveau compte",
+          en: "create a new account",
+        },
+        "login.create_account_aria": {
+          fr: "Créer un nouveau compte utilisateur",
+          en: "Create a new user account",
+        },
+        "login.email_label": { fr: "Adresse email", en: "Email address" },
+        "login.email_placeholder": {
+          fr: "votre@email.com",
+          en: "your@email.com",
+        },
+        "login.email_help": {
+          fr: "Utilisez l'email de votre compte",
+          en: "Use your account email",
+        },
+        "login.password_label": { fr: "Mot de passe", en: "Password" },
+        "login.password_placeholder": {
+          fr: "Votre mot de passe",
+          en: "Your password",
+        },
+        "login.password_help": {
+          fr: "Minimum 6 caractères",
+          en: "Minimum 6 characters",
+        },
+        "login.show_password": {
+          fr: "Afficher le mot de passe",
+          en: "Show password",
+        },
+        "login.hide_password": { fr: "Hide password", en: "Hide password" },
+        "login.remember_me": { fr: "Se souvenir de moi", en: "Remember me" },
+        "login.forgot_password": {
+          fr: "Mot de passe oublié ?",
+          en: "Forgot password?",
+        },
+        "login.forgot_password_help": {
+          fr: "Mot de passe oublié ?",
+          en: "Forgot password?",
+        },
+        "login.submit_button": { fr: "Se connecter", en: "Sign in" },
+        "login.submit_button_description": {
+          fr: "Cliquez pour vous connecter avec vos identifiants",
+          en: "Click to sign in with your credentials",
+        },
+        "login.logging_in": { fr: "Connexion...", en: "Signing in..." },
+        "login.or_divider": { fr: "OU", en: "OR" },
+        "login.google_login": {
+          fr: "Continuer avec Google",
+          en: "Continue with Google",
+        },
+        "login.new_user": {
+          fr: "Nouveau sur SOS Expats ?",
+          en: "New to SOS Expats?",
+        },
+        "validation.email_required": {
+          fr: "L'adresse email est requise",
+          en: "Email address is required",
+        },
+        "validation.email_invalid": {
+          fr: "Format d'email invalide",
+          en: "Invalid email format",
+        },
+        "validation.password_required": {
+          fr: "Le mot de passe est requis",
+          en: "Password is required",
+        },
+        "validation.password_min_length": {
+          fr: "Le mot de passe doit contenir au moins 6 caractères",
+          en: "Password must be at least 6 characters",
+        },
+        "error.title": { fr: "Erreur de connexion", en: "Login error" },
+        "error.description": {
+          fr: "Nous nous excusons pour ce désagrément. Veuillez réessayer.",
+          en: "We apologize for this inconvenience. Please try again.",
+        },
+        "error.retry": { fr: "Réessayer", en: "Retry" },
+        "error.offline": {
+          fr: "Connexion internet requise",
+          en: "Internet connection required",
+        },
+        "loading.message": { fr: "Connexion en cours...", en: "Signing in..." },
+        "offline.message": {
+          fr: "Mode hors ligne - Certaines fonctionnalités peuvent être limitées",
+          en: "Offline mode - Some features may be limited",
+        },
+        "pwa.install": { fr: "Installer l'app", en: "Install app" },
+        "pwa.install_button": { fr: "Installer", en: "Install" },
+        "security.ssl": {
+          fr: "Connexion sécurisée SSL",
+          en: "Secure SSL connection",
+        },
+        "trust.secure": { fr: "Sécurisé", en: "Secure" },
+        "trust.support_24_7": { fr: "Support 24/7", en: "24/7 Support" },
+        "language.selector": { fr: "Changer la langue", en: "Change language" },
+        "form.required": { fr: "requis", en: "required" },
+        "redirect.message": {
+          fr: "Après connexion, vous serez redirigé pour finaliser votre réservation",
+          en: "After login, you will be redirected to complete your booking",
+        },
+        "create_account.button": {
+          fr: "Créer un nouveau compte",
+          en: "Create a new account",
+        },
+        "remember_me.saved": { fr: "Sauvegardé", en: "Saved" },
+        "remember_me.clear": { fr: "Effacer", en: "Clear" },
+      };
 
-    return translations[key]?.[language] || defaultValue || key;
-  }, [language]);
+      return translations[key]?.[language] || defaultValue || key;
+    },
+    [language]
+  );
 
   return { t, language };
 };
@@ -293,7 +503,10 @@ interface ErrorFallbackProps {
   resetErrorBoundary: () => void;
 }
 
-class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+class ErrorBoundary extends React.Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false, error: null };
@@ -314,7 +527,9 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
       return (
         <this.props.FallbackComponent
           error={this.state.error}
-          resetErrorBoundary={() => this.setState({ hasError: false, error: null })}
+          resetErrorBoundary={() =>
+            this.setState({ hasError: false, error: null })
+          }
         />
       );
     }
@@ -323,7 +538,9 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
   }
 }
 
-const ErrorFallback: React.FC<ErrorFallbackProps> = ({ resetErrorBoundary }) => {
+const ErrorFallback: React.FC<ErrorFallbackProps> = ({
+  resetErrorBoundary,
+}) => {
   const { t } = useTranslation();
 
   return (
@@ -332,13 +549,17 @@ const ErrorFallback: React.FC<ErrorFallbackProps> = ({ resetErrorBoundary }) => 
         <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-red-500 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg">
           <AlertCircle className="h-10 w-10 text-white" />
         </div>
-        <h2 className="text-2xl font-black text-white mb-3">{t('error.title')}</h2>
-        <p className="text-gray-300 mb-8 text-base leading-relaxed">{t('error.description')}</p>
+        <h2 className="text-2xl font-black text-white mb-3">
+          {t("error.title")}
+        </h2>
+        <p className="text-gray-300 mb-8 text-base leading-relaxed">
+          {t("error.description")}
+        </p>
         <Button
           onClick={resetErrorBoundary}
           className="bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white font-bold py-4 px-8 rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-xl"
         >
-          {t('error.retry')}
+          {t("error.retry")}
         </Button>
       </div>
     </div>
@@ -351,16 +572,17 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const location = useLocation();
-  const { login, loginWithGoogle, isLoading, error, user, authInitialized } = useAuth();
-  
+  const { login, loginWithGoogle, isLoading, error, user, authInitialized } =
+    useAuth();
+
   // Hook PWA
   const { install, canInstall } = usePWAInstall();
 
   // ✅ CORRECTION: État formData typé correctement
   const [formData, setFormData] = useState<LoginFormData>({
-    email: '',
-    password: '',
-    rememberMe: false
+    email: "",
+    password: "",
+    rememberMe: false,
   });
   // Debounce timers for field-level validation (stable, browser env -> number)
   const emailDebounceRef = useRef<number | null>(null);
@@ -369,8 +591,10 @@ const Login: React.FC = () => {
   // Cleanup debounced validators on unmount
   useEffect(() => {
     return () => {
-      if (emailDebounceRef.current) window.clearTimeout(emailDebounceRef.current);
-      if (passwordDebounceRef.current) window.clearTimeout(passwordDebounceRef.current);
+      if (emailDebounceRef.current)
+        window.clearTimeout(emailDebounceRef.current);
+      if (passwordDebounceRef.current)
+        window.clearTimeout(passwordDebounceRef.current);
     };
   }, []);
 
@@ -378,22 +602,24 @@ const Login: React.FC = () => {
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [isFormTouched, setIsFormTouched] = useState<boolean>(false);
   const [submitAttempts, setSubmitAttempts] = useState<number>(0);
-  const [isOnline, setIsOnline] = useState<boolean>(typeof navigator !== 'undefined' ? navigator.onLine : true);
+  const [isOnline, setIsOnline] = useState<boolean>(
+    typeof navigator !== "undefined" ? navigator.onLine : true
+  );
 
-  const redirectUrl = searchParams.get('redirect') || '/dashboard';
+  const redirectUrl = searchParams.get("redirect") || "/dashboard";
   const encodedRedirectUrl = encodeURIComponent(redirectUrl);
-  const currentLang = language || 'fr';
+  const currentLang = language || "fr";
 
   // Callback pour l'installation PWA
-  const onInstallClick = useCallback(() => { 
-    install(); 
+  const onInstallClick = useCallback(() => {
+    install();
   }, [install]);
 
   // Navigation vers Register avec préservation du state
   const navigateToRegister = useCallback(() => {
     const registerUrl = `/register?redirect=${encodedRedirectUrl}`;
     navigate(registerUrl, {
-      state: location.state
+      state: location.state,
     });
   }, [encodedRedirectUrl, navigate, location.state]);
 
@@ -401,24 +627,26 @@ const Login: React.FC = () => {
   type NavState = Readonly<{ selectedProvider?: Provider }>;
 
   function isProviderLike(v: unknown): v is Provider {
-    if (typeof v !== 'object' || v === null) return false;
+    if (typeof v !== "object" || v === null) return false;
     const o = v as Record<string, unknown>;
-    return typeof o.id === 'string'
-      && typeof o.name === 'string'
-      && (o.type === 'lawyer' || o.type === 'expat');
+    return (
+      typeof o.id === "string" &&
+      typeof o.name === "string" &&
+      (o.type === "lawyer" || o.type === "expat")
+    );
   }
 
   // ✅ CORRECTION: Lecture des données sauvegardées au chargement
   useEffect(() => {
     // Lire les préférences sauvegardées
-    const savedRememberMe = localStorage.getItem('rememberMe') === '1';
-    const savedEmail = localStorage.getItem('savedEmail') || '';
-    
+    const savedRememberMe = localStorage.getItem("rememberMe") === "1";
+    const savedEmail = localStorage.getItem("savedEmail") || "";
+
     if (savedRememberMe && savedEmail) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         email: savedEmail,
-        rememberMe: true
+        rememberMe: true,
       }));
     }
   }, []);
@@ -431,7 +659,7 @@ const Login: React.FC = () => {
 
     if (isProviderLike(sp)) {
       try {
-        sessionStorage.setItem('selectedProvider', JSON.stringify(sp));
+        sessionStorage.setItem("selectedProvider", JSON.stringify(sp));
       } catch {
         // sessionStorage non disponible (mode privé, quotas…)
       }
@@ -443,88 +671,100 @@ const Login: React.FC = () => {
     const markStart = performance.now();
     return () => {
       const markEnd = performance.now();
-      if (process.env.NODE_ENV === 'development') {
+      if (process.env.NODE_ENV === "development") {
         console.log(`Login rendered in ${(markEnd - markStart).toFixed(2)}ms`);
       }
     };
   }, []);
-
-  
 
   // Online/offline status
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
   }, []);
 
   // SEO & Social Media Meta Data with i18n - COMPLET
   const metaData = useMemo(
     () => ({
-      title: t('meta.title'),
-      description: t('meta.description'),
-      keywords: t('meta.keywords'),
-      ogTitle: t('meta.og_title'),
-      ogDescription: t('meta.og_description'),
+      title: t("meta.title"),
+      description: t("meta.description"),
+      keywords: t("meta.keywords"),
+      ogTitle: t("meta.og_title"),
+      ogDescription: t("meta.og_description"),
       canonicalUrl: `${window.location.origin}/${currentLang}/login`,
       alternateUrls: {
         fr: `${window.location.origin}/fr/login`,
-        en: `${window.location.origin}/en/login`
+        en: `${window.location.origin}/en/login`,
       },
       structuredData: {
-        '@context': 'https://schema.org',
-        '@type': 'WebPage',
-        '@id': `${window.location.origin}/${currentLang}/login#webpage`,
-        name: t('meta.title'),
-        description: t('meta.description'),
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": `${window.location.origin}/${currentLang}/login#webpage`,
+        name: t("meta.title"),
+        description: t("meta.description"),
         url: `${window.location.origin}/${currentLang}/login`,
         inLanguage: currentLang,
         isPartOf: {
-          '@type': 'WebSite',
-          '@id': `${window.location.origin}#website`,
-          name: 'SOS Expats',
+          "@type": "WebSite",
+          "@id": `${window.location.origin}#website`,
+          name: "SOS Expats",
           url: window.location.origin,
           potentialAction: {
-            '@type': 'SearchAction',
+            "@type": "SearchAction",
             target: `${window.location.origin}/search?q={search_term_string}`,
-            'query-input': 'required name=search_term_string'
-          }
+            "query-input": "required name=search_term_string",
+          },
         },
         mainEntity: {
-          '@type': 'LoginAction',
-          '@id': `${window.location.origin}/${currentLang}/login#loginaction`,
-          name: t('login.title'),
-          description: t('login.subtitle'),
+          "@type": "LoginAction",
+          "@id": `${window.location.origin}/${currentLang}/login#loginaction`,
+          name: t("login.title"),
+          description: t("login.subtitle"),
           target: `${window.location.origin}/${currentLang}/login`,
           object: {
-            '@type': 'Person',
-            name: 'Utilisateur SOS Expats'
-          }
+            "@type": "Person",
+            name: "Utilisateur SOS Expats",
+          },
         },
         breadcrumb: {
-          '@type': 'BreadcrumbList',
+          "@type": "BreadcrumbList",
           itemListElement: [
-            { '@type': 'ListItem', position: 1, name: 'Accueil', item: window.location.origin },
-            { '@type': 'ListItem', position: 2, name: t('login.title'), item: `${window.location.origin}/${currentLang}/login` }
-          ]
+            {
+              "@type": "ListItem",
+              position: 1,
+              name: "Accueil",
+              item: window.location.origin,
+            },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: t("login.title"),
+              item: `${window.location.origin}/${currentLang}/login`,
+            },
+          ],
         },
         author: {
-          '@type': 'Organization',
-          '@id': `${window.location.origin}#organization`,
-          name: 'SOS Expats',
+          "@type": "Organization",
+          "@id": `${window.location.origin}#organization`,
+          name: "SOS Expats",
           url: window.location.origin,
           logo: `${window.location.origin}/images/logo.png`,
-          sameAs: ['https://www.facebook.com/sosexpats', 'https://www.linkedin.com/company/sosexpats', 'https://twitter.com/sosexpats']
+          sameAs: [
+            "https://www.facebook.com/sosexpats",
+            "https://www.linkedin.com/company/sosexpats",
+            "https://twitter.com/sosexpats",
+          ],
         },
-        publisher: { '@id': `${window.location.origin}#organization` }
-      }
+        publisher: { "@id": `${window.location.origin}#organization` },
+      },
     }),
     [t, currentLang]
   );
@@ -539,16 +779,16 @@ const Login: React.FC = () => {
   const validateField = useCallback(
     (field: keyof LoginFormData, value: string | boolean): string | null => {
       switch (field) {
-        case 'email':
-          if (!value) return t('validation.email_required');
-          if (typeof value === 'string' && !emailRegex.test(value)) {
-            return t('validation.email_invalid');
+        case "email":
+          if (!value) return t("validation.email_required");
+          if (typeof value === "string" && !emailRegex.test(value)) {
+            return t("validation.email_invalid");
           }
           return null;
-        case 'password':
-          if (!value) return t('validation.password_required');
-          if (typeof value === 'string' && value.length < 6) {
-            return t('validation.password_min_length');
+        case "password":
+          if (!value) return t("validation.password_required");
+          if (typeof value === "string" && value.length < 6) {
+            return t("validation.password_min_length");
           }
           return null;
         default:
@@ -561,8 +801,8 @@ const Login: React.FC = () => {
   const validateForm = useCallback((): boolean => {
     const errors: FormErrors = {};
 
-    const emailError = validateField('email', formData.email);
-    const passwordError = validateField('password', formData.password);
+    const emailError = validateField("email", formData.email);
+    const passwordError = validateField("password", formData.password);
 
     if (emailError) errors.email = emailError;
     if (passwordError) errors.password = passwordError;
@@ -574,21 +814,26 @@ const Login: React.FC = () => {
   // Real-time field validation with debouncing - COMPLET
   const handleFieldChange = useCallback(
     (field: keyof LoginFormData, value: string | boolean) => {
-      setFormData(prev => ({ ...prev, [field]: value }));
+      setFormData((prev) => ({ ...prev, [field]: value }));
       setIsFormTouched(true);
 
       if (formErrors[field as keyof FormErrors]) {
-        setFormErrors(prev => ({ ...prev, [field]: undefined }));
+        setFormErrors((prev) => ({ ...prev, [field]: undefined }));
       }
 
-      if (typeof value === 'string') {
-        const ref = field === 'email' ? emailDebounceRef : field === 'password' ? passwordDebounceRef : null;
+      if (typeof value === "string") {
+        const ref =
+          field === "email"
+            ? emailDebounceRef
+            : field === "password"
+              ? passwordDebounceRef
+              : null;
         if (ref) {
           if (ref.current) window.clearTimeout(ref.current);
           ref.current = window.setTimeout(() => {
             const err = validateField(field as keyof LoginFormData, value);
             if (err) {
-              setFormErrors(prev => ({ ...prev, [field]: err }));
+              setFormErrors((prev) => ({ ...prev, [field]: err }));
             }
           }, 300);
         }
@@ -599,12 +844,12 @@ const Login: React.FC = () => {
 
   // ✅ CORRECTION: Fonction pour effacer les données sauvegardées
   const clearSavedData = useCallback(() => {
-    localStorage.removeItem('rememberMe');
-    localStorage.removeItem('savedEmail');
-    setFormData(prev => ({
+    localStorage.removeItem("rememberMe");
+    localStorage.removeItem("savedEmail");
+    setFormData((prev) => ({
       ...prev,
-      email: '',
-      rememberMe: false
+      email: "",
+      rememberMe: false,
     }));
   }, []);
 
@@ -612,11 +857,17 @@ const Login: React.FC = () => {
   useEffect(() => {
     document.title = metaData.title;
 
-    const updateMetaTag = (name: string, content: string, property?: boolean) => {
-      const attribute = property ? 'property' : 'name';
-      let meta = document.querySelector(`meta[${attribute}="${name}"]`) as HTMLMetaElement | null;
+    const updateMetaTag = (
+      name: string,
+      content: string,
+      property?: boolean
+    ) => {
+      const attribute = property ? "property" : "name";
+      let meta = document.querySelector(
+        `meta[${attribute}="${name}"]`
+      ) as HTMLMetaElement | null;
       if (!meta) {
-        meta = document.createElement('meta');
+        meta = document.createElement("meta");
         meta.setAttribute(attribute, name);
         document.head.appendChild(meta);
       }
@@ -624,62 +875,77 @@ const Login: React.FC = () => {
     };
 
     // Basic SEO with i18n
-    updateMetaTag('description', metaData.description);
-    updateMetaTag('keywords', metaData.keywords);
-    updateMetaTag('robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
-    updateMetaTag('author', 'SOS Expats');
-    updateMetaTag('language', currentLang);
+    updateMetaTag("description", metaData.description);
+    updateMetaTag("keywords", metaData.keywords);
+    updateMetaTag(
+      "robots",
+      "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    );
+    updateMetaTag("author", "SOS Expats");
+    updateMetaTag("language", currentLang);
 
     // OpenGraph avec calcul d'og:locale sans erreur TS (évite `never`)
     const ogLocale =
-      currentLang === 'fr'
-        ? 'fr_FR'
-        : currentLang === 'en'
-        ? 'en_US'
-        : `${String(currentLang)}_${String(currentLang).toUpperCase()}`;
+      currentLang === "fr"
+        ? "fr_FR"
+        : currentLang === "en"
+          ? "en_US"
+          : `${String(currentLang)}_${String(currentLang).toUpperCase()}`;
 
-    updateMetaTag('og:type', 'website', true);
-    updateMetaTag('og:title', metaData.ogTitle, true);
-    updateMetaTag('og:description', metaData.ogDescription, true);
-    updateMetaTag('og:url', metaData.canonicalUrl, true);
-    updateMetaTag('og:site_name', 'SOS Expats', true);
-    updateMetaTag('og:locale', ogLocale, true);
-    updateMetaTag('og:image', `${window.location.origin}/images/og-login-${currentLang}.jpg`, true);
-    updateMetaTag('og:image:width', '1200', true);
-    updateMetaTag('og:image:height', '630', true);
-    updateMetaTag('og:image:alt', t('meta.og_image_alt'), true);
+    updateMetaTag("og:type", "website", true);
+    updateMetaTag("og:title", metaData.ogTitle, true);
+    updateMetaTag("og:description", metaData.ogDescription, true);
+    updateMetaTag("og:url", metaData.canonicalUrl, true);
+    updateMetaTag("og:site_name", "SOS Expats", true);
+    updateMetaTag("og:locale", ogLocale, true);
+    updateMetaTag(
+      "og:image",
+      `${window.location.origin}/images/og-login-${currentLang}.jpg`,
+      true
+    );
+    updateMetaTag("og:image:width", "1200", true);
+    updateMetaTag("og:image:height", "630", true);
+    updateMetaTag("og:image:alt", t("meta.og_image_alt"), true);
 
     // Twitter Cards with i18n
-    updateMetaTag('twitter:card', 'summary_large_image');
-    updateMetaTag('twitter:site', '@sosexpats');
-    updateMetaTag('twitter:creator', '@sosexpats');
-    updateMetaTag('twitter:title', metaData.ogTitle);
-    updateMetaTag('twitter:description', metaData.ogDescription);
-    updateMetaTag('twitter:image', `${window.location.origin}/images/twitter-login-${currentLang}.jpg`);
-    updateMetaTag('twitter:image:alt', t('meta.twitter_image_alt'));
+    updateMetaTag("twitter:card", "summary_large_image");
+    updateMetaTag("twitter:site", "@sosexpats");
+    updateMetaTag("twitter:creator", "@sosexpats");
+    updateMetaTag("twitter:title", metaData.ogTitle);
+    updateMetaTag("twitter:description", metaData.ogDescription);
+    updateMetaTag(
+      "twitter:image",
+      `${window.location.origin}/images/twitter-login-${currentLang}.jpg`
+    );
+    updateMetaTag("twitter:image:alt", t("meta.twitter_image_alt"));
 
     // AI & ChatGPT optimization
-    updateMetaTag('category', 'Authentication, Expat Services, International Support');
-    updateMetaTag('coverage', 'Worldwide');
-    updateMetaTag('distribution', 'Global');
-    updateMetaTag('rating', 'General');
-    updateMetaTag('revisit-after', '1 days');
-    updateMetaTag('classification', 'Business, Services, Authentication');
+    updateMetaTag(
+      "category",
+      "Authentication, Expat Services, International Support"
+    );
+    updateMetaTag("coverage", "Worldwide");
+    updateMetaTag("distribution", "Global");
+    updateMetaTag("rating", "General");
+    updateMetaTag("revisit-after", "1 days");
+    updateMetaTag("classification", "Business, Services, Authentication");
 
     // Mobile optimization
-    updateMetaTag('mobile-web-app-capable', 'yes');
-    updateMetaTag('apple-mobile-web-app-capable', 'yes');
-    updateMetaTag('apple-mobile-web-app-status-bar-style', 'default');
-    updateMetaTag('apple-mobile-web-app-title', 'SOS Expats');
-    updateMetaTag('theme-color', '#dc2626');
-    updateMetaTag('msapplication-navbutton-color', '#dc2626');
-    updateMetaTag('application-name', 'SOS Expats');
+    updateMetaTag("mobile-web-app-capable", "yes");
+    updateMetaTag("apple-mobile-web-app-capable", "yes");
+    updateMetaTag("apple-mobile-web-app-status-bar-style", "default");
+    updateMetaTag("apple-mobile-web-app-title", "SOS Expats");
+    updateMetaTag("theme-color", "#dc2626");
+    updateMetaTag("msapplication-navbutton-color", "#dc2626");
+    updateMetaTag("application-name", "SOS Expats");
 
     // Canonical and alternate languages
-    let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    let canonical = document.querySelector(
+      'link[rel="canonical"]'
+    ) as HTMLLinkElement | null;
     if (!canonical) {
-      canonical = document.createElement('link');
-      canonical.rel = 'canonical';
+      canonical = document.createElement("link");
+      canonical.rel = "canonical";
       document.head.appendChild(canonical);
     }
     canonical.href = metaData.canonicalUrl;
@@ -687,30 +953,32 @@ const Login: React.FC = () => {
     // Remove existing alternate links
     document
       .querySelectorAll('link[rel="alternate"][hreflang]')
-      .forEach(link => link.parentElement?.removeChild(link));
+      .forEach((link) => link.parentElement?.removeChild(link));
 
     // Add alternate language links
     Object.entries(metaData.alternateUrls).forEach(([lang, url]) => {
-      const alternate = document.createElement('link');
-      alternate.rel = 'alternate';
+      const alternate = document.createElement("link");
+      alternate.rel = "alternate";
       alternate.hreflang = lang;
       alternate.href = url;
       document.head.appendChild(alternate);
     });
 
     // Add x-default
-    const xDefault = document.createElement('link');
-    xDefault.rel = 'alternate';
-    xDefault.hreflang = 'x-default';
+    const xDefault = document.createElement("link");
+    xDefault.rel = "alternate";
+    xDefault.hreflang = "x-default";
     xDefault.href = metaData.alternateUrls.fr;
     document.head.appendChild(xDefault);
 
     // JSON-LD Structured Data
-    let structuredDataScript = document.querySelector('#structured-data') as HTMLScriptElement | null;
+    let structuredDataScript = document.querySelector(
+      "#structured-data"
+    ) as HTMLScriptElement | null;
     if (!structuredDataScript) {
-      structuredDataScript = document.createElement('script');
-      structuredDataScript.id = 'structured-data';
-      structuredDataScript.type = 'application/ld+json';
+      structuredDataScript = document.createElement("script");
+      structuredDataScript.id = "structured-data";
+      structuredDataScript.type = "application/ld+json";
       document.head.appendChild(structuredDataScript);
     }
     structuredDataScript.textContent = JSON.stringify(metaData.structuredData);
@@ -719,7 +987,10 @@ const Login: React.FC = () => {
   // ====== IMPORTANT: tous les hooks AVANT tout return conditionnel ======
 
   const isFormValid =
-    !formErrors.email && !formErrors.password && formData.email.length > 0 && formData.password.length > 0;
+    !formErrors.email &&
+    !formErrors.password &&
+    formData.email.length > 0 &&
+    formData.password.length > 0;
 
   // Progress calculation - COMPLET
   const formProgress = useMemo(() => {
@@ -727,7 +998,7 @@ const Login: React.FC = () => {
       formData.email.length > 0,
       formData.password.length >= 6,
       !formErrors.email,
-      !formErrors.password
+      !formErrors.password,
     ];
     const completed = fields.filter(Boolean).length;
     return Math.round((completed / fields.length) * 100);
@@ -745,19 +1016,19 @@ const Login: React.FC = () => {
 
       const gtag = getGtag();
       if (gtag) {
-        gtag('event', 'login_success', {
-          method: 'email',
+        gtag("event", "login_success", {
+          method: "email",
           user_id: getUserId(user),
-          redirect_url: finalUrl
+          redirect_url: finalUrl,
         });
       }
 
       // Clean session storage, but keep selectedProvider if we go to booking-request
-      const goingToBooking = finalUrl.startsWith('/booking-request/');
+      const goingToBooking = finalUrl.startsWith("/booking-request/");
       if (!goingToBooking) {
-        sessionStorage.removeItem('selectedProvider');
+        sessionStorage.removeItem("selectedProvider");
       }
-      sessionStorage.removeItem('loginAttempts');
+      sessionStorage.removeItem("loginAttempts");
 
       navigate(finalUrl, { replace: true });
     }
@@ -769,18 +1040,18 @@ const Login: React.FC = () => {
       e.preventDefault();
 
       if (!isOnline) {
-        setFormErrors({ general: t('error.offline') });
+        setFormErrors({ general: t("error.offline") });
         return;
       }
 
       if (!validateForm()) {
-        setSubmitAttempts(prev => prev + 1);
+        setSubmitAttempts((prev) => prev + 1);
 
         const gtag = getGtag();
         if (gtag) {
-          gtag('event', 'login_validation_failed', {
+          gtag("event", "login_validation_failed", {
             attempts: submitAttempts + 1,
-            errors: Object.keys(formErrors).join(',')
+            errors: Object.keys(formErrors).join(","),
           });
         }
 
@@ -788,47 +1059,54 @@ const Login: React.FC = () => {
       }
 
       try {
-        performance.mark('login-attempt-start');
+        performance.mark("login-attempt-start");
 
         // ✅ CORRECTION CRITIQUE : Configurer la persistence AVANT le login
-        const persistenceType = formData.rememberMe 
-          ? browserLocalPersistence    // Persist across browser sessions
+        const persistenceType = formData.rememberMe
+          ? browserLocalPersistence // Persist across browser sessions
           : browserSessionPersistence; // Only current session
 
         await setPersistence(auth, persistenceType);
 
         // ✅ CORRECTION : Sauvegarder email si rememberMe est coché
         if (formData.rememberMe) {
-          localStorage.setItem('rememberMe', '1');
-          localStorage.setItem('savedEmail', formData.email.trim().toLowerCase());
+          localStorage.setItem("rememberMe", "1");
+          localStorage.setItem(
+            "savedEmail",
+            formData.email.trim().toLowerCase()
+          );
         } else {
-          localStorage.removeItem('rememberMe');
-          localStorage.removeItem('savedEmail');
+          localStorage.removeItem("rememberMe");
+          localStorage.removeItem("savedEmail");
         }
 
         await login(formData.email.trim().toLowerCase(), formData.password);
 
-        performance.mark('login-attempt-end');
-        performance.measure('login-attempt', { start: 'login-attempt-start', end: 'login-attempt-end' });
+        performance.mark("login-attempt-end");
+        performance.measure("login-attempt", {
+          start: "login-attempt-start",
+          end: "login-attempt-end",
+        });
 
         const gtag = getGtag();
         if (gtag) {
-          gtag('event', 'login_attempt_success', {
-            email_domain: formData.email.split('@')[1],
+          gtag("event", "login_attempt_success", {
+            email_domain: formData.email.split("@")[1],
             remember_me: formData.rememberMe,
-            attempt_number: submitAttempts + 1
+            attempt_number: submitAttempts + 1,
           });
         }
       } catch (loginError) {
-        console.error('Login error:', loginError);
-        setSubmitAttempts(prev => prev + 1);
+        console.error("Login error:", loginError);
+        setSubmitAttempts((prev) => prev + 1);
 
         const gtag = getGtag();
         if (gtag) {
-          gtag('event', 'login_attempt_failed', {
-            error_type: loginError instanceof Error ? loginError.message : 'unknown',
+          gtag("event", "login_attempt_failed", {
+            error_type:
+              loginError instanceof Error ? loginError.message : "unknown",
             attempts: submitAttempts + 1,
-            email_domain: formData.email.split('@')[1]
+            email_domain: formData.email.split("@")[1],
           });
         }
       }
@@ -839,32 +1117,39 @@ const Login: React.FC = () => {
   // ✅ CORRECTION: Enhanced Google login avec persistence conditionnelle - COMPLET
   const handleGoogleLogin = useCallback(async () => {
     try {
-      performance.mark('google-login-start');
+      performance.mark("google-login-start");
 
       // ✅ Persistence basée sur rememberMe même pour Google
-      const persistenceType = formData.rememberMe 
-        ? browserLocalPersistence 
+      const persistenceType = formData.rememberMe
+        ? browserLocalPersistence
         : browserSessionPersistence;
-      
+
       await setPersistence(auth, persistenceType);
 
       await loginWithGoogle();
 
-      performance.mark('google-login-end');
-      performance.measure('google-login', { start: 'google-login-start', end: 'google-login-end' });
+      performance.mark("google-login-end");
+      performance.measure("google-login", {
+        start: "google-login-start",
+        end: "google-login-end",
+      });
 
       const gtag = getGtag();
       if (gtag) {
-        gtag('event', 'login_success', { method: 'google', remember_me: formData.rememberMe });
+        gtag("event", "login_success", {
+          method: "google",
+          remember_me: formData.rememberMe,
+        });
       }
     } catch (googleError) {
-      console.error('Google login error:', googleError);
+      console.error("Google login error:", googleError);
 
       const gtag = getGtag();
       if (gtag) {
-        gtag('event', 'login_failed', {
-          method: 'google',
-          error_type: googleError instanceof Error ? googleError.message : 'unknown'
+        gtag("event", "login_failed", {
+          method: "google",
+          error_type:
+            googleError instanceof Error ? googleError.message : "unknown",
         });
       }
     }
@@ -872,19 +1157,20 @@ const Login: React.FC = () => {
 
   // Password visibility toggle with analytics - COMPLET
   const togglePasswordVisibility = useCallback(() => {
-    setShowPassword(prev => {
+    setShowPassword((prev) => {
       const newValue = !prev;
 
       const gtag = getGtag();
       if (gtag) {
-        gtag('event', 'password_visibility_toggled', { visible: newValue, page: 'login' });
+        gtag("event", "password_visibility_toggled", {
+          visible: newValue,
+          page: "login",
+        });
       }
 
       return newValue;
     });
   }, []);
-
-  
 
   // 🔁 RÉCUPÉRER LE RÉSULTAT GOOGLE EN COOP/COEP (Redirect flow) - COMPLET
   const redirectHandledRef = useRef(false);
@@ -904,55 +1190,69 @@ const Login: React.FC = () => {
         redirectHandledRef.current = true;
         const googleUser = result.user;
 
-        const userRef = { doc: () => ({ get: () => ({ exists: () => false, data: () => ({} as ExistingUserData) }) }) };
+        const userRef = {
+          doc: () => ({
+            get: () => ({
+              exists: () => false,
+              data: () => ({}) as ExistingUserData,
+            }),
+          }),
+        };
         const userDoc = await userRef.doc().get();
 
         if (userDoc.exists()) {
           const existingData = userDoc.data();
 
           // Blocage rôle pour Google si ≠ client
-          if (existingData.role && existingData.role !== 'client') {
+          if (existingData.role && existingData.role !== "client") {
             await auth.signOut();
-            const { message, helpText } = { message: '🚫 La connexion Google est réservée aux clients', helpText: '👨‍⚖️ Avocats et 🌍 expatriés : utilisez votre email et mot de passe professionnels ci-dessous' };
-            setFormErrors({ general: helpText ? `${message}\n\n💡 ${helpText}` : message });
+            const { message, helpText } = {
+              message: "🚫 La connexion Google est réservée aux clients",
+              helpText:
+                "👨‍⚖️ Avocats et 🌍 expatriés : utilisez votre email et mot de passe professionnels ci-dessous",
+            };
+            setFormErrors({
+              general: helpText ? `${message}\n\n💡 ${helpText}` : message,
+            });
 
-            await logAuthEvent('google_login_role_restriction', {
+            await logAuthEvent("google_login_role_restriction", {
               userId: googleUser.uid,
               userEmail: googleUser.email,
-              blockedRole: existingData.role
+              blockedRole: existingData.role,
             });
             return;
           }
         }
 
-        await logAuthEvent('successful_google_login', {
+        await logAuthEvent("successful_google_login", {
           userId: googleUser.uid,
           userEmail: googleUser.email,
           isNewUser: !userDoc.exists(),
-          deviceType: 'desktop',
-          connectionSpeed: 'fast'
+          deviceType: "desktop",
+          connectionSpeed: "fast",
         });
       } catch (e) {
-        console.warn('[Auth] getRedirectResult error', e);
+        console.warn("[Auth] getRedirectResult error", e);
       } finally {
         if (!cancelled) {
           // Pas besoin de setIsLoading ici car géré par AuthContext
-          console.log('Google redirect flow completed');
+          console.log("Google redirect flow completed");
         }
       }
     })();
 
-    return () => { cancelled = true; };
-    
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // Fonction utilitaire pour les logs (fallback si pas dans AuthContext)
   const logAuthEvent = async (type: string, data: Record<string, unknown>) => {
     try {
-      console.log('Auth Event:', type, data);
+      console.log("Auth Event:", type, data);
       // Ici on pourrait appeler une API de logging
     } catch (error) {
-      console.warn('Erreur logging auth:', error);
+      console.warn("Erreur logging auth:", error);
     }
   };
 
@@ -965,12 +1265,16 @@ const Login: React.FC = () => {
             <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-red-500 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg animate-pulse">
               <LoadingSpinner size="large" color="red" />
             </div>
-            <h2 className="text-xl font-black text-white mb-3">{t('loading.message')}</h2>
-            <p className="text-base text-gray-400 mb-6">Vérification de vos identifiants...</p>
+            <h2 className="text-xl font-black text-white mb-3">
+              {t("loading.message")}
+            </h2>
+            <p className="text-base text-gray-400 mb-6">
+              Vérification de vos identifiants...
+            </p>
             <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
               <div
                 className="bg-gradient-to-r from-red-500 to-orange-500 h-2 rounded-full animate-pulse transition-all duration-1000"
-                style={{ width: '70%' }}
+                style={{ width: "70%" }}
               ></div>
             </div>
           </div>
@@ -985,7 +1289,10 @@ const Login: React.FC = () => {
       onError={(error, errorInfo) => {
         const gtag = getGtag();
         if (gtag) {
-          gtag('event', 'login_error_boundary', { error: error.message, component_stack: errorInfo.componentStack });
+          gtag("event", "login_error_boundary", {
+            error: error.message,
+            component_stack: errorInfo.componentStack,
+          });
         }
       }}
     >
@@ -1002,7 +1309,7 @@ const Login: React.FC = () => {
             <div className="fixed top-0 left-0 right-0 bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-4 py-3 text-center text-sm font-bold z-50 shadow-2xl backdrop-blur-sm">
               <div className="flex items-center justify-center space-x-2">
                 <Globe className="inline h-5 w-5 animate-pulse" />
-                <span>{t('offline.message')}</span>
+                <span>{t("offline.message")}</span>
               </div>
             </div>
           )}
@@ -1013,10 +1320,21 @@ const Login: React.FC = () => {
               {/* Badge moderne avec PWA */}
               <div className="inline-flex items-center space-x-3 bg-white/10 backdrop-blur-xl rounded-full pl-6 pr-2 py-3 border border-white/20 mb-8">
                 <Sparkles className="w-5 h-5 text-yellow-400" />
-                <span className="text-white font-bold">
+                {/* <span className="text-white font-bold">
                   Installez l'app <strong>SOS Expat</strong> !
+                </span> */}
+                <span className="text-white font-bold">
+                  <FormattedMessage
+                    id="app.install"
+                    values={{
+                      strong: (chunks) => <strong>{chunks}</strong>,
+                    }}
+                  />
                 </span>
-                <PWAInstallIconWithHint canInstall={canInstall} onInstall={onInstallClick} />
+                <PWAInstallIconWithHint
+                  canInstall={canInstall}
+                  onInstall={onInstallClick}
+                />
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
               </div>
 
@@ -1025,31 +1343,33 @@ const Login: React.FC = () => {
               </div>
 
               <h1 className="text-4xl sm:text-5xl font-black text-white mb-4 tracking-tight">
-                {t('login.title')}
+                {t("login.title")}
               </h1>
 
               <p className="text-lg text-gray-400 max-w-sm mx-auto leading-relaxed mb-6">
-                {t('login.subtitle')}
+                {t("login.subtitle")}
               </p>
 
               <p className="text-base text-gray-500">
-                {t('login.or')}{' '}
+                {t("login.or")}{" "}
                 <button
                   onClick={navigateToRegister}
                   className="font-black text-transparent bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text hover:from-red-400 hover:to-orange-400 transition-all duration-300 underline decoration-2 underline-offset-4"
-                  aria-label={t('login.create_account_aria')}
+                  aria-label={t("login.create_account_aria")}
                 >
-                  {t('login.create_account')}
+                  {t("login.create_account")}
                 </button>
               </p>
 
               {/* Message de redirection si venant d'un provider - COMPLET */}
-              {redirectUrl && redirectUrl.includes('/booking-request/') && (
+              {redirectUrl && redirectUrl.includes("/booking-request/") && (
                 <div className="mt-6 p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-xl border border-blue-500/30 rounded-2xl">
                   <div className="flex items-start">
                     <CheckCircle className="h-5 w-5 text-blue-400 mt-0.5 flex-shrink-0" />
                     <div className="ml-3">
-                      <p className="text-sm text-blue-300 font-bold">🎯 {t('redirect.message')}</p>
+                      <p className="text-sm text-blue-300 font-bold">
+                        🎯 {t("redirect.message")}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -1065,8 +1385,12 @@ const Login: React.FC = () => {
               {/* Progress bar - COMPLET */}
               <div className="mb-8">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm font-bold text-gray-400">Progression</span>
-                  <span className="text-sm font-black text-transparent bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text">{formProgress}%</span>
+                  <span className="text-sm font-bold text-gray-400">
+                    Progression
+                  </span>
+                  <span className="text-sm font-black text-transparent bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text">
+                    {formProgress}%
+                  </span>
                 </div>
                 <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
                   <div
@@ -1077,23 +1401,41 @@ const Login: React.FC = () => {
               </div>
 
               <div className="flex items-center justify-center mb-8">
-                <Shield className="h-5 w-5 text-green-400 mr-2 animate-pulse" aria-hidden="true" />
-                <span className="text-sm text-gray-400 font-bold">{t('security.ssl')}</span>
+                <Shield
+                  className="h-5 w-5 text-green-400 mr-2 animate-pulse"
+                  aria-hidden="true"
+                />
+                <span className="text-sm text-gray-400 font-bold">
+                  {t("security.ssl")}
+                </span>
               </div>
 
               <form className="space-y-6" onSubmit={handleSubmit} noValidate>
                 {/* Enhanced error display - COMPLET */}
                 {(error || formErrors.general) && (
-                  <div className="bg-red-500/10 backdrop-blur-xl border border-red-500/30 p-4 rounded-2xl" role="alert">
+                  <div
+                    className="bg-red-500/10 backdrop-blur-xl border border-red-500/30 p-4 rounded-2xl"
+                    role="alert"
+                  >
                     <div className="flex">
-                      <AlertCircle className="h-5 w-5 text-red-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                      <AlertCircle
+                        className="h-5 w-5 text-red-400 flex-shrink-0 mt-0.5"
+                        aria-hidden="true"
+                      />
                       <div className="ml-3">
-                        <h3 className="text-sm font-black text-red-300 mb-1">{t('error.title')}</h3>
-                        <div className="text-sm text-red-200 leading-relaxed">{error || formErrors.general}</div>
+                        <h3 className="text-sm font-black text-red-300 mb-1">
+                          {t("error.title")}
+                        </h3>
+                        <div className="text-sm text-red-200 leading-relaxed">
+                          {error || formErrors.general}
+                        </div>
                         {submitAttempts >= 3 && (
                           <div className="mt-3">
-                            <Link to="/password-reset" className="text-sm text-red-400 hover:text-red-300 underline font-bold">
-                              {t('login.forgot_password_help')}
+                            <Link
+                              to="/password-reset"
+                              className="text-sm text-red-400 hover:text-red-300 underline font-bold"
+                            >
+                              {t("login.forgot_password_help")}
                             </Link>
                           </div>
                         )}
@@ -1104,10 +1446,13 @@ const Login: React.FC = () => {
 
                 {/* Email field - COMPLET */}
                 <div>
-                  <label htmlFor="email" className="block text-sm font-bold text-gray-300 mb-2">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-bold text-gray-300 mb-2"
+                  >
                     <div className="flex items-center gap-2">
                       <Mail className="w-4 h-4" />
-                      {t('login.email_label')}
+                      {t("login.email_label")}
                       <span className="text-red-500">*</span>
                     </div>
                   </label>
@@ -1118,20 +1463,27 @@ const Login: React.FC = () => {
                     autoComplete="email"
                     required
                     value={formData.email}
-                    onChange={e => handleFieldChange('email', e.target.value)}
+                    onChange={(e) => handleFieldChange("email", e.target.value)}
                     onBlur={() => setIsFormTouched(true)}
                     className="appearance-none block w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl placeholder-gray-500 text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300 hover:bg-white/15"
-                    placeholder={t('login.email_placeholder')}
+                    placeholder={t("login.email_placeholder")}
                   />
-                  {formErrors.email && <p className="mt-2 text-sm text-red-400 font-medium">{formErrors.email}</p>}
+                  {formErrors.email && (
+                    <p className="mt-2 text-sm text-red-400 font-medium">
+                      {formErrors.email}
+                    </p>
+                  )}
                 </div>
 
                 {/* Password field - COMPLET */}
                 <div>
-                  <label htmlFor="password" className="block text-sm font-bold text-gray-300 mb-2">
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-bold text-gray-300 mb-2"
+                  >
                     <div className="flex items-center gap-2">
                       <Lock className="w-4 h-4" />
-                      {t('login.password_label')}
+                      {t("login.password_label")}
                       <span className="text-red-500">*</span>
                     </div>
                   </label>
@@ -1139,24 +1491,34 @@ const Login: React.FC = () => {
                     <input
                       id="password"
                       name="password"
-                      type={showPassword ? 'text' : 'password'}
+                      type={showPassword ? "text" : "password"}
                       autoComplete="current-password"
                       required
                       value={formData.password}
-                      onChange={e => handleFieldChange('password', e.target.value)}
+                      onChange={(e) =>
+                        handleFieldChange("password", e.target.value)
+                      }
                       onBlur={() => setIsFormTouched(true)}
                       className="appearance-none block w-full px-4 py-3 pr-12 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl placeholder-gray-500 text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300 hover:bg-white/15"
-                      placeholder={t('login.password_placeholder')}
+                      placeholder={t("login.password_placeholder")}
                     />
-                    <button 
-                      type="button" 
-                      onClick={togglePasswordVisibility} 
+                    <button
+                      type="button"
+                      onClick={togglePasswordVisibility}
                       className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-white transition-colors duration-200"
                     >
-                      {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5" />
+                      ) : (
+                        <Eye className="h-5 w-5" />
+                      )}
                     </button>
                   </div>
-                  {formErrors.password && <p className="mt-2 text-sm text-red-400 font-medium">{formErrors.password}</p>}
+                  {formErrors.password && (
+                    <p className="mt-2 text-sm text-red-400 font-medium">
+                      {formErrors.password}
+                    </p>
+                  )}
                 </div>
 
                 {/* ✅ Enhanced remember me section avec indicateurs visuels - COMPLET */}
@@ -1167,37 +1529,42 @@ const Login: React.FC = () => {
                       name="remember-me"
                       type="checkbox"
                       checked={formData.rememberMe}
-                      onChange={e => handleFieldChange('rememberMe', e.target.checked)}
+                      onChange={(e) =>
+                        handleFieldChange("rememberMe", e.target.checked)
+                      }
                       className="h-4 w-4 text-red-600 bg-white/10 border-white/20 rounded focus:ring-red-500 transition-colors duration-200"
                     />
-                    <label htmlFor="remember-me" className="ml-3 text-gray-300 select-none cursor-pointer font-bold">
-                      {t('login.remember_me')}
+                    <label
+                      htmlFor="remember-me"
+                      className="ml-3 text-gray-300 select-none cursor-pointer font-bold"
+                    >
+                      {t("login.remember_me")}
                     </label>
                     {/* ✅ Indicateur visuel si données sauvegardées */}
                     {formData.rememberMe && formData.email && (
                       <span className="ml-2 text-xs text-green-400 font-black">
-                        ✓ {t('remember_me.saved')}
+                        ✓ {t("remember_me.saved")}
                       </span>
                     )}
                   </div>
 
                   <div className="flex items-center space-x-2">
                     {/* Bouton pour effacer les données sauvegardées */}
-                    {(localStorage.getItem('rememberMe') === '1') && (
+                    {localStorage.getItem("rememberMe") === "1" && (
                       <button
                         type="button"
                         onClick={clearSavedData}
                         className="text-xs text-gray-500 hover:text-gray-300 underline transition-colors duration-200 font-bold"
                       >
-                        {t('remember_me.clear')}
+                        {t("remember_me.clear")}
                       </button>
                     )}
-                    
+
                     <Link
                       to="/password-reset"
                       className="font-black text-transparent bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text hover:from-red-300 hover:to-orange-300 transition-all duration-300 underline decoration-2 underline-offset-4"
                     >
-                      {t('login.forgot_password')}
+                      {t("login.forgot_password")}
                     </Link>
                   </div>
                 </div>
@@ -1211,8 +1578,8 @@ const Login: React.FC = () => {
                     size="large"
                     className={`py-5 text-lg font-black rounded-2xl transition-all duration-300 transform min-h-[60px] ${
                       isFormValid && !isLoading && isOnline
-                        ? 'bg-gradient-to-r from-red-600 via-red-500 to-orange-500 hover:from-red-700 hover:via-red-600 hover:to-orange-600 text-white shadow-2xl hover:shadow-red-500/50 hover:scale-[1.02] active:scale-[0.98] focus:ring-4 focus:ring-red-500/50'
-                        : 'bg-white/10 text-gray-500 cursor-not-allowed backdrop-blur-sm border border-white/20'
+                        ? "bg-gradient-to-r from-red-600 via-red-500 to-orange-500 hover:from-red-700 hover:via-red-600 hover:to-orange-600 text-white shadow-2xl hover:shadow-red-500/50 hover:scale-[1.02] active:scale-[0.98] focus:ring-4 focus:ring-red-500/50"
+                        : "bg-white/10 text-gray-500 cursor-not-allowed backdrop-blur-sm border border-white/20"
                     }`}
                     disabled={!isFormValid || isLoading || !isOnline}
                     aria-describedby="login-button-description"
@@ -1220,17 +1587,17 @@ const Login: React.FC = () => {
                     {isLoading ? (
                       <div className="flex items-center justify-center">
                         <div className="animate-spin rounded-full h-5 w-5 border-2 border-white/30 border-t-white mr-3" />
-                        {t('login.logging_in')}
+                        {t("login.logging_in")}
                       </div>
                     ) : (
                       <div className="flex items-center justify-center">
                         <LogIn size={20} className="mr-3" aria-hidden="true" />
-                        {t('login.submit_button')}
+                        {t("login.submit_button")}
                       </div>
                     )}
                   </Button>
                   <p id="login-button-description" className="sr-only">
-                    {t('login.submit_button_description')}
+                    {t("login.submit_button_description")}
                   </p>
                 </div>
 
@@ -1240,7 +1607,9 @@ const Login: React.FC = () => {
                     <div className="w-full border-t border-white/20" />
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className="px-4 bg-white/10 backdrop-blur-xl text-gray-400 font-black rounded-full">{t('login.or_divider')}</span>
+                    <span className="px-4 bg-white/10 backdrop-blur-xl text-gray-400 font-black rounded-full">
+                      {t("login.or_divider")}
+                    </span>
                   </div>
                 </div>
 
@@ -1256,13 +1625,29 @@ const Login: React.FC = () => {
                     className="py-5 text-lg font-black bg-white hover:bg-gray-100 text-gray-900 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] min-h-[60px] shadow-xl"
                     disabled={isLoading || !isOnline}
                   >
-                    <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24" aria-hidden="true">
-                      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                    <svg
+                      className="w-5 h-5 mr-3"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill="#4285F4"
+                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                      />
+                      <path
+                        fill="#34A853"
+                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                      />
+                      <path
+                        fill="#FBBC05"
+                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                      />
+                      <path
+                        fill="#EA4335"
+                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                      />
                     </svg>
-                    {t('login.google_login')}
+                    {t("login.google_login")}
                   </Button>
                 </div>
               </form>
@@ -1270,12 +1655,12 @@ const Login: React.FC = () => {
               {/* Footer - COMPLET */}
               <footer className="mt-10 text-center space-y-6">
                 <p className="text-base text-gray-400">
-                  {t('login.new_user')}{' '}
+                  {t("login.new_user")}{" "}
                   <button
                     onClick={navigateToRegister}
                     className="font-black text-transparent bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text hover:from-red-400 hover:to-orange-400 transition-all duration-300 underline decoration-2 underline-offset-4"
                   >
-                    {t('login.create_account')}
+                    {t("login.create_account")}
                   </button>
                 </p>
 
@@ -1287,7 +1672,7 @@ const Login: React.FC = () => {
                   >
                     <div className="flex items-center justify-center gap-3">
                       <User className="w-5 h-5" />
-                      <span>{t('create_account.button')}</span>
+                      <span>{t("create_account.button")}</span>
                       <Sparkles className="w-5 h-5 text-yellow-400" />
                     </div>
                   </button>
@@ -1297,7 +1682,7 @@ const Login: React.FC = () => {
                 <div className="flex items-center justify-center space-x-6 text-xs text-gray-500">
                   <span className="flex items-center">
                     <Shield className="h-3 w-3 mr-1 text-green-400" />
-                    <span className="font-bold">{t('trust.secure')}</span>
+                    <span className="font-bold">{t("trust.secure")}</span>
                   </span>
                   <span className="text-gray-600">•</span>
                   <span className="flex items-center">
@@ -1307,20 +1692,28 @@ const Login: React.FC = () => {
                   <span className="text-gray-600">•</span>
                   <span className="flex items-center">
                     <Star className="h-3 w-3 mr-1 text-yellow-400" />
-                    <span className="font-bold">{t('trust.support_24_7')}</span>
+                    <span className="font-bold">{t("trust.support_24_7")}</span>
                   </span>
                 </div>
 
                 {/* Performance indicator (dev only) - COMPLET */}
-                {process.env.NODE_ENV === 'development' && (
-                  <div className="text-xs text-gray-600 font-medium">⚡ Optimized for Core Web Vitals</div>
+                {process.env.NODE_ENV === "development" && (
+                  <div className="text-xs text-gray-600 font-medium">
+                    ⚡ Optimized for Core Web Vitals
+                  </div>
                 )}
               </footer>
             </div>
           </div>
 
           {/* Preload critical resources - COMPLET */}
-          <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+          <link
+            rel="preload"
+            href="/fonts/inter.woff2"
+            as="font"
+            type="font/woff2"
+            crossOrigin="anonymous"
+          />
           <link rel="preconnect" href="https://accounts.google.com" />
           <link rel="dns-prefetch" href="//www.google-analytics.com" />
 
@@ -1335,7 +1728,7 @@ const Login: React.FC = () => {
                       .catch(error => console.log('SW registration failed:', error));
                   });
                 }
-              `
+              `,
             }}
           />
         </main>

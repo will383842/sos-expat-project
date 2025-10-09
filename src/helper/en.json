@@ -238,6 +238,20 @@
   "join.expat.benefit8": "Sign up and describe your experience & local knowledge",
   "join.expat.cta": "I'm an expat",
   "join.appTip": "Tip: download the <strong>SOS Expat by Ulixai</strong> app to go online/offline whenever you want.",
-   "call.type.lawyer": "Call with a lawyer",
-  "call.type.expat": "Call with an expat"
+  "call.type.lawyer": "Call with a lawyer",
+  "call.type.expat": "Call with an expat",
+  "app.install": "Install the <strong>SOS Expat</strong> app!",
+  "app.downloadPrompt": "📱 Download the SOS Expats app!",
+  "app.description": "Emergency help in your pocket! Instant access to experts, even offline.",
+  "app.badge.freeSecure": "100% free & secure",
+  "app.installNow": "Install now",
+  "app.downloadApp": "Download app",
+  "pwa.hintPrefix": "Your browser doesn't support automatic installation. ",
+  "pwa.hintIOS": "On iPhone/iPad: Safari → Share → Add to Home Screen. 😊",
+  "pwa.hintAndroid": "On Android: Chrome → menu ⋮ → Install app. 😊",
+  "pwa.hintDesktop": "On computer: Chrome/Edge → Install icon in address bar.",
+  "pwa.hintFallback": "Try with Chrome/Edge (computer) or Safari/Chrome (mobile).",
+  "pwa.touchHint": "The app that changes expat life! 🚀",
+  "pwa.ariaLabel": "Download SOS Expats app",
+  "pwa.tooltipTitle": "The app that changes everything! 🚀"
 }
