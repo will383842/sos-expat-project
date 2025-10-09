@@ -651,7 +651,7 @@ const Footer: React.FC = () => {
               <div className="w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
             </div>
             <div className="relative flex justify-center">
-              <div className="bg-gradient-to-r from-slate-900 to-black px-4">
+              <div className="mx-2 bg-gradient-to-br bg-transparent from-slate-900 via-slate-900  px-4">
                 <div className="w-2 h-2 bg-gradient-to-r from-red-500 to-red-600 rounded-full animate-pulse" />
               </div>
             </div>
