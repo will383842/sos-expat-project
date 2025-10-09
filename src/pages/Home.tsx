@@ -1,5 +1,11 @@
 // src/pages/Home.tsx
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useMemo,
+} from "react";
 import { Form, Link } from "react-router-dom";
 import {
   ArrowRight,
@@ -32,7 +38,7 @@ import {
 } from "@/services/pricingService";
 import { functions, httpsCallable } from "@/config/firebase";
 import { getFunctions } from "firebase/functions";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { useApp } from "../contexts/AppContext";
 
 /* ================================
@@ -575,7 +581,10 @@ function ReviewsSlider({ theme = "dark" }: { theme?: "dark" | "light" }) {
           to="/testimonials"
           className={`inline-flex items-center gap-2 ${isDark ? "text-blue-300 hover:text-blue-200" : "text-blue-600 hover:text-blue-700"} font-semibold transition-colors`}
         >
-          <span>Voir tous les avis</span>
+          {/* <span>Voir tous les avis</span> */}
+          <span>
+            <FormattedMessage id="reviews.viewAll" />
+          </span>
           <ChevronRightIcon className="w-5 h-5" />
         </Link>
       </div>
@@ -656,6 +665,7 @@ const PRICING_PLANS: PricingPlan[] = [
    Page
    ================================ */
 const OptimizedHomePage: React.FC = () => {
+  const intl = useIntl();
   const { install, canPrompt } = usePWAInstall();
   const { language } = useApp();
 
@@ -1102,39 +1112,83 @@ const OptimizedHomePage: React.FC = () => {
             };
 
             // Bénéfices (identiques)
+            // const expatBenefits: string[] = [
+            //   "Retours d’expérience concrets",
+            //   "Conseils logement, banque, santé, transport",
+            //   "Infos à jour sur démarches et délais",
+            //   "Astuces culturelles & pièges à éviter",
+            //   "Réseau local (contacts utiles)",
+            //   "Accompagnement bienveillant",
+            // ];
+            // const lawyerBenefits: string[] = [
+            //   "Analyse rapide de votre situation",
+            //   "Conseils juridiques personnalisés",
+            //   "Confidentialité & sécurité garanties",
+            //   "Réponse en < 5 minutes",
+            //   "Expertise pays concerné",
+            //   "Orientation vers les bonnes procédures",
+            // ];
             const expatBenefits: string[] = [
-              "Retours d’expérience concrets",
-              "Conseils logement, banque, santé, transport",
-              "Infos à jour sur démarches et délais",
-              "Astuces culturelles & pièges à éviter",
-              "Réseau local (contacts utiles)",
-              "Accompagnement bienveillant",
+              intl.formatMessage({ id: "benefits.expat.experience" }),
+              intl.formatMessage({ id: "benefits.expat.housing" }),
+              intl.formatMessage({ id: "benefits.expat.procedures" }),
+              intl.formatMessage({ id: "benefits.expat.cultural" }),
+              intl.formatMessage({ id: "benefits.expat.network" }),
+              intl.formatMessage({ id: "benefits.expat.support" }),
             ];
+
             const lawyerBenefits: string[] = [
-              "Analyse rapide de votre situation",
-              "Conseils juridiques personnalisés",
-              "Confidentialité & sécurité garanties",
-              "Réponse en < 5 minutes",
-              "Expertise pays concerné",
-              "Orientation vers les bonnes procédures",
+              intl.formatMessage({ id: "benefits.lawyer.analysis" }),
+              intl.formatMessage({ id: "benefits.lawyer.advice" }),
+              intl.formatMessage({ id: "benefits.lawyer.confidentiality" }),
+              intl.formatMessage({ id: "benefits.lawyer.response" }),
+              intl.formatMessage({ id: "benefits.lawyer.expertise" }),
+              intl.formatMessage({ id: "benefits.lawyer.guidance" }),
             ];
 
             // Exemples (fusionnés)
-            const expatExamples: string[] = [
-              "Installation : logement, forfait mobile, banque",
-              "Scolarité & assurances locales",
-              "Préfecture / immigration : RDV & dossiers",
-            ];
-            const lawyerExamples: string[] = [
-              "Contrat de travail : clauses à vérifier",
-              "Conflit locatif / commercial — premiers réflexes",
-              "Accident / hospitalisation : droits & démarches",
-            ];
-            const additionalExamples: string[] = [
-              "Problèmes justice / police (droits & démarches)",
-              "Trouver un job (CV local, entretiens, contrats)",
-              "Rencontrer d’autres expatriés (réseau & entraide)",
-            ];
+            // const expatExamples: string[] = [
+            //   "Installation : logement, forfait mobile, banque",
+            //   "Scolarité & assurances locales",
+            //   "Préfecture / immigration : RDV & dossiers",
+            // ];
+            // const lawyerExamples: string[] = [
+            //   "Contrat de travail : clauses à vérifier",
+            //   "Conflit locatif / commercial — premiers réflexes",
+            //   "Accident / hospitalisation : droits & démarches",
+            // ];
+            // const additionalExamples: string[] = [
+            //   "Problèmes justice / police (droits & démarches)",
+            //   "Trouver un job (CV local, entretiens, contrats)",
+            //   "Rencontrer d’autres expatriés (réseau & entraide)",
+            // ];
+            const expatExamples = useMemo(
+              () => [
+                intl.formatMessage({ id: "examples.expat.housing" }),
+                intl.formatMessage({ id: "examples.expat.schooling" }),
+                intl.formatMessage({ id: "examples.expat.immigration" }),
+              ],
+              [intl]
+            );
+
+            const lawyerExamples = useMemo(
+              () => [
+                intl.formatMessage({ id: "examples.lawyer.contract" }),
+                intl.formatMessage({ id: "examples.lawyer.dispute" }),
+                intl.formatMessage({ id: "examples.lawyer.accident" }),
+              ],
+              [intl]
+            );
+
+            const additionalExamples = useMemo(
+              () => [
+                intl.formatMessage({ id: "examples.additional.justice" }),
+                intl.formatMessage({ id: "examples.additional.job" }),
+                intl.formatMessage({ id: "examples.additional.network" }),
+              ],
+              [intl]
+            );
+
             const combinedExamples: string[] = Array.from(
               new Set([
                 ...expatExamples,
@@ -1293,7 +1347,7 @@ const OptimizedHomePage: React.FC = () => {
                     </div>
 
                     {/* H2 - inchangé */}
-                    <h2
+                    {/* <h2
                       id="pricing-title"
                       className="text-5xl font-black text-white mb-4"
                     >
@@ -1302,12 +1356,30 @@ const OptimizedHomePage: React.FC = () => {
                         tarifs
                       </span>{" "}
                       adaptés à vos besoins
+                    </h2> */}
+                    <h2
+                      id="pricing-title"
+                      className="text-5xl font-black text-white mb-4"
+                    >
+                      <FormattedMessage id="pricing.heading" />{" "}
+                      <span className="bg-gradient-to-r from-green-500 to-blue-500 bg-clip-text text-transparent">
+                        <FormattedMessage id="pricing.headingHighlight" />
+                      </span>{" "}
+                      <FormattedMessage id="pricing.headingEnd" />
                     </h2>
                     {/* intro plus fun */}
-                    <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+                    {/* <p className="text-xl text-gray-300 max-w-3xl mx-auto">
                       Choisissez à qui vous voulez parler…{" "}
                       <strong>un avocat</strong> ? <strong>Un expatrié</strong>{" "}
                       ?
+                    </p> */}
+                    <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+                      <FormattedMessage
+                        id="pricing.choosePerson"
+                        values={{
+                          strong: (chunks) => <strong>{chunks}</strong>,
+                        }}
+                      />
                     </p>
                   </div>
 
@@ -1452,7 +1524,8 @@ const OptimizedHomePage: React.FC = () => {
                       {/* Indicateur source prix */}
                       <div className="text-center mt-6">
                         <span className="text-xs text-white/60 bg-white/10 px-3 py-1 rounded-full">
-                          💰 Tarifs mis à jour depuis la console admin
+                          {/* 💰 Tarifs mis à jour depuis la console admin */}
+                          <FormattedMessage id="pricing.adminSync" />
                         </span>
                       </div>
 
@@ -1548,33 +1621,74 @@ const OptimizedHomePage: React.FC = () => {
               gradient: string;
             }
 
-            const advantages: AdvantageItem[] = [
-              {
-                id: "speed-worldwide",
-                title: "Un expert en 5 minutes",
-                tagline: "Le service qui vous suit partout.",
-                caption: "Partout • 24/7 • < 5 min",
-                icon: <Zap className="w-6 h-6" />,
-                gradient: "from-red-500 to-orange-500",
-              },
-              {
-                id: "coffee-fast",
-                title: "Avant que votre café refroidisse",
-                tagline: "Avocat ou expatrié, on vous connecte tout de suite.",
-                caption: "Priorité à l’urgence",
-                icon: <Clock className="w-6 h-6" />,
-                gradient: "from-yellow-500 to-red-500",
-              },
-              {
-                id: "multi",
-                title: "Multilingue. Multidevise. Multicountry.",
-                tagline: "On s’adapte à vous — et c’est ultra-rapide.",
-                caption: "Langues • Devises • Pays",
-                icon: <Globe className="w-6 h-6" />,
-                gradient: "from-blue-500 to-purple-500",
-              },
-            ];
+            // const advantages: AdvantageItem[] = [
+            //   {
+            //     id: "speed-worldwide",
+            //     title: "Un expert en 5 minutes",
+            //     tagline: "Le service qui vous suit partout.",
+            //     caption: "Partout • 24/7 • < 5 min",
+            //     icon: <Zap className="w-6 h-6" />,
+            //     gradient: "from-red-500 to-orange-500",
+            //   },
+            //   {
+            //     id: "coffee-fast",
+            //     title: "Avant que votre café refroidisse",
+            //     tagline: "Avocat ou expatrié, on vous connecte tout de suite.",
+            //     caption: "Priorité à l’urgence",
+            //     icon: <Clock className="w-6 h-6" />,
+            //     gradient: "from-yellow-500 to-red-500",
+            //   },
+            //   {
+            //     id: "multi",
+            //     title: "Multilingue. Multidevise. Multicountry.",
+            //     tagline: "On s’adapte à vous — et c’est ultra-rapide.",
+            //     caption: "Langues • Devises • Pays",
+            //     icon: <Globe className="w-6 h-6" />,
+            //     gradient: "from-blue-500 to-purple-500",
+            //   },
+            // ];
 
+            const advantages: AdvantageItem[] = useMemo(
+              () => [
+                {
+                  id: "speed-worldwide",
+                  title: intl.formatMessage({ id: "advantage.speed.title" }),
+                  tagline: intl.formatMessage({
+                    id: "advantage.speed.tagline",
+                  }),
+                  caption: intl.formatMessage({
+                    id: "advantage.speed.caption",
+                  }),
+                  icon: <Zap className="w-6 h-6" />,
+                  gradient: "from-red-500 to-orange-500",
+                },
+                {
+                  id: "coffee-fast",
+                  title: intl.formatMessage({ id: "advantage.coffee.title" }),
+                  tagline: intl.formatMessage({
+                    id: "advantage.coffee.tagline",
+                  }),
+                  caption: intl.formatMessage({
+                    id: "advantage.coffee.caption",
+                  }),
+                  icon: <Clock className="w-6 h-6" />,
+                  gradient: "from-yellow-500 to-red-500",
+                },
+                {
+                  id: "multi",
+                  title: intl.formatMessage({ id: "advantage.multi.title" }),
+                  tagline: intl.formatMessage({
+                    id: "advantage.multi.tagline",
+                  }),
+                  caption: intl.formatMessage({
+                    id: "advantage.multi.caption",
+                  }),
+                  icon: <Globe className="w-6 h-6" />,
+                  gradient: "from-blue-500 to-purple-500",
+                },
+              ],
+              [intl]
+            );
             const AdvantageCard: React.FC<{ item: AdvantageItem }> = ({
               item,
             }) => {
@@ -1630,7 +1744,7 @@ const OptimizedHomePage: React.FC = () => {
               <div className="max-w-7xl mx-auto px-6">
                 <div className="text-center mb-12 sm:mb-16">
                   {/* H2 - inchangé */}
-                  <h2
+                  {/* <h2
                     id="why-title"
                     className="text-5xl font-black text-gray-900 mb-6"
                   >
@@ -1639,11 +1753,22 @@ const OptimizedHomePage: React.FC = () => {
                       SOS Expats
                     </span>{" "}
                     ?
+                  </h2> */}
+                  <h2
+                    id="why-title"
+                    className="text-5xl font-black text-gray-900 mb-6"
+                  >
+                    <FormattedMessage id="why.heading" />{" "}
+                    <span className="bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
+                      <FormattedMessage id="why.headingHighlight" />
+                    </span>
+                    <FormattedMessage id="why.headingEnd" />
                   </h2>
                   {/* intro plus fun */}
                   <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
-                    Pensé pour aller vite, rester clair et vraiment vous
-                    accompagner — mobile d’abord.
+                    {/* Pensé pour aller vite, rester clair et vraiment vous
+                    accompagner — mobile d’abord. */}
+                    <FormattedMessage id="home.mobileFirstDesc" />
                   </p>
                 </div>
 
@@ -1704,7 +1829,7 @@ const OptimizedHomePage: React.FC = () => {
                     </h3>
 
                     <ul
-                      className="mt-6 space-y-3"
+                      className="mt-6 space-y-3 mb-3"
                       role="list"
                       aria-label="Avantages"
                     >
@@ -1729,10 +1854,18 @@ const OptimizedHomePage: React.FC = () => {
                         {ctaLabel}
                         <ArrowRight className="w-5 h-5" />
                       </a>
-                      <p className="mt-3 text-sm text-gray-500">
+                      {/* <p className="mt-3 text-sm text-gray-500">
                         Astuce : téléchargez l’appli{" "}
                         <strong>SOS Expat d’Ulixai</strong> pour passer en
                         ligne/hors ligne quand vous le souhaitez.
+                      </p> */}
+                      <p className="mt-3 text-sm text-gray-500">
+                        <FormattedMessage
+                          id="join.appTip"
+                          values={{
+                            strong: (chunks) => <strong>{chunks}</strong>,
+                          }}
+                        />
                       </p>
                     </div>
                   </div>
@@ -1741,46 +1874,91 @@ const OptimizedHomePage: React.FC = () => {
             };
 
             // H2 via variable — inchangé
-            const joinTitle = "Faites partie du réseau SOS Expat";
-            const joinSubtitle =
-              "Avocats ou expatriés : rejoignez-nous et transformez vos compétences en opportunités réelles.";
+            // const joinTitle = "Faites partie du réseau SOS Expat";
+            // const joinSubtitle =
+            // "Avocats ou expatriés : rejoignez-nous et transformez vos compétences en opportunités réelles.";
 
-            const lawyerCard: JoinCardProps = {
-              label: "Avocat",
-              title: "Développez votre activité à l’international",
-              benefits: [
-                "Augmentez votre chiffre d’affaires avec des consultations de 20 minutes",
-                "Paiement rapide : versement sous 24 h",
-                "Mettez-vous en ligne/hors ligne quand vous voulez",
-                "Visibilité mondiale, clients connectés en < 5 minutes",
-                "Toutes langues, euros et dollars",
-                "Répondez aux expats, voyageurs et vacanciers",
-              ],
-              ctaLabel: "Je suis avocat",
-              ctaHref: "http://localhost:5173/register/lawyer",
-              icon: <Briefcase className="w-3.5 h-3.5" />,
-              gradient: "from-red-600 to-orange-600",
-            };
+            const joinTitle = intl.formatMessage({ id: "join.title" });
+            const joinSubtitle = intl.formatMessage({ id: "join.subtitle" });
 
-            const expatCard: JoinCardProps = {
-              label: "Expatrié",
-              title:
-                "Partagez votre expérience où que vous soyez dans le monde",
-              benefits: [
-                "Mettez-vous en ligne ou hors ligne à tout moment (contrôle total)",
-                "Quand vous recevez des appels, vous gagnez — paiement sous 24 h",
-                "30 minutes par appel : des revenus à chaque échange",
-                "Plus vous êtes en ligne, plus vos revenus explosent",
-                "Clients partout dans le monde, toutes langues",
-                "Euros et dollars acceptés",
-                "Je veux aider : expats, voyageurs, vacanciers",
-                "Inscrivez-vous et décrivez votre expérience & vos connaissances locales",
-              ],
-              ctaLabel: "Je suis expatrié",
-              ctaHref: "http://localhost:5173/register/expat",
-              icon: <User className="w-3.5 h-3.5" />,
-              gradient: "from-blue-600 to-indigo-600",
-            };
+            // const lawyerCard: JoinCardProps = {
+            //   label: "Avocat",
+            //   title: "Développez votre activité à l’international",
+            //   benefits: [
+            //     "Augmentez votre chiffre d’affaires avec des consultations de 20 minutes",
+            //     "Paiement rapide : versement sous 24 h",
+            //     "Mettez-vous en ligne/hors ligne quand vous voulez",
+            //     "Visibilité mondiale, clients connectés en < 5 minutes",
+            //     "Toutes langues, euros et dollars",
+            //     "Répondez aux expats, voyageurs et vacanciers",
+            //   ],
+            //   ctaLabel: "Je suis avocat",
+            //   ctaHref: "http://localhost:5173/register/lawyer",
+            //   icon: <Briefcase className="w-3.5 h-3.5" />,
+            //   gradient: "from-red-600 to-orange-600",
+            // };
+
+            // const expatCard: JoinCardProps = {
+            //   label: "Expatrié",
+            //   title:
+            //     "Partagez votre expérience où que vous soyez dans le monde",
+            //   benefits: [
+            //     "Mettez-vous en ligne ou hors ligne à tout moment (contrôle total)",
+            //     "Quand vous recevez des appels, vous gagnez — paiement sous 24 h",
+            //     "30 minutes par appel : des revenus à chaque échange",
+            //     "Plus vous êtes en ligne, plus vos revenus explosent",
+            //     "Clients partout dans le monde, toutes langues",
+            //     "Euros et dollars acceptés",
+            //     "Je veux aider : expats, voyageurs, vacanciers",
+            //     "Inscrivez-vous et décrivez votre expérience & vos connaissances locales",
+            //   ],
+            //   ctaLabel: "Je suis expatrié",
+            //   ctaHref: "http://localhost:5173/register/expat",
+            //   icon: <User className="w-3.5 h-3.5" />,
+            //   gradient: "from-blue-600 to-indigo-600",
+            // };
+
+            const lawyerCard: JoinCardProps = useMemo(
+              () => ({
+                label: intl.formatMessage({ id: "join.lawyer.label" }),
+                title: intl.formatMessage({ id: "join.lawyer.title" }),
+                benefits: [
+                  intl.formatMessage({ id: "join.lawyer.benefit1" }),
+                  intl.formatMessage({ id: "join.lawyer.benefit2" }),
+                  intl.formatMessage({ id: "join.lawyer.benefit3" }),
+                  intl.formatMessage({ id: "join.lawyer.benefit4" }),
+                  intl.formatMessage({ id: "join.lawyer.benefit5" }),
+                  intl.formatMessage({ id: "join.lawyer.benefit6" }),
+                ],
+                ctaLabel: intl.formatMessage({ id: "join.lawyer.cta" }),
+                ctaHref: "/register/lawyer",
+                icon: <Briefcase className="w-3.5 h-3.5" />,
+                gradient: "from-red-600 to-orange-600",
+              }),
+              [intl]
+            );
+
+            const expatCard: JoinCardProps = useMemo(
+              () => ({
+                label: intl.formatMessage({ id: "join.expat.label" }),
+                title: intl.formatMessage({ id: "join.expat.title" }),
+                benefits: [
+                  intl.formatMessage({ id: "join.expat.benefit1" }),
+                  intl.formatMessage({ id: "join.expat.benefit2" }),
+                  intl.formatMessage({ id: "join.expat.benefit3" }),
+                  intl.formatMessage({ id: "join.expat.benefit4" }),
+                  intl.formatMessage({ id: "join.expat.benefit5" }),
+                  intl.formatMessage({ id: "join.expat.benefit6" }),
+                  intl.formatMessage({ id: "join.expat.benefit7" }),
+                  intl.formatMessage({ id: "join.expat.benefit8" }),
+                ],
+                ctaLabel: intl.formatMessage({ id: "join.expat.cta" }),
+                ctaHref: "/register/expat",
+                icon: <User className="w-3.5 h-3.5" />,
+                gradient: "from-blue-600 to-indigo-600",
+              }),
+              [intl]
+            );
 
             return (
               <div className="relative z-10 max-w-7xl mx-auto px-6">
@@ -1825,12 +2003,17 @@ const OptimizedHomePage: React.FC = () => {
                   <Award className="w-4 h-4 sm:w-5 sm:h-5" />
                 </span>
               </span>
-
               {/* H2 - inchangé */}
+              {/* <h2 className="text-3xl sm:text-5xl font-extrabold text-gray-900 tracking-tight"> */}
+              {/* Ce que disent nos{" "} */}
+              {/* <span className="bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent"> */}
+              {/* utilisateurs */}
+              {/* </span> */}
+              {/* </h2> */}
               <h2 className="text-3xl sm:text-5xl font-extrabold text-gray-900 tracking-tight">
-                Ce que disent nos{" "}
+                <FormattedMessage id="reviews.heading" />{" "}
                 <span className="bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent">
-                  utilisateurs
+                  <FormattedMessage id="reviews.headingHighlight" />
                 </span>
               </h2>
               {/* intro plus fun */}
@@ -1854,9 +2037,17 @@ const OptimizedHomePage: React.FC = () => {
               <FormattedMessage id="readyToBeHelped" />
             </h2>
             {/* intro plus fun */}
-            <p className="text-xl md:text-2xl text-white/95 mb-10 md:mb-12 leading-relaxed">
+            {/* <p className="text-xl md:text-2xl text-white/95 mb-10 md:mb-12 leading-relaxed">
               Rejoignez plus de <strong>15&nbsp;000 expatriés</strong> qui nous
               font confiance pour avancer à l’étranger.
+            </p> */}
+            <p className="text-2xl text-white/90 mb-12 leading-relaxed">
+              <FormattedMessage
+                id="pricing.ctaDesc"
+                values={{
+                  strong: (chunks) => <strong>{chunks}</strong>,
+                }}
+              />
             </p>
 
             {/* Réassurance */}

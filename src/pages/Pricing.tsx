@@ -25,6 +25,7 @@ import {
   detectUserCurrency,
   getEffectivePrice,
 } from "../services/pricingService";
+import { FormattedMessage, FormattedTime } from "react-intl";
 
 interface PromoCode {
   id: string;
@@ -430,7 +431,8 @@ const Pricing: React.FC = () => {
               <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 border border-white/20 mb-8">
                 <Sparkles className="w-5 h-5 text-yellow-400" />
                 <span className="text-white font-medium">
-                  Tarifs fixes • Sans surprise • Paiement sécurisé
+                  {/* Tarifs fixes • Sans surprise • Paiement sécurisé */}
+                  <FormattedMessage id="pricing.badge" />
                 </span>
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
               </div>
@@ -555,13 +557,16 @@ const Pricing: React.FC = () => {
           <div className="relative z-10 max-w-7xl mx-auto px-6">
             <div className="text-center mb-16">
               <h2 className="text-5xl font-black text-gray-900 mb-4">
-                Nos{" "}
+                {/* Nos{" "} */}
+                <FormattedMessage id="pricing.ourOffers" />
                 <span className="bg-gradient-to-r from-red-600 to-orange-500 bg-clip-text text-transparent">
-                  offres
+                  {/* offres */}
+                  <FormattedMessage id="pricing.ourOffersHighlight" />
                 </span>
               </h2>
               <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-                Choisissez le service qui correspond à vos besoins
+                {/* Choisissez le service qui correspond à vos besoins */}
+                <FormattedMessage id="pricing.chooseServiceDesc" />
               </p>
             </div>
 
@@ -605,10 +610,19 @@ const Pricing: React.FC = () => {
                               ) : (
                                 <User className="w-4 h-4" />
                               )}
-                              {isLawyer ? "Offre Avocat" : "Offre Expatrié"}
+                              {
+                                isLawyer ? (
+                                  // "Offre Avocat"
+                                  <FormattedMessage id="Offre Avocat" />
+                                ) : (
+                                  <FormattedMessage id="Offre Expatrié" />
+                                )
+                                // "Offre Expatrié"
+                              }
                             </div>
                             <div className="text-sm text-gray-600">
-                              Appel en ~5 min
+                              {/* Appel en ~5 min */}
+                              <FormattedMessage id="callInApprox5Min" />
                             </div>
                           </div>
 
@@ -693,7 +707,8 @@ const Pricing: React.FC = () => {
                                   {/* Si promo EN PLUS de l'override */}
                                   {hasPromoDiscount && (
                                     <span className="mt-1 text-xs px-2 py-1 rounded-full bg-green-100 text-green-700 self-start">
-                                      + Code promo appliqué
+                                      {/* + Code promo appliqué */}
+                                      <FormattedMessage id="pricing.promoCodeApplied" />
                                     </span>
                                   )}
                                 </div>
@@ -801,7 +816,8 @@ const Pricing: React.FC = () => {
             {/* Indicateur source prix */}
             <div className="text-center mt-8">
               <span className="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                💰 Tarifs synchronisés depuis la console admin
+                {/* 💰 Tarifs synchronisés depuis la console admin */}
+                <FormattedMessage id="pricing.priceSyncNote" />
               </span>
             </div>
           </div>
@@ -817,13 +833,16 @@ const Pricing: React.FC = () => {
           <div className="relative z-10 max-w-7xl mx-auto px-6">
             <div className="text-center mb-16">
               <h2 className="text-5xl font-black text-white mb-4">
-                Sécurité &{" "}
+                {/* Sécurité &{" "} */}
+                <FormattedMessage id="pricing.securityTitle" />
                 <span className="bg-gradient-to-r from-green-500 to-blue-500 bg-clip-text text-transparent">
-                  garanties
+                  {/* garanties */}
+                  <FormattedMessage id="pricing.securityHighlight" />
                 </span>
               </h2>
               <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-                Votre tranquillité d'esprit est notre priorité
+                {/* Votre tranquillité d'esprit est notre priorité */}
+                <FormattedMessage id="pricing.securitySubtitle" />
               </p>
             </div>
 
@@ -885,7 +904,8 @@ const Pricing: React.FC = () => {
                 {currentText.faq}
               </h2>
               <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-                Tout ce que vous devez savoir sur nos services
+                {/* Tout ce que vous devez savoir sur nos services */}
+                <FormattedMessage id="pricing.faqSubtitle" />
               </p>
             </div>
 
@@ -928,11 +948,20 @@ const Pricing: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-br from-black/20 via-transparent to-black/20" />
           <div className="relative z-10 max-w-4xl mx-auto text-center px-6">
             <h2 className="text-5xl md:text-6xl font-black text-white mb-8">
-              Prêt à commencer ?
+              {/* Prêt à commencer ? */}
+              <FormattedMessage id="pricing.ctaTitle" />
             </h2>
+            {/* <p className="text-2xl text-white/90 mb-12 leading-relaxed">
+              Rejoignez plus de <strong>15 000 expatriés</strong>
+              qui font confiance à SOS Expats pour leurs démarches à l'étranger.
+            </p> */}
             <p className="text-2xl text-white/90 mb-12 leading-relaxed">
-              Rejoignez plus de <strong>15 000 expatriés</strong> qui font
-              confiance à SOS Expats pour leurs démarches à l'étranger.
+              <FormattedMessage
+                id="pricing.ctaDesc"
+                values={{
+                  strong: (chunks) => <strong>{chunks}</strong>,
+                }}
+              />
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
@@ -941,7 +970,10 @@ const Pricing: React.FC = () => {
                 className="group bg-white hover:bg-gray-100 text-red-600 px-12 py-6 rounded-3xl font-black text-xl transition-all duration-300 hover:scale-110 hover:shadow-2xl flex items-center space-x-4 touch-manipulation"
               >
                 <Phone className="w-8 h-8 group-hover:animate-pulse" />
-                <span>Commencer maintenant</span>
+                <span>
+                  {/* Commencer maintenant */}
+                  <FormattedMessage id="pricing.ctaButton" />
+                </span>
                 <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform duration-300" />
               </button>
 
@@ -950,7 +982,10 @@ const Pricing: React.FC = () => {
                 className="group bg-transparent border-2 border-white hover:bg-white hover:text-red-600 text-white px-12 py-6 rounded-3xl font-bold text-xl transition-all duration-300 hover:scale-105 flex items-center space-x-4 touch-manipulation"
               >
                 <User className="w-6 h-6" />
-                <span>Créer un compte</span>
+                <span>
+                  {/* Créer un compte */}
+                  <FormattedMessage id="pricing.ctaButtonSecondary" />
+                </span>
               </button>
             </div>
           </div>
