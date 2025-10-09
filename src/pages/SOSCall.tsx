@@ -1339,7 +1339,8 @@ const SOSCall: React.FC = () => {
                       htmlFor="expert-type"
                       className="block text-xs font-semibold text-gray-300 uppercase tracking-wide"
                     >
-                      Type
+                      <FormattedMessage id="type" />
+                      {/* Type */}
                     </label>
                     <div className="relative">
                       <select
@@ -1359,9 +1360,18 @@ const SOSCall: React.FC = () => {
                           transition-all appearance-none text-sm
                         "
                       >
-                        <option value="all">Tous</option>
+                        {/* <option value="all">Tous</option>
                         <option value="lawyer">Avocats</option>
-                        <option value="expat">Expatriés</option>
+                        <option value="expat">Expatriés</option> */}
+                        <option value="all">
+                          <FormattedMessage id="filter.all" />
+                        </option>
+                        <option value="lawyer">
+                          <FormattedMessage id="filter.lawyer" />
+                        </option>
+                        <option value="expat">
+                          <FormattedMessage id="filter.expat" />
+                        </option>
                       </select>
                       <ChevronDown
                         className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-300 pointer-events-none"
@@ -1376,7 +1386,8 @@ const SOSCall: React.FC = () => {
                       htmlFor="country-filter"
                       className="block text-xs font-semibold text-gray-300 uppercase tracking-wide"
                     >
-                      Pays
+                      <FormattedMessage id="country.label" />
+                      {/* Pays */}
                     </label>
                     <div className="relative">
                       <select
@@ -1392,13 +1403,19 @@ const SOSCall: React.FC = () => {
                           transition-all appearance-none text-sm
                         "
                       >
-                        <option value="all">Tous les pays</option>
+                        {/* <option value="all">Tous les pays</option> */}
+                        <option value="all">
+                          <FormattedMessage id="country.allCountries" />
+                        </option>
                         {countryOptions.map((country) => (
                           <option key={country} value={country}>
                             {country}
                           </option>
                         ))}
-                        <option value="Autre">Autre</option>
+                        {/* <option value="Autre">Autre</option> */}
+                        <option value="Autre">
+                          <FormattedMessage id="country.other" />
+                        </option>
                       </select>
                       <ChevronDown
                         className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-300 pointer-events-none"
@@ -1422,7 +1439,8 @@ const SOSCall: React.FC = () => {
                       htmlFor="language-filter"
                       className="block text-xs font-semibold text-gray-300 uppercase tracking-wide"
                     >
-                      Langue
+                      {/* Langue */}
+                      <FormattedMessage id="language.label" />
                     </label>
                     <div className="relative">
                       <select
@@ -1438,13 +1456,19 @@ const SOSCall: React.FC = () => {
                           transition-all appearance-none text-sm
                         "
                       >
-                        <option value="all">Toutes</option>
+                        {/* <option value="all">Toutes</option> */}
+                        <option value="all">
+                          <FormattedMessage id="language.all" />
+                        </option>
                         {languageOptions.map((lang) => (
                           <option key={lang} value={lang}>
                             {lang}
                           </option>
                         ))}
-                        <option value="Autre">Autre</option>
+                        <option value="Autre">
+                          <FormattedMessage id="language.other" />
+                        </option>
+                        {/* <option value="Autre">Autre</option> */}
                       </select>
                       <ChevronDown
                         className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-300 pointer-events-none"
@@ -1465,7 +1489,8 @@ const SOSCall: React.FC = () => {
                   {/* Statut */}
                   <div className="space-y-1 lg:col-span-2">
                     <label className="block text-xs font-semibold text-gray-300 uppercase tracking-wide">
-                      Statut
+                      {/* Statut */}
+                      <FormattedMessage id="status.label" />
                     </label>
                     <div className="flex items-center gap-2">
                       <button
@@ -1479,7 +1504,8 @@ const SOSCall: React.FC = () => {
                         aria-pressed={statusFilter === "all"}
                       >
                         <span className="w-2 h-2 rounded-full bg-gray-300" />
-                        Tous
+                        {/* Tous */}
+                        <FormattedMessage id="status.all" />
                       </button>
                       <button
                         type="button"
@@ -1493,7 +1519,8 @@ const SOSCall: React.FC = () => {
                         title="En ligne"
                       >
                         <Wifi className="w-4 h-4" />
-                        En ligne
+                        {/* En ligne */}
+                        <FormattedMessage id="status.online" />
                       </button>
                       <button
                         type="button"
@@ -1507,7 +1534,8 @@ const SOSCall: React.FC = () => {
                         title="Hors ligne"
                       >
                         <WifiOff className="w-4 h-4" />
-                        Hors ligne
+                        {/* Hors ligne */}
+                        <FormattedMessage id="status.offline" />
                       </button>
                     </div>
                   </div>
@@ -1515,7 +1543,8 @@ const SOSCall: React.FC = () => {
                   {/* Reset */}
                   <div className="space-y-1">
                     <label className="block text-xs font-medium text-transparent">
-                      Action
+                      {/* Action */}
+                      <FormattedMessage id="action.label" />
                     </label>
                     <button
                       onClick={() => {
@@ -1531,7 +1560,8 @@ const SOSCall: React.FC = () => {
                       }}
                       className="w-full px-3 py-2 border border-white/15 rounded-xl text-gray-100 hover:bg-white/10 active:bg-white/15 transition-colors text-sm font-semibold h-10"
                     >
-                      Réinitialiser
+                      {/* Réinitialiser */}
+                      <FormattedMessage id="action.reset" />
                     </button>
                   </div>
                 </div>
@@ -1539,11 +1569,18 @@ const SOSCall: React.FC = () => {
                 <div className="mt-4 text-center text-xs text-gray-300">
                   <span className="inline-flex items-center gap-2 rounded-full px-3 py-1 bg-white/10 border border-white/15">
                     <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                    {filteredProviders.filter((p) => p.isOnline).length} en
-                    ligne
+                    {filteredProviders.filter((p) => p.isOnline).length}
+                    {/* en ligne */}
+                    <span>
+                      <FormattedMessage id="status.online" />
+                    </span>
                   </span>
-                  <span className="mx-2 text-white/30">•</span>
-                  {filteredProviders.length} au total
+                  <span className="mx-2  text-white/30">•</span>
+                  {filteredProviders.length}
+                  {/* au total */}
+                  <span className="ml-[2px]">
+                    <FormattedMessage id="stats.total" />
+                  </span>
                 </div>
               </div>
             </div>
@@ -1623,7 +1660,11 @@ const SOSCall: React.FC = () => {
                 <div className="flex items-center justify-between mt-8">
                   <div className="text-sm text-gray-300">
                     Page <strong>{page}</strong> / {totalPages} —{" "}
-                    {filteredProviders.length} résultats
+                    {filteredProviders.length}
+                    {/* résultats */}
+                    <span className="ml-[2px]">
+                      <FormattedMessage id="pagination.results" />
+                    </span>
                   </div>
                   <Pagination
                     page={page}
@@ -1639,11 +1680,13 @@ const SOSCall: React.FC = () => {
                     <Search className="w-8 h-8 text-gray-200" />
                   </div>
                   <h3 className="text-xl font-semibold text-white mb-2">
-                    Aucun expert trouvé
+                    {/* Aucun expert trouvé */}
+                    <FormattedMessage id="noResults.title" />
                   </h3>
                   <p className="text-gray-300 mb-6">
-                    Aucun expert ne correspond à vos critères de recherche
-                    actuels.
+                    {/* Aucun expert ne correspond à vos critères de recherche
+                    actuels. */}
+                    <FormattedMessage id="noResults.description" />
                   </p>
                   <button
                     onClick={() => {
@@ -1659,7 +1702,8 @@ const SOSCall: React.FC = () => {
                     }}
                     className="px-6 py-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white font-semibold rounded-xl transition-colors"
                   >
-                    Réinitialiser les filtres
+                    {/* Réinitialiser les filtres */}
+                    <FormattedMessage id="noResults.resetFilters" />
                   </button>
                 </div>
               </div>
@@ -1756,7 +1800,10 @@ const Pagination: React.FC<{
         aria-label="Page précédente"
       >
         <ChevronLeft className="w-4 h-4" />
-        <span className="hidden sm:inline">Précédent</span>
+        <span className="hidden sm:inline">
+          {/* Précédent */}
+          <FormattedMessage id="pagination.previous" />
+        </span>
       </button>
 
       {items.map((it, idx) =>
@@ -1787,7 +1834,10 @@ const Pagination: React.FC<{
         disabled={page >= totalPages}
         aria-label="Page suivante"
       >
-        <span className="hidden sm:inline">Suivant</span>
+        <span className="hidden sm:inline">
+          {/* Suivant */}
+          <FormattedMessage id="pagination.next" />
+        </span>
         <ChevronRight className="w-4 h-4" />
       </button>
     </nav>
