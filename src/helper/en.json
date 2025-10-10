@@ -338,43 +338,43 @@
   "user.logout": "Logout",
   "testimonials.meta.title": "Customer Reviews SOS Expats | 2347+ Verified Testimonials",
   "testimonials.meta.description": "Discover authentic reviews from our expat clients in 150+ countries. Average rating of 4.9/5 stars. Verified testimonials from consultations with lawyers and expats.",
-  
+
   "testimonials.hero.badge": "4.9 / 5 stars • 2347+ verified reviews",
   "testimonials.hero.title": "Our clients testimonials",
   "testimonials.hero.subtitle": "Discover authentic experiences from our users worldwide. Every testimonial is verified and represents a real story of help provided.",
   "testimonials.hero.stats.testimonials": "Testimonials",
   "testimonials.hero.stats.averageRating": "Average Rating",
   "testimonials.hero.stats.countries": "Countries",
-  
+
   "testimonials.filters.all": "All reviews",
   "testimonials.filters.lawyers": "Lawyers",
   "testimonials.filters.expats": "Expats",
   "testimonials.filters.searchPlaceholder": "Search by country, name...",
-  
+
   "testimonials.card.lawyer": "Lawyer",
   "testimonials.card.expat": "Expat",
   "testimonials.card.verified": "Verified",
   "testimonials.card.readMore": "Read more",
-  
+
   "testimonials.pagination.previous": "Previous",
   "testimonials.pagination.next": "Next",
   "testimonials.pagination.page": "Page",
   "testimonials.pagination.of": "of",
-  
+
   "testimonials.loading": "Loading testimonials...",
   "testimonials.noResults": "No testimonials found",
   "testimonials.noResultsDescription": "Try changing your filters or search",
-  
+
   "testimonials.cta.title": "Ready to get help?",
   "testimonials.cta.description": "Join over 15,000 expats who trust us for their procedures abroad.",
   "testimonials.cta.button": "Find an expert",
-  
+
   "testimonials.aria.filterButton": "Filter reviews",
   "testimonials.aria.searchInput": "Search testimonials",
   "testimonials.aria.testimonialCard": "Testimonial from {name}",
   "testimonials.aria.rating": "Rating of {rating} stars out of 5",
   "testimonials.aria.unknownDate": "Unknown date",
-  
+
   "country.thailand": "Thailand",
   "country.portugal": "Portugal",
   "country.germany": "Germany",
@@ -391,7 +391,7 @@
   "country.usa": "United States",
   "country.vietnam": "Vietnam",
   "country.singapore": "Singapore",
-  
+
   "testimonials.review.1.comment": "I needed urgent help for a visa issue in Thailand. Within 5 minutes, I was connected with a French expat who knows the local system perfectly. He gave me practical advice and directed me to the right procedures. Exceptional service!",
   "testimonials.review.2.comment": "Complicated move to Portugal. The expat helped me understand the tax system, opening a bank account, and even the best schools for my kids. Really useful!",
   "testimonials.review.3.comment": "Employment contract in Germany: the lawyer analyzed all clauses in detail and advised me on points to renegotiate. Investment that saved me thousands of euros in the long run.",
@@ -407,7 +407,41 @@
   "testimonials.review.13.comment": "Children's schooling in Italy: the expat explained the entire Italian school system and recommended the best bilingual schools. Super helpful for a family move.",
   "testimonials.review.14.comment": "Customs issue in Morocco: the expat knew the procedures perfectly and helped me avoid significant additional fees.",
   "testimonials.review.15.comment": "Entrepreneur visa to USA: the immigration lawyer helped me prepare a solid application. Visa obtained on first try!",
-  "testimonials.review.16.comment": "Moving to Vietnam: the expat gave me all practical advice on housing, transport, and daily life. Much easier transition thanks to him!"
-
-
+  "testimonials.review.16.comment": "Moving to Vietnam: the expat gave me all practical advice on housing, transport, and daily life. Much easier transition thanks to him!",
+  "footer.scrollToTop": "Scroll to top",
+  "footer.services.title": "Services",
+  "footer.services.sosCall": "S.O.S Call",
+  "footer.services.expatCall": "Expat Call",
+  "footer.services.pricing": "Pricing",
+  "footer.services.experts": "Our Experts",
+  "footer.services.testimonials": "Testimonials",
+  "footer.support.title": "Support",
+  "footer.support.contact": "Contact",
+  "footer.support.helpCenter": "Help Center",
+  "footer.support.serviceStatus": "Service Status",
+  "footer.contact.title": "Contact",
+  "footer.contact.emailAria": "Send an email",
+  "footer.contact.presence": "International presence in over 120 countries",
+  "footer.contact.locationAria": "Our international presence",
+  "footer.contact.callUs": "Contact us",
+  "footer.contact.ulixai": "Ulixai",
+  "footer.contact.ulixaiAria": "Ulixai",
+  "footer.contact.phoneAria": "Contact us",
+  "footer.social.facebookAria": "Follow us on Facebook",
+  "footer.social.twitterAria": "Follow us on Twitter",
+  "footer.social.linkedinAria": "Follow us on LinkedIn",
+  "footer.social.ariaLabel": "Social media",
+  "footer.company.description": "Emergency call platform connecting French-speaking expats with verified lawyers and advisors worldwide.",
+  "footer.services.navAria": "Services navigation",
+  "footer.support.navAria": "Support navigation",
+  "footer.ariaLabel": "Site footer",
+  "footer.legal.privacy": "Privacy Policy",
+  "footer.legal.termsClients": "Terms of Service",
+  "footer.legal.termsLawyers": "Lawyer Terms",
+  "footer.legal.termsExpats": "Expat Terms",
+  "footer.legal.consumers": "Consumers",
+  "footer.legal.seo": "SEO",
+  "footer.legal.navAria": "Legal links",
+  "footer.copyright": "All rights reserved.",
+  "common.loading": "Loading..."
 }
