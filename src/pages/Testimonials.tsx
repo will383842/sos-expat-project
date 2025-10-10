@@ -18,7 +18,7 @@ import {
 import Layout from "../components/layout/Layout";
 import { useApp } from "../contexts/AppContext";
 import { logAnalyticsEvent } from "../utils/firestore";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 // =================== TYPES ===================
 export interface Review {
@@ -1209,7 +1209,8 @@ const Testimonials: React.FC = () => {
             <div className="flex justify-end mb-8">
               <div className="relative">
                 <label htmlFor="language-selector" className="sr-only">
-                  {t.aria.languageSelector}
+                  {/* {t.aria.languageSelector} */}
+                  <FormattedMessage id="testimonials.aria.languageSelector" />
                 </label>
                 <select
                   id="language-selector"
@@ -1238,6 +1239,7 @@ const Testimonials: React.FC = () => {
               <Star className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 fill-current" />
               <span className="font-semibold text-sm sm:text-base">
                 {t.hero.badge}
+                {/* <FormattedMessage id="testimonials.hero.badge" /> */}
               </span>
               <Award className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400" />
             </div>

@@ -493,5 +493,29 @@
   "login.new_user": "New to SOS Expats?",
   "create_account.button": "Create a free account",
   "trust.secure": "100% Secure",
-  "trust.support_24_7": "24/7 Support"
+  "trust.support_24_7": "24/7 Support",
+  
+ 
+ 
+  "testimonials.card.helpful": "helpful",
+  "testimonials.card.foundHelpful": "found this helpful",
+  "testimonials.loading.testimonials": "Loading testimonials...",
+  "testimonials.loading.noResults": "No testimonials found.",
+  "testimonials.loading.adjustCriteria": "Try adjusting your search criteria.",
+  "testimonials.loading.loadMore": "See more testimonials",
+  "testimonials.loading.clearSearch": "Clear search",
+  "testimonials.stats.showing": "Out of",
+  "testimonials.stats.total": "total testimonials",
+  "testimonials.cta.secured": "Secure & confidential",
+  "testimonials.cta.response5min": "Response in less than 5 min",
+  "testimonials.cta.countries150": "150+ countries covered",
+  "testimonials.cta.subtitle": "Join our expert network and transform your skills into real opportunities. Help other expats and travelers while growing your business.",
+  "testimonials.cta.findExpert": "Find an expert",
+  "testimonials.cta.becomeExpert": "Become an expert",
+  "testimonials.cta.joinExperts": "Join over 2,000 experts who trust SOS Expats",
+  "testimonials.aria.backToTop": "Back to top",
+  "testimonials.aria.languageSelector": "Language selector",
+  "testimonials.aria.pageButton": "Page"
+
+  
 }
