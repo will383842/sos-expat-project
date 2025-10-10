@@ -1238,8 +1238,8 @@ const Testimonials: React.FC = () => {
             <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-full px-4 sm:px-6 py-2 sm:py-3 border border-white/20 mb-6 sm:mb-8">
               <Star className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 fill-current" />
               <span className="font-semibold text-sm sm:text-base">
-                {t.hero.badge}
-                {/* <FormattedMessage id="testimonials.hero.badge" /> */}
+                {/* {t.hero.badge} */}
+                <FormattedMessage id="testy.hero.badge" />
               </span>
               <Award className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400" />
             </div>
@@ -1255,7 +1255,8 @@ const Testimonials: React.FC = () => {
             </h1>
 
             <p className="text-lg sm:text-xl md:text-2xl text-white/90 max-w-4xl mx-auto mb-8 sm:mb-12 leading-relaxed px-4">
-              {t.hero.subtitle}
+              {/* {t.hero.subtitle} */}
+              <FormattedMessage id="testy.hero.subtitle" />
             </p>
 
             {/* Stats */}
@@ -1268,7 +1269,8 @@ const Testimonials: React.FC = () => {
                   {stats.count}
                 </div>
                 <div className="text-white/80 font-medium">
-                  {t.hero.stats.testimonials}
+                  {/* {t.hero.stats.testimonials} */}
+                  <FormattedMessage id="testimonials.hero.stats.testimonials" />
                 </div>
               </div>
               <div className="text-center group">
@@ -1279,7 +1281,8 @@ const Testimonials: React.FC = () => {
                   {stats.averageRating}
                 </div>
                 <div className="text-white/80 font-medium">
-                  {t.hero.stats.averageRating}
+                  {/* {t.hero.stats.averageRating} */}
+                  <FormattedMessage id="testimonials.hero.stats.averageRating" />
                 </div>
               </div>
               <div className="text-center group">
@@ -1288,9 +1291,11 @@ const Testimonials: React.FC = () => {
                 </div>
                 <div className="text-4xl font-black text-white mb-2">
                   {stats.countries}+
+                  {/* <FormattedMessage id="testimonials.hero.stats.countries" />+ */}
                 </div>
                 <div className="text-white/80 font-medium">
-                  {t.hero.stats.countries}
+                  {/* {t.hero.stats.countries} */}
+                  <FormattedMessage id="testimonials.hero.stats.countries" />
                 </div>
               </div>
             </div>
@@ -1313,7 +1318,8 @@ const Testimonials: React.FC = () => {
                   aria-label={`${t.aria.filterButton}: ${t.filters.all}`}
                 >
                   <Sparkles className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
-                  {t.filters.all}
+                  {/* {t.filters.all} */}
+                  <FormattedMessage id="testy.filters.all" />
                 </button>
                 <button
                   onClick={() => handleFilterChange("avocat")}
@@ -1325,7 +1331,8 @@ const Testimonials: React.FC = () => {
                   aria-label={`${t.aria.filterButton}: ${t.filters.lawyers}`}
                 >
                   <Briefcase className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
-                  {t.filters.lawyers}
+                  {/* {t.filters.lawyers} */}
+                  <FormattedMessage id="testy.filters.lawyers" />
                 </button>
                 <button
                   onClick={() => handleFilterChange("expatrie")}
@@ -1337,7 +1344,8 @@ const Testimonials: React.FC = () => {
                   aria-label={`${t.aria.filterButton}: ${t.filters.expats}`}
                 >
                   <User className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
-                  {t.filters.expats}
+                  {/* {t.filters.expats} */}
+                  <FormattedMessage id="testy.filters.expats" />
                 </button>
               </div>
 
@@ -1374,18 +1382,36 @@ const Testimonials: React.FC = () => {
                   <div className="text-2xl font-black text-gray-900">
                     {filteredTestimonials.length}
                   </div>
-                  <div className="text-gray-600">
+                  {/* <div className="text-gray-600">
                     {filter === "all"
-                      ? t.filters.all.toLowerCase()
+                      ?  t.filters.all.toLowerCase()
                       : filter === "avocat"
                         ? t.filters.lawyers.toLowerCase()
                         : t.filters.expats.toLowerCase()}
+                  </div> */}
+
+                  <div className="text-gray-600">
+                    {filter === "all" ? (
+                      <FormattedMessage id="testy.filters.all" />
+                    ) : // t.filters.all.toLowerCase()
+                    filter === "avocat" ? (
+                      <FormattedMessage id="testy.filters.lawyers" />
+                    ) : (
+                      // t.filters.lawyers.toLowerCase()
+                      <FormattedMessage id="testy.filters.expats" />
+
+                      // t.filters.expats.toLowerCase()
+                    )}
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2 text-sm text-gray-500">
                   <span>
-                    {t.stats.showing} {STATS_TOTAL_TESTIMONIALS} {t.stats.total}
+                    {/* {t.stats.showing} */}
+                    <FormattedMessage id="testy.stats.showing" />
+                    {STATS_TOTAL_TESTIMONIALS}
+                    {/* {t.stats.total} */}
+                    <FormattedMessage id="testy.stats.total" />
                   </span>
                   <div className="w-1 h-1 bg-gray-400 rounded-full" />
                   <span>4,9/5 ⭐</span>
@@ -1442,9 +1468,13 @@ const Testimonials: React.FC = () => {
                   <Search className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" />
                 </div>
                 <p className="text-lg sm:text-xl text-gray-600 font-medium">
-                  {t.loading.noResults}
+                  {/* {t.loading.noResults} */}
+                  <FormattedMessage id="testy.loading.noResults" />
                 </p>
-                <p className="text-gray-500 mt-2">{t.loading.adjustCriteria}</p>
+                <p className="text-gray-500 mt-2">
+                  {/* {t.loading.adjustCriteria} */}
+                  <FormattedMessage id="testy.loading.adjustCriteria" />
+                </p>
                 {searchTerm && (
                   <button
                     onClick={() => {
@@ -1453,7 +1483,9 @@ const Testimonials: React.FC = () => {
                     }}
                     className="mt-4 text-red-600 hover:text-red-700 font-medium"
                   >
-                    {t.loading.clearSearch}
+                    {/* {t.loading.clearSearch} */}
+                    {/* {t.loading.clearSearch} */}
+                    <FormattedMessage id="testy.loading.clearSearch" />
                   </button>
                 )}
               </div>
@@ -1545,10 +1577,16 @@ const Testimonials: React.FC = () => {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-2 text-sm text-gray-500">
                             <span>{testimonial.helpfulVotes}</span>
-                            <span>{t.card.foundHelpful}</span>
+                            <span>
+                              {/* {t.card.foundHelpful} */}
+                              <FormattedMessage id="testy.card.foundHelpful" />
+                            </span>
                           </div>
                           <button className="group/btn inline-flex items-center text-red-600 hover:text-red-700 text-sm font-semibold transition-colors min-h-[44px] px-2 touch-manipulation">
-                            <span>{t.card.readMore}</span>
+                            <span>
+                              {/* {t.card.readMore} */}
+                              <FormattedMessage id="testy.card.readMore" />
+                            </span>
                             <ArrowRight
                               size={14}
                               className="ml-1 transition-transform duration-200 group-hover/btn:translate-x-0.5"
@@ -1583,7 +1621,11 @@ const Testimonials: React.FC = () => {
                       )}
                     </div>
                     <div className="text-sm text-gray-500">
-                      {t.pagination.page} {page} {t.pagination.of} {totalPages}
+                      <FormattedMessage id="testy.pagination.page" />
+                      {page}
+                      <FormattedMessage id="testy.pagination.of" />
+                      {totalPages}
+                      {/* {t.pagination.page} {page} {t.pagination.of} {totalPages} */}
                     </div>
                   </div>
                 )}
@@ -1622,30 +1664,35 @@ const Testimonials: React.FC = () => {
               <div className="flex items-center space-x-2 text-white/90">
                 <Shield className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span className="font-medium text-sm sm:text-base">
-                  {t.cta.secured}
+                  {/* {t.cta.secured} */}
+                  <FormattedMessage id="testy.cta.secured" />
                 </span>
               </div>
               <div className="w-px h-4 sm:h-6 bg-white/20 hidden sm:block" />
               <div className="flex items-center space-x-2 text-white/90">
                 <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span className="font-medium text-sm sm:text-base">
-                  {t.cta.response5min}
+                  {/* {t.cta.response5min} */}
+                  <FormattedMessage id="testy.cta.response5min" />
                 </span>
               </div>
               <div className="w-px h-4 sm:h-6 bg-white/20 hidden sm:block" />
               <div className="flex items-center space-x-2 text-white/90">
                 <Globe className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span className="font-medium text-sm sm:text-base">
-                  {t.cta.countries150}
+                  {/* {t.cta.countries150} */}
+                  <FormattedMessage id="testy.cta.countries150" />
                 </span>
               </div>
             </div>
 
             <h2 className="text-3xl sm:text-4xl md:text-6xl font-black text-white mb-4 sm:mb-6">
-              {t.cta.title}
+              {/* {t.cta.title} */}
+              <FormattedMessage id="testy.cta.title" />
             </h2>
             <p className="text-lg sm:text-xl md:text-2xl text-white/95 mb-8 sm:mb-12 leading-relaxed max-w-4xl mx-auto px-4">
-              {t.cta.subtitle}
+              {/* {t.cta.subtitle} */}
+              <FormattedMessage id="testy.cta.subtitle" />
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
@@ -1653,7 +1700,10 @@ const Testimonials: React.FC = () => {
                 onClick={() => (window.location.href = "/sos-appel")}
                 className="group relative overflow-hidden bg-white text-red-600 hover:text-red-700 px-8 sm:px-12 py-4 sm:py-6 rounded-3xl font-black text-lg sm:text-xl transition-all duration-300 hover:scale-110 hover:shadow-2xl flex items-center gap-3 sm:gap-4 min-h-[56px] active:scale-95 touch-manipulation"
               >
-                <span>{t.cta.findExpert}</span>
+                <span>
+                  {/* {t.cta.findExpert} */}
+                  <FormattedMessage id="testy.cta.findExpert" />
+                </span>
                 <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform duration-300" />
                 <div className="absolute inset-0 bg-gradient-to-r from-red-50 to-orange-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-3xl" />
               </button>
@@ -1663,12 +1713,18 @@ const Testimonials: React.FC = () => {
                 className="group relative overflow-hidden border-2 border-white bg-transparent text-white px-8 sm:px-12 py-4 sm:py-6 rounded-3xl font-bold text-lg sm:text-xl transition-all duration-300 hover:scale-105 hover:bg-white/10 flex items-center gap-3 sm:gap-4 min-h-[56px] active:scale-95 touch-manipulation"
               >
                 <Sparkles className="w-5 h-5 sm:w-6 sm:h-6" />
-                <span>{t.cta.becomeExpert}</span>
+                <span>
+                  {/* {t.cta.becomeExpert} */}
+                  <FormattedMessage id="testy.cta.becomeExpert" />
+                </span>
               </a>
             </div>
 
             <div className="mt-8 sm:mt-12 text-white/80">
-              <p className="text-base sm:text-lg px-4">{t.cta.joinExperts}</p>
+              <p className="text-base sm:text-lg px-4">
+                {/* {t.cta.joinExperts} */}
+                <FormattedMessage id="testy.cta.joinExperts" />
+              </p>
             </div>
           </div>
         </section>
