@@ -333,43 +333,43 @@
   "benefits.expat.duration": "Durée : 30 minutes",
   "testimonials.meta.title": "Avis Clients SOS Expats | 2347+ Témoignages Vérifiés",
   "testimonials.meta.description": "Découvrez les avis authentiques de nos clients expatriés dans 150+ pays. Note moyenne de 4.9/5 étoiles. Témoignages vérifiés de consultations avec avocats et expatriés.",
-  
+
   "testimonials.hero.badge": "4,9 / 5 étoiles • 2347+ avis vérifiés",
   "testimonials.hero.title": "Nos clients témoignent",
   "testimonials.hero.subtitle": "Découvrez les expériences authentiques de nos utilisateurs dans le monde entier. Chaque témoignage est vérifié et représente une histoire réelle d'aide apportée.",
   "testimonials.hero.stats.testimonials": "Témoignages",
   "testimonials.hero.stats.averageRating": "Note moyenne",
   "testimonials.hero.stats.countries": "Pays",
-  
+
   "testimonials.filters.all": "Tous les avis",
   "testimonials.filters.lawyers": "Avocats",
   "testimonials.filters.expats": "Expatriés",
   "testimonials.filters.searchPlaceholder": "Rechercher par pays, nom...",
-  
+
   "testimonials.card.lawyer": "Avocat",
   "testimonials.card.expat": "Expatrié",
   "testimonials.card.verified": "Vérifié",
   "testimonials.card.readMore": "Lire plus",
-  
+
   "testimonials.pagination.previous": "Précédent",
   "testimonials.pagination.next": "Suivant",
   "testimonials.pagination.page": "Page",
   "testimonials.pagination.of": "sur",
-  
+
   "testimonials.loading": "Chargement des témoignages...",
   "testimonials.noResults": "Aucun témoignage trouvé",
   "testimonials.noResultsDescription": "Essayez de modifier vos filtres ou votre recherche",
-  
+
   "testimonials.cta.title": "Prêt à être aidé ?",
   "testimonials.cta.description": "Rejoignez plus de 15 000 expatriés qui nous font confiance pour leurs démarches à l'étranger.",
   "testimonials.cta.button": "Trouver un expert",
-  
+
   "testimonials.aria.filterButton": "Filtrer les avis",
   "testimonials.aria.searchInput": "Rechercher dans les témoignages",
   "testimonials.aria.testimonialCard": "Témoignage de {name}",
   "testimonials.aria.rating": "Note de {rating} étoiles sur 5",
   "testimonials.aria.unknownDate": "Date inconnue",
-  
+
   "country.thailand": "Thaïlande",
   "country.portugal": "Portugal",
   "country.germany": "Allemagne",
@@ -386,7 +386,7 @@
   "country.usa": "États-Unis",
   "country.vietnam": "Vietnam",
   "country.singapore": "Singapour",
-  
+
   "testimonials.review.1.comment": "J'avais besoin d'aide urgente pour un problème de visa en Thaïlande. En moins de 5 minutes, j'étais en ligne avec un expatrié français qui connaît parfaitement le système local. Il m'a donné des conseils pratiques et m'a orienté vers les bonnes démarches. Service exceptionnel !",
   "testimonials.review.2.comment": "Installation au Portugal compliquée. L'expatrié m'a aidé à comprendre le système fiscal, l'ouverture de compte bancaire et même les meilleures écoles pour mes enfants. Vraiment utile !",
   "testimonials.review.3.comment": "Contrat de travail en Allemagne : l'avocat a analysé toutes les clauses en détail et m'a conseillé sur les points à renégocier. Investissement qui m'a fait économiser des milliers d'euros sur le long terme.",
@@ -439,9 +439,69 @@
   "footer.legal.seo": "Référencement",
   "footer.legal.navAria": "Liens légaux",
   "footer.copyright": "Tous droits réservés.",
-  "common.loading": "Chargement..."
+  "common.loading": "Chargement...",
+  "pwa.install": "Installer l'application",
+  "pwa.iconAlt": "Icône de l'application SOS Expats",
 
+  "error.title": "Erreur de connexion",
+  "error.description": "Une erreur s'est produite lors de la connexion. Veuillez réessayer.",
+  "error.retry": "Réessayer",
+  "error.offline": "Vous êtes hors ligne. Veuillez vérifier votre connexion Internet.",
+  "error.googleRestricted": "Cette connexion Google est réservée aux clients uniquement.",
+  "error.googleHelpText": "Si vous êtes un professionnel (avocat, expatrié), veuillez vous connecter avec votre email professionnel.",
 
-  
- 
+  "meta.title": "Connexion - SOS Expats | Plateforme d'Aide Internationale",
+  "meta.description": "Connectez-vous à SOS Expats pour accéder à des avocats et conseillers vérifiés dans plus de 150 pays. Assistance 24/7 pour expatriés.",
+  "meta.keywords": "connexion sos expats, login expat, aide juridique internationale, avocat expatrié, conseil expat",
+  "meta.og_title": "Connexion SOS Expats - Votre Plateforme d'Aide Internationale",
+  "meta.og_description": "Accédez à votre compte SOS Expats et connectez-vous avec des experts vérifiés partout dans le monde.",
+  "meta.og_image_alt": "Page de connexion SOS Expats",
+  "meta.twitter_image_alt": "Connexion SOS Expats",
+
+  "loading.message": "Connexion en cours...",
+  "loading.verifying": "Vérification de vos identifiants...",
+
+  "offline.message": "Vous êtes actuellement hors ligne. Certaines fonctionnalités peuvent être limitées.",
+
+  "login.title": "Connexion",
+  "login.subtitle": "Accédez à votre compte pour gérer vos demandes et consulter des experts.",
+  "login.or": "Ou",
+  "login.create_account": "créer un compte",
+  "login.create_account_aria": "Créer un nouveau compte SOS Expats",
+
+  "redirect.message": "Après connexion, vous serez redirigé vers votre réservation",
+
+  "form.progress": "Progression du formulaire",
+
+  "security.ssl": "🔒 Connexion sécurisée SSL 256-bit",
+
+  "validation.email_required": "L'adresse email est requise",
+  "validation.email_invalid": "Veuillez entrer une adresse email valide",
+  "validation.password_required": "Le mot de passe est requis",
+  "validation.password_min_length": "Le mot de passe doit contenir au moins 6 caractères",
+
+  "login.email_label": "Adresse email",
+  "login.email_placeholder": "votre@email.com",
+  "login.password_label": "Mot de passe",
+  "login.password_placeholder": "••••••••",
+  "login.show_password": "Afficher le mot de passe",
+  "login.hide_password": "Masquer le mot de passe",
+  "login.remember_me": "Se souvenir de moi",
+  "login.forgot_password": "Mot de passe oublié ?",
+  "login.forgot_password_help": "Réinitialiser votre mot de passe",
+
+  "remember_me.saved": "Sauvegardé",
+  "remember_me.clear": "Effacer",
+
+  "login.submit_button": "Se connecter",
+  "login.submit_button_description": "Cliquez pour vous connecter à votre compte SOS Expats",
+  "login.logging_in": "Connexion...",
+  "login.or_divider": "OU",
+  "login.google_login": "Continuer avec Google",
+  "login.new_user": "Nouveau sur SOS Expats ?",
+
+  "create_account.button": "Créer un compte gratuitement",
+
+  "trust.secure": "100% Sécurisé",
+  "trust.support_24_7": "Support 24/7"
 }

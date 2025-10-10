@@ -435,5 +435,70 @@
   "footer.legal.seo": "SEO",
   "footer.legal.navAria": "Enlaces legales",
   "footer.copyright": "Todos los derechos reservados.",
-  "common.loading": "Cargando..."
+  "common.loading": "Cargando...",
+
+  "pwa.install": "Instalar aplicación",
+  "pwa.iconAlt": "Icono de la aplicación SOS Expats",
+
+  "error.title": "Error de inicio de sesión",
+  "error.description": "Ocurrió un error durante el inicio de sesión. Por favor, inténtalo de nuevo.",
+  "error.retry": "Reintentar",
+  "error.offline": "Estás sin conexión. Por favor, verifica tu conexión a Internet.",
+  "error.googleRestricted": "Este inicio de sesión con Google está reservado solo para clientes.",
+  "error.googleHelpText": "Si eres un profesional (abogado, expatriado), inicia sesión con tu correo profesional.",
+
+  "meta.title": "Iniciar Sesión - SOS Expats | Plataforma de Ayuda Internacional",
+  "meta.description": "Inicia sesión en SOS Expats para acceder a abogados y asesores verificados en más de 150 países. Asistencia 24/7 para expatriados.",
+  "meta.keywords": "inicio sesión sos expats, login expat, ayuda legal internacional, abogado expatriado, consejo expat",
+  "meta.og_title": "Inicio de Sesión SOS Expats - Tu Plataforma de Ayuda Internacional",
+  "meta.og_description": "Accede a tu cuenta SOS Expats y conéctate con expertos verificados en todo el mundo.",
+  "meta.og_image_alt": "Página de inicio de sesión SOS Expats",
+  "meta.twitter_image_alt": "Inicio de Sesión SOS Expats",
+
+  "loading.message": "Iniciando sesión...",
+  "loading.verifying": "Verificando tus credenciales...",
+
+  "offline.message": "Actualmente estás sin conexión. Algunas funciones pueden estar limitadas.",
+
+  "login.title": "Iniciar Sesión",
+  "login.subtitle": "Accede a tu cuenta para gestionar tus solicitudes y consultar expertos.",
+  "login.or": "O",
+  "login.create_account": "crear una cuenta",
+  "login.create_account_aria": "Crear una nueva cuenta de SOS Expats",
+
+  "redirect.message": "Después de iniciar sesión, serás redirigido a tu reserva",
+
+  "form.progress": "Progreso del formulario",
+
+  "security.ssl": "🔒 Conexión segura SSL de 256 bits",
+
+  "validation.email_required": "La dirección de correo electrónico es obligatoria",
+  "validation.email_invalid": "Por favor, introduce una dirección de correo electrónico válida",
+  "validation.password_required": "La contraseña es obligatoria",
+  "validation.password_min_length": "La contraseña debe tener al menos 6 caracteres",
+
+  "login.email_label": "Dirección de correo electrónico",
+  "login.email_placeholder": "tu@email.com",
+  "login.password_label": "Contraseña",
+  "login.password_placeholder": "••••••••",
+  "login.show_password": "Mostrar contraseña",
+  "login.hide_password": "Ocultar contraseña",
+  "login.remember_me": "Recuérdame",
+  "login.forgot_password": "¿Olvidaste tu contraseña?",
+  "login.forgot_password_help": "Restablecer tu contraseña",
+
+  "remember_me.saved": "Guardado",
+  "remember_me.clear": "Borrar",
+
+  "login.submit_button": "Iniciar sesión",
+  "login.submit_button_description": "Haz clic para iniciar sesión en tu cuenta de SOS Expats",
+  "login.logging_in": "Iniciando sesión...",
+  "login.or_divider": "O",
+  "login.google_login": "Continuar con Google",
+  "login.new_user": "¿Nuevo en SOS Expats?",
+
+  "create_account.button": "Crear una cuenta gratis",
+
+  "trust.secure": "100% Seguro",
+  "trust.support_24_7": "Soporte 24/7"
 }
