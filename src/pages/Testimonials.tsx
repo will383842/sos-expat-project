@@ -18,6 +18,7 @@ import {
 import Layout from "../components/layout/Layout";
 import { useApp } from "../contexts/AppContext";
 import { logAnalyticsEvent } from "../utils/firestore";
+import { useIntl } from "react-intl";
 
 // =================== TYPES ===================
 export interface Review {
@@ -314,7 +315,9 @@ const createMockReviews = (language: string): ReviewType[] => {
       status: "published",
       helpfulVotes: 31,
       clientAvatar:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
+        "https://images.unsplash.com/photo-1601455763557-db1bea8a9a5a?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXZhdGFyJTIwbWFsZXxlbnwwfHwwfHx8MA%3D%3D",
+
+      // clientAvatar:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
     },
     {
@@ -333,7 +336,10 @@ const createMockReviews = (language: string): ReviewType[] => {
       status: "published",
       helpfulVotes: 18,
       clientAvatar:
-        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
+        "https://images.unsplash.com/photo-1677537946831-4590ff82359c?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjB8fGF2YXRhciUyMGZlbWFsZXxlbnwwfHwwfHx8MA%3D%3D",
+      // clientAvatar:
+      //   "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
+
       verified: true,
     },
     {
@@ -353,6 +359,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       helpfulVotes: 27,
       clientAvatar:
         "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
+
+      // clientAvatar:"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
+      // clientAvatar:
+      //   "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
+
       verified: true,
     },
     {
@@ -372,6 +383,8 @@ const createMockReviews = (language: string): ReviewType[] => {
       helpfulVotes: 22,
       clientAvatar:
         "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
+
+      // clientAvatar:"https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
     },
     {
@@ -389,8 +402,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       serviceType: "expat_call",
       status: "published",
       helpfulVotes: 15,
+      // clientAvatar:"https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
       clientAvatar:
         "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
+
+      // clientAvatar:"https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
     },
     {
@@ -408,8 +424,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       serviceType: "expat_call",
       status: "published",
       helpfulVotes: 29,
+      // clientAvatar:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
       clientAvatar:
         "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
+
+      // clientAvatar:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
     },
     {
@@ -427,8 +446,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       serviceType: "expat_call",
       status: "published",
       helpfulVotes: 33,
+      // clientAvatar:"https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&h=400&q=80",
+      // clientAvatar:
+      //   "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&h=400&q=80",
       clientAvatar:
         "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&h=400&q=80",
+
       verified: true,
     },
     {
@@ -446,8 +469,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       serviceType: "expat_call",
       status: "published",
       helpfulVotes: 19,
+      // clientAvatar:"https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80",
+      // clientAvatar:"https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80",
       clientAvatar:
         "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80",
+
       verified: true,
     },
 
@@ -467,8 +493,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       serviceType: "lawyer_call",
       status: "published",
       helpfulVotes: 41,
+      // clientAvatar:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
+      // clientAvatar:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
       clientAvatar:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
+
       verified: true,
     },
     {
@@ -486,8 +515,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       serviceType: "lawyer_call",
       status: "published",
       helpfulVotes: 38,
+      // clientAvatar:
+      //   "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
       clientAvatar:
-        "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
+        "https://images.unsplash.com/photo-1625262550495-1d3bfb5c1502?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTc2fHxhdmF0YXIlMjBtYWxlfGVufDB8fDB8fHww",
+
       verified: true,
     },
     {
@@ -505,8 +537,10 @@ const createMockReviews = (language: string): ReviewType[] => {
       serviceType: "lawyer_call",
       status: "published",
       helpfulVotes: 26,
+      // clientAvatar:"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
       clientAvatar:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
+        "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDB8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
+
       verified: true,
     },
     {
@@ -524,8 +558,10 @@ const createMockReviews = (language: string): ReviewType[] => {
       serviceType: "lawyer_call",
       status: "published",
       helpfulVotes: 45,
+      // clientAvatar:"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
       clientAvatar:
         "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
+
       verified: true,
     },
     {
@@ -543,8 +579,10 @@ const createMockReviews = (language: string): ReviewType[] => {
       serviceType: "lawyer_call",
       status: "published",
       helpfulVotes: 34,
+      // clientAvatar:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
       clientAvatar:
-        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
+        "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
+
       verified: true,
     },
     {
@@ -562,8 +600,10 @@ const createMockReviews = (language: string): ReviewType[] => {
       serviceType: "lawyer_call",
       status: "published",
       helpfulVotes: 21,
+      // clientAvatar:"https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
       clientAvatar:
-        "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
+        "https://images.unsplash.com/photo-1701615004837-40d8573b6652?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
+
       verified: true,
     },
     {
@@ -581,8 +621,10 @@ const createMockReviews = (language: string): ReviewType[] => {
       serviceType: "lawyer_call",
       status: "published",
       helpfulVotes: 37,
+      // clientAvatar:"https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80",
       clientAvatar:
-        "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80",
+        "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YXZhdGFyfGVufDB8fDB8fHww",
+
       verified: true,
     },
   ];
@@ -911,6 +953,7 @@ const createMockReviews = (language: string): ReviewType[] => {
 
 // =================== MAIN COMPONENT ===================
 const Testimonials: React.FC = () => {
+  const intl = useIntl();
   const { language } = useApp();
   const navigate = useNavigate();
 
@@ -918,9 +961,10 @@ const Testimonials: React.FC = () => {
   const [currentLanguage, setCurrentLanguage] = useState<string>(() => {
     if (typeof window !== "undefined") {
       return (
-        localStorage.getItem("testimonials_language") ||
-        language ||
-        detectBrowserLanguage()
+        // localStorage.getItem("testimonials_language") ||
+        // localStorage.getItem("sos_language") ||
+        language
+        // detectBrowserLanguage()
       );
     }
     return language || "fr";
@@ -1017,6 +1061,10 @@ const Testimonials: React.FC = () => {
       setIsLoading(false);
     }
   }, [filter, currentLanguage]);
+
+  useEffect(() => {
+    setCurrentLanguage(language);
+  }, [language]);
 
   // Charger les témoignages au montage et quand le filtre ou la langue change
   useEffect(() => {
@@ -1175,6 +1223,7 @@ const Testimonials: React.FC = () => {
                 >
                   <option value="fr">🇫🇷 Français</option>
                   <option value="en">🇺🇸 English</option>
+                  <option value="es">🇪🇸 Español</option>
                 </select>
                 {isLoading && (
                   <div className="absolute inset-y-0 right-2 flex items-center">
