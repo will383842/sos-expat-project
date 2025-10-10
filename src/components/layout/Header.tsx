@@ -1,19 +1,44 @@
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
-  Menu, X, Phone, Shield, ChevronDown, Globe, User as UserIcon, UserPlus,
-  Settings, LogOut, Wifi, WifiOff
-} from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
-import { useApp } from '../../contexts/AppContext';
+  Menu,
+  X,
+  Phone,
+  Shield,
+  ChevronDown,
+  Globe,
+  User as UserIcon,
+  UserPlus,
+  Settings,
+  LogOut,
+  Wifi,
+  WifiOff,
+} from "lucide-react";
+import { useAuth } from "../../contexts/AuthContext";
+import { useApp } from "../../contexts/AppContext";
 import {
-  doc, updateDoc, setDoc, onSnapshot,
-  getDoc, getDocs, query, where, writeBatch,
-  serverTimestamp, collection
-} from 'firebase/firestore';
-import { db } from '../../config/firebase';
-import { usePWAInstall } from '@/hooks/usePWAInstall';
-import type { User } from '../../contexts/types';
+  doc,
+  updateDoc,
+  setDoc,
+  onSnapshot,
+  getDoc,
+  getDocs,
+  query,
+  where,
+  writeBatch,
+  serverTimestamp,
+  collection,
+} from "firebase/firestore";
+import { db } from "../../config/firebase";
+import { usePWAInstall } from "@/hooks/usePWAInstall";
+import type { User } from "../../contexts/types";
 
 /** ================================
  *  Types & Global
@@ -25,7 +50,7 @@ declare global {
 }
 
 interface Language {
-  code: 'fr' | 'en';
+  code: "fr" | "en" | "es";
   name: string;
   nativeName: string;
   flag: React.ReactNode;
@@ -34,7 +59,7 @@ interface Language {
 interface NavigationItem {
   path: string;
   labelKey: string;
-  mobileIcon?: string;  // emoji (mobile)
+  mobileIcon?: string; // emoji (mobile)
   desktopIcon?: string; // emoji (desktop)
 }
 
@@ -56,7 +81,11 @@ type WithAuthExtras = User & {
  *  Flags
  *  ================================ */
 const FrenchFlag = memo(() => (
-  <div className="relative p-1 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg ring-1 ring-white/20" role="img" aria-label="Drapeau français">
+  <div
+    className="relative p-1 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg ring-1 ring-white/20"
+    role="img"
+    aria-label="Drapeau français"
+  >
     <div className="w-6 h-4 rounded-md overflow-hidden shadow-sm flex">
       <div className="w-1/3 h-full bg-blue-600" />
       <div className="w-1/3 h-full bg-white" />
@@ -65,18 +94,28 @@ const FrenchFlag = memo(() => (
     <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-lg pointer-events-none" />
   </div>
 ));
-FrenchFlag.displayName = 'FrenchFlag';
+FrenchFlag.displayName = "FrenchFlag";
 
 const BritishFlag = memo(() => (
-  <div className="relative p-1 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg ring-1 ring-white/20" role="img" aria-label="Drapeau britannique">
+  <div
+    className="relative p-1 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg ring-1 ring-white/20"
+    role="img"
+    aria-label="Drapeau britannique"
+  >
     <div className="w-6 h-4 rounded-md overflow-hidden shadow-sm relative bg-blue-800">
       <div className="absolute inset-0">
         <div className="absolute w-full h-0.5 bg-white rotate-45 top-1/2 left-0 -translate-y-1/2" />
         <div className="absolute w-full h-0.5 bg-white -rotate-45 top-1/2 left-0 -translate-y-1/2" />
       </div>
       <div className="absolute inset-0">
-        <div className="absolute w-full h-px bg-red-600 rotate-45" style={{ top: 'calc(50% - 1px)' }} />
-        <div className="absolute w-full h-px bg-red-600 -rotate-45" style={{ top: 'calc(50% + 1px)' }} />
+        <div
+          className="absolute w-full h-px bg-red-600 rotate-45"
+          style={{ top: "calc(50% - 1px)" }}
+        />
+        <div
+          className="absolute w-full h-px bg-red-600 -rotate-45"
+          style={{ top: "calc(50% + 1px)" }}
+        />
       </div>
       <div className="absolute top-0 left-1/2 w-0.5 h-full bg-white -translate-x-1/2" />
       <div className="absolute left-0 top-1/2 w-full h-0.5 bg-white -translate-y-1/2" />
@@ -86,28 +125,68 @@ const BritishFlag = memo(() => (
     <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-lg pointer-events-none" />
   </div>
 ));
-BritishFlag.displayName = 'BritishFlag';
+BritishFlag.displayName = "BritishFlag";
+
+const SpanishFlag = memo(() => (
+  <div
+    className="relative p-1 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg ring-1 ring-white/20"
+    role="img"
+    aria-label="Bandera española"
+  >
+    <div className="w-6 h-4 rounded-md overflow-hidden shadow-sm flex flex-col">
+      <div className="w-full h-1/3 bg-red-600" />
+      <div className="w-full h-1/3 bg-yellow-400" />
+      <div className="w-full h-1/3 bg-red-600" />
+    </div>
+    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-lg pointer-events-none" />
+  </div>
+));
+SpanishFlag.displayName = "SpanishFlag";
 
 /** ================================
  *  i18n Config
  *  ================================ */
 const SUPPORTED_LANGUAGES: Language[] = [
-  { code: 'fr', name: 'French', nativeName: 'Français', flag: <FrenchFlag /> },
-  { code: 'en', name: 'English', nativeName: 'English', flag: <BritishFlag /> },
+  { code: "fr", name: "French", nativeName: "Français", flag: <FrenchFlag /> },
+  { code: "en", name: "English", nativeName: "English", flag: <BritishFlag /> },
+  { code: "es", name: "Spanish", nativeName: "Español", flag: <SpanishFlag /> },
 ];
 
 const LEFT_NAVIGATION_ITEMS: NavigationItem[] = [
-  { path: '/', labelKey: 'nav.home', mobileIcon: '🏠', desktopIcon: '🏠' },
-  { path: '/sos-appel', labelKey: 'nav.viewProfiles', mobileIcon: '👥', desktopIcon: '👥' },
-  { path: '/testimonials', labelKey: 'nav.testimonials', mobileIcon: '💬', desktopIcon: '💬' },
+  { path: "/", labelKey: "nav.home", mobileIcon: "🏠", desktopIcon: "🏠" },
+  {
+    path: "/sos-appel",
+    labelKey: "nav.viewProfiles",
+    mobileIcon: "👥",
+    desktopIcon: "👥",
+  },
+  {
+    path: "/testimonials",
+    labelKey: "nav.testimonials",
+    mobileIcon: "💬",
+    desktopIcon: "💬",
+  },
 ];
 
 const RIGHT_NAVIGATION_ITEMS: NavigationItem[] = [
-  { path: '/how-it-works', labelKey: 'nav.howItWorks', mobileIcon: '⚡', desktopIcon: '⚡' },
-  { path: '/pricing', labelKey: 'nav.pricing', mobileIcon: '💎', desktopIcon: '💎' },
+  {
+    path: "/how-it-works",
+    labelKey: "nav.howItWorks",
+    mobileIcon: "⚡",
+    desktopIcon: "⚡",
+  },
+  {
+    path: "/pricing",
+    labelKey: "nav.pricing",
+    mobileIcon: "💎",
+    desktopIcon: "💎",
+  },
 ];
 
-const ALL_NAVIGATION_ITEMS = [...LEFT_NAVIGATION_ITEMS, ...RIGHT_NAVIGATION_ITEMS];
+const ALL_NAVIGATION_ITEMS = [
+  ...LEFT_NAVIGATION_ITEMS,
+  ...RIGHT_NAVIGATION_ITEMS,
+];
 
 /** ================================
  *  Hooks
@@ -125,8 +204,8 @@ const useScrolled = () => {
         ticking = true;
       }
     };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
   return scrolled;
 };
@@ -142,7 +221,8 @@ const useAvailabilityToggle = () => {
   const [isUpdating, setIsUpdating] = useState(false);
   const sosSnapshotSubscribed = useRef(false);
 
-  const isProvider = typedUser?.role === 'lawyer' || typedUser?.role === 'expat';
+  const isProvider =
+    typedUser?.role === "lawyer" || typedUser?.role === "expat";
 
   // ID unique (uid Firebase ou id Firestore)
   const userId = useMemo<string | undefined>(() => {
@@ -151,104 +231,113 @@ const useAvailabilityToggle = () => {
   }, [typedUser]);
 
   // --- Helpers d'écriture ---
-  const writeSosProfile = useCallback(async (newStatus: boolean) => {
-    if (!typedUser || !isProvider || !userId) return;
+  const writeSosProfile = useCallback(
+    async (newStatus: boolean) => {
+      if (!typedUser || !isProvider || !userId) return;
 
-    const sosRef = doc(db, 'sos_profiles', userId);
-    const updateData = {
-      isOnline: newStatus,
-      availability: newStatus ? 'available' : 'unavailable',
-      lastStatusChange: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-      isVisible: true,
-      isVisibleOnMap: true,
-    };
+      const sosRef = doc(db, "sos_profiles", userId);
+      const updateData = {
+        isOnline: newStatus,
+        availability: newStatus ? "available" : "unavailable",
+        lastStatusChange: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        isVisible: true,
+        isVisibleOnMap: true,
+      };
 
-    // 1) Update direct (doc id = userId)
-    try {
-      await updateDoc(sosRef, updateData);
-      return;
-    } catch {
-      /* pass, on tente la suite */
-    }
+      // 1) Update direct (doc id = userId)
+      try {
+        await updateDoc(sosRef, updateData);
+        return;
+      } catch {
+        /* pass, on tente la suite */
+      }
 
-    // 2) S'il n'existe pas, crée/merge
-    try {
-      const snap = await getDoc(sosRef);
-      if (!snap.exists()) {
-        const newProfileData = {
+      // 2) S'il n'existe pas, crée/merge
+      try {
+        const snap = await getDoc(sosRef);
+        if (!snap.exists()) {
+          const newProfileData = {
+            type: typedUser.role,
+            fullName:
+              typedUser.fullName ||
+              `${typedUser.firstName || ""} ${typedUser.lastName || ""}`.trim() ||
+              "Expert",
+            ...updateData,
+            isActive: true,
+            isApproved: typedUser.role !== "lawyer",
+            isVerified: !!typedUser.isVerified,
+            rating: 5.0,
+            reviewCount: 0,
+            createdAt: serverTimestamp(),
+          };
+          await setDoc(sosRef, newProfileData, { merge: true });
+          return;
+        }
+      } catch {
+        /* pass, on tente la suite */
+      }
+
+      // 3) Fallback : anciens docs avec id ≠ uid → update tous les docs où uid == userId
+      const q = query(
+        collection(db, "sos_profiles"),
+        where("uid", "==", userId)
+      );
+      const found = await getDocs(q);
+      if (!found.empty) {
+        const batch = writeBatch(db);
+        found.docs.forEach((d) => batch.update(d.ref, updateData));
+        await batch.commit();
+        return;
+      }
+
+      // 4) Dernier recours : créer doc {uid}
+      await setDoc(
+        sosRef,
+        {
           type: typedUser.role,
           fullName:
             typedUser.fullName ||
-            `${typedUser.firstName || ''} ${typedUser.lastName || ''}`.trim() ||
-            'Expert',
+            `${typedUser.firstName || ""} ${typedUser.lastName || ""}`.trim() ||
+            "Expert",
           ...updateData,
           isActive: true,
-          isApproved: typedUser.role !== 'lawyer',
+          isApproved: typedUser.role !== "lawyer",
           isVerified: !!typedUser.isVerified,
           rating: 5.0,
           reviewCount: 0,
           createdAt: serverTimestamp(),
-        };
-        await setDoc(sosRef, newProfileData, { merge: true });
-        return;
-      }
-    } catch {
-      /* pass, on tente la suite */
-    }
+        },
+        { merge: true }
+      );
+    },
+    [typedUser, isProvider, userId]
+  );
 
-    // 3) Fallback : anciens docs avec id ≠ uid → update tous les docs où uid == userId
-    const q = query(collection(db, 'sos_profiles'), where('uid', '==', userId));
-    const found = await getDocs(q);
-    if (!found.empty) {
-      const batch = writeBatch(db);
-      found.docs.forEach((d) => batch.update(d.ref, updateData));
-      await batch.commit();
-      return;
-    }
+  const writeUsersPresenceBestEffort = useCallback(
+    async (newStatus: boolean) => {
+      if (!typedUser || !userId) return;
 
-    // 4) Dernier recours : créer doc {uid}
-    await setDoc(
-      sosRef,
-      {
-        type: typedUser.role,
-        fullName:
-          typedUser.fullName ||
-          `${typedUser.firstName || ''} ${typedUser.lastName || ''}`.trim() ||
-          'Expert',
-        ...updateData,
-        isActive: true,
-        isApproved: typedUser.role !== 'lawyer',
-        isVerified: !!typedUser.isVerified,
-        rating: 5.0,
-        reviewCount: 0,
-        createdAt: serverTimestamp(),
-      },
-      { merge: true }
-    );
-  }, [typedUser, isProvider, userId]);
-
-  const writeUsersPresenceBestEffort = useCallback(async (newStatus: boolean) => {
-    if (!typedUser || !userId) return;
-
-    const userRef = doc(db, 'users', userId);
-    const payload = {
-      isOnline: newStatus,
-      availability: newStatus ? 'available' : 'unavailable',
-      lastStatusChange: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-    };
-    try {
-      await updateDoc(userRef, payload);
-    } catch {
-      // Tentative avec setDoc merge si updateDoc échoue
+      const userRef = doc(db, "users", userId);
+      const payload = {
+        isOnline: newStatus,
+        availability: newStatus ? "available" : "unavailable",
+        lastStatusChange: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      };
       try {
-        await setDoc(userRef, { uid: userId, ...payload }, { merge: true });
-      } catch (e2) {
-        console.warn('Users presence update ignorée (règles/email) :', e2);
+        await updateDoc(userRef, payload);
+      } catch {
+        // Tentative avec setDoc merge si updateDoc échoue
+        try {
+          await setDoc(userRef, { uid: userId, ...payload }, { merge: true });
+        } catch (e2) {
+          console.warn("Users presence update ignorée (règles/email) :", e2);
+        }
       }
-    }
-  }, [typedUser, userId]);
+    },
+    [typedUser, userId]
+  );
 
   // --- Ecoute temps réel : sos_profiles = source de vérité pour l'UI ---
   useEffect(() => {
@@ -256,7 +345,7 @@ const useAvailabilityToggle = () => {
     if (sosSnapshotSubscribed.current) return;
     sosSnapshotSubscribed.current = true;
 
-    const sosRef = doc(db, 'sos_profiles', userId);
+    const sosRef = doc(db, "sos_profiles", userId);
 
     const un = onSnapshot(
       sosRef,
@@ -267,7 +356,7 @@ const useAvailabilityToggle = () => {
         const next = data.isOnline === true;
         setIsOnline((prev) => (prev !== next ? next : prev));
       },
-      (err) => console.error('Erreur snapshot sos_profiles:', err)
+      (err) => console.error("Erreur snapshot sos_profiles:", err)
     );
 
     return () => {
@@ -278,7 +367,8 @@ const useAvailabilityToggle = () => {
 
   // Garde en phase avec un éventuel changement externe du user
   useEffect(() => {
-    if (typeof typedUser?.isOnline !== 'undefined') setIsOnline(!!typedUser.isOnline);
+    if (typeof typedUser?.isOnline !== "undefined")
+      setIsOnline(!!typedUser.isOnline);
   }, [typedUser?.isOnline]);
 
   const toggle = useCallback(async () => {
@@ -296,20 +386,34 @@ const useAvailabilityToggle = () => {
       setIsOnline(newStatus);
 
       // Broadcast (on émet les DEUX événements pour compatibilité)
-      window.dispatchEvent(new CustomEvent('availability:changed', { detail: { isOnline: newStatus } }));
-      window.dispatchEvent(new CustomEvent('availabilityChanged', { detail: { isOnline: newStatus } }));
+      window.dispatchEvent(
+        new CustomEvent("availability:changed", {
+          detail: { isOnline: newStatus },
+        })
+      );
+      window.dispatchEvent(
+        new CustomEvent("availabilityChanged", {
+          detail: { isOnline: newStatus },
+        })
+      );
 
       // Analytics
-      window.gtag?.('event', 'online_status_change', {
-        event_category: 'engagement',
-        event_label: newStatus ? 'online' : 'offline',
+      window.gtag?.("event", "online_status_change", {
+        event_category: "engagement",
+        event_label: newStatus ? "online" : "offline",
       });
     } catch (e) {
-      console.error('Erreur online/offline :', e);
+      console.error("Erreur online/offline :", e);
     } finally {
       setIsUpdating(false);
     }
-  }, [isOnline, isUpdating, typedUser, writeSosProfile, writeUsersPresenceBestEffort]);
+  }, [
+    isOnline,
+    isUpdating,
+    typedUser,
+    writeSosProfile,
+    writeUsersPresenceBestEffort,
+  ]);
 
   return { isOnline, isUpdating, isProvider, toggle };
 };
@@ -322,18 +426,24 @@ const HeaderAvailabilityToggle = memo(() => {
   const { isOnline, isUpdating, isProvider, toggle } = useAvailabilityToggle();
 
   if (!isProvider) return null;
-  const t = { online: language === 'fr' ? 'En ligne' : 'Online', offline: language === 'fr' ? 'Hors ligne' : 'Offline' };
+  const t = {
+    online: language === "fr" ? "En ligne" : "Online",
+    offline: language === "fr" ? "Hors ligne" : "Offline",
+  };
 
   return (
     <button
-      onClick={() => { toggle(); }}
+      onClick={() => {
+        toggle();
+      }}
       disabled={isUpdating}
       type="button"
       className={`group flex items-center px-4 py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/50 min-h-[44px] touch-manipulation ${
-        isOnline ? 'bg-green-500 hover:bg-green-600 text-white shadow-lg'
-                 : 'bg-gray-500 hover:bg-gray-600 text-white shadow-lg'
-      } ${isUpdating ? 'opacity-75 cursor-not-allowed' : ''}`}
-      style={{ border: '2px solid white', boxSizing: 'border-box' }}
+        isOnline
+          ? "bg-green-500 hover:bg-green-600 text-white shadow-lg"
+          : "bg-gray-500 hover:bg-gray-600 text-white shadow-lg"
+      } ${isUpdating ? "opacity-75 cursor-not-allowed" : ""}`}
+      style={{ border: "2px solid white", boxSizing: "border-box" }}
       aria-label={`Changer le statut vers ${isOnline ? t.offline : t.online}`}
     >
       {isUpdating ? (
@@ -347,76 +457,97 @@ const HeaderAvailabilityToggle = memo(() => {
     </button>
   );
 });
-HeaderAvailabilityToggle.displayName = 'HeaderAvailabilityToggle';
+HeaderAvailabilityToggle.displayName = "HeaderAvailabilityToggle";
 
 /** ================================
  *  User Avatar (bigger)
  *  ================================ */
-const UserAvatar = memo<{ user: User | null; size?: 'sm' | 'md' }>(({ user, size = 'md' }) => {
-  const [imageError, setImageError] = useState(false);
-  const sizeClasses = size === 'sm' ? 'w-10 h-10' : 'w-12 h-12';
+const UserAvatar = memo<{ user: User | null; size?: "sm" | "md" }>(
+  ({ user, size = "md" }) => {
+    const [imageError, setImageError] = useState(false);
+    const sizeClasses = size === "sm" ? "w-10 h-10" : "w-12 h-12";
 
-  const u = user as WithAuthExtras | null;
-  const photoUrl = u?.profilePhoto || u?.photoURL;
-  const displayName = u?.firstName || u?.displayName || u?.email || 'User';
-  const onError = useCallback(() => setImageError(true), []);
+    const u = user as WithAuthExtras | null;
+    const photoUrl = u?.profilePhoto || u?.photoURL;
+    const displayName = u?.firstName || u?.displayName || u?.email || "User";
+    const onError = useCallback(() => setImageError(true), []);
 
-  if (!photoUrl || imageError) {
+    if (!photoUrl || imageError) {
+      return (
+        <div
+          className={`${sizeClasses} rounded-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-white font-bold text-base ring-2 ring-white/30 hover:ring-white/60 transition-all duration-300`}
+          aria-label={`Avatar de ${displayName}`}
+        >
+          {displayName?.charAt(0).toUpperCase?.()}
+        </div>
+      );
+    }
     return (
-      <div
-        className={`${sizeClasses} rounded-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-white font-bold text-base ring-2 ring-white/30 hover:ring-white/60 transition-all duration-300`}
-        aria-label={`Avatar de ${displayName}`}
-      >
-        {displayName?.charAt(0).toUpperCase?.()}
+      <div className="relative">
+        <img
+          src={photoUrl}
+          alt={`Avatar de ${displayName}`}
+          className={`${sizeClasses} rounded-full object-cover ring-2 ring-white/30 hover:ring-white/60 transition-all duration-300`}
+          onError={onError}
+          loading="lazy"
+        />
+        <div
+          className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-400 rounded-full border-2 border-white"
+          aria-label="En ligne"
+        />
       </div>
     );
   }
-  return (
-    <div className="relative">
-      <img
-        src={photoUrl}
-        alt={`Avatar de ${displayName}`}
-        className={`${sizeClasses} rounded-full object-cover ring-2 ring-white/30 hover:ring-white/60 transition-all duration-300`}
-        onError={onError}
-        loading="lazy"
-      />
-      <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-400 rounded-full border-2 border-white" aria-label="En ligne" />
-    </div>
-  );
-});
-UserAvatar.displayName = 'UserAvatar';
+);
+UserAvatar.displayName = "UserAvatar";
 
 /** ================================
  *  Language Dropdown (mobile light/dark)
  *  ================================ */
-const LanguageDropdown = memo<{ isMobile?: boolean; variant?: 'light' | 'dark' }>(({ isMobile = false, variant = 'dark' }) => {
+const LanguageDropdown = memo<{
+  isMobile?: boolean;
+  variant?: "light" | "dark";
+}>(({ isMobile = false, variant = "dark" }) => {
   const { language, setLanguage } = useApp();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  const currentLanguage = SUPPORTED_LANGUAGES.find((l) => l.code === language) || SUPPORTED_LANGUAGES[0];
+  const currentLanguage =
+    SUPPORTED_LANGUAGES.find((l) => l.code === language) ||
+    SUPPORTED_LANGUAGES[0];
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (ref.current && !ref.current.contains(e.target as Node))
+        setOpen(false);
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleLanguageChange = useCallback((langCode: 'fr' | 'en') => {
-    setLanguage(langCode);
-    setOpen(false);
-    window.gtag?.('event', 'language_change', { event_category: 'engagement', event_label: langCode });
-  }, [setLanguage]);
+  const handleLanguageChange = useCallback(
+    (langCode: "fr" | "en") => {
+      setLanguage(langCode);
+      setOpen(false);
+      window.gtag?.("event", "language_change", {
+        event_category: "engagement",
+        event_label: langCode,
+      });
+    },
+    [setLanguage]
+  );
 
   if (isMobile) {
-    const isLight = variant === 'light';
+    const isLight = variant === "light";
     return (
       <div className="mb-6">
-        <div className={`flex items-center text-sm font-semibold mb-3 ${isLight ? 'text-gray-800' : 'text-white/90'}`}>
-          <Globe className={`w-4 h-4 mr-2 ${isLight ? 'text-gray-700' : 'text-white'}`} />
-          {language === 'fr' ? 'Langue' : 'Language'}
+        <div
+          className={`flex items-center text-sm font-semibold mb-3 ${isLight ? "text-gray-800" : "text-white/90"}`}
+        >
+          <Globe
+            className={`w-4 h-4 mr-2 ${isLight ? "text-gray-700" : "text-white"}`}
+          />
+          {language === "fr" ? "Langue" : "Language"}
         </div>
         <div className="grid grid-cols-2 gap-3">
           {SUPPORTED_LANGUAGES.map((lang) => (
@@ -425,8 +556,12 @@ const LanguageDropdown = memo<{ isMobile?: boolean; variant?: 'light' | 'dark' }
               onClick={() => handleLanguageChange(lang.code)}
               className={`group relative overflow-hidden px-6 py-4 rounded-2xl transition-all duration-300 focus:outline-none ${
                 language === lang.code
-                  ? (isLight ? 'bg-red-600 text-white shadow' : 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-xl scale-105')
-                  : (isLight ? 'bg-white border border-gray-300 text-gray-800 hover:bg-gray-50' : 'bg-white/20 backdrop-blur-xl text-white hover:bg-white/30 border border-white/20')
+                  ? isLight
+                    ? "bg-red-600 text-white shadow"
+                    : "bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-xl scale-105"
+                  : isLight
+                    ? "bg-white border border-gray-300 text-gray-800 hover:bg-gray-50"
+                    : "bg-white/20 backdrop-blur-xl text-white hover:bg-white/30 border border-white/20"
               }`}
               aria-label={`Changer la langue vers ${lang.nativeName}`}
               aria-pressed={language === lang.code}
@@ -453,8 +588,12 @@ const LanguageDropdown = memo<{ isMobile?: boolean; variant?: 'light' | 'dark' }
         aria-haspopup="true"
         aria-label="Sélectionner la langue"
       >
-        <div className="group-hover:scale-110 transition-transform duration-300">{currentLanguage.flag}</div>
-        <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${open ? 'rotate-180 text-yellow-300' : ''}`} />
+        <div className="group-hover:scale-110 transition-transform duration-300">
+          {currentLanguage.flag}
+        </div>
+        <ChevronDown
+          className={`w-4 h-4 transition-transform duration-300 ${open ? "rotate-180 text-yellow-300" : ""}`}
+        />
       </button>
       {open && (
         <div className="absolute right-0 mt-2 w-48 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl py-2 z-50 border border-gray-100 animate-in slide-in-from-top-2 duration-300">
@@ -463,13 +602,22 @@ const LanguageDropdown = memo<{ isMobile?: boolean; variant?: 'light' | 'dark' }
               key={lang.code}
               onClick={() => handleLanguageChange(lang.code)}
               className={`group flex items-center w-full px-4 py-3 text-sm text-left hover:bg-gray-50 transition-all duration-200 rounded-xl mx-1 focus:outline-none focus:bg-gray-50 ${
-                language === lang.code ? 'bg-red-50 text-red-600 font-semibold' : 'text-gray-700'
+                language === lang.code
+                  ? "bg-red-50 text-red-600 font-semibold"
+                  : "text-gray-700"
               }`}
               aria-pressed={language === lang.code}
             >
-              <div className="mr-3 group-hover:scale-110 transition-transform duration-300">{lang.flag}</div>
+              <div className="mr-3 group-hover:scale-110 transition-transform duration-300">
+                {lang.flag}
+              </div>
               <span>{lang.nativeName}</span>
-              {language === lang.code && <div className="ml-auto w-2 h-2 bg-red-500 rounded-full animate-pulse" aria-label="Langue actuelle" />}
+              {language === lang.code && (
+                <div
+                  className="ml-auto w-2 h-2 bg-red-500 rounded-full animate-pulse"
+                  aria-label="Langue actuelle"
+                />
+              )}
             </button>
           ))}
         </div>
@@ -477,7 +625,7 @@ const LanguageDropdown = memo<{ isMobile?: boolean; variant?: 'light' | 'dark' }
     </div>
   );
 });
-LanguageDropdown.displayName = 'LanguageDropdown';
+LanguageDropdown.displayName = "LanguageDropdown";
 
 /** ================================
  *  PWA Area (desktop)
@@ -493,7 +641,9 @@ const PWAInstallArea = memo(({ scrolled }: { scrolled: boolean }) => {
     return () => clearInterval(cycle);
   }, []);
 
-  const onClick = async () => { await install(); };
+  const onClick = async () => {
+    await install();
+  };
 
   return (
     <div className="flex items-center select-none">
@@ -501,32 +651,49 @@ const PWAInstallArea = memo(({ scrolled }: { scrolled: boolean }) => {
         type="button"
         onClick={onClick}
         className="relative w-[72px] h-[72px] rounded-2xl overflow-hidden bg-transparent focus:outline-none focus:ring-0 shrink-0 touch-manipulation"
-        aria-label={language === 'fr' ? "Installer l'application" : 'Install the app'}
-        title={language === 'fr' ? "Installer l'application" : 'Install the app'}
+        aria-label={
+          language === "fr" ? "Installer l'application" : "Install the app"
+        }
+        title={
+          language === "fr" ? "Installer l'application" : "Install the app"
+        }
       >
-        <img src="/icons/icon-512x512-maskable.png" alt="SOS Expat App Icon" className="w-full h-full object-cover" />
+        <img
+          src="/icons/icon-512x512-maskable.png"
+          alt="SOS Expat App Icon"
+          className="w-full h-full object-cover"
+        />
       </button>
 
       <div className="ml-3">
         <div className="flex flex-col leading-tight text-center">
-          <span className={`font-extrabold text-xl ${scrolled ? 'text-white' : 'text-gray-900'}`}>SOS Expat</span>
+          <span
+            className={`font-extrabold text-xl ${scrolled ? "text-white" : "text-gray-900"}`}
+          >
+            SOS Expat
+          </span>
           <span className="text-sm font-semibold">
             <span className="bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
-              {language === 'fr' ? "d'Ulixai" : 'by Ulixai'}
+              {language === "fr" ? "d'Ulixai" : "by Ulixai"}
             </span>
           </span>
         </div>
 
         <div className="hidden lg:block h-5 overflow-hidden">
-          <div className={`text-xs ${scrolled ? 'text-gray-300' : 'text-gray-600'} transition-opacity duration-700 ease-in-out ${showSlogan ? 'opacity-100' : 'opacity-0'}`}>
-            {language === 'fr' ? "L'appli qui fait du bien !" : 'The feel-good app!'}{installed ? ' 🎉' : ''}
+          <div
+            className={`text-xs ${scrolled ? "text-gray-300" : "text-gray-600"} transition-opacity duration-700 ease-in-out ${showSlogan ? "opacity-100" : "opacity-0"}`}
+          >
+            {language === "fr"
+              ? "L'appli qui fait du bien !"
+              : "The feel-good app!"}
+            {installed ? " 🎉" : ""}
           </div>
         </div>
       </div>
     </div>
   );
 });
-PWAInstallArea.displayName = 'PWAInstallArea';
+PWAInstallArea.displayName = "PWAInstallArea";
 
 /** ================================
  *  PWA icon button (mobile)
@@ -535,199 +702,282 @@ const PWAIconButton = memo(() => {
   const { install } = usePWAInstall();
   const { language } = useApp();
 
-  const handleClick = async () => { await install(); };
+  const handleClick = async () => {
+    await install();
+  };
 
   return (
     <button
       type="button"
       onClick={handleClick}
       className="w-16 h-16 rounded-2xl overflow-hidden bg-transparent focus:outline-none focus:ring-0 touch-manipulation"
-      aria-label={language === 'fr' ? "Installer l'application" : 'Install the app'}
-      title={language === 'fr' ? "Installer l'application" : 'Install the app'}
+      aria-label={
+        language === "fr" ? "Installer l'application" : "Install the app"
+      }
+      title={language === "fr" ? "Installer l'application" : "Install the app"}
     >
-      <img src="/icons/icon-512x512-maskable.png" alt="SOS Expat App Icon" className="w-full h-full object-cover" />
+      <img
+        src="/icons/icon-512x512-maskable.png"
+        alt="SOS Expat App Icon"
+        className="w-full h-full object-cover"
+      />
     </button>
   );
 });
-PWAIconButton.displayName = 'PWAIconButton';
+PWAIconButton.displayName = "PWAIconButton";
 
 /** ================================
  *  User Menu (uses navigate on logout)
  *  ================================ */
-const UserMenu = memo<{ isMobile?: boolean; scrolled?: boolean }>(({ isMobile = false, scrolled = false }) => {
-  const { user, logout } = useAuth();
-  const typedUser: WithAuthExtras | null = user as WithAuthExtras | null;
-  const { language } = useApp();
-  const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+const UserMenu = memo<{ isMobile?: boolean; scrolled?: boolean }>(
+  ({ isMobile = false, scrolled = false }) => {
+    const { user, logout } = useAuth();
+    const typedUser: WithAuthExtras | null = user as WithAuthExtras | null;
+    const { language } = useApp();
+    const navigate = useNavigate();
+    const [open, setOpen] = useState(false);
+    const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) setOpen(false);
+    useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (ref.current && !ref.current.contains(event.target as Node))
+          setOpen(false);
+      };
+      document.addEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    const handleLogout = useCallback(async () => {
+      try {
+        await logout();
+        setOpen(false);
+        window.gtag?.("event", "logout", { event_category: "engagement" });
+        try {
+          navigate("/", { replace: true });
+        } catch {
+          window.location.assign("/");
+        }
+      } catch (error) {
+        console.error("Logout error:", error);
+        try {
+          navigate("/", { replace: true });
+        } catch {
+          window.location.assign("/");
+        }
+      }
+    }, [logout, navigate]);
+
+    const t = {
+      login: language === "fr" ? "Connexion" : "Login",
+      signup: language === "fr" ? "S'inscrire" : "Sign up",
+      dashboard: language === "fr" ? "Tableau de bord" : "Dashboard",
+      adminConsole: language === "fr" ? "Console Admin" : "Admin Console",
+      logout: language === "fr" ? "Déconnexion" : "Logout",
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
-  const handleLogout = useCallback(async () => {
-    try {
-      await logout();
-      setOpen(false);
-      window.gtag?.('event', 'logout', { event_category: 'engagement' });
-      try {
-        navigate('/', { replace: true });
-      } catch {
-        window.location.assign('/');
-      }
-    } catch (error) {
-      console.error('Logout error:', error);
-      try {
-        navigate('/', { replace: true });
-      } catch {
-        window.location.assign('/');
-      }
-    }
-  }, [logout, navigate]);
+    if (!typedUser) {
+      const loginBtnDesktop = scrolled
+        ? "group relative p-3 rounded-full hover:bg-white/10 transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50 min-h-[44px] min-w-[44px] flex items-center justify-center"
+        : "group relative p-3 rounded-full hover:bg-gray-100 transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-500/20 min-h-[44px] min-w-[44px] flex items-center justify-center border border-gray-200";
+      const loginIconDesktop = scrolled
+        ? "w-5 h-5 text-white group-hover:text-yellow-200"
+        : "w-5 h-5 text-red-600";
 
-  const t = {
-    login: language === 'fr' ? 'Connexion' : 'Login',
-    signup: language === 'fr' ? "S'inscrire" : 'Sign up',
-    dashboard: language === 'fr' ? 'Tableau de bord' : 'Dashboard',
-    adminConsole: language === 'fr' ? 'Console Admin' : 'Admin Console',
-    logout: language === 'fr' ? 'Déconnexion' : 'Logout',
-  };
+      const registerBtnDesktop = scrolled
+        ? "group relative p-3 rounded-full bg-white hover:bg-gray-50 hover:scale-110 transition-all duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500/40 min-h-[44px] min-w-[44px] flex items-center justify-center"
+        : "group relative p-3 rounded-full bg-red-600 hover:bg-red-700 hover:scale-110 transition-all duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500/50 min-h-[44px] min-w-[44px] flex items-center justify-center";
+      const registerIconDesktop = scrolled
+        ? "w-5 h-5 text-red-600"
+        : "w-5 h-5 text-white";
 
-  if (!typedUser) {
-    const loginBtnDesktop = scrolled
-      ? 'group relative p-3 rounded-full hover:bg-white/10 transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50 min-h-[44px] min-w-[44px] flex items-center justify-center'
-      : 'group relative p-3 rounded-full hover:bg-gray-100 transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-500/20 min-h-[44px] min-w-[44px] flex items-center justify-center border border-gray-200';
-    const loginIconDesktop = scrolled ? 'w-5 h-5 text-white group-hover:text-yellow-200' : 'w-5 h-5 text-red-600';
-
-    const registerBtnDesktop = scrolled
-      ? 'group relative p-3 rounded-full bg-white hover:bg-gray-50 hover:scale-110 transition-all duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500/40 min-h-[44px] min-w-[44px] flex items-center justify-center'
-      : 'group relative p-3 rounded-full bg-red-600 hover:bg-red-700 hover:scale-110 transition-all duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500/50 min-h-[44px] min-w-[44px] flex items-center justify-center';
-    const registerIconDesktop = scrolled ? 'w-5 h-5 text-red-600' : 'w-5 h-5 text-white';
-
-    const authLinks = (
-      <>
-        <Link
-          to="/login"
-          className={isMobile ? 'group flex items-center justify-center w-full bg-white text-red-600 px-6 py-4 rounded-2xl border border-gray-300 hover:bg-gray-50 hover:scale-[1.01] transition-all duration-300 font-semibold min-h-[48px] touch-manipulation' : loginBtnDesktop}
-          aria-label={t.login}
-        >
-          {isMobile ? (<><UserIcon className="w-5 h-5 mr-3" /><span>{t.login}</span></>) : (<UserIcon className={loginIconDesktop} />)}
-        </Link>
-        <Link
-          to="/register"
-          className={isMobile ? 'group flex items-center justify-center w-full bg-red-600 text-white px-6 py-4 rounded-2xl hover:bg-red-700 hover:scale-[1.01] transition-all duration-300 font-bold shadow min-h-[48px] touch-manipulation' : registerBtnDesktop}
-          aria-label={t.signup}
-        >
-          {isMobile ? (<><UserPlus className="w-5 h-5 mr-3" /><span>{t.signup}</span></>) : (<UserPlus className={registerIconDesktop} />)}
-        </Link>
-      </>
-    );
-    return isMobile ? <div className="space-y-4">{authLinks}</div> : <div className="flex items-center space-x-4">{authLinks}</div>;
-  }
-
-  if (isMobile) {
-    const mobileContainer = scrolled
-      ? 'flex items-center space-x-4 p-4 bg-white/20 backdrop-blur-sm rounded-xl'
-      : 'flex items-center space-x-4 p-4 bg-gray-100 border border-gray-200 rounded-xl';
-
-    const nameClass = scrolled ? 'font-semibold text-white' : 'font-semibold text-gray-900';
-    const roleClass = scrolled ? 'text-xs text-white/70 capitalize' : 'text-xs text-gray-500 capitalize';
-
-    const adminLinkClass = scrolled
-      ? 'flex items-center w-full bg-white/20 backdrop-blur-sm text-white px-4 py-3 rounded-xl hover:bg-white/30 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/50'
-      : 'flex items-center w-full bg-white border border-gray-300 text-gray-800 px-4 py-3 rounded-xl hover:bg-gray-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-500/20';
-
-    const dashboardLinkClass = scrolled
-      ? 'flex items-center w-full bg-white/20 backdrop-blur-sm text-white px-4 py-4 rounded-xl hover:bg-white/30 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/50 min-h-[48px] touch-manipulation'
-      : 'flex items-center w-full bg-gray-100 text-gray-800 px-4 py-4 rounded-xl hover:bg-gray-200 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-500/20 min-h-[48px] touch-manipulation';
-
-    const logoutBtnClass =
-      'flex items-center w-full bg-red-600 text-white px-4 py-4 rounded-xl hover:bg-red-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-400/50 min-h-[48px] touch-manipulation';
-
-    return (
-      <div className="space-y-4">
-        <div className={mobileContainer}>
-          <UserAvatar user={typedUser} />
-          <div>
-            <div className={nameClass}>{typedUser.firstName || typedUser.displayName || typedUser.email}</div>
-            <div className={roleClass}>{typedUser.role || 'Utilisateur'}</div>
-          </div>
-        </div>
-
-        <div className="space-y-3">
-          {typedUser.role === 'admin' && (
-            <Link to="/admin/dashboard" className={adminLinkClass} aria-label={t.adminConsole}>
-              <Shield className="w-5 h-5 mr-3" />
-              <span className="font-medium">{t.adminConsole}</span>
-            </Link>
-          )}
-          <Link to="/dashboard" className={dashboardLinkClass} aria-label={t.dashboard}>
-            <Settings className="w-5 h-5 mr-3" />
-            <span className="font-medium">{t.dashboard}</span>
+      const authLinks = (
+        <>
+          <Link
+            to="/login"
+            className={
+              isMobile
+                ? "group flex items-center justify-center w-full bg-white text-red-600 px-6 py-4 rounded-2xl border border-gray-300 hover:bg-gray-50 hover:scale-[1.01] transition-all duration-300 font-semibold min-h-[48px] touch-manipulation"
+                : loginBtnDesktop
+            }
+            aria-label={t.login}
+          >
+            {isMobile ? (
+              <>
+                <UserIcon className="w-5 h-5 mr-3" />
+                <span>{t.login}</span>
+              </>
+            ) : (
+              <UserIcon className={loginIconDesktop} />
+            )}
           </Link>
-          <button onClick={handleLogout} className={logoutBtnClass} aria-label={t.logout}>
-            <LogOut className="w-5 h-5 mr-3" />
-            <span className="font-medium">{t.logout}</span>
-          </button>
-        </div>
-      </div>
-    );
-  }
+          <Link
+            to="/register"
+            className={
+              isMobile
+                ? "group flex items-center justify-center w-full bg-red-600 text-white px-6 py-4 rounded-2xl hover:bg-red-700 hover:scale-[1.01] transition-all duration-300 font-bold shadow min-h-[48px] touch-manipulation"
+                : registerBtnDesktop
+            }
+            aria-label={t.signup}
+          >
+            {isMobile ? (
+              <>
+                <UserPlus className="w-5 h-5 mr-3" />
+                <span>{t.signup}</span>
+              </>
+            ) : (
+              <UserPlus className={registerIconDesktop} />
+            )}
+          </Link>
+        </>
+      );
+      return isMobile ? (
+        <div className="space-y-4">{authLinks}</div>
+      ) : (
+        <div className="flex items-center space-x-4">{authLinks}</div>
+      );
+    }
 
-  return (
-    <div className="relative" ref={ref}>
-      <button
-        onClick={() => setOpen(!open)}
-        className="group flex items-center space-x-3 text-white transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/50 rounded-full p-2 min-h-[44px] touch-manipulation"
-        aria-expanded={open}
-        aria-haspopup="true"
-        aria-label="Menu utilisateur"
-      >
-        <UserAvatar user={typedUser} />
-        <span className="text-sm font-medium hidden md:inline">{typedUser.firstName || typedUser.displayName || 'User'}</span>
-        <ChevronDown className={`w-4 h-4 transition-all duration-300 ${open ? 'rotate-180 text-yellow-300' : ''}`} />
-      </button>
+    if (isMobile) {
+      const mobileContainer = scrolled
+        ? "flex items-center space-x-4 p-4 bg-white/20 backdrop-blur-sm rounded-xl"
+        : "flex items-center space-x-4 p-4 bg-gray-100 border border-gray-200 rounded-xl";
 
-      {open && (
-        <div className="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl py-2 z-50 border border-gray-100 animate-in slide-in-from-top-2 duration-300">
-          <div className="px-4 py-3 border-b border-gray-100 bg-gradient-to-r from-red-50 to-orange-50 rounded-t-2xl">
-            <div className="flex items-center space-x-3">
-              <UserAvatar user={typedUser} />
-              <div>
-                <div className="font-semibold text-gray-900">{typedUser.firstName || typedUser.displayName || typedUser.email}</div>
-                <div className="text-xs text-gray-500 capitalize">{typedUser.role || 'Utilisateur'}</div>
+      const nameClass = scrolled
+        ? "font-semibold text-white"
+        : "font-semibold text-gray-900";
+      const roleClass = scrolled
+        ? "text-xs text-white/70 capitalize"
+        : "text-xs text-gray-500 capitalize";
+
+      const adminLinkClass = scrolled
+        ? "flex items-center w-full bg-white/20 backdrop-blur-sm text-white px-4 py-3 rounded-xl hover:bg-white/30 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/50"
+        : "flex items-center w-full bg-white border border-gray-300 text-gray-800 px-4 py-3 rounded-xl hover:bg-gray-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-500/20";
+
+      const dashboardLinkClass = scrolled
+        ? "flex items-center w-full bg-white/20 backdrop-blur-sm text-white px-4 py-4 rounded-xl hover:bg-white/30 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/50 min-h-[48px] touch-manipulation"
+        : "flex items-center w-full bg-gray-100 text-gray-800 px-4 py-4 rounded-xl hover:bg-gray-200 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-500/20 min-h-[48px] touch-manipulation";
+
+      const logoutBtnClass =
+        "flex items-center w-full bg-red-600 text-white px-4 py-4 rounded-xl hover:bg-red-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-400/50 min-h-[48px] touch-manipulation";
+
+      return (
+        <div className="space-y-4">
+          <div className={mobileContainer}>
+            <UserAvatar user={typedUser} />
+            <div>
+              <div className={nameClass}>
+                {typedUser.firstName ||
+                  typedUser.displayName ||
+                  typedUser.email}
               </div>
+              <div className={roleClass}>{typedUser.role || "Utilisateur"}</div>
             </div>
           </div>
 
-          <div className="py-1">
-            {typedUser.role === 'admin' && (
-              <Link to="/admin/dashboard" className="group flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all duration-200 rounded-xl mx-1 focus:outline-none focus:bg-red-50" onClick={() => setOpen(false)}>
-                <Shield className="w-4 h-4 mr-3 group-hover:scale-110 transition-transform duration-300" />
-                {t.adminConsole}
+          <div className="space-y-3">
+            {typedUser.role === "admin" && (
+              <Link
+                to="/admin/dashboard"
+                className={adminLinkClass}
+                aria-label={t.adminConsole}
+              >
+                <Shield className="w-5 h-5 mr-3" />
+                <span className="font-medium">{t.adminConsole}</span>
               </Link>
             )}
-            <Link to="/dashboard" className="group flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all duration-200 rounded-xl mx-1 focus:outline-none focus:bg-red-50" onClick={() => setOpen(false)}>
-              <Settings className="w-4 h-4 mr-3 group-hover:scale-110 transition-transform duration-300" />
-              {t.dashboard}
+            <Link
+              to="/dashboard"
+              className={dashboardLinkClass}
+              aria-label={t.dashboard}
+            >
+              <Settings className="w-5 h-5 mr-3" />
+              <span className="font-medium">{t.dashboard}</span>
             </Link>
-            <hr className="my-1 border-gray-100" />
-            <button onClick={handleLogout} className="group flex items-center w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-all duration-200 rounded-xl mx-1 focus:outline-none focus:bg-red-50">
-              <LogOut className="w-4 h-4 mr-3 group-hover:scale-110 transition-transform duration-300" />
-              {t.logout}
+            <button
+              onClick={handleLogout}
+              className={logoutBtnClass}
+              aria-label={t.logout}
+            >
+              <LogOut className="w-5 h-5 mr-3" />
+              <span className="font-medium">{t.logout}</span>
             </button>
           </div>
         </div>
-      )}
-    </div>
-  );
-});
-UserMenu.displayName = 'UserMenu';
+      );
+    }
+
+    return (
+      <div className="relative" ref={ref}>
+        <button
+          onClick={() => setOpen(!open)}
+          className="group flex items-center space-x-3 text-white transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/50 rounded-full p-2 min-h-[44px] touch-manipulation"
+          aria-expanded={open}
+          aria-haspopup="true"
+          aria-label="Menu utilisateur"
+        >
+          <UserAvatar user={typedUser} />
+          <span className="text-sm font-medium hidden md:inline">
+            {typedUser.firstName || typedUser.displayName || "User"}
+          </span>
+          <ChevronDown
+            className={`w-4 h-4 transition-all duration-300 ${open ? "rotate-180 text-yellow-300" : ""}`}
+          />
+        </button>
+
+        {open && (
+          <div className="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl py-2 z-50 border border-gray-100 animate-in slide-in-from-top-2 duration-300">
+            <div className="px-4 py-3 border-b border-gray-100 bg-gradient-to-r from-red-50 to-orange-50 rounded-t-2xl">
+              <div className="flex items-center space-x-3">
+                <UserAvatar user={typedUser} />
+                <div>
+                  <div className="font-semibold text-gray-900">
+                    {typedUser.firstName ||
+                      typedUser.displayName ||
+                      typedUser.email}
+                  </div>
+                  <div className="text-xs text-gray-500 capitalize">
+                    {typedUser.role || "Utilisateur"}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="py-1">
+              {typedUser.role === "admin" && (
+                <Link
+                  to="/admin/dashboard"
+                  className="group flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all duration-200 rounded-xl mx-1 focus:outline-none focus:bg-red-50"
+                  onClick={() => setOpen(false)}
+                >
+                  <Shield className="w-4 h-4 mr-3 group-hover:scale-110 transition-transform duration-300" />
+                  {t.adminConsole}
+                </Link>
+              )}
+              <Link
+                to="/dashboard"
+                className="group flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all duration-200 rounded-xl mx-1 focus:outline-none focus:bg-red-50"
+                onClick={() => setOpen(false)}
+              >
+                <Settings className="w-4 h-4 mr-3 group-hover:scale-110 transition-transform duration-300" />
+                {t.dashboard}
+              </Link>
+              <hr className="my-1 border-gray-100" />
+              <button
+                onClick={handleLogout}
+                className="group flex items-center w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-all duration-200 rounded-xl mx-1 focus:outline-none focus:bg-red-50"
+              >
+                <LogOut className="w-4 h-4 mr-3 group-hover:scale-110 transition-transform duration-300" />
+                {t.logout}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+);
+UserMenu.displayName = "UserMenu";
 
 /** ================================
  *  Header
@@ -739,22 +989,45 @@ const Header: React.FC = () => {
   const scrolled = useScrolled();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const isActive = useCallback((path: string) => location.pathname === path, [location.pathname]);
+  const isActive = useCallback(
+    (path: string) => location.pathname === path,
+    [location.pathname]
+  );
 
-  useEffect(() => { setIsMenuOpen(false); }, [location.pathname]);
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location.pathname]);
 
-  const getNavigationLabel = useCallback((labelKey: string): string => {
-    const translations: Record<string, Record<'fr' | 'en', string>> = {
-      'nav.home': { fr: 'Accueil', en: 'Home' },
-      'nav.viewProfiles': { fr: 'Profils aidants', en: 'Helper profiles' },
-      'nav.testimonials': { fr: 'Avis', en: 'Reviews' },
-      'nav.howItWorks': { fr: 'Comment ça marche', en: 'How it Works' },
-      'nav.pricing': { fr: 'Tarifs', en: 'Pricing' },
-    };
-    return translations[labelKey]?.[language] || labelKey;
-  }, [language]);
+  const getNavigationLabel = useCallback(
+    (labelKey: string): string => {
+      // const translations: Record<string, Record<'fr' | 'en', string>> = {
+      //   'nav.home': { fr: 'Accueil', en: 'Home' },
+      //   'nav.viewProfiles': { fr: 'Profils aidants', en: 'Helper profiles' },
+      //   'nav.testimonials': { fr: 'Avis', en: 'Reviews' },
+      //   'nav.howItWorks': { fr: 'Comment ça marche', en: 'How it Works' },
+      //   'nav.pricing': { fr: 'Tarifs', en: 'Pricing' },
+      // };
+      const translations: Record<string, Record<"fr" | "en" | "es", string>> = {
+        "nav.home": { fr: "Accueil", en: "Home", es: "Inicio" },
+        "nav.viewProfiles": {
+          fr: "Profils aidants",
+          en: "Helper profiles",
+          es: "Perfiles de ayuda",
+        },
+        "nav.testimonials": { fr: "Avis", en: "Reviews", es: "Reseñas" },
+        "nav.howItWorks": {
+          fr: "Comment ça marche",
+          en: "How it Works",
+          es: "Cómo funciona",
+        },
+        "nav.pricing": { fr: "Tarifs", en: "Pricing", es: "Precios" },
+      };
+      return translations[labelKey]?.[language] || labelKey;
+    },
+    [language]
+  );
 
-  const t = { sosCall: language === 'fr' ? 'SOS Appel' : 'SOS Call' };
+  const t = { sosCall: language === "fr" ? "SOS Appel" : "SOS Call" };
 
   const { isOnline, isUpdating, isProvider, toggle } = useAvailabilityToggle();
 
@@ -762,7 +1035,9 @@ const Header: React.FC = () => {
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-700 ease-in-out ${
-          scrolled ? 'bg-gray-900/95 backdrop-blur-xl shadow-xl' : 'bg-white border-b border-gray-200'
+          scrolled
+            ? "bg-gray-900/95 backdrop-blur-xl shadow-xl"
+            : "bg-white border-b border-gray-200"
         } md:select-none`}
         role="banner"
       >
@@ -781,12 +1056,21 @@ const Header: React.FC = () => {
                       key={item.path}
                       to={item.path}
                       className={`flex items-center gap-2.5 px-4 py-3 rounded-lg transition-all duration-300 hover:scale-105 ${
-                        scrolled ? 'hover:bg-white/10' : 'hover:bg-gray-100'
-                      } ${isActive(item.path) ? (scrolled ? 'bg-white/20' : 'bg-gray-100') : ''}`}
-                      aria-current={isActive(item.path) ? 'page' : undefined}
+                        scrolled ? "hover:bg-white/10" : "hover:bg-gray-100"
+                      } ${isActive(item.path) ? (scrolled ? "bg-white/20" : "bg-gray-100") : ""}`}
+                      aria-current={isActive(item.path) ? "page" : undefined}
                     >
-                      {item.desktopIcon && <span className={`text-xl ${scrolled ? 'text-gray-200' : 'text-gray-700'}`} aria-hidden="true">{item.desktopIcon}</span>}
-                      <span className={`font-semibold ${scrolled ? 'text-gray-200' : 'text-gray-700'} text-lg tracking-wide`}>
+                      {item.desktopIcon && (
+                        <span
+                          className={`text-xl ${scrolled ? "text-gray-200" : "text-gray-700"}`}
+                          aria-hidden="true"
+                        >
+                          {item.desktopIcon}
+                        </span>
+                      )}
+                      <span
+                        className={`font-semibold ${scrolled ? "text-gray-200" : "text-gray-700"} text-lg tracking-wide`}
+                      >
                         {getNavigationLabel(item.labelKey)}
                       </span>
                     </Link>
@@ -800,21 +1084,34 @@ const Header: React.FC = () => {
                       aria-label={t.sosCall}
                     >
                       <Phone className="w-5 h-5 text-white" />
-                      <span className="tracking-wide">{t.sosCall.toUpperCase()}</span>
+                      <span className="tracking-wide">
+                        {t.sosCall.toUpperCase()}
+                      </span>
                     </Link>
                   </div>
 
-                  {RIGHT_NAVIGATION_ITEMS.concat(LEFT_NAVIGATION_ITEMS.slice(2)).map((item) => (
+                  {RIGHT_NAVIGATION_ITEMS.concat(
+                    LEFT_NAVIGATION_ITEMS.slice(2)
+                  ).map((item) => (
                     <Link
                       key={item.path}
                       to={item.path}
                       className={`flex items-center gap-2.5 px-4 py-3 rounded-lg transition-all duration-300 hover:scale-105 ${
-                        scrolled ? 'hover:bg-white/10' : 'hover:bg-gray-100'
-                      } ${isActive(item.path) ? (scrolled ? 'bg-white/20' : 'bg-gray-100') : ''}`}
-                      aria-current={isActive(item.path) ? 'page' : undefined}
+                        scrolled ? "hover:bg-white/10" : "hover:bg-gray-100"
+                      } ${isActive(item.path) ? (scrolled ? "bg-white/20" : "bg-gray-100") : ""}`}
+                      aria-current={isActive(item.path) ? "page" : undefined}
                     >
-                      {item.desktopIcon && <span className={`text-xl ${scrolled ? 'text-gray-200' : 'text-gray-700'}`} aria-hidden="true">{item.desktopIcon}</span>}
-                      <span className={`font-semibold ${scrolled ? 'text-gray-200' : 'text-gray-700'} text-lg tracking-wide`}>
+                      {item.desktopIcon && (
+                        <span
+                          className={`text-xl ${scrolled ? "text-gray-200" : "text-gray-700"}`}
+                          aria-hidden="true"
+                        >
+                          {item.desktopIcon}
+                        </span>
+                      )}
+                      <span
+                        className={`font-semibold ${scrolled ? "text-gray-200" : "text-gray-700"} text-lg tracking-wide`}
+                      >
                         {getNavigationLabel(item.labelKey)}
                       </span>
                     </Link>
@@ -827,7 +1124,11 @@ const Header: React.FC = () => {
                 <HeaderAvailabilityToggle />
                 <LanguageDropdown />
                 {isLoading ? (
-                  <div className={`w-8 h-8 border-2 rounded-full animate-spin ${scrolled ? 'border-white/30 border-t-white' : 'border-gray-300 border-t-gray-600'}`} role="status" aria-label="Chargement" />
+                  <div
+                    className={`w-8 h-8 border-2 rounded-full animate-spin ${scrolled ? "border-white/30 border-t-white" : "border-gray-300 border-t-gray-600"}`}
+                    role="status"
+                    aria-label="Chargement"
+                  />
                 ) : (
                   <UserMenu scrolled={scrolled} />
                 )}
@@ -857,14 +1158,26 @@ const Header: React.FC = () => {
                 <button
                   onClick={() => !isUpdating && toggle()}
                   className={`relative w-7 h-7 rounded-full border-2 flex items-center justify-center touch-manipulation ${
-                    scrolled ? 'border-white/40' : 'border-gray-400/50'
+                    scrolled ? "border-white/40" : "border-gray-400/50"
                   }`}
-                  aria-label={isOnline ? (language === 'fr' ? 'Se mettre hors ligne' : 'Go offline') : (language === 'fr' ? 'Se mettre en ligne' : 'Go online')}
+                  aria-label={
+                    isOnline
+                      ? language === "fr"
+                        ? "Se mettre hors ligne"
+                        : "Go offline"
+                      : language === "fr"
+                        ? "Se mettre en ligne"
+                        : "Go online"
+                  }
                 >
                   {isUpdating ? (
-                    <div className={`w-4 h-4 border-2 rounded-full animate-spin ${scrolled ? 'border-white/50 border-t-white' : 'border-gray-500/50 border-t-gray-600'}`} />
+                    <div
+                      className={`w-4 h-4 border-2 rounded-full animate-spin ${scrolled ? "border-white/50 border-t-white" : "border-gray-500/50 border-t-gray-600"}`}
+                    />
                   ) : (
-                    <span className={`block w-4 h-4 rounded-full ${isOnline ? 'bg-green-500' : 'bg-red-500'}`} />
+                    <span
+                      className={`block w-4 h-4 rounded-full ${isOnline ? "bg-green-500" : "bg-red-500"}`}
+                    />
                   )}
                 </button>
               )}
@@ -873,16 +1186,24 @@ const Header: React.FC = () => {
             {/* RIGHT: hamburger */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className={`p-2 rounded-lg transition-colors duration-200 touch-manipulation ${scrolled ? 'hover:bg-white/10 text-white' : 'hover:bg-gray-100 text-gray-600'}`}
+              className={`p-2 rounded-lg transition-colors duration-200 touch-manipulation ${scrolled ? "hover:bg-white/10 text-white" : "hover:bg-gray-100 text-gray-600"}`}
               aria-expanded={isMenuOpen}
               aria-label="Menu de navigation"
             >
-              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
             </button>
           </div>
 
           {isMenuOpen && (
-            <div className={`border-t transition-colors duration-700 ease-in-out ${scrolled ? 'bg-gray-900 border-white/10' : 'bg-white border-gray-200'}`} role="navigation" aria-label="Navigation mobile">
+            <div
+              className={`border-t transition-colors duration-700 ease-in-out ${scrolled ? "bg-gray-900 border-white/10" : "bg-white border-gray-200"}`}
+              role="navigation"
+              aria-label="Navigation mobile"
+            >
               <div className="px-4 py-4 space-y-4">
                 <nav className="space-y-2">
                   {ALL_NAVIGATION_ITEMS.map((item) => (
@@ -890,22 +1211,37 @@ const Header: React.FC = () => {
                       key={item.path}
                       to={item.path}
                       className={`flex items-center space-x-3 p-3 rounded-lg transition-all duration-200 touch-manipulation ${
-                        scrolled ? 'hover:bg-white/10 text-gray-300' : 'hover:bg-gray-100 text-gray-700'
-                      } ${location.pathname === item.path ? (scrolled ? 'bg-white/10' : 'bg-gray-100') : ''}`}
+                        scrolled
+                          ? "hover:bg-white/10 text-gray-300"
+                          : "hover:bg-gray-100 text-gray-700"
+                      } ${location.pathname === item.path ? (scrolled ? "bg-white/10" : "bg-gray-100") : ""}`}
                       onClick={() => setIsMenuOpen(false)}
-                      aria-current={location.pathname === item.path ? 'page' : undefined}
+                      aria-current={
+                        location.pathname === item.path ? "page" : undefined
+                      }
                     >
-                      {item.mobileIcon && <span className="text-xl">{item.mobileIcon}</span>}
-                      <span className="font-semibold text-base">{getNavigationLabel(item.labelKey)}</span>
+                      {item.mobileIcon && (
+                        <span className="text-xl">{item.mobileIcon}</span>
+                      )}
+                      <span className="font-semibold text-base">
+                        {getNavigationLabel(item.labelKey)}
+                      </span>
                     </Link>
                   ))}
                 </nav>
 
-                <div className={`pt-4 border-t ${scrolled ? 'border-white/10' : 'border-gray-200'}`}>
-                  <LanguageDropdown isMobile variant={scrolled ? 'dark' : 'light'} />
+                <div
+                  className={`pt-4 border-t ${scrolled ? "border-white/10" : "border-gray-200"}`}
+                >
+                  <LanguageDropdown
+                    isMobile
+                    variant={scrolled ? "dark" : "light"}
+                  />
                 </div>
 
-                <div className={`pt-4 border-t ${scrolled ? 'border-white/10' : 'border-gray-200'}`}>
+                <div
+                  className={`pt-4 border-t ${scrolled ? "border-white/10" : "border-gray-200"}`}
+                >
                   <UserMenu isMobile scrolled={scrolled} />
                 </div>
               </div>
@@ -918,27 +1254,30 @@ const Header: React.FC = () => {
       <div className="h-20" aria-hidden="true" />
 
       {/* Structured Data */}
-      {typeof window !== 'undefined' && (
+      {typeof window !== "undefined" && (
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'Organization',
-              name: 'SOS Expat d\'Ulixai',
-              description: language === 'fr' ? "Service d'assistance pour expatriés et voyageurs" : 'Assistance service for expats and travelers',
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "SOS Expat d'Ulixai",
+              description:
+                language === "fr"
+                  ? "Service d'assistance pour expatriés et voyageurs"
+                  : "Assistance service for expats and travelers",
               url: window.location.origin,
               logo: `${window.location.origin}/icons/icon-512x512-maskable.png`,
               contactPoint: {
-                '@type': 'ContactPoint',
-                telephone: '+33-XXX-XXX-XXX',
-                contactType: 'customer service',
-                availableLanguage: ['French', 'English'],
+                "@type": "ContactPoint",
+                telephone: "+33-XXX-XXX-XXX",
+                contactType: "customer service",
+                availableLanguage: ["French", "English"],
               },
               sameAs: [
-                'https://facebook.com/sosexpats',
-                'https://twitter.com/sosexpats',
-                'https://linkedin.com/company/sosexpats',
+                "https://facebook.com/sosexpats",
+                "https://twitter.com/sosexpats",
+                "https://linkedin.com/company/sosexpats",
               ],
             }),
           }}
@@ -946,35 +1285,52 @@ const Header: React.FC = () => {
       )}
 
       {/* OpenGraph/Twitter */}
-      {typeof window !== 'undefined' &&
+      {typeof window !== "undefined" &&
         (() => {
           const updateMetaTag = (property: string, content: string) => {
-            let meta = document.querySelector(`meta[property="${property}"]`) as HTMLMetaElement;
-            if (!meta) { meta = document.createElement('meta'); meta.setAttribute('property', property); document.head.appendChild(meta); }
+            let meta = document.querySelector(
+              `meta[property="${property}"]`
+            ) as HTMLMetaElement;
+            if (!meta) {
+              meta = document.createElement("meta");
+              meta.setAttribute("property", property);
+              document.head.appendChild(meta);
+            }
             meta.content = content;
           };
           const updateTwitterMeta = (name: string, content: string) => {
-            let meta = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement;
-            if (!meta) { meta = document.createElement('meta'); meta.setAttribute('name', name); document.head.appendChild(meta); }
+            let meta = document.querySelector(
+              `meta[name="${name}"]`
+            ) as HTMLMetaElement;
+            if (!meta) {
+              meta = document.createElement("meta");
+              meta.setAttribute("name", name);
+              document.head.appendChild(meta);
+            }
             meta.content = content;
           };
           const currentPage = location.pathname;
-          const baseTitle = 'SOS Expat d\'Ulixai';
-          const baseDescription = language === 'fr'
-            ? "Service d'assistance immédiate pour expatriés et voyageurs. Connexion en moins de 5 minutes avec des experts vérifiés."
-            : 'Immediate assistance service for expats and travelers. Connect in less than 5 minutes with verified experts.';
-          const currentNavItem = ALL_NAVIGATION_ITEMS.find((i) => i.path === currentPage);
-          const pageTitle = currentNavItem ? getNavigationLabel(currentNavItem.labelKey) : getNavigationLabel('nav.home');
+          const baseTitle = "SOS Expat d'Ulixai";
+          const baseDescription =
+            language === "fr"
+              ? "Service d'assistance immédiate pour expatriés et voyageurs. Connexion en moins de 5 minutes avec des experts vérifiés."
+              : "Immediate assistance service for expats and travelers. Connect in less than 5 minutes with verified experts.";
+          const currentNavItem = ALL_NAVIGATION_ITEMS.find(
+            (i) => i.path === currentPage
+          );
+          const pageTitle = currentNavItem
+            ? getNavigationLabel(currentNavItem.labelKey)
+            : getNavigationLabel("nav.home");
 
-          updateMetaTag('og:title', `${baseTitle} - ${pageTitle}`);
-          updateMetaTag('og:description', baseDescription);
-          updateMetaTag('og:url', window.location.href);
-          updateMetaTag('og:type', 'website');
-          updateMetaTag('og:locale', language === 'fr' ? 'fr_FR' : 'en_US');
+          updateMetaTag("og:title", `${baseTitle} - ${pageTitle}`);
+          updateMetaTag("og:description", baseDescription);
+          updateMetaTag("og:url", window.location.href);
+          updateMetaTag("og:type", "website");
+          updateMetaTag("og:locale", language === "fr" ? "fr_FR" : "en_US");
 
-          updateTwitterMeta('twitter:card', 'summary_large_image');
-          updateTwitterMeta('twitter:title', `${baseTitle} - ${pageTitle}`);
-          updateTwitterMeta('twitter:description', baseDescription);
+          updateTwitterMeta("twitter:card", "summary_large_image");
+          updateTwitterMeta("twitter:title", `${baseTitle} - ${pageTitle}`);
+          updateTwitterMeta("twitter:description", baseDescription);
 
           return null;
         })()}
@@ -982,5 +1338,5 @@ const Header: React.FC = () => {
   );
 };
 
-Header.displayName = 'Header';
+Header.displayName = "Header";
 export default memo(Header);

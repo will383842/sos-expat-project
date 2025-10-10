@@ -196,20 +196,48 @@ const TRANSLATIONS = {
       others: "others",
     },
   },
+  es: {
+    professions: {
+      lawyer: "Abogado",
+      expat: "Expatriado",
+    },
+    labels: {
+      online: "En línea",
+      offline: "Fuera de línea",
+      languages: "Idiomas",
+      years: "años",
+      reviews: "reseñas",
+      viewProfile: "Ver perfil",
+      others: "otros",
+    },
+  },
 } as const;
 
-const getBrowserLanguage = (): "fr" | "en" => {
+// const getBrowserLanguage = (): "fr" | "en" => {
+//   if (typeof window === "undefined") return "fr";
+//   const browserLang = navigator.language.toLowerCase();
+//   return browserLang.startsWith("fr") ? "fr" : "en";
+// };
+
+const getBrowserLanguage = (): "fr" | "en" | "es" => {
   if (typeof window === "undefined") return "fr";
   const browserLang = navigator.language.toLowerCase();
-  return browserLang.startsWith("fr") ? "fr" : "en";
+  if (browserLang.startsWith("fr")) return "fr";
+  if (browserLang.startsWith("es")) return "es";
+  return "en";
 };
 
-const getLanguage = (userLanguage?: string): "fr" | "en" => {
-  if (userLanguage) return userLanguage as "fr" | "en";
+// const getLanguage = (userLanguage?: string): "fr" | "en" => {
+//   if (userLanguage) return userLanguage as "fr" | "en";
+//   return getBrowserLanguage();
+// };
+
+const getLanguage = (userLanguage?: string): "fr" | "en" | "es" => {
+  if (userLanguage) return userLanguage as "fr" | "en" | "es";
   return getBrowserLanguage();
 };
 
-const t = (lang: "fr" | "en", key: string, subKey?: string): string => {
+const t = (lang: "fr" | "en" | "es", key: string, subKey?: string): string => {
   const translation = TRANSLATIONS[lang] as Record<
     string,
     Record<string, string> | string
@@ -951,6 +979,21 @@ const SOSCall: React.FC = () => {
         rating: "Rating",
         country: "Country",
         experience: "Years",
+      },
+      es: {
+        lawyer: "Abogado",
+        expat: "Expatriado",
+        languages: "Idiomas",
+        about: "Acerca de",
+        readMore: "Leer más",
+        online: "En línea",
+        offline: "Fuera de línea",
+        contactNow: "Contactar ahora",
+        viewProfile: "Ver perfil",
+        years: "años",
+        rating: "Calificación",
+        country: "País",
+        experience: "Años",
       },
     }),
     []
