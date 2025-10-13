@@ -501,8 +501,7 @@
 
   "trust.secure": "100% Seguro",
   "trust.support_24_7": "Soporte 24/7",
-  
-  
+
   "testimonials.card.helpful": "útil",
   "testimonials.card.foundHelpful": "encontraron esto útil",
   "testimonials.loading.testimonials": "Cargando testimonios...",
@@ -563,9 +562,51 @@
   "testy.aria.searchInput": "Campo de búsqueda",
   "testy.aria.testimonialCard": "Tarjeta de testimonio",
   "testy.aria.pageButton": "Página",
-  "testy.aria.unknownDate": "Fecha desconocida"
-
-
-
-
+  "testy.aria.unknownDate": "Fecha desconocida",
+  "providerProfile.loading": "Cargando perfil...",
+  "providerProfile.notFound": "Este perfil de proveedor no se encontró. Redirigiendo...",
+  "providerProfile.backToExperts": "Volver a expertos",
+  "providerProfile.certifiedLawyer": "Abogado certificado",
+  "providerProfile.expertExpat": "Expatriado experto",
+  "providerProfile.verified": "Verificado",
+  "providerProfile.online": "EN LÍNEA",
+  "providerProfile.offline": "FUERA DE LÍNEA",
+  "providerProfile.yearsExperience": "años de experiencia",
+  "providerProfile.yearsAsExpat": "años como expatriado",
+  "providerProfile.reviews": "opiniones",
+  "providerProfile.share": "Compartir:",
+  "providerProfile.copyLink": "Copiar enlace",
+  "providerProfile.successRate": "Tasa de éxito",
+  "providerProfile.availability": "Disponibilidad",
+  "providerProfile.completedCalls": "Llamadas realizadas",
+  "providerProfile.bookNow": "RESERVAR AHORA",
+  "providerProfile.unavailable": "NO DISPONIBLE",
+  "providerProfile.availableNow": "¡Experto disponible ahora!",
+  "providerProfile.currentlyOffline": "Experto actualmente desconectado",
+  "providerProfile.securePayment": "Pago seguro • Satisfacción garantizada",
+  "providerProfile.specialties": "Especialidades",
+  "providerProfile.languages": "Idiomas hablados",
+  "providerProfile.educationCertifications": "Formación y certificaciones",
+  "providerProfile.expatExperience": "Experiencia de expatriación",
+  "providerProfile.customerReviews": "Opiniones de clientes",
+  "providerProfile.loadingReviews": "Cargando opiniones...",
+  "providerProfile.stats": "Estadísticas",
+  "providerProfile.averageRating": "Calificación promedio",
+  "providerProfile.information": "Información",
+  "providerProfile.basedIn": "Con sede en ",
+  "providerProfile.speaks": "Habla ",
+  "providerProfile.onlineNow": "EN LÍNEA AHORA",
+  "providerProfile.verifiedExpert": "Experto verificado",
+  "providerProfile.linkCopied": "¡Enlace copiado!",
+  "providerProfile.reportReason": "Por favor ingrese una razón:",
+  "providerProfile.reportThanks": "Gracias. Nuestro equipo lo revisará.",
+  "providerProfile.close": "Cerrar",
+  "providerProfile.photoOf": "Foto de",
+  "providerProfile.noSpecialties": "No se proporcionaron especialidades.",
+  "providerProfile.yearsAbroad": "años en el extranjero",
+  "providerProfile.in": "en",
+  "providerProfile.experience": "Experiencia",
+  "providerProfile.years": "años",
+  "providerProfile.minutes": "minutos",
+  "providerProfile.memberSince": "Miembro desde "
 }

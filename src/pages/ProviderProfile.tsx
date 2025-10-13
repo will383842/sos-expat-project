@@ -47,7 +47,7 @@ import { formatLanguages } from "@/i18n";
 
 // 👉 Pricing admin (source de vérité)
 import { usePricingConfig } from "../services/pricingService";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 /* ===================================================================== */
 
@@ -414,6 +414,7 @@ const getAuthUserId = (u: unknown): string | undefined => {
 
 // Component
 const ProviderProfile: React.FC = () => {
+  const intl = useIntl();
   const params = useParams<RouteParams>();
   const {
     id,
@@ -426,6 +427,13 @@ const ProviderProfile: React.FC = () => {
   const { user } = useAuth();
   const { language } = useApp();
 
+  // const detectedLang = useMemo(
+  //   () =>
+  //     language === "fr" || language === "en"
+  //       ? (language as "fr" | "en")
+  //       : detectLanguage(),
+  //   [language]
+  // );
   const detectedLang = useMemo(
     () =>
       language === "fr" || language === "en"
@@ -1273,9 +1281,12 @@ const ProviderProfile: React.FC = () => {
       detectedLang
     );
     if (!formatted) return undefined;
+    // return detectedLang === "fr"
+    //   ? `${t("memberSince")} ${formatted}`
+    //   : `${t("memberSince")} ${formatted}`;
     return detectedLang === "fr"
-      ? `${t("memberSince")} ${formatted}`
-      : `${t("memberSince")} ${formatted}`;
+      ? `${intl.formatMessage({ id: "providerProfile.memberSince" })} ${formatted}`
+      : `${intl.formatMessage({ id: "providerProfile.memberSince" })} ${formatted}`;
   }, [provider, detectedLang, t]);
 
   const structuredData = useMemo<Record<string, unknown> | undefined>(() => {
@@ -1402,7 +1413,10 @@ const ProviderProfile: React.FC = () => {
                 aria-label={t("backToExperts")}
               >
                 <span aria-hidden="true">←</span>
-                <span className="ml-2">{t("backToExperts")}</span>
+                <span className="ml-2">
+                  {/* {t("backToExperts")} */}
+                  <FormattedMessage id="providerProfile.backToExperts" />
+                </span>
               </button>
             </nav>
 
@@ -1450,13 +1464,22 @@ const ProviderProfile: React.FC = () => {
                             : "bg-white/10 border-white/20 text-green-100"
                         }`}
                       >
-                        {isLawyer ? t("certifiedLawyer") : t("expertExpat")}
+                        {isLawyer ? (
+                          // t("certifiedLawyer")
+                          <FormattedMessage id="providerProfile.certifiedLawyer" />
+                        ) : (
+                          // t("expertExpat")}
+                          <FormattedMessage id="providerProfile.expertExpat" />
+                        )}
                       </span>
 
                       {provider.isVerified && (
                         <span className="inline-flex items-center gap-1 bg-white text-gray-900 text-[10px] sm:text-xs px-2 py-1 rounded-full border border-gray-200">
                           <Shield size={12} className="text-green-600" />
-                          <span>{t("verified")}</span>
+                          <span>
+                            {/* {t("verified")} */}
+                            <FormattedMessage id="providerProfile.verified" />
+                          </span>
                         </span>
                       )}
 
@@ -1467,9 +1490,20 @@ const ProviderProfile: React.FC = () => {
                             : "bg-red-500 text-white border-red-300"
                         }`}
                       >
-                        {onlineStatus.isOnline
+                        {/* {onlineStatus.isOnline
                           ? "🟢 " + t("online")
-                          : "🔴 " + t("offline")}
+                          : "🔴 " + t("offline")} */}
+
+                        {onlineStatus.isOnline
+                          ? `🟢 ${intl.formatMessage({ id: "providerProfile.online" })}`
+                          : `🔴 ${intl.formatMessage({ id: "providerProfile.offline" })}`}
+
+                        {/* {onlineStatus.isOnline
+                          ? "🟢 " +
+                            <FormattedMessage id="providerProfile.online" />
+                          : "🔴 " +
+                          <FormattedMessage id="providerProfile.offline" />
+                        } */}
                       </span>
                     </div>
 
@@ -1486,8 +1520,8 @@ const ProviderProfile: React.FC = () => {
                         )}
                         <span>
                           {isLawyer
-                            ? `${provider.yearsOfExperience || 0} ${t("yearsExperience")}`
-                            : `${provider.yearsAsExpat || provider.yearsOfExperience || 0} ${t("yearsAsExpat")}`}
+                            ? `${provider.yearsOfExperience || 0} ${intl.formatMessage({ id: "providerProfile.yearsExperience" })}`
+                            : `${provider.yearsAsExpat || provider.yearsOfExperience || 0} ${intl.formatMessage({ id: "providerProfile.yearsAsExpat" })}`}
                         </span>
                       </div>
                     </div>
@@ -1507,7 +1541,8 @@ const ProviderProfile: React.FC = () => {
                       </span>
                       <span className="text-gray-300">
                         ({provider.reviewCount || reviews.length || 0}{" "}
-                        {t("reviews")})
+                        {/* {t("reviews")} */}
+                        <FormattedMessage id="providerProfile.reviews" />)
                       </span>
                     </div>
 
@@ -1534,7 +1569,10 @@ const ProviderProfile: React.FC = () => {
 
                     {/* Social sharing */}
                     <div className="flex items-center space-x-3 mt-6">
-                      <span className="text-gray-300">{t("share")}</span>
+                      <span className="text-gray-300">
+                        {/* {t("share")} */}
+                        <FormattedMessage id="providerProfile.share" />
+                      </span>
                       <button
                         onClick={() => shareProfile("facebook")}
                         className="text-white/90 hover:text-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 border border-white/20"
@@ -1644,7 +1682,8 @@ const ProviderProfile: React.FC = () => {
 
                       <div className="text-gray-600">
                         {bookingPrice?.duration
-                          ? `${bookingPrice.duration} ${t("minutes")}`
+                          ? // ? `${bookingPrice.duration} ${t("minutes")}`
+                            `${bookingPrice.duration} ${intl.formatMessage({ id: "providerProfile.minutes" })}`
                           : "—"}
                       </div>
                     </div>
@@ -1652,7 +1691,8 @@ const ProviderProfile: React.FC = () => {
                     <div className="space-y-4 mb-6">
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-gray-600">
-                          {t("successRate")}
+                          {/* {t("successRate")} */}
+                          <FormattedMessage id="providerProfile.successRate" />
                         </span>
                         <span className="font-semibold text-gray-900">
                           {typeof provider.successRate === "number"
@@ -1662,7 +1702,8 @@ const ProviderProfile: React.FC = () => {
                       </div>
                       <div className="flex items-center justify-between text-sm bg-gray-50 p-3 rounded-xl border border-gray-200">
                         <span className="text-gray-700 font-medium">
-                          {t("availability")}
+                          {/* {t("availability")} */}
+                          <FormattedMessage id="providerProfile.availability" />
                         </span>
                         <span
                           className={`font-bold text-sm px-3 py-1 rounded-full transition-all duration-500 ${
@@ -1671,14 +1712,23 @@ const ProviderProfile: React.FC = () => {
                               : "bg-red-100 text-red-800 border border-red-300"
                           }`}
                         >
-                          {onlineStatus.isOnline
+                          {/* {onlineStatus.isOnline
                             ? "🟢 " + t("online")
-                            : "🔴 " + t("offline")}
+                            : "🔴 " + t("offline")
+                          } */}
+
+                          {
+                            onlineStatus.isOnline
+                              ? `🟢 ${intl.formatMessage({ id: "providerProfile.online" })}`
+                              : `🔴 ${intl.formatMessage({ id: "providerProfile.online" })}`
+                            // "🔴 " + t("offline")
+                          }
                         </span>
                       </div>
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-gray-600">
-                          {t("completedCalls")}
+                          {/* {t("completedCalls")} */}
+                          <FormattedMessage id="providerProfile.completedCalls" />
                         </span>
                         <span className="font-semibold">
                           {typeof provider.totalCalls === "number"
@@ -1702,9 +1752,17 @@ const ProviderProfile: React.FC = () => {
                     >
                       <Phone size={24} aria-hidden="true" />
                       <span>
-                        {onlineStatus.isOnline
+                        {/* {onlineStatus.isOnline
                           ? t("bookNow")
-                          : t("unavailable")}
+                          : t("unavailable")} */}
+
+                        {onlineStatus.isOnline
+                          ? intl.formatMessage({
+                              id: "providerProfile.bookNow",
+                            })
+                          : intl.formatMessage({
+                              id: "providerProfile.unavailable",
+                            })}
                       </span>
                       {onlineStatus.isOnline && (
                         <div className="flex gap-1" aria-hidden="true">
@@ -1718,11 +1776,13 @@ const ProviderProfile: React.FC = () => {
                     <div className="mt-4 text-center text-sm">
                       {onlineStatus.isOnline ? (
                         <div className="text-green-600 font-medium">
-                          ✅ {t("availableNow")}
+                          {/* ✅ {t("availableNow")} */}✅{" "}
+                          <FormattedMessage id="providerProfile.availableNow" />
                         </div>
                       ) : (
                         <div className="text-red-600">
-                          ❌ {t("currentlyOffline")}
+                          {/* ❌ {t("currentlyOffline")} */}❌{" "}
+                          <FormattedMessage id="providerProfile.currentlyOffline" />
                         </div>
                       )}
                     </div>
@@ -1730,7 +1790,10 @@ const ProviderProfile: React.FC = () => {
                     <div className="mt-4 text-center">
                       <div className="inline-flex items-center justify-center gap-2 text-sm text-gray-600 rounded-2xl border border-gray-200 px-4 py-2">
                         <Shield size={16} aria-hidden="true" />
-                        <span>{t("securePayment")}</span>
+                        {/* <span>{t("securePayment")}</span> */}
+                        <span>
+                          <FormattedMessage id="providerProfile.securePayment" />
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -1749,7 +1812,8 @@ const ProviderProfile: React.FC = () => {
                 {/* Specialties */}
                 <section className="bg-white rounded-3xl shadow-sm p-6 border border-gray-200">
                   <h2 className="text-xl font-extrabold text-gray-900 mb-4">
-                    {t("specialties")}
+                    {/* {t("specialties")} */}
+                    <FormattedMessage id="providerProfile.specialties" />
                   </h2>
                   {derivedSpecialties.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
@@ -1763,14 +1827,18 @@ const ProviderProfile: React.FC = () => {
                       ))}
                     </div>
                   ) : (
-                    <div className="text-gray-500">{t("noSpecialties")}</div>
+                    // <div className="text-gray-500">{t("noSpecialties")}</div>
+                    <div className="text-gray-500">
+                      <FormattedMessage id="providerProfile.noSpecialties" />
+                    </div>
                   )}
                 </section>
 
                 {/* Languages */}
                 <section className="bg-white rounded-3xl shadow-sm p-6 border border-gray-200">
                   <h2 className="text-xl font-extrabold text-gray-900 mb-4">
-                    {t("languages")}
+                    {/* {t("languages")} */}
+                    <FormattedMessage id="providerProfile.languages" />
                   </h2>
                   <div className="flex flex-wrap gap-2">
                     {languagesList.map((l, i) => (
@@ -1790,7 +1858,8 @@ const ProviderProfile: React.FC = () => {
                   (educationText || certificationsArray.length > 0) && (
                     <section className="bg-white rounded-3xl shadow-sm p-6 border border-gray-200">
                       <h2 className="text-xl font-extrabold text-gray-900 mb-4">
-                        {t("educationCertifications")}
+                        {/* {t("educationCertifications")} */}
+                        <FormattedMessage id="providerProfile.educationCertifications" />
                       </h2>
                       <div className="space-y-3">
                         {educationText && (
@@ -1827,7 +1896,8 @@ const ProviderProfile: React.FC = () => {
                 {isExpat && (
                   <section className="bg-white rounded-3xl shadow-sm p-6 border border-gray-200">
                     <h2 className="text-xl font-extrabold text-gray-900 mb-4">
-                      {t("expatExperience")}
+                      {/* {t("expatExperience")} */}
+                      <FormattedMessage id="providerProfile.expatExperience" />
                     </h2>
                     <div className="space-y-4">
                       <div className="flex items-center gap-2">
@@ -1836,11 +1906,19 @@ const ProviderProfile: React.FC = () => {
                           className="text-green-600 flex-shrink-0"
                           aria-hidden="true"
                         />
-                        <p className="text-gray-700">
+                        {/* <p className="text-gray-700">
                           {provider.yearsAsExpat ||
                             provider.yearsOfExperience ||
                             0}{" "}
                           {t("yearsAbroad")} {t("in")} {provider.country}
+                        </p> */}
+                        <p className="text-gray-700">
+                          {provider.yearsAsExpat ||
+                            provider.yearsOfExperience ||
+                            0}{" "}
+                          {intl.formatMessage({ id: "providerProfile.years" })}{" "}
+                          {intl.formatMessage({ id: "providerProfile.in" })}{" "}
+                          {provider.country}
                         </p>
                       </div>
 
@@ -1878,7 +1956,9 @@ const ProviderProfile: React.FC = () => {
                 >
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-extrabold text-gray-900">
-                      {t("customerReviews")} ({reviews.length || 0})
+                      {/* {t("customerReviews")} */}
+                      <FormattedMessage id="providerProfile.customerReviews" />(
+                      {reviews.length || 0})
                     </h2>
                     <span className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-yellow-400 to-orange-400 p-[1px]">
                       <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 border border-yellow-200/70 text-yellow-700 text-sm font-semibold">
@@ -1901,7 +1981,8 @@ const ProviderProfile: React.FC = () => {
                         aria-hidden="true"
                       ></div>
                       <p className="mt-2 text-gray-500">
-                        {t("loadingReviews")}
+                        {/* {t("loadingReviews")} */}
+                        <FormattedMessage id="providerProfile.loadingReviews" />
                       </p>
                     </div>
                   ) : (
@@ -1932,12 +2013,14 @@ const ProviderProfile: React.FC = () => {
                   {/* Stats */}
                   <div className="bg-white rounded-3xl shadow-sm p-6 border border-gray-200">
                     <h3 className="text-lg font-extrabold text-gray-900 mb-4">
-                      {t("stats")}
+                      {/* {t("stats")} */}
+                      <FormattedMessage id="providerProfile.stats" />
                     </h3>
                     <div className="space-y-3">
                       <div className="flex justify-between">
                         <span className="text-gray-600">
-                          {t("averageRating")}
+                          {/* {t("averageRating")} */}
+                          <FormattedMessage id="providerProfile.averageRating" />
                         </span>
                         <span className="font-semibold">
                           {typeof provider.rating === "number"
@@ -1947,12 +2030,16 @@ const ProviderProfile: React.FC = () => {
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">{t("reviews")}</span>
+                        <span className="text-gray-600">
+                          {/* {t("reviews")} */}
+                          <FormattedMessage id="providerProfile.reviews" />
+                        </span>
                         <span className="font-semibold">{reviews.length}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">
-                          {t("successRate")}
+                          {/* {t("successRate")} */}
+                          <FormattedMessage id="providerProfile.successRate" />
                         </span>
                         <span className="font-semibold">
                           {typeof provider.successRate === "number"
@@ -1961,11 +2048,19 @@ const ProviderProfile: React.FC = () => {
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">{t("experience")}</span>
+                        <span className="text-gray-600">
+                          {/* {t("experience")} */}
+                          <FormattedMessage id="providerProfile.experience" />
+                        </span>
                         <span className="font-semibold">
-                          {isLawyer
+                          {/* {isLawyer
                             ? `${provider.yearsOfExperience || 0} ${t("years")}`
-                            : `${provider.yearsAsExpat || provider.yearsOfExperience || 0} ${t("years")}`}
+                            : `${provider.yearsAsExpat || provider.yearsOfExperience || 0} ${t("years")}`
+                          } */}
+
+                          {isLawyer
+                            ? `${provider.yearsOfExperience || 0} ${intl.formatMessage({ id: "years" })}`
+                            : `${provider.yearsAsExpat || provider.yearsOfExperience || 0} ${intl.formatMessage({ id: "years" })}`}
                         </span>
                       </div>
                     </div>
@@ -1974,7 +2069,8 @@ const ProviderProfile: React.FC = () => {
                   {/* Info */}
                   <div className="bg-white rounded-3xl shadow-sm p-6 border border-gray-200">
                     <h3 className="text-lg font-extrabold text-gray-900 mb-4">
-                      {t("information")}
+                      {/* {t("information")} */}
+                      <FormattedMessage id="providerProfile.information" />
                     </h3>
                     <div className="space-y-3 text-sm">
                       <div className="flex items-center gap-2">
@@ -1984,7 +2080,9 @@ const ProviderProfile: React.FC = () => {
                           aria-hidden="true"
                         />
                         <span>
-                          {t("basedIn")} {provider.country}
+                          {/* {t("basedIn")} */}
+                          <FormattedMessage id="providerProfile.basedIn" />
+                          {provider.country}
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
@@ -1994,7 +2092,8 @@ const ProviderProfile: React.FC = () => {
                           aria-hidden="true"
                         />
                         <span>
-                          {t("speaks")}{" "}
+                          {/* {t("speaks")}{" "} */}
+                          <FormattedMessage id="providerProfile.speaks" />
                           {formatLanguages(languagesList, detectedLang)}
                         </span>
                       </div>
@@ -2021,9 +2120,15 @@ const ProviderProfile: React.FC = () => {
                         <span
                           className={`font-bold transition-all duration-500 ${onlineStatus.isOnline ? "text-green-700" : "text-red-700"}`}
                         >
-                          {onlineStatus.isOnline
-                            ? t("onlineNow")
-                            : t("offline")}
+                          {
+                            onlineStatus.isOnline ? (
+                              // t("onlineNow")
+                              <FormattedMessage id="providerProfile.onlineNow" />
+                            ) : (
+                              <FormattedMessage id="providerProfile.offline" />
+                            )
+                            // t("offline")
+                          }
                         </span>
                       </div>
                       {provider.isVerified && (
@@ -2033,7 +2138,10 @@ const ProviderProfile: React.FC = () => {
                             className="text-gray-400 flex-shrink-0"
                             aria-hidden="true"
                           />
-                          <span>{t("verifiedExpert")}</span>
+                          <span>
+                            {/* {t("verifiedExpert")} */}
+                            <FormattedMessage id="providerProfile.verifiedExpert" />
+                          </span>
                         </div>
                       )}
                     </div>
@@ -2056,7 +2164,9 @@ const ProviderProfile: React.FC = () => {
         >
           <div className="relative max-w-3xl max-h-[90vh] m-4">
             <h2 id="image-modal-title" className="sr-only">
-              {t("photoOf")} {provider.fullName}
+              {/* {t("photoOf")} */}
+              <FormattedMessage id="providerProfile.photoOf" />
+              {provider.fullName}
             </h2>
             <img
               src={mainPhoto}
