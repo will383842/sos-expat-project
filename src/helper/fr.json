@@ -898,5 +898,6 @@
   "dashboard.completed": "Terminé",
   "dashboard.pending": "En attente",
   "dashboard.inProgress": "En cours",
-  "dashboard.failed": "Échoué"
+  "dashboard.failed": "Échoué",
+  "dashboard.searchLanguages": "Rechercher et sélectionner les langues..."
 }

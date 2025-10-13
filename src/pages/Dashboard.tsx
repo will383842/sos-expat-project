@@ -611,14 +611,16 @@ const Dashboard: React.FC = () => {
         await refreshUser?.(); // propage vers sidebar / profil
 
         setSuccessMessage(
-          language === "fr" ? "Photo mise à jour ✅" : "Photo updated ✅"
+          intl.formatMessage({ id: "dashboard.photoUpdated" })
+          // language === "fr" ? "Photo mise à jour ✅" : "Photo updated ✅"
         );
         setTimeout(() => setSuccessMessage(null), 2000);
       } catch {
         setErrorMessage(
-          language === "fr"
-            ? "Erreur lors de la mise à jour de la photo"
-            : "Error updating photo"
+          intl.formatMessage({ id: "dashboard.errorPhotoUpdate" })
+          // language === "fr"
+          //   ? "Erreur lors de la mise à jour de la photo"
+          //   : "Error updating photo"
         );
         setTimeout(() => setErrorMessage(null), 2500);
       }
@@ -748,14 +750,12 @@ const Dashboard: React.FC = () => {
       await refreshUser?.();
 
       setSuccessMessage(
-        language === "fr" ? "Paramètres mis à jour ✔️" : "Settings updated ✔️"
+        intl.formatMessage({ id: "dashboard.settingsUpdated" })
       );
       setTimeout(() => setSuccessMessage(null), 2500);
     } catch {
       setErrorMessage(
-        language === "fr"
-          ? "Erreur lors de la mise à jour des paramètres"
-          : "Error updating settings"
+        intl.formatMessage({ id: "dashboard.errorSettingsUpdate" })
       );
     } finally {
       setIsLoading(false);
@@ -914,7 +914,6 @@ const Dashboard: React.FC = () => {
                                 : "text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5"
                             }
                           `}
-                   
                           title={
                             language === "fr"
                               ? item.fr
@@ -932,16 +931,15 @@ const Dashboard: React.FC = () => {
                             } ${UI.radiusSm}`}
                           />
                           {item.icon}
-                      
+
                           {language === "fr"
                             ? item.fr
                             : language === "es"
                               ? item.es
                               : item.en}
-                      
+
                           {activeTab === (item.key as TabType) && (
                             <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded bg-red-100 text-red-700 dark:bg-white/10 dark:text-white">
-                        
                               {intl.formatMessage({ id: "dashboard.active" })}
                             </span>
                           )}
@@ -956,7 +954,7 @@ const Dashboard: React.FC = () => {
                           className="w-full flex items-center px-4 py-2 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5"
                         >
                           <Shield className="mr-3 h-5 w-5" />
-             
+
                           {intl.formatMessage({
                             id: "dashboard.administration",
                           })}
@@ -970,7 +968,7 @@ const Dashboard: React.FC = () => {
                         className="w-full flex items-center px-4 py-2 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5"
                       >
                         <LogOut className="mr-3 h-5 w-5" />
-               
+
                         {intl.formatMessage({ id: "dashboard.logout" })}
                       </button>
                     </li>
@@ -979,14 +977,12 @@ const Dashboard: React.FC = () => {
 
                 <div className="p-6">
                   <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
-     
                     {intl.formatMessage({ id: "dashboard.availabilityStatus" })}
                   </h3>
                   {user && (user.role === "lawyer" || user.role === "expat") ? (
                     <AvailabilityToggle className="justify-center" />
                   ) : (
                     <p className={`${UI.textMuted} text-center`}>
-                
                       {intl.formatMessage({
                         id: "dashboard.statusOnlyProviders",
                       })}
@@ -1005,7 +1001,6 @@ const Dashboard: React.FC = () => {
                     className={`px-6 py-4 ${headerGradient} flex justify-between items-center`}
                   >
                     <h2 className="text-xl font-semibold">
-                 
                       {intl.formatMessage({ id: "dashboard.myProfile" })}
                     </h2>
                     <Button
@@ -1015,7 +1010,7 @@ const Dashboard: React.FC = () => {
                       className="bg-white text-gray-800 hover:bg-gray-50"
                     >
                       <Edit size={16} className="mr-2" />
-                
+
                       {intl.formatMessage({ id: "dashboard.edit" })}
                     </Button>
                   </div>
@@ -1024,31 +1019,27 @@ const Dashboard: React.FC = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <h3 className={`${UI.sectionTitle} mb-4`}>
-                   
                           {intl.formatMessage({ id: "dashboard.personalInfo" })}
                         </h3>
                         <div className="space-y-4">
                           <InfoRow
-                            label={
-                           
-                              intl.formatMessage({ id: "dashboard.fullName" })
-                            }
+                            label={intl.formatMessage({
+                              id: "dashboard.fullName",
+                            })}
                             value={`${user.firstName} ${user.lastName}`}
                           />
                           <InfoRow label="Email" value={user.email} />
                           {(user as { phone?: string }).phone && (
                             <InfoRow
-                              label={
-                            
-                                intl.formatMessage({ id: "dashboard.phone" })
-                              }
+                              label={intl.formatMessage({
+                                id: "dashboard.phone",
+                              })}
                               value={`${(user as { phoneCountryCode?: string }).phoneCountryCode || "+33"} ${(user as { phone?: string }).phone}`}
                             />
                           )}
                           {user.role !== "client" && (
                             <div>
                               <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                            
                                 {intl.formatMessage({ id: "dashboard.status" })}
                               </p>
                               <div className="mt-1 flex items-center">
@@ -1066,7 +1057,6 @@ const Dashboard: React.FC = () => {
                                         : "bg-red-600"
                                     }`}
                                   />
-                              
 
                                   {currentStatus
                                     ? intl.formatMessage({
@@ -1084,7 +1074,6 @@ const Dashboard: React.FC = () => {
 
                       <div>
                         <h3 className={`${UI.sectionTitle} mb-4`}>
-                          
                           {intl.formatMessage({ id: "dashboard.photoBio" })}
                         </h3>
                         <div className="flex items-start gap-6">
@@ -1102,7 +1091,6 @@ const Dashboard: React.FC = () => {
                           <div className="flex-1">
                             <p className={`${UI.text} whitespace-pre-wrap`}>
                               {(user as { bio?: string }).bio ||
-                               
                                 intl.formatMessage({
                                   id: "dashboard.noDescription",
                                 })}
@@ -1115,7 +1103,6 @@ const Dashboard: React.FC = () => {
                     {user.role !== "client" && (
                       <div className="mt-6 pt-6 border-t border-gray-200 dark:border-white/10">
                         <h3 className={`${UI.sectionTitle} mb-4`}>
-                       
                           {intl.formatMessage({
                             id: "dashboard.professionalInfo",
                           })}
@@ -1124,23 +1111,17 @@ const Dashboard: React.FC = () => {
                           {user.role === "lawyer" && (
                             <>
                               <InfoRow
-                                label={
-                             
-                                  intl.formatMessage({
-                                    id: "dashboard.yearsExperience",
-                                  })
-                                }
-                                value={`${(user as { yearsOfExperience?: number }).yearsOfExperience ?? 0} ${
-                               
-                                  intl.formatMessage({ id: "dashboard.years" })
-                                }`}
+                                label={intl.formatMessage({
+                                  id: "dashboard.yearsExperience",
+                                })}
+                                value={`${(user as { yearsOfExperience?: number }).yearsOfExperience ?? 0} ${intl.formatMessage(
+                                  { id: "dashboard.years" }
+                                )}`}
                               />
                               <PillsRow
-                                label={
-                                
-                                  intl.formatMessage({ id: 'dashboard.specialties' })
-                                }
-
+                                label={intl.formatMessage({
+                                  id: "dashboard.specialties",
+                                })}
                                 items={
                                   (user as { specialties?: string[] })
                                     .specialties || []
@@ -1148,10 +1129,9 @@ const Dashboard: React.FC = () => {
                                 color="blue"
                               />
                               <PillsRow
-                                label={
-                               
-                                  intl.formatMessage({ id: 'dashboard.countriesOfPractice' })
-                                }
+                                label={intl.formatMessage({
+                                  id: "dashboard.countriesOfPractice",
+                                })}
                                 items={
                                   (user as { practiceCountries?: string[] })
                                     .practiceCountries || []
@@ -1159,10 +1139,9 @@ const Dashboard: React.FC = () => {
                                 color="blue"
                               />
                               <InfoRow
-                                label={
-                                
-                                  intl.formatMessage({ id: 'dashboard.graduationYear' })
-                                }
+                                label={intl.formatMessage({
+                                  id: "dashboard.graduationYear",
+                                })}
                                 value={`${(user as { graduationYear?: number }).graduationYear || ""}`}
                               />
                             </>
@@ -1170,28 +1149,26 @@ const Dashboard: React.FC = () => {
                           {user.role === "expat" && (
                             <>
                               <InfoRow
-                                label={
-                                
-                                  intl.formatMessage({ id: 'dashboard.countryOfResidence' })
-                                }
+                                label={intl.formatMessage({
+                                  id: "dashboard.countryOfResidence",
+                                })}
                                 value={
                                   (user as { residenceCountry?: string })
                                     .residenceCountry || ""
                                 }
                               />
                               <InfoRow
-                                label={
-                                  intl.formatMessage({ id: 'dashboard.yearsAsExpat' })
-                                }
-                                value={`${(user as { yearsAsExpat?: number }).yearsAsExpat ?? 0} ${
-                                  
-                                  intl.formatMessage({ id: 'dashboard.years' })
-                                }`}
+                                label={intl.formatMessage({
+                                  id: "dashboard.yearsAsExpat",
+                                })}
+                                value={`${(user as { yearsAsExpat?: number }).yearsAsExpat ?? 0} ${intl.formatMessage(
+                                  { id: "dashboard.years" }
+                                )}`}
                               />
                               <PillsRow
-                                label={
-                                  intl.formatMessage({ id: 'dashboard.helpTypes' })
-                                }
+                                label={intl.formatMessage({
+                                  id: "dashboard.helpTypes",
+                                })}
                                 items={
                                   (user as { helpTypes?: string[] })
                                     .helpTypes || []
@@ -1199,9 +1176,9 @@ const Dashboard: React.FC = () => {
                                 color="green"
                               />
                               <PillsRow
-                                label={
-                                 intl.formatMessage({ id: 'dashboard.countriesOfIntervention' })
-                                }
+                                label={intl.formatMessage({
+                                  id: "dashboard.countriesOfIntervention",
+                                })}
                                 items={
                                   (user as { interventionCountries?: string[] })
                                     .interventionCountries || []
@@ -1233,7 +1210,7 @@ const Dashboard: React.FC = () => {
                 <div className={`${softCard} overflow-hidden`}>
                   <div className={`px-6 py-4 ${headerGradient}`}>
                     <h2 className="text-xl font-semibold">
-                      {language === "fr" ? "Paramètres" : "Settings"}
+                      {intl.formatMessage({ id: "dashboard.settings" })}
                     </h2>
                   </div>
 
@@ -1273,9 +1250,12 @@ const Dashboard: React.FC = () => {
                         />
                       </div>
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                        {language === "fr"
+                        {/* {language === "fr"
                           ? "La nouvelle photo remplace immédiatement l’ancienne dans tout le dashboard."
-                          : "The new photo replaces the old one immediately across the dashboard."}
+                          : "The new photo replaces the old one immediately across the dashboard."} */}
+                        {intl.formatMessage({
+                          id: "dashboard.photoUpdateNote",
+                        })}
                       </p>
                     </section>
 
@@ -1291,7 +1271,7 @@ const Dashboard: React.FC = () => {
                       />
                       <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                          {language === "fr" ? "Téléphone" : "Phone"}
+                          {intl.formatMessage({ id: "dashboard.phone" })}
                         </label>
                         <div className="flex gap-2">
                           <select
@@ -1326,11 +1306,9 @@ const Dashboard: React.FC = () => {
                       </div>
 
                       <Field
-                        label={
-                          language === "fr"
-                            ? "Pays de résidence"
-                            : "Country of residence"
-                        }
+                        label={intl.formatMessage({
+                          id: "dashboard.countryOfResidence",
+                        })}
                         value={
                           profileData.residenceCountry ||
                           profileData.currentCountry
@@ -1345,11 +1323,9 @@ const Dashboard: React.FC = () => {
                       />
 
                       <Field
-                        label={
-                          language === "fr"
-                            ? "Pays où vous êtes actuellement"
-                            : "Current presence country"
-                        }
+                        label={intl.formatMessage({
+                          id: "dashboard.currentPresenceCountry",
+                        })}
                         value={profileData.currentPresenceCountry || ""}
                         onChange={(v) =>
                           setProfileData((p) => ({
@@ -1399,9 +1375,6 @@ const Dashboard: React.FC = () => {
                       {/* Langues — même sélecteur que l’inscription */}
                       <div className="md:col-span-2">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                          {/* {language === "fr"
-                            ? "Langues parlées"
-                            : "Languages spoken"} */}
                           {intl.formatMessage({
                             id: "dashboard.languagesSpoken",
                           })}
@@ -1422,19 +1395,14 @@ const Dashboard: React.FC = () => {
                           providerLanguages={[]}
                           highlightShared
                           locale={language === "fr" ? "fr" : "en"}
-                          placeholder={
-                            language === "fr"
-                              ? "Rechercher et sélectionner les langues..."
-                              : "Search and select languages..."
-                          }
+                          placeholder={intl.formatMessage({
+                            id: "dashboard.searchLanguages",
+                          })}
                         />
                       </div>
 
                       <div className="md:col-span-2">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                          {/* {language === "fr"
-                            ? "Description / Bio"
-                            : "Description / Bio"} */}
                           {intl.formatMessage({
                             id: "dashboard.descriptionBio",
                           })}
@@ -1449,11 +1417,6 @@ const Dashboard: React.FC = () => {
                           }
                           rows={5}
                           className="w-full px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500"
-                          // placeholder={
-                          //   language === "fr"
-                          //     ? "Votre bio professionnelle…"
-                          //     : "Your professional bio…"
-                          // }
                           placeholder={intl.formatMessage({
                             id: "dashboard.bioPlaceholder",
                           })}
@@ -1465,11 +1428,9 @@ const Dashboard: React.FC = () => {
                     {user.role === "lawyer" && (
                       <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <Field
-                          label={
-                            language === "fr"
-                              ? "Années d'expérience"
-                              : "Years of experience"
-                          }
+                          label={intl.formatMessage({
+                            id: "dashboard.yearsExperience",
+                          })}
                           type="number"
                           value={String(profileData.yearsOfExperience ?? 0)}
                           onChange={(v) =>
@@ -1480,11 +1441,9 @@ const Dashboard: React.FC = () => {
                           }
                         />
                         <Field
-                          label={
-                            language === "fr"
-                              ? "Année de diplôme"
-                              : "Graduation year"
-                          }
+                          label={intl.formatMessage({
+                            id: "dashboard.graduationYear",
+                          })}
                           type="number"
                           value={String(
                             profileData.graduationYear ||
@@ -1514,18 +1473,13 @@ const Dashboard: React.FC = () => {
                                 specialties: next,
                               }))
                             }
-                            placeholder={
-                              language === "fr"
-                                ? "Ajoutez une spécialité"
-                                : "Add a specialty"
-                            }
+                            placeholder={intl.formatMessage({
+                              id: "dashboard.addSpecialty",
+                            })}
                           />
                         </div>
                         <div className="md:col-span-2">
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            {/* {language === "fr"
-                              ? "Pays d'intervention"
-                              : "Countries of practice"} */}
                             {intl.formatMessage({
                               id: "dashboard.countriesOfPractice",
                             })}
@@ -1538,19 +1492,15 @@ const Dashboard: React.FC = () => {
                                 practiceCountries: next,
                               }))
                             }
-                            placeholder={
-                              language === "fr"
-                                ? "Ajoutez un pays"
-                                : "Add a country"
-                            }
+                            placeholder={intl.formatMessage({
+                              id: "dashboard.addCountry",
+                            })}
                           />
                         </div>
                         <Field
-                          label={
-                            language === "fr"
-                              ? "Numéro au barreau (optionnel)"
-                              : "Bar number (optional)"
-                          }
+                          label={intl.formatMessage({
+                            id: "dashboard.barNumber",
+                          })}
                           value={profileData.barNumber || ""}
                           onChange={(v) =>
                             setProfileData((p) => ({ ...p, barNumber: v }))
@@ -1558,7 +1508,7 @@ const Dashboard: React.FC = () => {
                         />
                         <div className="md:col-span-2">
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            {language === "fr" ? "Formations" : "Educations"}
+                            {intl.formatMessage({ id: "dashboard.educations" })}
                           </label>
                           <ChipInput
                             value={profileData.educations || []}
@@ -1568,11 +1518,9 @@ const Dashboard: React.FC = () => {
                                 educations: next,
                               }))
                             }
-                            placeholder={
-                              language === "fr"
-                                ? "Ajoutez une formation"
-                                : "Add an education"
-                            }
+                            placeholder={intl.formatMessage({
+                              id: "dashboard.addEducation",
+                            })}
                           />
                         </div>
                       </section>
@@ -1582,11 +1530,9 @@ const Dashboard: React.FC = () => {
                     {user.role === "expat" && (
                       <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <Field
-                          label={
-                            language === "fr"
-                              ? "Années d'expatriation"
-                              : "Years as expat"
-                          }
+                          label={intl.formatMessage({
+                            id: "dashboard.yearsAsExpat",
+                          })}
                           type="number"
                           value={String(profileData.yearsAsExpat ?? 0)}
                           onChange={(v) =>
@@ -1598,25 +1544,23 @@ const Dashboard: React.FC = () => {
                         />
                         <div className="md:col-span-2">
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            {language === "fr" ? "Types d'aide" : "Help types"}
+                            {intl.formatMessage({ id: "dashboard.helpTypes" })}
                           </label>
                           <ChipInput
                             value={profileData.helpTypes || []}
                             onChange={(next) =>
                               setProfileData((p) => ({ ...p, helpTypes: next }))
                             }
-                            placeholder={
-                              language === "fr"
-                                ? "Ajoutez un type"
-                                : "Add a type"
-                            }
+                            placeholder={intl.formatMessage({
+                              id: "dashboard.addType",
+                            })}
                           />
                         </div>
                         <div className="md:col-span-2">
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            {language === "fr"
-                              ? "Pays d'intervention"
-                              : "Countries of intervention"}
+                            {intl.formatMessage({
+                              id: "dashboard.countriesOfIntervention",
+                            })}
                           </label>
                           <ChipInput
                             value={profileData.interventionCountries || []}
@@ -1626,11 +1570,9 @@ const Dashboard: React.FC = () => {
                                 interventionCountries: next,
                               }))
                             }
-                            placeholder={
-                              language === "fr"
-                                ? "Ajoutez un pays"
-                                : "Add a country"
-                            }
+                            placeholder={intl.formatMessage({
+                              id: "dashboard.addCountry",
+                            })}
                           />
                         </div>
                       </section>
@@ -1644,7 +1586,6 @@ const Dashboard: React.FC = () => {
                         fullWidth
                         className="bg-red-600 hover:bg-red-700"
                       >
-                        
                         {intl.formatMessage({ id: "dashboard.saveSettings" })}
                       </Button>
                     </div>
@@ -1657,7 +1598,8 @@ const Dashboard: React.FC = () => {
                 <div className={`${softCard} overflow-hidden`}>
                   <div className={`px-6 py-4 ${headerGradient}`}>
                     <h2 className="text-xl font-semibold">
-                      {language === "fr" ? "Mes appels" : "My calls"}
+                      {/* {language === "fr" ? "Mes appels" : "My calls"} */}
+                      {intl.formatMessage({ id: "dashboard.myCalls" })}
                     </h2>
                   </div>
                   <div className="p-6">
@@ -1698,9 +1640,12 @@ const Dashboard: React.FC = () => {
                                 </div>
                                 <div className="mt-2">
                                   <p className={`${UI.text} text-sm`}>
-                                    {user.role === "client"
+                                    {/* {user.role === "client"
                                       ? `${language === "fr" ? "Prestataire" : "Provider"}: ${call.providerName}`
-                                      : `${language === "fr" ? "Client" : "Client"}: ${call.clientName}`}
+                                      : `${language === "fr" ? "Client" : "Client"}: ${call.clientName}`} */}
+                                    {user.role === "client"
+                                      ? `${intl.formatMessage({ id: "dashboard.provider" })}: ${call.providerName}`
+                                      : `${intl.formatMessage({ id: "dashboard.client" })}: ${call.clientName}`}
                                   </p>
                                 </div>
                               </div>
@@ -1710,9 +1655,12 @@ const Dashboard: React.FC = () => {
                                   user.role === "client" &&
                                   !call.clientRating && (
                                     <Button size="small" variant="outline">
-                                      {language === "fr"
+                                      {/* {language === "fr"
                                         ? "Laisser un avis"
-                                        : "Leave a review"}
+                                        : "Leave a review"} */}
+                                      {intl.formatMessage({
+                                        id: "dashboard.leaveReview",
+                                      })}
                                     </Button>
                                   )}
                               </div>
@@ -1722,9 +1670,6 @@ const Dashboard: React.FC = () => {
                       </div>
                     ) : (
                       <p className={`${UI.textMuted} text-center py-8`}>
-                        {/* {language === "fr"
-                          ? "Vous n'avez pas encore effectué d'appels."
-                          : "You haven't made any calls yet."} */}
                         {intl.formatMessage({ id: "dashboard.noCalls" })}
                       </p>
                     )}
@@ -1737,7 +1682,7 @@ const Dashboard: React.FC = () => {
                 <div className={`${softCard} overflow-hidden`}>
                   <div className={`px-6 py-4 ${headerGradient}`}>
                     <h2 className="text-xl font-semibold">
-                      {language === "fr" ? "Mes messages" : "My messages"}
+                      {intl.formatMessage({ id: "dashboard.myMessages" })}
                     </h2>
                   </div>
                   <div className="p-6">
@@ -1754,14 +1699,12 @@ const Dashboard: React.FC = () => {
                 <div className={`${softCard} overflow-hidden`}>
                   <div className={`px-6 py-4 ${headerGradient}`}>
                     <h2 className="text-xl font-semibold">
-                      {language === "fr" ? "Mes avis" : "My reviews"}
+                      {intl.formatMessage({ id: "dashboard.myReviews" })}
                     </h2>
                   </div>
                   <div className="p-6">
                     <p className={`${UI.textMuted} text-center py-8`}>
-                      {language === "fr"
-                        ? "Aucun avis pour le moment."
-                        : "No reviews yet."}
+                      {intl.formatMessage({ id: "dashboard.noReviews" })}
                     </p>
                   </div>
                 </div>
@@ -1772,16 +1715,16 @@ const Dashboard: React.FC = () => {
                 <div className={`${softCard} overflow-hidden`}>
                   <div className={`px-6 py-4 ${headerGradient}`}>
                     <h2 className="text-xl font-semibold">
-                      {language === "fr" ? "Notifications" : "Notifications"}
+                      {intl.formatMessage({ id: "dashboard.notifications" })}
                     </h2>
                   </div>
                   <div className="p-6">
                     {(user?.role === "lawyer" || user?.role === "expat") && (
                       <div className="mb-8">
                         <h3 className={`${UI.sectionTitle} mb-4`}>
-                          {language === "fr"
-                            ? "Préférences de notifications"
-                            : "Notification preferences"}
+                          {intl.formatMessage({
+                            id: "dashboard.notificationPreferences",
+                          })}
                         </h3>
                         <NotificationSettings />
                       </div>
@@ -1789,9 +1732,12 @@ const Dashboard: React.FC = () => {
 
                     <div>
                       <h3 className={`${UI.sectionTitle} mb-4`}>
-                        {language === "fr"
+                        {/* {language === "fr"
                           ? "Historique des notifications"
-                          : "Notification history"}
+                          : "Notification history"} */}
+                        {intl.formatMessage({
+                          id: "dashboard.notificationHistory",
+                        })}
                       </h3>
                       {notifications.length > 0 ? (
                         <div className="space-y-4">
@@ -1820,9 +1766,12 @@ const Dashboard: React.FC = () => {
                         </div>
                       ) : (
                         <p className={`${UI.textMuted} text-center py-8`}>
-                          {language === "fr"
+                          {/* {language === "fr"
                             ? "Vous n'avez pas de notifications."
-                            : "You don't have any notifications."}
+                            : "You don't have any notifications."} */}
+                          {intl.formatMessage({
+                            id: "dashboard.noNotifications",
+                          })}
                         </p>
                       )}
                     </div>
@@ -1835,7 +1784,8 @@ const Dashboard: React.FC = () => {
                 <div className={`${softCard} overflow-hidden`}>
                   <div className={`px-6 py-4 ${headerGradient}`}>
                     <h2 className="text-xl font-semibold">
-                      {language === "fr" ? "Mes favoris" : "My favorites"}
+                      {/* {language === "fr" ? "Mes favoris" : "My favorites"} */}
+                      {intl.formatMessage({ id: "dashboard.myFavorites" })}
                     </h2>
                   </div>
                   <div className="p-6">
@@ -1859,13 +1809,21 @@ const Dashboard: React.FC = () => {
                                 {f.name}
                               </p>
                               <p className="text-xs text-gray-500 dark:text-gray-400">
-                                {f.type === "lawyer"
+                                {/* {f.type === "lawyer"
                                   ? language === "fr"
                                     ? "Avocat"
                                     : "Lawyer"
                                   : language === "fr"
                                     ? "Expatrié"
-                                    : "Expat"}
+                                    : "Expat"} */}
+                                {f.type === "lawyer"
+                                  ? intl.formatMessage({
+                                      id: "dashboard.lawyer",
+                                    })
+                                  : intl.formatMessage({
+                                      id: "dashboard.expat",
+                                    })}
+
                                 {f.country ? ` • ${f.country}` : ""}
                               </p>
                             </div>
@@ -1874,9 +1832,10 @@ const Dashboard: React.FC = () => {
                       </ul>
                     ) : (
                       <p className={`${UI.textMuted} text-center py-12`}>
-                        {language === "fr"
+                        {/* {language === "fr"
                           ? "Aucun favori pour le moment."
-                          : "No favorites yet."}
+                          : "No favorites yet."} */}
+                        {intl.formatMessage({ id: "dashboard.noFavorites" })}
                       </p>
                     )}
                   </div>
