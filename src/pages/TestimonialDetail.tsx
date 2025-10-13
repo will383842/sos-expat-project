@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import Layout from "../components/layout/Layout";
 import { useApp } from "../contexts/AppContext";
+import { useIntl } from "react-intl";
 
 interface TestimonialData {
   id: string;
@@ -713,7 +714,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       en: "Remarkable lawyer! Tax issue in Switzerland, he explained legal implications, procedures and directed me to a local tax specialist. Impeccable service!",
     },
     avatar:
-    "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YXZhdGFyfGVufDB8fDB8fHww",
+      "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YXZhdGFyfGVufDB8fDB8fHww",
     verified: true,
     serviceUsed: {
       fr: "Consultation Avocat",
@@ -791,6 +792,7 @@ const COUNTRY_TRANSLATIONS: Record<string, { fr: string; en: string }> = {
 };
 
 const TestimonialDetail: React.FC = () => {
+  const intl = useIntl();
   // ✅ USEPARAMS CORRIGÉ AVEC LA NOUVELLE STRUCTURE URL
   const {
     serviceType,
@@ -1087,7 +1089,10 @@ const TestimonialDetail: React.FC = () => {
                 size={20}
                 className="group-hover:-translate-x-1 transition-transform duration-300"
               />
-              <span className="font-semibold">{t.backToTestimonials}</span>
+              <span className="font-semibold">
+                {/* {t.backToTestimonials} */}
+                {intl.formatMessage({ id: "testimonial.backToTestimonials" })}
+              </span>
             </button>
 
             <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-8 space-y-6 lg:space-y-0">
@@ -1114,11 +1119,23 @@ const TestimonialDetail: React.FC = () => {
                   ) : (
                     <User size={16} className="text-blue-400" />
                   )}
-                  <span className="font-semibold text-sm">
+                  {/* <span className="font-semibold text-sm">
                     {testimonialData.type === "lawyer"
                       ? t.solicitedLawyer
                       : t.solicitedExpat}
+                  </span> */}
+
+                  <span className="font-semibold text-sm">
+                    {testimonialData.type === "lawyer"
+                      ? intl.formatMessage({
+                          id: "testimonial.solicitedLawyer",
+                        })
+                      : intl.formatMessage({
+                          id: "testimonial.solicitedExpat",
+                        })}
                   </span>
+
+                  {intl.formatMessage({ id: "testimonial.backToTestimonials" })}
                 </div>
 
                 <div className="flex flex-col lg:flex-row lg:items-center space-y-3 lg:space-y-0 lg:space-x-4 mb-4">
@@ -1128,7 +1145,8 @@ const TestimonialDetail: React.FC = () => {
                   {testimonialData.verified && (
                     <span className="inline-flex items-center gap-2 bg-green-500/20 border border-green-400/30 text-green-300 text-sm px-3 py-1.5 rounded-full backdrop-blur-sm">
                       <Shield size={14} />
-                      {t.verified}
+                      {/* {t.verified} */}
+                      {intl.formatMessage({ id: "testimonial.verified" })}
                     </span>
                   )}
                 </div>
@@ -1203,26 +1221,56 @@ const TestimonialDetail: React.FC = () => {
                   <div className="border-t border-gray-200 pt-8 mt-12">
                     <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                       <Share2 size={24} className="text-blue-500" />
-                      {t.shareTestimonial}
+                      {/* {t.shareTestimonial} */}
+                      {intl.formatMessage({
+                        id: "testimonial.shareTestimonial",
+                      })}
                     </h3>
                     <div className="flex flex-wrap gap-4">
                       {[
+                        // {
+                        //   platform: "facebook",
+                        //   icon: Facebook,
+                        //   title: t.shareOnFacebook,
+                        //   bg: "bg-blue-600 hover:bg-blue-700",
+                        // },
+                        // {
+                        //   platform: "email",
+                        //   icon: Mail,
+                        //   title: t.shareByEmail,
+                        //   bg: "bg-gray-600 hover:bg-gray-700",
+                        // },
+                        // {
+                        //   platform: "copy",
+                        //   icon: Share2,
+                        //   title: t.copyLink,
+                        //   bg: "bg-green-600 hover:bg-green-700",
+                        // },
+
                         {
                           platform: "facebook",
                           icon: Facebook,
-                          title: t.shareOnFacebook,
+                          title: intl.formatMessage({
+                            id: "testimonial.shareOnFacebook",
+                          }),
                           bg: "bg-blue-600 hover:bg-blue-700",
                         },
                         {
                           platform: "email",
                           icon: Mail,
-                          title: t.shareByEmail,
+                          // title: t.shareByEmail,
+                          title: intl.formatMessage({
+                            id: "testimonial.shareByEmail",
+                          }),
                           bg: "bg-gray-600 hover:bg-gray-700",
                         },
                         {
                           platform: "copy",
                           icon: Share2,
-                          title: t.copyLink,
+                          // title: t.copyLink,
+                          title: intl.formatMessage({
+                            id: "testimonial.copyLink",
+                          }),
                           bg: "bg-green-600 hover:bg-green-700",
                         },
                       ].map(({ platform, icon: Icon, title, bg }) => (
@@ -1260,13 +1308,19 @@ const TestimonialDetail: React.FC = () => {
                         <User size={20} />
                       )}
                     </div>
-                    {t.serviceDetails}
+                    {/* {t.serviceDetails} */}
+                    {intl.formatMessage({
+                      id: "testimonial.serviceDetails",
+                    })}
                   </h3>
 
                   <div className="space-y-6">
                     <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100">
                       <span className="text-sm text-gray-500 block font-medium mb-1">
-                        {t.serviceUsed}
+                        {/* {t.serviceUsed} */}
+                        {intl.formatMessage({
+                          id: "testimonial.serviceUsed",
+                        })}
                       </span>
                       <div className="font-bold text-gray-900 text-lg">
                         {language === "fr"
@@ -1277,7 +1331,10 @@ const TestimonialDetail: React.FC = () => {
 
                     <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100">
                       <span className="text-sm text-gray-500 block font-medium mb-1">
-                        {t.duration}
+                        {/* {t.duration} */}
+                        {intl.formatMessage({
+                          id: "testimonial.duration",
+                        })}
                       </span>
                       <div className="font-bold text-gray-900 text-lg flex items-center gap-2">
                         <Clock size={18} className="text-orange-500" />
@@ -1287,7 +1344,10 @@ const TestimonialDetail: React.FC = () => {
 
                     <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100">
                       <span className="text-sm text-gray-500 block font-medium mb-3">
-                        {t.helpType}
+                        {/* {t.helpType} */}
+                        {intl.formatMessage({
+                          id: "testimonial.helpType",
+                        })}
                       </span>
                       <div className="flex flex-wrap gap-2">
                         {(language === "fr"
@@ -1320,25 +1380,40 @@ const TestimonialDetail: React.FC = () => {
                     <Shield size={24} />
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-3">
-                    {t.needHelp}
+                    {/* {t.needHelp} */}
+                    {intl.formatMessage({
+                      id: "testimonial.needHelp",
+                    })}
                   </h3>
                   <p className="text-gray-600 mb-6 leading-relaxed">
-                    {t.helpDescription}
+                    {/* {t.helpDescription} */}
+                    {intl.formatMessage({
+                      id: "testimonial.helpDescription",
+                    })}
                   </p>
 
                   {/* Reassurance points / Points de réassurance */}
                   <div className="flex flex-wrap justify-center gap-3 mb-6 text-sm">
                     <span className="inline-flex items-center gap-1.5 text-green-600 font-medium">
                       <Check size={14} />
-                      {t.secured}
+                      {/* {t.secured} */}
+                      {intl.formatMessage({
+                        id: "testimonial.secured",
+                      })}
                     </span>
                     <span className="inline-flex items-center gap-1.5 text-blue-600 font-medium">
                       <Clock size={14} />
-                      {t.lessThan5Min}
+                      {/* {t.lessThan5Min} */}
+                      {intl.formatMessage({
+                        id: "testimonial.lessThan5Min",
+                      })}
                     </span>
                     <span className="inline-flex items-center gap-1.5 text-purple-600 font-medium">
                       <Globe size={14} />
-                      {t.worldwide}
+                      {/* {t.worldwide} */}
+                      {intl.formatMessage({
+                        id: "testimonial.worldwide",
+                      })}
                     </span>
                   </div>
 
@@ -1346,7 +1421,10 @@ const TestimonialDetail: React.FC = () => {
                     href="/sos-appel"
                     className="group inline-flex items-center justify-center w-full px-6 py-4 rounded-2xl bg-gradient-to-r from-red-600 to-orange-600 text-white font-bold text-lg hover:from-red-700 hover:to-orange-700 transition-all duration-300 hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                   >
-                    {t.findExpert}
+                    {/* {t.findExpert} */}
+                    {intl.formatMessage({
+                      id: "testimonial.findExpert",
+                    })}
                     <ChevronRightIcon
                       size={20}
                       className="ml-2 group-hover:translate-x-1 transition-transform duration-300"
@@ -1371,12 +1449,19 @@ const TestimonialDetail: React.FC = () => {
             <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 border border-white/20 mb-6">
               <Star className="w-5 h-5 text-yellow-400" />
               <span className="text-white font-bold">
-                4,9/5 • +2 500 {t.reviews}
+                4,9/5 • +2 500
+                {/* {t.reviews} */}
+                {intl.formatMessage({
+                  id: "testimonial.reviews",
+                })}
               </span>
             </div>
 
             <h3 className="text-4xl lg:text-5xl font-black text-white mb-4">
-              {t.otherTestimonials}
+              {/* {t.otherTestimonials} */}
+              {intl.formatMessage({
+                id: "testimonial.otherTestimonials",
+              })}
             </h3>
             <p className="text-xl text-white/80 mb-12 max-w-2xl mx-auto">
               {language === "fr"
@@ -1388,7 +1473,10 @@ const TestimonialDetail: React.FC = () => {
               href="/testimonials"
               className="group inline-flex items-center gap-3 bg-white text-gray-900 hover:bg-gray-100 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl focus:outline-none focus:ring-2 focus:ring-white/50"
             >
-              {t.viewAllTestimonials}
+              {/* {t.viewAllTestimonials} */}
+              {intl.formatMessage({
+                id: "testimonial.viewAllTestimonials",
+              })}
               <ChevronRightIcon
                 size={20}
                 className="group-hover:translate-x-1 transition-transform duration-300"

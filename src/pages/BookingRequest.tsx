@@ -54,7 +54,7 @@ import { createBookingRequest } from "../services/booking";
 import PhoneField from "@/components/PhoneField";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 /** ===== Types complémentaires ===== */
 type LangKey = keyof typeof I18N;
@@ -247,6 +247,80 @@ const I18N = {
       incompatible: "Non-compatible languages",
       communicationImpossible: "Communication impossible",
       needShared: "Pick at least one shared language to continue.",
+    },
+  },
+  es: {
+    metaTitle: "Solicitud de consulta • SOS Expats",
+    metaDesc:
+      "Un formulario divertido, fluido y ultra claro para reservar tu llamada 🚀",
+    heroTitle: "Describe tu solicitud",
+    heroSubtitle:
+      "Algunos datos y nosotros nos encargamos del resto — simple, amigable, genial ✨",
+    progress: "Progreso",
+    personal: "Conozcámonos",
+    request: "Tu solicitud",
+    languages: "Idiomas",
+    contact: "Contacto",
+    cgu: "T&C Clientes",
+    checklistTitle: "Para completar:",
+    callTiming: "Llamada dentro de 5 minutos después del pago",
+    securePay: "Pago 100% seguro",
+    satisfied:
+      "💯 Garantía de satisfacción: si el experto no está disponible, reembolso automático.",
+    continuePay: "Continuar al pago",
+    errorsTitle: "Pequeños ajustes y listo ✨",
+    hints: {
+      title: "¡Cuanto más preciso sea tu título, mejor!",
+      desc: "Contexto, objetivo, plazos… danos información 🔎",
+      phone: "Sin spam — nunca. Solo para conectarte con el experto. 📵",
+      whatsapp:
+        "Opcional pero práctico para actualizaciones en tiempo real. 💬",
+    },
+    fields: {
+      firstName: "Nombre",
+      lastName: "Apellido",
+      nationality: "Nacionalidad",
+      currentCountry: "País de intervención",
+      otherCountry: "Especifica tu país",
+      title: "Título de tu solicitud",
+      description: "Descripción detallada",
+      phone: "Teléfono",
+      whatsapp: "Número de WhatsApp (opcional)",
+      accept: "Acepto los ",
+      andConfirm: " y confirmo que la información proporcionada es correcta.",
+    },
+    placeholders: {
+      firstName: "Tu nombre",
+      lastName: "Tu apellido",
+      nationality: "Ej: Francesa, Americana…",
+      title: "Ej: Visa de trabajo en Canadá — ¿qué documentos?",
+      description:
+        "Explica tu situación: contexto, preguntas específicas, objetivos, plazos… (mín. 50 caracteres)",
+      phone: "612 345 678",
+      otherCountry: "Ej: Paraguay",
+    },
+    validators: {
+      firstName: "Nombre requerido",
+      lastName: "Apellido requerido",
+      title: "El título debe tener al menos 10 caracteres",
+      description: "La descripción debe tener al menos 50 caracteres",
+      nationality: "Nacionalidad requerida",
+      currentCountry: "País de intervención requerido",
+      otherCountry: "Por favor especifica tu país",
+      languages: "Selecciona al menos un idioma",
+      phone: "Número de teléfono inválido",
+      accept: "Debes aceptar las condiciones",
+      langMismatch: "Ningún idioma en común con el proveedor",
+    },
+    preview: {
+      title: "Vista previa rápida",
+      hint: "Esto es lo que verá tu experto para ayudarte mejor.",
+    },
+    labels: {
+      compatible: "Idiomas compatibles",
+      incompatible: "Idiomas no compatibles",
+      communicationImpossible: "Comunicación imposible",
+      needShared: "Selecciona al menos un idioma compartido para continuar.",
     },
   },
 } as const;
@@ -624,6 +698,7 @@ const sanitizeInput = (input: string): string =>
 
 /** ===== Page (RHF) ===== */
 const BookingRequest: React.FC = () => {
+  const intl = useIntl();
   const { providerId } = useParams<{ providerId: string }>();
   const navigate = useNavigate();
   const { user, isLoading: authLoading } = useAuth();
@@ -1258,7 +1333,8 @@ const BookingRequest: React.FC = () => {
                 <span
                   className={`bg-gradient-to-r ${THEME.gradFrom} ${THEME.gradVia} ${THEME.gradTo} bg-clip-text text-transparent`}
                 >
-                  {t.heroTitle}
+                  {/* {t.heroTitle} */}
+                  <FormattedMessage id="bookingRequest.heroTitle" />
                 </span>
               </h1>
               <p className="text-sm text-gray-600 mt-1">{t.heroSubtitle}</p>

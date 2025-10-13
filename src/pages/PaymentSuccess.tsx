@@ -28,6 +28,7 @@ import ReviewModal from "../components/review/ReviewModal";
 // 🔁 Firestore
 import { doc, onSnapshot, getDoc } from "firebase/firestore";
 import { db } from "../config/firebase";
+import { useIntl, FormattedMessage } from "react-intl";
 
 /* =========================
    Types pour l'order / coupon / metadata
@@ -91,6 +92,7 @@ const COMMISSION_RATES = {
    Page principale
    ========================= */
 const SuccessPayment: React.FC = () => {
+  const intl = useIntl();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { language } = useApp();
@@ -569,10 +571,12 @@ const SuccessPayment: React.FC = () => {
         <div className="min-h-screen bg-gray-950 flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-white mb-4">
-              {t.serviceNotFound}
+              {/* {t.serviceNotFound} */}
+              {intl.formatMessage({ id: "success.serviceNotFound" })}
             </h1>
             <a href="/" className="text-red-400 hover:text-red-300">
-              {t.backToHome}
+              {/* {t.backToHome} */}
+              {intl.formatMessage({ id: "success.backToHome" })}
             </a>
           </div>
         </div>
@@ -599,7 +603,8 @@ const SuccessPayment: React.FC = () => {
             <div className="inline-flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-full pl-6 pr-6 py-3 border border-white/20 mb-8">
               <CheckCircle className="w-5 h-5 text-green-400" />
               <span className="text-white font-semibold">
-                {t.paymentSuccessful}
+                {/* {t.paymentSuccessful} */}
+                {intl.formatMessage({ id: "success.paymentSuccessful" })}
               </span>
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
             </div>
@@ -626,7 +631,8 @@ const SuccessPayment: React.FC = () => {
                 <div className="inline-flex items-center space-x-2 bg-white/5 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10">
                   <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   <span className="text-white/60 text-sm">
-                    {t.loadingPaymentInfo}
+                    {/* {t.loadingPaymentInfo} */}
+                    {intl.formatMessage({ id: "success.loadingPaymentInfo" })}
                   </span>
                 </div>
               </div>
@@ -637,7 +643,8 @@ const SuccessPayment: React.FC = () => {
               <>
                 <h1 className="text-4xl md:text-6xl font-black mb-6 leading-tight">
                   <span className="bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
-                    {t.countdownTitle}
+                    {/* {t.countdownTitle} */}
+                    {intl.formatMessage({ id: "success.countdownTitle" })}
                   </span>
                 </h1>
 
@@ -652,11 +659,13 @@ const SuccessPayment: React.FC = () => {
                         </div>
                       </div>
                       <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-                        {t.connecting}
+                        {/* {t.connecting} */}
+                        {intl.formatMessage({ id: "success.connecting" })}
                       </p>
                       <div className="mt-4 inline-flex items-center space-x-2 bg-white/5 backdrop-blur-sm rounded-full px-4 py-2">
                         <span className="text-white/70 text-sm">
-                          {t.almostThere}
+                          {/* {t.almostThere} */}
+                          {intl.formatMessage({ id: "success.almostThere" })}
                         </span>
                       </div>
                     </>
@@ -666,7 +675,10 @@ const SuccessPayment: React.FC = () => {
                         <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin" />
                       </div>
                       <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-                        {t.loadingPaymentInfo}
+                        {/* {t.loadingPaymentInfo} */}
+                        {intl.formatMessage({
+                          id: "success.loadingPaymentInfo",
+                        })}
                       </p>
                     </>
                   )}
@@ -678,7 +690,8 @@ const SuccessPayment: React.FC = () => {
               <>
                 <h1 className="text-4xl md:text-6xl font-black mb-6 leading-tight">
                   <span className="bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
-                    {t.readyToRingTitle}
+                    {/* {t.readyToRingTitle} */}
+                    {intl.formatMessage({ id: "success.readyToRingTitle" })}
                   </span>
                 </h1>
 
@@ -687,11 +700,13 @@ const SuccessPayment: React.FC = () => {
                     <Phone className="w-16 h-16 text-white" />
                   </div>
                   <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-                    {t.readyToRingDesc}
+                    {/* {t.readyToRingDesc} */}
+                    {intl.formatMessage({ id: "success.readyToRingDesc" })}
                   </p>
                   <div className="mt-4 inline-flex items-center space-x-2 bg-green-500/10 backdrop-blur-sm rounded-full px-4 py-2 border border-green-400/20">
                     <span className="text-green-300 text-sm font-medium">
-                      {t.expertComing}
+                      {/* {t.expertComing} */}
+                      {intl.formatMessage({ id: "success.expertComing" })}
                     </span>
                   </div>
                 </div>
@@ -702,7 +717,8 @@ const SuccessPayment: React.FC = () => {
               <>
                 <h1 className="text-4xl md:text-6xl font-black mb-6 leading-tight">
                   <span className="bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
-                    {t.callInProgress}
+                    {/* {t.callInProgress} */}
+                    {intl.formatMessage({ id: "success.callInProgress" })}
                   </span>
                 </h1>
 
@@ -713,10 +729,14 @@ const SuccessPayment: React.FC = () => {
                   <div className="text-4xl font-black text-white mb-4">
                     {formatTime(timeRemaining)}
                   </div>
-                  <p className="text-xl text-gray-300">{t.timeRemaining}</p>
+                  <p className="text-xl text-gray-300">
+                    {/* {t.timeRemaining} */}
+                    {intl.formatMessage({ id: "success.timeRemaining" })}
+                  </p>
                   <div className="mt-4 inline-flex items-center space-x-2 bg-green-500/10 backdrop-blur-sm rounded-full px-4 py-2 border border-green-400/20">
                     <span className="text-green-300 text-sm font-medium">
-                      {t.youRock}
+                      {/* {t.youRock} */}
+                      {intl.formatMessage({ id: "success.youRock" })}
                     </span>
                   </div>
                 </div>
@@ -727,7 +747,8 @@ const SuccessPayment: React.FC = () => {
               <>
                 <h1 className="text-4xl md:text-6xl font-black mb-6 leading-tight">
                   <span className="bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
-                    {t.callCompleted}
+                    {/* {t.callCompleted} */}
+                    {intl.formatMessage({ id: "success.callCompleted" })}
                   </span>
                 </h1>
 
@@ -736,11 +757,13 @@ const SuccessPayment: React.FC = () => {
                     <CheckCircle className="w-16 h-16 text-white" />
                   </div>
                   <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-6">
-                    {t.thankYou}
+                    {/* {t.thankYou} */}
+                    {intl.formatMessage({ id: "success.thankYou" })}
                   </p>
                   <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-yellow-400/10 to-orange-400/10 backdrop-blur-sm rounded-full px-6 py-3 border border-yellow-400/20">
                     <span className="text-yellow-300 text-lg font-bold">
-                      {t.superFast}
+                      {/* {t.superFast} */}
+                      {intl.formatMessage({ id: "success.superFast" })}
                     </span>
                   </div>
                 </div>
@@ -751,7 +774,8 @@ const SuccessPayment: React.FC = () => {
               <>
                 <h1 className="text-4xl md:text-6xl font-black mb-6 leading-tight">
                   <span className="bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent">
-                    {t.callFailed}
+                    {/* {t.callFailed} */}
+                    {intl.formatMessage({ id: "success.callFailed" })}
                   </span>
                 </h1>
 
@@ -760,14 +784,17 @@ const SuccessPayment: React.FC = () => {
                     <AlertCircle className="w-16 h-16 text-white" />
                   </div>
                   <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-6">
-                    {t.expertNoAnswer}
+                    {/* {t.expertNoAnswer} */}
+                    {intl.formatMessage({ id: "success.expertNoAnswer" })}
                   </p>
                   <button
                     onClick={() => navigate("/prestataires")}
                     className="bg-gradient-to-r from-red-600 to-orange-600 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:scale-105 transition-all duration-300 inline-flex items-center gap-2"
                   >
                     <RefreshCw className="w-5 h-5" />
-                    {t.chooseAnother} 🔄
+                    {/* {t.chooseAnother} */}
+                    {intl.formatMessage({ id: "success.chooseAnother" })}
+                    🔄
                   </button>
                 </div>
               </>
@@ -932,14 +959,18 @@ const SuccessPayment: React.FC = () => {
                     <div className="inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-gradient-to-r from-red-600 to-orange-600 text-white">
                       <Briefcase className="w-5 h-5" />
                     </div>
-                    {t.serviceDetails} — Avocat 🎯
+                    {/* {t.serviceDetails} */}
+                    {intl.formatMessage({ id: "success.serviceDetails" })} —
+                    Avocat 🎯
                   </>
                 ) : (
                   <>
                     <div className="inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
                       <User className="w-5 h-5" />
                     </div>
-                    {t.serviceDetails} — Expat 🌍
+                    {/* {t.serviceDetails} */}
+                    {intl.formatMessage({ id: "success.serviceDetails" })} —
+                    Expat 🌍
                   </>
                 )}
               </h2>
@@ -948,7 +979,8 @@ const SuccessPayment: React.FC = () => {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
                     <span className="text-gray-600 font-medium">
-                      {t.service}:
+                      {/* {t.service} */}
+                      {intl.formatMessage({ id: "success.service" })}:
                     </span>
                     <span className="font-bold text-gray-900">
                       {isLawyer ? t.lawyerCall : t.expatCall}
@@ -957,7 +989,8 @@ const SuccessPayment: React.FC = () => {
 
                   <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
                     <span className="text-gray-600 font-medium">
-                      {t.duration}:
+                      {/* {t.duration} */}
+                      {intl.formatMessage({ id: "success.duration" })}:
                     </span>
                     <span className="font-bold text-gray-900 flex items-center gap-2">
                       <Clock className="w-4 h-4" />
@@ -969,7 +1002,8 @@ const SuccessPayment: React.FC = () => {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-2xl border border-green-200">
                     <span className="text-green-700 font-medium">
-                      {t.price}:
+                      {/* {t.price} */}
+                      {intl.formatMessage({ id: "success.price" })}:
                     </span>
 
                     <span className="font-black text-2xl text-green-800">
@@ -986,7 +1020,10 @@ const SuccessPayment: React.FC = () => {
                   </div>
 
                   <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
-                    <span className="text-gray-600 font-medium">{t.date}:</span>
+                    <span className="text-gray-600 font-medium">
+                      {/* {t.date} */}
+                      {intl.formatMessage({ id: "success.date" })}:
+                    </span>
                     <span className="font-bold text-gray-900">
                       {new Date().toLocaleDateString()}
                     </span>
@@ -998,7 +1035,8 @@ const SuccessPayment: React.FC = () => {
               <div className="mt-8 pt-6 border-t border-gray-200">
                 <div className="text-center mb-4">
                   <span className="text-sm font-semibold text-gray-600 bg-gray-50 px-3 py-1 rounded-full">
-                    {t.allGood}
+                    {/* {t.allGood} */}
+                    {intl.formatMessage({ id: "success.allGood" })}
                   </span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
@@ -1054,7 +1092,8 @@ const SuccessPayment: React.FC = () => {
                   className="w-full sm:w-auto bg-gradient-to-r from-yellow-500 to-yellow-600 text-white py-4 px-8 rounded-2xl hover:scale-105 transition-all duration-300 font-bold text-lg inline-flex items-center justify-center gap-3"
                 >
                   <Star size={20} />
-                  {t.leaveReview}
+                  {/* {t.leaveReview} */}
+                  {intl.formatMessage({ id: "success.leaveReview" })}
                   <ArrowRight size={16} />
                 </button>
               )}
@@ -1064,7 +1103,9 @@ const SuccessPayment: React.FC = () => {
                   onClick={() => (window.location.href = "/dashboard")}
                   className="bg-white/10 backdrop-blur-sm border border-white/20 text-white py-4 px-8 rounded-2xl hover:bg-white/20 transition-all duration-300 font-bold inline-flex items-center justify-center gap-3"
                 >
-                  {t.goToDashboard} 🚀
+                  {/* {t.goToDashboard} */}
+                  {intl.formatMessage({ id: "success.goToDashboard" })}
+                  🚀
                   <ArrowRight size={16} />
                 </button>
 
@@ -1072,7 +1113,9 @@ const SuccessPayment: React.FC = () => {
                   onClick={() => navigate("/")}
                   className="bg-white/5 backdrop-blur-sm border border-white/10 text-white/70 py-4 px-8 rounded-2xl hover:bg-white/10 hover:text-white transition-all duration-300 font-medium inline-flex items-center justify-center gap-3"
                 >
-                  {t.backToHome} 🏠
+                  {/* {t.backToHome} */}
+                  {intl.formatMessage({ id: "success.backToHome" })}
+                  🏠
                 </button>
               </div>
             </div>
