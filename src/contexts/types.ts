@@ -5,16 +5,16 @@
 // ===============================
 
 // Langues supportées par l'application
-export type SupportedLanguage = 'fr' | 'en';
+export type SupportedLanguage = "fr" | "en" | "es";
 
 // Rôles d'utilisateur dans l'application
-export type UserRole = 'client' | 'lawyer' | 'expat' | 'admin';
+export type UserRole = "client" | "lawyer" | "expat" | "admin";
 
 // Types de service disponibles
-export type ServiceType = 'lawyer_call' | 'expat_call';
+export type ServiceType = "lawyer_call" | "expat_call";
 
 // Statuts de disponibilité
-export type AvailabilityStatus = 'available' | 'busy' | 'offline';
+export type AvailabilityStatus = "available" | "busy" | "offline";
 
 // ===============================
 // INTERFACES UTILISATEUR
@@ -26,21 +26,21 @@ export interface User {
   uid?: string;
   email: string;
   emailLower?: string;
-  
+
   // Informations personnelles
   firstName?: string;
   lastName?: string;
   fullName?: string;
   displayName?: string;
   name?: string;
-  
+
   // Profil
   profilePhoto?: string;
   photoURL?: string;
   avatar?: string;
   bio?: string;
   description?: string;
-  
+
   // Rôle et permissions
   role: UserRole;
   type?: UserRole; // Alias pour compatibilité
@@ -51,7 +51,7 @@ export interface User {
   isBanned?: boolean;
   isVisible?: boolean;
   isOnline?: boolean;
-  
+
   // Contact
   phone?: string;
   phoneNumber?: string;
@@ -60,20 +60,20 @@ export interface User {
   whatsAppNumber?: string;
   whatsappNumber?: string;
   whatsappCountryCode?: string;
-  
+
   // Localisation
   country?: string;
   currentCountry?: string;
   currentPresenceCountry?: string;
   residenceCountry?: string;
   interventionCountry?: string;
-  
+
   // Langues
   preferredLanguage?: SupportedLanguage;
   lang?: SupportedLanguage;
   languages?: string[];
   languagesSpoken?: string[];
-  
+
   // Métriques
   rating?: number;
   averageRating?: number;
@@ -81,18 +81,18 @@ export interface User {
   totalCalls?: number;
   totalEarnings?: number;
   points?: number;
-  
+
   // Tarification (pour avocats/expatriés)
   hourlyRate?: number;
   price?: number;
   duration?: number;
   responseTime?: string;
-  
+
   // Spécialités et compétences
   specialties?: string[];
   helpTypes?: string[];
   certifications?: string[];
-  
+
   // Expérience professionnelle
   yearsOfExperience?: number;
   yearsAsExpat?: number;
@@ -100,15 +100,15 @@ export interface User {
   lawSchool?: string;
   graduationYear?: number;
   education?: string;
-  
+
   // Pays d'intervention
   practiceCountries?: string[];
   previousCountries?: string[];
-  
+
   // Statuts et disponibilité
   availability?: AvailabilityStatus;
   isSOS?: boolean;
-  
+
   // Données techniques
   provider?: string;
   affiliateCode?: string;
@@ -122,14 +122,14 @@ export interface User {
     loginDevice?: string;
     registrationDevice?: string;
   };
-  
+
   // Horodatage
   createdAt?: Date;
   updatedAt?: Date;
   lastLoginAt?: Date;
   lastSeenAt?: Date;
   registrationDate?: string;
-  
+
   // Motivation (pour expatriés)
   motivation?: string;
 }
@@ -156,7 +156,7 @@ export interface Notification {
   id: string;
   title?: string;
   message: string;
-  type: 'info' | 'warning' | 'error' | 'success';
+  type: "info" | "warning" | "error" | "success";
   isRead: boolean;
   createdAt: Date;
   data?: Record<string, unknown>;
@@ -189,7 +189,7 @@ export interface EnhancedSettings {
     sms: boolean;
   };
   privacy: {
-    profileVisibility: 'public' | 'private' | 'contacts';
+    profileVisibility: "public" | "private" | "contacts";
     allowContact: boolean;
     showOnMap: boolean;
   };
@@ -221,7 +221,7 @@ export interface EnhancedSettings {
 export interface AuthError {
   code: string;
   message: string;
-  severity: 'low' | 'medium' | 'high' | 'critical';
+  severity: "low" | "medium" | "high" | "critical";
   userMessage: string;
   helpText?: string;
 }
@@ -236,11 +236,11 @@ export interface AuthMetrics {
 }
 
 export interface DeviceInfo {
-  type: 'mobile' | 'tablet' | 'desktop';
+  type: "mobile" | "tablet" | "desktop";
   os: string;
   browser: string;
   isOnline: boolean;
-  connectionSpeed: 'slow' | 'medium' | 'fast';
+  connectionSpeed: "slow" | "medium" | "fast";
 }
 
 // ===============================
@@ -251,66 +251,66 @@ export interface Provider {
   // Identifiants de base
   id: string;
   uid?: string;
-  
+
   // Informations personnelles
   name: string;
   fullName?: string;
   firstName?: string;
   lastName?: string;
   email?: string;
-  
+
   // Type et rôle
-  type: 'lawyer' | 'expat';
-  role?: 'lawyer' | 'expat';
-  
+  type: "lawyer" | "expat";
+  role?: "lawyer" | "expat";
+
   // Contact
   phone?: string;
   phoneNumber?: string;
   whatsapp?: string;
   whatsAppNumber?: string;
   whatsappNumber?: string;
-  
+
   // Localisation
   country: string;
   currentCountry?: string;
   residenceCountry?: string;
-  
+
   // Profil
   avatar: string;
   profilePhoto?: string;
   description?: string;
   bio?: string;
-  
+
   // Langues
   languages: string[];
   languagesSpoken?: string[];
   preferredLanguage?: SupportedLanguage;
-  
+
   // Tarification
   price: number;
   duration: number;
   hourlyRate?: number;
-  
+
   // Métriques
   rating: number;
   reviewCount: number;
   averageRating?: number;
-  
+
   // Spécialités
   specialties: string[];
   helpTypes?: string[];
-  
+
   // Expérience
   yearsOfExperience: number;
   yearsAsExpat?: number;
-  
+
   // Statuts
   isActive: boolean;
   isApproved: boolean;
   isVisible: boolean;
   isBanned: boolean;
   isOnline: boolean;
-  
+
   // Dates
   createdAt?: Date;
   updatedAt?: Date;
@@ -322,7 +322,7 @@ export interface Provider {
 
 export interface BookingRequest {
   id?: string;
-  
+
   // Client
   clientId?: string;
   clientName: string;
@@ -335,11 +335,11 @@ export interface BookingRequest {
   clientCurrentCountry: string;
   clientLanguages: string[];
   clientLanguagesDetails: Array<{ code: string; name: string }>;
-  
+
   // Provider
   providerId: string;
   providerName: string;
-  providerType: 'lawyer' | 'expat';
+  providerType: "lawyer" | "expat";
   providerCountry: string;
   providerAvatar: string;
   providerEmail?: string;
@@ -348,19 +348,19 @@ export interface BookingRequest {
   providerReviewCount?: number;
   providerLanguages?: string[];
   providerSpecialties?: string[];
-  
+
   // Service
   title: string;
   description: string;
   price: number;
   duration: number;
   serviceType?: ServiceType;
-  
+
   // Statut et dates
-  status: 'pending' | 'confirmed' | 'cancelled' | 'completed';
+  status: "pending" | "confirmed" | "cancelled" | "completed";
   createdAt: Date;
   updatedAt?: Date;
-  
+
   // Métadonnées techniques
   ip: string;
   userAgent: string;
@@ -384,7 +384,7 @@ export interface PaymentData {
 export interface ServiceData {
   providerId: string;
   serviceType: ServiceType;
-  providerRole: 'lawyer' | 'expat';
+  providerRole: "lawyer" | "expat";
   amount: number;
   duration: number;
   clientPhone: string;

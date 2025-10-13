@@ -526,7 +526,7 @@ const LanguageDropdown = memo<{
   }, []);
 
   const handleLanguageChange = useCallback(
-    (langCode: "fr" | "en") => {
+    (langCode: "fr" | "en" | "es") => {
       setLanguage(langCode);
       setOpen(false);
       window.gtag?.("event", "language_change", {
@@ -768,12 +768,45 @@ const UserMenu = memo<{ isMobile?: boolean; scrolled?: boolean }>(
       }
     }, [logout, navigate]);
 
+    // const t = {
+    //   login: language === "fr" ? "Connexion" : "Login",
+    //   signup: language === "fr" ? "S'inscrire" : "Sign up",
+    //   dashboard: language === "fr" ? "Tableau de bord" : "Dashboard",
+    //   adminConsole: language === "fr" ? "Console Admin" : "Admin Console",
+    //   logout: language === "fr" ? "Déconnexion" : "Logout",
+    // };
+
     const t = {
-      login: language === "fr" ? "Connexion" : "Login",
-      signup: language === "fr" ? "S'inscrire" : "Sign up",
-      dashboard: language === "fr" ? "Tableau de bord" : "Dashboard",
-      adminConsole: language === "fr" ? "Console Admin" : "Admin Console",
-      logout: language === "fr" ? "Déconnexion" : "Logout",
+      login:
+        language === "fr"
+          ? "Connexion"
+          : language === "es"
+            ? "Iniciar sesión"
+            : "Login",
+      signup:
+        language === "fr"
+          ? "S'inscrire"
+          : language === "es"
+            ? "Registrarse"
+            : "Sign up",
+      dashboard:
+        language === "fr"
+          ? "Tableau de bord"
+          : language === "es"
+            ? "Panel de control"
+            : "Dashboard",
+      adminConsole:
+        language === "fr"
+          ? "Console Admin"
+          : language === "es"
+            ? "Consola de Administración"
+            : "Admin Console",
+      logout:
+        language === "fr"
+          ? "Déconnexion"
+          : language === "es"
+            ? "Cerrar sesión"
+            : "Logout",
     };
 
     if (!typedUser) {

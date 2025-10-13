@@ -6,15 +6,18 @@ import React, {
   ReactNode,
 } from "react";
 import { Service, AppSettings, Notification, EnhancedSettings } from "./types";
-import { ensureCollectionsExist } from "../utils/firestore"; // ✅ Actif maintenant
+import { ensureCollectionsExist } from "../utils/firestore";
+
+// ✅ ADD "es" to the type
+type Language = "fr" | "en" | "es";
 
 interface AppContextType {
   services: Service[];
   settings: AppSettings;
   enhancedSettings: EnhancedSettings;
   notifications: Notification[];
-  language: "fr" | "en";
-  setLanguage: (lang: "fr" | "en") => void;
+  language: Language; // ✅ Changed from "fr" | "en" to Language
+  setLanguage: (lang: Language) => void; // ✅ Changed from "fr" | "en" to Language
   addNotification: (
     notification: Omit<Notification, "id" | "createdAt">
   ) => void;
@@ -40,7 +43,7 @@ interface AppProviderProps {
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [services, setServices] = useState<Service[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [language, setLanguage] = useState<"fr" | "en">("fr");
+  const [language, setLanguage] = useState<Language>("fr"); // ✅ Changed type to Language
 
   const [settings] = useState<AppSettings>({
     servicesEnabled: {
@@ -66,7 +69,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       "NL",
       "AT",
     ],
-    supportedLanguages: ["fr", "en"],
+    supportedLanguages: ["fr", "en", "es"],
   });
 
   const [enhancedSettings, setEnhancedSettings] = useState<EnhancedSettings>({
@@ -123,13 +126,19 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
     setServices(defaultServices);
 
-    const savedLanguage = localStorage.getItem("sos_language") as "fr" | "en";
-    if (savedLanguage) {
+    // ✅ Updated to support "es" as well
+    const savedLanguage = localStorage.getItem("sos_language");
+    if (
+      savedLanguage === "fr" ||
+      savedLanguage === "en" ||
+      savedLanguage === "es"
+    ) {
       setLanguage(savedLanguage);
     }
-  }, []); // ✅ AJOUTÉ : Array de dépendances manquant
+  }, []);
 
-  const handleSetLanguage = (lang: "fr" | "en") => {
+  // ✅ Updated parameter type
+  const handleSetLanguage = (lang: Language) => {
     setLanguage(lang);
     localStorage.setItem("sos_language", lang);
   };
