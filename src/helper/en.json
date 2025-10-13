@@ -871,5 +871,21 @@
   "dashboard.pending": "Pending",
   "dashboard.inProgress": "In progress",
   "dashboard.failed": "Failed",
-  "dashboard.searchLanguages": "Search and select languages..." 
+  "dashboard.searchLanguages": "Search and select languages..." ,
+  
+  "expatCall.title": "Expat Call",
+  "expatCall.subtitle": "Benefit from the experience of a French-speaking expat who has faced the same challenges as you",
+  "expatCall.price": "€19",
+  "expatCall.duration": "30 minutes",
+  "expatCall.whyChoose": "Why choose an expat?",
+  "expatCall.livedExperience": "Lived experience",
+  "expatCall.livedExperienceDesc": "Advice based on real expatriation experience",
+  "expatCall.localKnowledge": "Local knowledge",
+  "expatCall.localKnowledgeDesc": "Practical expertise of the country and its specificities",
+  "expatCall.extendedAvailability": "Extended availability",
+  "expatCall.extendedAvailabilityDesc": "30 minutes of exchange to explore your situation",
+  "expatCall.seeAvailable": "See available expats",
+  "expatCall.guarantees": "Secure payment • Immediate call • Satisfaction guaranteed"
+
+
 }

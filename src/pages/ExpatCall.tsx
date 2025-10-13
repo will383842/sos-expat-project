@@ -1,36 +1,29 @@
 import React, { useMemo } from 'react';
 import { Users, MapPin, Clock, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useIntl } from 'react-intl';
 import Layout from '../components/layout/Layout';
-import { useApp } from '../contexts/AppContext';
 
 const ExpatCall: React.FC = () => {
-  const { language } = useApp();
-  const isFrench = language === 'fr';
+  const intl = useIntl();
 
   const expatAdvantages = useMemo(() => [
     {
       icon: Users,
-      title: isFrench ? 'Expérience vécue' : 'Lived experience',
-      description: isFrench
-        ? 'Conseils basés sur une expérience réelle d\'expatriation'
-        : 'Advice based on real expatriation experience'
+      title: intl.formatMessage({ id: 'expatCall.livedExperience' }),
+      description: intl.formatMessage({ id: 'expatCall.livedExperienceDesc' })
     },
     {
       icon: MapPin,
-      title: isFrench ? 'Connaissance locale' : 'Local knowledge',
-      description: isFrench
-        ? 'Expertise pratique du pays et de ses spécificités' 
-        : 'Practical expertise of the country and its specificities'
+      title: intl.formatMessage({ id: 'expatCall.localKnowledge' }),
+      description: intl.formatMessage({ id: 'expatCall.localKnowledgeDesc' })
     },
     {
       icon: Clock,
-      title: isFrench ? 'Disponibilité étendue' : 'Extended availability',
-      description: isFrench
-        ? '30 minutes d\'échange pour explorer votre situation'
-        : '30 minutes of exchange to explore your situation' 
+      title: intl.formatMessage({ id: 'expatCall.extendedAvailability' }),
+      description: intl.formatMessage({ id: 'expatCall.extendedAvailabilityDesc' })
     }
-  ], [isFrench]);
+  ], [intl]);
 
   return (
     <Layout>
@@ -43,17 +36,18 @@ const ExpatCall: React.FC = () => {
               </div>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              {isFrench ? 'Appel Expatrié' : 'Expat Call'}
+              {intl.formatMessage({ id: 'expatCall.title' })}
             </h1>
             <p className="text-xl text-green-100 max-w-2xl mx-auto mb-8">
-              {isFrench
-                ? 'Bénéficiez de l\'expérience d\'un expatrié francophone qui a vécu les mêmes défis que vous'
-                : 'Benefit from the experience of a French-speaking expat who has faced the same challenges as you'
-              }
+              {intl.formatMessage({ id: 'expatCall.subtitle' })}
             </p>
             <div className="bg-green-700 rounded-lg p-4 inline-block">
-              <div className="text-3xl font-bold">€19</div>
-              <div className="text-green-100">30 minutes</div>
+              <div className="text-3xl font-bold">
+                {intl.formatMessage({ id: 'expatCall.price' })}
+              </div>
+              <div className="text-green-100">
+                {intl.formatMessage({ id: 'expatCall.duration' })}
+              </div>
             </div>
           </div>
         </div>
@@ -61,7 +55,7 @@ const ExpatCall: React.FC = () => {
         <div className="py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-              {isFrench ? 'Pourquoi choisir un expatrié ?' : 'Why choose an expat?'}
+              {intl.formatMessage({ id: 'expatCall.whyChoose' })}
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
@@ -85,16 +79,13 @@ const ExpatCall: React.FC = () => {
             <div className="text-center">
               <Link
                 to="/sos-appel?type=expat"
-                className="bg-green-600 hover:bg-green-700 text-white px-12 py-4 rounded-lg font-bold text-xl transition-colors"
+                className="bg-green-600 hover:bg-green-700 text-white px-12 py-4 rounded-lg font-bold text-xl transition-colors inline-flex items-center"
               >
-                {isFrench ? 'Consulter les expatriés disponibles' : 'See available expats'}
-                <ArrowRight className="ml-2 inline-block" size={20} />
+                {intl.formatMessage({ id: 'expatCall.seeAvailable' })}
+                <ArrowRight className="ml-2" size={20} />
               </Link>
               <p className="mt-4 text-gray-600">
-                {isFrench
-                  ? 'Paiement sécurisé • Appel immédiat • Satisfaction garantie'
-                  : 'Secure payment • Immediate call • Satisfaction guaranteed'
-                }
+                {intl.formatMessage({ id: 'expatCall.guarantees' })}
               </p>
             </div>
           </div>
@@ -105,4 +96,3 @@ const ExpatCall: React.FC = () => {
 };
 
 export default ExpatCall;
-

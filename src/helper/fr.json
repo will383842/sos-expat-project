@@ -927,6 +927,20 @@
   "needImmediateHelp": "Avez-vous besoin d'aide immédiate ?",
   "dashboardCta": "Accédez à votre espace",
   "howItWorks": "Comment ça marche",
-  "faq": "Questions fréquentes"
+  "faq": "Questions fréquentes",
+  "expatCall.title": "Appel Expatrié",
+  "expatCall.subtitle": "Bénéficiez de l'expérience d'un expatrié francophone qui a vécu les mêmes défis que vous",
+  "expatCall.price": "€19",
+  "expatCall.duration": "30 minutes",
+  "expatCall.whyChoose": "Pourquoi choisir un expatrié ?",
+  "expatCall.livedExperience": "Expérience vécue",
+  "expatCall.livedExperienceDesc": "Conseils basés sur une expérience réelle d'expatriation",
+  "expatCall.localKnowledge": "Connaissance locale",
+  "expatCall.localKnowledgeDesc": "Expertise pratique du pays et de ses spécificités",
+  "expatCall.extendedAvailability": "Disponibilité étendue",
+  "expatCall.extendedAvailabilityDesc": "30 minutes d'échange pour explorer votre situation",
+  "expatCall.seeAvailable": "Consulter les expatriés disponibles",
+  "expatCall.guarantees": "Paiement sécurisé • Appel immédiat • Satisfaction garantie"
+
   
 }

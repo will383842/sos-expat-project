@@ -896,5 +896,19 @@
   "dashboard.pending": "Pendiente",
   "dashboard.inProgress": "En progreso",
   "dashboard.failed": "Fallido",
-   "dashboard.searchLanguages": "Buscar y seleccionar idiomas..."   
+  "dashboard.searchLanguages": "Buscar y seleccionar idiomas...",
+
+  "expatCall.title": "Llamada Expatriado",
+  "expatCall.subtitle": "Benefíciate de la experiencia de un expatriado francófono que ha enfrentado los mismos desafíos que tú",
+  "expatCall.price": "€19",
+  "expatCall.duration": "30 minutos",
+  "expatCall.whyChoose": "¿Por qué elegir un expatriado?",
+  "expatCall.livedExperience": "Experiencia vivida",
+  "expatCall.livedExperienceDesc": "Consejos basados en experiencia real de expatriación",
+  "expatCall.localKnowledge": "Conocimiento local",
+  "expatCall.localKnowledgeDesc": "Experiencia práctica del país y sus especificidades",
+  "expatCall.extendedAvailability": "Disponibilidad extendida",
+  "expatCall.extendedAvailabilityDesc": "30 minutos de intercambio para explorar tu situación",
+  "expatCall.seeAvailable": "Ver expatriados disponibles",
+  "expatCall.guarantees": "Pago seguro • Llamada inmediata • Satisfacción garantizada"
 }

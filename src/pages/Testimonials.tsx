@@ -1206,13 +1206,13 @@ const Testimonials: React.FC = () => {
 
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center">
             {/* Language Selector */}
-            <div className="flex justify-end mb-8">
-              <div className="relative">
-                <label htmlFor="language-selector" className="sr-only">
-                  {/* {t.aria.languageSelector} */}
-                  <FormattedMessage id="testimonials.aria.languageSelector" />
-                </label>
-                <select
+            {/* <div className="flex justify-end mb-8"> */}
+            {/* <div className="relative"> */}
+            {/* <label htmlFor="language-selector" className="sr-only"> */}
+            {/* {t.aria.languageSelector} */}
+            {/* <FormattedMessage id="testimonials.aria.languageSelector" /> */}
+            {/* </label> */}
+            {/* <select
                   id="language-selector"
                   value={currentLanguage}
                   onChange={(e) => handleLanguageChange(e.target.value)}
@@ -1225,14 +1225,14 @@ const Testimonials: React.FC = () => {
                   <option value="fr">🇫🇷 Français</option>
                   <option value="en">🇺🇸 English</option>
                   <option value="es">🇪🇸 Español</option>
-                </select>
-                {isLoading && (
+                </select> */}
+            {/* {isLoading && (
                   <div className="absolute inset-y-0 right-2 flex items-center">
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                   </div>
-                )}
-              </div>
-            </div>
+                )} */}
+            {/* </div> */}
+            {/* </div> */}
 
             {/* Badge */}
             <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-full px-4 sm:px-6 py-2 sm:py-3 border border-white/20 mb-6 sm:mb-8">
