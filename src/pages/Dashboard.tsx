@@ -1,6 +1,6 @@
 // src/pages/Dashboard.tsx
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   User,
   Settings,
@@ -18,21 +18,21 @@ import {
   AlertTriangle,
   Clock,
   Star,
-  Bookmark
-} from 'lucide-react';
+  Bookmark,
+} from "lucide-react";
 
-import Layout from '../components/layout/Layout';
-import Button from '../components/common/Button';
-import AvailabilityToggle from '../components/dashboard/AvailabilityToggle';
-import NotificationSettings from '../notifications/notificationsDashboardProviders/NotificationSettings';
-import UserInvoices from '../components/dashboard/UserInvoices';
-import DashboardMessages from '../components/dashboard/DashboardMessages';
-import ImageUploader from '../components/common/ImageUploader';
-import MultiLanguageSelect from '../components/forms-data/MultiLanguageSelect';
+import Layout from "../components/layout/Layout";
+import Button from "../components/common/Button";
+import AvailabilityToggle from "../components/dashboard/AvailabilityToggle";
+import NotificationSettings from "../notifications/notificationsDashboardProviders/NotificationSettings";
+import UserInvoices from "../components/dashboard/UserInvoices";
+import DashboardMessages from "../components/dashboard/DashboardMessages";
+import ImageUploader from "../components/common/ImageUploader";
+import MultiLanguageSelect from "../components/forms-data/MultiLanguageSelect";
 
-import { useAuth } from '../contexts/AuthContext';
-import { useApp } from '../contexts/AppContext';
-import { updateUserProfile, logAuditEvent } from '../utils/firestore';
+import { useAuth } from "../contexts/AuthContext";
+import { useApp } from "../contexts/AppContext";
+import { updateUserProfile, logAuditEvent } from "../utils/firestore";
 
 import {
   collection,
@@ -43,49 +43,57 @@ import {
   onSnapshot,
   doc,
   updateDoc,
-  serverTimestamp
-} from 'firebase/firestore';
-import { db, auth } from '../config/firebase';
-import { updateEmail as fbUpdateEmail, updateProfile as fbUpdateProfile } from 'firebase/auth';
+  serverTimestamp,
+} from "firebase/firestore";
+import { db, auth } from "../config/firebase";
+import {
+  updateEmail as fbUpdateEmail,
+  updateProfile as fbUpdateProfile,
+} from "firebase/auth";
+import { useIntl } from "react-intl";
 
 // ===============================
 // 🎨 DESIGN TOKENS (UI only — aucune incidence métier)
 // ===============================
 const UI = {
-  card:
-    'bg-white/80 dark:bg-white/5 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-2xl shadow-lg',
-  sectionTitle: 'text-lg font-semibold text-gray-900 dark:text-gray-100',
-  text: 'text-gray-700 dark:text-gray-200',
-  textMuted: 'text-gray-500 dark:text-gray-400',
-  radiusSm: 'rounded-lg',
-  radiusFull: 'rounded-full'
+  card: "bg-white/80 dark:bg-white/5 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-2xl shadow-lg",
+  sectionTitle: "text-lg font-semibold text-gray-900 dark:text-gray-100",
+  text: "text-gray-700 dark:text-gray-200",
+  textMuted: "text-gray-500 dark:text-gray-400",
+  radiusSm: "rounded-lg",
+  radiusFull: "rounded-full",
 } as const;
 
 const ROLE = {
   admin: {
-    header: 'bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white',
-    chip: 'bg-amber-100 text-amber-700 border border-amber-200'
+    header:
+      "bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white",
+    chip: "bg-amber-100 text-amber-700 border border-amber-200",
   },
   lawyer: {
-    header: 'bg-gradient-to-r from-red-600 via-orange-500 to-red-600 text-white',
-    chip: 'bg-red-100 text-red-700 border border-red-200'
+    header:
+      "bg-gradient-to-r from-red-600 via-orange-500 to-red-600 text-white",
+    chip: "bg-red-100 text-red-700 border border-red-200",
   },
   expat: {
-    header: 'bg-gradient-to-r from-blue-600 via-indigo-600 to-indigo-700 text-white',
-    chip: 'bg-indigo-100 text-indigo-700 border border-indigo-200'
+    header:
+      "bg-gradient-to-r from-blue-600 via-indigo-600 to-indigo-700 text-white",
+    chip: "bg-indigo-100 text-indigo-700 border border-indigo-200",
   },
   client: {
-    header: 'bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 text-white',
-    chip: 'bg-purple-100 text-purple-700 border border-purple-200'
+    header:
+      "bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 text-white",
+    chip: "bg-purple-100 text-purple-700 border border-purple-200",
   },
-  defaultHeader: 'bg-gradient-to-r from-red-500 via-orange-500 to-purple-600 text-white'
+  defaultHeader:
+    "bg-gradient-to-r from-red-500 via-orange-500 to-purple-600 text-white",
 } as const;
 
 const getHeaderClassForRole = (role?: string): string => {
-  if (role === 'admin') return ROLE.admin.header;
-  if (role === 'lawyer') return ROLE.lawyer.header;
-  if (role === 'expat') return ROLE.expat.header;
-  if (role === 'client') return ROLE.client.header;
+  if (role === "admin") return ROLE.admin.header;
+  if (role === "lawyer") return ROLE.lawyer.header;
+  if (role === "expat") return ROLE.expat.header;
+  if (role === "client") return ROLE.client.header;
   return ROLE.defaultHeader;
 };
 
@@ -98,12 +106,12 @@ interface Call {
   providerId: string;
   providerName: string;
   clientName: string;
-  serviceType: 'lawyer_call' | 'expat_call';
+  serviceType: "lawyer_call" | "expat_call";
   title: string;
   description: string;
   duration: number;
   price: number;
-  status: 'completed' | 'pending' | 'in_progress' | 'failed';
+  status: "completed" | "pending" | "in_progress" | "failed";
   createdAt: Date;
   startedAt: Date;
   endedAt: Date;
@@ -116,7 +124,7 @@ interface Invoice {
   number: string;
   amount: number;
   date: Date;
-  status: 'paid' | 'pending' | 'overdue';
+  status: "paid" | "pending" | "overdue";
   downloadUrl: string;
 }
 
@@ -141,7 +149,7 @@ interface ProfileData {
   isOnline: boolean;
 
   // commun
-  preferredLanguage?: 'fr' | 'en';
+  preferredLanguage?: "fr" | "en";
   languages?: string[];
   bio?: string;
 
@@ -160,16 +168,16 @@ interface ProfileData {
 }
 
 type TabType =
-  | 'profile'
-  | 'settings'
-  | 'calls'
-  | 'invoices'
-  | 'reviews'
-  | 'notifications'
-  | 'messages'
-  | 'favorites';
+  | "profile"
+  | "settings"
+  | "calls"
+  | "invoices"
+  | "reviews"
+  | "notifications"
+  | "messages"
+  | "favorites";
 
-type CallStatus = 'completed' | 'pending' | 'in_progress' | 'failed';
+type CallStatus = "completed" | "pending" | "in_progress" | "failed";
 
 // ===============================
 // Sous-composants UI (logique inchangée, styles modernisés)
@@ -179,10 +187,12 @@ const Field: React.FC<{
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
-  type?: 'text' | 'email' | 'number';
-}> = ({ label, value, onChange, placeholder, type = 'text' }) => (
+  type?: "text" | "email" | "number";
+}> = ({ label, value, onChange, placeholder, type = "text" }) => (
   <div>
-    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{label}</label>
+    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+      {label}
+    </label>
     <input
       type={type}
       value={value}
@@ -199,16 +209,16 @@ const ChipInput: React.FC<{
   placeholder?: string;
   className?: string;
 }> = ({ value, onChange, placeholder, className }) => {
-  const [input, setInput] = useState<string>('');
+  const [input, setInput] = useState<string>("");
   const add = () => {
     const v = input.trim();
     if (!v) return;
     if (value.includes(v)) {
-      setInput('');
+      setInput("");
       return;
     }
     onChange([...value, v]);
-    setInput('');
+    setInput("");
   };
   const remove = (i: number) => {
     const next = [...value];
@@ -216,7 +226,7 @@ const ChipInput: React.FC<{
     onChange(next);
   };
   return (
-    <div className={className ?? ''}>
+    <div className={className ?? ""}>
       <div className="flex flex-wrap gap-2 mb-2">
         {value.map((v, i) => (
           <span
@@ -240,7 +250,7 @@ const ChipInput: React.FC<{
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === 'Enter') {
+            if (e.key === "Enter") {
               e.preventDefault();
               add();
             }
@@ -256,30 +266,43 @@ const ChipInput: React.FC<{
   );
 };
 
-const InfoRow: React.FC<{ label: string; value: string }> = ({ label, value }) => (
+const InfoRow: React.FC<{ label: string; value: string }> = ({
+  label,
+  value,
+}) => (
   <div>
-    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{label}</p>
-    <p className="mt-1 text-sm text-gray-900 dark:text-gray-100">{value || '—'}</p>
+    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+      {label}
+    </p>
+    <p className="mt-1 text-sm text-gray-900 dark:text-gray-100">
+      {value || "—"}
+    </p>
   </div>
 );
 
-const PillsRow: React.FC<{ label: string; items: string[]; color: 'blue' | 'green' | 'red' }> = ({
-  label,
-  items,
-  color
-}) => {
-  const colorMap: Record<'blue' | 'green' | 'red', string> = {
-    blue: 'bg-blue-100 text-blue-800 dark:bg-blue-500/15 dark:text-blue-300',
-    green: 'bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-300',
-    red: 'bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-300'
+const PillsRow: React.FC<{
+  label: string;
+  items: string[];
+  color: "blue" | "green" | "red";
+}> = ({ label, items, color }) => {
+  const colorMap: Record<"blue" | "green" | "red", string> = {
+    blue: "bg-blue-100 text-blue-800 dark:bg-blue-500/15 dark:text-blue-300",
+    green:
+      "bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-300",
+    red: "bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-300",
   };
   return (
     <div>
-      <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">{label}</p>
+      <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+        {label}
+      </p>
       <div className="flex flex-wrap gap-1">
         {(items || []).length > 0 ? (
           items.map((it, i) => (
-            <span key={`${it}-${i}`} className={`px-2 py-1 ${colorMap[color]} text-xs rounded-full`}>
+            <span
+              key={`${it}-${i}`}
+              className={`px-2 py-1 ${colorMap[color]} text-xs rounded-full`}
+            >
               {it}
             </span>
           ))
@@ -291,20 +314,23 @@ const PillsRow: React.FC<{ label: string; items: string[]; color: 'blue' | 'gree
   );
 };
 
-const Alert: React.FC<{ type: 'success' | 'error'; message: string }> = ({ type, message }) => {
+const Alert: React.FC<{ type: "success" | "error"; message: string }> = ({
+  type,
+  message,
+}) => {
   const cfg =
-    type === 'success'
+    type === "success"
       ? {
-          bg: 'bg-green-50 dark:bg-green-500/10',
-          border: 'border-green-200 dark:border-green-500/20',
-          text: 'text-green-800 dark:text-green-200',
-          icon: <Check className="h-5 w-5 mr-2" />
+          bg: "bg-green-50 dark:bg-green-500/10",
+          border: "border-green-200 dark:border-green-500/20",
+          text: "text-green-800 dark:text-green-200",
+          icon: <Check className="h-5 w-5 mr-2" />,
         }
       : {
-          bg: 'bg-red-50 dark:bg-red-500/10',
-          border: 'border-red-200 dark:border-red-500/20',
-          text: 'text-red-800 dark:text-red-200',
-          icon: <AlertTriangle className="h-5 w-5 mr-2" />
+          bg: "bg-red-50 dark:bg-red-500/10",
+          border: "border-red-200 dark:border-red-500/20",
+          text: "text-red-800 dark:text-red-200",
+          icon: <AlertTriangle className="h-5 w-5 mr-2" />,
         };
   return (
     <div
@@ -324,70 +350,95 @@ const Alert: React.FC<{ type: 'success' | 'error'; message: string }> = ({ type,
 // Composant principal
 // ===============================
 const Dashboard: React.FC = () => {
+  const intl = useIntl();
   const navigate = useNavigate();
   const { user, firebaseUser, logout, refreshUser } = useAuth();
   const { language } = useApp();
 
   // UI & feedback
-  const [activeTab, setActiveTab] = useState<TabType>('profile');
+  const [activeTab, setActiveTab] = useState<TabType>("profile");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // data
-  const [currentStatus, setCurrentStatus] = useState<boolean>(user?.isOnline ?? false);
+  const [currentStatus, setCurrentStatus] = useState<boolean>(
+    user?.isOnline ?? false
+  );
   const [calls, setCalls] = useState<Call[]>([]);
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [favorites, setFavorites] = useState<
-    Array<{ id: string; type: 'lawyer' | 'expat'; name: string; country?: string; photo?: string }>
+    Array<{
+      id: string;
+      type: "lawyer" | "expat";
+      name: string;
+      country?: string;
+      photo?: string;
+    }>
   >([]);
 
   // Profil (édition) pré-rempli
   const baseProfile: ProfileData = useMemo(
     () => ({
-      email: user?.email || '',
-      phone: (user as { phone?: string })?.phone || '',
-      phoneCountryCode: (user as { phoneCountryCode?: string })?.phoneCountryCode || '+33',
-      whatsappNumber: (user as { whatsappNumber?: string })?.whatsappNumber || '',
-      whatsappCountryCode: (user as { whatsappCountryCode?: string })?.whatsappCountryCode || '+33',
-      currentCountry: (user as { currentCountry?: string })?.currentCountry || '',
-      currentPresenceCountry: (user as { currentPresenceCountry?: string })?.currentPresenceCountry || '',
-      residenceCountry: (user as { residenceCountry?: string })?.residenceCountry || '',
-      profilePhoto: user?.profilePhoto || user?.photoURL || '',
+      email: user?.email || "",
+      phone: (user as { phone?: string })?.phone || "",
+      phoneCountryCode:
+        (user as { phoneCountryCode?: string })?.phoneCountryCode || "+33",
+      whatsappNumber:
+        (user as { whatsappNumber?: string })?.whatsappNumber || "",
+      whatsappCountryCode:
+        (user as { whatsappCountryCode?: string })?.whatsappCountryCode ||
+        "+33",
+      currentCountry:
+        (user as { currentCountry?: string })?.currentCountry || "",
+      currentPresenceCountry:
+        (user as { currentPresenceCountry?: string })?.currentPresenceCountry ||
+        "",
+      residenceCountry:
+        (user as { residenceCountry?: string })?.residenceCountry || "",
+      profilePhoto: user?.profilePhoto || user?.photoURL || "",
       isOnline: user?.isOnline ?? true,
-      preferredLanguage: (user as { preferredLanguage?: 'fr' | 'en' })?.preferredLanguage || 'fr',
+      preferredLanguage:
+        (user as { preferredLanguage?: "fr" | "en" })?.preferredLanguage ||
+        "fr",
       languages: (user as { languages?: string[] })?.languages || [],
-      bio: (user as { bio?: string })?.bio || '',
-      yearsOfExperience: (user as { yearsOfExperience?: number })?.yearsOfExperience ?? 0,
+      bio: (user as { bio?: string })?.bio || "",
+      yearsOfExperience:
+        (user as { yearsOfExperience?: number })?.yearsOfExperience ?? 0,
       specialties: (user as { specialties?: string[] })?.specialties || [],
-      practiceCountries: (user as { practiceCountries?: string[] })?.practiceCountries || [],
-      graduationYear: (user as { graduationYear?: number })?.graduationYear || new Date().getFullYear() - 5,
+      practiceCountries:
+        (user as { practiceCountries?: string[] })?.practiceCountries || [],
+      graduationYear:
+        (user as { graduationYear?: number })?.graduationYear ||
+        new Date().getFullYear() - 5,
       educations: (user as { educations?: string[] })?.educations || [],
-      barNumber: (user as { barNumber?: string })?.barNumber || '',
+      barNumber: (user as { barNumber?: string })?.barNumber || "",
       helpTypes: (user as { helpTypes?: string[] })?.helpTypes || [],
       yearsAsExpat: (user as { yearsAsExpat?: number })?.yearsAsExpat ?? 0,
-      interventionCountries: (user as { interventionCountries?: string[] })?.interventionCountries || []
+      interventionCountries:
+        (user as { interventionCountries?: string[] })?.interventionCountries ||
+        [],
     }),
     [user]
   );
   const [profileData, setProfileData] = useState<ProfileData>(baseProfile);
 
   // Langues (sélecteur identique aux formulaires)
-  const [selectedLanguages, setSelectedLanguages] = useState<Array<{ value: string; label: string }>>(
-    (baseProfile.languages || []).map((l) => ({ value: l, label: l }))
-  );
+  const [selectedLanguages, setSelectedLanguages] = useState<
+    Array<{ value: string; label: string }>
+  >((baseProfile.languages || []).map((l) => ({ value: l, label: l })));
 
   // Redirect si pas loggé
   useEffect(() => {
-    if (!user) navigate('/login');
+    if (!user) navigate("/login");
   }, [user, navigate]);
 
   // Status en temps réel (priorité = sos_profiles, fallback = users)
   useEffect(() => {
     if (!user?.id) return;
 
-    const sosRef = doc(db, 'sos_profiles', user.id);
-    const userRef = doc(db, 'users', user.id);
+    const sosRef = doc(db, "sos_profiles", user.id);
+    const userRef = doc(db, "users", user.id);
 
     let unsubUsers: null | (() => void) = null;
 
@@ -434,17 +485,27 @@ const Dashboard: React.FC = () => {
     if (!user?.id) return;
     (async () => {
       try {
-        const q = query(collection(db, 'users', user.id, 'favorites'), orderBy('createdAt', 'desc'), limit(20));
+        const q = query(
+          collection(db, "users", user.id, "favorites"),
+          orderBy("createdAt", "desc"),
+          limit(20)
+        );
         const snap = await getDocs(q);
-        const items: Array<{ id: string; type: 'lawyer' | 'expat'; name: string; country?: string; photo?: string }> = [];
+        const items: Array<{
+          id: string;
+          type: "lawyer" | "expat";
+          name: string;
+          country?: string;
+          photo?: string;
+        }> = [];
         snap.forEach((d) => {
           const data = d.data() as Record<string, unknown>;
           items.push({
             id: d.id,
-            type: (data.type as 'lawyer' | 'expat') || 'lawyer',
-            name: String(data.name || ''),
-            country: (data.country as string) || '',
-            photo: (data.photo as string) || ''
+            type: (data.type as "lawyer" | "expat") || "lawyer",
+            name: String(data.name || ""),
+            country: (data.country as string) || "",
+            photo: (data.photo as string) || "",
           });
         });
         setFavorites(items);
@@ -466,39 +527,42 @@ const Dashboard: React.FC = () => {
 
   // Helpers
   const formatDate = (date: Date): string =>
-    new Intl.DateTimeFormat(language === 'fr' ? 'fr-FR' : 'en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    new Intl.DateTimeFormat(language === "fr" ? "fr-FR" : "en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     }).format(date);
 
   const formatDuration = (minutes: number): string => `${minutes} min`;
   const formatPrice = (price: number): string => `${price.toFixed(2)} €`;
 
   const getStatusBadge = (status: CallStatus): JSX.Element => {
-    const statusConfig: Record<CallStatus, { className: string; text: string }> = {
+    const statusConfig: Record<
+      CallStatus,
+      { className: string; text: string }
+    > = {
       completed: {
         className:
-          'px-2 py-1 bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-300 rounded-full text-xs font-medium',
-        text: language === 'fr' ? 'Terminé' : 'Completed'
+          "px-2 py-1 bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-300 rounded-full text-xs font-medium",
+        text: language === "fr" ? "Terminé" : "Completed",
       },
       pending: {
         className:
-          'px-2 py-1 bg-yellow-100 text-yellow-800 dark:bg-yellow-500/15 dark:text-yellow-300 rounded-full text-xs font-medium',
-        text: language === 'fr' ? 'En attente' : 'Pending'
+          "px-2 py-1 bg-yellow-100 text-yellow-800 dark:bg-yellow-500/15 dark:text-yellow-300 rounded-full text-xs font-medium",
+        text: language === "fr" ? "En attente" : "Pending",
       },
       in_progress: {
         className:
-          'px-2 py-1 bg-blue-100 text-blue-800 dark:bg-blue-500/15 dark:text-blue-300 rounded-full text-xs font-medium',
-        text: language === 'fr' ? 'En cours' : 'In progress'
+          "px-2 py-1 bg-blue-100 text-blue-800 dark:bg-blue-500/15 dark:text-blue-300 rounded-full text-xs font-medium",
+        text: language === "fr" ? "En cours" : "In progress",
       },
       failed: {
         className:
-          'px-2 py-1 bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-300 rounded-full text-xs font-medium',
-        text: language === 'fr' ? 'Échoué' : 'Failed'
-      }
+          "px-2 py-1 bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-300 rounded-full text-xs font-medium",
+        text: language === "fr" ? "Échoué" : "Failed",
+      },
     };
     const config = statusConfig[status];
     return <span className={config.className}>{config.text}</span>;
@@ -516,39 +580,45 @@ const Dashboard: React.FC = () => {
       if (!user) return;
       try {
         // users/{uid}
-        await updateDoc(doc(db, 'users', user.id), {
+        await updateDoc(doc(db, "users", user.id), {
           profilePhoto: url,
           photoURL: url,
           avatar: url,
-          updatedAt: serverTimestamp()
+          updatedAt: serverTimestamp(),
         });
 
         // sos_profiles/{uid} si prestataire
-        if (user.role === 'lawyer' || user.role === 'expat') {
-          await updateDoc(doc(db, 'sos_profiles', user.id), {
+        if (user.role === "lawyer" || user.role === "expat") {
+          await updateDoc(doc(db, "sos_profiles", user.id), {
             profilePhoto: url,
             photoURL: url,
             avatar: url,
-            updatedAt: serverTimestamp()
+            updatedAt: serverTimestamp(),
           }).catch(() => {});
         }
 
         // Auth photoURL
         if (auth.currentUser) {
-          await fbUpdateProfile(auth.currentUser, { photoURL: url }).catch(() => {});
+          await fbUpdateProfile(auth.currentUser, { photoURL: url }).catch(
+            () => {}
+          );
         }
 
         // MAJ UI immédiate
         setProfileData((prev) => ({ ...prev, profilePhoto: url }));
 
-        await logAuditEvent(user.id, 'profile_photo_updated', { newUrl: url });
+        await logAuditEvent(user.id, "profile_photo_updated", { newUrl: url });
         await refreshUser?.(); // propage vers sidebar / profil
 
-        setSuccessMessage(language === 'fr' ? 'Photo mise à jour ✅' : 'Photo updated ✅');
+        setSuccessMessage(
+          language === "fr" ? "Photo mise à jour ✅" : "Photo updated ✅"
+        );
         setTimeout(() => setSuccessMessage(null), 2000);
       } catch {
         setErrorMessage(
-          language === 'fr' ? 'Erreur lors de la mise à jour de la photo' : 'Error updating photo'
+          language === "fr"
+            ? "Erreur lors de la mise à jour de la photo"
+            : "Error updating photo"
         );
         setTimeout(() => setErrorMessage(null), 2500);
       }
@@ -572,55 +642,63 @@ const Dashboard: React.FC = () => {
 
       const payload: Record<string, unknown> = {
         email: profileData.email.trim().toLowerCase(),
-        phone: profileData.phone || '',
-        phoneCountryCode: profileData.phoneCountryCode || '+33',
-        whatsappNumber: profileData.whatsappNumber || '',
-        whatsappCountryCode: profileData.whatsappCountryCode || '+33',
-        currentCountry: profileData.currentCountry || '',
-        currentPresenceCountry: profileData.currentPresenceCountry || '',
-        residenceCountry: profileData.residenceCountry || '',
-        preferredLanguage: profileData.preferredLanguage || 'fr',
+        phone: profileData.phone || "",
+        phoneCountryCode: profileData.phoneCountryCode || "+33",
+        whatsappNumber: profileData.whatsappNumber || "",
+        whatsappCountryCode: profileData.whatsappCountryCode || "+33",
+        currentCountry: profileData.currentCountry || "",
+        currentPresenceCountry: profileData.currentPresenceCountry || "",
+        residenceCountry: profileData.residenceCountry || "",
+        preferredLanguage: profileData.preferredLanguage || "fr",
         languages: languagesFromSelect,
-        bio: profileData.bio || '',
-        profilePhoto: profileData.profilePhoto || '',
-        photoURL: profileData.profilePhoto || '',
-        avatar: profileData.profilePhoto || '',
-        updatedAt: new Date()
+        bio: profileData.bio || "",
+        profilePhoto: profileData.profilePhoto || "",
+        photoURL: profileData.profilePhoto || "",
+        avatar: profileData.profilePhoto || "",
+        updatedAt: new Date(),
       };
 
-      if (user.role === 'lawyer') {
+      if (user.role === "lawyer") {
         Object.assign(payload, {
           practiceCountries: profileData.practiceCountries || [],
           yearsOfExperience:
-            typeof profileData.yearsOfExperience === 'number' ? profileData.yearsOfExperience : 0,
+            typeof profileData.yearsOfExperience === "number"
+              ? profileData.yearsOfExperience
+              : 0,
           specialties: profileData.specialties || [],
           graduationYear:
-            typeof profileData.graduationYear === 'number'
+            typeof profileData.graduationYear === "number"
               ? profileData.graduationYear
               : new Date().getFullYear() - 5,
           educations: profileData.educations || [],
-          barNumber: profileData.barNumber || ''
+          barNumber: profileData.barNumber || "",
         });
-      } else if (user.role === 'expat') {
+      } else if (user.role === "expat") {
         Object.assign(payload, {
           helpTypes: profileData.helpTypes || [],
           yearsAsExpat:
-            typeof profileData.yearsAsExpat === 'number' ? profileData.yearsAsExpat : 0,
-          interventionCountries: profileData.interventionCountries || []
+            typeof profileData.yearsAsExpat === "number"
+              ? profileData.yearsAsExpat
+              : 0,
+          interventionCountries: profileData.interventionCountries || [],
         });
       }
 
       // Si changement d'email => met à jour l'identifiant Auth
       const emailChanged =
-        user.email.trim().toLowerCase() !== profileData.email.trim().toLowerCase();
+        user.email.trim().toLowerCase() !==
+        profileData.email.trim().toLowerCase();
       if (emailChanged && firebaseUser) {
         try {
-          await fbUpdateEmail(firebaseUser, profileData.email.trim().toLowerCase());
+          await fbUpdateEmail(
+            firebaseUser,
+            profileData.email.trim().toLowerCase()
+          );
         } catch {
           throw new Error(
-            language === 'fr'
+            language === "fr"
               ? "Impossible de changer l’email (reconnexion récente requise). Déconnectez-vous puis reconnectez-vous et réessayez."
-              : 'Cannot change email (recent login required). Please sign out/in and try again.'
+              : "Cannot change email (recent login required). Please sign out/in and try again."
           );
         }
       }
@@ -629,8 +707,8 @@ const Dashboard: React.FC = () => {
       await updateUserProfile(user.id, payload);
 
       // sync SOS profile
-      if (user.role === 'lawyer' || user.role === 'expat') {
-        await updateDoc(doc(db, 'sos_profiles', user.id), {
+      if (user.role === "lawyer" || user.role === "expat") {
+        await updateDoc(doc(db, "sos_profiles", user.id), {
           profilePhoto: payload.profilePhoto,
           photoURL: payload.photoURL,
           avatar: payload.avatar,
@@ -639,36 +717,45 @@ const Dashboard: React.FC = () => {
           phoneCountryCode: payload.phoneCountryCode,
           languages: payload.languages,
           country:
-            user.role === 'lawyer'
-              ? profileData.currentCountry || ''
-              : profileData.residenceCountry || profileData.currentCountry || '',
+            user.role === "lawyer"
+              ? profileData.currentCountry || ""
+              : profileData.residenceCountry ||
+                profileData.currentCountry ||
+                "",
           description: payload.bio,
           specialties:
-            user.role === 'lawyer'
+            user.role === "lawyer"
               ? (payload as { specialties?: string[] }).specialties || []
               : (payload as { helpTypes?: string[] }).helpTypes || [],
           yearsOfExperience:
-            user.role === 'lawyer'
-              ? (payload as { yearsOfExperience?: number }).yearsOfExperience || 0
+            user.role === "lawyer"
+              ? (payload as { yearsOfExperience?: number }).yearsOfExperience ||
+                0
               : (payload as { yearsAsExpat?: number }).yearsAsExpat || 0,
           interventionCountries:
-            user.role === 'lawyer'
-              ? (payload as { practiceCountries?: string[] }).practiceCountries || []
-              : (payload as { interventionCountries?: string[] }).interventionCountries || [],
-          updatedAt: serverTimestamp()
+            user.role === "lawyer"
+              ? (payload as { practiceCountries?: string[] })
+                  .practiceCountries || []
+              : (payload as { interventionCountries?: string[] })
+                  .interventionCountries || [],
+          updatedAt: serverTimestamp(),
         }).catch(() => {});
       }
 
-      await logAuditEvent(user.id, 'settings_updated', {
-        settings: JSON.stringify(payload)
+      await logAuditEvent(user.id, "settings_updated", {
+        settings: JSON.stringify(payload),
       });
       await refreshUser?.();
 
-      setSuccessMessage(language === 'fr' ? 'Paramètres mis à jour ✔️' : 'Settings updated ✔️');
+      setSuccessMessage(
+        language === "fr" ? "Paramètres mis à jour ✔️" : "Settings updated ✔️"
+      );
       setTimeout(() => setSuccessMessage(null), 2500);
     } catch {
       setErrorMessage(
-        language === 'fr' ? 'Erreur lors de la mise à jour des paramètres' : 'Error updating settings'
+        language === "fr"
+          ? "Erreur lors de la mise à jour des paramètres"
+          : "Error updating settings"
       );
     } finally {
       setIsLoading(false);
@@ -680,14 +767,15 @@ const Dashboard: React.FC = () => {
     try {
       await logout();
     } finally {
-      navigate('/login', { replace: true });
+      navigate("/login", { replace: true });
     }
   }, [logout, navigate]);
 
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center text-sm text-gray-500 dark:text-gray-400">
-        {language === 'fr' ? 'Redirection…' : 'Redirecting…'}
+        {/* {language === "fr" ? "Redirection…" : "Redirecting…"} */}
+        {intl.formatMessage({ id: "dashboard.redirecting" })}
       </div>
     );
   }
@@ -720,24 +808,37 @@ const Dashboard: React.FC = () => {
                       <h2 className="text-xl font-extrabold leading-tight">
                         {user.firstName} {user.lastName}
                       </h2>
-                      <p className="text-white/90 text-sm flex items-center gap-1" title={user.email}>
+                      <p
+                        className="text-white/90 text-sm flex items-center gap-1"
+                        title={user.email}
+                      >
                         <Mail className="w-4 h-4" />
                         {user.email}
                       </p>
-                      <span className={`inline-block mt-2 px-2.5 py-1 ${UI.radiusFull} text-xs font-semibold bg-white/20`}>
-                        {user.role === 'lawyer'
-                          ? language === 'fr'
-                            ? 'Avocat'
-                            : 'Lawyer'
-                          : user.role === 'expat'
-                          ? language === 'fr'
-                            ? 'Expatrié'
-                            : 'Expat'
-                          : user.role === 'admin'
-                          ? 'Admin'
-                          : language === 'fr'
-                          ? 'Client'
-                          : 'Client'}
+                      <span
+                        className={`inline-block mt-2 px-2.5 py-1 ${UI.radiusFull} text-xs font-semibold bg-white/20`}
+                      >
+                        {/* {user.role === "lawyer"
+                          ? language === "fr"
+                            ? "Avocat"
+                            : "Lawyer"
+                          : user.role === "expat"
+                            ? language === "fr"
+                              ? "Expatrié"
+                              : "Expat"
+                            : user.role === "admin"
+                              ? "Admin"
+                              : language === "fr"
+                                ? "Client"
+                                : "Client"} */}
+
+                        {user.role === "lawyer"
+                          ? intl.formatMessage({ id: "dashboard.lawyer" })
+                          : user.role === "expat"
+                            ? intl.formatMessage({ id: "dashboard.expat" })
+                            : user.role === "admin"
+                              ? intl.formatMessage({ id: "dashboard.admin" })
+                              : intl.formatMessage({ id: "dashboard.client" })}
                       </span>
                     </div>
                   </div>
@@ -746,52 +847,119 @@ const Dashboard: React.FC = () => {
                 <nav className="p-4">
                   <ul className="space-y-2">
                     {[
-                      { key: 'profile', icon: <User className="mr-3 h-5 w-5" />, fr: 'Mon profil', en: 'My profile' },
-                      { key: 'settings', icon: <Settings className="mr-3 h-5 w-5" />, fr: 'Paramètres', en: 'Settings' },
-                      { key: 'calls', icon: <Phone className="mr-3 h-5 w-5" />, fr: 'Mes appels', en: 'My calls' },
-                      { key: 'invoices', icon: <FileText className="mr-3 h-5 w-5" />, fr: 'Mes factures', en: 'My invoices' },
-                      { key: 'reviews', icon: <Star className="mr-3 h-5 w-5" />, fr: 'Mes avis', en: 'My reviews' },
-                      { key: 'notifications', icon: <Bell className="mr-3 h-5 w-5" />, fr: 'Notifications', en: 'Notifications' },
-                      { key: 'messages', icon: <MessageSquare className="mr-3 h-5 w-5" />, fr: 'Mes messages', en: 'My messages' },
-                      { key: 'favorites', icon: <Bookmark className="mr-3 h-5 w-5" />, fr: 'Mes favoris', en: 'My favorites' }
+                      {
+                        key: "profile",
+                        icon: <User className="mr-3 h-5 w-5" />,
+                        fr: "Mon profil",
+                        en: "My profile",
+                        es: "Mi perfil",
+                      },
+                      {
+                        key: "settings",
+                        icon: <Settings className="mr-3 h-5 w-5" />,
+                        fr: "Paramètres",
+                        en: "Settings",
+                        es: "Configuración",
+                      },
+                      {
+                        key: "calls",
+                        icon: <Phone className="mr-3 h-5 w-5" />,
+                        fr: "Mes appels",
+                        en: "My calls",
+                        es: "Mis llamadas",
+                      },
+                      {
+                        key: "invoices",
+                        icon: <FileText className="mr-3 h-5 w-5" />,
+                        fr: "Mes factures",
+                        en: "My invoices",
+                        es: "Mis facturas",
+                      },
+                      {
+                        key: "reviews",
+                        icon: <Star className="mr-3 h-5 w-5" />,
+                        fr: "Mes avis",
+                        en: "My reviews",
+                        es: "Mis reseñas",
+                      },
+                      {
+                        key: "notifications",
+                        icon: <Bell className="mr-3 h-5 w-5" />,
+                        fr: "Notifications",
+                        en: "Notifications",
+                        es: "Notificaciones",
+                      },
+                      {
+                        key: "messages",
+                        icon: <MessageSquare className="mr-3 h-5 w-5" />,
+                        fr: "Mes messages",
+                        en: "My messages",
+                        es: "Mis mensajes",
+                      },
+                      {
+                        key: "favorites",
+                        icon: <Bookmark className="mr-3 h-5 w-5" />,
+                        fr: "Mes favoris",
+                        en: "My favorites",
+                        es: "Mis favoritos",
+                      },
                     ].map((item) => (
                       <li key={item.key}>
                         <button
                           onClick={() => setActiveTab(item.key as TabType)}
                           className={`group relative w-full flex items-center px-4 py-2 text-sm font-medium ${UI.radiusSm} transition-all
-                            ${activeTab === (item.key as TabType)
-                              ? 'bg-gradient-to-r from-red-50 to-orange-50 text-red-700 dark:from-white/5 dark:to-white/10 dark:text-white'
-                              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5'}
+                            ${
+                              activeTab === (item.key as TabType)
+                                ? "bg-gradient-to-r from-red-50 to-orange-50 text-red-700 dark:from-white/5 dark:to-white/10 dark:text-white"
+                                : "text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5"
+                            }
                           `}
-                          title={language === 'fr' ? item.fr : item.en}
+                   
+                          title={
+                            language === "fr"
+                              ? item.fr
+                              : language === "es"
+                                ? item.es
+                                : item.en
+                          }
                         >
                           {/* Barre active à gauche (UI only) */}
                           <span
                             className={`absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 ${
                               activeTab === item.key
-                                ? 'bg-gradient-to-b from-red-500 to-orange-500 dark:from-red-500 dark:to-orange-500'
-                                : 'bg-transparent'
+                                ? "bg-gradient-to-b from-red-500 to-orange-500 dark:from-red-500 dark:to-orange-500"
+                                : "bg-transparent"
                             } ${UI.radiusSm}`}
                           />
                           {item.icon}
-                          {language === 'fr' ? item.fr : item.en}
+                      
+                          {language === "fr"
+                            ? item.fr
+                            : language === "es"
+                              ? item.es
+                              : item.en}
+                      
                           {activeTab === (item.key as TabType) && (
                             <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded bg-red-100 text-red-700 dark:bg-white/10 dark:text-white">
-                              Actif
+                        
+                              {intl.formatMessage({ id: "dashboard.active" })}
                             </span>
                           )}
                         </button>
                       </li>
                     ))}
 
-                    {user.role === 'admin' && (
+                    {user.role === "admin" && (
                       <li>
                         <button
-                          onClick={() => navigate('/admin/dashboard')}
+                          onClick={() => navigate("/admin/dashboard")}
                           className="w-full flex items-center px-4 py-2 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5"
                         >
                           <Shield className="mr-3 h-5 w-5" />
-                          {language === 'fr' ? 'Administration' : 'Admin panel'}
+             
+                          {intl.formatMessage({
+                            id: "dashboard.administration",
+                          })}
                         </button>
                       </li>
                     )}
@@ -802,7 +970,8 @@ const Dashboard: React.FC = () => {
                         className="w-full flex items-center px-4 py-2 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5"
                       >
                         <LogOut className="mr-3 h-5 w-5" />
-                        {language === 'fr' ? 'Déconnexion' : 'Logout'}
+               
+                        {intl.formatMessage({ id: "dashboard.logout" })}
                       </button>
                     </li>
                   </ul>
@@ -810,15 +979,17 @@ const Dashboard: React.FC = () => {
 
                 <div className="p-6">
                   <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
-                    {language === 'fr' ? 'Statut de disponibilité' : 'Availability status'}
+     
+                    {intl.formatMessage({ id: "dashboard.availabilityStatus" })}
                   </h3>
-                  {user && (user.role === 'lawyer' || user.role === 'expat') ? (
+                  {user && (user.role === "lawyer" || user.role === "expat") ? (
                     <AvailabilityToggle className="justify-center" />
                   ) : (
                     <p className={`${UI.textMuted} text-center`}>
-                      {language === 'fr'
-                        ? 'Statut disponible uniquement pour les prestataires'
-                        : 'Status available only for providers'}
+                
+                      {intl.formatMessage({
+                        id: "dashboard.statusOnlyProviders",
+                      })}
                     </p>
                   )}
                 </div>
@@ -828,20 +999,24 @@ const Dashboard: React.FC = () => {
             {/* CONTENU PRINCIPAL */}
             <div className="lg:col-span-3 space-y-8">
               {/* PROFIL — lecture seule */}
-              {activeTab === 'profile' && (
+              {activeTab === "profile" && (
                 <div className={`${softCard} overflow-hidden`}>
-                  <div className={`px-6 py-4 ${headerGradient} flex justify-between items-center`}>
+                  <div
+                    className={`px-6 py-4 ${headerGradient} flex justify-between items-center`}
+                  >
                     <h2 className="text-xl font-semibold">
-                      {language === 'fr' ? 'Mon profil' : 'My profile'}
+                 
+                      {intl.formatMessage({ id: "dashboard.myProfile" })}
                     </h2>
                     <Button
-                      onClick={() => setActiveTab('settings')}
+                      onClick={() => setActiveTab("settings")}
                       variant="outline"
                       size="small"
                       className="bg-white text-gray-800 hover:bg-gray-50"
                     >
                       <Edit size={16} className="mr-2" />
-                      {language === 'fr' ? 'Modifier' : 'Edit'}
+                
+                      {intl.formatMessage({ id: "dashboard.edit" })}
                     </Button>
                   </div>
 
@@ -849,45 +1024,57 @@ const Dashboard: React.FC = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <h3 className={`${UI.sectionTitle} mb-4`}>
-                          {language === 'fr' ? 'Informations personnelles' : 'Personal information'}
+                   
+                          {intl.formatMessage({ id: "dashboard.personalInfo" })}
                         </h3>
                         <div className="space-y-4">
                           <InfoRow
-                            label={language === 'fr' ? 'Nom complet' : 'Full name'}
+                            label={
+                           
+                              intl.formatMessage({ id: "dashboard.fullName" })
+                            }
                             value={`${user.firstName} ${user.lastName}`}
                           />
                           <InfoRow label="Email" value={user.email} />
                           {(user as { phone?: string }).phone && (
                             <InfoRow
-                              label={language === 'fr' ? 'Téléphone' : 'Phone'}
-                              value={`${(user as { phoneCountryCode?: string }).phoneCountryCode || '+33'} ${(user as { phone?: string }).phone}`}
+                              label={
+                            
+                                intl.formatMessage({ id: "dashboard.phone" })
+                              }
+                              value={`${(user as { phoneCountryCode?: string }).phoneCountryCode || "+33"} ${(user as { phone?: string }).phone}`}
                             />
                           )}
-                          {user.role !== 'client' && (
+                          {user.role !== "client" && (
                             <div>
                               <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                                {language === 'fr' ? 'Statut' : 'Status'}
+                            
+                                {intl.formatMessage({ id: "dashboard.status" })}
                               </p>
                               <div className="mt-1 flex items-center">
                                 <span
                                   className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
                                     currentStatus
-                                      ? 'bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-300'
-                                      : 'bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-300'
+                                      ? "bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-300"
+                                      : "bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-300"
                                   }`}
                                 >
                                   <span
                                     className={`w-2 h-2 mr-2 rounded-full ${
-                                      currentStatus ? 'bg-green-600' : 'bg-red-600'
+                                      currentStatus
+                                        ? "bg-green-600"
+                                        : "bg-red-600"
                                     }`}
                                   />
+                              
+
                                   {currentStatus
-                                    ? language === 'fr'
-                                      ? 'En ligne'
-                                      : 'Online'
-                                    : language === 'fr'
-                                    ? 'Hors ligne'
-                                    : 'Offline'}
+                                    ? intl.formatMessage({
+                                        id: "dashboard.online",
+                                      })
+                                    : intl.formatMessage({
+                                        id: "dashboard.offline",
+                                      })}
                                 </span>
                               </div>
                             </div>
@@ -897,7 +1084,8 @@ const Dashboard: React.FC = () => {
 
                       <div>
                         <h3 className={`${UI.sectionTitle} mb-4`}>
-                          {language === 'fr' ? 'Photo & bio' : 'Photo & bio'}
+                          
+                          {intl.formatMessage({ id: "dashboard.photoBio" })}
                         </h3>
                         <div className="flex items-start gap-6">
                           {user.profilePhoto ? (
@@ -914,70 +1102,123 @@ const Dashboard: React.FC = () => {
                           <div className="flex-1">
                             <p className={`${UI.text} whitespace-pre-wrap`}>
                               {(user as { bio?: string }).bio ||
-                                (language === 'fr' ? 'Aucune description.' : 'No description.')}
+                               
+                                intl.formatMessage({
+                                  id: "dashboard.noDescription",
+                                })}
                             </p>
                           </div>
                         </div>
                       </div>
                     </div>
 
-                    {user.role !== 'client' && (
+                    {user.role !== "client" && (
                       <div className="mt-6 pt-6 border-t border-gray-200 dark:border-white/10">
                         <h3 className={`${UI.sectionTitle} mb-4`}>
-                          {language === 'fr' ? 'Informations professionnelles' : 'Professional information'}
+                       
+                          {intl.formatMessage({
+                            id: "dashboard.professionalInfo",
+                          })}
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          {user.role === 'lawyer' && (
+                          {user.role === "lawyer" && (
                             <>
                               <InfoRow
-                                label={language === 'fr' ? "Années d'expérience" : 'Years of experience'}
+                                label={
+                             
+                                  intl.formatMessage({
+                                    id: "dashboard.yearsExperience",
+                                  })
+                                }
                                 value={`${(user as { yearsOfExperience?: number }).yearsOfExperience ?? 0} ${
-                                  language === 'fr' ? 'ans' : 'years'
+                               
+                                  intl.formatMessage({ id: "dashboard.years" })
                                 }`}
                               />
                               <PillsRow
-                                label={language === 'fr' ? 'Spécialités' : 'Specialties'}
-                                items={(user as { specialties?: string[] }).specialties || []}
+                                label={
+                                
+                                  intl.formatMessage({ id: 'dashboard.specialties' })
+                                }
+
+                                items={
+                                  (user as { specialties?: string[] })
+                                    .specialties || []
+                                }
                                 color="blue"
                               />
                               <PillsRow
-                                label={language === 'fr' ? "Pays d'intervention" : 'Countries of practice'}
-                                items={(user as { practiceCountries?: string[] }).practiceCountries || []}
+                                label={
+                               
+                                  intl.formatMessage({ id: 'dashboard.countriesOfPractice' })
+                                }
+                                items={
+                                  (user as { practiceCountries?: string[] })
+                                    .practiceCountries || []
+                                }
                                 color="blue"
                               />
                               <InfoRow
-                                label={language === 'fr' ? 'Année de diplôme' : 'Graduation year'}
-                                value={`${(user as { graduationYear?: number }).graduationYear || ''}`}
+                                label={
+                                
+                                  intl.formatMessage({ id: 'dashboard.graduationYear' })
+                                }
+                                value={`${(user as { graduationYear?: number }).graduationYear || ""}`}
                               />
                             </>
                           )}
-                          {user.role === 'expat' && (
+                          {user.role === "expat" && (
                             <>
                               <InfoRow
-                                label={language === 'fr' ? 'Pays de résidence' : 'Country of residence'}
-                                value={(user as { residenceCountry?: string }).residenceCountry || ''}
+                                label={
+                                
+                                  intl.formatMessage({ id: 'dashboard.countryOfResidence' })
+                                }
+                                value={
+                                  (user as { residenceCountry?: string })
+                                    .residenceCountry || ""
+                                }
                               />
                               <InfoRow
-                                label={language === 'fr' ? "Années d'expatriation" : 'Years as expat'}
+                                label={
+                                  intl.formatMessage({ id: 'dashboard.yearsAsExpat' })
+                                }
                                 value={`${(user as { yearsAsExpat?: number }).yearsAsExpat ?? 0} ${
-                                  language === 'fr' ? 'ans' : 'years'
+                                  
+                                  intl.formatMessage({ id: 'dashboard.years' })
                                 }`}
                               />
                               <PillsRow
-                                label={language === 'fr' ? "Types d'aide" : 'Help types'}
-                                items={(user as { helpTypes?: string[] }).helpTypes || []}
+                                label={
+                                  intl.formatMessage({ id: 'dashboard.helpTypes' })
+                                }
+                                items={
+                                  (user as { helpTypes?: string[] })
+                                    .helpTypes || []
+                                }
                                 color="green"
                               />
                               <PillsRow
-                                label={language === 'fr' ? "Pays d'intervention" : 'Countries of intervention'}
-                                items={(user as { interventionCountries?: string[] }).interventionCountries || []}
+                                label={
+                                 intl.formatMessage({ id: 'dashboard.countriesOfIntervention' })
+                                }
+                                items={
+                                  (user as { interventionCountries?: string[] })
+                                    .interventionCountries || []
+                                }
                                 color="green"
                               />
                             </>
                           )}
                           <PillsRow
-                            label={language === 'fr' ? 'Langues parlées' : 'Languages spoken'}
-                            items={(user as { languages?: string[] }).languages || []}
+                            label={
+                              language === "fr"
+                                ? "Langues parlées"
+                                : "Languages spoken"
+                            }
+                            items={
+                              (user as { languages?: string[] }).languages || []
+                            }
                             color="red"
                           />
                         </div>
@@ -988,22 +1229,29 @@ const Dashboard: React.FC = () => {
               )}
 
               {/* PARAMÈTRES — édition complète */}
-              {activeTab === 'settings' && (
+              {activeTab === "settings" && (
                 <div className={`${softCard} overflow-hidden`}>
                   <div className={`px-6 py-4 ${headerGradient}`}>
                     <h2 className="text-xl font-semibold">
-                      {language === 'fr' ? 'Paramètres' : 'Settings'}
+                      {language === "fr" ? "Paramètres" : "Settings"}
                     </h2>
                   </div>
 
                   <div className="p-6 space-y-6">
-                    {successMessage && <Alert type="success" message={successMessage} />}
-                    {errorMessage && <Alert type="error" message={errorMessage} />}
+                    {successMessage && (
+                      <Alert type="success" message={successMessage} />
+                    )}
+                    {errorMessage && (
+                      <Alert type="error" message={errorMessage} />
+                    )}
 
                     {/* Photo de profil : mise à jour immédiate */}
                     <section>
                       <h3 className={`${UI.sectionTitle} mb-2`}>
-                        {language === 'fr' ? 'Photo de profil' : 'Profile photo'}
+                        {/* {language === "fr"
+                          ? "Photo de profil"
+                          : "Profile photo"} */}
+                        {intl.formatMessage({ id: "dashboard.profilePhoto" })}
                       </h3>
                       <div className="flex items-center gap-6">
                         {profileData.profilePhoto ? (
@@ -1020,14 +1268,14 @@ const Dashboard: React.FC = () => {
                         <ImageUploader
                           currentImage={profileData.profilePhoto}
                           uploadPath={`profilePhotos/${user.id}`}
-                          locale={language === 'fr' ? 'fr' : 'en'}
+                          locale={language === "fr" ? "fr" : "en"}
                           onImageUploaded={handleInstantPhotoPersist}
                         />
                       </div>
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                        {language === 'fr'
-                          ? 'La nouvelle photo remplace immédiatement l’ancienne dans tout le dashboard.'
-                          : 'The new photo replaces the old one immediately across the dashboard.'}
+                        {language === "fr"
+                          ? "La nouvelle photo remplace immédiatement l’ancienne dans tout le dashboard."
+                          : "The new photo replaces the old one immediately across the dashboard."}
                       </p>
                     </section>
 
@@ -1036,18 +1284,23 @@ const Dashboard: React.FC = () => {
                       <Field
                         label="Email"
                         value={profileData.email}
-                        onChange={(v) => setProfileData((p) => ({ ...p, email: v }))}
+                        onChange={(v) =>
+                          setProfileData((p) => ({ ...p, email: v }))
+                        }
                         type="email"
                       />
                       <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                          {language === 'fr' ? 'Téléphone' : 'Phone'}
+                          {language === "fr" ? "Téléphone" : "Phone"}
                         </label>
                         <div className="flex gap-2">
                           <select
                             value={profileData.phoneCountryCode}
                             onChange={(e) =>
-                              setProfileData((p) => ({ ...p, phoneCountryCode: e.target.value }))
+                              setProfileData((p) => ({
+                                ...p,
+                                phoneCountryCode: e.target.value,
+                              }))
                             }
                             className="w-28 px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500"
                           >
@@ -1060,7 +1313,12 @@ const Dashboard: React.FC = () => {
                           </select>
                           <input
                             value={profileData.phone}
-                            onChange={(e) => setProfileData((p) => ({ ...p, phone: e.target.value }))}
+                            onChange={(e) =>
+                              setProfileData((p) => ({
+                                ...p,
+                                phone: e.target.value,
+                              }))
+                            }
                             className="flex-1 px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500"
                             placeholder="612345678"
                           />
@@ -1068,28 +1326,35 @@ const Dashboard: React.FC = () => {
                       </div>
 
                       <Field
-                        label={language === 'fr' ? 'Pays de résidence' : 'Country of residence'}
-                        value={profileData.residenceCountry || profileData.currentCountry}
+                        label={
+                          language === "fr"
+                            ? "Pays de résidence"
+                            : "Country of residence"
+                        }
+                        value={
+                          profileData.residenceCountry ||
+                          profileData.currentCountry
+                        }
                         onChange={(v) =>
                           setProfileData((p) => ({
                             ...p,
                             residenceCountry: v,
-                            currentCountry: p.currentCountry || v
+                            currentCountry: p.currentCountry || v,
                           }))
                         }
                       />
 
                       <Field
                         label={
-                          language === 'fr'
-                            ? 'Pays où vous êtes actuellement'
-                            : 'Current presence country'
+                          language === "fr"
+                            ? "Pays où vous êtes actuellement"
+                            : "Current presence country"
                         }
-                        value={profileData.currentPresenceCountry || ''}
+                        value={profileData.currentPresenceCountry || ""}
                         onChange={(v) =>
                           setProfileData((p) => ({
                             ...p,
-                            currentPresenceCountry: v
+                            currentPresenceCountry: v,
                           }))
                         }
                       />
@@ -1101,9 +1366,12 @@ const Dashboard: React.FC = () => {
                         </label>
                         <div className="flex gap-2">
                           <select
-                            value={profileData.whatsappCountryCode || '+33'}
+                            value={profileData.whatsappCountryCode || "+33"}
                             onChange={(e) =>
-                              setProfileData((p) => ({ ...p, whatsappCountryCode: e.target.value }))
+                              setProfileData((p) => ({
+                                ...p,
+                                whatsappCountryCode: e.target.value,
+                              }))
                             }
                             className="w-28 px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500"
                           >
@@ -1115,9 +1383,12 @@ const Dashboard: React.FC = () => {
                             <option value="+39">🇮🇹 +39</option>
                           </select>
                           <input
-                            value={profileData.whatsappNumber || ''}
+                            value={profileData.whatsappNumber || ""}
                             onChange={(e) =>
-                              setProfileData((p) => ({ ...p, whatsappNumber: e.target.value }))
+                              setProfileData((p) => ({
+                                ...p,
+                                whatsappNumber: e.target.value,
+                              }))
                             }
                             className="flex-1 px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500"
                             placeholder="612345678"
@@ -1128,137 +1399,238 @@ const Dashboard: React.FC = () => {
                       {/* Langues — même sélecteur que l’inscription */}
                       <div className="md:col-span-2">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                          {language === 'fr' ? 'Langues parlées' : 'Languages spoken'}
+                          {/* {language === "fr"
+                            ? "Langues parlées"
+                            : "Languages spoken"} */}
+                          {intl.formatMessage({
+                            id: "dashboard.languagesSpoken",
+                          })}
                         </label>
                         <MultiLanguageSelect
                           value={selectedLanguages}
                           onChange={(opts) => {
-                            const normalized = (opts || []).map((o) => ({ value: o.value, label: o.label }));
+                            const normalized = (opts || []).map((o) => ({
+                              value: o.value,
+                              label: o.label,
+                            }));
                             setSelectedLanguages(normalized);
-                            setProfileData((p) => ({ ...p, languages: normalized.map((o) => o.value) }));
+                            setProfileData((p) => ({
+                              ...p,
+                              languages: normalized.map((o) => o.value),
+                            }));
                           }}
                           providerLanguages={[]}
                           highlightShared
-                          locale={language === 'fr' ? 'fr' : 'en'}
+                          locale={language === "fr" ? "fr" : "en"}
                           placeholder={
-                            language === 'fr'
-                              ? 'Rechercher et sélectionner les langues...'
-                              : 'Search and select languages...'
+                            language === "fr"
+                              ? "Rechercher et sélectionner les langues..."
+                              : "Search and select languages..."
                           }
                         />
                       </div>
 
                       <div className="md:col-span-2">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                          {language === 'fr' ? 'Description / Bio' : 'Description / Bio'}
+                          {/* {language === "fr"
+                            ? "Description / Bio"
+                            : "Description / Bio"} */}
+                          {intl.formatMessage({
+                            id: "dashboard.descriptionBio",
+                          })}
                         </label>
                         <textarea
-                          value={profileData.bio || ''}
-                          onChange={(e) => setProfileData((p) => ({ ...p, bio: e.target.value }))}
+                          value={profileData.bio || ""}
+                          onChange={(e) =>
+                            setProfileData((p) => ({
+                              ...p,
+                              bio: e.target.value,
+                            }))
+                          }
                           rows={5}
                           className="w-full px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500"
-                          placeholder={
-                            language === 'fr' ? 'Votre bio professionnelle…' : 'Your professional bio…'
-                          }
+                          // placeholder={
+                          //   language === "fr"
+                          //     ? "Votre bio professionnelle…"
+                          //     : "Your professional bio…"
+                          // }
+                          placeholder={intl.formatMessage({
+                            id: "dashboard.bioPlaceholder",
+                          })}
                         />
                       </div>
                     </section>
 
                     {/* Rôle : Lawyer */}
-                    {user.role === 'lawyer' && (
+                    {user.role === "lawyer" && (
                       <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <Field
-                          label={language === 'fr' ? "Années d'expérience" : 'Years of experience'}
+                          label={
+                            language === "fr"
+                              ? "Années d'expérience"
+                              : "Years of experience"
+                          }
                           type="number"
                           value={String(profileData.yearsOfExperience ?? 0)}
                           onChange={(v) =>
-                            setProfileData((p) => ({ ...p, yearsOfExperience: Number(v || 0) }))
+                            setProfileData((p) => ({
+                              ...p,
+                              yearsOfExperience: Number(v || 0),
+                            }))
                           }
                         />
                         <Field
-                          label={language === 'fr' ? 'Année de diplôme' : 'Graduation year'}
+                          label={
+                            language === "fr"
+                              ? "Année de diplôme"
+                              : "Graduation year"
+                          }
                           type="number"
-                          value={String(profileData.graduationYear || new Date().getFullYear() - 5)}
+                          value={String(
+                            profileData.graduationYear ||
+                              new Date().getFullYear() - 5
+                          )}
                           onChange={(v) =>
                             setProfileData((p) => ({
                               ...p,
-                              graduationYear: Number(v || new Date().getFullYear() - 5)
+                              graduationYear: Number(
+                                v || new Date().getFullYear() - 5
+                              ),
                             }))
                           }
                         />
                         <div className="md:col-span-2">
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            {language === 'fr' ? 'Spécialités' : 'Specialties'}
+                            {/* {language === "fr" ? "Spécialités" : "Specialties"} */}
+                            {intl.formatMessage({
+                              id: "dashboard.specialties",
+                            })}
                           </label>
                           <ChipInput
                             value={profileData.specialties || []}
-                            onChange={(next) => setProfileData((p) => ({ ...p, specialties: next }))}
-                            placeholder={language === 'fr' ? 'Ajoutez une spécialité' : 'Add a specialty'}
+                            onChange={(next) =>
+                              setProfileData((p) => ({
+                                ...p,
+                                specialties: next,
+                              }))
+                            }
+                            placeholder={
+                              language === "fr"
+                                ? "Ajoutez une spécialité"
+                                : "Add a specialty"
+                            }
                           />
                         </div>
                         <div className="md:col-span-2">
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            {language === 'fr' ? "Pays d'intervention" : 'Countries of practice'}
+                            {/* {language === "fr"
+                              ? "Pays d'intervention"
+                              : "Countries of practice"} */}
+                            {intl.formatMessage({
+                              id: "dashboard.countriesOfPractice",
+                            })}
                           </label>
                           <ChipInput
                             value={profileData.practiceCountries || []}
                             onChange={(next) =>
-                              setProfileData((p) => ({ ...p, practiceCountries: next }))
+                              setProfileData((p) => ({
+                                ...p,
+                                practiceCountries: next,
+                              }))
                             }
-                            placeholder={language === 'fr' ? 'Ajoutez un pays' : 'Add a country'}
+                            placeholder={
+                              language === "fr"
+                                ? "Ajoutez un pays"
+                                : "Add a country"
+                            }
                           />
                         </div>
                         <Field
                           label={
-                            language === 'fr' ? 'Numéro au barreau (optionnel)' : 'Bar number (optional)'
+                            language === "fr"
+                              ? "Numéro au barreau (optionnel)"
+                              : "Bar number (optional)"
                           }
-                          value={profileData.barNumber || ''}
-                          onChange={(v) => setProfileData((p) => ({ ...p, barNumber: v }))}
+                          value={profileData.barNumber || ""}
+                          onChange={(v) =>
+                            setProfileData((p) => ({ ...p, barNumber: v }))
+                          }
                         />
                         <div className="md:col-span-2">
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            {language === 'fr' ? 'Formations' : 'Educations'}
+                            {language === "fr" ? "Formations" : "Educations"}
                           </label>
                           <ChipInput
                             value={profileData.educations || []}
-                            onChange={(next) => setProfileData((p) => ({ ...p, educations: next }))}
-                            placeholder={language === 'fr' ? 'Ajoutez une formation' : 'Add an education'}
+                            onChange={(next) =>
+                              setProfileData((p) => ({
+                                ...p,
+                                educations: next,
+                              }))
+                            }
+                            placeholder={
+                              language === "fr"
+                                ? "Ajoutez une formation"
+                                : "Add an education"
+                            }
                           />
                         </div>
                       </section>
                     )}
 
                     {/* Rôle : Expat */}
-                    {user.role === 'expat' && (
+                    {user.role === "expat" && (
                       <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <Field
-                          label={language === 'fr' ? "Années d'expatriation" : 'Years as expat'}
+                          label={
+                            language === "fr"
+                              ? "Années d'expatriation"
+                              : "Years as expat"
+                          }
                           type="number"
                           value={String(profileData.yearsAsExpat ?? 0)}
                           onChange={(v) =>
-                            setProfileData((p) => ({ ...p, yearsAsExpat: Number(v || 0) }))
+                            setProfileData((p) => ({
+                              ...p,
+                              yearsAsExpat: Number(v || 0),
+                            }))
                           }
                         />
                         <div className="md:col-span-2">
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            {language === 'fr' ? "Types d'aide" : 'Help types'}
+                            {language === "fr" ? "Types d'aide" : "Help types"}
                           </label>
                           <ChipInput
                             value={profileData.helpTypes || []}
-                            onChange={(next) => setProfileData((p) => ({ ...p, helpTypes: next }))}
-                            placeholder={language === 'fr' ? 'Ajoutez un type' : 'Add a type'}
+                            onChange={(next) =>
+                              setProfileData((p) => ({ ...p, helpTypes: next }))
+                            }
+                            placeholder={
+                              language === "fr"
+                                ? "Ajoutez un type"
+                                : "Add a type"
+                            }
                           />
                         </div>
                         <div className="md:col-span-2">
                           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            {language === 'fr' ? "Pays d'intervention" : 'Countries of intervention'}
+                            {language === "fr"
+                              ? "Pays d'intervention"
+                              : "Countries of intervention"}
                           </label>
                           <ChipInput
                             value={profileData.interventionCountries || []}
                             onChange={(next) =>
-                              setProfileData((p) => ({ ...p, interventionCountries: next }))
+                              setProfileData((p) => ({
+                                ...p,
+                                interventionCountries: next,
+                              }))
                             }
-                            placeholder={language === 'fr' ? 'Ajoutez un pays' : 'Add a country'}
+                            placeholder={
+                              language === "fr"
+                                ? "Ajoutez un pays"
+                                : "Add a country"
+                            }
                           />
                         </div>
                       </section>
@@ -1272,7 +1644,8 @@ const Dashboard: React.FC = () => {
                         fullWidth
                         className="bg-red-600 hover:bg-red-700"
                       >
-                        {language === 'fr' ? 'Enregistrer les paramètres' : 'Save settings'}
+                        
+                        {intl.formatMessage({ id: "dashboard.saveSettings" })}
                       </Button>
                     </div>
                   </div>
@@ -1280,11 +1653,11 @@ const Dashboard: React.FC = () => {
               )}
 
               {/* APPELS */}
-              {activeTab === 'calls' && (
+              {activeTab === "calls" && (
                 <div className={`${softCard} overflow-hidden`}>
                   <div className={`px-6 py-4 ${headerGradient}`}>
                     <h2 className="text-xl font-semibold">
-                      {language === 'fr' ? 'Mes appels' : 'My calls'}
+                      {language === "fr" ? "Mes appels" : "My calls"}
                     </h2>
                   </div>
                   <div className="p-6">
@@ -1297,37 +1670,49 @@ const Dashboard: React.FC = () => {
                           >
                             <div className="flex justify-between items-start">
                               <div>
-                                <h3 className="font-medium text-gray-900 dark:text-gray-100">{call.title}</h3>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">{call.description}</p>
+                                <h3 className="font-medium text-gray-900 dark:text-gray-100">
+                                  {call.title}
+                                </h3>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                  {call.description}
+                                </p>
                                 <div className="mt-2 flex items-center space-x-4 text-sm">
                                   <div className="flex items-center">
                                     <Clock className="w-4 h-4 text-gray-400 mr-1" />
-                                    <span className={UI.text}>{formatDuration(call.duration)}</span>
+                                    <span className={UI.text}>
+                                      {formatDuration(call.duration)}
+                                    </span>
                                   </div>
                                   <div className="flex items-center">
                                     <CreditCard className="w-4 h-4 text-gray-400 mr-1" />
-                                    <span className={UI.text}>{formatPrice(call.price)}</span>
+                                    <span className={UI.text}>
+                                      {formatPrice(call.price)}
+                                    </span>
                                   </div>
                                   <div className="flex items-center">
                                     <Calendar className="w-4 h-4 text-gray-400 mr-1" />
-                                    <span className={UI.text}>{formatDate(call.createdAt)}</span>
+                                    <span className={UI.text}>
+                                      {formatDate(call.createdAt)}
+                                    </span>
                                   </div>
                                 </div>
                                 <div className="mt-2">
                                   <p className={`${UI.text} text-sm`}>
-                                    {user.role === 'client'
-                                      ? `${language === 'fr' ? 'Prestataire' : 'Provider'}: ${call.providerName}`
-                                      : `${language === 'fr' ? 'Client' : 'Client'}: ${call.clientName}`}
+                                    {user.role === "client"
+                                      ? `${language === "fr" ? "Prestataire" : "Provider"}: ${call.providerName}`
+                                      : `${language === "fr" ? "Client" : "Client"}: ${call.clientName}`}
                                   </p>
                                 </div>
                               </div>
                               <div className="flex flex-col items-end space-y-2">
                                 {getStatusBadge(call.status)}
-                                {call.status === 'completed' &&
-                                  user.role === 'client' &&
+                                {call.status === "completed" &&
+                                  user.role === "client" &&
                                   !call.clientRating && (
                                     <Button size="small" variant="outline">
-                                      {language === 'fr' ? 'Laisser un avis' : 'Leave a review'}
+                                      {language === "fr"
+                                        ? "Laisser un avis"
+                                        : "Leave a review"}
                                     </Button>
                                   )}
                               </div>
@@ -1337,9 +1722,10 @@ const Dashboard: React.FC = () => {
                       </div>
                     ) : (
                       <p className={`${UI.textMuted} text-center py-8`}>
-                        {language === 'fr'
+                        {/* {language === "fr"
                           ? "Vous n'avez pas encore effectué d'appels."
-                          : "You haven't made any calls yet."}
+                          : "You haven't made any calls yet."} */}
+                        {intl.formatMessage({ id: "dashboard.noCalls" })}
                       </p>
                     )}
                   </div>
@@ -1347,11 +1733,11 @@ const Dashboard: React.FC = () => {
               )}
 
               {/* MESSAGES */}
-              {activeTab === 'messages' && (
+              {activeTab === "messages" && (
                 <div className={`${softCard} overflow-hidden`}>
                   <div className={`px-6 py-4 ${headerGradient}`}>
                     <h2 className="text-xl font-semibold">
-                      {language === 'fr' ? 'Mes messages' : 'My messages'}
+                      {language === "fr" ? "Mes messages" : "My messages"}
                     </h2>
                   </div>
                   <div className="p-6">
@@ -1361,37 +1747,41 @@ const Dashboard: React.FC = () => {
               )}
 
               {/* FACTURES */}
-              {activeTab === 'invoices' && <UserInvoices />}
+              {activeTab === "invoices" && <UserInvoices />}
 
               {/* AVIS */}
-              {activeTab === 'reviews' && (
+              {activeTab === "reviews" && (
                 <div className={`${softCard} overflow-hidden`}>
                   <div className={`px-6 py-4 ${headerGradient}`}>
                     <h2 className="text-xl font-semibold">
-                      {language === 'fr' ? 'Mes avis' : 'My reviews'}
+                      {language === "fr" ? "Mes avis" : "My reviews"}
                     </h2>
                   </div>
                   <div className="p-6">
                     <p className={`${UI.textMuted} text-center py-8`}>
-                      {language === 'fr' ? 'Aucun avis pour le moment.' : 'No reviews yet.'}
+                      {language === "fr"
+                        ? "Aucun avis pour le moment."
+                        : "No reviews yet."}
                     </p>
                   </div>
                 </div>
               )}
 
               {/* NOTIFICATIONS */}
-              {activeTab === 'notifications' && (
+              {activeTab === "notifications" && (
                 <div className={`${softCard} overflow-hidden`}>
                   <div className={`px-6 py-4 ${headerGradient}`}>
                     <h2 className="text-xl font-semibold">
-                      {language === 'fr' ? 'Notifications' : 'Notifications'}
+                      {language === "fr" ? "Notifications" : "Notifications"}
                     </h2>
                   </div>
                   <div className="p-6">
-                    {(user?.role === 'lawyer' || user?.role === 'expat') && (
+                    {(user?.role === "lawyer" || user?.role === "expat") && (
                       <div className="mb-8">
                         <h3 className={`${UI.sectionTitle} mb-4`}>
-                          {language === 'fr' ? 'Préférences de notifications' : 'Notification preferences'}
+                          {language === "fr"
+                            ? "Préférences de notifications"
+                            : "Notification preferences"}
                         </h3>
                         <NotificationSettings />
                       </div>
@@ -1399,7 +1789,9 @@ const Dashboard: React.FC = () => {
 
                     <div>
                       <h3 className={`${UI.sectionTitle} mb-4`}>
-                        {language === 'fr' ? 'Historique des notifications' : 'Notification history'}
+                        {language === "fr"
+                          ? "Historique des notifications"
+                          : "Notification history"}
                       </h3>
                       {notifications.length > 0 ? (
                         <div className="space-y-4">
@@ -1408,21 +1800,27 @@ const Dashboard: React.FC = () => {
                               key={n.id}
                               className={`p-4 rounded-lg border ${
                                 n.isRead
-                                  ? 'bg-white dark:bg-white/5 border-gray-200 dark:border-white/10'
-                                  : 'bg-blue-50 dark:bg-blue-500/10 border-blue-200 dark:border-blue-500/20'
+                                  ? "bg-white dark:bg-white/5 border-gray-200 dark:border-white/10"
+                                  : "bg-blue-50 dark:bg-blue-500/10 border-blue-200 dark:border-blue-500/20"
                               }`}
                             >
                               <div className="flex justify-between">
-                                <h4 className="font-medium text-gray-900 dark:text-gray-100">{n.title}</h4>
-                                <span className="text-sm text-gray-500 dark:text-gray-400">{formatDate(n.createdAt)}</span>
+                                <h4 className="font-medium text-gray-900 dark:text-gray-100">
+                                  {n.title}
+                                </h4>
+                                <span className="text-sm text-gray-500 dark:text-gray-400">
+                                  {formatDate(n.createdAt)}
+                                </span>
                               </div>
-                              <p className="mt-1 text-gray-600 dark:text-gray-300">{n.message}</p>
+                              <p className="mt-1 text-gray-600 dark:text-gray-300">
+                                {n.message}
+                              </p>
                             </div>
                           ))}
                         </div>
                       ) : (
                         <p className={`${UI.textMuted} text-center py-8`}>
-                          {language === 'fr'
+                          {language === "fr"
                             ? "Vous n'avez pas de notifications."
                             : "You don't have any notifications."}
                         </p>
@@ -1433,11 +1831,11 @@ const Dashboard: React.FC = () => {
               )}
 
               {/* FAVORIS */}
-              {activeTab === 'favorites' && (
+              {activeTab === "favorites" && (
                 <div className={`${softCard} overflow-hidden`}>
                   <div className={`px-6 py-4 ${headerGradient}`}>
                     <h2 className="text-xl font-semibold">
-                      {language === 'fr' ? 'Mes favoris' : 'My favorites'}
+                      {language === "fr" ? "Mes favoris" : "My favorites"}
                     </h2>
                   </div>
                   <div className="p-6">
@@ -1449,21 +1847,26 @@ const Dashboard: React.FC = () => {
                             className="border border-gray-200 dark:border-white/10 rounded-lg p-4 flex items-center gap-3 hover:bg-gray-50/60 dark:hover:bg-white/[0.04] transition"
                           >
                             <img
-                              src={(f.photo || '/default-avatar.png') + `?v=${Date.now()}`}
+                              src={
+                                (f.photo || "/default-avatar.png") +
+                                `?v=${Date.now()}`
+                              }
                               alt={f.name}
                               className="w-12 h-12 rounded-full object-cover border border-white/30 dark:border-white/10"
                             />
                             <div className="flex-1">
-                              <p className="font-medium text-gray-900 dark:text-gray-100">{f.name}</p>
+                              <p className="font-medium text-gray-900 dark:text-gray-100">
+                                {f.name}
+                              </p>
                               <p className="text-xs text-gray-500 dark:text-gray-400">
-                                {f.type === 'lawyer'
-                                  ? language === 'fr'
-                                    ? 'Avocat'
-                                    : 'Lawyer'
-                                  : language === 'fr'
-                                  ? 'Expatrié'
-                                  : 'Expat'}
-                                {f.country ? ` • ${f.country}` : ''}
+                                {f.type === "lawyer"
+                                  ? language === "fr"
+                                    ? "Avocat"
+                                    : "Lawyer"
+                                  : language === "fr"
+                                    ? "Expatrié"
+                                    : "Expat"}
+                                {f.country ? ` • ${f.country}` : ""}
                               </p>
                             </div>
                           </li>
@@ -1471,7 +1874,9 @@ const Dashboard: React.FC = () => {
                       </ul>
                     ) : (
                       <p className={`${UI.textMuted} text-center py-12`}>
-                        {language === 'fr' ? 'Aucun favori pour le moment.' : 'No favorites yet.'}
+                        {language === "fr"
+                          ? "Aucun favori pour le moment."
+                          : "No favorites yet."}
                       </p>
                     )}
                   </div>
