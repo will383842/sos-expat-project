@@ -940,7 +940,24 @@
   "expatCall.extendedAvailability": "Disponibilité étendue",
   "expatCall.extendedAvailabilityDesc": "30 minutes d'échange pour explorer votre situation",
   "expatCall.seeAvailable": "Consulter les expatriés disponibles",
-  "expatCall.guarantees": "Paiement sécurisé • Appel immédiat • Satisfaction garantie"
+  "expatCall.guarantees": "Paiement sécurisé • Appel immédiat • Satisfaction garantie",
+  "serviceStatus.title": "Statut du service",
+  "serviceStatus.subtitle": "Surveillez l'état de nos services en temps réel",
+  "serviceStatus.allOperational": "Tous les systèmes opérationnels",
+  "serviceStatus.lastUpdated": "Dernière mise à jour",
+  "serviceStatus.serviceStatus": "État des services",
+  "serviceStatus.uptime": "disponibilité",
+  "serviceStatus.last30Days": "30 derniers jours",
+  "serviceStatus.incidentHistory": "Historique des incidents",
+  "serviceStatus.noIncidents": "Aucun incident signalé au cours des 30 derniers jours",
+  "serviceStatus.emergencyCalls": "Appels d'urgence",
+  "serviceStatus.paymentSystem": "Système de paiement",
+  "serviceStatus.webPlatform": "Plateforme web",
+  "serviceStatus.twilioAPI": "API Twilio",
+  "serviceStatus.operational": "Opérationnel",
+  "serviceStatus.degraded": "Dégradé",
+  "serviceStatus.outage": "Panne",
+  "serviceStatus.maintenance": "Maintenance"
 
   
 }
