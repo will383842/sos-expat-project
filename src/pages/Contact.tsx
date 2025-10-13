@@ -31,6 +31,7 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
+import { useIntl } from "react-intl";
 
 // Interface pour Navigator avec connection
 interface NavigatorConnection {
@@ -61,6 +62,7 @@ interface FormErrors {
 }
 
 const Contact: React.FC = () => {
+  const intl = useIntl();
   const { language } = useApp();
   const lang = (language as "fr" | "en") || "fr";
 
@@ -128,181 +130,304 @@ const Contact: React.FC = () => {
   }, [isSubmitted]);
 
   // Textes i18n avec ton fun et jovial
+  // const t = useMemo(
+  //   () => ({
+  //     // Meta & SEO
+  //     metaTitle:
+  //       lang === "fr"
+  //         ? "On vous écoute ! • SOS Expats"
+  //         : "We're all ears! • SOS Expats",
+  //     metaDesc:
+  //       lang === "fr"
+  //         ? "Une question ? Un souci ? Notre équipe sympa est là pour vous aider avec le sourire ✨"
+  //         : "Got a question? Need help? Our friendly team is here to help with a smile ✨",
+
+  //     // Header fun
+  //     pageTitle: lang === "fr" ? "On vous écoute !" : "We're all ears!",
+  //     pageSubtitle:
+  //       lang === "fr"
+  //         ? "Notre équipe super sympa est là pour vous 🤗"
+  //         : "Our super friendly team is here for you 🤗",
+  //     pageDescription:
+  //       lang === "fr"
+  //         ? "Une question ? Un pépin ? Envoyez-nous un petit message et on revient vers vous en mode turbo ! 🚀"
+  //         : "Got a question? A little hiccup? Drop us a message and we'll get back to you super fast! 🚀",
+
+  //     // Form labels avec émojis
+  //     firstName: lang === "fr" ? "Votre prénom" : "Your first name",
+  //     lastName: lang === "fr" ? "Votre nom" : "Your last name",
+  //     email: lang === "fr" ? "Votre email" : "Your email",
+  //     phoneNumber: lang === "fr" ? "Votre téléphone" : "Your phone",
+  //     customCode:
+  //       lang === "fr" ? "Indicatif personnalisé" : "Custom country code",
+  //     originCountry:
+  //       lang === "fr" ? "D'où venez-vous ?" : "Where are you from?",
+  //     interventionCountry:
+  //       lang === "fr"
+  //         ? "Où vous faut-il de l'aide ?"
+  //         : "Where do you need help?",
+  //     spokenLanguages:
+  //       lang === "fr" ? "Vos langues magiques" : "Your magical languages",
+  //     nationalities: lang === "fr" ? "Vos nationalités" : "Your nationalities",
+  //     category: lang === "fr" ? "Type de demande" : "Request type",
+  //     subject: lang === "fr" ? "Le sujet en bref" : "Subject in brief",
+  //     message: lang === "fr" ? "Votre message" : "Your message",
+
+  //     // Placeholders fun
+  //     firstNamePlaceholder:
+  //       lang === "fr"
+  //         ? "Comment on vous appelle ? 😊"
+  //         : "What should we call you? 😊",
+  //     lastNamePlaceholder:
+  //       lang === "fr" ? "Votre nom de famille..." : "Your family name...",
+  //     emailPlaceholder: lang === "fr" ? "votre@email.com" : "your@email.com",
+  //     phonePlaceholder: "06 12 34 56 78",
+  //     customCodePlaceholder: lang === "fr" ? "Ex: +225" : "Ex: +225",
+  //     originCountryPlaceholder: lang === "fr" ? "France" : "France",
+  //     interventionCountryPlaceholder:
+  //       lang === "fr"
+  //         ? "Où avez-vous besoin d'un coup de main ?"
+  //         : "Where do you need a helping hand?",
+  //     nationalitiesPlaceholder:
+  //       lang === "fr" ? "Française, Belge..." : "French, Belgian...",
+  //     subjectPlaceholder:
+  //       lang === "fr" ? "En quelques mots... ✨" : "In a few words... ✨",
+  //     messagePlaceholder:
+  //       lang === "fr"
+  //         ? "Racontez-nous tout ! Plus c'est détaillé, mieux on peut vous aider 🎯"
+  //         : "Tell us everything! The more detailed, the better we can help you 🎯",
+
+  //     // Buttons
+  //     sendMessage: lang === "fr" ? "Envoyer avec amour" : "Send with love",
+  //     sending: lang === "fr" ? "Envoi en cours... ⏳" : "Sending... ⏳",
+  //     sendAnother:
+  //       lang === "fr" ? "Envoyer un autre message" : "Send another message",
+  //     backHome: lang === "fr" ? "Retour à l'accueil" : "Back to home",
+
+  //     // Success messages
+  //     messageSent: lang === "fr" ? "Message envoyé ! 🎉" : "Message sent! 🎉",
+  //     messageReceived:
+  //       lang === "fr"
+  //         ? "Super ! On a bien reçu votre message. Notre équipe va vous répondre très vite !"
+  //         : "Great! We received your message. Our team will respond very quickly!",
+
+  //     // Contact info fun
+  //     contactInfo:
+  //       lang === "fr" ? "Comment on peut vous aider" : "How we can help you",
+  //     sosService:
+  //       lang === "fr" ? "Service S.O.S Express" : "S.O.S Express Service",
+  //     available247:
+  //       lang === "fr" ? "Toujours là pour vous !" : "Always here for you!",
+  //     quickResponse:
+  //       lang === "fr" ? "Réponse ultra-rapide" : "Lightning-fast response",
+  //     usually24h:
+  //       lang === "fr" ? "Généralement sous 24h !" : "Usually within 24h!",
+  //     multilingualSupport:
+  //       lang === "fr" ? "Support multilingue" : "Multilingual support",
+  //     multipleLanguages:
+  //       lang === "fr"
+  //         ? "Français maintenant, autres langues très bientôt !"
+  //         : "French now, other languages very soon!",
+
+  //     // Form
+  //     formTitle:
+  //       lang === "fr"
+  //         ? "Envoyez-nous un petit message !"
+  //         : "Drop us a little message!",
+  //     formDescription:
+  //       lang === "fr"
+  //         ? "Quelques infos et c'est parti 🚀"
+  //         : "Just a few details and we're off! 🚀",
+  //     selectCategory:
+  //       lang === "fr"
+  //         ? "Choisissez votre catégorie..."
+  //         : "Pick your category...",
+  //     responseTime: lang === "fr" ? "Temps de réponse" : "Response time",
+  //     maxTime: lang === "fr" ? "Super rapide ⚡" : "Super fast ⚡",
+  //     secureData:
+  //       lang === "fr"
+  //         ? "Vos données sont en sécurité absolue avec nous 🔒"
+  //         : "Your data is absolutely safe with us 🔒",
+
+  //     // Progress
+  //     progressTitle: lang === "fr" ? "Votre progression" : "Your progress",
+  //     almostThere:
+  //       lang === "fr" ? "Vous y êtes presque !" : "You're almost there!",
+
+  //     // Errors fun
+  //     errorSending:
+  //       lang === "fr"
+  //         ? "Oups ! Petit souci technique. Pouvez-vous réessayer ? 🙏"
+  //         : "Oops! Small technical hiccup. Can you try again? 🙏",
+
+  //     // Validation errors with emojis
+  //     required:
+  //       lang === "fr"
+  //         ? "Ce petit champ nous manque 🥺"
+  //         : "We need this little field 🥺",
+  //     invalidEmail:
+  //       lang === "fr"
+  //         ? "Cette adresse email a l'air bizarre 🤔"
+  //         : "This email looks a bit off 🤔",
+  //     invalidPhone:
+  //       lang === "fr"
+  //         ? "Ce numéro ne nous semble pas correct 📱"
+  //         : "This number doesn't look right 📱",
+  //     invalidCustomCode:
+  //       lang === "fr"
+  //         ? "L'indicatif doit commencer par + 📞"
+  //         : "Country code must start with + 📞",
+  //     selectLanguages:
+  //       lang === "fr"
+  //         ? "Choisissez au moins une langue 🗣️"
+  //         : "Pick at least one language 🗣️",
+  //     acceptTermsRequired:
+  //       lang === "fr"
+  //         ? "Un petit clic sur les conditions, s'il vous plaît 📋"
+  //         : "A little click on the terms, please 📋",
+  //     formHasErrors:
+  //       lang === "fr"
+  //         ? "Quelques petites retouches et c'est parfait ! ✨"
+  //         : "A few little tweaks and it's perfect! ✨",
+
+  //     // Terms and conditions
+  //     acceptTerms: lang === "fr" ? "J'accepte les" : "I accept the",
+  //     termsAndConditions:
+  //       lang === "fr" ? "conditions générales" : "terms and conditions",
+  //     termsLink: "/conditions-generales-clients",
+
+  //     // Other
+  //     other: lang === "fr" ? "Autre" : "Other",
+
+  //     // Fun helpers
+  //     helpTitle: lang === "fr" ? "Petite aide" : "Little help",
+  //     completeFields:
+  //       lang === "fr" ? "Champs à compléter" : "Fields to complete",
+  //   }),
+  //   [lang]
+  // );
+
   const t = useMemo(
     () => ({
       // Meta & SEO
-      metaTitle:
-        lang === "fr"
-          ? "On vous écoute ! • SOS Expats"
-          : "We're all ears! • SOS Expats",
-      metaDesc:
-        lang === "fr"
-          ? "Une question ? Un souci ? Notre équipe sympa est là pour vous aider avec le sourire ✨"
-          : "Got a question? Need help? Our friendly team is here to help with a smile ✨",
+      metaTitle: intl.formatMessage({ id: "contact.metaTitle" }),
+      metaDesc: intl.formatMessage({ id: "contact.metaDesc" }),
 
-      // Header fun
-      pageTitle: lang === "fr" ? "On vous écoute !" : "We're all ears!",
-      pageSubtitle:
-        lang === "fr"
-          ? "Notre équipe super sympa est là pour vous 🤗"
-          : "Our super friendly team is here for you 🤗",
-      pageDescription:
-        lang === "fr"
-          ? "Une question ? Un pépin ? Envoyez-nous un petit message et on revient vers vous en mode turbo ! 🚀"
-          : "Got a question? A little hiccup? Drop us a message and we'll get back to you super fast! 🚀",
+      // Header
+      pageTitle: intl.formatMessage({ id: "contact.pageTitle" }),
+      pageSubtitle: intl.formatMessage({ id: "contact.pageSubtitle" }),
+      pageDescription: intl.formatMessage({ id: "contact.pageDescription" }),
 
-      // Form labels avec émojis
-      firstName: lang === "fr" ? "Votre prénom" : "Your first name",
-      lastName: lang === "fr" ? "Votre nom" : "Your last name",
-      email: lang === "fr" ? "Votre email" : "Your email",
-      phoneNumber: lang === "fr" ? "Votre téléphone" : "Your phone",
-      customCode:
-        lang === "fr" ? "Indicatif personnalisé" : "Custom country code",
-      originCountry:
-        lang === "fr" ? "D'où venez-vous ?" : "Where are you from?",
-      interventionCountry:
-        lang === "fr"
-          ? "Où vous faut-il de l'aide ?"
-          : "Where do you need help?",
-      spokenLanguages:
-        lang === "fr" ? "Vos langues magiques" : "Your magical languages",
-      nationalities: lang === "fr" ? "Vos nationalités" : "Your nationalities",
-      category: lang === "fr" ? "Type de demande" : "Request type",
-      subject: lang === "fr" ? "Le sujet en bref" : "Subject in brief",
-      message: lang === "fr" ? "Votre message" : "Your message",
+      // Form labels
+      firstName: intl.formatMessage({ id: "contact.firstName" }),
+      lastName: intl.formatMessage({ id: "contact.lastName" }),
+      email: intl.formatMessage({ id: "contact.email" }),
+      phoneNumber: intl.formatMessage({ id: "contact.phoneNumber" }),
+      customCode: intl.formatMessage({ id: "contact.customCode" }),
+      originCountry: intl.formatMessage({ id: "contact.originCountry" }),
+      interventionCountry: intl.formatMessage({
+        id: "contact.interventionCountry",
+      }),
+      spokenLanguages: intl.formatMessage({ id: "contact.spokenLanguages" }),
+      nationalities: intl.formatMessage({ id: "contact.nationalities" }),
+      category: intl.formatMessage({ id: "contact.category" }),
+      subject: intl.formatMessage({ id: "contact.subject" }),
+      message: intl.formatMessage({ id: "contact.message" }),
 
-      // Placeholders fun
-      firstNamePlaceholder:
-        lang === "fr"
-          ? "Comment on vous appelle ? 😊"
-          : "What should we call you? 😊",
-      lastNamePlaceholder:
-        lang === "fr" ? "Votre nom de famille..." : "Your family name...",
-      emailPlaceholder: lang === "fr" ? "votre@email.com" : "your@email.com",
-      phonePlaceholder: "06 12 34 56 78",
-      customCodePlaceholder: lang === "fr" ? "Ex: +225" : "Ex: +225",
-      originCountryPlaceholder: lang === "fr" ? "France" : "France",
-      interventionCountryPlaceholder:
-        lang === "fr"
-          ? "Où avez-vous besoin d'un coup de main ?"
-          : "Where do you need a helping hand?",
-      nationalitiesPlaceholder:
-        lang === "fr" ? "Française, Belge..." : "French, Belgian...",
-      subjectPlaceholder:
-        lang === "fr" ? "En quelques mots... ✨" : "In a few words... ✨",
-      messagePlaceholder:
-        lang === "fr"
-          ? "Racontez-nous tout ! Plus c'est détaillé, mieux on peut vous aider 🎯"
-          : "Tell us everything! The more detailed, the better we can help you 🎯",
+      // Placeholders
+      firstNamePlaceholder: intl.formatMessage({
+        id: "contact.firstNamePlaceholder",
+      }),
+      lastNamePlaceholder: intl.formatMessage({
+        id: "contact.lastNamePlaceholder",
+      }),
+      emailPlaceholder: intl.formatMessage({ id: "contact.emailPlaceholder" }),
+      phonePlaceholder: intl.formatMessage({ id: "contact.phonePlaceholder" }),
+      customCodePlaceholder: intl.formatMessage({
+        id: "contact.customCodePlaceholder",
+      }),
+      originCountryPlaceholder: intl.formatMessage({
+        id: "contact.originCountryPlaceholder",
+      }),
+      interventionCountryPlaceholder: intl.formatMessage({
+        id: "contact.interventionCountryPlaceholder",
+      }),
+      nationalitiesPlaceholder: intl.formatMessage({
+        id: "contact.nationalitiesPlaceholder",
+      }),
+      subjectPlaceholder: intl.formatMessage({
+        id: "contact.subjectPlaceholder",
+      }),
+      messagePlaceholder: intl.formatMessage({
+        id: "contact.messagePlaceholder",
+      }),
 
       // Buttons
-      sendMessage: lang === "fr" ? "Envoyer avec amour" : "Send with love",
-      sending: lang === "fr" ? "Envoi en cours... ⏳" : "Sending... ⏳",
-      sendAnother:
-        lang === "fr" ? "Envoyer un autre message" : "Send another message",
-      backHome: lang === "fr" ? "Retour à l'accueil" : "Back to home",
+      sendMessage: intl.formatMessage({ id: "contact.sendMessage" }),
+      sending: intl.formatMessage({ id: "contact.sending" }),
+      sendAnother: intl.formatMessage({ id: "contact.sendAnother" }),
+      backHome: intl.formatMessage({ id: "contact.backHome" }),
 
       // Success messages
-      messageSent: lang === "fr" ? "Message envoyé ! 🎉" : "Message sent! 🎉",
-      messageReceived:
-        lang === "fr"
-          ? "Super ! On a bien reçu votre message. Notre équipe va vous répondre très vite !"
-          : "Great! We received your message. Our team will respond very quickly!",
+      messageSent: intl.formatMessage({ id: "contact.messageSent" }),
+      messageReceived: intl.formatMessage({ id: "contact.messageReceived" }),
 
-      // Contact info fun
-      contactInfo:
-        lang === "fr" ? "Comment on peut vous aider" : "How we can help you",
-      sosService:
-        lang === "fr" ? "Service S.O.S Express" : "S.O.S Express Service",
-      available247:
-        lang === "fr" ? "Toujours là pour vous !" : "Always here for you!",
-      quickResponse:
-        lang === "fr" ? "Réponse ultra-rapide" : "Lightning-fast response",
-      usually24h:
-        lang === "fr" ? "Généralement sous 24h !" : "Usually within 24h!",
-      multilingualSupport:
-        lang === "fr" ? "Support multilingue" : "Multilingual support",
-      multipleLanguages:
-        lang === "fr"
-          ? "Français maintenant, autres langues très bientôt !"
-          : "French now, other languages very soon!",
+      // Contact info
+      contactInfo: intl.formatMessage({ id: "contact.contactInfo" }),
+      sosService: intl.formatMessage({ id: "contact.sosService" }),
+      available247: intl.formatMessage({ id: "contact.available247" }),
+      quickResponse: intl.formatMessage({ id: "contact.quickResponse" }),
+      usually24h: intl.formatMessage({ id: "contact.usually24h" }),
+      multilingualSupport: intl.formatMessage({
+        id: "contact.multilingualSupport",
+      }),
+      multipleLanguages: intl.formatMessage({
+        id: "contact.multipleLanguages",
+      }),
 
       // Form
-      formTitle:
-        lang === "fr"
-          ? "Envoyez-nous un petit message !"
-          : "Drop us a little message!",
-      formDescription:
-        lang === "fr"
-          ? "Quelques infos et c'est parti 🚀"
-          : "Just a few details and we're off! 🚀",
-      selectCategory:
-        lang === "fr"
-          ? "Choisissez votre catégorie..."
-          : "Pick your category...",
-      responseTime: lang === "fr" ? "Temps de réponse" : "Response time",
-      maxTime: lang === "fr" ? "Super rapide ⚡" : "Super fast ⚡",
-      secureData:
-        lang === "fr"
-          ? "Vos données sont en sécurité absolue avec nous 🔒"
-          : "Your data is absolutely safe with us 🔒",
+      formTitle: intl.formatMessage({ id: "contact.formTitle" }),
+      formDescription: intl.formatMessage({ id: "contact.formDescription" }),
+      selectCategory: intl.formatMessage({ id: "contact.selectCategory" }),
+      responseTime: intl.formatMessage({ id: "contact.responseTime" }),
+      maxTime: intl.formatMessage({ id: "contact.maxTime" }),
+      secureData: intl.formatMessage({ id: "contact.secureData" }),
 
       // Progress
-      progressTitle: lang === "fr" ? "Votre progression" : "Your progress",
-      almostThere:
-        lang === "fr" ? "Vous y êtes presque !" : "You're almost there!",
+      progressTitle: intl.formatMessage({ id: "contact.progressTitle" }),
+      almostThere: intl.formatMessage({ id: "contact.almostThere" }),
 
-      // Errors fun
-      errorSending:
-        lang === "fr"
-          ? "Oups ! Petit souci technique. Pouvez-vous réessayer ? 🙏"
-          : "Oops! Small technical hiccup. Can you try again? 🙏",
+      // Errors
+      errorSending: intl.formatMessage({ id: "contact.errorSending" }),
 
-      // Validation errors with emojis
-      required:
-        lang === "fr"
-          ? "Ce petit champ nous manque 🥺"
-          : "We need this little field 🥺",
-      invalidEmail:
-        lang === "fr"
-          ? "Cette adresse email a l'air bizarre 🤔"
-          : "This email looks a bit off 🤔",
-      invalidPhone:
-        lang === "fr"
-          ? "Ce numéro ne nous semble pas correct 📱"
-          : "This number doesn't look right 📱",
-      invalidCustomCode:
-        lang === "fr"
-          ? "L'indicatif doit commencer par + 📞"
-          : "Country code must start with + 📞",
-      selectLanguages:
-        lang === "fr"
-          ? "Choisissez au moins une langue 🗣️"
-          : "Pick at least one language 🗣️",
-      acceptTermsRequired:
-        lang === "fr"
-          ? "Un petit clic sur les conditions, s'il vous plaît 📋"
-          : "A little click on the terms, please 📋",
-      formHasErrors:
-        lang === "fr"
-          ? "Quelques petites retouches et c'est parfait ! ✨"
-          : "A few little tweaks and it's perfect! ✨",
+      // Validation errors
+      required: intl.formatMessage({ id: "contact.required" }),
+      invalidEmail: intl.formatMessage({ id: "contact.invalidEmail" }),
+      invalidPhone: intl.formatMessage({ id: "contact.invalidPhone" }),
+      invalidCustomCode: intl.formatMessage({
+        id: "contact.invalidCustomCode",
+      }),
+      selectLanguages: intl.formatMessage({ id: "contact.selectLanguages" }),
+      acceptTermsRequired: intl.formatMessage({
+        id: "contact.acceptTermsRequired",
+      }),
+      formHasErrors: intl.formatMessage({ id: "contact.formHasErrors" }),
 
       // Terms and conditions
-      acceptTerms: lang === "fr" ? "J'accepte les" : "I accept the",
-      termsAndConditions:
-        lang === "fr" ? "conditions générales" : "terms and conditions",
-      termsLink: "/conditions-generales-clients",
+      acceptTerms: intl.formatMessage({ id: "contact.acceptTerms" }),
+      termsAndConditions: intl.formatMessage({
+        id: "contact.termsAndConditions",
+      }),
+      termsLink: intl.formatMessage({ id: "contact.termsLink" }),
 
       // Other
-      other: lang === "fr" ? "Autre" : "Other",
+      other: intl.formatMessage({ id: "contact.other" }),
 
-      // Fun helpers
-      helpTitle: lang === "fr" ? "Petite aide" : "Little help",
-      completeFields:
-        lang === "fr" ? "Champs à compléter" : "Fields to complete",
+      // Helpers
+      helpTitle: intl.formatMessage({ id: "contact.helpTitle" }),
+      completeFields: intl.formatMessage({ id: "contact.completeFields" }),
     }),
-    [lang]
+    [intl]
   );
 
   // Validation du formulaire
@@ -941,7 +1066,8 @@ const Contact: React.FC = () => {
                 <div className="flex items-center space-x-2">
                   <Zap className="w-5 h-5 text-emerald-600" />
                   <span className="text-sm font-bold text-gray-800">
-                    {lang === "fr" ? "Réponse < 24h" : "Response < 24h"}
+                    {/* {lang === "fr" ? "Réponse < 24h" : "Response < 24h"} */}
+                    {intl.formatMessage({ id: "contact.response24h" })}
                   </span>
                 </div>
               </div>
@@ -949,7 +1075,8 @@ const Contact: React.FC = () => {
                 <div className="flex items-center space-x-2">
                   <Globe className="w-5 h-5 text-emerald-600" />
                   <span className="text-sm font-bold text-gray-800">
-                    {lang === "fr" ? "24/7 Partout" : "24/7 Anywhere"}
+                    {/* {lang === "fr" ? "24/7 Partout" : "24/7 Anywhere"} */}
+                    {intl.formatMessage({ id: "contact.anywhere247" })}
                   </span>
                 </div>
               </div>
@@ -957,7 +1084,8 @@ const Contact: React.FC = () => {
                 <div className="flex items-center space-x-2">
                   <Star className="w-5 h-5 text-emerald-600" />
                   <span className="text-sm font-bold text-gray-800">
-                    {lang === "fr" ? "100% Humain" : "100% Human"}
+                    {/* {lang === "fr" ? "100% Humain" : "100% Human"} */}
+                    {intl.formatMessage({ id: "contact.human100" })}
                   </span>
                 </div>
               </div>
@@ -1094,7 +1222,8 @@ const Contact: React.FC = () => {
                   <div className="bg-gradient-to-r from-emerald-50 to-green-50 rounded-2xl p-6 border border-emerald-200">
                     <h3 className="text-xl font-black text-gray-900 mb-4 flex items-center">
                       <User className="w-6 h-6 mr-2 text-emerald-600" />
-                      {lang === "fr" ? "Qui êtes-vous ? 😊" : "Who are you? 😊"}
+                      {/* {lang === "fr" ? "Qui êtes-vous ? 😊" : "Who are you? 😊"} */}
+                      {intl.formatMessage({ id: "contact.whoAreYou" })}
                     </h3>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1938,14 +2067,16 @@ const Contact: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="text-xl font-black text-gray-900">
-                    {lang === "fr"
+                    {/* {lang === "fr"
                       ? "Une communauté qui vous veut du bien"
-                      : "A community that wants the best for you"}
+                      : "A community that wants the best for you"} */}
+                    {intl.formatMessage({ id: "contact.communityGood" })}
                   </h3>
                   <p className="text-gray-600">
-                    {lang === "fr"
+                    {/* {lang === "fr"
                       ? "Des experts passionnés, partout dans le monde"
-                      : "Passionate experts, all around the world"}
+                      : "Passionate experts, all around the world"} */}
+                    {intl.formatMessage({ id: "contact.passionateExperts" })}
                   </p>
                 </div>
               </div>
@@ -1955,22 +2086,27 @@ const Contact: React.FC = () => {
                   href="/politique-confidentialite"
                   className="hover:text-emerald-600 underline transition-colors"
                 >
-                  🔒 {lang === "fr" ? "Confidentialité" : "Privacy"}
+                  🔒
+                  {/* {lang === "fr" ? "Confidentialité" : "Privacy"} */}
+                  {intl.formatMessage({ id: "contact.privacy" })}
                 </a>
                 <a
                   href="/centre-aide"
                   className="hover:text-emerald-600 underline transition-colors"
                 >
-                  💬 {lang === "fr" ? "Centre d'aide" : "Help Center"}
+                  💬
+                  {/* {lang === "fr" ? "Centre d'aide" : "Help Center"} */}
+                  {intl.formatMessage({ id: "contact.helpCenter" })}
                 </a>
                 <a
                   href="/conditions-generales-clients"
                   className="hover:text-emerald-600 underline transition-colors"
                 >
                   📋{" "}
-                  {lang === "fr"
+                  {/* {lang === "fr"
                     ? "Conditions générales"
-                    : "Terms & Conditions"}
+                    : "Terms & Conditions"} */}
+                  {intl.formatMessage({ id: "contact.termsConditions" })}
                 </a>
               </div>
 
