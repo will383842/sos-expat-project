@@ -1071,6 +1071,31 @@
   "faq.supportTitle": "Vous ne trouvez pas votre réponse ?",
   "faq.supportSubtitle": "Notre équipe support est disponible 24/7 pour vous aider",
   "faq.contactForm": "Formulaire de contact",
-  "faq.emergencyCall": "Appel d'urgence"
+  "faq.emergencyCall": "Appel d'urgence",
+  
+  "helpCenter.title": "Centre d'aide",
+  "helpCenter.subtitle": "Trouvez rapidement des réponses et des guides internationaux.",
+  "helpCenter.searchPlaceholder": "Rechercher dans l'aide...",
+  "helpCenter.searchLabel": "Champ de recherche du centre d'aide",
+  "helpCenter.categories": "Catégories",
+  "helpCenter.allCategories": "Toutes les catégories",
+  "helpCenter.emergencyCalls": "Appels d'urgence",
+  "helpCenter.userAccount": "Compte utilisateur",
+  "helpCenter.payments": "Paiements",
+  "helpCenter.practicalGuides": "Guides pratiques",
+  "helpCenter.generalFaq": "Questions diverses",
+  "helpCenter.allArticles": "Tous les articles",
+  "helpCenter.articlesFound": "article(s) trouvé(s)",
+  "helpCenter.minRead": "min de lecture",
+  "helpCenter.loadingArticles": "Chargement des articles...",
+  "helpCenter.noArticlesFound": "Aucun article trouvé pour ces critères",
+  "helpCenter.resetSearch": "Réinitialiser la recherche",
+  "helpCenter.backToArticles": "Retour aux articles",
+  "helpCenter.supportTitle": "Vous ne trouvez pas votre réponse ?",
+  "helpCenter.supportSubtitle": "Notre équipe support est disponible 24/7 pour vous aider",
+  "helpCenter.contactUs": "Nous contacter",
+  "helpCenter.emergencyCall": "Appel d'urgence"
+
+
 
 }
