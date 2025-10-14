@@ -32,7 +32,7 @@ import { db } from "../config/firebase";
 import Layout from "../components/layout/Layout";
 import SEOHead from "../components/layout/SEOHead";
 import { useApp } from "../contexts/AppContext";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 /* =========================
    Types
@@ -165,53 +165,53 @@ const PROFESSION_ICONS: Record<
   },
 };
 
-const TRANSLATIONS = {
-  fr: {
-    professions: {
-      lawyer: "Avocat",
-      expat: "Expat",
-    },
-    labels: {
-      online: "En ligne",
-      offline: "Hors ligne",
-      languages: "Langues",
-      years: "ans",
-      reviews: "avis",
-      viewProfile: "Voir le profil",
-      others: "autres",
-    },
-  },
-  en: {
-    professions: {
-      lawyer: "Lawyer",
-      expat: "Expat",
-    },
-    labels: {
-      online: "Online",
-      offline: "Offline",
-      languages: "Languages",
-      years: "years",
-      reviews: "reviews",
-      viewProfile: "View profile",
-      others: "others",
-    },
-  },
-  es: {
-    professions: {
-      lawyer: "Abogado",
-      expat: "Expatriado",
-    },
-    labels: {
-      online: "En línea",
-      offline: "Fuera de línea",
-      languages: "Idiomas",
-      years: "años",
-      reviews: "reseñas",
-      viewProfile: "Ver perfil",
-      others: "otros",
-    },
-  },
-} as const;
+// const TRANSLATIONS = {
+//   fr: {
+//     professions: {
+//       lawyer: "Avocat",
+//       expat: "Expat",
+//     },
+//     labels: {
+//       online: "En ligne",
+//       offline: "Hors ligne",
+//       languages: "Langues",
+//       years: "ans",
+//       reviews: "avis",
+//       viewProfile: "Voir le profil",
+//       others: "autres",
+//     },
+//   },
+//   en: {
+//     professions: {
+//       lawyer: "Lawyer",
+//       expat: "Expat",
+//     },
+//     labels: {
+//       online: "Online",
+//       offline: "Offline",
+//       languages: "Languages",
+//       years: "years",
+//       reviews: "reviews",
+//       viewProfile: "View profile",
+//       others: "others",
+//     },
+//   },
+//   es: {
+//     professions: {
+//       lawyer: "Abogado",
+//       expat: "Expatriado",
+//     },
+//     labels: {
+//       online: "En línea",
+//       offline: "Fuera de línea",
+//       languages: "Idiomas",
+//       years: "años",
+//       reviews: "reseñas",
+//       viewProfile: "Ver perfil",
+//       others: "otros",
+//     },
+//   },
+// } as const;
 
 // const getBrowserLanguage = (): "fr" | "en" => {
 //   if (typeof window === "undefined") return "fr";
@@ -237,27 +237,27 @@ const getLanguage = (userLanguage?: string): "fr" | "en" | "es" => {
   return getBrowserLanguage();
 };
 
-const t = (lang: "fr" | "en" | "es", key: string, subKey?: string): string => {
-  const translation = TRANSLATIONS[lang] as Record<
-    string,
-    Record<string, string> | string
-  >;
-  let text: string;
+// const t = (lang: "fr" | "en" | "es", key: string, subKey?: string): string => {
+//   const translation = TRANSLATIONS[lang] as Record<
+//     string,
+//     Record<string, string> | string
+//   >;
+//   let text: string;
 
-  if (subKey) {
-    const section = translation[key];
-    if (typeof section === "object" && section !== null) {
-      text = section[subKey] || key;
-    } else {
-      text = key;
-    }
-  } else {
-    const value = translation[key];
-    text = typeof value === "string" ? value : key;
-  }
+//   if (subKey) {
+//     const section = translation[key];
+//     if (typeof section === "object" && section !== null) {
+//       text = section[subKey] || key;
+//     } else {
+//       text = key;
+//     }
+//   } else {
+//     const value = translation[key];
+//     text = typeof value === "string" ? value : key;
+//   }
 
-  return text;
-};
+//   return text;
+// };
 
 const getProfessionInfo = (type: string) => {
   return PROFESSION_ICONS[type] || PROFESSION_ICONS["expat"];
@@ -580,7 +580,8 @@ const ModernProfileCard: React.FC<{
   onProfileClick: (provider: Provider) => void;
   index?: number;
   language?: string;
-}> = React.memo(({ provider, onProfileClick, index = 0, language }) => {
+  intl: ReturnType<typeof useIntl>;
+}> = React.memo(({ provider, onProfileClick, index = 0, language, intl }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -624,17 +625,33 @@ const ModernProfileCard: React.FC<{
     if (mappedLanguages.length <= 3) {
       return mappedLanguages.join(" • ");
     }
-    return `${mappedLanguages.slice(0, 2).join(" • ")} +${mappedLanguages.length - 2} ${t(currentLang, "labels", "others")}`;
+    return `${mappedLanguages.slice(0, 2).join(" • ")} +${mappedLanguages.length - 2} ${intl.formatMessage({ id: "card.others" })}`;
   }, [provider.languages, currentLang]);
 
   const ariaLabels = useMemo(
     () => ({
-      card: `Carte de profil de ${provider.name}`,
-      status: `Statut en ligne : ${provider.isOnline ? t(currentLang, "labels", "online") : t(currentLang, "labels", "offline")}`,
-      rating: `Note ${provider.rating.toFixed(1)} sur 5`,
-      viewProfile: `Voir le profil de ${provider.name}`,
+      card: intl.formatMessage(
+        { id: "card.aria.profileCard" },
+        { name: provider.name }
+      ),
+      status: intl.formatMessage(
+        { id: "card.aria.onlineStatus" },
+        {
+          status: provider.isOnline
+            ? intl.formatMessage({ id: "card.online" })
+            : intl.formatMessage({ id: "card.offline" }),
+        }
+      ),
+      rating: intl.formatMessage(
+        { id: "card.aria.rating" },
+        { rating: provider.rating.toFixed(1) }
+      ),
+      viewProfile: intl.formatMessage(
+        { id: "card.aria.viewProfileAction" },
+        { name: provider.name }
+      ),
     }),
-    [currentLang, provider.name, provider.isOnline, provider.rating]
+    [intl, provider.name, provider.isOnline, provider.rating]
   );
 
   return (
@@ -707,8 +724,8 @@ const ModernProfileCard: React.FC<{
               )}
               <span>
                 {provider.isOnline
-                  ? t(currentLang, "labels", "online")
-                  : t(currentLang, "labels", "offline")}
+                  ? intl.formatMessage({ id: "card.online" })
+                  : intl.formatMessage({ id: "card.offline" })}
               </span>
             </div>
           </div>
@@ -725,7 +742,12 @@ const ModernProfileCard: React.FC<{
             >
               <span className="text-sm font-medium">
                 <span aria-hidden="true">{professionInfo.icon}</span>{" "}
-                {t(currentLang, "professions", provider.type)}
+                {intl.formatMessage({
+                  id:
+                    provider.type === "lawyer"
+                      ? "profession.lawyer"
+                      : "profession.expat",
+                })}
               </span>
             </div>
           </div>
@@ -762,7 +784,7 @@ const ModernProfileCard: React.FC<{
                 <Zap className="w-3 h-3 text-teal-600" aria-hidden="true" />
                 <span className="text-teal-600 text-xs font-medium">
                   {provider.yearsOfExperience}{" "}
-                  {t(currentLang, "labels", "years")}
+                  {intl.formatMessage({ id: "card.years" })}
                 </span>
               </div>
             </div>
@@ -797,7 +819,7 @@ const ModernProfileCard: React.FC<{
               <div className="flex items-center gap-2">
                 <Globe className="w-3 h-3 text-indigo-600" aria-hidden="true" />
                 <span className="text-slate-800 font-semibold text-xs">
-                  {t(currentLang, "labels", "languages")}
+                  {/* {t(currentLang, "labels", "languages")} */}
                 </span>
               </div>
               <div className="pl-5">
@@ -813,11 +835,17 @@ const ModernProfileCard: React.FC<{
             <div className="flex items-center gap-1">
               <Users className="w-3 h-3 text-amber-600" aria-hidden="true" />
               <span className="text-amber-600 text-xs font-medium">
-                {provider.reviewCount} {t(currentLang, "labels", "reviews")}
+                {provider.reviewCount}{" "}
+                {intl.formatMessage({ id: "card.reviews" })}
               </span>
             </div>
             <div className="text-slate-500 text-xs">
-              {t(currentLang, "professions", provider.type)}
+              {intl.formatMessage({
+                id:
+                  provider.type === "lawyer"
+                    ? "profession.lawyer"
+                    : "profession.expat",
+              })}
             </div>
           </div>
 
@@ -846,7 +874,7 @@ const ModernProfileCard: React.FC<{
             >
               <Eye className="w-4 h-4" aria-hidden="true" />
               <span className="font-bold">
-                {t(currentLang, "labels", "viewProfile")}
+                {intl.formatMessage({ id: "card.viewProfile" })}
               </span>
               <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </button>
@@ -899,6 +927,7 @@ ModernProfileCard.displayName = "ModernProfileCard";
    Composant principal
 ========================= */
 const SOSCall: React.FC = () => {
+  const intl = useIntl();
   const { language } = useApp();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -1670,6 +1699,7 @@ const SOSCall: React.FC = () => {
                           onProfileClick={handleProviderClick}
                           index={index}
                           language={language}
+                          intl={intl}
                         />
                       </div>
                     ))}
@@ -1685,6 +1715,7 @@ const SOSCall: React.FC = () => {
                       onProfileClick={handleProviderClick}
                       index={index}
                       language={language}
+                      intl={intl}
                     />
                   ))}
                 </div>
