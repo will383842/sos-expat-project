@@ -983,5 +983,16 @@
   "contact.categoryUrgent": "🚨 Срочный",
   "contact.categoryOther": "💬 Другое",
     "testy.hero.titleFirst": "Отзывы",
-  "testy.hero.titleSecond": "клиентов"
+  "testy.hero.titleSecond": "клиентов",
+    "faq.title": "Центр помощи",
+  "faq.heroTitle": "Часто задаваемые вопросы",
+  "faq.heroSubtitle": "Быстро найдите ответы о SOS Expat & Travelers",
+  "faq.searchPlaceholder": "Поиск в FAQ…",
+  "faq.categories": "Категории",
+  "faq.resetFilters": "Сбросить фильтры",
+  "faq.noResults": "По этим критериям вопросы не найдены",
+  "faq.supportTitle": "Не можете найти ответ?",
+  "faq.supportSubtitle": "Наша служба поддержки доступна 24/7, чтобы помочь вам",
+  "faq.contactForm": "Контактная форма",
+  "faq.emergencyCall": "Экстренный звонок"
 }

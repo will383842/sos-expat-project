@@ -983,5 +983,16 @@
   "contact.categoryUrgent": "🚨 Dringend",
   "contact.categoryOther": "💬 Sonstiges",
    "testy.hero.titleFirst": "Kunden",
-  "testy.hero.titleSecond": "testimonials"
+  "testy.hero.titleSecond": "testimonials",
+    "faq.title": "Hilfecenter",
+  "faq.heroTitle": "Häufig gestellte Fragen",
+  "faq.heroSubtitle": "Finden Sie schnell Antworten zu SOS Expat & Travelers",
+  "faq.searchPlaceholder": "In den FAQs suchen…",
+  "faq.categories": "Kategorien",
+  "faq.resetFilters": "Filter zurücksetzen",
+  "faq.noResults": "Keine Fragen für diese Kriterien gefunden",
+  "faq.supportTitle": "Sie finden Ihre Antwort nicht?",
+  "faq.supportSubtitle": "Unser Support-Team ist 24/7 für Sie da",
+  "faq.contactForm": "Kontaktformular",
+  "faq.emergencyCall": "Notanruf"
 }

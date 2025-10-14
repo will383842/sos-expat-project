@@ -1031,5 +1031,16 @@
   "contact.categoryUrgent": "🚨 Urgente",
   "contact.categoryOther": "💬 Otro",
     "testy.hero.titleFirst": "Testimonios",
-  "testy.hero.titleSecond": "de clientes"
+  "testy.hero.titleSecond": "de clientes",
+    "faq.title": "Centro de ayuda",
+  "faq.heroTitle": "Preguntas frecuentes",
+  "faq.heroSubtitle": "Encuentra rápidamente respuestas sobre SOS Expat & Travelers",
+  "faq.searchPlaceholder": "Buscar en las preguntas frecuentes…",
+  "faq.categories": "Categorías",
+  "faq.resetFilters": "Restablecer filtros",
+  "faq.noResults": "No se encontraron preguntas para estos criterios",
+  "faq.supportTitle": "¿No encuentras tu respuesta?",
+  "faq.supportSubtitle": "Nuestro equipo de soporte está disponible 24/7 para ayudarte",
+  "faq.contactForm": "Formulario de contacto",
+  "faq.emergencyCall": "Llamada de emergencia"
 }

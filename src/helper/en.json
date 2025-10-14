@@ -1005,5 +1005,16 @@
   "contact.categoryUrgent": "🚨 Urgent",
   "contact.categoryOther": "💬 Other",
   "testy.hero.titleFirst": "Client",
-  "testy.hero.titleSecond": "testimonials"
+  "testy.hero.titleSecond": "testimonials",
+    "faq.title": "Help center",
+  "faq.heroTitle": "Frequently Asked Questions",
+  "faq.heroSubtitle": "Quickly find answers about SOS Expat & Travelers",
+  "faq.searchPlaceholder": "Search FAQ…",
+  "faq.categories": "Categories",
+  "faq.resetFilters": "Reset filters",
+  "faq.noResults": "No questions found for these criteria",
+  "faq.supportTitle": "Can't find your answer?",
+  "faq.supportSubtitle": "Our support team is available 24/7 to help you",
+  "faq.contactForm": "Contact form",
+  "faq.emergencyCall": "Emergency call"
 }
