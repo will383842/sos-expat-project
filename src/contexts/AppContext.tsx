@@ -9,7 +9,7 @@ import { Service, AppSettings, Notification, EnhancedSettings } from "./types";
 import { ensureCollectionsExist } from "../utils/firestore";
 
 // ✅ ADD "es" to the type
-type Language = "fr" | "en" | "es";
+type Language = "fr" | "en" | "es" | "ru" | "de";
 
 interface AppContextType {
   services: Service[];

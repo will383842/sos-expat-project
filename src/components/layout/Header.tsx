@@ -50,7 +50,7 @@ declare global {
 }
 
 interface Language {
-  code: "fr" | "en" | "es";
+  code: "fr" | "en" | "es" | "ru" | "de" ;
   name: string;
   nativeName: string;
   flag: React.ReactNode;
@@ -143,6 +143,38 @@ const SpanishFlag = memo(() => (
 ));
 SpanishFlag.displayName = "SpanishFlag";
 
+const RussianFlag = memo(() => (
+  <div
+    className="relative p-1 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg ring-1 ring-white/20"
+    role="img"
+    aria-label="Российский флаг"
+  >
+    <div className="w-6 h-4 rounded-md overflow-hidden shadow-sm flex flex-col">
+      <div className="w-full h-1/3 bg-white" />
+      <div className="w-full h-1/3 bg-blue-600" />
+      <div className="w-full h-1/3 bg-red-600" />
+    </div>
+    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-lg pointer-events-none" />
+  </div>
+));
+RussianFlag.displayName = "RussianFlag";
+
+const GermanFlag = memo(() => (
+  <div
+    className="relative p-1 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg ring-1 ring-white/20"
+    role="img"
+    aria-label="Deutsche Flagge"
+  >
+    <div className="w-6 h-4 rounded-md overflow-hidden shadow-sm flex flex-col">
+      <div className="w-full h-1/3 bg-black" />
+      <div className="w-full h-1/3 bg-red-600" />
+      <div className="w-full h-1/3 bg-yellow-400" />
+    </div>
+    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-lg pointer-events-none" />
+  </div>
+));
+GermanFlag.displayName = "GermanFlag";
+
 /** ================================
  *  i18n Config
  *  ================================ */
@@ -150,6 +182,8 @@ const SUPPORTED_LANGUAGES: Language[] = [
   { code: "fr", name: "French", nativeName: "Français", flag: <FrenchFlag /> },
   { code: "en", name: "English", nativeName: "English", flag: <BritishFlag /> },
   { code: "es", name: "Spanish", nativeName: "Español", flag: <SpanishFlag /> },
+  { code: "ru", name: "Russian", nativeName: "Русский", flag: <RussianFlag /> },
+  { code: "de", name: "German", nativeName: "Deutsch", flag: <GermanFlag /> },
 ];
 
 const LEFT_NAVIGATION_ITEMS: NavigationItem[] = [
@@ -526,7 +560,7 @@ const LanguageDropdown = memo<{
   }, []);
 
   const handleLanguageChange = useCallback(
-    (langCode: "fr" | "en" | "es") => {
+    (langCode: "fr" | "en" | "es" | "ru" | "de") => {
       setLanguage(langCode);
       setOpen(false);
       window.gtag?.("event", "language_change", {
@@ -1033,28 +1067,47 @@ const Header: React.FC = () => {
 
   const getNavigationLabel = useCallback(
     (labelKey: string): string => {
-      // const translations: Record<string, Record<'fr' | 'en', string>> = {
-      //   'nav.home': { fr: 'Accueil', en: 'Home' },
-      //   'nav.viewProfiles': { fr: 'Profils aidants', en: 'Helper profiles' },
-      //   'nav.testimonials': { fr: 'Avis', en: 'Reviews' },
-      //   'nav.howItWorks': { fr: 'Comment ça marche', en: 'How it Works' },
-      //   'nav.pricing': { fr: 'Tarifs', en: 'Pricing' },
-      // };
-      const translations: Record<string, Record<"fr" | "en" | "es", string>> = {
-        "nav.home": { fr: "Accueil", en: "Home", es: "Inicio" },
+      const translations: Record<
+        string,
+        Record<"fr" | "en" | "es" | "ru" | "de", string>
+      > = {
+        "nav.home": {
+          fr: "Accueil",
+          en: "Home",
+          es: "Inicio",
+          ru: "Главная",
+          de: "Startseite",
+        },
         "nav.viewProfiles": {
           fr: "Profils aidants",
           en: "Helper profiles",
           es: "Perfiles de ayuda",
+          ru: "Профили помощников",
+          de: "Helferprofile",
         },
-        "nav.testimonials": { fr: "Avis", en: "Reviews", es: "Reseñas" },
+        "nav.testimonials": {
+          fr: "Avis",
+          en: "Reviews",
+          es: "Reseñas",
+          ru: "Отзывы",
+          de: "Bewertungen",
+        },
         "nav.howItWorks": {
           fr: "Comment ça marche",
           en: "How it Works",
           es: "Cómo funciona",
+          ru: "Как это работает",
+          de: "Wie es funktioniert",
         },
-        "nav.pricing": { fr: "Tarifs", en: "Pricing", es: "Precios" },
+        "nav.pricing": {
+          fr: "Tarifs",
+          en: "Pricing",
+          es: "Precios",
+          ru: "Тарифы",
+          de: "Preise",
+        },
       };
+
       return translations[labelKey]?.[language] || labelKey;
     },
     [language]
