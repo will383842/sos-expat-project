@@ -1365,15 +1365,13 @@ const Contact: React.FC = () => {
                   <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200">
                     <h3 className="text-xl font-black text-gray-900 mb-4 flex items-center">
                       <Phone className="w-6 h-6 mr-2 text-green-600" />
-                      {lang === "fr"
-                        ? "Comment vous joindre ? 📞"
-                        : "How to reach you? 📞"}
+                      {intl.formatMessage({ id: "contact.howToReach" })}
                     </h3>
 
                     <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
                       <div className="sm:col-span-2">
                         <label className="text-sm font-bold text-gray-800 mb-2 block">
-                          {lang === "fr" ? "Indicatif" : "Country code"}
+                          {intl.formatMessage({ id: "contact.countryCode" })}
                         </label>
                         <select
                           name="phoneCountryCode"
@@ -1389,11 +1387,9 @@ const Contact: React.FC = () => {
                                 ? "border-emerald-400 bg-emerald-50 shadow-lg"
                                 : "border-gray-300 hover:border-emerald-300"
                           }`}
-                          aria-label={
-                            lang === "fr"
-                              ? "Sélectionner l'indicatif pays"
-                              : "Select country code"
-                          }
+                          aria-label={intl.formatMessage({
+                            id: "contact.selectCountryCode",
+                          })}
                         >
                           {countryCodes.map((code) => (
                             <option
@@ -1469,9 +1465,7 @@ const Contact: React.FC = () => {
                       </div>
                     </div>
                     <FieldSuccess show={validStates.phone}>
-                      {lang === "fr"
-                        ? "Super ! On pourra vous appeler 📱"
-                        : "Great! We can call you 📱"}
+                      {intl.formatMessage({ id: "contact.canCallYou" })}
                     </FieldSuccess>
                     <ErrorMessage
                       error={
@@ -1484,9 +1478,7 @@ const Contact: React.FC = () => {
                   <div className="bg-gradient-to-r from-emerald-50 to-green-50 rounded-2xl p-6 border border-emerald-200">
                     <h3 className="text-xl font-black text-gray-900 mb-4 flex items-center">
                       <MapPin className="w-6 h-6 mr-2 text-emerald-600" />
-                      {lang === "fr"
-                        ? "Votre géographie 🌍"
-                        : "Your geography 🌍"}
+                      {intl.formatMessage({ id: "contact.yourGeography" })}
                     </h3>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -1525,7 +1517,7 @@ const Contact: React.FC = () => {
                           aria-invalid={!!formErrors.originCountry}
                         />
                         <FieldSuccess show={validStates.originCountry}>
-                          {lang === "fr" ? "Noté ! 🌍" : "Got it! 🌍"}
+                          {intl.formatMessage({ id: "contact.noted" })}
                         </FieldSuccess>
                         <ErrorMessage
                           error={formErrors.originCountry}
@@ -1567,9 +1559,7 @@ const Contact: React.FC = () => {
                           aria-invalid={!!formErrors.interventionCountry}
                         />
                         <FieldSuccess show={validStates.interventionCountry}>
-                          {lang === "fr"
-                            ? "On va vous aider là-bas ! 🎯"
-                            : "We'll help you there! 🎯"}
+                          {intl.formatMessage({ id: "contact.helpThere" })}
                         </FieldSuccess>
                         <ErrorMessage
                           error={formErrors.interventionCountry}
@@ -1612,7 +1602,8 @@ const Contact: React.FC = () => {
                         aria-invalid={!!formErrors.nationalities}
                       />
                       <FieldSuccess show={validStates.nationalities}>
-                        {lang === "fr" ? "Parfait ! 🏳️" : "Perfect! 🏳️"}
+                        {/* {lang === "fr" ? "Parfait ! 🏳️" : "Perfect! 🏳️"} */}
+                        {intl.formatMessage({ id: "contact.perfect" })}
                       </FieldSuccess>
                       <ErrorMessage
                         error={formErrors.nationalities}
@@ -1654,10 +1645,10 @@ const Contact: React.FC = () => {
                           }
                         >
                           {spokenLanguages.length > 0
-                            ? `${spokenLanguages.length} ${lang === "fr" ? "langue(s) sélectionnée(s)" : "language(s) selected"} ✨`
-                            : lang === "fr"
-                              ? "Choisissez vos langues magiques..."
-                              : "Choose your magical languages..."}
+                            ? `${spokenLanguages.length} ${intl.formatMessage({ id: "contact.languagesSelected" })} ✨`
+                            : intl.formatMessage({
+                                id: "contact.chooseLanguages",
+                              })}
                         </span>
                         <ChevronDown
                           className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${
@@ -1713,9 +1704,7 @@ const Contact: React.FC = () => {
                       )}
                     </div>
                     <FieldSuccess show={validStates.languages}>
-                      {lang === "fr"
-                        ? "Super ! On peut discuter dans votre langue ! 🌐"
-                        : "Great! We can chat in your language! 🌐"}
+                      {intl.formatMessage({ id: "contact.chatInLanguage" })}
                     </FieldSuccess>
                     <ErrorMessage
                       error={formErrors.spokenLanguages}
@@ -1727,7 +1716,7 @@ const Contact: React.FC = () => {
                   <div className="bg-gradient-to-r from-emerald-50 to-green-50 rounded-2xl p-6 border border-emerald-200">
                     <h3 className="text-xl font-black text-gray-900 mb-4 flex items-center">
                       <MessageCircle className="w-6 h-6 mr-2 text-emerald-600" />
-                      {lang === "fr" ? "Votre demande 💬" : "Your request 💬"}
+                      {intl.formatMessage({ id: "contact.yourRequest" })}
                     </h3>
 
                     {/* Category */}
@@ -1776,9 +1765,7 @@ const Contact: React.FC = () => {
                         ))}
                       </select>
                       <FieldSuccess show={validStates.category}>
-                        {lang === "fr"
-                          ? "Catégorie choisie ! 🎯"
-                          : "Category selected! 🎯"}
+                        {intl.formatMessage({ id: "contact.categorySelected" })}
                       </FieldSuccess>
                       <ErrorMessage
                         error={formErrors.category}
@@ -1821,9 +1808,7 @@ const Contact: React.FC = () => {
                         aria-invalid={!!formErrors.subject}
                       />
                       <FieldSuccess show={validStates.subject}>
-                        {lang === "fr"
-                          ? "Sujet clair ! 📝"
-                          : "Clear subject! 📝"}
+                        {intl.formatMessage({ id: "contact.clearSubject" })}
                       </FieldSuccess>
                       <ErrorMessage
                         error={formErrors.subject}
@@ -1877,9 +1862,9 @@ const Contact: React.FC = () => {
                             }`}
                           >
                             {formData.message.length >= 10
-                              ? lang === "fr"
-                                ? "✓ Message assez détaillé"
-                                : "✓ Message detailed enough"
+                              ? intl.formatMessage({
+                                  id: "contact.messageDetailedEnough",
+                                })
                               : lang === "fr"
                                 ? `Encore ${10 - formData.message.length} caractères...`
                                 : `${10 - formData.message.length} more characters...`}
@@ -1903,9 +1888,7 @@ const Contact: React.FC = () => {
                       </div>
 
                       <FieldSuccess show={validStates.message}>
-                        {lang === "fr"
-                          ? "Message parfait ! On va pouvoir bien vous aider ! 🎯"
-                          : "Perfect message! We'll be able to help you well! 🎯"}
+                        {intl.formatMessage({ id: "contact.messagePerfect" })}
                       </FieldSuccess>
                       <ErrorMessage
                         error={formErrors.message}
@@ -1924,18 +1907,16 @@ const Contact: React.FC = () => {
                             {t.responseTime}
                           </h4>
                           <p className="text-green-100 text-sm">
-                            {lang === "fr"
-                              ? "On revient vers vous rapidement !"
-                              : "We'll get back to you quickly!"}
+                            {intl.formatMessage({
+                              id: "contact.backQuickly",
+                            })}
                           </p>
                         </div>
                       </div>
                       <div className="text-right">
                         <div className="text-2xl font-black">{t.maxTime}</div>
                         <div className="text-green-100 text-xs">
-                          {lang === "fr"
-                            ? "Souvent bien plus vite !"
-                            : "Often much faster!"}
+                          {intl.formatMessage({ id: "contact.oftenFaster" })}
                         </div>
                       </div>
                     </div>
@@ -1998,9 +1979,7 @@ const Contact: React.FC = () => {
                           </label>
                         </div>
                         <FieldSuccess show={acceptTerms}>
-                          {lang === "fr"
-                            ? "Merci ! Tout est en ordre ! ✅"
-                            : "Thanks! Everything is in order! ✅"}
+                          {intl.formatMessage({ id: "contact.thanks" })}
                         </FieldSuccess>
                         <ErrorMessage
                           error={formErrors.acceptTerms}
@@ -2067,15 +2046,9 @@ const Contact: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="text-xl font-black text-gray-900">
-                    {/* {lang === "fr"
-                      ? "Une communauté qui vous veut du bien"
-                      : "A community that wants the best for you"} */}
                     {intl.formatMessage({ id: "contact.communityGood" })}
                   </h3>
                   <p className="text-gray-600">
-                    {/* {lang === "fr"
-                      ? "Des experts passionnés, partout dans le monde"
-                      : "Passionate experts, all around the world"} */}
                     {intl.formatMessage({ id: "contact.passionateExperts" })}
                   </p>
                 </div>
@@ -2087,7 +2060,6 @@ const Contact: React.FC = () => {
                   className="hover:text-emerald-600 underline transition-colors"
                 >
                   🔒
-                  {/* {lang === "fr" ? "Confidentialité" : "Privacy"} */}
                   {intl.formatMessage({ id: "contact.privacy" })}
                 </a>
                 <a
@@ -2095,18 +2067,13 @@ const Contact: React.FC = () => {
                   className="hover:text-emerald-600 underline transition-colors"
                 >
                   💬
-                  {/* {lang === "fr" ? "Centre d'aide" : "Help Center"} */}
                   {intl.formatMessage({ id: "contact.helpCenter" })}
                 </a>
                 <a
                   href="/conditions-generales-clients"
                   className="hover:text-emerald-600 underline transition-colors"
                 >
-                  📋{" "}
-                  {/* {lang === "fr"
-                    ? "Conditions générales"
-                    : "Terms & Conditions"} */}
-                  {intl.formatMessage({ id: "contact.termsConditions" })}
+                  📋 {intl.formatMessage({ id: "contact.termsConditions" })}
                 </a>
               </div>
 

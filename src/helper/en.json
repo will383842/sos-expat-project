@@ -993,7 +993,7 @@
   "contact.response24h": "Response < 24h",
   "contact.anywhere247": "24/7 Anywhere",
   "contact.human100": "100% Human",
-  "contact.languagesSelected": "{count} language(s) selected ✨",
+  "contact.languagesSelected": "language(s) selected ✨",
   "contact.chooseLanguages": "Choose your magical languages...",
   "contact.chatInLanguage": "Great! We can chat in your language! 🌐",
   "contact.categoryTechnical": "🔧 Technical issue",
