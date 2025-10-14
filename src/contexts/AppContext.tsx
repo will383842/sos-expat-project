@@ -126,14 +126,14 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
     setServices(defaultServices);
 
-    // ✅ Updated to support "es" as well
-    const savedLanguage = localStorage.getItem("sos_language");
+    const savedLanguage = localStorage.getItem(
+      "sos_language"
+    ) as Language | null;
     if (
-      savedLanguage === "fr" ||
-      savedLanguage === "en" ||
-      savedLanguage === "es"
+      savedLanguage &&
+      ["fr", "en", "es", "ru", "de"].includes(savedLanguage)
     ) {
-      setLanguage(savedLanguage);
+      setLanguage(savedLanguage as Language);
     }
   }, []);
 

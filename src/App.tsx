@@ -285,6 +285,7 @@ const App: React.FC = () => {
     setLocale(language);
   }, [language]);
 
+
   const renderRoute = (config: RouteConfig, index: number) => {
     const {
       path,

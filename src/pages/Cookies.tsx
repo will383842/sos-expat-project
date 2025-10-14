@@ -1,22 +1,40 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Cookie as CookieIcon, Settings, Eye, Shield, Check, Globe, Clock, Languages } from 'lucide-react';
-import Layout from '../components/layout/Layout';
-import { useApp } from '../contexts/AppContext';
-import { collection, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import React, { useEffect, useMemo, useState } from "react";
+import {
+  Cookie as CookieIcon,
+  Settings,
+  Eye,
+  Shield,
+  Check,
+  Globe,
+  Clock,
+  Languages,
+} from "lucide-react";
+import Layout from "../components/layout/Layout";
+import { useApp } from "../contexts/AppContext";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  orderBy,
+  limit,
+} from "firebase/firestore";
+import { db } from "../config/firebase";
 
 const Cookies: React.FC = () => {
   const { language } = useApp();
 
-  const [content, setContent] = useState<string>('');
+  const [content, setContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [selectedLanguage, setSelectedLanguage] = useState<'fr' | 'en'>(
-    (language as 'fr' | 'en') || 'fr'
-  );
+
+  const [selectedLanguage, setSelectedLanguage] = useState<
+    "fr" | "en" | "es" | "de" | "ru"
+  >((language as "fr" | "en" | "es" | "de" | "ru") || "fr");
 
   // Rester aligné avec la langue globale si elle change
   useEffect(() => {
-    if (language) setSelectedLanguage(language as 'fr' | 'en');
+    if (language)
+      setSelectedLanguage(language as "fr" | "en" | "es" | "de" | "ru");
   }, [language]);
 
   // Récupération Firestore (même logique métier)
@@ -25,11 +43,11 @@ const Cookies: React.FC = () => {
       try {
         setIsLoading(true);
         const q = query(
-          collection(db, 'legal_documents'),
-          where('type', '==', 'cookies'),
-          where('language', '==', selectedLanguage),
-          where('isActive', '==', true),
-          orderBy('updatedAt', 'desc'),
+          collection(db, "legal_documents"),
+          where("type", "==", "cookies"),
+          where("language", "==", selectedLanguage),
+          where("isActive", "==", true),
+          orderBy("updatedAt", "desc"),
           limit(1)
         );
 
@@ -38,10 +56,10 @@ const Cookies: React.FC = () => {
           const doc = querySnapshot.docs[0];
           setContent((doc.data() as { content: string }).content);
         } else {
-          setContent('');
+          setContent("");
         }
       } catch (error) {
-        console.error('Error fetching cookies policy:', error);
+        console.error("Error fetching cookies policy:", error);
       } finally {
         setIsLoading(false);
       }
@@ -53,61 +71,111 @@ const Cookies: React.FC = () => {
   // Traductions d'UI
   const translations = {
     fr: {
-      title: 'Politique des Cookies',
-      subtitle: 'Comment nous utilisons les cookies sur notre site',
-      lastUpdated: 'Version 2.2 – Dernière mise à jour : 16 juin 2025',
-      loading: 'Chargement...',
+      title: "Politique des Cookies",
+      subtitle: "Comment nous utilisons les cookies sur notre site",
+      lastUpdated: "Version 2.2 – Dernière mise à jour : 16 juin 2025",
+      loading: "Chargement...",
       features: [
-        'Bannière de consentement',
-        'Contrôle granulaire',
-        'Respect RGPD',
-        'Transparence totale',
+        "Bannière de consentement",
+        "Contrôle granulaire",
+        "Respect RGPD",
+        "Transparence totale",
       ],
-      anchorTitle: 'Sommaire',
-      contactCta: 'Nous contacter',
-      editHint: 'Document éditable depuis la console admin',
+      anchorTitle: "Sommaire",
+      contactCta: "Nous contacter",
+      editHint: "Document éditable depuis la console admin",
     },
     en: {
-      title: 'Cookie Policy',
-      subtitle: 'How we use cookies on our site',
-      lastUpdated: 'Version 2.2 – Last updated: 16 June 2025',
-      loading: 'Loading...',
+      title: "Cookie Policy",
+      subtitle: "How we use cookies on our site",
+      lastUpdated: "Version 2.2 – Last updated: 16 June 2025",
+      loading: "Loading...",
       features: [
-        'Consent banner',
-        'Granular control',
-        'GDPR compliant',
-        'Full transparency',
+        "Consent banner",
+        "Granular control",
+        "GDPR compliant",
+        "Full transparency",
       ],
-      anchorTitle: 'Overview',
-      contactCta: 'Contact us',
-      editHint: 'Document editable from the admin console',
+      anchorTitle: "Overview",
+      contactCta: "Contact us",
+      editHint: "Document editable from the admin console",
+    },
+    es: {
+      title: "Política de Cookies",
+      subtitle: "Cómo utilizamos las cookies en nuestro sitio",
+      lastUpdated: "Versión 2.2 – Última actualización: 16 de junio de 2025",
+      loading: "Cargando...",
+      features: [
+        "Banner de consentimiento",
+        "Control granular",
+        "Cumplimiento RGPD",
+        "Transparencia total",
+      ],
+      anchorTitle: "Resumen",
+      contactCta: "Contáctanos",
+      editHint: "Documento editable desde la consola de administración",
+    },
+    de: {
+      title: "Cookie-Richtlinie",
+      subtitle: "Wie wir Cookies auf unserer Website verwenden",
+      lastUpdated: "Version 2.2 – Letzte Aktualisierung: 16. Juni 2025",
+      loading: "Wird geladen...",
+      features: [
+        "Einwilligungsbanner",
+        "Granulare Kontrolle",
+        "DSGVO-konform",
+        "Volle Transparenz",
+      ],
+      anchorTitle: "Übersicht",
+      contactCta: "Kontaktieren Sie uns",
+      editHint: "Dokument bearbeitbar über die Admin-Konsole",
+    },
+    ru: {
+      title: "Политика использования файлов cookie",
+      subtitle: "Как мы используем файлы cookie на нашем сайте",
+      lastUpdated: "Версия 2.2 – Последнее обновление: 16 июня 2025",
+      loading: "Загрузка...",
+      features: [
+        "Баннер согласия",
+        "Детальный контроль",
+        "Соответствие GDPR",
+        "Полная прозрачность",
+      ],
+      anchorTitle: "Обзор",
+      contactCta: "Свяжитесь с нами",
+      editHint: "Документ редактируется через консоль администратора",
     },
   };
 
   const t = translations[selectedLanguage];
 
-  const handleLanguageChange = (newLang: 'fr' | 'en') => {
+  const handleLanguageChange = (newLang: "fr" | "en") => {
     setSelectedLanguage(newLang);
   };
 
   // -------- Parser Markdown (même logique que les autres pages) --------
   const parseMarkdownContent = (text: string) => {
-    const lines = text.split('\n');
+    const lines = text.split("\n");
     const elements: JSX.Element[] = [];
     let currentIndex = 0;
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
 
-      if (line.trim() === '') continue;
+      if (line.trim() === "") continue;
 
-      if (line.trim() === '---') {
-        elements.push(<hr key={currentIndex++} className="my-8 border-t-2 border-gray-200" />);
+      if (line.trim() === "---") {
+        elements.push(
+          <hr
+            key={currentIndex++}
+            className="my-8 border-t-2 border-gray-200"
+          />
+        );
         continue;
       }
 
-      if (line.startsWith('# ')) {
-        const title = line.substring(2).replace(/\*\*/g, '');
+      if (line.startsWith("# ")) {
+        const title = line.substring(2).replace(/\*\*/g, "");
         elements.push(
           <h1
             key={currentIndex++}
@@ -119,7 +187,7 @@ const Cookies: React.FC = () => {
         continue;
       }
 
-      if (line.startsWith('## ')) {
+      if (line.startsWith("## ")) {
         const title = line.substring(3).trim();
         const match = title.match(/^(\d+)\.\s*(.*)$/);
         if (match) {
@@ -132,23 +200,29 @@ const Cookies: React.FC = () => {
               <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 text-white text-sm font-bold shadow-lg">
                 {match[1]}
               </span>
-              <span>{match[2].replace(/\*\*/g, '')}</span>
+              <span>{match[2].replace(/\*\*/g, "")}</span>
             </h2>
           );
         } else {
           elements.push(
-            <h2 key={currentIndex++} className="text-xl sm:text-2xl font-bold text-gray-900 mt-10 mb-6">
-              {title.replace(/\*\*/g, '')}
+            <h2
+              key={currentIndex++}
+              className="text-xl sm:text-2xl font-bold text-gray-900 mt-10 mb-6"
+            >
+              {title.replace(/\*\*/g, "")}
             </h2>
           );
         }
         continue;
       }
 
-      if (line.startsWith('### ')) {
-        const subtitle = line.substring(4).replace(/\*\*/g, '');
+      if (line.startsWith("### ")) {
+        const subtitle = line.substring(4).replace(/\*\*/g, "");
         elements.push(
-          <h3 key={currentIndex++} className="text-lg font-bold text-gray-800 mt-6 mb-4 border-l-4 border-orange-500 pl-4">
+          <h3
+            key={currentIndex++}
+            className="text-lg font-bold text-gray-800 mt-6 mb-4 border-l-4 border-orange-500 pl-4"
+          >
             {subtitle}
           </h3>
         );
@@ -179,8 +253,8 @@ const Cookies: React.FC = () => {
 
       // Bloc contact spécial (redirige vers http://localhost:5174/contact)
       if (
-        line.toLowerCase().includes('contact') &&
-        line.toLowerCase().includes('http://localhost:5174/contact')
+        line.toLowerCase().includes("contact") &&
+        line.toLowerCase().includes("http://localhost:5174/contact")
       ) {
         elements.push(
           <div
@@ -191,7 +265,7 @@ const Cookies: React.FC = () => {
               <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-r from-orange-600 to-amber-600 text-white font-bold shadow-lg">
                 !
               </span>
-              {selectedLanguage === 'fr' ? 'Contact' : 'Contact'}
+              {selectedLanguage === "fr" ? "Contact" : "Contact"}
             </h3>
             <p className="text-gray-800 leading-relaxed mb-6 text-lg">{line}</p>
             <a
@@ -199,17 +273,22 @@ const Cookies: React.FC = () => {
               className="inline-flex items-center gap-3 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg"
             >
               <Globe className="w-5 h-5" />
-              {selectedLanguage === 'fr' ? 'Formulaire de contact' : 'Contact form'}
+              {selectedLanguage === "fr"
+                ? "Formulaire de contact"
+                : "Contact form"}
             </a>
           </div>
         );
         continue;
       }
 
-      if (line.startsWith('**') && line.endsWith('**')) {
+      if (line.startsWith("**") && line.endsWith("**")) {
         const boldText = line.slice(2, -2);
         elements.push(
-          <div key={currentIndex++} className="bg-gradient-to-r from-amber-50 to-orange-50 border border-orange-200 rounded-2xl p-6 my-6">
+          <div
+            key={currentIndex++}
+            className="bg-gradient-to-r from-amber-50 to-orange-50 border border-orange-200 rounded-2xl p-6 my-6"
+          >
             <p className="font-bold text-gray-900 text-lg">{boldText}</p>
           </div>
         );
@@ -217,7 +296,10 @@ const Cookies: React.FC = () => {
       }
 
       const formattedLine = line
-        .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-900">$1</strong>')
+        .replace(
+          /\*\*(.*?)\*\*/g,
+          '<strong class="font-semibold text-gray-900">$1</strong>'
+        )
         .replace(/\*([^*]+)\*/g, '<em class="italic text-gray-700">$1</em>');
       elements.push(
         <p
@@ -382,21 +464,433 @@ We may update this policy to reflect regulatory or technical changes. The update
 For any questions regarding cookies or data protection, please contact us: **http://localhost:5174/contact**
 `;
 
-  const defaultContent = selectedLanguage === 'fr' ? defaultFr : defaultEn;
+  const defaultEs = `
+# Política de Cookies
+
+**Versión 2.2 – Última actualización: 16 de junio de 2025**
+
+---
+
+## 1. ¿Qué es una cookie?
+
+Una **cookie** es un pequeño archivo de texto almacenado en su dispositivo (ordenador, móvil, tableta) cuando visita un sitio. Permite al sitio **reconocer su dispositivo**, **recordar** sus preferencias y **mejorar** su experiencia.
+
+---
+
+## 2. ¿Por qué utilizamos cookies?
+
+2.1. **Funcionamiento esencial**: garantizar la autenticación, la seguridad, la selección del idioma y el mantenimiento de su sesión.
+2.2. **Medición de audiencia**: comprender el uso del sitio para mejorarlo (páginas visitadas, tiempo pasado, eventos).
+2.3. **Rendimiento**: optimizar la velocidad de carga y la estabilidad.
+2.4. **Comunicación**: permitir la telefonía/videollamada y las notificaciones técnicas.
+
+---
+
+## 3. Tipos de cookies
+
+3.1. **Cookies esenciales**: estrictamente necesarias para el funcionamiento del sitio.
+3.2. **Cookies analíticas**: estadísticas de uso agregadas y anonimizadas cuando sea posible.
+3.3. **Cookies de rendimiento**: mejora de visualización, caché y distribución de contenido.
+
+---
+
+## 4. Base legal y duración
+
+4.1. **Esenciales**: interés legítimo (proporcionar el servicio solicitado).
+4.2. **Analíticas/Rendimiento**: **su consentimiento** a través del banner.
+4.3. **Duraciones**: sesión (eliminadas al cerrar) o persistentes (unas pocas horas hasta 13 meses máximo según la finalidad).
+
+---
+
+## 5. Gestión de su consentimiento
+
+5.1. Puede **aceptar/rechazar** las categorías no esenciales a través de nuestro **banner de consentimiento**.
+5.2. Puede en cualquier momento **retirar su consentimiento** desde el enlace "Preferencias de cookies" en la parte inferior de la página.
+5.3. Configure también su **navegador** para bloquear/eliminar cookies.
+
+---
+
+## 6. Cookies emitidas por terceros
+
+Podemos utilizar proveedores que pueden depositar sus propias cookies: **Stripe** (pago), **Twilio** (telefonía), **Firebase** (autenticación/BD/alojamiento) y, según activación, una herramienta de **análisis de audiencia**. Estos terceros pueden operar **fuera de la UE**; se establecen **garantías apropiadas** cuando sea necesario.
+
+---
+
+## 7. Transferencias internacionales
+
+Cuando se realizan transferencias de datos fuera de su país, nos aseguramos de que se basen en **mecanismos de protección** reconocidos (cláusulas contractuales tipo, decisión de adecuación, etc.) cuando la ley lo exige.
+
+---
+
+## 8. Sus derechos
+
+De conformidad con el derecho aplicable (ej. RGPD), dispone de derechos de **acceso**, **rectificación**, **supresión**, **oposición**, **limitación** y **portabilidad** en las condiciones previstas por la ley. Puede ejercer sus derechos a través de nuestro **formulario de contacto**: http://localhost:5174/contact
+
+---
+
+## 9. Actualización de esta política
+
+Podemos modificar esta política para reflejar evoluciones regulatorias o técnicas. La versión actualizada se publica en esta página con la **fecha de actualización**.
+
+---
+
+## 10. Contacto
+
+Para cualquier pregunta relacionada con las cookies o la protección de datos, contáctenos: [**http://localhost:5174/contact**](http://localhost:5174/contact)
+`;
+
+  const defaultDe = `
+# Cookie-Richtlinie
+
+**Version 2.2 – Letzte Aktualisierung: 16. Juni 2025**
+
+---
+
+## 1. Was ist ein Cookie?
+
+Ein **Cookie** ist eine kleine Textdatei, die auf Ihrem Gerät (Computer, Mobiltelefon, Tablet) gespeichert wird, wenn Sie eine Website besuchen. Es ermöglicht der Website, **Ihr Gerät zu erkennen**, Ihre Präferenzen zu **speichern** und Ihr Erlebnis zu **verbessern**.
+
+---
+
+## 2. Warum verwenden wir Cookies?
+
+2.1. **Wesentliche Funktionen**: Authentifizierung, Sicherheit, Sprachauswahl und Aufrechterhaltung Ihrer Sitzung sicherstellen.
+2.2. **Reichweitenmessung**: Nutzung der Website verstehen, um sie zu verbessern (besuchte Seiten, verbrachte Zeit, Ereignisse).
+2.3. **Leistung**: Ladegeschwindigkeit und Stabilität optimieren.
+2.4. **Kommunikation**: Telefonie/Video und technische Benachrichtigungen ermöglichen.
+
+---
+
+## 3. Cookie-Typen
+
+3.1. **Notwendige Cookies**: Unbedingt erforderlich für den Betrieb der Website.
+3.2. **Analytische Cookies**: Aggregierte und nach Möglichkeit anonymisierte Nutzungsstatistiken.
+3.3. **Leistungs-Cookies**: Verbesserung der Anzeige, Cache und Inhaltsverteilung.
+
+---
+
+## 4. Rechtsgrundlage und Dauer
+
+4.1. **Notwendig**: Berechtigtes Interesse (Bereitstellung des angeforderten Dienstes).
+4.2. **Analytisch/Leistung**: **Ihre Zustimmung** über das Banner.
+4.3. **Laufzeiten**: Sitzung (beim Schließen gelöscht) oder persistent (einige Stunden bis maximal 13 Monate je nach Zweck).
+
+---
+
+## 5. Verwaltung Ihrer Zustimmung
+
+5.1. Sie können nicht wesentliche Kategorien über unser **Zustimmungsbanner** **akzeptieren/ablehnen**.
+5.2. Sie können jederzeit **Ihre Zustimmung widerrufen** über den Link "Cookie-Einstellungen" am Seitenende.
+5.3. Konfigurieren Sie auch Ihren **Browser**, um Cookies zu blockieren/löschen.
+
+---
+
+## 6. Von Dritten gesetzte Cookies
+
+Wir können Dienstleister nutzen, die ihre eigenen Cookies setzen können: **Stripe** (Zahlung), **Twilio** (Telefonie), **Firebase** (Authentifizierung/Datenbank/Hosting) und, je nach Aktivierung, ein **Analyse-Tool**. Diese Dritten können **außerhalb der EU** tätig sein; **geeignete Garantien** werden bei Bedarf eingerichtet.
+
+---
+
+## 7. Internationale Übermittlungen
+
+Wenn Datenübermittlungen außerhalb Ihres Landes erfolgen, stellen wir sicher, dass sie auf anerkannten **Schutzmechanismen** basieren (Standardvertragsklauseln, Angemessenheitsbeschluss usw.), wenn das Gesetz dies erfordert.
+
+---
+
+## 8. Ihre Rechte
+
+Gemäß geltendem Recht (z.B. DSGVO) haben Sie Rechte auf **Zugang**, **Berichtigung**, **Löschung**, **Widerspruch**, **Einschränkung** und **Datenübertragbarkeit** unter den gesetzlich vorgesehenen Bedingungen. Sie können Ihre Rechte über unser **Kontaktformular** ausüben: http://localhost:5174/contact
+
+---
+
+## 9. Aktualisierung dieser Richtlinie
+
+Wir können diese Richtlinie ändern, um regulatorische oder technische Entwicklungen widerzuspiegeln. Die aktualisierte Version wird auf dieser Seite mit dem **Aktualisierungsdatum** veröffentlicht.
+
+---
+
+## 10. Kontakt
+
+Bei Fragen zu Cookies oder Datenschutz kontaktieren Sie uns bitte: [**http://localhost:5174/contact**](http://localhost:5174/contact)
+`;
+
+  const defaultRu = `
+# Политика использования файлов cookie
+
+**Версия 2.2 – Последнее обновление: 16 июня 2025**
+
+---
+
+## 1. Что такое файл cookie?
+
+**Cookie** — это небольшой текстовый файл, сохраняемый на вашем устройстве (компьютере, мобильном телефоне, планшете) при посещении сайта. Он позволяет сайту **распознать ваше устройство**, **запомнить** ваши предпочтения и **улучшить** ваш опыт.
+
+---
+
+## 2. Почему мы используем файлы cookie?
+
+2.1. **Основные функции**: обеспечение аутентификации, безопасности, выбора языка и поддержания вашей сессии.
+2.2. **Измерение аудитории**: понимание использования сайта для его улучшения (посещенные страницы, проведенное время, события).
+2.3. **Производительность**: оптимизация скорости загрузки и стабильности.
+2.4. **Связь**: обеспечение телефонии/видео и технических уведомлений.
+
+---
+
+## 3. Типы файлов cookie
+
+3.1. **Необходимые файлы cookie**: строго необходимы для работы сайта.
+3.2. **Аналитические файлы cookie**: агрегированная статистика использования, по возможности анонимизированная.
+3.3. **Файлы cookie производительности**: улучшение отображения, кэш и распространение контента.
+
+---
+
+## 4. Правовая основа и продолжительность
+
+4.1. **Необходимые**: законный интерес (предоставление запрошенной услуги).
+4.2. **Аналитические/Производительность**: **ваше согласие** через баннер.
+4.3. **Сроки**: сеанс (удаляются при закрытии) или постоянные (от нескольких часов до максимум 13 месяцев в зависимости от цели).
+
+---
+
+## 5. Управление вашим согласием
+
+5.1. Вы можете **принять/отклонить** необязательные категории через наш **баннер согласия**.
+5.2. Вы можете в любой момент **отозвать свое согласие** по ссылке "Настройки файлов cookie" внизу страницы.
+5.3. Также настройте свой **браузер** для блокировки/удаления файлов cookie.
+
+---
+
+## 6. Файлы cookie, устанавливаемые третьими лицами
+
+Мы можем использовать поставщиков, которые могут устанавливать свои собственные файлы cookie: **Stripe** (платежи), **Twilio** (телефония), **Firebase** (аутентификация/БД/хостинг) и, при активации, инструмент **анализа аудитории**. Эти третьи стороны могут работать **за пределами ЕС**; при необходимости применяются **соответствующие гарантии**.
+
+---
+
+## 7. Международные передачи
+
+Когда передача данных происходит за пределы вашей страны, мы обеспечиваем, чтобы они основывались на признанных **механизмах защиты** (стандартные договорные оговорки, решение об адекватности и т.д.), когда этого требует закон.
+
+---
+
+## 8. Ваши права
+
+В соответствии с применимым законодательством (например, GDPR), вы имеете права на **доступ**, **исправление**, **удаление**, **возражение**, **ограничение** и **переносимость** на условиях, предусмотренных законом. Вы можете реализовать свои права через нашу **контактную форму**: http://localhost:5174/contact
+
+---
+
+## 9. Обновление этой политики
+
+Мы можем изменять эту политику для отражения нормативных или технических изменений. Обновленная версия публикуется на этой странице с **датой обновления**.
+
+---
+
+## 10. Контакт
+
+По любым вопросам, связанным с файлами cookie или защитой данных, свяжитесь с нами: [**http://localhost:5174/contact**](http://localhost:5174/contact)
+`;
+
+  // const defaultContent = selectedLanguage === "fr" ? defaultFr : defaultEn;
+  const defaultContent =
+    selectedLanguage === "fr"
+      ? defaultFr
+      : selectedLanguage === "es"
+        ? defaultEs
+        : selectedLanguage === "de"
+          ? defaultDe
+          : selectedLanguage === "ru"
+            ? defaultRu
+            : defaultEn;
 
   // Sommaire UI
+  // const anchorMap = useMemo(
+  //   () => [
+  //     {
+  //       num: 1,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Qu’est-ce qu’un cookie ?"
+  //           : "What is a cookie?",
+  //     },
+  //     {
+  //       num: 2,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Pourquoi nous les utilisons"
+  //           : "Why we use them",
+  //     },
+  //     {
+  //       num: 3,
+  //       label:
+  //         selectedLanguage === "fr" ? "Types de cookies" : "Types of cookies",
+  //     },
+  //     {
+  //       num: 4,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Base légale & durée"
+  //           : "Legal basis & duration",
+  //     },
+  //     {
+  //       num: 5,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Gestion du consentement"
+  //           : "Managing consent",
+  //     },
+  //     {
+  //       num: 6,
+  //       label:
+  //         selectedLanguage === "fr" ? "Cookies tiers" : "Third-party cookies",
+  //     },
+  //     {
+  //       num: 7,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Transferts internationaux"
+  //           : "International transfers",
+  //     },
+  //     {
+  //       num: 8,
+  //       label: selectedLanguage === "fr" ? "Vos droits" : "Your rights",
+  //     },
+  //     { num: 9, label: selectedLanguage === "fr" ? "Mises à jour" : "Updates" },
+  //     { num: 10, label: selectedLanguage === "fr" ? "Contact" : "Contact" },
+  //   ],
+  //   [selectedLanguage]
+  // );
+
   const anchorMap = useMemo(
     () => [
-      { num: 1, label: selectedLanguage === 'fr' ? 'Qu’est-ce qu’un cookie ?' : 'What is a cookie?' },
-      { num: 2, label: selectedLanguage === 'fr' ? "Pourquoi nous les utilisons" : 'Why we use them' },
-      { num: 3, label: selectedLanguage === 'fr' ? 'Types de cookies' : 'Types of cookies' },
-      { num: 4, label: selectedLanguage === 'fr' ? 'Base légale & durée' : 'Legal basis & duration' },
-      { num: 5, label: selectedLanguage === 'fr' ? 'Gestion du consentement' : 'Managing consent' },
-      { num: 6, label: selectedLanguage === 'fr' ? 'Cookies tiers' : 'Third-party cookies' },
-      { num: 7, label: selectedLanguage === 'fr' ? 'Transferts internationaux' : 'International transfers' },
-      { num: 8, label: selectedLanguage === 'fr' ? 'Vos droits' : 'Your rights' },
-      { num: 9, label: selectedLanguage === 'fr' ? 'Mises à jour' : 'Updates' },
-      { num: 10, label: selectedLanguage === 'fr' ? 'Contact' : 'Contact' },
+      {
+        num: 1,
+        label:
+          selectedLanguage === "fr"
+            ? "Qu'est-ce qu'un cookie ?"
+            : selectedLanguage === "es"
+              ? "¿Qué es una cookie?"
+              : selectedLanguage === "de"
+                ? "Was ist ein Cookie?"
+                : selectedLanguage === "ru"
+                  ? "Что такое файл cookie?"
+                  : "What is a cookie?",
+      },
+      {
+        num: 2,
+        label:
+          selectedLanguage === "fr"
+            ? "Pourquoi nous les utilisons"
+            : selectedLanguage === "es"
+              ? "Por qué los utilizamos"
+              : selectedLanguage === "de"
+                ? "Warum wir sie verwenden"
+                : selectedLanguage === "ru"
+                  ? "Почему мы их используем"
+                  : "Why we use them",
+      },
+      {
+        num: 3,
+        label:
+          selectedLanguage === "fr"
+            ? "Types de cookies"
+            : selectedLanguage === "es"
+              ? "Tipos de cookies"
+              : selectedLanguage === "de"
+                ? "Cookie-Typen"
+                : selectedLanguage === "ru"
+                  ? "Типы файлов cookie"
+                  : "Types of cookies",
+      },
+      {
+        num: 4,
+        label:
+          selectedLanguage === "fr"
+            ? "Base légale & durée"
+            : selectedLanguage === "es"
+              ? "Base legal y duración"
+              : selectedLanguage === "de"
+                ? "Rechtsgrundlage & Dauer"
+                : selectedLanguage === "ru"
+                  ? "Правовая основа и продолжительность"
+                  : "Legal basis & duration",
+      },
+      {
+        num: 5,
+        label:
+          selectedLanguage === "fr"
+            ? "Gestion du consentement"
+            : selectedLanguage === "es"
+              ? "Gestión del consentimiento"
+              : selectedLanguage === "de"
+                ? "Verwaltung der Zustimmung"
+                : selectedLanguage === "ru"
+                  ? "Управление согласием"
+                  : "Managing consent",
+      },
+      {
+        num: 6,
+        label:
+          selectedLanguage === "fr"
+            ? "Cookies tiers"
+            : selectedLanguage === "es"
+              ? "Cookies de terceros"
+              : selectedLanguage === "de"
+                ? "Drittanbieter-Cookies"
+                : selectedLanguage === "ru"
+                  ? "Файлы cookie третьих лиц"
+                  : "Third-party cookies",
+      },
+      {
+        num: 7,
+        label:
+          selectedLanguage === "fr"
+            ? "Transferts internationaux"
+            : selectedLanguage === "es"
+              ? "Transferencias internacionales"
+              : selectedLanguage === "de"
+                ? "Internationale Übermittlungen"
+                : selectedLanguage === "ru"
+                  ? "Международные передачи"
+                  : "International transfers",
+      },
+      {
+        num: 8,
+        label:
+          selectedLanguage === "fr"
+            ? "Vos droits"
+            : selectedLanguage === "es"
+              ? "Sus derechos"
+              : selectedLanguage === "de"
+                ? "Ihre Rechte"
+                : selectedLanguage === "ru"
+                  ? "Ваши права"
+                  : "Your rights",
+      },
+      {
+        num: 9,
+        label:
+          selectedLanguage === "fr"
+            ? "Mises à jour"
+            : selectedLanguage === "es"
+              ? "Actualizaciones"
+              : selectedLanguage === "de"
+                ? "Aktualisierungen"
+                : selectedLanguage === "ru"
+                  ? "Обновления"
+                  : "Updates",
+      },
+      {
+        num: 10,
+        label:
+          selectedLanguage === "fr"
+            ? "Contact"
+            : selectedLanguage === "es"
+              ? "Contacto"
+              : selectedLanguage === "de"
+                ? "Kontakt"
+                : selectedLanguage === "ru"
+                  ? "Контакт"
+                  : "Contact",
+      },
     ],
     [selectedLanguage]
   );
@@ -423,30 +917,34 @@ For any questions regarding cookies or data protection, please contact us: **htt
                 <span className="text-sm font-semibold">{t.lastUpdated}</span>
               </div>
 
-              <div className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-sm p-1">
+              {/* <div className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-sm p-1">
                 <button
                   type="button"
-                  onClick={() => handleLanguageChange('fr')}
+                  onClick={() => handleLanguageChange("fr")}
                   className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
-                    selectedLanguage === 'fr' ? 'bg-white text-gray-900' : 'text-white hover:bg-white/10'
+                    selectedLanguage === "fr"
+                      ? "bg-white text-gray-900"
+                      : "text-white hover:bg-white/10"
                   }`}
-                  aria-pressed={selectedLanguage === 'fr'}
+                  aria-pressed={selectedLanguage === "fr"}
                 >
                   <Languages className="w-4 h-4" />
                   FR
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleLanguageChange('en')}
+                  onClick={() => handleLanguageChange("en")}
                   className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
-                    selectedLanguage === 'en' ? 'bg-white text-gray-900' : 'text-white hover:bg-white/10'
+                    selectedLanguage === "en"
+                      ? "bg-white text-gray-900"
+                      : "text-white hover:bg-white/10"
                   }`}
-                  aria-pressed={selectedLanguage === 'en'}
+                  aria-pressed={selectedLanguage === "en"}
                 >
                   <Languages className="w-4 h-4" />
                   EN
                 </button>
-              </div>
+              </div> */}
             </div>
 
             <header className="text-center">
@@ -461,21 +959,43 @@ For any questions regarding cookies or data protection, please contact us: **htt
                   {t.title}
                 </span>
               </h1>
-              <p className="text-lg sm:text-2xl text-gray-300 max-w-3xl mx-auto">{t.subtitle}</p>
+              <p className="text-lg sm:text-2xl text-gray-300 max-w-3xl mx-auto">
+                {t.subtitle}
+              </p>
 
               {/* Points clés */}
               <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-white/90">
                 {[
-                  { icon: <Shield className="w-6 h-6" />, text: t.features[0], gradient: 'from-green-500 to-emerald-500' },
-                  { icon: <Settings className="w-6 h-6" />, text: t.features[1], gradient: 'from-blue-500 to-indigo-500' },
-                  { icon: <Eye className="w-6 h-6" />, text: t.features[2], gradient: 'from-yellow-500 to-orange-500' },
-                  { icon: <Globe className="w-6 h-6" />, text: t.features[3], gradient: 'from-orange-500 to-red-500' },
+                  {
+                    icon: <Shield className="w-6 h-6" />,
+                    text: t.features[0],
+                    gradient: "from-green-500 to-emerald-500",
+                  },
+                  {
+                    icon: <Settings className="w-6 h-6" />,
+                    text: t.features[1],
+                    gradient: "from-blue-500 to-indigo-500",
+                  },
+                  {
+                    icon: <Eye className="w-6 h-6" />,
+                    text: t.features[2],
+                    gradient: "from-yellow-500 to-orange-500",
+                  },
+                  {
+                    icon: <Globe className="w-6 h-6" />,
+                    text: t.features[3],
+                    gradient: "from-orange-500 to-red-500",
+                  },
                 ].map((f, i) => (
                   <div
                     key={i}
                     className="group flex items-center gap-3 p-5 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10 hover:border-white/20 transition-all duration-300 hover:scale-[1.01]"
                   >
-                    <span className={`inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-r ${f.gradient} text-white`}>{f.icon}</span>
+                    <span
+                      className={`inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-r ${f.gradient} text-white`}
+                    >
+                      {f.icon}
+                    </span>
                     <span className="font-semibold">{f.text}</span>
                   </div>
                 ))}
@@ -502,7 +1022,9 @@ For any questions regarding cookies or data protection, please contact us: **htt
                 <div className="inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 text-white">
                   <CookieIcon className="w-5 h-5" />
                 </div>
-                <h2 className="text-xl sm:text-2xl font-black text-gray-900">{t.anchorTitle}</h2>
+                <h2 className="text-xl sm:text-2xl font-black text-gray-900">
+                  {t.anchorTitle}
+                </h2>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                 {anchorMap.map((s) => (
@@ -514,7 +1036,9 @@ For any questions regarding cookies or data protection, please contact us: **htt
                     <span className="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-gray-900 text-white text-xs font-bold">
                       {s.num}
                     </span>
-                    <span className="text-gray-700 group-hover:text-gray-900">{s.label}</span>
+                    <span className="text-gray-700 group-hover:text-gray-900">
+                      {s.label}
+                    </span>
                   </a>
                 ))}
               </div>

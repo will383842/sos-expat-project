@@ -1072,7 +1072,7 @@
   "faq.supportSubtitle": "Notre équipe support est disponible 24/7 pour vous aider",
   "faq.contactForm": "Formulaire de contact",
   "faq.emergencyCall": "Appel d'urgence",
-  
+
   "helpCenter.title": "Centre d'aide",
   "helpCenter.subtitle": "Trouvez rapidement des réponses et des guides internationaux.",
   "helpCenter.searchPlaceholder": "Rechercher dans l'aide...",
@@ -1094,8 +1094,31 @@
   "helpCenter.supportTitle": "Vous ne trouvez pas votre réponse ?",
   "helpCenter.supportSubtitle": "Notre équipe support est disponible 24/7 pour vous aider",
   "helpCenter.contactUs": "Nous contacter",
-  "helpCenter.emergencyCall": "Appel d'urgence"
+  "helpCenter.emergencyCall": "Appel d'urgence",
 
-
-
+  "privacy.title": "Politique de confidentialité",
+  "privacy.subtitle": "Votre vie privée est notre priorité",
+  "privacy.lastUpdated": "Version 2.2 – Dernière mise à jour : 16 juin 2025",
+  "privacy.dataCollection": "Collecte des données",
+  "privacy.dataProtection": "Protection des données",
+  "privacy.dataSharing": "Partage des données",
+  "privacy.yourRights": "Vos droits",
+  "privacy.contact": "Contact",
+  "privacy.dataCollectionContent": "Nous collectons uniquement les informations nécessaires pour fournir nos services d'assistance. Cela inclut vos informations de contact, des métadonnées techniques (appels, messagerie) et les détails indispensables à votre demande.",
+  "privacy.dataProtectionContent": "Vos données sont chiffrées en transit et au repos lorsque c'est possible et stockées de manière sécurisée. Des mesures techniques et organisationnelles sont mises en œuvre pour prévenir tout accès non autorisé.",
+  "privacy.dataSharingContent": "Nous ne vendons jamais vos données personnelles. Nous partageons uniquement les informations nécessaires avec des prestataires vérifiés (paiements, téléphonie, hébergement) pour fournir le service demandé.",
+  "privacy.rights.access": "Droit d'accès à vos données",
+  "privacy.rights.rectification": "Droit de rectification",
+  "privacy.rights.erasure": "Droit à l'effacement (dans les limites légales)",
+  "privacy.rights.portability": "Droit à la portabilité",
+  "privacy.rights.objection": "Droit d'opposition et de limitation",
+  "privacy.contactContent": "Pour toute question ou pour exercer vos droits, utilisez le formulaire dédié ci-dessous.",
+  "privacy.features.encryption": "Chiffrement",
+  "privacy.features.transparency": "Transparence",
+  "privacy.features.userControl": "Contrôle utilisateur",
+  "privacy.features.noResale": "Pas de revente de données",
+  "privacy.contactCta": "Formulaire de contact",
+  "privacy.editHint": "Document éditable depuis la console admin (FR/EN)",
+  "privacy.loadingError": "Échec du chargement",
+  "privacy.defaultContent": "Affichage du contenu par défaut"
 }

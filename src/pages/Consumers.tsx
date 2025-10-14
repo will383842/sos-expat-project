@@ -1,22 +1,40 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { ShoppingCart, Shield, AlertTriangle, Phone, Check, Globe, Clock, Languages } from 'lucide-react';
-import Layout from '../components/layout/Layout';
-import { useApp } from '../contexts/AppContext';
-import { collection, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import React, { useEffect, useMemo, useState } from "react";
+import {
+  ShoppingCart,
+  Shield,
+  AlertTriangle,
+  Phone,
+  Check,
+  Globe,
+  Clock,
+  Languages,
+} from "lucide-react";
+import Layout from "../components/layout/Layout";
+import { useApp } from "../contexts/AppContext";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  orderBy,
+  limit,
+} from "firebase/firestore";
+import { db } from "../config/firebase";
 
 const Consumers: React.FC = () => {
   const { language } = useApp();
 
-  const [content, setContent] = useState<string>('');
+  const [content, setContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [selectedLanguage, setSelectedLanguage] = useState<'fr' | 'en'>(
-    (language as 'fr' | 'en') || 'fr'
-  );
+
+  const [selectedLanguage, setSelectedLanguage] = useState<
+    "fr" | "en" | "es" | "de" | "ru"
+  >((language as "fr" | "en" | "es" | "de" | "ru") || "fr");
 
   // Rester synchronisé avec la langue globale de l'app
   useEffect(() => {
-    if (language) setSelectedLanguage(language as 'fr' | 'en');
+    if (language)
+      setSelectedLanguage(language as "fr" | "en" | "es" | "de" | "ru");
   }, [language]);
 
   // Logique métier Firestore conservée (type: 'legal')
@@ -25,11 +43,11 @@ const Consumers: React.FC = () => {
       try {
         setIsLoading(true);
         const q = query(
-          collection(db, 'legal_documents'),
-          where('type', '==', 'legal'),
-          where('language', '==', selectedLanguage),
-          where('isActive', '==', true),
-          orderBy('updatedAt', 'desc'),
+          collection(db, "legal_documents"),
+          where("type", "==", "legal"),
+          where("language", "==", selectedLanguage),
+          where("isActive", "==", true),
+          orderBy("updatedAt", "desc"),
           limit(1)
         );
 
@@ -38,10 +56,10 @@ const Consumers: React.FC = () => {
           const doc = querySnapshot.docs[0];
           setContent((doc.data() as { content: string }).content);
         } else {
-          setContent('');
+          setContent("");
         }
       } catch (error) {
-        console.error('Error fetching consumer info:', error);
+        console.error("Error fetching consumer info:", error);
       } finally {
         setIsLoading(false);
       }
@@ -52,67 +70,151 @@ const Consumers: React.FC = () => {
 
   const translations = {
     fr: {
-      title: 'Information Consommateurs',
-      subtitle: 'Vos droits et protections – Plateforme internationale',
-      lastUpdated: 'Version 2.2 – Dernière mise à jour : 16 juin 2025',
-      loading: 'Chargement...',
-      features: ['Remboursement auto', 'Prix EUR & USD', 'Droits consommateurs', 'Support 24/7'],
-      anchorTitle: 'Sommaire',
-      contactCta: 'Nous contacter',
-      editHint: 'Document éditable depuis la console admin',
+      title: "Information Consommateurs",
+      subtitle: "Vos droits et protections – Plateforme internationale",
+      lastUpdated: "Version 2.2 – Dernière mise à jour : 16 juin 2025",
+      loading: "Chargement...",
+      features: [
+        "Remboursement auto",
+        "Prix EUR & USD",
+        "Droits consommateurs",
+        "Support 24/7",
+      ],
+      anchorTitle: "Sommaire",
+      contactCta: "Nous contacter",
+      editHint: "Document éditable depuis la console admin",
       sections: {
-        rights: 'Vos droits de consommateur',
-        refunds: 'Politique de remboursement',
-        prices: 'Transparence des prix (EUR / USD)',
-        mediation: 'Médiation et réclamations',
-        support: 'Service client',
-        contact: 'Contact',
+        rights: "Vos droits de consommateur",
+        refunds: "Politique de remboursement",
+        prices: "Transparence des prix (EUR / USD)",
+        mediation: "Médiation et réclamations",
+        support: "Service client",
+        contact: "Contact",
       },
     },
     en: {
-      title: 'Consumer Information',
-      subtitle: 'Your rights and protections — International platform',
-      lastUpdated: 'Version 2.2 – Last updated: 16 June 2025',
-      loading: 'Loading...',
-      features: ['Auto refund', 'Prices in EUR & USD', 'Consumer rights', '24/7 support'],
-      anchorTitle: 'Overview',
-      contactCta: 'Contact us',
-      editHint: 'Document editable from the admin console',
+      title: "Consumer Information",
+      subtitle: "Your rights and protections — International platform",
+      lastUpdated: "Version 2.2 – Last updated: 16 June 2025",
+      loading: "Loading...",
+      features: [
+        "Auto refund",
+        "Prices in EUR & USD",
+        "Consumer rights",
+        "24/7 support",
+      ],
+      anchorTitle: "Overview",
+      contactCta: "Contact us",
+      editHint: "Document editable from the admin console",
       sections: {
-        rights: 'Your consumer rights',
-        refunds: 'Refund policy',
-        prices: 'Price transparency (EUR / USD)',
-        mediation: 'Mediation and complaints',
-        support: 'Customer service',
-        contact: 'Contact',
+        rights: "Your consumer rights",
+        refunds: "Refund policy",
+        prices: "Price transparency (EUR / USD)",
+        mediation: "Mediation and complaints",
+        support: "Customer service",
+        contact: "Contact",
+      },
+    },
+    es: {
+      title: "Información del Consumidor",
+      subtitle: "Sus derechos y protecciones — Plataforma internacional",
+      lastUpdated: "Versión 2.2 – Última actualización: 16 de junio de 2025",
+      loading: "Cargando...",
+      features: [
+        "Reembolso automático",
+        "Precios en EUR y USD",
+        "Derechos del consumidor",
+        "Soporte 24/7",
+      ],
+      anchorTitle: "Resumen",
+      contactCta: "Contáctanos",
+      editHint: "Documento editable desde la consola de administración",
+      sections: {
+        rights: "Sus derechos como consumidor",
+        refunds: "Política de reembolso",
+        prices: "Transparencia de precios (EUR / USD)",
+        mediation: "Mediación y reclamaciones",
+        support: "Servicio al cliente",
+        contact: "Contacto",
+      },
+    },
+    de: {
+      title: "Verbraucherinformationen",
+      subtitle: "Ihre Rechte und Ihr Schutz — Internationale Plattform",
+      lastUpdated: "Version 2.2 – Letzte Aktualisierung: 16. Juni 2025",
+      loading: "Wird geladen...",
+      features: [
+        "Auto-Rückerstattung",
+        "Preise in EUR & USD",
+        "Verbraucherrechte",
+        "24/7 Support",
+      ],
+      anchorTitle: "Übersicht",
+      contactCta: "Kontaktieren Sie uns",
+      editHint: "Dokument bearbeitbar über die Admin-Konsole",
+      sections: {
+        rights: "Ihre Verbraucherrechte",
+        refunds: "Rückerstattungsrichtlinie",
+        prices: "Preistransparenz (EUR / USD)",
+        mediation: "Mediation und Beschwerden",
+        support: "Kundendienst",
+        contact: "Kontakt",
+      },
+    },
+    ru: {
+      title: "Информация для потребителей",
+      subtitle: "Ваши права и защита — Международная платформа",
+      lastUpdated: "Версия 2.2 – Последнее обновление: 16 июня 2025",
+      loading: "Загрузка...",
+      features: [
+        "Авто возврат",
+        "Цены в EUR и USD",
+        "Права потребителей",
+        "Поддержка 24/7",
+      ],
+      anchorTitle: "Обзор",
+      contactCta: "Свяжитесь с нами",
+      editHint: "Документ редактируется через консоль администратора",
+      sections: {
+        rights: "Ваши права потребителя",
+        refunds: "Политика возврата",
+        prices: "Прозрачность цен (EUR / USD)",
+        mediation: "Медиация и жалобы",
+        support: "Служба поддержки",
+        contact: "Контакт",
       },
     },
   };
 
   const t = translations[selectedLanguage];
 
-  const handleLanguageChange = (newLang: 'fr' | 'en') => {
+  const handleLanguageChange = (newLang: "fr" | "en") => {
     setSelectedLanguage(newLang);
   };
 
   // Parser Markdown (UI only, ne modifie pas le contenu)
   const parseMarkdownContent = (text: string) => {
-    const lines = text.split('\n');
+    const lines = text.split("\n");
     const elements: JSX.Element[] = [];
     let currentIndex = 0;
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
 
-      if (line.trim() === '') continue;
+      if (line.trim() === "") continue;
 
-      if (line.trim() === '---') {
-        elements.push(<hr key={currentIndex++} className="my-8 border-t-2 border-gray-200" />);
+      if (line.trim() === "---") {
+        elements.push(
+          <hr
+            key={currentIndex++}
+            className="my-8 border-t-2 border-gray-200"
+          />
+        );
         continue;
       }
 
-      if (line.startsWith('# ')) {
-        const title = line.substring(2).replace(/\*\*/g, '');
+      if (line.startsWith("# ")) {
+        const title = line.substring(2).replace(/\*\*/g, "");
         elements.push(
           <h1
             key={currentIndex++}
@@ -124,7 +226,7 @@ const Consumers: React.FC = () => {
         continue;
       }
 
-      if (line.startsWith('## ')) {
+      if (line.startsWith("## ")) {
         const title = line.substring(3).trim();
         const match = title.match(/^(\d+)\.\s*(.*)$/);
         if (match) {
@@ -137,23 +239,29 @@ const Consumers: React.FC = () => {
               <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white text-sm font-bold shadow-lg">
                 {match[1]}
               </span>
-              <span>{match[2].replace(/\*\*/g, '')}</span>
+              <span>{match[2].replace(/\*\*/g, "")}</span>
             </h2>
           );
         } else {
           elements.push(
-            <h2 key={currentIndex++} className="text-xl sm:text-2xl font-bold text-gray-900 mt-10 mb-6">
-              {title.replace(/\*\*/g, '')}
+            <h2
+              key={currentIndex++}
+              className="text-xl sm:text-2xl font-bold text-gray-900 mt-10 mb-6"
+            >
+              {title.replace(/\*\*/g, "")}
             </h2>
           );
         }
         continue;
       }
 
-      if (line.startsWith('### ')) {
-        const subtitle = line.substring(4).replace(/\*\*/g, '');
+      if (line.startsWith("### ")) {
+        const subtitle = line.substring(4).replace(/\*\*/g, "");
         elements.push(
-          <h3 key={currentIndex++} className="text-lg font-bold text-gray-800 mt-6 mb-4 border-l-4 border-purple-500 pl-4">
+          <h3
+            key={currentIndex++}
+            className="text-lg font-bold text-gray-800 mt-6 mb-4 border-l-4 border-purple-500 pl-4"
+          >
             {subtitle}
           </h3>
         );
@@ -183,7 +291,7 @@ const Consumers: React.FC = () => {
       }
 
       // Bloc contact spécial (détection d'URL)
-      if (line.toLowerCase().includes('http://localhost:5174/contact')) {
+      if (line.toLowerCase().includes("http://localhost:5174/contact")) {
         elements.push(
           <div
             key={currentIndex++}
@@ -193,7 +301,7 @@ const Consumers: React.FC = () => {
               <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white font-bold shadow-lg">
                 !
               </span>
-              {selectedLanguage === 'fr' ? 'Contact' : 'Contact'}
+              {selectedLanguage === "fr" ? "Contact" : "Contact"}
             </h3>
             <p className="text-gray-800 leading-relaxed mb-6 text-lg">{line}</p>
             <a
@@ -201,17 +309,22 @@ const Consumers: React.FC = () => {
               className="inline-flex items-center gap-3 bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-700 hover:to-fuchsia-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg"
             >
               <Globe className="w-5 h-5" />
-              {selectedLanguage === 'fr' ? 'Formulaire de contact' : 'Contact form'}
+              {selectedLanguage === "fr"
+                ? "Formulaire de contact"
+                : "Contact form"}
             </a>
           </div>
         );
         continue;
       }
 
-      if (line.startsWith('**') && line.endsWith('**')) {
+      if (line.startsWith("**") && line.endsWith("**")) {
         const boldText = line.slice(2, -2);
         elements.push(
-          <div key={currentIndex++} className="bg-gradient-to-r from-fuchsia-50 to-purple-50 border border-purple-200 rounded-2xl p-6 my-6">
+          <div
+            key={currentIndex++}
+            className="bg-gradient-to-r from-fuchsia-50 to-purple-50 border border-purple-200 rounded-2xl p-6 my-6"
+          >
             <p className="font-bold text-gray-900 text-lg">{boldText}</p>
           </div>
         );
@@ -219,7 +332,10 @@ const Consumers: React.FC = () => {
       }
 
       const formattedLine = line
-        .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-900">$1</strong>')
+        .replace(
+          /\*\*(.*?)\*\*/g,
+          '<strong class="font-semibold text-gray-900">$1</strong>'
+        )
         .replace(/\*([^*]+)\*/g, '<em class="italic text-gray-700">$1</em>');
       elements.push(
         <p
@@ -340,7 +456,176 @@ Formulaire (support & demandes légales) : http://localhost:5174/contact
 Contact form (support & legal requests): http://localhost:5174/contact
 `;
 
-  const defaultContent = selectedLanguage === 'fr' ? defaultFr : defaultEn;
+  const defaultEs = `
+# Información del Consumidor (Global)
+
+**Versión 2.2 – Última actualización: 16 de junio de 2025**
+
+---
+
+## 1. Sus derechos como consumidor
+
+1.1. **Información clara** sobre servicios, precios y condiciones.
+1.2. **Derecho de desistimiento** según la ley local obligatoria cuando sea aplicable (ver condiciones de implementación con el proveedor y la Plataforma).
+1.3. **Protección** contra prácticas comerciales desleales o engañosas.
+1.4. **Acceso** a un servicio al cliente receptivo a través del **formulario de contacto**.
+
+---
+
+## 2. Política de reembolso
+
+2.1. **Reembolso automático**: si su experto no responde después de **3 intentos de llamada** dentro de la ventana esperada, la reserva se **cancela** y recibe un **reembolso completo**.
+2.2. **Otras situaciones**: contacte al soporte **dentro de las 24 horas** después de la llamada a través del **formulario de contacto** para que podamos revisar su solicitud.
+
+---
+
+## 3. Transparencia de precios (EUR / USD)
+
+3.1. **Llamada con abogado**: **49€ (EUR)** / **$49 (USD)** por **20 minutos** (impuestos incluidos).
+3.2. **Llamada con ayudante expatriado**: **19€ (EUR)** / **$19 (USD)** por **30 minutos** (impuestos incluidos).
+3.3. **Sin tarifas ocultas**; el precio mostrado incluye, cuando corresponda, la tarifa técnica de conexión.
+3.4. Los montos en **USD** pueden mostrarse y cobrarse en el **pago**; pueden aplicarse **tarifas/tasas de cambio** del procesador de pagos.
+
+---
+
+## 4. Mediación y reclamaciones
+
+4.1. **Soporte a través del formulario de contacto**: http://localhost:5174/contact
+4.2. **Mediación del consumidor**: puede contactar al mediador competente en su país.
+4.3. **Plataforma ODR de la UE**: puede utilizar el mecanismo de resolución de disputas en línea.
+
+---
+
+## 5. Servicio al cliente (internacional)
+
+5.1. **Horario**: 24/7
+5.2. **Tiempo de respuesta**: dentro de 24 horas
+5.3. **Contacto**: por favor use el **formulario de contacto**: http://localhost:5174/contact
+
+---
+
+## 6. Contacto
+
+Formulario de contacto (soporte y solicitudes legales): http://localhost:5174/contact
+`;
+
+  const defaultDe = `
+# Verbraucherinformationen (Global)
+
+**Version 2.2 – Letzte Aktualisierung: 16. Juni 2025**
+
+---
+
+## 1. Ihre Verbraucherrechte
+
+1.1. **Klare Informationen** über Dienstleistungen, Preise und Bedingungen.
+1.2. **Widerrufsrecht**, wo zwingendes lokales Recht gilt (siehe Umsetzungsbedingungen beim Anbieter und der Plattform).
+1.3. **Schutz** vor unlauteren oder irreführenden Geschäftspraktiken.
+1.4. **Zugang** zu reaktionsfähigem Kundendienst über das **Kontaktformular**.
+
+---
+
+## 2. Rückerstattungsrichtlinie
+
+2.1. **Automatische Rückerstattung**: Wenn Ihr Experte nach **3 Anrufversuchen** innerhalb des erwarteten Zeitfensters nicht antwortet, wird die Buchung **storniert** und Sie erhalten eine **vollständige Rückerstattung**.
+2.2. **Andere Situationen**: Kontaktieren Sie den Support **innerhalb von 24 Stunden** nach dem Anruf über das **Kontaktformular**, damit wir Ihre Anfrage prüfen können.
+
+---
+
+## 3. Preistransparenz (EUR / USD)
+
+3.1. **Anwaltsanruf**: **49€ (EUR)** / **$49 (USD)** für **20 Minuten** (inkl. Steuern).
+3.2. **Expat-Helfer-Anruf**: **19€ (EUR)** / **$19 (USD)** für **30 Minuten** (inkl. Steuern).
+3.3. **Keine versteckten Gebühren**; der angezeigte Preis umfasst gegebenenfalls die technische Verbindungsgebühr.
+3.4. **USD**-Beträge können an der **Kasse** angezeigt und berechnet werden; **Wechselkurse/Gebühren** des Zahlungsabwicklers können anfallen.
+
+---
+
+## 4. Mediation und Beschwerden
+
+4.1. **Support über Kontaktformular**: http://localhost:5174/contact
+4.2. **Verbrauchermediation**: Sie können den zuständigen Mediator in Ihrem Land kontaktieren.
+4.3. **EU-ODR-Plattform**: Sie können den Online-Streitbeilegungsmechanismus nutzen.
+
+---
+
+## 5. Kundendienst (international)
+
+5.1. **Öffnungszeiten**: 24/7
+5.2. **Antwortzeit**: innerhalb von 24 Stunden
+5.3. **Kontakt**: Bitte verwenden Sie das **Kontaktformular**: http://localhost:5174/contact
+
+---
+
+## 6. Kontakt
+
+Kontaktformular (Support und rechtliche Anfragen): http://localhost:5174/contact
+`;
+
+  const defaultRu = `
+# Информация для потребителей (Глобальная)
+
+**Версия 2.2 – Последнее обновление: 16 июня 2025**
+
+---
+
+## 1. Ваши права потребителя
+
+1.1. **Четкая информация** об услугах, ценах и условиях.
+1.2. **Право на отказ**, где применяется обязательное местное законодательство (см. условия реализации у поставщика и Платформы).
+1.3. **Защита** от недобросовестных или вводящих в заблуждение коммерческих практик.
+1.4. **Доступ** к отзывчивой службе поддержки через **контактную форму**.
+
+---
+
+## 2. Политика возврата
+
+2.1. **Автоматический возврат**: если ваш эксперт не отвечает после **3 попыток звонка** в ожидаемом окне, бронирование **отменяется** и вы получаете **полный возврат средств**.
+2.2. **Другие ситуации**: свяжитесь со службой поддержки **в течение 24 часов** после звонка через **контактную форму**, чтобы мы могли рассмотреть вашу просьбу.
+
+---
+
+## 3. Прозрачность цен (EUR / USD)
+
+3.1. **Звонок юристу**: **49€ (EUR)** / **$49 (USD)** на **20 минут** (включая налоги).
+3.2. **Звонок помощнику-экспату**: **19€ (EUR)** / **$19 (USD)** на **30 минут** (включая налоги).
+3.3. **Без скрытых комиссий**; указанная цена включает, где применимо, техническую плату за соединение.
+3.4. Суммы в **USD** могут отображаться и взиматься при **оплате**; могут применяться **курсы/сборы** платежного процессора.
+
+---
+
+## 4. Медиация и жалобы
+
+4.1. **Поддержка через контактную форму**: http://localhost:5174/contact
+4.2. **Медиация потребителей**: вы можете связаться с компетентным медиатором в вашей стране.
+4.3. **Платформа ODR ЕС**: вы можете использовать механизм онлайн-разрешения споров.
+
+---
+
+## 5. Служба поддержки (международная)
+
+5.1. **Часы работы**: 24/7
+5.2. **Время ответа**: в течение 24 часов
+5.3. **Контакт**: пожалуйста, используйте **контактную форму**: http://localhost:5174/contact
+
+---
+
+## 6. Контакт
+
+Контактная форма (поддержка и юридические запросы): http://localhost:5174/contact
+`;
+
+  // const defaultContent = selectedLanguage === "fr" ? defaultFr : defaultEn;
+  const defaultContent =
+    selectedLanguage === "fr"
+      ? defaultFr
+      : selectedLanguage === "es"
+        ? defaultEs
+        : selectedLanguage === "de"
+          ? defaultDe
+          : selectedLanguage === "ru"
+            ? defaultRu
+            : defaultEn;
 
   // Sommaire
   const anchorMap = useMemo(
@@ -377,7 +662,7 @@ Contact form (support & legal requests): http://localhost:5174/contact
                 <span className="text-sm font-semibold">{t.lastUpdated}</span>
               </div>
 
-              <div className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-sm p-1">
+              {/* <div className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-sm p-1">
                 <button
                   type="button"
                   onClick={() => handleLanguageChange('fr')}
@@ -400,7 +685,7 @@ Contact form (support & legal requests): http://localhost:5174/contact
                   <Languages className="w-4 h-4" />
                   EN
                 </button>
-              </div>
+              </div> */}
             </div>
 
             <header className="text-center">
@@ -415,21 +700,43 @@ Contact form (support & legal requests): http://localhost:5174/contact
                   {t.title}
                 </span>
               </h1>
-              <p className="text-lg sm:text-2xl text-gray-300 max-w-3xl mx-auto">{t.subtitle}</p>
+              <p className="text-lg sm:text-2xl text-gray-300 max-w-3xl mx-auto">
+                {t.subtitle}
+              </p>
 
               {/* Points clés */}
               <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-white/90">
                 {[
-                  { icon: <AlertTriangle className="w-6 h-6" />, text: t.features[0], gradient: 'from-emerald-500 to-green-500' },
-                  { icon: <Shield className="w-6 h-6" />, text: t.features[1], gradient: 'from-blue-500 to-indigo-500' },
-                  { icon: <Check className="w-6 h-6" />, text: t.features[2], gradient: 'from-yellow-500 to-orange-500' },
-                  { icon: <Phone className="w-6 h-6" />, text: t.features[3], gradient: 'from-purple-500 to-fuchsia-500' },
+                  {
+                    icon: <AlertTriangle className="w-6 h-6" />,
+                    text: t.features[0],
+                    gradient: "from-emerald-500 to-green-500",
+                  },
+                  {
+                    icon: <Shield className="w-6 h-6" />,
+                    text: t.features[1],
+                    gradient: "from-blue-500 to-indigo-500",
+                  },
+                  {
+                    icon: <Check className="w-6 h-6" />,
+                    text: t.features[2],
+                    gradient: "from-yellow-500 to-orange-500",
+                  },
+                  {
+                    icon: <Phone className="w-6 h-6" />,
+                    text: t.features[3],
+                    gradient: "from-purple-500 to-fuchsia-500",
+                  },
                 ].map((f, i) => (
                   <div
                     key={i}
                     className="group flex items-center gap-3 p-5 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10 hover:border-white/20 transition-all duration-300 hover:scale-[1.01]"
                   >
-                    <span className={`inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-r ${f.gradient} text-white`}>{f.icon}</span>
+                    <span
+                      className={`inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-r ${f.gradient} text-white`}
+                    >
+                      {f.icon}
+                    </span>
                     <span className="font-semibold">{f.text}</span>
                   </div>
                 ))}
@@ -456,7 +763,9 @@ Contact form (support & legal requests): http://localhost:5174/contact
                 <div className="inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-gradient-to-r from-purple-500 to-fuchsia-500 text-white">
                   <ShoppingCart className="w-5 h-5" />
                 </div>
-                <h2 className="text-xl sm:text-2xl font-black text-gray-900">{t.anchorTitle}</h2>
+                <h2 className="text-xl sm:text-2xl font-black text-gray-900">
+                  {t.anchorTitle}
+                </h2>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                 {anchorMap.map((s) => (
@@ -468,7 +777,9 @@ Contact form (support & legal requests): http://localhost:5174/contact
                     <span className="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-gray-900 text-white text-xs font-bold">
                       {s.num}
                     </span>
-                    <span className="text-gray-700 group-hover:text-gray-900">{s.label}</span>
+                    <span className="text-gray-700 group-hover:text-gray-900">
+                      {s.label}
+                    </span>
                   </a>
                 ))}
               </div>
@@ -502,56 +813,75 @@ Contact form (support & legal requests): http://localhost:5174/contact
                 <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="p-6 rounded-2xl border border-gray-200 bg-white shadow-sm">
                     <h3 className="text-xl font-bold text-gray-900 mb-2">
-                      {selectedLanguage === 'fr' ? 'Appel Avocat' : 'Lawyer Call'}
+                      {selectedLanguage === "fr"
+                        ? "Appel Avocat"
+                        : "Lawyer Call"}
                     </h3>
                     <div className="flex items-baseline gap-3">
-                      <span className="text-3xl font-extrabold text-gray-900">49€</span>
+                      <span className="text-3xl font-extrabold text-gray-900">
+                        49€
+                      </span>
                       <span className="text-gray-500 font-medium">EUR</span>
                       <span className="text-gray-400">/</span>
-                      <span className="text-3xl font-extrabold text-gray-900">$49</span>
+                      <span className="text-3xl font-extrabold text-gray-900">
+                        $49
+                      </span>
                       <span className="text-gray-500 font-medium">USD</span>
                       <span className="ml-2 text-sm text-gray-500">
-                        {selectedLanguage === 'fr' ? 'pour 20 min' : 'for 20 min'}
+                        {selectedLanguage === "fr"
+                          ? "pour 20 min"
+                          : "for 20 min"}
                       </span>
                     </div>
                     <p className="mt-2 text-sm text-gray-600">
-                      {selectedLanguage === 'fr'
-                        ? 'Affichage et paiement possibles en EUR ou USD selon votre choix.'
-                        : 'Display and payment available in EUR or USD at your choice.'}
+                      {selectedLanguage === "fr"
+                        ? "Affichage et paiement possibles en EUR ou USD selon votre choix."
+                        : "Display and payment available in EUR or USD at your choice."}
                     </p>
                   </div>
 
                   <div className="p-6 rounded-2xl border border-gray-200 bg-white shadow-sm">
                     <h3 className="text-xl font-bold text-gray-900 mb-2">
-                      {selectedLanguage === 'fr' ? 'Appel Expatrié Aidant' : 'Expat Helper Call'}
+                      {selectedLanguage === "fr"
+                        ? "Appel Expatrié Aidant"
+                        : "Expat Helper Call"}
                     </h3>
                     <div className="flex items-baseline gap-3">
-                      <span className="text-3xl font-extrabold text-gray-900">19€</span>
+                      <span className="text-3xl font-extrabold text-gray-900">
+                        19€
+                      </span>
                       <span className="text-gray-500 font-medium">EUR</span>
                       <span className="text-gray-400">/</span>
-                      <span className="text-3xl font-extrabold text-gray-900">$19</span>
+                      <span className="text-3xl font-extrabold text-gray-900">
+                        $19
+                      </span>
                       <span className="text-gray-500 font-medium">USD</span>
                       <span className="ml-2 text-sm text-gray-500">
-                        {selectedLanguage === 'fr' ? 'pour 30 min' : 'for 30 min'}
+                        {selectedLanguage === "fr"
+                          ? "pour 30 min"
+                          : "for 30 min"}
                       </span>
                     </div>
                     <p className="mt-2 text-sm text-gray-600">
-                      {selectedLanguage === 'fr'
-                        ? 'Montants affichés à titre indicatif ; le taux/frais de conversion du prestataire de paiement peuvent s’appliquer.'
-                        : 'Amounts are indicative; payment processor FX rates/fees may apply.'}
+                      {selectedLanguage === "fr"
+                        ? "Montants affichés à titre indicatif ; le taux/frais de conversion du prestataire de paiement peuvent s’appliquer."
+                        : "Amounts are indicative; payment processor FX rates/fees may apply."}
                     </p>
                   </div>
                 </div>
 
                 {/* Bloc service client sans email, bouton vers contact */}
-                <div id="section-5" className="mt-12 rounded-3xl border border-gray-200 bg-white p-6 sm:p-10 shadow-sm">
+                <div
+                  id="section-5"
+                  className="mt-12 rounded-3xl border border-gray-200 bg-white p-6 sm:p-10 shadow-sm"
+                >
                   <h2 className="text-2xl font-black text-gray-900 mb-4">
                     {t.sections.support}
                   </h2>
                   <p className="text-gray-700">
-                    {selectedLanguage === 'fr'
-                      ? 'Horaires : 24/7 • Temps de réponse : sous 24h. Pour toute demande, utilisez notre formulaire.'
-                      : 'Hours: 24/7 • Response time: within 24h. For any request, please use our contact form.'}
+                    {selectedLanguage === "fr"
+                      ? "Horaires : 24/7 • Temps de réponse : sous 24h. Pour toute demande, utilisez notre formulaire."
+                      : "Hours: 24/7 • Response time: within 24h. For any request, please use our contact form."}
                   </p>
                   <a
                     href="http://localhost:5174/contact"

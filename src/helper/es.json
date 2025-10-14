@@ -1065,5 +1065,33 @@
   "helpCenter.supportTitle": "Vous ne trouvez pas votre réponse ?",
   "helpCenter.supportSubtitle": "Notre équipe support est disponible 24/7 pour vous aider",
   "helpCenter.contactUs": "Nous contacter",
-  "helpCenter.emergencyCall": "Appel d'urgence"
+  "helpCenter.emergencyCall": "Appel d'urgence",
+  
+  "privacy.title": "Política de privacidad",
+  "privacy.subtitle": "Tu privacidad es nuestra prioridad",
+  "privacy.lastUpdated": "Versión 2.2 – Última actualización: 16 de junio de 2025",
+  "privacy.dataCollection": "Recopilación de datos",
+  "privacy.dataProtection": "Protección de datos",
+  "privacy.dataSharing": "Compartir datos",
+  "privacy.yourRights": "Tus derechos",
+  "privacy.contact": "Contacto",
+  "privacy.dataCollectionContent": "Solo recopilamos la información necesaria para proporcionar nuestros servicios de asistencia. Esto incluye tus datos de contacto, metadatos técnicos (llamadas, mensajería) y detalles estrictamente necesarios para tu solicitud.",
+  "privacy.dataProtectionContent": "Tus datos están cifrados en tránsito y en reposo cuando es posible y almacenados de forma segura. Aplicamos medidas técnicas y organizativas para prevenir accesos no autorizados.",
+  "privacy.dataSharingContent": "Nunca vendemos tus datos personales. Solo compartimos información necesaria con proveedores verificados (pagos, telefonía, alojamiento) para entregar el servicio solicitado.",
+  "privacy.rights.access": "Derecho de acceso",
+  "privacy.rights.rectification": "Derecho de rectificación",
+  "privacy.rights.erasure": "Derecho al olvido (dentro de los límites legales)",
+  "privacy.rights.portability": "Derecho a la portabilidad de datos",
+  "privacy.rights.objection": "Derecho a objetar y restringir",
+  "privacy.contactContent": "Para preguntas o ejercer tus derechos, utiliza el formulario a continuación.",
+  "privacy.features.encryption": "Cifrado",
+  "privacy.features.transparency": "Transparencia",
+  "privacy.features.userControl": "Control del usuario",
+  "privacy.features.noResale": "Sin reventa de datos",
+  "privacy.contactCta": "Formulario de contacto",
+  "privacy.editHint": "Documento editable desde la consola de administración (ES)",
+  "privacy.loadingError": "Error al cargar",
+  "privacy.defaultContent": "Mostrando contenido predeterminado"
+
+
 }
