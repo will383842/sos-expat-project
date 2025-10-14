@@ -810,38 +810,43 @@ const UserMenu = memo<{ isMobile?: boolean; scrolled?: boolean }>(
     //   logout: language === "fr" ? "Déconnexion" : "Logout",
     // };
 
-    const t = {
-      login:
-        language === "fr"
-          ? "Connexion"
-          : language === "es"
-            ? "Iniciar sesión"
-            : "Login",
-      signup:
-        language === "fr"
-          ? "S'inscrire"
-          : language === "es"
-            ? "Registrarse"
-            : "Sign up",
-      dashboard:
-        language === "fr"
-          ? "Tableau de bord"
-          : language === "es"
-            ? "Panel de control"
-            : "Dashboard",
-      adminConsole:
-        language === "fr"
-          ? "Console Admin"
-          : language === "es"
-            ? "Consola de Administración"
-            : "Admin Console",
-      logout:
-        language === "fr"
-          ? "Déconnexion"
-          : language === "es"
-            ? "Cerrar sesión"
-            : "Logout",
-    };
+  const t = {
+  login:
+    language === "fr" ? "Connexion"
+    : language === "es" ? "Iniciar sesión"
+    : language === "de" ? "Anmelden"
+    : language === "ru" ? "Войти"
+    : "Login",
+    
+  signup:
+    language === "fr" ? "S'inscrire"
+    : language === "es" ? "Registrarse"
+    : language === "de" ? "Registrieren"
+    : language === "ru" ? "Зарегистрироваться"
+    : "Sign up",
+    
+  dashboard:
+    language === "fr" ? "Tableau de bord"
+    : language === "es" ? "Panel de control"
+    : language === "de" ? "Dashboard"
+    : language === "ru" ? "Панель управления"
+    : "Dashboard",
+    
+  adminConsole:
+    language === "fr" ? "Console Admin"
+    : language === "es" ? "Consola de Administración"
+    : language === "de" ? "Admin-Konsole"
+    : language === "ru" ? "Консоль администратора"
+    : "Admin Console",
+    
+  logout:
+    language === "fr" ? "Déconnexion"
+    : language === "es" ? "Cerrar sesión"
+    : language === "de" ? "Abmelden"
+    : language === "ru" ? "Выйти"
+    : "Logout",
+};
+
 
     if (!typedUser) {
       const loginBtnDesktop = scrolled
