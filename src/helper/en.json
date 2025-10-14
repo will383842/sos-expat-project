@@ -871,8 +871,8 @@
   "dashboard.pending": "Pending",
   "dashboard.inProgress": "In progress",
   "dashboard.failed": "Failed",
-  "dashboard.searchLanguages": "Search and select languages..." ,
-  
+  "dashboard.searchLanguages": "Search and select languages...",
+
   "expatCall.title": "Expat Call",
   "expatCall.subtitle": "Benefit from the experience of a French-speaking expat who has faced the same challenges as you",
   "expatCall.price": "€19",
@@ -1004,12 +1004,6 @@
   "contact.categoryPartnership": "🤝 Partnership",
   "contact.categoryUrgent": "🚨 Urgent",
   "contact.categoryOther": "💬 Other",
-    "testy.hero.titleFirst": "Client",
+  "testy.hero.titleFirst": "Client",
   "testy.hero.titleSecond": "testimonials"
-
-
-
-
-
-
 }

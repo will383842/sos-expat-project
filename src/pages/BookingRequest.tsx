@@ -1311,8 +1311,8 @@ const BookingRequest: React.FC = () => {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": ["WebPage", "Action"],
-            name: t.metaTitle,
-            description: t.metaDesc,
+            name: intl.formatMessage({ id: "bookingRequest.metaTitle" }),
+            description: intl.formatMessage({ id: "bookingRequest.metaDesc" }),
           }),
         }}
       />
@@ -1337,7 +1337,10 @@ const BookingRequest: React.FC = () => {
                   <FormattedMessage id="bookingRequest.heroTitle" />
                 </span>
               </h1>
-              <p className="text-sm text-gray-600 mt-1">{t.heroSubtitle}</p>
+              <p className="text-sm text-gray-600 mt-1">
+                {/* {t.heroSubtitle} */}
+                <FormattedMessage id="bookingRequest.heroSubtitle" />
+              </p>
             </div>
           </div>
 
@@ -1345,7 +1348,8 @@ const BookingRequest: React.FC = () => {
           <div className="mb-3">
             <div className="flex items-center justify-between mb-1">
               <span className="text-sm font-bold text-gray-700">
-                {t.progress}
+                {/* {t.progress} */}
+                {intl.formatMessage({ id: "bookingRequest.progress" })}
               </span>
               <span className="text-sm font-bold text-red-600">
                 {formProgress}%
@@ -1426,7 +1430,11 @@ const BookingRequest: React.FC = () => {
               <div className="text-sm text-gray-600 mt-1">
                 {displayDuration} min
               </div>
-              <div className="mt-1 text-xs text-gray-500">💳 {t.securePay}</div>
+              <div className="mt-1 text-xs text-gray-500">
+                💳
+                {/* {t.securePay} */}
+                {intl.formatMessage({ id: "bookingRequest.securePay" })}
+              </div>
             </div>
           </div>
         </div>
@@ -1439,20 +1447,28 @@ const BookingRequest: React.FC = () => {
               <section className="p-5 sm:p-6">
                 <SectionHeader
                   icon={<MapPin className="w-5 h-5" />}
-                  title={t.personal}
+                  // title={t.personal}
+                  title={intl.formatMessage({ id: "bookingRequest.personal" })}
                 />
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Prénom */}
                   <div ref={refFirstName}>
                     <label className="block text-sm font-semibold text-gray-800 mb-1">
-                      {t.fields.firstName}{" "}
+                      {/* {t.fields.firstName}{" "} */}
+                      {intl.formatMessage({
+                        id: "bookingRequest.fields.firstName",
+                      })}
                       <span className="text-red-500">*</span>
                     </label>
                     <Controller
                       control={control}
                       name="firstName"
-                      rules={{ required: t.validators.firstName }}
+                      rules={{
+                        required: intl.formatMessage({
+                          id: "bookingRequest.validators.firstName",
+                        }),
+                      }}
                       render={({ field }) => (
                         <input
                           {...field}
@@ -1460,7 +1476,9 @@ const BookingRequest: React.FC = () => {
                             field.onChange(sanitizeText(e.target.value))
                           }
                           className={inputClass(inputHas("firstName"))}
-                          placeholder={t.placeholders.firstName}
+                          placeholder={intl.formatMessage({
+                            id: "bookingRequest.placeholders.firstName",
+                          })}
                         />
                       )}
                     />
@@ -1479,13 +1497,21 @@ const BookingRequest: React.FC = () => {
                   {/* Nom */}
                   <div ref={refLastName}>
                     <label className="block text-sm font-semibold text-gray-800 mb-1">
-                      {t.fields.lastName}{" "}
+                      {/* {t.fields.lastName}{" "} */}
+                      {intl.formatMessage({
+                        id: "bookingRequest.fields.lastName",
+                      })}
                       <span className="text-red-500">*</span>
                     </label>
                     <Controller
                       control={control}
                       name="lastName"
-                      rules={{ required: t.validators.lastName }}
+                      // rules={{ required: t.validators.lastName }}
+                      rules={{
+                        required: intl.formatMessage({
+                          id: "bookingRequest.validators.lastName",
+                        }),
+                      }}
                       render={({ field }) => (
                         <input
                           {...field}
@@ -1493,7 +1519,11 @@ const BookingRequest: React.FC = () => {
                             field.onChange(sanitizeText(e.target.value))
                           }
                           className={inputClass(inputHas("lastName"))}
-                          placeholder={t.placeholders.lastName}
+                          // placeholder={t.placeholders.lastName}
+
+                          placeholder={intl.formatMessage({
+                            id: "bookingRequest.placeholders.lastName",
+                          })}
                         />
                       )}
                     />
@@ -1513,13 +1543,21 @@ const BookingRequest: React.FC = () => {
                 {/* Nationalité */}
                 <div className="mt-4" ref={refNationality}>
                   <label className="block text-sm font-semibold text-gray-800 mb-1">
-                    {t.fields.nationality}{" "}
+                    {/* {t.fields.nationality}{" "} */}
+                    {intl.formatMessage({
+                      id: "bookingRequest.fields.nationality",
+                    })}
                     <span className="text-red-500">*</span>
                   </label>
                   <Controller
                     control={control}
                     name="nationality"
-                    rules={{ required: t.validators.nationality }}
+                    // rules={{ required: t.validators.nationality }}
+                    rules={{
+                      required: intl.formatMessage({
+                        id: "bookingRequest.validators.nationality ",
+                      }),
+                    }}
                     render={({ field }) => (
                       <input
                         {...field}
@@ -1527,7 +1565,10 @@ const BookingRequest: React.FC = () => {
                           field.onChange(sanitizeText(e.target.value))
                         }
                         className={inputClass(inputHas("nationality"))}
-                        placeholder={t.placeholders.nationality}
+                        // placeholder={t.placeholders.nationality}
+                        placeholder={intl.formatMessage({
+                          id: "bookingRequest.placeholders.nationality",
+                        })}
                       />
                     )}
                   />
@@ -1541,13 +1582,20 @@ const BookingRequest: React.FC = () => {
                 {/* Pays d'intervention */}
                 <div className="mt-4" ref={refCountry}>
                   <label className="block text-sm font-semibold text-gray-800 mb-1">
-                    {t.fields.currentCountry}{" "}
+                    {/* {t.fields.currentCountry}{" "} */}
+                    {intl.formatMessage({
+                      id: "bookingRequest.fields.currentCountry",
+                    })}
                     <span className="text-red-500">*</span>
                   </label>
                   <Controller
                     control={control}
                     name="currentCountry"
-                    rules={{ required: t.validators.currentCountry }}
+                    rules={{
+                      required: intl.formatMessage({
+                        id: "bookingRequest.validators.currentCountry",
+                      }),
+                    }}
                     render={({ field }) => (
                       <select
                         {...field}
@@ -1581,7 +1629,11 @@ const BookingRequest: React.FC = () => {
                         name="autrePays"
                         rules={{
                           validate: (v) =>
-                            !!v?.trim() ? true : t.validators.otherCountry,
+                            !!v?.trim()
+                              ? true
+                              : intl.formatMessage({
+                                  id: "bookingRequest.validators.autrePays",
+                                }),
                         }}
                         render={({ field }) => (
                           <input
@@ -1590,7 +1642,10 @@ const BookingRequest: React.FC = () => {
                               field.onChange(sanitizeText(e.target.value))
                             }
                             className={inputClass(Boolean(errors.autrePays))}
-                            placeholder={t.placeholders.otherCountry}
+                            // placeholder={t.placeholders.otherCountry}
+                            placeholder={intl.formatMessage({
+                              id: "bookingRequest.placeholders.otherCountry",
+                            })}
                           />
                         )}
                       />
@@ -1608,21 +1663,30 @@ const BookingRequest: React.FC = () => {
               <section className="p-5 sm:p-6 border-t border-gray-50">
                 <SectionHeader
                   icon={<Globe className="w-5 h-5" />}
-                  title={t.request}
+                  // title={t.request}
+                  title={intl.formatMessage({ id: "bookingRequest.request" })}
                 />
 
                 {/* Titre */}
                 <div ref={refTitle}>
                   <label className="block text-sm font-semibold text-gray-800 mb-1">
-                    {t.fields.title} <span className="text-red-500">*</span>
+                    {/* {t.fields.title} */}
+                    {intl.formatMessage({ id: "bookingRequest.fields.title" })}
+                    <span className="text-red-500">*</span>
                   </label>
                   <Controller
                     control={control}
                     name="title"
                     rules={{
-                      required: t.validators.title,
+                      required: intl.formatMessage({
+                        id: "bookingRequest.validators.title",
+                      }),
                       validate: (v) =>
-                        v.trim().length >= 10 ? true : t.validators.title,
+                        v.trim().length >= 10
+                          ? true
+                          : intl.formatMessage({
+                              id: "bookingRequest.validators.title",
+                            }),
                     }}
                     render={({ field }) => (
                       <input
@@ -1631,12 +1695,17 @@ const BookingRequest: React.FC = () => {
                           field.onChange(sanitizeText(e.target.value))
                         }
                         className={inputClass(Boolean(errors.title))}
-                        placeholder={t.placeholders.title}
+                        // placeholder={t.placeholders.title}
+                        placeholder={intl.formatMessage({
+                          id: "bookingRequest.placeholders.title",
+                        })}
                       />
                     )}
                   />
                   <div className="mt-1 text-xs text-gray-500">
-                    💡 {t.hints.title}
+                    💡
+                    {/* {t.hints.title} */}
+                    {intl.formatMessage({ id: "bookingRequest.hints.title" })}
                   </div>
                   <FieldSuccess
                     show={!errors.title && watch("title").trim().length >= 10}
@@ -1653,16 +1722,25 @@ const BookingRequest: React.FC = () => {
                 {/* Description */}
                 <div className="mt-4" ref={refDesc}>
                   <label className="block text-sm font-semibold text-gray-800 mb-1">
-                    {t.fields.description}{" "}
+                    {/* {t.fields.description}{" "} */}
+                    {intl.formatMessage({
+                      id: "bookingRequest.fields.description",
+                    })}
                     <span className="text-red-500">*</span>
                   </label>
                   <Controller
                     control={control}
                     name="description"
                     rules={{
-                      required: t.validators.description,
+                      required: intl.formatMessage({
+                              id: "bookingRequest.validators.description",
+                            }),
                       validate: (v) =>
-                        v.trim().length >= 50 ? true : t.validators.description,
+                        v.trim().length >= 50
+                          ? true
+                          : intl.formatMessage({
+                              id: "bookingRequest.validators.description",
+                            }),
                     }}
                     render={({ field }) => (
                       <textarea
@@ -1672,12 +1750,17 @@ const BookingRequest: React.FC = () => {
                           field.onChange(sanitizeText(e.target.value))
                         }
                         className={`resize-none ${inputClass(Boolean(errors.description))}`}
-                        placeholder={t.placeholders.description}
+                        // placeholder={t.placeholders.description}
+                        placeholder={intl.formatMessage({
+                          id: "bookingRequest.placeholders.description",
+                        })}
                       />
                     )}
                   />
                   <div className="mt-1 text-xs text-gray-500">
-                    🔎 {t.hints.desc}
+                    🔎
+                    {/* {t.hints.desc} */}
+                    {intl.formatMessage({ id: "bookingRequest.hints.desc" })}
                   </div>
                   <FieldSuccess
                     show={
@@ -1702,11 +1785,14 @@ const BookingRequest: React.FC = () => {
               >
                 <SectionHeader
                   icon={<LanguagesIcon className="w-5 h-5" />}
-                  title={t.languages}
+                  // title={t.languages}
+                  title={intl.formatMessage({ id: "bookingRequest.languages" })}
                 />
 
                 <label className="block text-sm font-semibold text-gray-900 mb-2">
-                  🗣️ {lang === "en" ? "Spoken languages" : "Langues parlées"}{" "}
+                  🗣️
+                  {/* {lang === "en" ? "Spoken languages" : "Langues parlées"}{" "} */}
+                  {intl.formatMessage({ id: "bookingRequest.languagesSpoken" })}
                   <span className="text-red-500">*</span>
                 </label>
 
@@ -1748,7 +1834,10 @@ const BookingRequest: React.FC = () => {
                 {(!watch("clientLanguages") ||
                   watch("clientLanguages").length === 0) && (
                   <p className="mt-2 text-sm text-red-600">
-                    {t.validators.languages}
+                    {/* {t.validators.languages} */}
+                    {intl.formatMessage({
+                      id: "bookingRequest.validators.languages",
+                    })}
                   </p>
                 )}
 
@@ -1772,7 +1861,11 @@ const BookingRequest: React.FC = () => {
                                 <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
                                 <div className="ml-3">
                                   <p className="text-green-900 font-semibold mb-2">
-                                    ✅ {t.labels.compatible} :
+                                    ✅{" "}
+                                    {intl.formatMessage({
+                                      id: "bookingRequest.labels.compatible",
+                                    })}{" "}
+                                    :
                                   </p>
                                   <div className="flex flex-wrap gap-2">
                                     {compatible.map((l) => (
@@ -1794,7 +1887,11 @@ const BookingRequest: React.FC = () => {
                                 <AlertCircle className="h-5 w-5 text-red-500 mt-0.5 flex-shrink-0" />
                                 <div className="ml-3">
                                   <p className="text-red-700 font-semibold mb-2">
-                                    ⚠️ {t.labels.incompatible} :
+                                    ⚠️
+                                    {intl.formatMessage({
+                                      id: "bookingRequest.labels.incompatible",
+                                    })}{" "}
+                                    :
                                   </p>
                                   <div className="flex flex-wrap gap-2">
                                     {incompatible.map((l) => (
@@ -1822,10 +1919,17 @@ const BookingRequest: React.FC = () => {
                       <AlertCircle className="h-5 w-5 text-red-500 mt-0.5 flex-shrink-0" />
                       <div className="ml-3">
                         <p className="text-red-700 font-semibold">
-                          🚫 {t.labels.communicationImpossible}
+                          🚫
+                          {/* {t.labels.communicationImpossible} */}
+                          {intl.formatMessage({
+                            id: "bookingRequest.labels.communicationImpossible",
+                          })}
                         </p>
                         <p className="text-red-600 text-sm mt-1">
-                          {t.labels.needShared}
+                          {/* {t.labels.needShared} */}
+                          {intl.formatMessage({
+                            id: "bookingRequest.labels.needShared",
+                          })}
                         </p>
                       </div>
                     </div>
@@ -1840,7 +1944,8 @@ const BookingRequest: React.FC = () => {
               >
                 <SectionHeader
                   icon={<Phone className="w-5 h-5" />}
-                  title={t.contact}
+                  // title={t.contact}
+                  title={intl.formatMessage({ id: "bookingRequest.contact" })}
                 />
 
                 {/* Téléphone client via PhoneField (RHF) */}
@@ -1898,21 +2003,33 @@ const BookingRequest: React.FC = () => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     <Phone size={16} className="inline mr-1" />
-                    {t.fields.phone}
+                    {/* {t.fields.phone} */}
+                    {intl.formatMessage({ id: "bookingRequest.fields.phone" })}
                     <span className="text-red-500">*</span>
                   </label>
                   <Controller
                     control={control}
                     name="clientPhone"
                     rules={{
-                      required: t.validators.phone,
+                      required: intl.formatMessage({
+                        id: "bookingRequest.validators.phone",
+                      }),
                       validate: (v) => {
-                        if (!v) return t.validators.phone;
+                        if (!v)
+                          return intl.formatMessage({
+                            id: "bookingRequest.validators.phone",
+                          });
                         try {
                           const p = parsePhoneNumberFromString(v);
-                          return p && p.isValid() ? true : t.validators.phone;
+                          return p && p.isValid()
+                            ? true
+                            : intl.formatMessage({
+                                id: "bookingRequest.validators.phone",
+                              });
                         } catch {
-                          return t.validators.phone;
+                          return intl.formatMessage({
+                            id: "bookingRequest.validators.phone",
+                          });
                         }
                       },
                     }}
@@ -1929,7 +2046,8 @@ const BookingRequest: React.FC = () => {
                   />
                   <div className="mt-2 text-xs text-gray-600 flex items-center gap-1">
                     <Info className={`w-4 h-4 ${THEME.icon}`} />
-                    {t.hints.phone}
+                    {/* {t.hints.phone} */}
+                    {intl.formatMessage({ id: "bookingRequest.hints.phone" })}
                   </div>
                   {errors.clientPhone && (
                     <p className="mt-1 text-sm text-red-600">
@@ -1997,7 +2115,10 @@ const BookingRequest: React.FC = () => {
                 <div className="mt-5">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     <MessageCircle size={16} className="inline mr-1" />
-                    {t.fields.whatsapp}
+                    {/* {t.fields.whatsapp} */}
+                    {intl.formatMessage({
+                      id: "bookingRequest.fields.whatsapp",
+                    })}
                   </label>
                   <Controller
                     control={control}
@@ -2034,7 +2155,10 @@ const BookingRequest: React.FC = () => {
                   />
                   <div className="mt-2 text-xs text-gray-600 flex items-center gap-1">
                     <Info className={`w-4 h-4 ${THEME.icon}`} />
-                    {t.hints.whatsapp}
+                    {/* {t.hints.whatsapp} */}
+                    {intl.formatMessage({
+                      id: "bookingRequest.hints.whatsapp",
+                    })}
                   </div>
                   {errors.whatsapp && (
                     <p className="mt-1 text-sm text-red-600">
@@ -2061,7 +2185,12 @@ const BookingRequest: React.FC = () => {
                       control={control}
                       name="acceptTerms"
                       rules={{
-                        validate: (v) => (v ? true : t.validators.accept),
+                        validate: (v) =>
+                          v
+                            ? true
+                            : intl.formatMessage({
+                                id: "bookingRequest.validators.accept",
+                              }),
                       }}
                       render={({ field }) => (
                         <input
@@ -2078,14 +2207,21 @@ const BookingRequest: React.FC = () => {
                       htmlFor="acceptTerms"
                       className="text-sm text-gray-700 leading-relaxed"
                     >
-                      {t.fields.accept}
+                      {/* {t.fields.accept} */}
+                      {intl.formatMessage({
+                        id: "bookingRequest.fields.accept",
+                      })}
                       <Link
                         to="/cgu-clients"
                         className="text-red-600 hover:text-red-700 underline font-medium"
                       >
-                        {t.cgu}
+                        {/* {t.cgu} */}
+                        {intl.formatMessage({ id: "bookingRequest.cgu" })}
                       </Link>
-                      {t.fields.andConfirm}
+                      {/* {t.fields.andConfirm} */}
+                      {intl.formatMessage({
+                        id: "bookingRequest.fields.andConfirm",
+                      })}
                     </label>
                   </div>
                   {errors.acceptTerms && (
@@ -2104,7 +2240,10 @@ const BookingRequest: React.FC = () => {
                       <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
                       <div className="ml-3">
                         <p className="font-semibold text-red-800">
-                          {t.errorsTitle}
+                          {/* {t.errorsTitle} */}
+                          {intl.formatMessage({
+                            id: "bookingRequest.errorsTitle",
+                          })}
                         </p>
                         <p className="text-sm text-red-700 mt-1">{formError}</p>
                       </div>
@@ -2174,7 +2313,11 @@ const BookingRequest: React.FC = () => {
                     <div className="flex items-center justify-center">
                       <Euro size={20} className="mr-2 sm:mr-3" />
                       <span>
-                        {t.continuePay} ({`${displayEUR}€ / $${displayUSD}`})
+                        {/* {t.continuePay} */}
+                        {intl.formatMessage({
+                          id: "bookingRequest.continuePay",
+                        })}
+                        ({`${displayEUR}€ / $${displayUSD}`})
                       </span>
                     </div>
                   )}
@@ -2184,12 +2327,15 @@ const BookingRequest: React.FC = () => {
                   <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                     <p className="text-yellow-800 text-sm font-medium mb-2">
                       🔍{" "}
-                      {lang === "en"
+                      {/* {lang === "en"
                         ? "Missing to enable the button:"
-                        : "Éléments manquants pour activer le bouton :"}
+                        : "Éléments manquants pour activer le bouton :"} */}
+                      {intl.formatMessage({
+                        id: "bookingRequest.missingElements",
+                      })}
                     </p>
                     <div className="grid grid-cols-1 gap-1 text-xs text-yellow-700">
-                      {!validFlags.firstName && (
+                      {/* {!validFlags.firstName && (
                         <div>• {t.validators.firstName}</div>
                       )}
                       {!validFlags.lastName && (
@@ -2216,7 +2362,75 @@ const BookingRequest: React.FC = () => {
                       {!validFlags.sharedLang && (
                         <div>• {t.validators.langMismatch}</div>
                       )}
-                      {!validFlags.accept && <div>• {t.validators.accept}</div>}
+                      {!validFlags.accept && <div>• {t.validators.accept}</div>} */}
+
+                      {!validFlags.firstName && (
+                        <div>
+                          • {intl.formatMessage({ id: "validators.firstName" })}
+                        </div>
+                      )}
+                      {!validFlags.lastName && (
+                        <div>
+                          • {intl.formatMessage({ id: "validators.lastName" })}
+                        </div>
+                      )}
+                      {!validFlags.title && (
+                        <div>
+                          • {intl.formatMessage({ id: "validators.title" })}
+                        </div>
+                      )}
+                      {!validFlags.description && (
+                        <div>
+                          •{" "}
+                          {intl.formatMessage({ id: "validators.description" })}
+                        </div>
+                      )}
+                      {!validFlags.phone && (
+                        <div>
+                          • {intl.formatMessage({ id: "validators.phone" })}
+                        </div>
+                      )}
+                      {!validFlags.nationality && (
+                        <div>
+                          •{" "}
+                          {intl.formatMessage({ id: "validators.nationality" })}
+                        </div>
+                      )}
+                      {!validFlags.currentCountry && (
+                        <div>
+                          •{" "}
+                          {intl.formatMessage({
+                            id: "validators.currentCountry",
+                          })}
+                        </div>
+                      )}
+                      {watch("currentCountry") === "Autre" &&
+                        !validFlags.autrePays && (
+                          <div>
+                            •{" "}
+                            {intl.formatMessage({
+                              id: "validators.otherCountry",
+                            })}
+                          </div>
+                        )}
+                      {!validFlags.langs && (
+                        <div>
+                          • {intl.formatMessage({ id: "validators.languages" })}
+                        </div>
+                      )}
+                      {!validFlags.sharedLang && (
+                        <div>
+                          •{" "}
+                          {intl.formatMessage({
+                            id: "validators.langMismatch",
+                          })}
+                        </div>
+                      )}
+                      {!validFlags.accept && (
+                        <div>
+                          • {intl.formatMessage({ id: "validators.accept" })}
+                        </div>
+                      )}
                     </div>
                     <div className="mt-3">
                       <button
@@ -2224,9 +2438,12 @@ const BookingRequest: React.FC = () => {
                         onClick={scrollToFirstIncomplete}
                         className="text-xs font-semibold underline text-gray-800"
                       >
-                        {lang === "en"
+                        {/* {lang === "en"
                           ? "Jump to first missing field"
-                          : "Aller au premier champ manquant"}
+                          : "Aller au premier champ manquant"} */}
+                        {intl.formatMessage({
+                          id: "bookingRequest.jumpToFirst",
+                        })}
                       </button>
                     </div>
                   </div>
@@ -2234,7 +2451,10 @@ const BookingRequest: React.FC = () => {
 
                 <div className="text-center pt-4">
                   <p className="text-xs text-gray-500">
-                    🔒 {t.securePay} • {t.callTiming}
+                    {/* 🔒 {t.securePay} • {t.callTiming} */}
+                    🔒
+                    {intl.formatMessage({ id: "bookingRequest.securePay" })}•
+                    {intl.formatMessage({ id: "bookingRequest.callTiming" })}
                   </p>
                 </div>
               </div>
