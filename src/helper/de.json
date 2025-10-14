@@ -981,5 +981,7 @@
   "contact.categoryService": "⭐ Servicequalität",
   "contact.categoryPartnership": "🤝 Partnerschaft",
   "contact.categoryUrgent": "🚨 Dringend",
-  "contact.categoryOther": "💬 Sonstiges"
+  "contact.categoryOther": "💬 Sonstiges",
+   "testy.hero.titleFirst": "Kunden",
+  "testy.hero.titleSecond": "testimonials"
 }

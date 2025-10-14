@@ -54,143 +54,6 @@ const STATS_COUNTRIES = 150;
 const STATS_TOTAL_TESTIMONIALS = 2347;
 const TESTIMONIALS_PER_PAGE = 9;
 
-// =================== I18N CONFIGURATION ===================
-const translations = {
-  fr: {
-    meta: {
-      title: "Témoignages clients - SOS Expats",
-      description:
-        "Découvrez les expériences de nos utilisateurs partout dans le monde",
-    },
-    hero: {
-      badge: "4,9/5 • +2 500 avis vérifiés",
-      title: "Témoignages clients",
-      subtitle:
-        "Découvrez les expériences de nos utilisateurs partout dans le monde",
-      stats: {
-        testimonials: "Témoignages",
-        averageRating: "Note moyenne",
-        countries: "Pays",
-      },
-    },
-    filters: {
-      all: "Tous les avis",
-      lawyers: "Avocats",
-      expats: "Expatriés",
-      searchPlaceholder: "Rechercher dans les témoignages...",
-    },
-    card: {
-      verified: "Vérifié",
-      helpful: "utile",
-      readMore: "Lire la suite",
-      foundHelpful: "trouvent cela utile",
-      lawyer: "Avocat",
-      expat: "Expatrié",
-    },
-    loading: {
-      testimonials: "Chargement des témoignages...",
-      noResults: "Aucun témoignage trouvé.",
-      adjustCriteria: "Essayez de modifier vos critères de recherche.",
-      loadMore: "Voir plus de témoignages",
-      clearSearch: "Effacer la recherche",
-    },
-    pagination: {
-      page: "Page",
-      of: "sur",
-    },
-    stats: {
-      showing: "Sur",
-      total: "témoignages au total",
-    },
-    cta: {
-      secured: "Sécurisé & confidentiel",
-      response5min: "Réponse en moins de 5 min",
-      countries150: "150+ pays couverts",
-      title: "Vous êtes avocat ou expatrié ?",
-      subtitle:
-        "Rejoignez notre réseau d'experts et transformez vos compétences en opportunités réelles. Aidez d'autres expatriés et voyageurs tout en développant votre activité.",
-      findExpert: "Trouver un expert",
-      becomeExpert: "Devenir expert",
-      joinExperts:
-        "Rejoignez plus de 2 000 experts qui font confiance à SOS Expats",
-    },
-    aria: {
-      backToTop: "Retour en haut",
-      languageSelector: "Sélecteur de langue",
-      filterButton: "Filtre",
-      searchInput: "Champ de recherche",
-      testimonialCard: "Carte de témoignage",
-      pageButton: "Page",
-      unknownDate: "Date inconnue",
-    },
-  },
-  en: {
-    meta: {
-      title: "Client Testimonials - SOS Expats",
-      description: "Discover the experiences of our users worldwide",
-    },
-    hero: {
-      badge: "4.9/5 • +2,500 verified reviews",
-      title: "Client testimonials",
-      subtitle: "Discover the experiences of our users worldwide",
-      stats: {
-        testimonials: "Testimonials",
-        averageRating: "Average rating",
-        countries: "Countries",
-      },
-    },
-    filters: {
-      all: "All reviews",
-      lawyers: "Lawyers",
-      expats: "Expats",
-      searchPlaceholder: "Search testimonials...",
-    },
-    card: {
-      verified: "Verified",
-      helpful: "helpful",
-      readMore: "Read more",
-      foundHelpful: "found this helpful",
-      lawyer: "Lawyer",
-      expat: "Expat",
-    },
-    loading: {
-      testimonials: "Loading testimonials...",
-      noResults: "No testimonials found.",
-      adjustCriteria: "Try adjusting your search criteria.",
-      loadMore: "See more testimonials",
-      clearSearch: "Clear search",
-    },
-    pagination: {
-      page: "Page",
-      of: "of",
-    },
-    stats: {
-      showing: "Out of",
-      total: "total testimonials",
-    },
-    cta: {
-      secured: "Secure & confidential",
-      response5min: "Response in less than 5 min",
-      countries150: "150+ countries covered",
-      title: "Are you a lawyer or an expat?",
-      subtitle:
-        "Join our expert network and transform your skills into real opportunities. Help other expats and travelers while growing your business.",
-      findExpert: "Find an expert",
-      becomeExpert: "Become an expert",
-      joinExperts: "Join over 2,000 experts who trust SOS Expats",
-    },
-    aria: {
-      backToTop: "Back to top",
-      languageSelector: "Language selector",
-      filterButton: "Filter",
-      searchInput: "Search input",
-      testimonialCard: "Testimonial card",
-      pageButton: "Page",
-      unknownDate: "Unknown date",
-    },
-  },
-};
-
 // =================== HELPER FUNCTIONS ===================
 const detectBrowserLanguage = (): string => {
   if (typeof navigator === "undefined") return "fr";
@@ -971,17 +834,17 @@ const Testimonials: React.FC = () => {
   });
 
   // 🔥 CORRECTION: Utiliser useMemo pour recalculer t quand la langue change
-  const t = useMemo(() => {
-    const selectedTranslations =
-      translations[currentLanguage as keyof typeof translations] ||
-      translations.fr;
-    console.log(
-      "🌍 Traductions actives:",
-      currentLanguage,
-      selectedTranslations.hero.title
-    ); // Debug
-    return selectedTranslations;
-  }, [currentLanguage]);
+  // const t = useMemo(() => {
+  //   const selectedTranslations =
+  //     translations[currentLanguage as keyof typeof translations] ||
+  //     translations.fr;
+  //   console.log(
+  //     "🌍 Traductions actives:",
+  //     currentLanguage,
+  //     selectedTranslations.hero.title
+  //   ); // Debug
+  //   return selectedTranslations;
+  // }, [currentLanguage]);
 
   // State
   const [filter, setFilter] = useState<FilterType>("all");
@@ -1087,15 +950,19 @@ const Testimonials: React.FC = () => {
       localStorage.setItem("testimonials_language", currentLanguage);
       document.documentElement.lang = currentLanguage;
       // Update page title and meta description
-      document.title = t.meta.title;
+      // document.title = t.meta.title;
+      document.title = intl.formatMessage({ id: "testy.meta.title" });
       const metaDescription = document.querySelector(
         'meta[name="description"]'
       );
       if (metaDescription) {
-        metaDescription.setAttribute("content", t.meta.description);
+        metaDescription.setAttribute(
+          "content",
+          intl.formatMessage({ id: "testy.meta.description" })
+        );
       }
     }
-  }, [currentLanguage, t.meta.title, t.meta.description]);
+  }, [currentLanguage, intl]);
 
   // Event handlers
   const handleFilterChange = useCallback((newFilter: FilterType) => {
@@ -1168,7 +1035,7 @@ const Testimonials: React.FC = () => {
 
   const formatDate = (date: Date): string => {
     if (!(date instanceof Date) || isNaN(date.getTime())) {
-      return t.aria.unknownDate;
+      return intl.formatMessage({ id: "testy.aria.unknownDate" });
     }
     return date.toLocaleDateString(
       currentLanguage === "fr" ? "fr-FR" : "en-US",
@@ -1181,7 +1048,9 @@ const Testimonials: React.FC = () => {
   };
 
   const getServiceTypeLabel = (serviceType: string): string => {
-    return serviceType === "lawyer_call" ? t.card.lawyer : t.card.expat;
+    return serviceType === "lawyer_call"
+      ? intl.formatMessage({ id: "testy.card.lawyer" })
+      : intl.formatMessage({ id: "testy.card.expat" });
   };
 
   const getServiceTypeClass = (serviceType: string): string => {
@@ -1246,11 +1115,13 @@ const Testimonials: React.FC = () => {
 
             <h1 className="text-4xl sm:text-5xl md:text-7xl font-black mb-4 sm:mb-6 leading-tight">
               <span className="bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
-                {t.hero.title.split(" ")[0]}
+                {/* {t.hero.title.split(" ")[0]} */}
+                {intl.formatMessage({ id: "testy.hero.titleFirst" })}
               </span>
               <br />
               <span className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text text-transparent">
-                {t.hero.title.split(" ")[1]}
+                {/* {t.hero.title.split(" ")[1]} */}
+                {intl.formatMessage({ id: "testy.hero.titleSecond" })}
               </span>
             </h1>
 
@@ -1315,7 +1186,7 @@ const Testimonials: React.FC = () => {
                       ? "bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-lg scale-105"
                       : "bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-white hover:shadow-md hover:scale-105 border border-gray-200/50"
                   }`}
-                  aria-label={`${t.aria.filterButton}: ${t.filters.all}`}
+                  aria-label={`${intl.formatMessage({ id: "testy.aria.filterButton" })}: ${intl.formatMessage({ id: "testy.filters.all" })}`}
                 >
                   <Sparkles className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
                   {/* {t.filters.all} */}
@@ -1328,7 +1199,7 @@ const Testimonials: React.FC = () => {
                       ? "bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-lg scale-105"
                       : "bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-white hover:shadow-md hover:scale-105 border border-gray-200/50"
                   }`}
-                  aria-label={`${t.aria.filterButton}: ${t.filters.lawyers}`}
+                  aria-label={`${intl.formatMessage({ id: "testy.aria.filterButton" })}: ${intl.formatMessage({ id: "testy.filters.lawyers" })}`}
                 >
                   <Briefcase className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
                   {/* {t.filters.lawyers} */}
@@ -1341,7 +1212,7 @@ const Testimonials: React.FC = () => {
                       ? "bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-lg scale-105"
                       : "bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-white hover:shadow-md hover:scale-105 border border-gray-200/50"
                   }`}
-                  aria-label={`${t.aria.filterButton}: ${t.filters.expats}`}
+                  aria-label={`${intl.formatMessage({ id: "testy.aria.filterButton" })}: ${intl.formatMessage({ id: "testy.filters.expats" })}`}
                 >
                   <User className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
                   {/* {t.filters.expats} */}
@@ -1357,11 +1228,15 @@ const Testimonials: React.FC = () => {
                 />
                 <input
                   type="text"
-                  placeholder={t.filters.searchPlaceholder}
+                  placeholder={intl.formatMessage({
+                    id: "testy.filters.searchPlaceholder",
+                  })}
                   value={searchTerm}
                   onChange={handleSearchChange}
                   className="pl-12 pr-6 py-3 w-full border border-gray-200 rounded-2xl bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300 placeholder-gray-500 text-sm sm:text-base min-h-[48px] touch-manipulation"
-                  aria-label={t.aria.searchInput}
+                  aria-label={intl.formatMessage({
+                    id: "testy.aria.searchInput",
+                  })}
                 />
               </div>
             </div>
@@ -1498,7 +1373,7 @@ const Testimonials: React.FC = () => {
                       className="group relative bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-2xl hover:scale-[1.02] hover:-translate-y-1 touch-manipulation active:scale-[0.98] opacity-0 animate-[fadeInUp_0.6s_ease-out_forwards]"
                       style={{ animationDelay: `${index * 0.1}s` }}
                       onClick={() => handleTestimonialClick(testimonial)}
-                      aria-label={`${t.aria.testimonialCard} ${testimonial.clientName}`}
+                      aria-label={`${intl.formatMessage({ id: "testy.aria.testimonialCard" })} ${testimonial.clientName}`}
                     >
                       <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 via-orange-500/5 to-yellow-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
@@ -1613,7 +1488,7 @@ const Testimonials: React.FC = () => {
                                 ? "bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-lg scale-110"
                                 : "bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 hover:border-gray-300 hover:scale-105"
                             }`}
-                            aria-label={`${t.aria.pageButton} ${pageNum}`}
+                            aria-label={`${intl.formatMessage({ id: "testy.aria.pageButton" })} ${pageNum}`}
                           >
                             {pageNum}
                           </button>
@@ -1734,7 +1609,7 @@ const Testimonials: React.FC = () => {
           onClick={smoothScrollToTop}
           className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 w-14 h-14 flex items-center justify-center touch-manipulation"
           style={{ display: "block" }}
-          aria-label={t.aria.backToTop}
+          aria-label={intl.formatMessage({ id: "testy.aria.backToTop" })}
         >
           <ChevronRight className="w-5 h-5 rotate-[-90deg]" />
         </button>

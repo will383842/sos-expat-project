@@ -1003,7 +1003,9 @@
   "contact.categoryService": "⭐ Service quality",
   "contact.categoryPartnership": "🤝 Partnership",
   "contact.categoryUrgent": "🚨 Urgent",
-  "contact.categoryOther": "💬 Other"
+  "contact.categoryOther": "💬 Other",
+    "testy.hero.titleFirst": "Client",
+  "testy.hero.titleSecond": "testimonials"
 
 
 

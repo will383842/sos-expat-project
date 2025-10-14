@@ -1029,5 +1029,7 @@
   "contact.categoryService": "⭐ Calidad de servicio",
   "contact.categoryPartnership": "🤝 Asociación",
   "contact.categoryUrgent": "🚨 Urgente",
-  "contact.categoryOther": "💬 Otro"
+  "contact.categoryOther": "💬 Otro",
+    "testy.hero.titleFirst": "Testimonios",
+  "testy.hero.titleSecond": "de clientes"
 }

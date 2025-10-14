@@ -981,5 +981,7 @@
   "contact.categoryService": "⭐ Качество сервиса",
   "contact.categoryPartnership": "🤝 Партнерство",
   "contact.categoryUrgent": "🚨 Срочный",
-  "contact.categoryOther": "💬 Другое"
+  "contact.categoryOther": "💬 Другое",
+    "testy.hero.titleFirst": "Отзывы",
+  "testy.hero.titleSecond": "клиентов"
 }
