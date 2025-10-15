@@ -853,6 +853,8 @@ const Dashboard: React.FC = () => {
                         fr: "Mon profil",
                         en: "My profile",
                         es: "Mi perfil",
+                        de: "Mein Profil",
+                        ru: "Мой профиль",
                       },
                       {
                         key: "settings",
@@ -860,6 +862,8 @@ const Dashboard: React.FC = () => {
                         fr: "Paramètres",
                         en: "Settings",
                         es: "Configuración",
+                        de: "Einstellungen",
+                        ru: "Настройки",
                       },
                       {
                         key: "calls",
@@ -867,6 +871,8 @@ const Dashboard: React.FC = () => {
                         fr: "Mes appels",
                         en: "My calls",
                         es: "Mis llamadas",
+                        de: "Meine Anrufe",
+                        ru: "Мои звонки",
                       },
                       {
                         key: "invoices",
@@ -874,6 +880,8 @@ const Dashboard: React.FC = () => {
                         fr: "Mes factures",
                         en: "My invoices",
                         es: "Mis facturas",
+                        de: "Meine Rechnungen",
+                        ru: "Мои счета",
                       },
                       {
                         key: "reviews",
@@ -881,6 +889,8 @@ const Dashboard: React.FC = () => {
                         fr: "Mes avis",
                         en: "My reviews",
                         es: "Mis reseñas",
+                        de: "Meine Bewertungen",
+                        ru: "Мои отзывы",
                       },
                       {
                         key: "notifications",
@@ -888,6 +898,8 @@ const Dashboard: React.FC = () => {
                         fr: "Notifications",
                         en: "Notifications",
                         es: "Notificaciones",
+                        de: "Benachrichtigungen",
+                        ru: "Уведомления",
                       },
                       {
                         key: "messages",
@@ -895,6 +907,8 @@ const Dashboard: React.FC = () => {
                         fr: "Mes messages",
                         en: "My messages",
                         es: "Mis mensajes",
+                        de: "Meine Nachrichten",
+                        ru: "Мои сообщения",
                       },
                       {
                         key: "favorites",
@@ -902,6 +916,8 @@ const Dashboard: React.FC = () => {
                         fr: "Mes favoris",
                         en: "My favorites",
                         es: "Mis favoritos",
+                        de: "Meine Favoriten",
+                        ru: "Мои избранные",
                       },
                     ].map((item) => (
                       <li key={item.key}>
@@ -916,10 +932,14 @@ const Dashboard: React.FC = () => {
                           `}
                           title={
                             language === "fr"
-                              ? item.fr
-                              : language === "es"
-                                ? item.es
-                                : item.en
+  ? item.fr
+  : language === "es"
+    ? item.es
+    : language === "de"
+      ? item.de
+      : language === "ru"
+        ? item.ru
+        : item.en
                           }
                         >
                           {/* Barre active à gauche (UI only) */}
@@ -933,10 +953,14 @@ const Dashboard: React.FC = () => {
                           {item.icon}
 
                           {language === "fr"
-                            ? item.fr
-                            : language === "es"
-                              ? item.es
-                              : item.en}
+  ? item.fr
+  : language === "es"
+    ? item.es
+    : language === "de"
+      ? item.de
+      : language === "ru"
+        ? item.ru
+        : item.en}
 
                           {activeTab === (item.key as TabType) && (
                             <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded bg-red-100 text-red-700 dark:bg-white/10 dark:text-white">

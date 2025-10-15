@@ -315,7 +315,14 @@ const App: React.FC = () => {
 
   return (
     <HelmetProvider>
-      <IntlProvider locale={locale} messages={messages[locale]}>
+      <IntlProvider locale={locale} messages={messages[locale]} defaultLocale="fr" onError={(err) => {
+        // Suppress missing translation warnings in production
+        if (err.code === 'MISSING_TRANSLATION') {
+          console.warn('Missing translation:', err.message);
+          return;
+        }
+        throw err;
+      }}>
         <div className={`App ${isMobile ? "mobile-layout" : "desktop-layout"}`}>
           <DefaultHelmet pathname={location.pathname} />
           <Suspense fallback={<LoadingSpinner size="large" color="red" />}>
