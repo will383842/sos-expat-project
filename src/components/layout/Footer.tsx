@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   Phone,
@@ -103,7 +102,8 @@ const Footer: React.FC = () => {
           },
           {
             label: intl.formatMessage({ id: "footer.services.experts" }),
-            href: "/nos-experts",
+            // href: "/nos-experts",
+            href: "#",
           },
           {
             label: intl.formatMessage({ id: "footer.services.testimonials" }),

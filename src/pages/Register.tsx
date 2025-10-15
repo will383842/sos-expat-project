@@ -96,202 +96,6 @@ interface PWAInstallSectionProps {
   onInstall: () => void;
 }
 
-// function PWAInstallSection({ canInstall, onInstall }: PWAInstallSectionProps) {
-//   const intl = useIntl();
-//   const [showHint, setShowHint] = useState(false);
-//   const [hintText, setHintText] = useState("");
-//   const hideTimer = useRef<number | null>(null);
-
-//   const computeHint = () => {
-//     const ua = typeof navigator !== "undefined" ? navigator.userAgent : "";
-//     const isIOS =
-//       /iPad|iPhone|iPod/.test(ua) ||
-//       ((navigator as any).platform === "MacIntel" &&
-//         (navigator as any).maxTouchPoints > 1);
-//     const isAndroid = /Android/i.test(ua);
-//     const isDesktop = !isIOS && !isAndroid;
-
-//     const prefix =
-//       "Votre navigateur ne permet pas l'installation automatique. ";
-//     if (isIOS)
-//       return (
-//         prefix +
-//         "Sur iPhone/iPad : Safari → « Partager » → « Sur l'écran d'accueil ». 😊"
-//       );
-//     if (isAndroid)
-//       return (
-//         prefix +
-//         "Sur Android : Chrome → menu ⋮ → « Installer l'application ». 😊"
-//       );
-//     if (isDesktop)
-//       return (
-//         prefix +
-//         "Sur ordinateur : Chrome/Edge → icône « Installer » dans la barre d'adresse."
-//       );
-//     return (
-//       prefix +
-//       "Essayez avec Chrome/Edge (ordinateur) ou Safari/Chrome (mobile)."
-//     );
-//   };
-
-//   const reveal = (text?: string) => {
-//     if (hideTimer.current) {
-//       window.clearTimeout(hideTimer.current);
-//       hideTimer.current = null;
-//     }
-//     setHintText(text ?? computeHint());
-//     setShowHint(true);
-//   };
-
-//   const scheduleHide = (delay = 1600) => {
-//     if (hideTimer.current) window.clearTimeout(hideTimer.current);
-//     hideTimer.current = window.setTimeout(
-//       () => setShowHint(false),
-//       delay
-//     ) as unknown as number;
-//   };
-
-//   const onClick = () => {
-//     if (canInstall) onInstall();
-//     else {
-//       reveal();
-//       scheduleHide(2800);
-//     }
-//   };
-
-//   return (
-//     <div className="relative z-10 mt-12 sm:mt-16">
-//       <div className="bg-gradient-to-r from-purple-600/20 via-violet-600/20 to-indigo-600/20 backdrop-blur-sm rounded-3xl p-6 sm:p-8 border border-purple-400/30 shadow-2xl shadow-purple-500/20">
-//         <div className="text-center">
-//           <div className="flex justify-center mb-6">
-//             <div className="relative">
-//               <button
-//                 onClick={onClick}
-//                 onTouchStart={() => {
-//                   reveal("L'app qui change la vie des expats ! 🚀");
-//                   scheduleHide(1400);
-//                 }}
-//                 className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl overflow-hidden border-4 border-orange-400/50 hover:border-orange-300/70 transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-4 focus:ring-orange-400/40 touch-manipulation shadow-2xl shadow-orange-500/30"
-//                 aria-label="Télécharger l'application SOS Expats"
-//               >
-//                 {/* Nouvelle icône avec image ronde */}
-//                 <div className="w-full h-full bg-white rounded-2xl flex items-center justify-center p-1">
-//                   <div className="w-full h-full rounded-2xl overflow-hidden">
-//                     <svg viewBox="0 0 200 200" className="w-full h-full">
-//                       <defs>
-//                         <clipPath id="circle-clip">
-//                           <circle cx="100" cy="100" r="95" />
-//                         </clipPath>
-//                       </defs>
-//                       <circle cx="100" cy="100" r="95" fill="#E53E3E" />
-//                       <g clipPath="url(#circle-clip)">
-//                         {/* Triangle d'alerte */}
-//                         <path d="M100 40 L140 100 L60 100 Z" fill="white" />
-//                         {/* Point d'exclamation */}
-//                         <rect
-//                           x="95"
-//                           y="55"
-//                           width="10"
-//                           height="25"
-//                           fill="#E53E3E"
-//                           rx="2"
-//                         />
-//                         <circle cx="100" cy="90" r="5" fill="#E53E3E" />
-//                         {/* Texte SOS */}
-//                         <text
-//                           x="100"
-//                           y="135"
-//                           textAnchor="middle"
-//                           fill="white"
-//                           fontSize="32"
-//                           fontWeight="bold"
-//                         >
-//                           SOS
-//                         </text>
-//                         {/* Texte Expats */}
-//                         <text
-//                           x="100"
-//                           y="165"
-//                           textAnchor="middle"
-//                           fill="white"
-//                           fontSize="20"
-//                           fontWeight="bold"
-//                         >
-//                           Expats
-//                         </text>
-//                       </g>
-//                     </svg>
-//                   </div>
-//                 </div>
-//               </button>
-
-//               <div className="absolute -top-2 -right-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-black px-2 py-1 rounded-full shadow-lg animate-pulse">
-//                 NEW
-//               </div>
-//             </div>
-//           </div>
-
-//           <h3 className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-purple-400 to-violet-400 bg-clip-text text-transparent mb-3">
-//             {/* 📱 Télécharge l&apos;app SOS Expats ! */}
-//             <FormattedMessage id="app.downloadPrompt" />
-//           </h3>
-
-//           <p className="text-purple-200 text-base sm:text-lg leading-relaxed mb-6 max-w-lg mx-auto">
-//             <FormattedMessage id="app.description" />
-//             {/* L&apos;aide d&apos;urgence dans ta poche ! Accès instantané aux experts, même hors connexion. */}
-//           </p>
-
-//           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-//             <button
-//               onClick={onClick}
-//               className="group w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 text-white font-bold text-lg rounded-2xl transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-500/40 touch-manipulation shadow-xl shadow-purple-500/30"
-//             >
-//               <Download className="w-6 h-6 group-hover:animate-bounce" />
-//               {/* <span>
-//                 {canInstall ? "Installer maintenant" : "Télécharger l'app"}
-//               </span> */}
-//               <span>
-//                 {canInstall
-//                   ? intl.formatMessage({ id: "app.installNow" })
-//                   : intl.formatMessage({ id: "app.downloadApp" })}
-//               </span>
-//             </button>
-
-//             <div className="flex items-center gap-2 text-sm text-purple-300">
-//               <Shield className="w-4 h-4 text-green-400" />
-//               <span>
-//                 {/* 100% gratuit & sécurisé */}
-//                 <FormattedMessage id="app.badge.freeSecure" />
-//               </span>
-//             </div>
-//           </div>
-
-//           <div
-//             className={`absolute left-1/2 -translate-x-1/2 mt-4 w-[280px] sm:w-[320px] text-sm rounded-2xl shadow-2xl border transition-all duration-200 ${
-//               showHint
-//                 ? "opacity-100 translate-y-0"
-//                 : "opacity-0 -translate-y-1 pointer-events-none"
-//             } bg-white/95 backdrop-blur-xl border-gray-200 text-gray-900`}
-//             role="status"
-//           >
-//             <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-3 h-3 bg-white/95 rotate-45 border-l border-t border-gray-200" />
-//             <div className="px-4 py-3">
-//               <div className="font-bold text-gray-900">
-//                 L&apos;app qui change tout ! 🚀
-//               </div>
-//               {hintText && (
-//                 <div className="mt-1 leading-relaxed text-gray-700">
-//                   {hintText}
-//                 </div>
-//               )}
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
 function PWAInstallSection({ canInstall, onInstall }: PWAInstallSectionProps) {
   const intl = useIntl();
   const [showHint, setShowHint] = useState(false);
@@ -425,9 +229,9 @@ function PWAInstallSection({ canInstall, onInstall }: PWAInstallSectionProps) {
             >
               <Download className="w-6 h-6 group-hover:animate-bounce" />
               <span>
-                {canInstall
-                  ? intl.formatMessage({ id: "app.installNow" })
-                  : intl.formatMessage({ id: "app.downloadApp" })}
+                <FormattedMessage
+                  id={canInstall ? "app.installNow" : "app.downloadApp"}
+                />
               </span>
             </button>
 
@@ -465,173 +269,12 @@ function PWAInstallSection({ canInstall, onInstall }: PWAInstallSectionProps) {
   );
 }
 
-/* ============ i18n léger (FR/EN) ============ */
-const useTranslation = () => {
-  const { language } = useApp();
-  const lang = (language as "fr" | "en") || "fr";
-
-  const dict: Record<string, Record<"fr" | "en", string>> = {
-    "meta.title": {
-      fr: "Inscription - SOS Expats | Choisissez votre profil ✨",
-      en: "Sign up - SOS Expats | Choose your profile ✨",
-    },
-    "meta.description": {
-      fr: "Rejoignez SOS Expats : choisissez un profil (Client, Avocat, Expatrié) pour profiter d'une aide sympa et efficace, 24/7 et multilingue 🌍.",
-      en: "Join SOS Expats: choose a profile (Client, Lawyer, Expat) to get friendly and effective help, 24/7 and multilingual 🌍.",
-    },
-    "og.title": {
-      fr: "Inscription SOS Expats - Choisissez votre profil 🌴",
-      en: "SOS Expats Sign up - Choose your profile 🌴",
-    },
-    "og.description": {
-      fr: "Plateforme d'aide sympa et efficace pour expatriés & conseils juridiques. Toujours là pour vous, même en vacances 😎.",
-      en: "Friendly and effective help for expats & legal advisory. Here for you, even on holiday 😎.",
-    },
-    "register.title": {
-      fr: "Qui êtes-vous ? 🚀",
-      en: "Who are you? 🚀",
-    },
-    "register.subtitle": {
-      fr: "Rejoignez la famille SOS Expats !",
-      en: "Join the SOS Expats family!",
-    },
-    "register.description": {
-      fr: "Choisissez votre camp et on vous emmène dans l'aventure ! 🌟",
-      en: "Pick your side and we'll take you on the adventure! 🌟",
-    },
-    "register.loginPrompt": {
-      fr: "déjà dans la team ? Connectez-vous !",
-      en: "already on the team? Sign in!",
-    },
-    "register.bookingMessage": {
-      fr: "Après ton inscription, on te redirige direct pour finaliser ta résa ! 🎯",
-      en: "After signing up, we'll redirect you to finish your booking! 🎯",
-    },
-    "register.needHelp": {
-      fr: "Un souci ? On est là ! ",
-      en: "Need help? We got you! ",
-    },
-    "register.contactUs": {
-      fr: "Écris-nous 💬",
-      en: "Hit us up 💬",
-    },
-    "register.termsAccept": {
-      fr: "En t'inscrivant, tu acceptes nos",
-      en: "By signing up, you agree to our",
-    },
-    "register.termsLink": {
-      fr: "conditions (promis c'est pas chiant à lire)",
-      en: "terms (promise they're not boring)",
-    },
-    "register.secureData": {
-      fr: "Tes données sont safe 🔒",
-      en: "Your data is safe 🔒",
-    },
-    "register.freeRegistration": {
-      fr: "Inscription 100% gratuite 🎉",
-      en: "100% free signup 🎉",
-    },
-    "role.client": {
-      fr: "J'ai besoin d'aide",
-      en: "I need help",
-    },
-    "role.lawyer": {
-      fr: "Je suis avocat(e)",
-      en: "I'm a lawyer",
-    },
-    "role.expat": {
-      fr: "Je suis expatrié(e)",
-      en: "I'm an expat",
-    },
-    "role.client.desc": {
-      fr: "J'ai des galères d'expat et j'ai besoin de conseils qui marchent vraiment ! 🆘",
-      en: "I have expat troubles and need advice that actually works! 🆘",
-    },
-    "role.lawyer.desc": {
-      fr: "Je connais le droit et je veux aider des expats tout en gagnant ma vie ! 💼",
-      en: "I know the law and want to help expats while making good money! 💼",
-    },
-    "role.expat.desc": {
-      fr: "J'ai galéré, j'ai appris, et maintenant je veux aider les autres (et me faire un petit extra) ! 🌍",
-      en: "I've struggled, learned, and now I want to help others (and make some extra cash)! 🌍",
-    },
-    "role.lawyer.cta": {
-      fr: "Booste ton chiffre d'affaires en aidant des expats ! Tu décides quand être en ligne, tu réponds aux appels, tu factures. Simple et efficace ! 💰⚖️",
-      en: "Boost your revenue helping expats! You decide when to go online, answer calls, and bill. Simple and effective! 💰⚖️",
-    },
-    "role.expat.cta": {
-      fr: "Du petit extra au gros revenu, c'est TOI qui choisis ! Un clic pour passer en ligne → joignable 24h → payé direct. À toi de voir ton niveau d'implication ! 🎯💸",
-      en: "From small extras to big income, YOU choose! One click to go online → available 24h → paid directly. Up to you how involved you want to be! 🎯💸",
-    },
-    "role.client.f1": {
-      fr: "Conseils dans ta langue 🗣️",
-      en: "Advice in your language 🗣️",
-    },
-    "role.client.f2": {
-      fr: "Dispo même à 3h du mat 🌙",
-      en: "Available even at 3am 🌙",
-    },
-    "role.client.f3": {
-      fr: "Réponses ultra rapides ⚡",
-      en: "Lightning fast answers ⚡",
-    },
-    "role.lawyer.f1": {
-      fr: "Clients du monde entier 🌏",
-      en: "Clients worldwide 🌏",
-    },
-    "role.lawyer.f2": {
-      fr: "Travaille dans plusieurs langues 🎯",
-      en: "Work in multiple languages 🎯",
-    },
-    "role.lawyer.f3": {
-      fr: "Revenus quand tu veux 💵",
-      en: "Earn when you want 💵",
-    },
-    "role.expat.f1": {
-      fr: "Aide concrète sur le terrain 🛠️",
-      en: "Real hands-on help 🛠️",
-    },
-    "role.expat.f2": {
-      fr: "Partage ton vécu 📖",
-      en: "Share your experience 📖",
-    },
-    "role.expat.f3": {
-      fr: "Gagne en aidant 🤝💰",
-      en: "Earn while helping 🤝💰",
-    },
-    "badge.24_7": {
-      fr: "Toujours là pour toi ! ⏰",
-      en: "Always here for you! ⏰",
-    },
-    "badge.multi": {
-      fr: "On parle toutes les langues ! 🌍",
-      en: "We speak all languages! 🌍",
-    },
-    "register.topBadge": {
-      fr: "🎉 Déjà +15K expats dans la team !",
-      en: "🎉 Already +15K expats on the team!",
-    },
-    "register.mainTitle": {
-      fr: "Bienvenue dans l'aventure",
-      en: "Welcome to the adventure",
-    },
-    "register.mainSubtitle": {
-      fr: "SOS Expats",
-      en: "SOS Expats",
-    },
-  };
-
-  const t = (key: string) => dict[key]?.[lang] ?? dict[key]?.fr ?? key;
-  return { t, language: lang };
-};
-
 const Register: React.FC = () => {
   const intl = useIntl();
-
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const location = useLocation();
-  const { t, language } = useTranslation();
+  const { language } = useApp();
   const { install, canInstall } = usePWAInstall();
 
   const redirectUrl = searchParams.get("redirect");
@@ -668,58 +311,62 @@ const Register: React.FC = () => {
     () => [
       {
         id: "client" as const,
-        title: t("role.client"),
-        description: t("role.client.desc"),
+        titleId: "role.client.title",
+        descriptionId: "role.client.description",
         icon: UserCheck,
         cardGradient: "from-blue-600 via-blue-500 to-cyan-500",
         border: "border-blue-400/50",
         bgGlow: "bg-blue-500/20",
         features: [
-          t("role.client.f1"),
-          t("role.client.f2"),
-          t("role.client.f3"),
+          "role.client.feature1",
+          "role.client.feature2",
+          "role.client.feature3",
         ],
-        cta: "",
+        ctaId: null,
         emoji: "🆘",
         emojiSecondary: "💡",
       },
       {
         id: "lawyer" as const,
-        title: t("role.lawyer"),
-        description: t("role.lawyer.desc"),
+        titleId: "role.lawyer.title",
+        descriptionId: "role.lawyer.description",
         icon: Scale,
         cardGradient: "from-red-600 via-red-500 to-orange-500",
         border: "border-red-400/50",
         bgGlow: "bg-red-500/20",
         features: [
-          t("role.lawyer.f1"),
-          t("role.lawyer.f2"),
-          t("role.lawyer.f3"),
+          "role.lawyer.feature1",
+          "role.lawyer.feature2",
+          "role.lawyer.feature3",
         ],
-        cta: t("role.lawyer.cta"),
+        ctaId: "role.lawyer.cta",
         emoji: "⚖️",
         emojiSecondary: "💰",
       },
       {
         id: "expat" as const,
-        title: t("role.expat"),
-        description: t("role.expat.desc"),
+        titleId: "role.expat.title",
+        descriptionId: "role.expat.description",
         icon: Users,
         cardGradient: "from-emerald-600 via-green-500 to-teal-500",
         border: "border-emerald-400/50",
         bgGlow: "bg-emerald-500/20",
-        features: [t("role.expat.f1"), t("role.expat.f2"), t("role.expat.f3")],
-        cta: t("role.expat.cta"),
+        features: [
+          "role.expat.feature1",
+          "role.expat.feature2",
+          "role.expat.feature3",
+        ],
+        ctaId: "role.expat.cta",
         emoji: "🌍",
         emojiSecondary: "✈️",
       },
     ],
-    [t]
+    []
   );
 
   useEffect(() => {
     const originalTitle = document.title;
-    document.title = t("meta.title");
+    document.title = intl.formatMessage({ id: "meta.register.title" });
 
     const setMeta = (name: string, content: string, property = false) => {
       const attr = property ? "property" : "name";
@@ -735,23 +382,40 @@ const Register: React.FC = () => {
       return el;
     };
 
-    setMeta("description", t("meta.description"));
+    setMeta(
+      "description",
+      intl.formatMessage({ id: "meta.register.description" })
+    );
     setMeta(
       "robots",
       "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
     );
     setMeta("language", language);
     setMeta("og:type", "website", true);
-    setMeta("og:title", t("og.title"), true);
-    setMeta("og:description", t("og.description"), true);
+    setMeta(
+      "og:title",
+      intl.formatMessage({ id: "meta.register.og.title" }),
+      true
+    );
+    setMeta(
+      "og:description",
+      intl.formatMessage({ id: "meta.register.og.description" }),
+      true
+    );
     setMeta("og:url", window.location.href, true);
     setMeta("og:site_name", "SOS Expats", true);
     setMeta("og:locale", language === "en" ? "en_US" : "fr_FR", true);
     setMeta("twitter:card", "summary_large_image");
-    setMeta("twitter:title", t("og.title"));
-    setMeta("twitter:description", t("og.description"));
+    setMeta(
+      "twitter:title",
+      intl.formatMessage({ id: "meta.register.og.title" })
+    );
+    setMeta(
+      "twitter:description",
+      intl.formatMessage({ id: "meta.register.og.description" })
+    );
 
-    const currentLangPath = language === "en" ? "en" : "fr";
+    const currentLangPath = language;
     const canonicalUrl = `${window.location.origin}/${currentLangPath}/register`;
     let canonical = document.querySelector(
       'link[rel="canonical"]'
@@ -769,6 +433,9 @@ const Register: React.FC = () => {
     const alternates: Record<string, string> = {
       fr: `${window.location.origin}/fr/register`,
       en: `${window.location.origin}/en/register`,
+      es: `${window.location.origin}/es/register`,
+      ru: `${window.location.origin}/ru/register`,
+      de: `${window.location.origin}/de/register`,
     };
     Object.entries(alternates).forEach(([langKey, url]) => {
       const link = document.createElement("link");
@@ -787,8 +454,8 @@ const Register: React.FC = () => {
       "@context": "https://schema.org",
       "@type": "WebPage",
       "@id": `${canonicalUrl}#webpage`,
-      name: t("meta.title"),
-      description: t("meta.description"),
+      name: intl.formatMessage({ id: "meta.register.title" }),
+      description: intl.formatMessage({ id: "meta.register.description" }),
       url: canonicalUrl,
       inLanguage: language,
       isPartOf: {
@@ -799,8 +466,8 @@ const Register: React.FC = () => {
       },
       mainEntity: {
         "@type": "Thing",
-        name: t("register.title"),
-        description: t("register.description"),
+        name: intl.formatMessage({ id: "register.title" }),
+        description: intl.formatMessage({ id: "register.description" }),
       },
       potentialAction: {
         "@type": "RegisterAction",
@@ -825,7 +492,7 @@ const Register: React.FC = () => {
       document.title = originalTitle;
       document.getElementById("structured-data-register")?.remove();
     };
-  }, [t, language]);
+  }, [intl, language]);
 
   return (
     <Layout>
@@ -843,37 +510,35 @@ const Register: React.FC = () => {
             <div className="inline-flex items-center space-x-2 sm:space-x-3 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 backdrop-blur-sm rounded-full pl-4 pr-3 sm:pl-6 sm:pr-4 py-2 sm:py-3 border border-yellow-400/50 mb-4 sm:mb-6 shadow-lg shadow-yellow-500/25">
               <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 animate-pulse" />
               <span className="text-yellow-200 font-bold text-xs sm:text-sm">
-                {t("register.topBadge")}
+                <FormattedMessage id="register.topBadge" />
               </span>
               <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-400 rounded-full animate-ping" />
             </div>
 
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black leading-tight tracking-tight mb-4 sm:mb-6">
               <span className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
-                {t("register.mainTitle")}
+                <FormattedMessage id="register.mainTitle" />
               </span>
               <br />
               <span className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text text-transparent animate-pulse">
-                {t("register.mainSubtitle")}
+                <FormattedMessage id="register.mainSubtitle" />
               </span>
             </h1>
 
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-white mb-3 sm:mb-4">
-              {t("register.title")}
+              <FormattedMessage id="register.title" />
             </h2>
 
             <p className="text-base sm:text-lg lg:text-xl text-gray-300 leading-relaxed mb-4 sm:mb-6">
-              {language === "fr" ? "Ou " : "Or "}{" "}
+              <FormattedMessage id="register.loginPrompt.prefix" />{" "}
               <button
                 onClick={navigateToLogin}
                 className="font-bold text-transparent bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text hover:from-red-300 hover:to-orange-300 underline underline-offset-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-950 rounded-sm touch-manipulation"
-                aria-label={
-                  language === "fr"
-                    ? "Se connecter à votre compte existant"
-                    : "Sign in to your existing account"
-                }
+                aria-label={intl.formatMessage({
+                  id: "register.loginPrompt.link",
+                })}
               >
-                {t("register.loginPrompt")}
+                <FormattedMessage id="register.loginPrompt.link" />
               </button>
             </p>
 
@@ -889,7 +554,7 @@ const Register: React.FC = () => {
                     aria-hidden="true"
                   />
                   <p className="text-sm sm:text-base text-blue-200 font-semibold leading-relaxed text-center">
-                    {t("register.bookingMessage")}
+                    <FormattedMessage id="register.bookingMessage" />
                   </p>
                 </div>
               </div>
@@ -898,19 +563,21 @@ const Register: React.FC = () => {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 mb-6 sm:mb-8">
             <span className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-3 rounded-2xl text-sm font-bold bg-gradient-to-r from-purple-500/30 to-violet-500/30 text-white border border-purple-400/50 backdrop-blur-sm shadow-lg shadow-purple-500/25 touch-manipulation">
-              <Clock className="w-4 h-4 animate-pulse" /> {t("badge.24_7")}
+              <Clock className="w-4 h-4 animate-pulse" />{" "}
+              <FormattedMessage id="badge.24_7" />
             </span>
             <span className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-3 rounded-2xl text-sm font-bold bg-gradient-to-r from-violet-500/30 to-purple-500/30 text-white border border-violet-400/50 backdrop-blur-sm shadow-lg shadow-violet-500/25 touch-manipulation">
-              <Users className="w-4 h-4 animate-pulse" /> {t("badge.multi")}
+              <Users className="w-4 h-4 animate-pulse" />{" "}
+              <FormattedMessage id="badge.multilingual" />
             </span>
           </div>
 
           <div className="text-center mb-8 sm:mb-12">
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-black bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent mb-3 sm:mb-4">
-              {t("register.subtitle")}
+              <FormattedMessage id="register.subtitle" />
             </h2>
             <p className="text-gray-400 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
-              {t("register.description")}
+              <FormattedMessage id="register.description" />
             </p>
           </div>
 
@@ -923,7 +590,9 @@ const Register: React.FC = () => {
                     <button
                       onClick={() => handleRoleSelect(role.id)}
                       className="w-full h-auto min-h-[200px] sm:min-h-[220px] lg:min-h-[320px] text-left relative overflow-hidden rounded-2xl sm:rounded-3xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-white/30 touch-manipulation flex flex-col shadow-2xl"
-                      aria-label={`${language === "fr" ? "S'inscrire en tant que" : "Sign up as"} ${role.title}. ${role.description}`}
+                      aria-label={`${intl.formatMessage({
+                        id: "register.loginPrompt.link",
+                      })} ${intl.formatMessage({ id: role.titleId })}. ${intl.formatMessage({ id: role.descriptionId })}`}
                     >
                       <div
                         className={`absolute inset-0 bg-gradient-to-br ${role.cardGradient} opacity-90 group-hover:opacity-100 transition-opacity duration-500`}
@@ -942,7 +611,7 @@ const Register: React.FC = () => {
                           </div>
                           <div className="bg-white/20 rounded-full px-2 py-1 backdrop-blur-sm">
                             <span className="text-white text-xs font-bold uppercase tracking-wide">
-                              {language === "fr" ? "Populaire" : "Popular"}
+                              <FormattedMessage id="role.badge.popular" />
                             </span>
                           </div>
                         </div>
@@ -955,38 +624,38 @@ const Register: React.FC = () => {
                           </div>
 
                           <h3 className="font-black text-white text-lg sm:text-xl lg:text-2xl mb-2 sm:mb-3 group-hover:scale-105 transition-transform duration-300">
-                            {role.title}
+                            <FormattedMessage id={role.titleId} />
                           </h3>
 
                           <p className="text-white/95 text-sm sm:text-base leading-relaxed font-medium">
-                            {role.description}
+                            <FormattedMessage id={role.descriptionId} />
                           </p>
                         </div>
 
-                        {role.cta && (
+                        {role.ctaId && (
                           <div className="bg-gradient-to-r from-black/40 to-black/20 rounded-xl p-3 sm:p-4 backdrop-blur-sm border border-white/30 mb-4 flex-shrink-0 group-hover:border-white/50 transition-colors duration-300">
                             <div className="flex items-center gap-2 mb-2">
                               <div className="text-lg">
                                 {role.emojiSecondary}
                               </div>
                               <span className="text-white font-black text-xs">
-                                BONUS
+                                <FormattedMessage id="role.badge.bonus" />
                               </span>
                             </div>
                             <p className="text-white/95 text-xs sm:text-sm leading-relaxed font-semibold">
-                              {role.cta}
+                              <FormattedMessage id={role.ctaId} />
                             </p>
                           </div>
                         )}
 
-                        {!role.cta && (
+                        {!role.ctaId && (
                           <div className="mb-4 flex-shrink-0">
                             <div className="h-8 sm:h-10 lg:h-12"></div>
                           </div>
                         )}
 
                         <div className="grid grid-cols-1 gap-2 mb-4 sm:mb-6 flex-grow">
-                          {role.features.map((f, idx) => (
+                          {role.features.map((featureId, idx) => (
                             <div
                               key={idx}
                               className="bg-white/10 rounded-lg p-2 sm:p-3 backdrop-blur-sm border border-white/20 group-hover:bg-white/15 transition-colors duration-300"
@@ -996,7 +665,7 @@ const Register: React.FC = () => {
                                   <div className="w-2 h-2 rounded-full bg-white"></div>
                                 </div>
                                 <span className="text-white font-bold text-xs sm:text-sm">
-                                  {f}
+                                  <FormattedMessage id={featureId} />
                                 </span>
                               </div>
                             </div>
@@ -1006,9 +675,7 @@ const Register: React.FC = () => {
                         <div className="text-center mt-auto">
                           <div className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/25 backdrop-blur-sm border border-white/50 group-hover:bg-white/35 group-hover:scale-110 transition-all duration-300 text-white font-black text-sm sm:text-base touch-manipulation shadow-xl">
                             <span>
-                              {language === "fr"
-                                ? "C'est parti !"
-                                : "Let's go!"}
+                              <FormattedMessage id="role.cta.button" />
                             </span>
                             <ArrowRight
                               size={16}
@@ -1033,13 +700,13 @@ const Register: React.FC = () => {
           <footer className="mt-12 sm:mt-16 pt-6 sm:pt-8 border-t border-white/20">
             <div className="text-center space-y-4 sm:space-y-6">
               <p className="text-gray-400 leading-relaxed text-sm sm:text-base">
-                {t("register.termsAccept")}{" "}
+                <FormattedMessage id="register.termsAccept" />{" "}
                 <Link
                   to="/cgu-clients"
                   className="text-transparent bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text hover:from-blue-300 hover:to-purple-300 underline underline-offset-2 transition-all font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-950 rounded-sm touch-manipulation"
                   rel="noopener"
                 >
-                  {t("register.termsLink")}
+                  <FormattedMessage id="register.termsLink" />
                 </Link>
               </p>
 
@@ -1049,11 +716,11 @@ const Register: React.FC = () => {
                     className="w-3 h-3 sm:w-4 sm:h-4"
                     aria-hidden="true"
                   />
-                  {t("register.secureData")}
+                  <FormattedMessage id="register.secureData" />
                 </span>
                 <span className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl bg-gradient-to-r from-violet-500/20 to-purple-500/20 text-violet-300 border border-violet-400/30 backdrop-blur-sm touch-manipulation">
                   <Clock className="w-3 h-3 sm:w-4 sm:h-4" aria-hidden="true" />
-                  {t("register.freeRegistration")}
+                  <FormattedMessage id="register.freeRegistration" />
                 </span>
               </div>
             </div>
@@ -1061,12 +728,14 @@ const Register: React.FC = () => {
 
           <aside className="mt-8 sm:mt-12 text-center">
             <div className="inline-flex items-center gap-2 text-gray-400 leading-relaxed text-sm sm:text-base">
-              <span>{t("register.needHelp")}</span>
+              <span>
+                <FormattedMessage id="register.needHelp" />
+              </span>
               <Link
                 to="/contact"
                 className="inline-flex items-center gap-1 text-transparent bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text hover:from-orange-300 hover:to-red-300 underline underline-offset-2 transition-all font-bold focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-gray-950 rounded-sm touch-manipulation"
               >
-                {t("register.contactUs")}
+                <FormattedMessage id="register.contactUs" />
               </Link>
               <span className="text-base sm:text-xl animate-bounce">👋</span>
             </div>

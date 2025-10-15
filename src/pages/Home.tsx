@@ -985,7 +985,7 @@ const OptimizedHomePage: React.FC = () => {
                   >
                     <div className="flex items-end gap-3">
                       <span className="text-5xl  font-black text-gray-900 leading-none">
-                        {formatted}
+                        {formatted} 
                       </span>
                     </div>
                     <div className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-900 text-white font-semibold">

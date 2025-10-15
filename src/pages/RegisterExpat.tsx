@@ -36,6 +36,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useApp } from "../contexts/AppContext";
 import type { MultiValue } from "react-select";
 import type { Provider } from "../types/provider";
+import { useIntl, FormattedMessage } from "react-intl";
 
 // 🔌 Champ téléphone normalisé (E.164)
 import PhoneField from "@/components/PhoneField";
@@ -483,17 +484,28 @@ const PreviewCard = ({
   languages: string[];
   helpTypes: string[];
 }) => {
+  const intl = useIntl();
   return (
     <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-5">
       <div className="flex items-center gap-3">
         <Avatar src={photo} name={fullName} />
         <div>
           <h3 className="text-lg font-extrabold text-gray-900 leading-tight">
-            {fullName || (lang === "en" ? "Your Name" : "Votre nom")}
+            {/* {fullName || (lang === "en" ? "Your Name" : "Votre nom")} */}
+            {fullName ||
+              intl.formatMessage({ id: "registerExpat.preview.yourName" })}
           </h3>
-          <p className="text-xs text-gray-500">
+          {/* <p className="text-xs text-gray-500">
             {lang === "en" ? "Expat Helper" : "Expat Aidant"} • {progress}%{" "}
             {lang === "en" ? "complete" : "complet"}
+          </p> */}
+          <p className="text-xs text-gray-500">
+            <FormattedMessage id="registerExpat.preview.expatHelper" />
+            {" • "}
+            <FormattedMessage
+              id="registerExpat.preview.complete"
+              values={{ progress }}
+            />
           </p>
         </div>
       </div>
@@ -576,7 +588,10 @@ const PreviewCard = ({
         </div>
       )}
 
-      <p className="mt-4 text-xs text-gray-500">{t.previewHint}</p>
+      <p className="mt-4 text-xs text-gray-500">
+        {/* {t.previewHint} */}
+        {intl.formatMessage({ id: "registerExpat.preview.hint" })}
+      </p>
     </div>
   );
 };
@@ -602,7 +617,8 @@ const BottomChecklist = ({
     <div className="rounded-2xl bg-gradient-to-br from-emerald-600 via-green-600 to-teal-600 p-[10px] shadow-lg">
       <div className="rounded-xl bg-white/90 backdrop-blur-sm p-4 sm:p-5">
         <p className="font-bold text-gray-900 mb-3">
-          {lang === "en" ? "To complete:" : "À compléter :"}
+          {/* {lang === "en" ? "To complete:" : "À compléter :"} */}
+          <FormattedMessage id="registerExpat.checklist.toComplete" />
         </p>
 
         <div className="grid sm:grid-cols-2 gap-y-2">
@@ -629,9 +645,13 @@ const BottomChecklist = ({
 
         <div className="mt-4">
           <span className="text-xs text-gray-700 bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-1 inline-block">
-            {lang === "en"
+            {/* {lang === "en"
               ? `Completion: ${progress}%`
-              : `Complétion : ${progress}%`}
+              : `Complétion : ${progress}%`} */}
+            <FormattedMessage
+              id="registerExpat.checklist.completion"
+              values={{ progress }}
+            />
           </span>
         </div>
       </div>
@@ -641,6 +661,7 @@ const BottomChecklist = ({
 
 // ===== Component =====
 const RegisterExpat: React.FC = () => {
+  const intl = useIntl();
   const navigate = useNavigate();
 
   // --- Types sûrs ---
@@ -678,8 +699,31 @@ const RegisterExpat: React.FC = () => {
   const t: AnyI18N = I18N[lang]; // <- annotation explicite
 
   // ---- SEO / OG meta ----
+  // useEffect(() => {
+  //   document.title = t.metaTitle;
+  //   const ensure = (name: string, content: string, prop = false) => {
+  //     const sel = prop ? `meta[property="${name}"]` : `meta[name="${name}"]`;
+  //     let el = document.querySelector(sel) as HTMLMetaElement | null;
+  //     if (!el) {
+  //       el = document.createElement("meta");
+  //       if (prop) el.setAttribute("property", name);
+  //       else el.setAttribute("name", name);
+  //       document.head.appendChild(el);
+  //     }
+  //     el.content = content;
+  //   };
+  //   ensure("description", t.metaDesc);
+  //   ensure("og:title", t.metaTitle, true);
+  //   ensure("og:description", t.metaDesc, true);
+  //   ensure("og:type", "website", true);
+  //   ensure("twitter:card", "summary_large_image");
+  //   ensure("twitter:title", t.metaTitle);
+  //   ensure("twitter:description", t.metaDesc);
+  // }, [t]);
+
   useEffect(() => {
-    document.title = t.metaTitle;
+    document.title = intl.formatMessage({ id: "registerExpat.meta.title" });
+
     const ensure = (name: string, content: string, prop = false) => {
       const sel = prop ? `meta[property="${name}"]` : `meta[name="${name}"]`;
       let el = document.querySelector(sel) as HTMLMetaElement | null;
@@ -691,14 +735,32 @@ const RegisterExpat: React.FC = () => {
       }
       el.content = content;
     };
-    ensure("description", t.metaDesc);
-    ensure("og:title", t.metaTitle, true);
-    ensure("og:description", t.metaDesc, true);
+
+    ensure(
+      "description",
+      intl.formatMessage({ id: "registerExpat.meta.description" })
+    );
+    ensure(
+      "og:title",
+      intl.formatMessage({ id: "registerExpat.meta.title" }),
+      true
+    );
+    ensure(
+      "og:description",
+      intl.formatMessage({ id: "registerExpat.meta.description" }),
+      true
+    );
     ensure("og:type", "website", true);
     ensure("twitter:card", "summary_large_image");
-    ensure("twitter:title", t.metaTitle);
-    ensure("twitter:description", t.metaDesc);
-  }, [t]);
+    ensure(
+      "twitter:title",
+      intl.formatMessage({ id: "registerExpat.meta.title" })
+    );
+    ensure(
+      "twitter:description",
+      intl.formatMessage({ id: "registerExpat.meta.description" })
+    );
+  }, [intl]);
 
   // ---- Initial state ----
   const initial: ExpatFormData = {
@@ -886,34 +948,99 @@ const RegisterExpat: React.FC = () => {
   }, [form.customHelpType, form.helpTypes]);
 
   // ---- Validation blocage submit ----
+  // const validate = useCallback(() => {
+  //   const e: Record<string, string> = {};
+  //   if (!valid.firstName) e.firstName = t.errors.firstNameRequired;
+  //   if (!valid.lastName) e.lastName = t.errors.lastNameRequired;
+  //   if (!form.email.trim()) e.email = t.errors.emailRequired;
+  //   else if (!EMAIL_REGEX.test(form.email)) e.email = t.errors.emailInvalid;
+  //   // ⚠️ Unicité: on laisse Firebase gérer
+  //   if (!valid.password) e.password = t.errors.passwordTooShort;
+  //   if (!valid.phone) e.phone = t.errors.phoneRequired;
+  //   if (!valid.currentCountry) e.currentCountry = t.errors.needCountry;
+  //   if (!valid.currentPresenceCountry)
+  //     e.currentPresenceCountry = t.errors.needPresence;
+  //   if (!valid.interventionCountry)
+  //     e.interventionCountry = t.errors.needIntervention;
+  //   if (!valid.languages) e.languages = t.errors.needLang;
+  //   if (!valid.helpTypes) e.helpTypes = t.errors.needHelp;
+  //   if (!valid.bio) e.bio = t.errors.needBio;
+  //   if (!valid.profilePhoto) e.profilePhoto = t.errors.needPhoto;
+  //   if (!valid.yearsAsExpat) e.yearsAsExpat = t.errors.needYears;
+  //   if (!valid.acceptTerms) e.acceptTerms = t.errors.acceptTermsRequired;
+
+  //   setFieldErrors(e);
+  //   if (Object.keys(e).length) {
+  //     setFormError(t.errors.title);
+  //     return false;
+  //   }
+  //   return true;
+  // }, [form, valid, t]);
+
   const validate = useCallback(() => {
     const e: Record<string, string> = {};
-    if (!valid.firstName) e.firstName = t.errors.firstNameRequired;
-    if (!valid.lastName) e.lastName = t.errors.lastNameRequired;
-    if (!form.email.trim()) e.email = t.errors.emailRequired;
-    else if (!EMAIL_REGEX.test(form.email)) e.email = t.errors.emailInvalid;
-    // ⚠️ Unicité: on laisse Firebase gérer
-    if (!valid.password) e.password = t.errors.passwordTooShort;
-    if (!valid.phone) e.phone = t.errors.phoneRequired;
-    if (!valid.currentCountry) e.currentCountry = t.errors.needCountry;
+
+    if (!valid.firstName)
+      e.firstName = intl.formatMessage({
+        id: "registerExpat.errors.firstNameRequired",
+      });
+    if (!valid.lastName)
+      e.lastName = intl.formatMessage({
+        id: "registerExpat.errors.lastNameRequired",
+      });
+    if (!form.email.trim())
+      e.email = intl.formatMessage({
+        id: "registerExpat.errors.emailRequired",
+      });
+    else if (!EMAIL_REGEX.test(form.email))
+      e.email = intl.formatMessage({ id: "registerExpat.errors.emailInvalid" });
+
+    if (!valid.password)
+      e.password = intl.formatMessage({
+        id: "registerExpat.errors.passwordTooShort",
+      });
+    if (!valid.phone)
+      e.phone = intl.formatMessage({
+        id: "registerExpat.errors.phoneRequired",
+      });
+    if (!valid.currentCountry)
+      e.currentCountry = intl.formatMessage({
+        id: "registerExpat.errors.needCountry",
+      });
     if (!valid.currentPresenceCountry)
-      e.currentPresenceCountry = t.errors.needPresence;
+      e.currentPresenceCountry = intl.formatMessage({
+        id: "registerExpat.errors.needPresence",
+      });
     if (!valid.interventionCountry)
-      e.interventionCountry = t.errors.needIntervention;
-    if (!valid.languages) e.languages = t.errors.needLang;
-    if (!valid.helpTypes) e.helpTypes = t.errors.needHelp;
-    if (!valid.bio) e.bio = t.errors.needBio;
-    if (!valid.profilePhoto) e.profilePhoto = t.errors.needPhoto;
-    if (!valid.yearsAsExpat) e.yearsAsExpat = t.errors.needYears;
-    if (!valid.acceptTerms) e.acceptTerms = t.errors.acceptTermsRequired;
+      e.interventionCountry = intl.formatMessage({
+        id: "registerExpat.errors.needIntervention",
+      });
+    if (!valid.languages)
+      e.languages = intl.formatMessage({ id: "registerExpat.errors.needLang" });
+    if (!valid.helpTypes)
+      e.helpTypes = intl.formatMessage({ id: "registerExpat.errors.needHelp" });
+    if (!valid.bio)
+      e.bio = intl.formatMessage({ id: "registerExpat.errors.needBio" });
+    if (!valid.profilePhoto)
+      e.profilePhoto = intl.formatMessage({
+        id: "registerExpat.errors.needPhoto",
+      });
+    if (!valid.yearsAsExpat)
+      e.yearsAsExpat = intl.formatMessage({
+        id: "registerExpat.errors.needYears",
+      });
+    if (!valid.acceptTerms)
+      e.acceptTerms = intl.formatMessage({
+        id: "registerExpat.errors.acceptTermsRequired",
+      });
 
     setFieldErrors(e);
     if (Object.keys(e).length) {
-      setFormError(t.errors.title);
+      setFormError(intl.formatMessage({ id: "registerExpat.errors.title" }));
       return false;
     }
     return true;
-  }, [form, valid, t]);
+  }, [form, valid, intl]);
 
   // Scroll vers le premier champ incomplet
   const scrollToFirstIncomplete = useCallback(() => {
@@ -992,7 +1119,10 @@ const RegisterExpat: React.FC = () => {
         await register(userData, form.password);
         navigate(redirect, {
           replace: true,
-          state: { message: t.success, type: "success" },
+          state: {
+            message: intl.formatMessage({ id: "registerExpat.success" }),
+            type: "success",
+          },
         });
       } catch (err: unknown) {
         const msg = err instanceof Error ? err.message : "Error";
@@ -1039,101 +1169,288 @@ const RegisterExpat: React.FC = () => {
   );
 
   // ---- Checklist items ----
+  // const checklist = useMemo(
+  //   () => [
+  //     {
+  //       key: "firstName",
+  //       label: lang === "en" ? "First name" : "Prénom",
+  //       ok: valid.firstName,
+  //       ref: refFirstName,
+  //     },
+  //     {
+  //       key: "lastName",
+  //       label: lang === "en" ? "Last name" : "Nom",
+  //       ok: valid.lastName,
+  //       ref: refLastName,
+  //     },
+  //     {
+  //       key: "email",
+  //       label: lang === "en" ? "Valid email" : "Email valide",
+  //       ok: valid.email,
+  //       ref: refEmail,
+  //     },
+  //     {
+  //       key: "password",
+  //       label:
+  //         lang === "en"
+  //           ? "Password (≥ 6 chars)"
+  //           : "Mot de passe (≥ 6 caractères)",
+  //       ok: valid.password,
+  //       ref: refPwd,
+  //     },
+  //     {
+  //       key: "phone",
+  //       label: lang === "en" ? "Phone (E.164)" : "Téléphone (E.164)",
+  //       ok: valid.phone,
+  //       ref: refPhone,
+  //     },
+  //     {
+  //       key: "currentCountry",
+  //       label: lang === "en" ? "Country of residence" : "Pays de résidence",
+  //       ok: valid.currentCountry,
+  //       ref: refCountry,
+  //     },
+  //     {
+  //       key: "currentPresenceCountry",
+  //       label: lang === "en" ? "Presence country" : "Pays de présence",
+  //       ok: valid.currentPresenceCountry,
+  //       ref: refPresence,
+  //     },
+  //     {
+  //       key: "interventionCountry",
+  //       label:
+  //         lang === "en" ? "Main intervention country" : "Pays d'intervention",
+  //       ok: valid.interventionCountry,
+  //       ref: refInterv,
+  //     },
+  //     {
+  //       key: "languages",
+  //       label: lang === "en" ? "At least one language" : "Au moins une langue",
+  //       ok: valid.languages,
+  //       ref: refLangs,
+  //     },
+  //     {
+  //       key: "helpTypes",
+  //       label:
+  //         lang === "en" ? "At least one specialty" : "Au moins une spécialité",
+  //       ok: valid.helpTypes,
+  //       ref: refHelp,
+  //     },
+  //     {
+  //       key: "profilePhoto",
+  //       label: lang === "en" ? "Profile photo" : "Photo de profil",
+  //       ok: valid.profilePhoto,
+  //       ref: refPhoto,
+  //     },
+  //     {
+  //       key: "bio",
+  //       label: lang === "en" ? "Bio (≥ 50 chars)" : "Bio (≥ 50 caractères)",
+  //       ok: valid.bio,
+  //       ref: refBio,
+  //     },
+  //     {
+  //       key: "yearsAsExpat",
+  //       label:
+  //         lang === "en" ? "Years abroad (≥ 1)" : "Années d'expatriation (≥ 1)",
+  //       ok: valid.yearsAsExpat,
+  //       ref: refYears,
+  //     },
+  //     {
+  //       key: "acceptTerms",
+  //       label: lang === "en" ? "Accept T&Cs" : "Accepter les CGU",
+  //       ok: valid.acceptTerms,
+  //       ref: refCGU,
+  //     },
+  //   ],
+  //   [valid, lang]
+  // );
+
+  // const checklist = useMemo(
+  //   () => [
+  //     {
+  //       key: "firstName",
+  //       label: intl.formatMessage({ id: "registerExpat.firstName" }),
+  //       ok: valid.firstName,
+  //       ref: refFirstName,
+  //     },
+  //     {
+  //       key: "lastName",
+  //       label: intl.formatMessage({ id: "registerExpat.lastName" }),
+  //       ok: valid.lastName,
+  //       ref: refLastName,
+  //     },
+  //     {
+  //       key: "email",
+  //       label: intl.formatMessage({ id: "registerExpat.email" }),
+  //       ok: valid.email,
+  //       ref: refEmail,
+  //     },
+  //     {
+  //       key: "password",
+  //       label: intl.formatMessage({ id: "registerExpat.password" }),
+  //       ok: valid.password,
+  //       ref: refPwd,
+  //     },
+  //     {
+  //       key: "phone",
+  //       label: intl.formatMessage({ id: "registerExpat.phone" }),
+  //       ok: valid.phone,
+  //       ref: refPhone,
+  //     },
+  //     {
+  //       key: "currentCountry",
+  //       label: intl.formatMessage({ id: "registerExpat.residenceCountry" }),
+  //       ok: valid.currentCountry,
+  //       ref: refCountry,
+  //     },
+  //     {
+  //       key: "currentPresenceCountry",
+  //       label: intl.formatMessage({ id: "registerExpat.presenceCountry" }),
+  //       ok: valid.currentPresenceCountry,
+  //       ref: refPresence,
+  //     },
+  //     {
+  //       key: "interventionCountry",
+  //       label: intl.formatMessage({ id: "registerExpat.interventionCountry" }),
+  //       ok: valid.interventionCountry,
+  //       ref: refInterv,
+  //     },
+  //     {
+  //       key: "languages",
+  //       label: intl.formatMessage({ id: "registerExpat.languages" }),
+  //       ok: valid.languages,
+  //       ref: refLangs,
+  //     },
+  //     {
+  //       key: "helpTypes",
+  //       label: intl.formatMessage({ id: "registerExpat.helpDomains" }),
+  //       ok: valid.helpTypes,
+  //       ref: refHelp,
+  //     },
+  //     {
+  //       key: "profilePhoto",
+  //       label: intl.formatMessage({
+  //         id: "registerExpat.checklist.profilePhoto",
+  //       }),
+  //       ok: valid.profilePhoto,
+  //       ref: refPhoto,
+  //     },
+  //     {
+  //       key: "bio",
+  //       label: intl.formatMessage({ id: "registerExpat.checklist.bio" }),
+  //       ok: valid.bio,
+  //       ref: refBio,
+  //     },
+  //     {
+  //       key: "yearsAsExpat",
+  //       label: intl.formatMessage({
+  //         id: "registerExpat.checklist.yearsAbroad",
+  //       }),
+  //       ok: valid.yearsAsExpat,
+  //       ref: refYears,
+  //     },
+  //     {
+  //       key: "acceptTerms",
+  //       label: intl.formatMessage({
+  //         id: "registerExpat.checklist.acceptTerms",
+  //       }),
+  //       ok: valid.acceptTerms,
+  //       ref: refCGU,
+  //     },
+  //   ],
+  //   [valid, intl]
+  // );
+
   const checklist = useMemo(
-    () => [
-      {
-        key: "firstName",
-        label: lang === "en" ? "First name" : "Prénom",
-        ok: valid.firstName,
-        ref: refFirstName,
-      },
-      {
-        key: "lastName",
-        label: lang === "en" ? "Last name" : "Nom",
-        ok: valid.lastName,
-        ref: refLastName,
-      },
-      {
-        key: "email",
-        label: lang === "en" ? "Valid email" : "Email valide",
-        ok: valid.email,
-        ref: refEmail,
-      },
-      {
-        key: "password",
-        label:
-          lang === "en"
-            ? "Password (≥ 6 chars)"
-            : "Mot de passe (≥ 6 caractères)",
-        ok: valid.password,
-        ref: refPwd,
-      },
-      {
-        key: "phone",
-        label: lang === "en" ? "Phone (E.164)" : "Téléphone (E.164)",
-        ok: valid.phone,
-        ref: refPhone,
-      },
-      {
-        key: "currentCountry",
-        label: lang === "en" ? "Country of residence" : "Pays de résidence",
-        ok: valid.currentCountry,
-        ref: refCountry,
-      },
-      {
-        key: "currentPresenceCountry",
-        label: lang === "en" ? "Presence country" : "Pays de présence",
-        ok: valid.currentPresenceCountry,
-        ref: refPresence,
-      },
-      {
-        key: "interventionCountry",
-        label:
-          lang === "en" ? "Main intervention country" : "Pays d'intervention",
-        ok: valid.interventionCountry,
-        ref: refInterv,
-      },
-      {
-        key: "languages",
-        label: lang === "en" ? "At least one language" : "Au moins une langue",
-        ok: valid.languages,
-        ref: refLangs,
-      },
-      {
-        key: "helpTypes",
-        label:
-          lang === "en" ? "At least one specialty" : "Au moins une spécialité",
-        ok: valid.helpTypes,
-        ref: refHelp,
-      },
-      {
-        key: "profilePhoto",
-        label: lang === "en" ? "Profile photo" : "Photo de profil",
-        ok: valid.profilePhoto,
-        ref: refPhoto,
-      },
-      {
-        key: "bio",
-        label: lang === "en" ? "Bio (≥ 50 chars)" : "Bio (≥ 50 caractères)",
-        ok: valid.bio,
-        ref: refBio,
-      },
-      {
-        key: "yearsAsExpat",
-        label:
-          lang === "en" ? "Years abroad (≥ 1)" : "Années d'expatriation (≥ 1)",
-        ok: valid.yearsAsExpat,
-        ref: refYears,
-      },
-      {
-        key: "acceptTerms",
-        label: lang === "en" ? "Accept T&Cs" : "Accepter les CGU",
-        ok: valid.acceptTerms,
-        ref: refCGU,
-      },
-    ],
-    [valid, lang]
-  );
+  () => [
+    {
+      key: "firstName",
+      label: intl.formatMessage({ id: "registerExpat.checklist.firstName" }),
+      ok: valid.firstName,
+      ref: refFirstName,
+    },
+    {
+      key: "lastName",
+      label: intl.formatMessage({ id: "registerExpat.checklist.lastName" }),
+      ok: valid.lastName,
+      ref: refLastName,
+    },
+    {
+      key: "email",
+      label: intl.formatMessage({ id: "registerExpat.checklist.validEmail" }),
+      ok: valid.email,
+      ref: refEmail,
+    },
+    {
+      key: "password",
+      label: intl.formatMessage({ id: "registerExpat.checklist.password" }),
+      ok: valid.password,
+      ref: refPwd,
+    },
+    {
+      key: "phone",
+      label: intl.formatMessage({ id: "registerExpat.checklist.phone" }),
+      ok: valid.phone,
+      ref: refPhone,
+    },
+    {
+      key: "currentCountry",
+      label: intl.formatMessage({ id: "registerExpat.checklist.countryOfResidence" }),
+      ok: valid.currentCountry,
+      ref: refCountry,
+    },
+    {
+      key: "currentPresenceCountry",
+      label: intl.formatMessage({ id: "registerExpat.checklist.presenceCountry" }),
+      ok: valid.currentPresenceCountry,
+      ref: refPresence,
+    },
+    {
+      key: "interventionCountry",
+      label: intl.formatMessage({ id: "registerExpat.checklist.mainInterventionCountry" }),
+      ok: valid.interventionCountry,
+      ref: refInterv,
+    },
+    {
+      key: "languages",
+      label: intl.formatMessage({ id: "registerExpat.checklist.atLeastOneLanguage" }),
+      ok: valid.languages,
+      ref: refLangs,
+    },
+    {
+      key: "helpTypes",
+      label: intl.formatMessage({ id: "registerExpat.checklist.atLeastOneSpecialty" }),
+      ok: valid.helpTypes,
+      ref: refHelp,
+    },
+    {
+      key: "profilePhoto",
+      label: intl.formatMessage({ id: "registerExpat.checklist.profilePhoto" }),
+      ok: valid.profilePhoto,
+      ref: refPhoto,
+    },
+    {
+      key: "bio",
+      label: intl.formatMessage({ id: "registerExpat.checklist.bio" }),
+      ok: valid.bio,
+      ref: refBio,
+    },
+    {
+      key: "yearsAsExpat",
+      label: intl.formatMessage({ id: "registerExpat.checklist.yearsAbroad" }),
+      ok: valid.yearsAsExpat,
+      ref: refYears,
+    },
+    {
+      key: "acceptTerms",
+      label: intl.formatMessage({ id: "registerExpat.checklist.acceptTerms" }),
+      ok: valid.acceptTerms,
+      ref: refCGU,
+    },
+  ],
+  [valid, intl]
+);
+
 
   // ===== RENDER =====
   return (
@@ -1145,8 +1462,10 @@ const RegisterExpat: React.FC = () => {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": ["WebPage", "RegisterAction"],
-            name: t.metaTitle,
-            description: t.metaDesc,
+            name: intl.formatMessage({ id: "registerExpat.meta.title" }),
+            description: intl.formatMessage({
+              id: "registerExpat.meta.description",
+            }),
             inLanguage: lang === "en" ? "en-US" : "fr-FR",
             publisher: { "@type": "Organization", name: "SOS Expats" },
           }),
@@ -1155,7 +1474,7 @@ const RegisterExpat: React.FC = () => {
 
       <div className="min-h-screen bg-[linear-gradient(180deg,#f7fff9_0%,#ffffff_35%,#f0fff7_100%)]">
         {/* Hero */}
-        <header className="pt-6 sm:pt-8 text-center">
+        {/* <header className="pt-6 sm:pt-8 text-center">
           <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-gray-900">
             <span
               className={`bg-gradient-to-r ${THEME.gradFrom} ${THEME.gradTo} bg-clip-text text-transparent`}
@@ -1183,10 +1502,41 @@ const RegisterExpat: React.FC = () => {
               {t.login}
             </Link>
           </div>
+        </header> */}
+
+        <header className="pt-6 sm:pt-8 text-center">
+          <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-gray-900">
+            <span
+              className={`bg-gradient-to-r ${THEME.gradFrom} ${THEME.gradTo} bg-clip-text text-transparent`}
+            >
+              {/* <FormattedMessage id="registerExpat.heroTitle" /> */}
+              <FormattedMessage id="registerExpat.ui.heroTitle" />
+            </span>
+          </h1>
+          <p className="mt-3 sm:mt-4 text-sm sm:text-base text-gray-700 px-4">
+            <FormattedMessage id="registerExpat.ui.heroTitle" />
+          </p>
+          <div className="mt-3 inline-flex items-center gap-2">
+            <span className="text-xs sm:text-sm px-3 py-1 rounded-full bg-white border shadow-sm">
+              24/7
+            </span>
+            <span className="text-xs sm:text-sm px-3 py-1 rounded-full bg-white border shadow-sm">
+              <FormattedMessage id="registerExpat.ui.badgeMultilingual" />
+            </span>
+          </div>
+          <div className="mt-3 text-xs sm:text-sm text-gray-600">
+            <FormattedMessage id="registerExpat.ui.already" />{" "}
+            <Link
+              to={`/login?redirect=${encodeURIComponent(redirect)}`}
+              className="font-semibold text-emerald-700 underline decoration-2 underline-offset-2 hover:text-emerald-800"
+            >
+              <FormattedMessage id="registerExpat.ui.login" />
+            </Link>
+          </div>
         </header>
 
         <main className="max-w-6xl mx-auto px-3 sm:px-6 py-6 sm:py-8">
-          {(error || formError) && (
+          {/* {(error || formError) && (
             <div className="mb-4 p-4 bg-red-50 border-l-4 border-red-500 rounded-md">
               <div className="flex items-start">
                 <AlertCircle className="h-5 w-5 text-red-600 mr-2 mt-0.5" />
@@ -1196,13 +1546,44 @@ const RegisterExpat: React.FC = () => {
                 </div>
               </div>
             </div>
+          )} */}
+
+          {(error || formError) && (
+            <div className="mb-4 p-4 bg-red-50 border-l-4 border-red-500 rounded-md">
+              <div className="flex items-start">
+                <AlertCircle className="h-5 w-5 text-red-600 mr-2 mt-0.5" />
+                <div className="text-sm text-red-700">
+                  <div className="font-semibold mb-0.5">
+                    <FormattedMessage id="registerExpat.errors.title" />
+                  </div>
+                  <div>{error || formError}</div>
+                </div>
+              </div>
+            </div>
           )}
 
           {/* Progress */}
-          <div className="mb-6 max-w-2xl">
+          {/* <div className="mb-6 max-w-2xl">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-bold text-gray-700">
                 {t.progress}
+              </span>
+              <span className="text-sm font-bold text-emerald-600">
+                {progress}%
+              </span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2.5">
+              <div
+                className="h-2.5 rounded-full bg-gradient-to-r from-emerald-500 to-green-500 transition-all duration-700"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          </div> */}
+
+          <div className="mb-6 max-w-2xl">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-bold text-gray-700">
+                <FormattedMessage id="registerExpat.ui.progress" />
               </span>
               <span className="text-sm font-bold text-emerald-600">
                 {progress}%
@@ -1220,12 +1601,23 @@ const RegisterExpat: React.FC = () => {
           <div className="lg:grid lg:grid-cols-3 lg:gap-6">
             {/* Mobile preview toggle */}
             <div className="mb-4 lg:hidden">
-              <button
+              {/* <button
                 type="button"
                 onClick={() => setIsPreviewOpen((s) => !s)}
                 className="w-full text-sm font-semibold px-4 py-2 rounded-xl border border-emerald-200 bg-white shadow-sm"
               >
                 {isPreviewOpen ? t.previewToggleOpen : t.previewToggleClose}
+              </button> */}
+              <button
+                type="button"
+                onClick={() => setIsPreviewOpen((s) => !s)}
+                className="w-full text-sm font-semibold px-4 py-2 rounded-xl border border-emerald-200 bg-white shadow-sm"
+              >
+                {isPreviewOpen ? (
+                  <FormattedMessage id="registerExpat.previewToggleOpen" />
+                ) : (
+                  <FormattedMessage id="registerExpat.previewToggleClose" />
+                )}
               </button>
             </div>
 
@@ -1234,7 +1626,8 @@ const RegisterExpat: React.FC = () => {
               className={`${isPreviewOpen ? "block" : "hidden"} lg:block lg:col-span-1 lg:order-last lg:sticky lg:top-6 mb-6`}
             >
               <h3 className="text-sm font-semibold text-gray-800 mb-2">
-                {t.previewTitle}
+                {/* {t.previewTitle} */}
+                {intl.formatMessage({ id: "registerExpat.preview.title" })}
               </h3>
               <PreviewCard
                 lang={lang}
@@ -1261,14 +1654,18 @@ const RegisterExpat: React.FC = () => {
                   <section className="p-5 sm:p-6">
                     <SectionHeader
                       icon={<Users className="w-5 h-5" />}
-                      title={t.personalInfo}
+                      // title={t.personalInfo}
+                      title={intl.formatMessage({
+                        id: "registerExpat.ui.personalInfo",
+                      })}
                     />
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {/* First name */}
                       <div ref={refFirstName}>
                         <label className="block text-sm font-semibold text-gray-800 mb-1">
-                          {t.firstName} <span className="text-red-500">*</span>
+                          <FormattedMessage id="registerExpat.fields.firstName" />{" "}
+                          <span className="text-red-500">*</span>
                         </label>
                         <input
                           name="firstName"
@@ -1276,17 +1673,25 @@ const RegisterExpat: React.FC = () => {
                           value={form.firstName}
                           onChange={onChange}
                           className={`w-full px-4 py-3 border-2 rounded-xl bg-gray-50 hover:bg-white ${THEME.ring} focus:bg-white transition ${fieldErrors.firstName ? "border-red-500 bg-red-50" : valid.firstName ? "border-green-300 bg-green-50" : "border-gray-200"}`}
-                          placeholder={t.help.firstNamePlaceholder}
+                          // placeholder={t.help.firstNamePlaceholder}
+                          placeholder={intl.formatMessage({
+                            id: "registerExpat.help.firstNamePlaceholder",
+                          })}
                         />
                         <FieldSuccess show={valid.firstName}>
-                          {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"}
+                          {/* {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"} */}
+                          {intl.formatMessage({
+                            id: "registerExpat.success.fieldValid",
+                          })}
                         </FieldSuccess>
                       </div>
 
                       {/* Last name */}
                       <div ref={refLastName}>
                         <label className="block text-sm font-semibold text-gray-800 mb-1">
-                          {t.lastName} <span className="text-red-500">*</span>
+                          {/* {t.lastName} */}
+                          <FormattedMessage id="registerExpat.fields.lastName" />
+                          <span className="text-red-500">*</span>
                         </label>
                         <input
                           name="lastName"
@@ -1297,7 +1702,8 @@ const RegisterExpat: React.FC = () => {
                           placeholder={lang === "en" ? "Doe" : "Dupont"}
                         />
                         <FieldSuccess show={valid.lastName}>
-                          {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"}
+                          {/* {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"} */}
+                          <FormattedMessage id="registerExpat.success.fieldValid" />
                         </FieldSuccess>
                       </div>
                     </div>
@@ -1308,7 +1714,8 @@ const RegisterExpat: React.FC = () => {
                         htmlFor="email"
                         className="block text-sm font-semibold text-gray-800 mb-1"
                       >
-                        {t.email} <span className="text-red-500">*</span>
+                        <FormattedMessage id="registerExpat.fields.email" />
+                        <span className="text-red-500">*</span>
                       </label>
                       <div className="relative">
                         <Mail
@@ -1324,7 +1731,10 @@ const RegisterExpat: React.FC = () => {
                           aria-describedby="email-help"
                           className={`w-full block z-[1] pl-11 pr-4 py-3 rounded-xl border-2 ${THEME.ring} focus:bg-white transition
                                       ${fieldErrors.email ? "!border-red-500 bg-red-50" : valid.email ? "!border-green-300 bg-green-50" : "!border-gray-300"}`}
-                          placeholder={t.help.emailPlaceholder}
+                          // placeholder={t.help.emailPlaceholder}
+                          placeholder={intl.formatMessage({
+                            id: "registerExpat.help.emailPlaceholder",
+                          })}
                         />
                       </div>
                       <p id="email-help" className="mt-1 text-xs text-gray-500">
@@ -1338,14 +1748,16 @@ const RegisterExpat: React.FC = () => {
                         </p>
                       )}
                       <FieldSuccess show={valid.email}>
-                        {lang === "en" ? "Looks good! 👌" : "Email au top ! 👌"}
+                        {/* {lang === "en" ? "Looks good! 👌" : "Email au top ! 👌"} */}
+                        <FormattedMessage id="registerExpat.success.emailValid" />
                       </FieldSuccess>
                     </div>
 
                     {/* Password */}
                     <div className="mt-4" ref={refPwd}>
                       <label className="block text-sm font-semibold text-gray-800 mb-1">
-                        {t.password} <span className="text-red-500">*</span>
+                        <FormattedMessage id="registerExpat.fields.password" />
+                        <span className="text-red-500">*</span>
                       </label>
                       <div className="relative">
                         <Lock
@@ -1362,7 +1774,10 @@ const RegisterExpat: React.FC = () => {
                           autoComplete="new-password"
                           aria-describedby="pwd-meter"
                           className={`w-full pl-10 pr-12 py-3 border-2 rounded-xl bg-gray-50 hover:bg-white ${THEME.ring} focus:bg-white transition ${fieldErrors.password ? "border-red-500 bg-red-50" : valid.password ? "border-green-300 bg-green-50" : "border-gray-200"}`}
-                          placeholder={t.help.minPassword}
+                          // placeholder={t.help.minPassword}
+                          placeholder={intl.formatMessage({
+                            id: "registerExpat.help.minPassword",
+                          })}
                         />
                         <button
                           type="button"
@@ -1412,9 +1827,7 @@ const RegisterExpat: React.FC = () => {
                         )}
                       </div>
                       <FieldSuccess show={valid.password}>
-                        {lang === "en"
-                          ? "Nice password! 🔒"
-                          : "Mot de passe OK ! 🔒"}
+                        <FormattedMessage id="registerExpat.success.passwordValid" />
                       </FieldSuccess>
                     </div>
 
@@ -1425,7 +1838,8 @@ const RegisterExpat: React.FC = () => {
                     >
                       <h3 className="text-sm font-bold text-gray-900 mb-3 flex items-center">
                         <PhoneIcon className={`w-4 h-4 mr-2 ${THEME.icon}`} />{" "}
-                        {t.phone}
+                        {/* {t.phone} */}
+                        <FormattedMessage id="registerExpat.fields.phone" />
                       </h3>
 
                       {/* Champ unique normalisé */}
@@ -1443,9 +1857,10 @@ const RegisterExpat: React.FC = () => {
                       />
 
                       <FieldSuccess show={valid.phone}>
-                        {lang === "en"
+                        {/* {lang === "en"
                           ? "Phone number valid (E.164) 🔒"
-                          : "Numéro valide (E.164) 🔒"}
+                          : "Numéro valide (E.164) 🔒"} */}
+                        <FormattedMessage id="registerExpat.success.phoneValid" />
                       </FieldSuccess>
 
                       <p className="mt-3 text-xs text-gray-600 flex items-center">
@@ -1461,13 +1876,17 @@ const RegisterExpat: React.FC = () => {
                   <section className="p-5 sm:p-6 border-t border-gray-50">
                     <SectionHeader
                       icon={<Globe className="w-5 h-5" />}
-                      title={t.geoInfo}
+                      // title={t.geoInfo}
+                      title={intl.formatMessage({
+                        id: "registerExpat.ui.geoInfo",
+                      })}
                     />
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div ref={refCountry}>
                         <label className="block text-sm font-semibold text-gray-800 mb-1">
-                          {t.residenceCountry}{" "}
+                          {/* {t.residenceCountry}{" "} */}
+                          <FormattedMessage id="registerExpat.fields.residenceCountry" />
                           <span className="text-red-500">*</span>
                         </label>
                         <select
@@ -1477,9 +1896,12 @@ const RegisterExpat: React.FC = () => {
                           className={`w-full px-4 py-3 border-2 rounded-xl bg-white ${THEME.ring} ${fieldErrors.currentCountry ? "border-red-500" : valid.currentCountry ? "border-green-300 bg-green-50" : "border-gray-200"}`}
                         >
                           <option value="">
-                            {lang === "en"
+                            {/* {lang === "en"
                               ? "Select your country"
-                              : "Sélectionnez votre pays"}
+                              : "Sélectionnez votre pays"} */}
+                            {intl.formatMessage({
+                              id: "registerExpat.select.selectCountry",
+                            })}
                           </option>
                           {countryOptions.map((c) => (
                             <option key={c} value={c}>
@@ -1488,13 +1910,15 @@ const RegisterExpat: React.FC = () => {
                           ))}
                         </select>
                         <FieldSuccess show={valid.currentCountry}>
-                          {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"}
+                          {/* {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"} */}
+                          <FormattedMessage id="registerExpat.success.fieldValid" />
                         </FieldSuccess>
                       </div>
 
                       <div ref={refPresence}>
                         <label className="block text-sm font-semibold text-gray-800 mb-1">
-                          {t.presenceCountry}{" "}
+                          {/* {t.presenceCountry}{" "} */}
+                          <FormattedMessage id="registerExpat.fields.presenceCountry" />
                           <span className="text-red-500">*</span>
                         </label>
                         <select
@@ -1515,7 +1939,8 @@ const RegisterExpat: React.FC = () => {
                           ))}
                         </select>
                         <FieldSuccess show={valid.currentPresenceCountry}>
-                          {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"}
+                          {/* {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"} */}
+                          <FormattedMessage id="registerExpat.success.fieldValid" />
                         </FieldSuccess>
                       </div>
                     </div>
@@ -1523,7 +1948,7 @@ const RegisterExpat: React.FC = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                       <div ref={refInterv}>
                         <label className="block text-sm font-semibold text-gray-800 mb-1">
-                          {t.interventionCountry}{" "}
+                          <FormattedMessage id="registerExpat.fields.interventionCountry" />{" "}
                           <span className="text-red-500">*</span>
                         </label>
                         <select
@@ -1544,13 +1969,15 @@ const RegisterExpat: React.FC = () => {
                           ))}
                         </select>
                         <FieldSuccess show={valid.interventionCountry}>
-                          {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"}
+                          {/* {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"} */}
+                          <FormattedMessage id="registerExpat.success.fieldValid" />
                         </FieldSuccess>
                       </div>
 
                       <div ref={refYears}>
                         <label className="block text-sm font-semibold text-gray-800 mb-1">
-                          {t.yearsAsExpat}{" "}
+                          {/* {t.yearsAsExpat}{" "} */}
+                          <FormattedMessage id="registerExpat.fields.yearsAsExpat" />
                           <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -1564,7 +1991,8 @@ const RegisterExpat: React.FC = () => {
                           placeholder="5"
                         />
                         <FieldSuccess show={valid.yearsAsExpat}>
-                          {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"}
+                          {/* {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"} */}
+                          <FormattedMessage id="registerExpat.success.fieldValid" />
                         </FieldSuccess>
                       </div>
                     </div>
@@ -1575,13 +2003,15 @@ const RegisterExpat: React.FC = () => {
                       ref={refLangs}
                     >
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        {t.languages} <span className="text-red-500">*</span>
+                        <FormattedMessage id="registerExpat.fields.languages" />{" "}
+                        <span className="text-red-500">*</span>
                       </label>
 
                       {(selectedLanguages as LanguageOption[]).length > 0 && (
                         <div className="mb-2 text-xs text-gray-700">
                           <span className="font-medium">
-                            {t.selectedLanguages}:
+                            <FormattedMessage id="registerExpat.fields.selectedLanguages" />
+                            :
                           </span>{" "}
                           {(selectedLanguages as LanguageOption[])
                             .map((l) => l.value.toUpperCase())
@@ -1621,14 +2051,16 @@ const RegisterExpat: React.FC = () => {
                         </p>
                       )}
                       <FieldSuccess show={valid.languages}>
-                        {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"}
+                        {/* {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"} */}
+                        <FormattedMessage id="registerExpat.success.fieldValid" />
                       </FieldSuccess>
                     </div>
 
                     {/* Bio */}
                     <div className="mt-4" ref={refBio}>
                       <label className="block text-sm font-semibold text-gray-800 mb-1">
-                        {t.bio} <span className="text-red-500">*</span>
+                        <FormattedMessage id="registerExpat.fields.bio" />
+                        <span className="text-red-500">*</span>
                       </label>
                       <textarea
                         name="bio"
@@ -1661,13 +2093,19 @@ const RegisterExpat: React.FC = () => {
                                 : "text-green-600"
                             }
                           >
-                            {form.bio.length < 50
-                              ? lang === "en"
-                                ? `Just ${50 - form.bio.length} chars to go — you’ve got this! 💪`
-                                : `Encore ${50 - form.bio.length} caractères — vous y êtes presque ! 💪`
-                              : lang === "en"
-                                ? "✓ Nice! Field validated."
-                                : "✓ Top ! Champ validé."}
+                            {form.bio.length < 50 ? (
+                              // lang === "en" ? (
+                              //   `Just ${50 - form.bio.length} chars to go — you’ve got this! 💪`
+                              // ) : (
+                              //   `Encore ${50 - form.bio.length} caractères — vous y êtes presque ! 💪`
+                              // )
+                              <FormattedMessage
+                                id="registerExpat.bio.charsToGo"
+                                values={{ count: 50 - form.bio.length }}
+                              />
+                            ) : (
+                              <FormattedMessage id="registerExpat.bio.fieldValidated" />
+                            )}
                           </span>
                           <span
                             className={
@@ -1680,7 +2118,8 @@ const RegisterExpat: React.FC = () => {
                           </span>
                         </div>
                         <p className="mt-1 text-xs text-gray-500">
-                          {t.help.bioHint}
+                          {/* {t.help.bioHint} */}
+                          <FormattedMessage id="registerExpat.help.bioHint" />
                         </p>
                       </div>
                     </div>
@@ -1692,7 +2131,8 @@ const RegisterExpat: React.FC = () => {
                     >
                       <label className="text-sm font-semibold text-gray-900 mb-2 flex items-center">
                         <Camera className={`w-4 h-4 mr-2 ${THEME.icon}`} />{" "}
-                        {t.profilePhoto}{" "}
+                        {/* {t.profilePhoto} */}
+                        <FormattedMessage id="registerExpat.fields.profilePhoto" />{" "}
                         <span className="text-red-500 ml-1">*</span>
                       </label>
                       <Suspense
@@ -1703,7 +2143,7 @@ const RegisterExpat: React.FC = () => {
                         }
                       >
                         <ImageUploader
-                          locale={lang}
+                          locale={"fr"}
                           currentImage={form.profilePhoto}
                           onImageUploaded={(url: string) => {
                             setForm((prev) => ({ ...prev, profilePhoto: url }));
@@ -1729,7 +2169,8 @@ const RegisterExpat: React.FC = () => {
                           : "Photo professionnelle (JPG/PNG) obligatoire"}
                       </p>
                       <FieldSuccess show={valid.profilePhoto}>
-                        {lang === "en" ? "Nice photo! 📸" : "Belle photo ! 📸"}
+                        {/* {lang === "en" ? "Nice photo! 📸" : "Belle photo ! 📸"} */}
+                        <FormattedMessage id="registerExpat.success.photoValid" />
                       </FieldSuccess>
                     </div>
                   </section>
@@ -1741,13 +2182,17 @@ const RegisterExpat: React.FC = () => {
                   >
                     <SectionHeader
                       icon={<CheckCircle className="w-5 h-5" />}
-                      title={t.helpInfo}
+                      // title={t.helpInfo}
+                      title={intl.formatMessage({
+                        id: "registerExpat.ui.helpInfo",
+                      })}
                     />
                     <div
                       className={`rounded-xl border ${THEME.border} p-4 ${THEME.subtle}`}
                     >
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        {t.helpDomains} <span className="text-red-500">*</span>
+                        <FormattedMessage id="registerExpat.fields.helpDomains" />{" "}
+                        <span className="text-red-500">*</span>
                       </label>
                       <TagSelector
                         items={form.helpTypes}
@@ -1758,7 +2203,12 @@ const RegisterExpat: React.FC = () => {
                         value=""
                         className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl bg-white focus:outline-none focus:border-green-600"
                       >
-                        <option value="">{t.addHelp}</option>
+                        <option value="">
+                          {/* {t.addHelp} */}
+                          {intl.formatMessage({
+                            id: "registerExpat.fields.addHelp",
+                          })}
+                        </option>
                         {helpTypeOptions.map((c) => (
                           <option key={c} value={c}>
                             {c}
@@ -1782,7 +2232,10 @@ const RegisterExpat: React.FC = () => {
                               }))
                             }
                             className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl"
-                            placeholder={t.specifyHelp}
+                            // placeholder={t.specifyHelp}
+                            placeholder={intl.formatMessage({
+                              id: "registerExpat.fields.specifyHelp",
+                            })}
                             onKeyDown={(e) => {
                               if (e.key === "Enter") {
                                 e.preventDefault();
@@ -1802,7 +2255,8 @@ const RegisterExpat: React.FC = () => {
                       )}
 
                       <FieldSuccess show={valid.helpTypes}>
-                        {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"}
+                        {/* {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"} */}
+                        <FormattedMessage id="registerExpat.success.fieldValid" />
                       </FieldSuccess>
                     </div>
                   </section>
@@ -1851,7 +2305,8 @@ const RegisterExpat: React.FC = () => {
                         </p>
                       )}
                       <FieldSuccess show={valid.acceptTerms}>
-                        {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"}
+                        {/* {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"} */}
+                        <FormattedMessage id="registerExpat.success.fieldValid" />
                       </FieldSuccess>
                     </div>
 
@@ -1866,15 +2321,19 @@ const RegisterExpat: React.FC = () => {
                         disabled={!canSubmit}
                       >
                         {isLoading || isSubmitting ? (
-                          t.loading
+                          // t.loading
+                          <FormattedMessage id="registerExpat.ui.loading" />
                         ) : (
                           <span className="inline-flex items-center justify-center">
-                            <ArrowRight className="w-5 h-5 mr-2" /> {t.create}
+                            <ArrowRight className="w-5 h-5 mr-2" />
+                            {/* {t.create} */}
+                            <FormattedMessage id="registerExpat.ui.create" />
                           </span>
                         )}
                       </Button>
                       <p className="text-center text-xs text-white/90 mt-4">
-                        {t.secureNote}
+                        {/* {t.secureNote} */}
+                        <FormattedMessage id="registerExpat.ui.secureNote" />
                       </p>
                     </div>
                   </section>
@@ -1897,34 +2356,43 @@ const RegisterExpat: React.FC = () => {
               <footer className="text-center mt-8">
                 <div className="bg-white rounded-xl p-5 shadow border">
                   <h3 className="text-lg sm:text-xl font-black text-gray-900 mb-1">
-                    {t.footerTitle}
+                    {/* {t.footerTitle} */}
+                    <FormattedMessage id="registerExpat.footer.title" />
                   </h3>
-                  <p className="text-sm text-gray-700">{t.footerText}</p>
+                  <p className="text-sm text-gray-700">
+                    {/* {t.footerText} */}
+
+                    <FormattedMessage id="registerExpat.footer.text" />
+                  </p>
                 </div>
                 <div className="mt-4 flex flex-wrap justify-center gap-4 text-xs text-gray-500">
                   <Link
                     to="/politique-confidentialite"
                     className="hover:text-emerald-700 underline"
                   >
-                    {t.privacy}
+                    {/* {t.privacy} */}
+                    <FormattedMessage id="registerExpat.footer.privacy" />
                   </Link>
                   <Link
                     to="/cgu-expatries"
                     className="hover:text-emerald-700 underline"
                   >
-                    {t.cguLabel}
+                    {/* {t.cguLabel} */}
+                    <FormattedMessage id="registerExpat.footer.cguLabel" />
                   </Link>
                   <Link
                     to="/centre-aide"
                     className="hover:text-emerald-700 underline"
                   >
-                    {t.helpLink}
+                    {/* {t.helpLink} */}
+                    <FormattedMessage id="registerExpat.footer.helpLink" />
                   </Link>
                   <Link
                     to="/contact"
                     className="hover:text-emerald-700 underline"
                   >
-                    {t.contact}
+                    {/* {t.contact} */}
+                    <FormattedMessage id="registerExpat.footer.contact" />
                   </Link>
                 </div>
               </footer>
