@@ -1238,7 +1238,7 @@
   "registerClient.success.allFieldsValid": "Tout est bon ! Prêt(e) à décoller 🚀",
   
 
-  
+
   "registerExpat.meta.title": "Inscription Expat Aidant • SOS Expats",
   "registerExpat.meta.description": "Partagez vos bons plans, filez des coups de main et rendez la vie à l'étranger plus simple ✨",
   
@@ -1360,13 +1360,148 @@
   
   "registerExpat.bio.charsToGo": "Encore {count} caractères — vous y êtes presque ! 💪",
   "registerExpat.bio.fieldValidated": "✓ Top ! Champ validé.",
-  "registerExpat.bio.placeholder": "En quelques lignes, racontez votre parcours + comment vous aidez (sympa & concret)."
+  "registerExpat.bio.placeholder": "En quelques lignes, racontez votre parcours + comment vous aidez (sympa & concret).",
 
 
 
 
   
-  
+  "registerLawyer.meta.title": "Inscription Avocat • SOS Expats",
+"registerLawyer.meta.description": "Rejoignez le réseau SOS Expats : des clients partout, des dossiers malins, et vous aux commandes 🚀.",
+
+"registerLawyer.ui.heroTitle": "Inscription Avocat",
+"registerLawyer.ui.heroSubtitle": "Partagez votre expertise avec des expats du monde entier. On s'occupe du reste 😉",
+"registerLawyer.ui.badgeMultilingual": "Multilingue",
+"registerLawyer.ui.already": "Déjà inscrit ?",
+"registerLawyer.ui.login": "Se connecter",
+"registerLawyer.ui.personalInfo": "Informations personnelles",
+"registerLawyer.ui.geoInfo": "Où vous opérez",
+"registerLawyer.ui.proInfo": "Votre pratique",
+"registerLawyer.ui.progress": "Progression",
+"registerLawyer.ui.previewTitle": "Aperçu live du profil",
+"registerLawyer.ui.previewToggleOpen": "Masquer l'aperçu",
+"registerLawyer.ui.previewToggleClose": "Voir l'aperçu",
+"registerLawyer.ui.loading": "On prépare tout pour vous… ⏳",
+"registerLawyer.ui.create": "Créer mon compte avocat",
+"registerLawyer.ui.secureNote": "Données protégées • Validation sous 24h • Support juridique",
+"registerLawyer.ui.ariaShowPassword": "Afficher le mot de passe",
+"registerLawyer.ui.ariaHidePassword": "Masquer le mot de passe",
+"registerLawyer.ui.acceptTerms": "J'accepte les",
+"registerLawyer.ui.termsLink": "CGU Avocats",
+
+"registerLawyer.fields.firstName": "Prénom",
+"registerLawyer.fields.lastName": "Nom",
+"registerLawyer.fields.email": "Adresse email",
+"registerLawyer.fields.password": "Mot de passe",
+"registerLawyer.fields.phone": "Téléphone",
+"registerLawyer.fields.whatsapp": "Numéro WhatsApp",
+"registerLawyer.fields.residenceCountry": "Pays de résidence",
+"registerLawyer.fields.presenceCountry": "Pays où vous êtes en ce moment",
+"registerLawyer.fields.practiceCountries": "Pays d'intervention",
+"registerLawyer.fields.yearsOfExperience": "Années d'expérience",
+"registerLawyer.fields.graduationYear": "Année de diplôme",
+"registerLawyer.fields.specialties": "Spécialités",
+"registerLawyer.fields.education": "Formations",
+"registerLawyer.fields.languages": "Langues parlées",
+"registerLawyer.fields.bio": "Description professionnelle",
+"registerLawyer.fields.profilePhoto": "Photo de profil",
+
+"registerLawyer.select.selectCountry": "Sélectionnez votre pays",
+"registerLawyer.select.selectPresenceCountry": "Sélectionnez votre pays de présence",
+"registerLawyer.select.addPractice": "Ajouter un pays d'intervention",
+"registerLawyer.select.addSpecialty": "Ajouter une spécialité",
+"registerLawyer.select.addEducation": "Ajouter une formation",
+"registerLawyer.select.searchLanguages": "Rechercher et sélectionner les langues...",
+
+"registerLawyer.placeholder.specifyCountry": "Précisez votre pays",
+"registerLawyer.placeholder.specifyPractice": "Précisez le pays",
+"registerLawyer.placeholder.specifySpecialty": "Précisez la spécialité",
+"registerLawyer.placeholder.lastName": "Dupont",
+"registerLawyer.placeholder.phoneNumber": "+33612345678",
+"registerLawyer.placeholder.education": "ex : Master 2 Droit – Paris 1, 2018",
+"registerLawyer.placeholder.bio": "En quelques lignes, racontez comment vous aidez les expats. Concret et sympa !",
+
+"registerLawyer.help.minPassword": "6 caractères et c'est parti (aucune contrainte) 💃",
+"registerLawyer.help.emailPlaceholder": "votre@email.com",
+"registerLawyer.help.firstNamePlaceholder": "Comment on vous appelle ? 😊",
+"registerLawyer.help.bioHint": "Racontez en 2–3 phrases comment vous aidez les expats (50 caractères mini).",
+"registerLawyer.help.emailInfo": "On vous écrit seulement pour le compte & les réservations. 🤝",
+"registerLawyer.help.contactInfo": "Vos coordonnées servent uniquement aux mises en relation. Jamais de spam.",
+"registerLawyer.help.photoInfo": "Photo professionnelle (JPG/PNG) obligatoire",
+
+"registerLawyer.password.strengthLabel": "Force de votre mot de passe",
+"registerLawyer.password.tooShort": "Trop court 😅",
+"registerLawyer.password.weak": "Faible 🙂",
+"registerLawyer.password.medium": "Moyen 👍",
+"registerLawyer.password.good": "Bon 🔥",
+"registerLawyer.password.excellent": "Excellent 🚀",
+"registerLawyer.password.capsLockOn": "Verr. Maj activée",
+
+"registerLawyer.success.fieldValid": "Parfait ! ✨",
+"registerLawyer.success.emailValid": "Super email ! 👌",
+"registerLawyer.success.passwordValid": "Mot de passe validé 🔒",
+"registerLawyer.success.allGood": "Tout est bon, prêt·e à rayonner 🌟",
+
+"registerLawyer.errors.title": "Petites retouches avant le grand saut ✨",
+"registerLawyer.errors.firstNameRequired": "On veut bien vous appeler… mais comment ? 😄",
+"registerLawyer.errors.lastNameRequired": "Un petit nom de famille pour faire pro ? 👔",
+"registerLawyer.errors.emailRequired": "On a besoin de votre email pour vous tenir au courant 📬",
+"registerLawyer.errors.emailInvalid": "Cette adresse a l'air louche… Essayez plutôt nom@exemple.com 🧐",
+"registerLawyer.errors.emailTaken": "Oups, cet email est déjà utilisé. Vous avez peut-être déjà un compte ? 🔑",
+"registerLawyer.errors.passwordTooShort": "Juste 6 caractères minimum — easy ! 💪",
+"registerLawyer.errors.phoneRequired": "On vous sonne où ? 📞",
+"registerLawyer.errors.whatsappRequired": "On papote aussi sur WhatsApp ? 💬",
+"registerLawyer.errors.needCountry": "Votre pays de résidence, s'il vous plaît 🌍",
+"registerLawyer.errors.needPresence": "Où êtes-vous actuellement ? ✈️",
+"registerLawyer.errors.needPractice": "Ajoutez au moins un pays d'intervention 🗺️",
+"registerLawyer.errors.needLanguage": "Choisissez au moins une langue 🗣️",
+"registerLawyer.errors.needSpecialty": "Une spécialité, et vous brillez ✨",
+"registerLawyer.errors.needBio": "Encore un petit effort : 50 caractères minimum 📝",
+"registerLawyer.errors.needPhoto": "Une photo pro, et c'est 100% plus rassurant 📸",
+"registerLawyer.errors.needEducation": "Ajoutez au moins une formation 🎓",
+"registerLawyer.errors.acceptTermsRequired": "Un petit clic sur les conditions et on y va ✅",
+
+"registerLawyer.bio.charsToGo": "Encore {count} caractères — vous y êtes presque ! 💪",
+"registerLawyer.bio.fieldValidated": "✓ Top ! Champ validé.",
+
+"registerLawyer.footer.title": "⚖️ Rejoignez la communauté SOS Expats",
+"registerLawyer.footer.text": "Des avocats vérifiés, des clients engagés — let's go !",
+"registerLawyer.footer.privacy": "🔒 Confidentialité",
+"registerLawyer.footer.helpLink": "💬 Aide",
+"registerLawyer.footer.contact": "📧 Contact",
+
+"registerLawyer.preview.yourName": "Votre nom",
+"registerLawyer.preview.lawyer": "Avocat",
+"registerLawyer.preview.complete": "complet",
+"registerLawyer.preview.residence": "Résidence",
+"registerLawyer.preview.experience": "Expérience :",
+"registerLawyer.preview.years": "ans",
+"registerLawyer.preview.languages": "Langues",
+"registerLawyer.preview.hint": "Ce que les clients verront. Faites briller votre profil ✨",
+"registerLawyer.preview.firstName": "Prénom",
+"registerLawyer.preview.lastName": "Nom",
+
+"registerLawyer.checklist.toComplete": "À compléter :",
+"registerLawyer.checklist.completion": "Complétion : {progress}%",
+"registerLawyer.checklist.firstName": "Prénom",
+"registerLawyer.checklist.lastName": "Nom",
+"registerLawyer.checklist.validEmail": "Email valide",
+"registerLawyer.checklist.password": "Mot de passe (≥ 6 caractères)",
+"registerLawyer.checklist.phone": "Téléphone",
+"registerLawyer.checklist.whatsapp": "WhatsApp",
+"registerLawyer.checklist.residenceCountry": "Pays de résidence",
+"registerLawyer.checklist.presenceCountry": "Pays de présence",
+"registerLawyer.checklist.atLeastOnePracticeCountry": "Au moins un pays d'intervention",
+"registerLawyer.checklist.atLeastOneLanguage": "Au moins une langue",
+"registerLawyer.checklist.atLeastOneSpecialty": "Au moins une spécialité",
+"registerLawyer.checklist.bio": "Bio (≥ 50 caractères)",
+"registerLawyer.checklist.profilePhoto": "Photo de profil",
+"registerLawyer.checklist.atLeastOneEducation": "Au moins une formation",
+"registerLawyer.checklist.acceptTerms": "Accepter les CGU",
+
+"registerLawyer.loading.languages": "Chargement des langues…",
+"registerLawyer.loading.selectedLanguages": "Langues sélectionnées"
+
  
 
 

@@ -1157,11 +1157,9 @@
   "registerClient.success.passwordValid": "Пароль выглядит хорошо! 🔒",
   "registerClient.success.allFieldsValid": "Все готово! Готовы к взлету 🚀",
 
-
-  
   "registerExpat.meta.title": "Регистрация помощника-экспата • SOS Expats",
   "registerExpat.meta.description": "Делитесь советами, помогайте и делайте жизнь за границей проще ✨",
-  
+
   "registerExpat.ui.heroTitle": "Регистрация помощника-экспата",
   "registerExpat.ui.heroSubtitle": "Создайте свой профиль за 3 простых шага — легко, дружелюбно, весело 🌍",
   "registerExpat.ui.already": "Уже зарегистрированы?",
@@ -1175,7 +1173,7 @@
   "registerExpat.ui.secureNote": "🔒 Данные защищены • Поддержка 24/7",
   "registerExpat.ui.create": "Создать мой аккаунт помощника-экспата",
   "registerExpat.ui.loading": "Готовим всё для вас… ⏳",
-  
+
   "registerExpat.fields.firstName": "Имя",
   "registerExpat.fields.lastName": "Фамилия",
   "registerExpat.fields.email": "Электронная почта",
@@ -1193,7 +1191,7 @@
   "registerExpat.fields.helpDomains": "Области помощи",
   "registerExpat.fields.addHelp": "Добавить область помощи",
   "registerExpat.fields.specifyHelp": "Укажите область помощи",
-  
+
   "registerExpat.help.minPassword": "6+ символов и готово 💃",
   "registerExpat.help.emailPlaceholder": "вы@пример.com",
   "registerExpat.help.firstNamePlaceholder": "Как нам вас называть? 🥰",
@@ -1201,7 +1199,7 @@
   "registerExpat.help.phoneInfo": "Мы используем ваш телефон только для связи с людьми, которым нужна помощь. Никакого спама.",
   "registerExpat.help.emailInfo": "Мы пишем вам только о вашем аккаунте и подключениях. 🤝",
   "registerExpat.help.photoInfo": "Требуется профессиональное фото (JPG/PNG)",
-  
+
   "registerExpat.errors.title": "Небольшие правки и готово ✨",
   "registerExpat.errors.firstNameRequired": "Как к вам обращаться? 😄",
   "registerExpat.errors.lastNameRequired": "Фамилия делает профиль профессиональным 👔",
@@ -1219,14 +1217,14 @@
   "registerExpat.errors.needPhoto": "Профессиональное фото вызывает доверие 📸",
   "registerExpat.errors.needYears": "Минимум 1 год за границей для помощи другим 🌍",
   "registerExpat.errors.acceptTermsRequired": "Поставьте галочку и поехали ✅",
-  
+
   "registerExpat.success.registration": "Регистрация успешна! Добро пожаловать 🎉",
   "registerExpat.success.fieldValid": "Отлично! ✨",
   "registerExpat.success.emailValid": "Выглядит хорошо! 👌",
   "registerExpat.success.passwordValid": "Хороший пароль! 🔒",
   "registerExpat.success.phoneValid": "Номер телефона валиден (E.164) 🔒",
   "registerExpat.success.photoValid": "Отличное фото! 📸",
-  
+
   "registerExpat.preview.title": "Предпросмотр профиля в реальном времени",
   "registerExpat.preview.hint": "Это то, что увидят другие. Сделайте его сияющим ✨",
   "registerExpat.preview.toggleOpen": "Скрыть предпросмотр",
@@ -1238,7 +1236,7 @@
   "registerExpat.preview.mainHelpIn": "Основная помощь в",
   "registerExpat.preview.intervention": "Помощь:",
   "registerExpat.preview.yearsAbroad": "Лет за границей:",
-  
+
   "registerExpat.password.strength": "Надежность:",
   "registerExpat.password.empty": "Пусто",
   "registerExpat.password.veryWeak": "Очень слабый",
@@ -1248,7 +1246,7 @@
   "registerExpat.password.veryStrong": "Очень надежный",
   "registerExpat.password.tip": "Совет: смешайте A-z, 0-9 и символы",
   "registerExpat.password.capsLockOn": "Caps Lock ВКЛЮЧЕН",
-  
+
   "registerExpat.checklist.toComplete": "К выполнению:",
   "registerExpat.checklist.completion": "Завершение:",
   "registerExpat.checklist.firstName": "Имя",
@@ -1265,22 +1263,155 @@
   "registerExpat.checklist.bio": "Биография (≥ 50 символов)",
   "registerExpat.checklist.yearsAbroad": "Лет за границей (≥ 1)",
   "registerExpat.checklist.acceptTerms": "Принять условия",
-  
+
   "registerExpat.footer.title": "🌍 Сообщество взаимопомощи экспатов",
   "registerExpat.footer.text": "Экспаты помогают экспатам, везде.",
   "registerExpat.footer.cguLabel": "📋 Условия для экспатов",
   "registerExpat.footer.privacy": "🔒 Конфиденциальность",
   "registerExpat.footer.helpLink": "💬 Помощь",
   "registerExpat.footer.contact": "📧 Контакт",
-  
+
   "registerExpat.select.selectCountry": "Выберите вашу страну",
   "registerExpat.select.selectPresenceCountry": "Выберите вашу страну присутствия",
   "registerExpat.select.selectInterventionCountry": "Выберите вашу страну помощи",
   "registerExpat.select.searchLanguages": "Поиск и выбор языков...",
-  
+
   "registerExpat.bio.charsToGo": "Еще {count} символов — почти готово! 💪",
   "registerExpat.bio.fieldValidated": "✓ Отлично! Поле проверено.",
-  "registerExpat.bio.placeholder": "В нескольких строках поделитесь своим путем + как вы помогаете (дружелюбно + конкретно)."
+  "registerExpat.bio.placeholder": "В нескольких строках поделитесь своим путем + как вы помогаете (дружелюбно + конкретно).",
+  "registerLawyer.meta.title": "Регистрация юриста • SOS Expats",
+  "registerLawyer.meta.description": "Присоединяйтесь к SOS Expats: умные клиенты, гладкие дела, и вы за рулем 🚀.",
 
+  "registerLawyer.ui.heroTitle": "Регистрация юриста",
+  "registerLawyer.ui.heroSubtitle": "Поделитесь своим опытом с экспатами по всему миру. Мы позаботимся об остальном 😉",
+  "registerLawyer.ui.badgeMultilingual": "Многоязычный",
+  "registerLawyer.ui.already": "Уже зарегистрированы?",
+  "registerLawyer.ui.login": "Войти",
+  "registerLawyer.ui.personalInfo": "Личная информация",
+  "registerLawyer.ui.geoInfo": "Где вы работаете",
+  "registerLawyer.ui.proInfo": "Ваша практика",
+  "registerLawyer.ui.progress": "Прогресс",
+  "registerLawyer.ui.previewTitle": "Предпросмотр профиля",
+  "registerLawyer.ui.previewToggleOpen": "Скрыть предпросмотр",
+  "registerLawyer.ui.previewToggleClose": "Показать предпросмотр",
+  "registerLawyer.ui.loading": "Готовим все для вас… ⏳",
+  "registerLawyer.ui.create": "Создать аккаунт юриста",
+  "registerLawyer.ui.secureNote": "Данные защищены • Валидация 24ч • Юридическая поддержка",
+  "registerLawyer.ui.ariaShowPassword": "Показать пароль",
+  "registerLawyer.ui.ariaHidePassword": "Скрыть пароль",
+  "registerLawyer.ui.acceptTerms": "Я принимаю",
+  "registerLawyer.ui.termsLink": "Условия для юристов",
 
+  "registerLawyer.fields.firstName": "Имя",
+  "registerLawyer.fields.lastName": "Фамилия",
+  "registerLawyer.fields.email": "Электронная почта",
+  "registerLawyer.fields.password": "Пароль",
+  "registerLawyer.fields.phone": "Телефон",
+  "registerLawyer.fields.whatsapp": "Номер WhatsApp",
+  "registerLawyer.fields.residenceCountry": "Страна проживания",
+  "registerLawyer.fields.presenceCountry": "Где вы сейчас находитесь",
+  "registerLawyer.fields.practiceCountries": "Страны практики",
+  "registerLawyer.fields.yearsOfExperience": "Лет опыта",
+  "registerLawyer.fields.graduationYear": "Год окончания",
+  "registerLawyer.fields.specialties": "Специализации",
+  "registerLawyer.fields.education": "Образование",
+  "registerLawyer.fields.languages": "Языки",
+  "registerLawyer.fields.bio": "Профессиональная биография",
+  "registerLawyer.fields.profilePhoto": "Фото профиля",
+
+  "registerLawyer.select.selectCountry": "Выберите вашу страну",
+  "registerLawyer.select.selectPresenceCountry": "Выберите страну присутствия",
+  "registerLawyer.select.addPractice": "Добавить страну практики",
+  "registerLawyer.select.addSpecialty": "Добавить специализацию",
+  "registerLawyer.select.addEducation": "Добавить образование",
+  "registerLawyer.select.searchLanguages": "Поиск и выбор языков...",
+
+  "registerLawyer.placeholder.specifyCountry": "Укажите вашу страну",
+  "registerLawyer.placeholder.specifyPractice": "Укажите страну",
+  "registerLawyer.placeholder.specifySpecialty": "Укажите специализацию",
+  "registerLawyer.placeholder.lastName": "Иванов",
+  "registerLawyer.placeholder.phoneNumber": "+79123456789",
+  "registerLawyer.placeholder.education": "напр., Магистр права – МГУ, 2018",
+  "registerLawyer.placeholder.bio": "В нескольких строках расскажите, как вы помогаете экспатам. Конкретно и дружелюбно!",
+
+  "registerLawyer.help.minPassword": "6+ символов и готово 💃",
+  "registerLawyer.help.emailPlaceholder": "ваш@email.com",
+  "registerLawyer.help.firstNamePlaceholder": "Как вас зовут? 😊",
+  "registerLawyer.help.bioHint": "В 2–3 строках расскажите экспатам, как вы помогаете (мин 50 символов).",
+  "registerLawyer.help.emailInfo": "Мы пишем только по аккаунту и бронированиям. 🤝",
+  "registerLawyer.help.contactInfo": "Мы используем ваш контакт только для связи с клиентами. Без спама.",
+  "registerLawyer.help.photoInfo": "Профессиональное фото (JPG/PNG) обязательно",
+
+  "registerLawyer.password.strengthLabel": "Сила пароля",
+  "registerLawyer.password.tooShort": "Слишком короткий 😅",
+  "registerLawyer.password.weak": "Слабый 🙂",
+  "registerLawyer.password.medium": "Средний 👍",
+  "registerLawyer.password.good": "Хороший 🔥",
+  "registerLawyer.password.excellent": "Отличный 🚀",
+  "registerLawyer.password.capsLockOn": "Caps Lock включен",
+
+  "registerLawyer.success.fieldValid": "Отлично! ✨",
+  "registerLawyer.success.emailValid": "Хорошая почта! 👌",
+  "registerLawyer.success.passwordValid": "Пароль подтвержден 🔒",
+  "registerLawyer.success.allGood": "Все готово — время сиять 🌟",
+
+  "registerLawyer.errors.title": "Небольшие правки перед запуском ✨",
+  "registerLawyer.errors.firstNameRequired": "Как нам вас называть? 😄",
+  "registerLawyer.errors.lastNameRequired": "Фамилия делает это профессиональным 👔",
+  "registerLawyer.errors.emailRequired": "Нам нужна ваша почта, чтобы держать вас в курсе 📬",
+  "registerLawyer.errors.emailInvalid": "Эта почта выглядит странно. Попробуйте имя@пример.com 🧐",
+  "registerLawyer.errors.emailTaken": "Эта почта уже используется. Может, у вас уже есть аккаунт? 🔑",
+  "registerLawyer.errors.passwordTooShort": "Минимум 6 символов — легко! 💪",
+  "registerLawyer.errors.phoneRequired": "Куда нам вам позвонить? 📞",
+  "registerLawyer.errors.whatsappRequired": "Номер WhatsApp, пожалуйста? 💬",
+  "registerLawyer.errors.needCountry": "Ваша страна проживания, пожалуйста 🌍",
+  "registerLawyer.errors.needPresence": "Где вы сейчас? ✈️",
+  "registerLawyer.errors.needPractice": "Добавьте хотя бы одну страну практики 🗺️",
+  "registerLawyer.errors.needLanguage": "Выберите хотя бы один язык 🗣️",
+  "registerLawyer.errors.needSpecialty": "Выберите хотя бы одну специализацию ✨",
+  "registerLawyer.errors.needBio": "Доведите до 50 символов, вы справитесь 📝",
+  "registerLawyer.errors.needPhoto": "Профессиональное фото создает доверие 📸",
+  "registerLawyer.errors.needEducation": "Добавьте хотя бы одно образование 🎓",
+  "registerLawyer.errors.acceptTermsRequired": "Поставьте галочку и поехали ✅",
+
+  "registerLawyer.bio.charsToGo": "Еще {count} символов — вы справитесь! 💪",
+  "registerLawyer.bio.fieldValidated": "✓ Отлично! Поле проверено.",
+
+  "registerLawyer.footer.title": "⚖️ Присоединяйтесь к сообществу SOS Expats",
+  "registerLawyer.footer.text": "Проверенные юристы, отличные клиенты — поехали!",
+  "registerLawyer.footer.privacy": "🔒 Конфиденциальность",
+  "registerLawyer.footer.helpLink": "💬 Помощь",
+  "registerLawyer.footer.contact": "📧 Контакт",
+
+  "registerLawyer.preview.yourName": "Ваше имя",
+  "registerLawyer.preview.lawyer": "Юрист",
+  "registerLawyer.preview.complete": "завершено",
+  "registerLawyer.preview.residence": "Проживание",
+  "registerLawyer.preview.experience": "Опыт:",
+  "registerLawyer.preview.years": "лет",
+  "registerLawyer.preview.languages": "Языки",
+  "registerLawyer.preview.hint": "Это то, что увидят клиенты. Сделайте это ярким ✨",
+  "registerLawyer.preview.firstName": "Имя",
+  "registerLawyer.preview.lastName": "Фамилия",
+
+  "registerLawyer.checklist.toComplete": "К заполнению:",
+  "registerLawyer.checklist.completion": "Заполнено: {progress}%",
+  "registerLawyer.checklist.firstName": "Имя",
+  "registerLawyer.checklist.lastName": "Фамилия",
+  "registerLawyer.checklist.validEmail": "Действительная почта",
+  "registerLawyer.checklist.password": "Пароль (≥ 6 символов)",
+  "registerLawyer.checklist.phone": "Телефон",
+  "registerLawyer.checklist.whatsapp": "WhatsApp",
+  "registerLawyer.checklist.residenceCountry": "Страна проживания",
+  "registerLawyer.checklist.presenceCountry": "Страна присутствия",
+  "registerLawyer.checklist.atLeastOnePracticeCountry": "Хотя бы одна страна практики",
+  "registerLawyer.checklist.atLeastOneLanguage": "Хотя бы один язык",
+  "registerLawyer.checklist.atLeastOneSpecialty": "Хотя бы одна специализация",
+  "registerLawyer.checklist.bio": "Био (≥ 50 символов)",
+  "registerLawyer.checklist.profilePhoto": "Фото профиля",
+  "registerLawyer.checklist.atLeastOneEducation": "Хотя бы одно образование",
+  "registerLawyer.checklist.acceptTerms": "Принять условия",
+
+  "registerLawyer.loading.languages": "Загрузка языков…",
+  "registerLawyer.loading.selectedLanguages": "Выбранные языки"
 }
