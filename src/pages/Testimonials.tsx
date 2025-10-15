@@ -1605,14 +1605,14 @@ const Testimonials: React.FC = () => {
         </section>
 
         {/* Floating Back to Top Button */}
-        <button
+        {/* <button
           onClick={smoothScrollToTop}
           className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 w-14 h-14 flex items-center justify-center touch-manipulation"
           style={{ display: "block" }}
           aria-label={intl.formatMessage({ id: "testy.aria.backToTop" })}
         >
           <ChevronRight className="w-5 h-5 rotate-[-90deg]" />
-        </button>
+        </button> */}
       </div>
     </Layout>
   );
