@@ -1469,7 +1469,7 @@ const OptimizedHomePage: React.FC = () => {
                                   </span>
                                   {eff.override?.label && (
                                     <span className="text-xs px-2 py-1 bg-red-100 text-red-700 rounded-full">
-                                      {eff.override.label}
+                                      {/* {eff.override.label} */}
                                     </span>
                                   )}
                                 </div>
