@@ -1047,22 +1047,10 @@
 
   "og.title": "SOS Expats Registrierung - Wählen Sie Ihr Profil 🌴",
   "og.description": "Freundliche und effektive Hilfe für Expats & Rechtsberatung. Für Sie da, auch im Urlaub 😎.",
-  "register.title": "Wer bist du? 🚀",
-  "register.subtitle": "Tritt der SOS Expats Familie bei!",
-  "register.description": "Wähle deine Seite und wir nehmen dich mit auf das Abenteuer! 🌟",
+ 
   "register.orText": "Oder ",
   "register.loginPrompt": "schon im Team? Anmelden!",
   "register.loginAriaLabel": "Bei Ihrem bestehenden Konto anmelden",
-  "register.bookingMessage": "Nach der Registrierung leiten wir dich weiter, um deine Buchung abzuschließen! 🎯",
-  "register.needHelp": "Brauchst du Hilfe? Wir sind für dich da! ",
-  "register.contactUs": "Schreib uns 💬",
-  "register.termsAccept": "Mit der Registrierung stimmst du unseren",
-  "register.termsLink": "Bedingungen zu (versprochen, sie sind nicht langweilig)",
-  "register.secureData": "Deine Daten sind sicher 🔒",
-  "register.freeRegistration": "100% kostenlose Anmeldung 🎉",
-  "register.topBadge": "🎉 Bereits +15K Expats im Team!",
-  "register.mainTitle": "Willkommen zum Abenteuer",
-  "register.mainSubtitle": "SOS Expats",
   "register.signUpAs": "Anmelden als",
   "register.popularLabel": "Beliebt",
   "register.letsGo": "Los geht's!",
@@ -1072,8 +1060,6 @@
   "role.client.desc": "Ich habe Expat-Probleme und brauche Ratschläge, die wirklich funktionieren! 🆘",
   "role.lawyer.desc": "Ich kenne das Recht und möchte Expats helfen, während ich gutes Geld verdiene! 💼",
   "role.expat.desc": "Ich habe gekämpft, gelernt und möchte jetzt anderen helfen (und etwas Geld dazuverdienen)! 🌍",
-  "role.lawyer.cta": "Steigere dein Einkommen, indem du Expats hilfst! Du entscheidest, wann du online gehst, Anrufe beantwortest und abrechnest. Einfach und effektiv! 💰⚖️",
-  "role.expat.cta": "Von kleinen Extras bis zu großem Einkommen, DU entscheidest! Ein Klick, um online zu gehen → 24h verfügbar → direkt bezahlt. Du entscheidest, wie sehr du dich engagierst! 🎯💸",
   "role.client.f1": "Beratung in deiner Sprache 🗣️",
   "role.client.f2": "Verfügbar auch um 3 Uhr morgens 🌙",
   "role.client.f3": "Blitzschnelle Antworten ⚡",
@@ -1083,9 +1069,70 @@
   "role.expat.f1": "Echte praktische Hilfe 🛠️",
   "role.expat.f2": "Teile deine Erfahrung 📖",
   "role.expat.f3": "Verdiene beim Helfen 🤝💰",
-  "badge.24_7": "Immer für dich da! ⏰",
   "badge.multi": "Wir sprechen alle Sprachen! 🌍",
   "badge.bonusLabel": "BONUS",
+  
+
+"app.downloadPrompt": "SOS Expats App herunterladen",
+"app.description": "Schnellerer Zugriff. Offline-Support. Native App-Erfahrung. Kostenlos & sicher 🚀",
+"app.installNow": "Jetzt installieren",
+"app.downloadApp": "App herunterladen",
+"app.badge.freeSecure": "Kostenlos & Sicher",
+
+"meta.register.title": "Registrieren • SOS Expats",
+"meta.register.description": "Treten Sie SOS Expats bei - Ihre mehrsprachige Plattform für Auswanderer-Unterstützung. Registrieren Sie sich als Mandant, Anwalt oder Auswanderer-Helfer.",
+"meta.register.og.title": "Bei SOS Expats registrieren",
+"meta.register.og.description": "Beginnen Sie Ihre Reise mit SOS Expats. Wählen Sie Ihre Rolle und verbinden Sie sich mit einer globalen Community.",
+
+"register.topBadge": "Kostenlose Registrierung • Keine Kreditkarte erforderlich",
+"register.mainTitle": "Willkommen bei SOS Expats",
+"register.mainSubtitle": "Ihre globale Auswanderer-Community",
+"register.title": "Wählen Sie Ihre Rolle",
+"register.loginPrompt.prefix": "Haben Sie bereits ein Konto?",
+"register.loginPrompt.link": "Anmelden",
+"register.bookingMessage": "Erstellen Sie ein Konto, um mit Ihrer Buchungsanfrage fortzufahren und Zugriff auf alle Funktionen zu erhalten.",
+"register.subtitle": "Wie möchten Sie SOS Expats nutzen?",
+"register.description": "Wählen Sie die Rolle, die am besten zu Ihren Bedürfnissen passt. Sie können später jederzeit wechseln.",
+
+"badge.24_7": "24/7 Verfügbar",
+"badge.multilingual": "Mehrsprachig",
+
+"role.client.title": "Mandant",
+"role.client.description": "Finden Sie vertrauenswürdige Anwälte und Auswanderer-Helfer für Ihre Bedürfnisse",
+"role.client.feature1": "Sofortige Anwaltssuche",
+"role.client.feature2": "Sichere Zahlungsabwicklung",
+"role.client.feature3": "Rund-um-die-Uhr-Support",
+
+"role.lawyer.title": "Anwalt",
+"role.lawyer.description": "Bieten Sie Ihre juristischen Dienstleistungen an und erweitern Sie Ihre Praxis",
+"role.lawyer.feature1": "Verifiziertes Profil",
+"role.lawyer.feature2": "Direkte Mandanten-Buchungen",
+"role.lawyer.feature3": "Globale Reichweite",
+"role.lawyer.cta": "Verdienen Sie Geld mit Ihrem Fachwissen. Bis zu 50 % mehr Mandanten.",
+
+"role.expat.title": "Auswanderer-Helfer",
+"role.expat.description": "Teilen Sie Ihre Erfahrungen und helfen Sie anderen Auswanderern",
+"role.expat.feature1": "Community-Anerkennung",
+"role.expat.feature2": "Verdienen Sie durch Hilfe",
+"role.expat.feature3": "Flexible Arbeitszeiten",
+"role.expat.cta": "Teilen Sie Ihr Wissen. Verdienen Sie zusätzliches Einkommen.",
+
+"role.badge.popular": "Beliebt",
+"role.badge.bonus": "Bonus",
+"role.cta.button": "Loslegen",
+
+"register.termsAccept": "Durch die Registrierung akzeptieren Sie unsere",
+"register.termsLink": "Allgemeinen Geschäftsbedingungen",
+"register.secureData": "Sichere Daten",
+"register.freeRegistration": "Kostenlose Registrierung",
+"register.needHelp": "Benötigen Sie Hilfe?",
+"register.contactUs": "Kontaktieren Sie uns",
+
+
+
+
+
+  
 
   
   "registerClient.meta.title": "Kunden-Registrierung - SOS Expats | Dem Team beitreten 💙",
