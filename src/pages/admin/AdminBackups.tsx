@@ -257,7 +257,9 @@ const AdminBackups: React.FC = () => {
     if (!(await ensureAdminOrExplain())) return;
     setLoading(true);
     try {
+      console.log("I called the schedule function.");
       await updateBackupSchedule(cron, timeZone);
+
       alert("Planification mise à jour.");
     } catch (e: unknown) {
       alert(getErrMsg(e) || "Erreur planification");
@@ -273,10 +275,15 @@ const AdminBackups: React.FC = () => {
       alert("Renseigne un prefix AAAA-MM-JJ/HHMMSS");
       return;
     }
-    if (!confirm(`Restaurer depuis ${p} ? Cela peut écraser des données.`)) return;
+    if (!confirm(`Restaurer depuis ${p} ? Cela peut écraser des données.`))
+      return;
     setRestoring(true);
     try {
-      await restoreFromBackup(p, { firestore: true, storage: true, auth: "basic" });
+      await restoreFromBackup(p, {
+        firestore: true,
+        storage: true,
+        auth: "basic",
+      });
       alert("Restauration lancée.");
     } catch (e: unknown) {
       alert(getErrMsg(e) || "Erreur restauration");
@@ -287,7 +294,12 @@ const AdminBackups: React.FC = () => {
 
   async function onDelete(id: string) {
     if (!(await ensureAdminOrExplain())) return;
-    if (!confirm("Supprimer cette sauvegarde ? Les fichiers seront effacés du bucket.")) return;
+    if (
+      !confirm(
+        "Supprimer cette sauvegarde ? Les fichiers seront effacés du bucket."
+      )
+    )
+      return;
     setLoading(true);
     try {
       await deleteBackup(id);
@@ -333,7 +345,11 @@ const AdminBackups: React.FC = () => {
               <Play size={16} className="mr-2" />
               Test HTTP
             </Button>
-            <Button onClick={onStartBackup} loading={loading} className="bg-red-600 hover:bg-red-700">
+            <Button
+              onClick={onStartBackup}
+              loading={loading}
+              className="bg-red-600 hover:bg-red-700"
+            >
               <Save size={16} className="mr-2" />
               Sauvegarder maintenant
             </Button>
@@ -384,7 +400,11 @@ const AdminBackups: React.FC = () => {
               />
             </div>
             <div className="flex items-end">
-              <Button onClick={onSaveSchedule} loading={loading} className="w-full">
+              <Button
+                onClick={onSaveSchedule}
+                loading={loading}
+                className="w-full"
+              >
                 Enregistrer la planification
               </Button>
             </div>
@@ -399,9 +419,14 @@ const AdminBackups: React.FC = () => {
               className="w-full border rounded px-3 py-2"
               value={restorePrefix}
               onChange={(e) => setRestorePrefix(e.target.value)}
-              placeholder={latestPrefix ? `Ex: ${latestPrefix}` : "AAAA-MM-JJ/HHMMSS"}
+              placeholder={
+                latestPrefix ? `Ex: ${latestPrefix}` : "AAAA-MM-JJ/HHMMSS"
+              }
             />
-            <Button onClick={() => onRestore(restorePrefix)} loading={restoring}>
+            <Button
+              onClick={() => onRestore(restorePrefix)}
+              loading={restoring}
+            >
               Lancer la restauration
             </Button>
           </div>
@@ -418,18 +443,33 @@ const AdminBackups: React.FC = () => {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Créée le</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Statut</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Erreur</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    ID
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Type
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Créée le
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Statut
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Erreur
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-100">
                 {rows.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                    <td
+                      colSpan={6}
+                      className="px-6 py-8 text-center text-gray-500"
+                    >
                       Aucune sauvegarde pour le moment.
                     </td>
                   </tr>
@@ -440,11 +480,15 @@ const AdminBackups: React.FC = () => {
                       <td className="px-6 py-3">
                         <TypeBadge t={r.type} />
                       </td>
-                      <td className="px-6 py-3 text-sm text-gray-700">{fmtFrDate(r.createdAt)}</td>
+                      <td className="px-6 py-3 text-sm text-gray-700">
+                        {fmtFrDate(r.createdAt)}
+                      </td>
                       <td className="px-6 py-3">
                         <StatusBadge s={r.status} />
                       </td>
-                      <td className="px-6 py-3 text-sm text-red-700">{r.error ? r.error : "-"}</td>
+                      <td className="px-6 py-3 text-sm text-red-700">
+                        {r.error ? r.error : "-"}
+                      </td>
                       <td className="px-6 py-3">
                         <button
                           onClick={() => onDelete(r.id)}

@@ -67,7 +67,9 @@ export async function startBackup() {
 
 export async function getBackupSchedule() {
   const call = httpsCallable(functions, "getBackupSchedule");
-  return (await call()).data as Partial<BackupSchedule> & { uri?: string | null };
+  return (await call()).data as Partial<BackupSchedule> & {
+    uri?: string | null;
+  };
 }
 
 export async function updateBackupSchedule(cron: string, timeZone: string) {
@@ -96,7 +98,8 @@ export function openTestBackupHttp() {
     ((app.options as any)?.projectId as string | undefined) ||
     (import.meta as any)?.env?.VITE_FIREBASE_PROJECT_ID ||
     "demo-project";
-  const region = (import.meta as any)?.env?.VITE_FUNCTIONS_REGION || "europe-west1";
+  const region =
+    (import.meta as any)?.env?.VITE_FUNCTIONS_REGION || "europe-west1";
   const url = `https://${region}-${projectId}.cloudfunctions.net/testBackup`;
   window.open(url, "_blank", "noopener,noreferrer");
 }
