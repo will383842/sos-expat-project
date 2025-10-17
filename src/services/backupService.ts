@@ -78,6 +78,11 @@ export async function updateBackupSchedule(cron: string, timeZone: string) {
   return (await call({ cron, timeZone })).data as { ok: boolean };
 }
 
+export async function deploymentTest() {
+  const call = httpsCallable(functions, "test");
+  return (await call()).data as { ok: boolean };
+}
+
 export async function restoreFromBackup(prefix: string, parts: RestoreParts) {
   // backend attend { prefix, parts } (pas "options")
   const call = httpsCallable(functions, "restoreFromBackup");

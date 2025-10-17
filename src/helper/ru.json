@@ -1413,5 +1413,53 @@
   "registerLawyer.checklist.acceptTerms": "Принять условия",
 
   "registerLawyer.loading.languages": "Загрузка языков…",
-  "registerLawyer.loading.selectedLanguages": "Выбранные языки"
+  "registerLawyer.loading.selectedLanguages": "Выбранные языки",
+  "registerLawyer.fields.dateOfBirth": "Дата рождения",
+  "registerLawyer.fields.address": "Адрес",
+  "registerLawyer.fields.panNumber": "PAN или другой ID",
+  "registerLawyer.fields.panDocument": "Загрузка документа удостоверения личности",
+  "registerLawyer.fields.bankAccountNumber": "Номер банковского счета",
+  "registerLawyer.fields.ifscCode": "Код IFSC",
+
+  "registerLawyer.placeholder.dateOfBirth": "ГГГГ-ММ-ДД",
+  "registerLawyer.placeholder.address": "Введите ваш полный адрес",
+  "registerLawyer.placeholder.panNumber": "Введите номер PAN или ID",
+  "registerLawyer.placeholder.bankAccountNumber": "Введите номер счета",
+  "registerLawyer.placeholder.ifscCode": "Введите код IFSC",
+
+  "registerLawyer.errors.dobRequired": "Дата рождения обязательна",
+  "registerLawyer.errors.dobInvalid": "Пожалуйста, введите действительную дату (ГГГГ-ММ-ДД)",
+  "registerLawyer.errors.addressRequired": "Адрес обязателен",
+  "registerLawyer.errors.panRequired": "Номер PAN или ID обязателен",
+  "registerLawyer.errors.panDocumentRequired": "Пожалуйста, загрузите документ удостоверения личности",
+  "registerLawyer.errors.bankAccountRequired": "Номер банковского счета обязателен",
+  "registerLawyer.errors.ifscRequired": "Код IFSC обязателен",
+  "registerLawyer.errors.ifscInvalid": "Неверный формат кода IFSC",
+  "registerLawyer.ui.financialInfo": "Финансовая информация и удостоверение личности",
+  
+  "registerExpat.fields.dateOfBirth": "Дата рождения",
+  "registerExpat.fields.address": "Адрес",
+  "registerExpat.fields.panNumber": "PAN или другой ID",
+  "registerExpat.fields.panDocument": "Загрузка документа удостоверения личности",
+  "registerExpat.fields.bankAccountNumber": "Номер банковского счета",
+  "registerExpat.fields.ifscCode": "Код IFSC",
+  
+  "registerExpat.placeholder.dateOfBirth": "ГГГГ-ММ-ДД",
+  "registerExpat.placeholder.address": "Введите ваш полный адрес",
+  "registerExpat.placeholder.panNumber": "Введите номер PAN или ID",
+  "registerExpat.placeholder.bankAccountNumber": "Введите номер счета",
+  "registerExpat.placeholder.ifscCode": "Введите код IFSC",
+  
+  "registerExpat.errors.dobRequired": "Дата рождения обязательна",
+  "registerExpat.errors.dobInvalid": "Пожалуйста, введите действительную дату (ГГГГ-ММ-ДД)",
+  "registerExpat.errors.addressRequired": "Адрес обязателен",
+  "registerExpat.errors.panRequired": "Номер PAN или ID обязателен",
+  "registerExpat.errors.panDocumentRequired": "Пожалуйста, загрузите документ удостоверения личности",
+  "registerExpat.errors.bankAccountRequired": "Номер банковского счета обязателен",
+  "registerExpat.errors.ifscRequired": "Код IFSC обязателен",
+  "registerExpat.errors.ifscInvalid": "Неверный формат кода IFSC",
+  
+  "registerExpat.ui.financialInfo": "Финансовая информация и удостоверение личности"
+
+
 }

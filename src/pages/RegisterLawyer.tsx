@@ -40,7 +40,6 @@ import type { MultiValue } from "react-select";
 import type { Provider } from "../types/provider";
 import { useIntl, FormattedMessage } from "react-intl";
 
-
 // ===== Lazy (perf) =====
 const ImageUploader = lazy(() => import("../components/common/ImageUploader"));
 const MultiLanguageSelect = lazy(
@@ -137,67 +136,301 @@ type MultiLangDuo = {
 // ];
 
 const COUNTRIES: MultiLangDuo[] = [
-  { fr: "Afghanistan", es: "Afganistán", en: "Afghanistan", de: "Afghanistan", ru: "Афганистан" },
-  { fr: "Afrique du Sud", es: "Sudáfrica", en: "South Africa", de: "Südafrika", ru: "Южная Африка" },
-  { fr: "Albanie", es: "Albania", en: "Albania", de: "Albanien", ru: "Албания" },
+  {
+    fr: "Afghanistan",
+    es: "Afganistán",
+    en: "Afghanistan",
+    de: "Afghanistan",
+    ru: "Афганистан",
+  },
+  {
+    fr: "Afrique du Sud",
+    es: "Sudáfrica",
+    en: "South Africa",
+    de: "Südafrika",
+    ru: "Южная Африка",
+  },
+  {
+    fr: "Albanie",
+    es: "Albania",
+    en: "Albania",
+    de: "Albanien",
+    ru: "Албания",
+  },
   { fr: "Algérie", es: "Argelia", en: "Algeria", de: "Algerien", ru: "Алжир" },
-  { fr: "Allemagne", es: "Alemania", en: "Germany", de: "Deutschland", ru: "Германия" },
+  {
+    fr: "Allemagne",
+    es: "Alemania",
+    en: "Germany",
+    de: "Deutschland",
+    ru: "Германия",
+  },
   { fr: "Andorre", es: "Andorra", en: "Andorra", de: "Andorra", ru: "Андорра" },
   { fr: "Angola", es: "Angola", en: "Angola", de: "Angola", ru: "Ангола" },
-  { fr: "Arabie Saoudite", es: "Arabia Saudita", en: "Saudi Arabia", de: "Saudi-Arabien", ru: "Саудовская Аравия" },
-  { fr: "Argentine", es: "Argentina", en: "Argentina", de: "Argentinien", ru: "Аргентина" },
-  { fr: "Arménie", es: "Armenia", en: "Armenia", de: "Armenien", ru: "Армения" },
-  { fr: "Australie", es: "Australia", en: "Australia", de: "Australien", ru: "Австралия" },
-  { fr: "Autriche", es: "Austria", en: "Austria", de: "Österreich", ru: "Австрия" },
-  { fr: "Azerbaïdjan", es: "Azerbaiyán", en: "Azerbaijan", de: "Aserbaidschan", ru: "Азербайджан" },
+  {
+    fr: "Arabie Saoudite",
+    es: "Arabia Saudita",
+    en: "Saudi Arabia",
+    de: "Saudi-Arabien",
+    ru: "Саудовская Аравия",
+  },
+  {
+    fr: "Argentine",
+    es: "Argentina",
+    en: "Argentina",
+    de: "Argentinien",
+    ru: "Аргентина",
+  },
+  {
+    fr: "Arménie",
+    es: "Armenia",
+    en: "Armenia",
+    de: "Armenien",
+    ru: "Армения",
+  },
+  {
+    fr: "Australie",
+    es: "Australia",
+    en: "Australia",
+    de: "Australien",
+    ru: "Австралия",
+  },
+  {
+    fr: "Autriche",
+    es: "Austria",
+    en: "Austria",
+    de: "Österreich",
+    ru: "Австрия",
+  },
+  {
+    fr: "Azerbaïdjan",
+    es: "Azerbaiyán",
+    en: "Azerbaijan",
+    de: "Aserbaidschan",
+    ru: "Азербайджан",
+  },
   { fr: "Bahamas", es: "Bahamas", en: "Bahamas", de: "Bahamas", ru: "Багамы" },
   { fr: "Bahreïn", es: "Baréin", en: "Bahrain", de: "Bahrain", ru: "Бахрейн" },
-  { fr: "Bangladesh", es: "Bangladés", en: "Bangladesh", de: "Bangladesch", ru: "Бангладеш" },
-  { fr: "Barbade", es: "Barbados", en: "Barbados", de: "Barbados", ru: "Барбадос" },
-  { fr: "Belgique", es: "Bélgica", en: "Belgium", de: "Belgien", ru: "Бельгия" },
+  {
+    fr: "Bangladesh",
+    es: "Bangladés",
+    en: "Bangladesh",
+    de: "Bangladesch",
+    ru: "Бангладеш",
+  },
+  {
+    fr: "Barbade",
+    es: "Barbados",
+    en: "Barbados",
+    de: "Barbados",
+    ru: "Барбадос",
+  },
+  {
+    fr: "Belgique",
+    es: "Bélgica",
+    en: "Belgium",
+    de: "Belgien",
+    ru: "Бельгия",
+  },
   { fr: "Belize", es: "Belice", en: "Belize", de: "Belize", ru: "Белиз" },
   { fr: "Bénin", es: "Benín", en: "Benin", de: "Benin", ru: "Бенин" },
   { fr: "Bhoutan", es: "Bután", en: "Bhutan", de: "Bhutan", ru: "Бутан" },
-  { fr: "Biélorussie", es: "Bielorrusia", en: "Belarus", de: "Belarus", ru: "Беларусь" },
-  { fr: "Birmanie", es: "Birmania", en: "Myanmar", de: "Myanmar", ru: "Мьянма" },
-  { fr: "Bolivie", es: "Bolivia", en: "Bolivia", de: "Bolivien", ru: "Боливия" },
-  { fr: "Bosnie-Herzégovine", es: "Bosnia y Herzegovina", en: "Bosnia and Herzegovina", de: "Bosnien und Herzegowina", ru: "Босния и Герцеговина" },
-  { fr: "Botswana", es: "Botsuana", en: "Botswana", de: "Botswana", ru: "Ботсвана" },
+  {
+    fr: "Biélorussie",
+    es: "Bielorrusia",
+    en: "Belarus",
+    de: "Belarus",
+    ru: "Беларусь",
+  },
+  {
+    fr: "Birmanie",
+    es: "Birmania",
+    en: "Myanmar",
+    de: "Myanmar",
+    ru: "Мьянма",
+  },
+  {
+    fr: "Bolivie",
+    es: "Bolivia",
+    en: "Bolivia",
+    de: "Bolivien",
+    ru: "Боливия",
+  },
+  {
+    fr: "Bosnie-Herzégovine",
+    es: "Bosnia y Herzegovina",
+    en: "Bosnia and Herzegovina",
+    de: "Bosnien und Herzegowina",
+    ru: "Босния и Герцеговина",
+  },
+  {
+    fr: "Botswana",
+    es: "Botsuana",
+    en: "Botswana",
+    de: "Botswana",
+    ru: "Ботсвана",
+  },
   { fr: "Brésil", es: "Brasil", en: "Brazil", de: "Brasilien", ru: "Бразилия" },
   { fr: "Brunei", es: "Brunéi", en: "Brunei", de: "Brunei", ru: "Бруней" },
-  { fr: "Bulgarie", es: "Bulgaria", en: "Bulgaria", de: "Bulgarien", ru: "Болгария" },
-  { fr: "Burkina Faso", es: "Burkina Faso", en: "Burkina Faso", de: "Burkina Faso", ru: "Буркина-Фасо" },
+  {
+    fr: "Bulgarie",
+    es: "Bulgaria",
+    en: "Bulgaria",
+    de: "Bulgarien",
+    ru: "Болгария",
+  },
+  {
+    fr: "Burkina Faso",
+    es: "Burkina Faso",
+    en: "Burkina Faso",
+    de: "Burkina Faso",
+    ru: "Буркина-Фасо",
+  },
   { fr: "Burundi", es: "Burundi", en: "Burundi", de: "Burundi", ru: "Бурунди" },
-  { fr: "Cambodge", es: "Camboya", en: "Cambodia", de: "Kambodscha", ru: "Камбоджа" },
-  { fr: "Cameroun", es: "Camerún", en: "Cameroon", de: "Kamerun", ru: "Камерун" },
+  {
+    fr: "Cambodge",
+    es: "Camboya",
+    en: "Cambodia",
+    de: "Kambodscha",
+    ru: "Камбоджа",
+  },
+  {
+    fr: "Cameroun",
+    es: "Camerún",
+    en: "Cameroon",
+    de: "Kamerun",
+    ru: "Камерун",
+  },
   { fr: "Canada", es: "Canadá", en: "Canada", de: "Kanada", ru: "Канада" },
-  { fr: "Cap-Vert", es: "Cabo Verde", en: "Cape Verde", de: "Kap Verde", ru: "Кабо-Верде" },
+  {
+    fr: "Cap-Vert",
+    es: "Cabo Verde",
+    en: "Cape Verde",
+    de: "Kap Verde",
+    ru: "Кабо-Верде",
+  },
   { fr: "Chili", es: "Chile", en: "Chile", de: "Chile", ru: "Чили" },
   { fr: "Chine", es: "China", en: "China", de: "China", ru: "Китай" },
   { fr: "Chypre", es: "Chipre", en: "Cyprus", de: "Zypern", ru: "Кипр" },
-  { fr: "Colombie", es: "Colombia", en: "Colombia", de: "Kolumbien", ru: "Колумбия" },
+  {
+    fr: "Colombie",
+    es: "Colombia",
+    en: "Colombia",
+    de: "Kolumbien",
+    ru: "Колумбия",
+  },
   { fr: "Comores", es: "Comoras", en: "Comoros", de: "Komoren", ru: "Коморы" },
   { fr: "Congo", es: "Congo", en: "Congo", de: "Kongo", ru: "Конго" },
-  { fr: "Corée du Nord", es: "Corea del Norte", en: "North Korea", de: "Nordkorea", ru: "Северная Корея" },
-  { fr: "Corée du Sud", es: "Corea del Sur", en: "South Korea", de: "Südkorea", ru: "Южная Корея" },
-  { fr: "Costa Rica", es: "Costa Rica", en: "Costa Rica", de: "Costa Rica", ru: "Коста-Рика" },
-  { fr: "Côte d'Ivoire", es: "Costa de Marfil", en: "Ivory Coast", de: "Elfenbeinküste", ru: "Кот-д'Ивуар" },
-  { fr: "Croatie", es: "Croacia", en: "Croatia", de: "Kroatien", ru: "Хорватия" },
+  {
+    fr: "Corée du Nord",
+    es: "Corea del Norte",
+    en: "North Korea",
+    de: "Nordkorea",
+    ru: "Северная Корея",
+  },
+  {
+    fr: "Corée du Sud",
+    es: "Corea del Sur",
+    en: "South Korea",
+    de: "Südkorea",
+    ru: "Южная Корея",
+  },
+  {
+    fr: "Costa Rica",
+    es: "Costa Rica",
+    en: "Costa Rica",
+    de: "Costa Rica",
+    ru: "Коста-Рика",
+  },
+  {
+    fr: "Côte d'Ivoire",
+    es: "Costa de Marfil",
+    en: "Ivory Coast",
+    de: "Elfenbeinküste",
+    ru: "Кот-д'Ивуар",
+  },
+  {
+    fr: "Croatie",
+    es: "Croacia",
+    en: "Croatia",
+    de: "Kroatien",
+    ru: "Хорватия",
+  },
   { fr: "Cuba", es: "Cuba", en: "Cuba", de: "Kuba", ru: "Куба" },
-  { fr: "Danemark", es: "Dinamarca", en: "Denmark", de: "Dänemark", ru: "Дания" },
-  { fr: "Djibouti", es: "Yibuti", en: "Djibouti", de: "Dschibuti", ru: "Джибути" },
-  { fr: "Dominique", es: "Dominica", en: "Dominica", de: "Dominica", ru: "Доминика" },
+  {
+    fr: "Danemark",
+    es: "Dinamarca",
+    en: "Denmark",
+    de: "Dänemark",
+    ru: "Дания",
+  },
+  {
+    fr: "Djibouti",
+    es: "Yibuti",
+    en: "Djibouti",
+    de: "Dschibuti",
+    ru: "Джибути",
+  },
+  {
+    fr: "Dominique",
+    es: "Dominica",
+    en: "Dominica",
+    de: "Dominica",
+    ru: "Доминика",
+  },
   { fr: "Égypte", es: "Egipto", en: "Egypt", de: "Ägypten", ru: "Египет" },
-  { fr: "Émirats arabes unis", es: "Emiratos Árabes Unidos", en: "United Arab Emirates", de: "Vereinigte Arabische Emirate", ru: "Объединённые Арабские Эмираты" },
-  { fr: "Équateur", es: "Ecuador", en: "Ecuador", de: "Ecuador", ru: "Эквадор" },
-  { fr: "Érythrée", es: "Eritrea", en: "Eritrea", de: "Eritrea", ru: "Эритрея" },
+  {
+    fr: "Émirats arabes unis",
+    es: "Emiratos Árabes Unidos",
+    en: "United Arab Emirates",
+    de: "Vereinigte Arabische Emirate",
+    ru: "Объединённые Арабские Эмираты",
+  },
+  {
+    fr: "Équateur",
+    es: "Ecuador",
+    en: "Ecuador",
+    de: "Ecuador",
+    ru: "Эквадор",
+  },
+  {
+    fr: "Érythrée",
+    es: "Eritrea",
+    en: "Eritrea",
+    de: "Eritrea",
+    ru: "Эритрея",
+  },
   { fr: "Espagne", es: "España", en: "Spain", de: "Spanien", ru: "Испания" },
   { fr: "Estonie", es: "Estonia", en: "Estonia", de: "Estland", ru: "Эстония" },
-  { fr: "États-Unis", es: "Estados Unidos", en: "United States", de: "Vereinigte Staaten", ru: "Соединённые Штаты" },
-  { fr: "Éthiopie", es: "Etiopía", en: "Ethiopia", de: "Äthiopien", ru: "Эфиопия" },
+  {
+    fr: "États-Unis",
+    es: "Estados Unidos",
+    en: "United States",
+    de: "Vereinigte Staaten",
+    ru: "Соединённые Штаты",
+  },
+  {
+    fr: "Éthiopie",
+    es: "Etiopía",
+    en: "Ethiopia",
+    de: "Äthiopien",
+    ru: "Эфиопия",
+  },
   { fr: "Fidji", es: "Fiyi", en: "Fiji", de: "Fidschi", ru: "Фиджи" },
-  { fr: "Finlande", es: "Finlandia", en: "Finland", de: "Finnland", ru: "Финляндия" },
-  { fr: "France", es: "Francia", en: "France", de: "Frankreich", ru: "Франция" },
+  {
+    fr: "Finlande",
+    es: "Finlandia",
+    en: "Finland",
+    de: "Finnland",
+    ru: "Финляндия",
+  },
+  {
+    fr: "France",
+    es: "Francia",
+    en: "France",
+    de: "Frankreich",
+    ru: "Франция",
+  },
   { fr: "Autre", es: "Otro", en: "Other", de: "Andere", ru: "Другое" },
 ];
 
@@ -224,151 +457,148 @@ const COUNTRIES: MultiLangDuo[] = [
 //   { fr: "Autre", en: "Other" },
 // ];
 
-
 const SPECIALTIES: MultiLangDuo[] = [
-  { 
-    fr: "Droit de l'immigration", 
-    es: "Derecho de inmigración", 
-    en: "Immigration Law", 
-    de: "Einwanderungsrecht", 
-    ru: "Иммиграционное право" 
+  {
+    fr: "Droit de l'immigration",
+    es: "Derecho de inmigración",
+    en: "Immigration Law",
+    de: "Einwanderungsrecht",
+    ru: "Иммиграционное право",
   },
-  { 
-    fr: "Droit du travail", 
-    es: "Derecho laboral", 
-    en: "Labor Law", 
-    de: "Arbeitsrecht", 
-    ru: "Трудовое право" 
+  {
+    fr: "Droit du travail",
+    es: "Derecho laboral",
+    en: "Labor Law",
+    de: "Arbeitsrecht",
+    ru: "Трудовое право",
   },
-  { 
-    fr: "Droit immobilier", 
-    es: "Derecho inmobiliario", 
-    en: "Real Estate Law", 
-    de: "Immobilienrecht", 
-    ru: "Недвижимость" 
+  {
+    fr: "Droit immobilier",
+    es: "Derecho inmobiliario",
+    en: "Real Estate Law",
+    de: "Immobilienrecht",
+    ru: "Недвижимость",
   },
-  { 
-    fr: "Droit des affaires", 
-    es: "Derecho empresarial", 
-    en: "Business Law", 
-    de: "Wirtschaftsrecht", 
-    ru: "Коммерческое право" 
+  {
+    fr: "Droit des affaires",
+    es: "Derecho empresarial",
+    en: "Business Law",
+    de: "Wirtschaftsrecht",
+    ru: "Коммерческое право",
   },
-  { 
-    fr: "Droit de la famille", 
-    es: "Derecho de familia", 
-    en: "Family Law", 
-    de: "Familienrecht", 
-    ru: "Семейное право" 
+  {
+    fr: "Droit de la famille",
+    es: "Derecho de familia",
+    en: "Family Law",
+    de: "Familienrecht",
+    ru: "Семейное право",
   },
-  { 
-    fr: "Droit pénal", 
-    es: "Derecho penal", 
-    en: "Criminal Law", 
-    de: "Strafrecht", 
-    ru: "Уголовное право" 
+  {
+    fr: "Droit pénal",
+    es: "Derecho penal",
+    en: "Criminal Law",
+    de: "Strafrecht",
+    ru: "Уголовное право",
   },
-  { 
-    fr: "Droit fiscal", 
-    es: "Derecho fiscal", 
-    en: "Tax Law", 
-    de: "Steuerrecht", 
-    ru: "Налоговое право" 
+  {
+    fr: "Droit fiscal",
+    es: "Derecho fiscal",
+    en: "Tax Law",
+    de: "Steuerrecht",
+    ru: "Налоговое право",
   },
-  { 
-    fr: "Droit international", 
-    es: "Derecho internacional", 
-    en: "International Law", 
-    de: "Internationales Recht", 
-    ru: "Международное право" 
+  {
+    fr: "Droit international",
+    es: "Derecho internacional",
+    en: "International Law",
+    de: "Internationales Recht",
+    ru: "Международное право",
   },
-  { 
-    fr: "Droit des contrats", 
-    es: "Derecho de contratos", 
-    en: "Contract Law", 
-    de: "Vertragsrecht", 
-    ru: "Договорное право" 
+  {
+    fr: "Droit des contrats",
+    es: "Derecho de contratos",
+    en: "Contract Law",
+    de: "Vertragsrecht",
+    ru: "Договорное право",
   },
-  { 
-    fr: "Propriété intellectuelle", 
-    es: "Propiedad intelectual", 
-    en: "Intellectual Property", 
-    de: "Geistiges Eigentum", 
-    ru: "Интеллектуальная собственность" 
+  {
+    fr: "Propriété intellectuelle",
+    es: "Propiedad intelectual",
+    en: "Intellectual Property",
+    de: "Geistiges Eigentum",
+    ru: "Интеллектуальная собственность",
   },
-  { 
-    fr: "Droit de la consommation", 
-    es: "Derecho del consumidor", 
-    en: "Consumer Law", 
-    de: "Verbraucherschutzrecht", 
-    ru: "Защита прав потребителей" 
+  {
+    fr: "Droit de la consommation",
+    es: "Derecho del consumidor",
+    en: "Consumer Law",
+    de: "Verbraucherschutzrecht",
+    ru: "Защита прав потребителей",
   },
-  { 
-    fr: "Droit bancaire", 
-    es: "Derecho bancario", 
-    en: "Banking Law", 
-    de: "Bankrecht", 
-    ru: "Банковское право" 
+  {
+    fr: "Droit bancaire",
+    es: "Derecho bancario",
+    en: "Banking Law",
+    de: "Bankrecht",
+    ru: "Банковское право",
   },
-  { 
-    fr: "Droit de l'environnement", 
-    es: "Derecho ambiental", 
-    en: "Environmental Law", 
-    de: "Umweltrecht", 
-    ru: "Экологическое право" 
+  {
+    fr: "Droit de l'environnement",
+    es: "Derecho ambiental",
+    en: "Environmental Law",
+    de: "Umweltrecht",
+    ru: "Экологическое право",
   },
-  { 
-    fr: "Droit médical", 
-    es: "Derecho médico", 
-    en: "Medical Law", 
-    de: "Medizinrecht", 
-    ru: "Медицинское право" 
+  {
+    fr: "Droit médical",
+    es: "Derecho médico",
+    en: "Medical Law",
+    de: "Medizinrecht",
+    ru: "Медицинское право",
   },
-  { 
-    fr: "Droit des sociétés", 
-    es: "Derecho corporativo", 
-    en: "Corporate Law", 
-    de: "Gesellschaftsrecht", 
-    ru: "Корпоративное право" 
+  {
+    fr: "Droit des sociétés",
+    es: "Derecho corporativo",
+    en: "Corporate Law",
+    de: "Gesellschaftsrecht",
+    ru: "Корпоративное право",
   },
-  { 
-    fr: "Droit des successions", 
-    es: "Derecho de sucesiones", 
-    en: "Estate Law", 
-    de: "Erbrecht", 
-    ru: "Наследственное право" 
+  {
+    fr: "Droit des successions",
+    es: "Derecho de sucesiones",
+    en: "Estate Law",
+    de: "Erbrecht",
+    ru: "Наследственное право",
   },
-  { 
-    fr: "Droit administratif", 
-    es: "Derecho administrativo", 
-    en: "Administrative Law", 
-    de: "Verwaltungsrecht", 
-    ru: "Административное право" 
+  {
+    fr: "Droit administratif",
+    es: "Derecho administrativo",
+    en: "Administrative Law",
+    de: "Verwaltungsrecht",
+    ru: "Административное право",
   },
-  { 
-    fr: "Droit européen", 
-    es: "Derecho europeo", 
-    en: "European Law", 
-    de: "Europarecht", 
-    ru: "Европейское право" 
+  {
+    fr: "Droit européen",
+    es: "Derecho europeo",
+    en: "European Law",
+    de: "Europarecht",
+    ru: "Европейское право",
   },
-  { 
-    fr: "Droit des étrangers", 
-    es: "Derecho de extranjería", 
-    en: "Immigrant Rights", 
-    de: "Ausländerrecht", 
-    ru: "Право иностранцев" 
+  {
+    fr: "Droit des étrangers",
+    es: "Derecho de extranjería",
+    en: "Immigrant Rights",
+    de: "Ausländerrecht",
+    ru: "Право иностранцев",
   },
-  { 
-    fr: "Autre", 
-    es: "Otro", 
-    en: "Other", 
-    de: "Andere", 
-    ru: "Другое" 
+  {
+    fr: "Autre",
+    es: "Otro",
+    en: "Other",
+    de: "Andere",
+    ru: "Другое",
   },
 ];
-
-
 
 // ===== Types =====
 interface LawyerFormData {
@@ -378,6 +608,15 @@ interface LawyerFormData {
   password: string;
   phone: string;
   whatsapp: string;
+
+  // Add these new fields
+  dateOfBirth: string;
+  address: string;
+  panNumber: string;
+  panDocument: string; // URL to uploaded document
+  bankAccountNumber: string;
+  ifscCode: string;
+
   currentCountry: string;
   currentPresenceCountry: string;
   customCountry: string;
@@ -723,7 +962,7 @@ const LawyerPreviewCard = ({
   whatsapp?: string;
   yearsOfExperience?: number;
 }) => {
-  const intl = useIntl()
+  const intl = useIntl();
   return (
     <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-5">
       <div className="flex items-center gap-3">
@@ -793,7 +1032,7 @@ const LawyerPreviewCard = ({
         <div className="mt-3">
           <p className="text-xs font-semibold text-gray-700 mb-1">
             {/* {t.specialties} */}
-            {intl.formatMessage({id:"registerLawyer.fields.specialties"})}
+            {intl.formatMessage({ id: "registerLawyer.fields.specialties" })}
           </p>
           <div className="flex flex-wrap gap-2">
             {specialties.map((s, i) => (
@@ -812,7 +1051,9 @@ const LawyerPreviewCard = ({
         <div className="mt-3">
           <p className="text-xs font-semibold text-gray-700 mb-1">
             {/* {t.practiceCountries} */}
-            {intl.formatMessage({id:"registerLawyer.fields.practiceCountries"})}
+            {intl.formatMessage({
+              id: "registerLawyer.fields.practiceCountries",
+            })}
           </p>
           <div className="flex flex-wrap gap-2">
             {practiceCountries.map((c, i) => (
@@ -1002,13 +1243,30 @@ const RegisterLawyer: React.FC = () => {
       }
       el.content = content;
     };
-    ensure("description", intl.formatMessage({ id: "registerLawyer.meta.description" }));
-    ensure("og:title", intl.formatMessage({ id: "registerLawyer.meta.title" }), true);
-    ensure("og:description", intl.formatMessage({ id: "registerLawyer.meta.description" }), true);
+    ensure(
+      "description",
+      intl.formatMessage({ id: "registerLawyer.meta.description" })
+    );
+    ensure(
+      "og:title",
+      intl.formatMessage({ id: "registerLawyer.meta.title" }),
+      true
+    );
+    ensure(
+      "og:description",
+      intl.formatMessage({ id: "registerLawyer.meta.description" }),
+      true
+    );
     ensure("og:type", "website", true);
     ensure("twitter:card", "summary_large_image");
-    ensure("twitter:title", intl.formatMessage({ id: "registerLawyer.meta.title" }));
-    ensure("twitter:description", intl.formatMessage({ id: "registerLawyer.meta.description" }));
+    ensure(
+      "twitter:title",
+      intl.formatMessage({ id: "registerLawyer.meta.title" })
+    );
+    ensure(
+      "twitter:description",
+      intl.formatMessage({ id: "registerLawyer.meta.description" })
+    );
   }, [intl]);
 
   // ---- Initial state ----
@@ -1019,6 +1277,15 @@ const RegisterLawyer: React.FC = () => {
     password: "",
     phone: "",
     whatsapp: "",
+
+    // Add these
+    dateOfBirth: "",
+    address: "",
+    panNumber: "",
+    panDocument: "",
+    bankAccountNumber: "",
+    ifscCode: "",
+
     currentCountry: "",
     currentPresenceCountry: "",
     customCountry: "",
@@ -1081,6 +1348,13 @@ const RegisterLawyer: React.FC = () => {
       form.password.length >= 6,
       !!form.phone,
       !!form.whatsapp,
+      // Add new fields
+      !!form.dateOfBirth && /^\d{4}-\d{2}-\d{2}$/.test(form.dateOfBirth),
+      !!form.address.trim(),
+      !!form.panNumber.trim(),
+      !!form.panDocument,
+      !!form.bankAccountNumber.trim(),
+      !!form.ifscCode.trim() && /^[A-Z]{4}0[A-Z0-9]{6}$/.test(form.ifscCode),
       !!form.currentCountry,
       !!form.currentPresenceCountry,
       form.bio.trim().length >= 50,
@@ -1312,85 +1586,152 @@ const RegisterLawyer: React.FC = () => {
   //   return Object.keys(e).length === 0;
   // }, [form, selectedLanguages, t]);
 
-
   const validateAll = useCallback(() => {
-  const e: Record<string, string> = {};
-  
-  if (!form.firstName.trim()) 
-    e.firstName = intl.formatMessage({ id: 'registerLawyer.errors.firstNameRequired' });
-  
-  if (!form.lastName.trim()) 
-    e.lastName = intl.formatMessage({ id: 'registerLawyer.errors.lastNameRequired' });
+    const e: Record<string, string> = {};
 
-  if (!form.email.trim()) 
-    e.email = intl.formatMessage({ id: 'registerLawyer.errors.emailRequired' });
-  else if (!EMAIL_REGEX.test(form.email)) 
-    e.email = intl.formatMessage({ id: 'registerLawyer.errors.emailInvalid' });
+    if (!form.firstName.trim())
+      e.firstName = intl.formatMessage({
+        id: "registerLawyer.errors.firstNameRequired",
+      });
 
-  if (!form.password || form.password.length < 6)
-    e.password = intl.formatMessage({ id: 'registerLawyer.errors.passwordTooShort' });
+    if (!form.lastName.trim())
+      e.lastName = intl.formatMessage({
+        id: "registerLawyer.errors.lastNameRequired",
+      });
 
-  if (!form.phone.trim()) 
-    e.phone = intl.formatMessage({ id: 'registerLawyer.errors.phoneRequired' });
-  
-  if (!form.whatsapp.trim()) 
-    e.whatsapp = intl.formatMessage({ id: 'registerLawyer.errors.whatsappRequired' });
+    if (!form.email.trim())
+      e.email = intl.formatMessage({
+        id: "registerLawyer.errors.emailRequired",
+      });
+    else if (!EMAIL_REGEX.test(form.email))
+      e.email = intl.formatMessage({
+        id: "registerLawyer.errors.emailInvalid",
+      });
 
-  if (!form.currentCountry) 
-    e.currentCountry = intl.formatMessage({ id: 'registerLawyer.errors.needCountry' });
-  
-  if (!form.currentPresenceCountry)
-    e.currentPresenceCountry = intl.formatMessage({ id: 'registerLawyer.errors.needPresence' });
+    // Add new validations
+    if (!form.dateOfBirth)
+      e.dateOfBirth = intl.formatMessage({
+        id: "registerLawyer.errors.dobRequired",
+      });
+    else if (!/^\d{4}-\d{2}-\d{2}$/.test(form.dateOfBirth))
+      e.dateOfBirth = intl.formatMessage({
+        id: "registerLawyer.errors.dobInvalid",
+      });
 
-  if (form.practiceCountries.length === 0)
-    e.practiceCountries = intl.formatMessage({ id: 'registerLawyer.errors.needPractice' });
-  
-  if (form.specialties.length === 0) 
-    e.specialties = intl.formatMessage({ id: 'registerLawyer.errors.needSpecialty' });
-  
-  if ((selectedLanguages as LanguageOption[]).length === 0)
-    e.languages = intl.formatMessage({ id: 'registerLawyer.errors.needLanguage' });
+    if (!form.address.trim())
+      e.address = intl.formatMessage({
+        id: "registerLawyer.errors.addressRequired",
+      });
 
-  if (!form.bio.trim() || form.bio.trim().length < 50)
-    e.bio = intl.formatMessage({ id: 'registerLawyer.errors.needBio' });
-  
-  if (!form.profilePhoto) 
-    e.profilePhoto = intl.formatMessage({ id: 'registerLawyer.errors.needPhoto' });
-  
-  if (!form.educations.some((v) => v.trim().length > 0))
-    e.educations = intl.formatMessage({ id: 'registerLawyer.errors.needEducation' });
-  
-  if (!form.acceptTerms) 
-    e.acceptTerms = intl.formatMessage({ id: 'registerLawyer.errors.acceptTermsRequired' });
+    if (!form.panNumber.trim())
+      e.panNumber = intl.formatMessage({
+        id: "registerLawyer.errors.panRequired",
+      });
 
-  setFieldErrors(e);
+    if (!form.panDocument)
+      e.panDocument = intl.formatMessage({
+        id: "registerLawyer.errors.panDocumentRequired",
+      });
 
-  const order = [
-    "firstName",
-    "lastName",
-    "email",
-    "password",
-    "phone",
-    "currentCountry",
-    "currentPresenceCountry",
-    "bio",
-  ] as const;
-  
-  const firstKey = order.find((k) => e[k]);
-  if (firstKey && fieldRefs[firstKey]?.current) {
-    fieldRefs[firstKey]!.current!.focus();
-    window.scrollTo({
-      top:
-        fieldRefs[firstKey]!.current!.getBoundingClientRect().top +
-        window.scrollY -
-        120,
-      behavior: "smooth",
-    });
-  }
+    if (!form.bankAccountNumber.trim())
+      e.bankAccountNumber = intl.formatMessage({
+        id: "registerLawyer.errors.bankAccountRequired",
+      });
 
-  return Object.keys(e).length === 0;
-}, [form, selectedLanguages, intl]);
+    if (!form.ifscCode.trim())
+      e.ifscCode = intl.formatMessage({
+        id: "registerLawyer.errors.ifscRequired",
+      });
+    else if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(form.ifscCode))
+      e.ifscCode = intl.formatMessage({
+        id: "registerLawyer.errors.ifscInvalid",
+      });
 
+    if (!form.password || form.password.length < 6)
+      e.password = intl.formatMessage({
+        id: "registerLawyer.errors.passwordTooShort",
+      });
+
+    if (!form.phone.trim())
+      e.phone = intl.formatMessage({
+        id: "registerLawyer.errors.phoneRequired",
+      });
+
+    if (!form.whatsapp.trim())
+      e.whatsapp = intl.formatMessage({
+        id: "registerLawyer.errors.whatsappRequired",
+      });
+
+    if (!form.currentCountry)
+      e.currentCountry = intl.formatMessage({
+        id: "registerLawyer.errors.needCountry",
+      });
+
+    if (!form.currentPresenceCountry)
+      e.currentPresenceCountry = intl.formatMessage({
+        id: "registerLawyer.errors.needPresence",
+      });
+
+    if (form.practiceCountries.length === 0)
+      e.practiceCountries = intl.formatMessage({
+        id: "registerLawyer.errors.needPractice",
+      });
+
+    if (form.specialties.length === 0)
+      e.specialties = intl.formatMessage({
+        id: "registerLawyer.errors.needSpecialty",
+      });
+
+    if ((selectedLanguages as LanguageOption[]).length === 0)
+      e.languages = intl.formatMessage({
+        id: "registerLawyer.errors.needLanguage",
+      });
+
+    if (!form.bio.trim() || form.bio.trim().length < 50)
+      e.bio = intl.formatMessage({ id: "registerLawyer.errors.needBio" });
+
+    if (!form.profilePhoto)
+      e.profilePhoto = intl.formatMessage({
+        id: "registerLawyer.errors.needPhoto",
+      });
+
+    if (!form.educations.some((v) => v.trim().length > 0))
+      e.educations = intl.formatMessage({
+        id: "registerLawyer.errors.needEducation",
+      });
+
+    if (!form.acceptTerms)
+      e.acceptTerms = intl.formatMessage({
+        id: "registerLawyer.errors.acceptTermsRequired",
+      });
+
+    setFieldErrors(e);
+
+    const order = [
+      "firstName",
+      "lastName",
+      "email",
+      "password",
+      "phone",
+      "currentCountry",
+      "currentPresenceCountry",
+      "bio",
+    ] as const;
+
+    const firstKey = order.find((k) => e[k]);
+    if (firstKey && fieldRefs[firstKey]?.current) {
+      fieldRefs[firstKey]!.current!.focus();
+      window.scrollTo({
+        top:
+          fieldRefs[firstKey]!.current!.getBoundingClientRect().top +
+          window.scrollY -
+          120,
+        behavior: "smooth",
+      });
+    }
+
+    return Object.keys(e).length === 0;
+  }, [form, selectedLanguages, intl]);
 
   // ---- Missing checklist (UX clair) ----
   const missing = useMemo(() => {
@@ -1509,6 +1850,11 @@ const RegisterLawyer: React.FC = () => {
   const handleSubmit = useCallback(
     async (ev: React.FormEvent) => {
       ev.preventDefault();
+
+      console.log("=== FORM SUBMISSION ATTEMPT ===");
+      console.log("Form Data:", form);
+    // return 
+
       setTouched((prev) => ({
         ...prev,
         firstName: true,
@@ -1543,6 +1889,12 @@ const RegisterLawyer: React.FC = () => {
           name: `${form.firstName.trim()} ${form.lastName.trim()}`,
           firstName: form.firstName.trim(),
           lastName: form.lastName.trim(),
+          dateOfBirth: form.dateOfBirth,
+          address: form.address.trim(),
+          panNumber: form.panNumber.trim(),
+          panDocument: form.panDocument,
+          bankAccountNumber: form.bankAccountNumber.trim(),
+          ifscCode: form.ifscCode.trim().toUpperCase(),
           phone: form.phone,
           whatsapp: form.whatsapp,
           currentCountry:
@@ -1678,7 +2030,11 @@ const RegisterLawyer: React.FC = () => {
 
         <main className="max-w-6xl mx-auto px-3 sm:px-6 py-6 sm:py-8">
           {(error || fieldErrors.general) && (
-            <div className="rounded-xl border border-red-200 bg-gradient-to-r from-red-50 to-pink-50 p-4 mb-5" role="alert" aria-live="polite">
+            <div
+              className="rounded-xl border border-red-200 bg-gradient-to-r from-red-50 to-pink-50 p-4 mb-5"
+              role="alert"
+              aria-live="polite"
+            >
               <div className="flex">
                 <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
                 <div className="ml-3 flex-1">
@@ -1736,7 +2092,7 @@ const RegisterLawyer: React.FC = () => {
             >
               <h3 className="sr-only">
                 {/* {t.previewTitle} */}
-                {intl.formatMessage({id:"registerLawyer.ui.previewTitle"})}
+                {intl.formatMessage({ id: "registerLawyer.ui.previewTitle" })}
               </h3>
               <LawyerPreviewCard
                 lang={lang}
@@ -1802,7 +2158,9 @@ const RegisterLawyer: React.FC = () => {
                             !!form.firstName
                           }
                           // message={t.success.fieldValid}
-                          message={intl.formatMessage({id:"registerLawyer.success.fieldValid"})} 
+                          message={intl.formatMessage({
+                            id: "registerLawyer.success.fieldValid",
+                          })}
                         />
                       </div>
 
@@ -1839,8 +2197,9 @@ const RegisterLawyer: React.FC = () => {
                           }
                           // message={t.success.fieldValid}
 
-                                                   message={intl.formatMessage({id:"registerLawyer.success.fieldValid"})} 
-
+                          message={intl.formatMessage({
+                            id: "registerLawyer.success.fieldValid",
+                          })}
                         />
                       </div>
                     </div>
@@ -1883,8 +2242,9 @@ const RegisterLawyer: React.FC = () => {
                         error={
                           fieldErrors.email ||
                           (!EMAIL_REGEX.test(form.email) && touched.email
-                            ?                           intl.formatMessage({id:"registerLawyer.success.emailValid"})
-
+                            ? intl.formatMessage({
+                                id: "registerLawyer.success.emailValid",
+                              })
                             : undefined)
                         }
                         show={
@@ -1897,7 +2257,9 @@ const RegisterLawyer: React.FC = () => {
                       />
                       <FieldSuccess
                         show={!!touched.email && EMAIL_REGEX.test(form.email)}
-                        message={intl.formatMessage({id:"registerLawyer.success.emailValid"})}
+                        message={intl.formatMessage({
+                          id: "registerLawyer.success.emailValid",
+                        })}
                       />
                     </div>
 
@@ -2006,7 +2368,9 @@ const RegisterLawyer: React.FC = () => {
                           !!touched.password &&
                           form.password.length >= 6
                         }
-                        message={intl.formatMessage({id:"registerLawyer.success.pwdOk"})}
+                        message={intl.formatMessage({
+                          id: "registerLawyer.success.pwdOk",
+                        })}
                       />
                     </div>
 
@@ -2050,8 +2414,9 @@ const RegisterLawyer: React.FC = () => {
                               !!form.phone
                             }
                             // message={t.success.fieldValid}
-                            message={intl.formatMessage({id:"registerLawyer.success.fieldValid"})}
-
+                            message={intl.formatMessage({
+                              id: "registerLawyer.success.fieldValid",
+                            })}
                           />
                         </div>
 
@@ -2084,7 +2449,9 @@ const RegisterLawyer: React.FC = () => {
                               !!form.whatsapp
                             }
                             // message={t.success.fieldValid}
-                            message={intl.formatMessage({id:"registerLawyer.success.fieldValid"})}
+                            message={intl.formatMessage({
+                              id: "registerLawyer.success.fieldValid",
+                            })}
                           />
                         </div>
                       </div>
@@ -2093,6 +2460,260 @@ const RegisterLawyer: React.FC = () => {
                         <ShieldCheck className="w-3.5 h-3.5 mr-1 text-green-600" />
                         <FormattedMessage id="registerLawyer.help.contactInfo" />
                       </p>
+                    </div>
+                  </section>
+
+                  {/* Financial & Identity Information */}
+                  <section className="p-5 sm:p-6 border-t border-gray-50">
+                    <SectionHeader
+                      icon={<ShieldCheck className="w-5 h-5" />}
+                      title={intl.formatMessage({
+                        id: "registerLawyer.ui.financialInfo",
+                      })}
+                      subtitle="Required for payments and verification"
+                    />
+
+                    {/* Date of Birth */}
+                    <div className="mb-4">
+                      <label
+                        htmlFor="dateOfBirth"
+                        className="block text-sm font-semibold text-gray-800 mb-1"
+                      >
+                        <FormattedMessage id="registerLawyer.fields.dateOfBirth" />{" "}
+                        <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="dateOfBirth"
+                        name="dateOfBirth"
+                        type="date"
+                        value={form.dateOfBirth}
+                        onChange={onChange}
+                        onBlur={() => markTouched("dateOfBirth")}
+                        className={getInputClassName("dateOfBirth")}
+                        placeholder={intl.formatMessage({
+                          id: "registerLawyer.placeholder.dateOfBirth",
+                        })}
+                      />
+                      <FieldError
+                        error={fieldErrors.dateOfBirth}
+                        show={
+                          !!(fieldErrors.dateOfBirth && touched.dateOfBirth)
+                        }
+                      />
+                      <FieldSuccess
+                        show={
+                          !fieldErrors.dateOfBirth &&
+                          !!touched.dateOfBirth &&
+                          !!form.dateOfBirth
+                        }
+                        message={intl.formatMessage({
+                          id: "registerLawyer.success.fieldValid",
+                        })}
+                      />
+                    </div>
+
+                    {/* Address */}
+                    <div className="mb-4">
+                      <label
+                        htmlFor="address"
+                        className="block text-sm font-semibold text-gray-800 mb-1"
+                      >
+                        <FormattedMessage id="registerLawyer.fields.address" />{" "}
+                        <span className="text-red-500">*</span>
+                      </label>
+                      <textarea
+                        id="address"
+                        name="address"
+                        rows={3}
+                        value={form.address}
+                        onChange={onChange}
+                        onBlur={() => markTouched("address")}
+                        className={getInputClassName("address")}
+                        placeholder={intl.formatMessage({
+                          id: "registerLawyer.placeholder.address",
+                        })}
+                      />
+                      <FieldError
+                        error={fieldErrors.address}
+                        show={!!(fieldErrors.address && touched.address)}
+                      />
+                      <FieldSuccess
+                        show={
+                          !fieldErrors.address &&
+                          !!touched.address &&
+                          !!form.address
+                        }
+                        message={intl.formatMessage({
+                          id: "registerLawyer.success.fieldValid",
+                        })}
+                      />
+                    </div>
+
+                    {/* PAN Number */}
+                    <div className="mb-4">
+                      <label
+                        htmlFor="panNumber"
+                        className="block text-sm font-semibold text-gray-800 mb-1"
+                      >
+                        <FormattedMessage id="registerLawyer.fields.panNumber" />{" "}
+                        <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        id="panNumber"
+                        name="panNumber"
+                        type="text"
+                        value={form.panNumber}
+                        onChange={onChange}
+                        onBlur={() => markTouched("panNumber")}
+                        className={getInputClassName("panNumber")}
+                        placeholder={intl.formatMessage({
+                          id: "registerLawyer.placeholder.panNumber",
+                        })}
+                      />
+                      <FieldError
+                        error={fieldErrors.panNumber}
+                        show={!!(fieldErrors.panNumber && touched.panNumber)}
+                      />
+                      <FieldSuccess
+                        show={
+                          !fieldErrors.panNumber &&
+                          !!touched.panNumber &&
+                          !!form.panNumber
+                        }
+                        message={intl.formatMessage({
+                          id: "registerLawyer.success.fieldValid",
+                        })}
+                      />
+                    </div>
+
+                    {/* PAN Document Upload */}
+                    <div
+                      className={`mb-4 rounded-xl border ${THEME.border} p-4 ${THEME.subtle}`}
+                    >
+                      <label className="flex items-center text-sm font-semibold text-gray-900 mb-2">
+                        <FormattedMessage id="registerLawyer.fields.panDocument" />{" "}
+                        <span className="text-red-500 ml-1">*</span>
+                      </label>
+                      <Suspense
+                        fallback={
+                          <div className="py-6">
+                            <div className="h-24 bg-gray-100 animate-pulse rounded-xl" />
+                          </div>
+                        }
+                      >
+                        <ImageUploader
+                          locale={"fr"}
+                          currentImage={form.panDocument}
+                          onImageUploaded={(url: string) => {
+                            setForm((prev) => ({ ...prev, panDocument: url }));
+                            setFieldErrors((prev) => ({
+                              ...prev,
+                              panDocument: "",
+                            }));
+                            setTouched((p) => ({ ...p, panDocument: true }));
+                          }}
+                          hideNativeFileLabel
+                          cropShape="rect"
+                          outputSize={1024}
+                          uploadPath="documents/pan"
+                          isRegistration={true}
+                        />
+                      </Suspense>
+                      <FieldError
+                        error={fieldErrors.panDocument}
+                        show={!!fieldErrors.panDocument}
+                      />
+                      <FieldSuccess
+                        show={!!form.panDocument}
+                        message={intl.formatMessage({
+                          id: "registerLawyer.success.fieldValid",
+                        })}
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Upload a clear copy of your PAN card or
+                        government-issued ID
+                      </p>
+                    </div>
+
+                    {/* Bank Details */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label
+                          htmlFor="bankAccountNumber"
+                          className="block text-sm font-semibold text-gray-800 mb-1"
+                        >
+                          <FormattedMessage id="registerLawyer.fields.bankAccountNumber" />{" "}
+                          <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          id="bankAccountNumber"
+                          name="bankAccountNumber"
+                          type="text"
+                          value={form.bankAccountNumber}
+                          onChange={onChange}
+                          onBlur={() => markTouched("bankAccountNumber")}
+                          className={getInputClassName("bankAccountNumber")}
+                          placeholder={intl.formatMessage({
+                            id: "registerLawyer.placeholder.bankAccountNumber",
+                          })}
+                        />
+                        <FieldError
+                          error={fieldErrors.bankAccountNumber}
+                          show={
+                            !!(
+                              fieldErrors.bankAccountNumber &&
+                              touched.bankAccountNumber
+                            )
+                          }
+                        />
+                        <FieldSuccess
+                          show={
+                            !fieldErrors.bankAccountNumber &&
+                            !!touched.bankAccountNumber &&
+                            !!form.bankAccountNumber
+                          }
+                          message={intl.formatMessage({
+                            id: "registerLawyer.success.fieldValid",
+                          })}
+                        />
+                      </div>
+
+                      <div>
+                        <label
+                          htmlFor="ifscCode"
+                          className="block text-sm font-semibold text-gray-800 mb-1"
+                        >
+                          <FormattedMessage id="registerLawyer.fields.ifscCode" />{" "}
+                          <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          id="ifscCode"
+                          name="ifscCode"
+                          type="text"
+                          value={form.ifscCode}
+                          onChange={onChange}
+                          onBlur={() => markTouched("ifscCode")}
+                          className={getInputClassName("ifscCode")}
+                          placeholder={intl.formatMessage({
+                            id: "registerLawyer.placeholder.ifscCode",
+                          })}
+                          maxLength={11}
+                        />
+                        <FieldError
+                          error={fieldErrors.ifscCode}
+                          show={!!(fieldErrors.ifscCode && touched.ifscCode)}
+                        />
+                        <FieldSuccess
+                          show={
+                            !fieldErrors.ifscCode &&
+                            !!touched.ifscCode &&
+                            !!form.ifscCode
+                          }
+                          message={intl.formatMessage({
+                            id: "registerLawyer.success.fieldValid",
+                          })}
+                        />
+                      </div>
                     </div>
                   </section>
 
@@ -2163,7 +2784,9 @@ const RegisterLawyer: React.FC = () => {
                             !!form.currentCountry
                           }
                           // message={t.success.fieldValid}
-                          message={intl.formatMessage({id:"registerLawyer.success.fieldValid"})}
+                          message={intl.formatMessage({
+                            id: "registerLawyer.success.fieldValid",
+                          })}
                         />
                       </div>
                       <div>
@@ -2212,7 +2835,9 @@ const RegisterLawyer: React.FC = () => {
                             !!form.currentPresenceCountry
                           }
                           // message={t.success.fieldValid}
-                          message={intl.formatMessage({id:"registerLawyer.success.fieldValid"})}
+                          message={intl.formatMessage({
+                            id: "registerLawyer.success.fieldValid",
+                          })}
                         />
                       </div>
                     </div>
@@ -2287,7 +2912,9 @@ const RegisterLawyer: React.FC = () => {
                       <FieldSuccess
                         show={form.practiceCountries.length > 0}
                         // message={t.success.fieldValid}
-                        message={intl.formatMessage({id:"registerLawyer.success.fieldValid"})}
+                        message={intl.formatMessage({
+                          id: "registerLawyer.success.fieldValid",
+                        })}
                       />
                     </div>
                   </section>
@@ -2410,7 +3037,9 @@ const RegisterLawyer: React.FC = () => {
                       <FieldSuccess
                         show={form.specialties.length > 0}
                         // message={t.success.fieldValid}
-                        message={intl.formatMessage({id:"registerLawyer.success.fieldValid"})}
+                        message={intl.formatMessage({
+                          id: "registerLawyer.success.fieldValid",
+                        })}
                       />
                     </div>
 
@@ -2427,7 +3056,9 @@ const RegisterLawyer: React.FC = () => {
                           <div key={idx} className="flex items-center gap-2">
                             <input
                               value={ed}
-                              onChange={(e) => updateEducation(idx, e.target.value)}
+                              onChange={(e) =>
+                                updateEducation(idx, e.target.value)
+                              }
                               className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl bg-white focus:outline-none focus:border-indigo-600"
                               placeholder={intl.formatMessage({
                                 id: "registerLawyer.placeholder.education",
@@ -2460,7 +3091,9 @@ const RegisterLawyer: React.FC = () => {
                       <FieldSuccess
                         show={form.educations.some((e) => e.trim().length > 0)}
                         // message={t.success.fieldValid}
-                        message={intl.formatMessage({id:"registerLawyer.success.fieldValid"})}
+                        message={intl.formatMessage({
+                          id: "registerLawyer.success.fieldValid",
+                        })}
                       />
                     </div>
 
@@ -2495,7 +3128,7 @@ const RegisterLawyer: React.FC = () => {
                         }
                       >
                         <div
-                          className={`${getInputClassName('languages')} p-0`}
+                          className={`${getInputClassName("languages")} p-0`}
                         >
                           <MultiLanguageSelect
                             value={selectedLanguages}
@@ -2525,7 +3158,9 @@ const RegisterLawyer: React.FC = () => {
                           (selectedLanguages as LanguageOption[]).length > 0
                         }
                         // message={t.success.fieldValid}
-                        message={intl.formatMessage({id:"registerLawyer.success.fieldValid"})}
+                        message={intl.formatMessage({
+                          id: "registerLawyer.success.fieldValid",
+                        })}
                       />
                     </div>
 
@@ -2599,7 +3234,9 @@ const RegisterLawyer: React.FC = () => {
                       <FieldSuccess
                         show={form.bio.trim().length >= 50}
                         // message={t.success.fieldValid}
-                        message={intl.formatMessage({id:"registerLawyer.success.fieldValid"})}
+                        message={intl.formatMessage({
+                          id: "registerLawyer.success.fieldValid",
+                        })}
                       />
                     </div>
 
@@ -2608,7 +3245,8 @@ const RegisterLawyer: React.FC = () => {
                       className={`mt-4 rounded-xl border ${THEME.border} p-4 ${THEME.subtle}`}
                     >
                       <label className="flex items-center text-sm font-semibold text-gray-900 mb-2">
-                        <Camera className={`w-4 h-4 mr-2 ${THEME.icon}`} /> <FormattedMessage id="registerLawyer.fields.profilePhoto" />{" "}
+                        <Camera className={`w-4 h-4 mr-2 ${THEME.icon}`} />{" "}
+                        <FormattedMessage id="registerLawyer.fields.profilePhoto" />{" "}
                         <span className="text-red-500 ml-1">*</span>
                       </label>
                       <Suspense
@@ -2644,7 +3282,9 @@ const RegisterLawyer: React.FC = () => {
                       <FieldSuccess
                         show={!!form.profilePhoto}
                         // message={t.success.fieldValid}
-                        message={intl.formatMessage({id:"registerLawyer.success.fieldValid"})}
+                        message={intl.formatMessage({
+                          id: "registerLawyer.success.fieldValid",
+                        })}
                       />
                       <p className="text-xs text-gray-500 mt-1">
                         <FormattedMessage id="registerLawyer.help.photoInfo" />
@@ -2700,7 +3340,9 @@ const RegisterLawyer: React.FC = () => {
                       <FieldSuccess
                         show={!!form.acceptTerms}
                         // message={t.success.fieldValid}
-                        message={intl.formatMessage({id:"registerLawyer.success.fieldValid"})}
+                        message={intl.formatMessage({
+                          id: "registerLawyer.success.fieldValid",
+                        })}
                       />
                     </div>
 
@@ -2811,4 +3453,3 @@ const RegisterLawyer: React.FC = () => {
 };
 
 export default RegisterLawyer;
-     

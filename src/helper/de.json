@@ -1451,7 +1451,57 @@
 "registerLawyer.checklist.acceptTerms": "AGB akzeptieren",
 
 "registerLawyer.loading.languages": "Sprachen werden geladen…",
-"registerLawyer.loading.selectedLanguages": "Ausgewählte Sprachen"
+"registerLawyer.loading.selectedLanguages": "Ausgewählte Sprachen",
+  "registerLawyer.fields.dateOfBirth": "Geburtsdatum",
+  "registerLawyer.fields.address": "Adresse",
+  "registerLawyer.fields.panNumber": "PAN oder andere ID",
+  "registerLawyer.fields.panDocument": "Ausweisdokument hochladen",
+  "registerLawyer.fields.bankAccountNumber": "Bankkontonummer",
+  "registerLawyer.fields.ifscCode": "IFSC-Code",
+  
+  "registerLawyer.placeholder.dateOfBirth": "JJJJ-MM-TT",
+  "registerLawyer.placeholder.address": "Geben Sie Ihre vollständige Adresse ein",
+  "registerLawyer.placeholder.panNumber": "Geben Sie die PAN- oder ID-Nummer ein",
+  "registerLawyer.placeholder.bankAccountNumber": "Geben Sie die Kontonummer ein",
+  "registerLawyer.placeholder.ifscCode": "Geben Sie den IFSC-Code ein",
+  
+  "registerLawyer.errors.dobRequired": "Geburtsdatum ist erforderlich",
+  "registerLawyer.errors.dobInvalid": "Bitte geben Sie ein gültiges Datum ein (JJJJ-MM-TT)",
+  "registerLawyer.errors.addressRequired": "Adresse ist erforderlich",
+  "registerLawyer.errors.panRequired": "PAN- oder ID-Nummer ist erforderlich",
+  "registerLawyer.errors.panDocumentRequired": "Bitte laden Sie das Ausweisdokument hoch",
+  "registerLawyer.errors.bankAccountRequired": "Bankkontonummer ist erforderlich",
+  "registerLawyer.errors.ifscRequired": "IFSC-Code ist erforderlich",
+  "registerLawyer.errors.ifscInvalid": "Ungültiges IFSC-Code-Format",
+    "registerLawyer.ui.financialInfo": "Finanz- und Identitätsinformationen",
+    
+  "registerExpat.fields.dateOfBirth": "Geburtsdatum",
+  "registerExpat.fields.address": "Adresse",
+  "registerExpat.fields.panNumber": "PAN oder andere ID",
+  "registerExpat.fields.panDocument": "Ausweisdokument hochladen",
+  "registerExpat.fields.bankAccountNumber": "Bankkontonummer",
+  "registerExpat.fields.ifscCode": "IFSC-Code",
+  
+  "registerExpat.placeholder.dateOfBirth": "JJJJ-MM-TT",
+  "registerExpat.placeholder.address": "Geben Sie Ihre vollständige Adresse ein",
+  "registerExpat.placeholder.panNumber": "Geben Sie die PAN- oder ID-Nummer ein",
+  "registerExpat.placeholder.bankAccountNumber": "Geben Sie die Kontonummer ein",
+  "registerExpat.placeholder.ifscCode": "Geben Sie den IFSC-Code ein",
+  
+  "registerExpat.errors.dobRequired": "Geburtsdatum ist erforderlich",
+  "registerExpat.errors.dobInvalid": "Bitte geben Sie ein gültiges Datum ein (JJJJ-MM-TT)",
+  "registerExpat.errors.addressRequired": "Adresse ist erforderlich",
+  "registerExpat.errors.panRequired": "PAN- oder ID-Nummer ist erforderlich",
+  "registerExpat.errors.panDocumentRequired": "Bitte laden Sie das Ausweisdokument hoch",
+  "registerExpat.errors.bankAccountRequired": "Bankkontonummer ist erforderlich",
+  "registerExpat.errors.ifscRequired": "IFSC-Code ist erforderlich",
+  "registerExpat.errors.ifscInvalid": "Ungültiges IFSC-Code-Format",
+  
+  "registerExpat.ui.financialInfo": "Finanz- und Identitätsinformationen"
+
+
+
+
 
 
 
