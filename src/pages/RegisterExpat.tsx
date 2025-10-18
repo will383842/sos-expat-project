@@ -43,6 +43,10 @@ import { useIntl, FormattedMessage } from "react-intl";
 import PhoneField from "@/components/PhoneField";
 import { useForm } from "react-hook-form";
 
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
+
 // ===== Lazy (perf) =====
 const ImageUploader = lazy(() => import("../components/common/ImageUploader"));
 const MultiLanguageSelect = lazy(
@@ -1253,12 +1257,12 @@ const RegisterExpat: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(true);
 
-  // react-hook-form pour le téléphone uniquement (normalisation E.164 par PhoneField)
-  const { control, getValues, watch } = useForm<{ phone: string }>({
-    defaultValues: { phone: "" },
-    mode: "onBlur",
-  });
-  const watchedPhone = watch("phone"); // e164 si valide
+  // // react-hook-form pour le téléphone uniquement (normalisation E.164 par PhoneField)
+  // const { control, getValues, watch } = useForm<{ phone: string }>({
+  //   defaultValues: { phone: "" },
+  //   mode: "onBlur",
+  // });
+  // const watchedPhone = watch("phone"); // e164 si valide
 
   // Refs pour scroll/jump
   const refFirstName = useRef<HTMLDivElement | null>(null);
@@ -1293,11 +1297,21 @@ const RegisterExpat: React.FC = () => {
       lastName: !!form.lastName.trim(),
       email: EMAIL_REGEX.test(form.email), // ✅ format uniquement
       password: form.password.length >= 6,
-      phone: !!(
-        watchedPhone &&
-        watchedPhone.startsWith("+") &&
-        watchedPhone.length >= 10
-      ), // E.164 détecté
+      // phone: !!(
+      //   watchedPhone &&
+      //   watchedPhone.startsWith("+") &&
+      //   watchedPhone.length >= 10
+      // ), // E.164 détecté
+      phone: (() => {
+        if (!form.phone.trim()) return false;
+
+        try {
+          const parsed = parsePhoneNumberFromString(form.phone);
+          return parsed ? parsed.isValid() : false;
+        } catch {
+          return false;
+        }
+      })(),
 
       dateOfBirth:
         !!form.dateOfBirth && /^\d{4}-\d{2}-\d{2}$/.test(form.dateOfBirth),
@@ -1318,7 +1332,7 @@ const RegisterExpat: React.FC = () => {
       helpTypes: form.helpTypes.length > 0,
       acceptTerms: form.acceptTerms,
     }),
-    [form, selectedLanguages, watchedPhone]
+    [form, selectedLanguages]
   );
 
   // ---- Progress (sans emailStatus) ----
@@ -1328,7 +1342,17 @@ const RegisterExpat: React.FC = () => {
       !!form.lastName.trim(),
       EMAIL_REGEX.test(form.email),
       form.password.length >= 6,
-      !!(watchedPhone && watchedPhone.startsWith("+")),
+      // !!(watchedPhone && watchedPhone.startsWith("+")),
+      !!form.phone &&
+        (() => {
+          // ✅ Update this
+          try {
+            const parsed = parsePhoneNumberFromString(form.phone);
+            return parsed ? parsed.isValid() : false;
+          } catch {
+            return false;
+          }
+        })(),
       !!form.dateOfBirth && /^\d{4}-\d{2}-\d{2}$/.test(form.dateOfBirth),
       !!form.address.trim(),
       !!form.panNumber.trim(),
@@ -1347,7 +1371,7 @@ const RegisterExpat: React.FC = () => {
     ];
     const done = fields.filter(Boolean).length;
     return Math.round((done / fields.length) * 100);
-  }, [form, selectedLanguages, watchedPhone]);
+  }, [form, selectedLanguages]);
 
   // ---- Handlers ----
   const onChange = useCallback(
@@ -1586,7 +1610,7 @@ const RegisterExpat: React.FC = () => {
       ev.preventDefault();
       console.log("=== FORM SUBMISSION ATTEMPT ===");
       console.log("Form Data:", form);
-     
+
       if (isSubmitting) return;
       setIsSubmitting(true);
       setFormError("");
@@ -1599,7 +1623,7 @@ const RegisterExpat: React.FC = () => {
         const languageCodes = (selectedLanguages as LanguageOption[]).map(
           (l) => l.value
         );
-        const e164Phone = getValues("phone") || ""; // déjà normalisé par PhoneField
+        // const e164Phone = getValues("phone") || ""; // déjà normalisé par PhoneField
 
         const userData = {
           role: "expat" as const,
@@ -1608,7 +1632,7 @@ const RegisterExpat: React.FC = () => {
           fullName: `${form.firstName.trim()} ${form.lastName.trim()}`.trim(),
           firstName: form.firstName.trim(),
           lastName: form.lastName.trim(),
-          phone: e164Phone, // ✅ E.164
+          phone: form.phone, // ✅ E.164
           currentCountry: form.currentCountry,
           currentPresenceCountry: form.currentPresenceCountry,
           country: form.currentPresenceCountry,
@@ -1657,7 +1681,7 @@ const RegisterExpat: React.FC = () => {
       redirect,
       t,
       scrollToFirstIncomplete,
-      getValues,
+      // getValues,
     ]
   );
 
@@ -1988,6 +2012,50 @@ const RegisterExpat: React.FC = () => {
     ],
     [valid, intl]
   );
+
+  useEffect(() => {
+    console.log("🔍 VALIDATION DEBUG");
+    console.log("━".repeat(60));
+
+    const validationChecks = {
+      Email: valid.email,
+      Password: valid.password,
+      "First Name": valid.firstName,
+      "Last Name": valid.lastName,
+      "Accept Terms": valid.acceptTerms,
+      Bio: valid.bio,
+      "Profile Photo": valid.profilePhoto,
+      Languages: valid.languages,
+      "Help Types": valid.helpTypes,
+      "Current Country": valid.currentCountry,
+      "Current Presence Country": valid.currentPresenceCountry,
+      "Intervention Country": valid.interventionCountry,
+      "Years as Expat": valid.yearsAsExpat,
+      Phone: valid.phone,
+      "Date of Birth": valid.dateOfBirth,
+      Address: valid.address,
+      "PAN Number": valid.panNumber,
+      "PAN Document": valid.panDocument,
+      "Bank Account Number": valid.bankAccountNumber,
+      "IFSC Code": valid.ifscCode,
+    };
+
+    console.log("📋 FIELD VALIDATIONS:");
+    Object.entries(validationChecks).forEach(([field, isValid]) => {
+      if (!isValid) {
+        console.log(`  ❌ ${field}: INVALID`);
+      } else {
+        console.log(`  ✅ ${field}: VALID`);
+      }
+    });
+
+    if (Object.keys(fieldErrors).length > 0) {
+      console.log("\n⚠️  FIELD ERRORS:", fieldErrors);
+    }
+
+    console.log("\n🎯 CAN SUBMIT:", canSubmit);
+    console.log("━".repeat(60));
+  }, [valid, fieldErrors, isLoading, isSubmitting, canSubmit]);
 
   // ===== RENDER =====
   return (
@@ -2369,17 +2437,17 @@ const RegisterExpat: React.FC = () => {
                     </div>
 
                     {/* Contact (Téléphone E.164) */}
-                    <div
+                    {/* <div
                       className={`mt-5 rounded-xl border ${THEME.border} ${THEME.subtle} p-4`}
                       ref={refPhone}
                     >
                       <h3 className="text-sm font-bold text-gray-900 mb-3 flex items-center">
                         <PhoneIcon className={`w-4 h-4 mr-2 ${THEME.icon}`} />{" "}
-                        {/* {t.phone} */}
+                    
                         <FormattedMessage id="registerExpat.fields.phone" />
                       </h3>
 
-                      {/* Champ unique normalisé */}
+                   
                       <PhoneField
                         name="phone"
                         control={control}
@@ -2394,9 +2462,7 @@ const RegisterExpat: React.FC = () => {
                       />
 
                       <FieldSuccess show={valid.phone}>
-                        {/* {lang === "en"
-                          ? "Phone number valid (E.164) 🔒"
-                          : "Numéro valide (E.164) 🔒"} */}
+                      
                         <FormattedMessage id="registerExpat.success.phoneValid" />
                       </FieldSuccess>
 
@@ -2405,6 +2471,64 @@ const RegisterExpat: React.FC = () => {
                         {lang === "en"
                           ? "We only use your phone to connect you with people who need help. No spam."
                           : "Votre numéro sert uniquement à des mises en relation. Aucun spam."}
+                      </p>
+                    </div> */}
+
+                    {/* Contact Phone with Country Selector */}
+                    <div
+                      className="mt-5 rounded-xl border {THEME.border} {THEME.subtle} p-4"
+                      ref={refPhone}
+                    >
+                      <label className="block text-sm font-semibold text-gray-800 mb-1">
+                        <FormattedMessage id="registerExpat.fields.phone" />
+                        <span className="text-red-500">*</span>
+                      </label>
+
+                      <PhoneInput
+                        value={form.phone}
+                        onChange={(value) => {
+                          setForm((prev) => ({ ...prev, phone: value || "" }));
+
+                          // Clear error if valid
+                          if (value) {
+                            try {
+                              const parsed = parsePhoneNumberFromString(value);
+                              if (parsed && parsed.isValid()) {
+                                setFieldErrors((prev) => {
+                                  const { phone, ...rest } = prev;
+                                  return rest;
+                                });
+                              }
+                            } catch {}
+                          }
+                        }}
+                        defaultCountry="IN"
+                        international
+                        countryCallingCodeEditable={false}
+                        className={`w-full ${fieldErrors.phone ? "border-red-500 bg-red-50" : valid.phone ? "border-green-300 bg-green-50" : "border-gray-200"}`}
+                        placeholder="+91 98765 43210"
+                      />
+
+                      {form.phone && (
+                        <div className="mt-1 text-xs text-gray-500">
+                          <FormattedMessage id="Format" />:
+                          <span className="font-mono ml-1">{form.phone}</span>
+                        </div>
+                      )}
+
+                      {fieldErrors.phone && (
+                        <p className="mt-1 text-sm text-red-600">
+                          {fieldErrors.phone}
+                        </p>
+                      )}
+
+                      <FieldSuccess show={valid.phone}>
+                        <FormattedMessage id="registerExpat.success.phoneValid" />
+                      </FieldSuccess>
+
+                      <p className="mt-3 text-xs text-gray-600 flex items-center">
+                        <Info className="w-3.5 h-3.5 mr-1" />
+                        <FormattedMessage id="registerExpat.help.contactInfo" />
                       </p>
                     </div>
                   </section>
@@ -2548,8 +2672,12 @@ const RegisterExpat: React.FC = () => {
                             setForm((prev) => ({ ...prev, panDocument: url }));
                             setFieldErrors((prev) => ({
                               ...prev,
-                              panDocument: "",
                             }));
+
+                            setFieldErrors((prev) => {
+                              const { panDocument, ...rest } = prev;
+                              return rest;
+                            });
                           }}
                           hideNativeFileLabel
                           cropShape="rect"
@@ -3181,4 +3309,3 @@ const RegisterExpat: React.FC = () => {
 };
 
 export default RegisterExpat;
-

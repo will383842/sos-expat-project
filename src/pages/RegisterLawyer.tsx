@@ -40,6 +40,10 @@ import type { MultiValue } from "react-select";
 import type { Provider } from "../types/provider";
 import { useIntl, FormattedMessage } from "react-intl";
 
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
+
 // ===== Lazy (perf) =====
 const ImageUploader = lazy(() => import("../components/common/ImageUploader"));
 const MultiLanguageSelect = lazy(
@@ -1853,7 +1857,7 @@ const RegisterLawyer: React.FC = () => {
 
       console.log("=== FORM SUBMISSION ATTEMPT ===");
       console.log("Form Data:", form);
-    // return 
+      // return
 
       setTouched((prev) => ({
         ...prev,
@@ -2375,7 +2379,7 @@ const RegisterLawyer: React.FC = () => {
                     </div>
 
                     {/* Contact - Version simplifiée sans PhoneField */}
-                    <div
+                    {/* <div
                       className={`mt-5 rounded-xl border ${THEME.border} ${THEME.subtle} p-4`}
                     >
                       <h3 className="text-sm font-bold text-gray-900 mb-3 flex items-center">
@@ -2460,6 +2464,116 @@ const RegisterLawyer: React.FC = () => {
                         <ShieldCheck className="w-3.5 h-3.5 mr-1 text-green-600" />
                         <FormattedMessage id="registerLawyer.help.contactInfo" />
                       </p>
+                    </div> */}
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {/* Phone Number */}
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-800 mb-1">
+                          <FormattedMessage id="registerExpat.fields.phone" />
+                          <span className="text-red-500">*</span>
+                        </label>
+
+                        <PhoneInput
+                          value={form.phone}
+                          onChange={(value) => {
+                            setForm((prev) => ({
+                              ...prev,
+                              phone: value || "",
+                            }));
+
+                            // Clear error if valid
+                            if (value) {
+                              try {
+                                const parsed =
+                                  parsePhoneNumberFromString(value);
+                                if (parsed && parsed.isValid()) {
+                                  setFieldErrors((prev) => {
+                                    const { phone, ...rest } = prev;
+                                    return rest;
+                                  });
+                                }
+                              } catch {}
+                            }
+                          }}
+                          onBlur={() => markTouched("phone")}
+                          defaultCountry="IN"
+                          international
+                          countryCallingCodeEditable={false}
+                          className={getInputClassName("phone")}
+                          placeholder="+91 98765 43210"
+                        />
+
+                        {form.phone && (
+                          <div className="mt-1 text-xs text-gray-500">
+                            Format:{" "}
+                            <span className="font-mono">{form.phone}</span>
+                          </div>
+                        )}
+
+                        <FieldError
+                          error={fieldErrors.phone}
+                          show={!!fieldErrors.phone && touched.phone}
+                        />
+                        <FieldSuccess
+                          show={
+                            !fieldErrors.phone &&
+                            !!touched.phone &&
+                            !!form.phone
+                          }
+                          message={intl.formatMessage({
+                            id: "registerExpat.success.fieldValid",
+                          })}
+                        />
+                      </div>
+
+                      {/* WhatsApp Number */}
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-800 mb-1">
+                          <FormattedMessage id="registerLawyer.fields.whatsapp" />
+                        </label>
+
+                        <PhoneInput
+                          value={form.whatsapp}
+                          onChange={(value) => {
+                            setForm((prev) => ({
+                              ...prev,
+                              whatsapp: value || "",
+                            }));
+
+                            if (value) {
+                              try {
+                                const parsed =
+                                  parsePhoneNumberFromString(value);
+                                if (parsed && parsed.isValid()) {
+                                  setFieldErrors((prev) => {
+                                    const { whatsapp, ...rest } = prev;
+                                    return rest;
+                                  });
+                                }
+                              } catch {}
+                            }
+                          }}
+                          onBlur={() => markTouched("whatsapp")}
+                          defaultCountry="IN"
+                          international
+                          countryCallingCodeEditable={false}
+                          className={getInputClassName("whatsapp")}
+                          placeholder="+91 98765 43210"
+                        />
+
+                        {form.whatsapp && (
+                          <div className="mt-1 text-xs text-gray-500">
+                            Format:{" "}
+                            <span className="font-mono">{form.whatsapp}</span>
+                          </div>
+                        )}
+
+                        <FieldError
+                          error={fieldErrors.whatsapp}
+                          show={!!fieldErrors.whatsapp && touched.whatsapp}
+                        />
+                      </div>
                     </div>
                   </section>
 
@@ -3357,7 +3471,7 @@ const RegisterLawyer: React.FC = () => {
                             ? `bg-gradient-to-r ${THEME.button} hover:brightness-110`
                             : "bg-gray-400 cursor-not-allowed opacity-60"
                         }`}
-                        // disabled={!canSubmit}
+                        disabled={!canSubmit}
                       >
                         {isLoading || isSubmitting ? (
                           <FormattedMessage id="registerLawyer.ui.loading" />
