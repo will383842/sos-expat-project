@@ -43,6 +43,8 @@ import { useIntl, FormattedMessage } from "react-intl";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
+import { browserLocalPersistence, setPersistence } from "firebase/auth";
+import { auth } from "@/config/firebase";
 
 // ===== Lazy (perf) =====
 const ImageUploader = lazy(() => import("../components/common/ImageUploader"));
@@ -438,259 +440,254 @@ const COUNTRIES: MultiLangDuo[] = [
   { fr: "Autre", es: "Otro", en: "Other", de: "Andere", ru: "Другое" },
 ];
 
-
-
-
 // Add this at the top of your RegisterLawyer.tsx file (outside component)
 
 // Country name to ISO code mapping (Stripe requires 2-letter codes)
 const getCountryCode = (countryName: string, locale: string = "en"): string => {
   // Mapping for English country names
   const countryMap: Record<string, string> = {
-    "Afghanistan": "AF",
+    Afghanistan: "AF",
     "South Africa": "ZA",
-    "Albania": "AL",
-    "Algeria": "DZ",
-    "Germany": "DE",
-    "Andorra": "AD",
-    "Angola": "AO",
+    Albania: "AL",
+    Algeria: "DZ",
+    Germany: "DE",
+    Andorra: "AD",
+    Angola: "AO",
     "Saudi Arabia": "SA",
-    "Argentina": "AR",
-    "Armenia": "AM",
-    "Australia": "AU",
-     "United Arab Emirates": "AE", // ✅ ADD THIS LINE
-    "Austria": "AT",
-    "Azerbaijan": "AZ",
-    "Bahamas": "BS",
-    "Bahrain": "BH",
-    "Bangladesh": "BD",
-    "Barbados": "BB",
-    "Belgium": "BE",
-    "Belize": "BZ",
-    "Benin": "BJ",
-    "Bhutan": "BT",
-    "Belarus": "BY",
-    "Myanmar": "MM",
-    "Bolivia": "BO",
+    Argentina: "AR",
+    Armenia: "AM",
+    Australia: "AU",
+    "United Arab Emirates": "AE",
+    Austria: "AT",
+    Azerbaijan: "AZ",
+    Bahamas: "BS",
+    Bahrain: "BH",
+    Bangladesh: "BD",
+    Barbados: "BB",
+    Belgium: "BE",
+    Belize: "BZ",
+    Benin: "BJ",
+    Bhutan: "BT",
+    Belarus: "BY",
+    Myanmar: "MM",
+    Bolivia: "BO",
     "Bosnia and Herzegovina": "BA",
-    "Botswana": "BW",
-    "Brazil": "BR",
-    "Brunei": "BN",
-    "Bulgaria": "BG",
+    Botswana: "BW",
+    Brazil: "BR",
+    Brunei: "BN",
+    Bulgaria: "BG",
     "Burkina Faso": "BF",
-    "Burundi": "BI",
-    "Cambodia": "KH",
-    "Cameroon": "CM",
-    "Canada": "CA",
+    Burundi: "BI",
+    Cambodia: "KH",
+    Cameroon: "CM",
+    Canada: "CA",
     "Cape Verde": "CV",
-    "Chile": "CL",
-    "China": "CN",
-    "Cyprus": "CY",
-    "Colombia": "CO",
-    "Comoros": "KM",
-    "Congo": "CG",
+    Chile: "CL",
+    China: "CN",
+    Cyprus: "CY",
+    Colombia: "CO",
+    Comoros: "KM",
+    Congo: "CG",
     "North Korea": "KP",
     "South Korea": "KR",
     "Costa Rica": "CR",
     "Ivory Coast": "CI",
-    "Croatia": "HR",
-    "Cuba": "CU",
-    "Denmark": "DK",
-    "Djibouti": "DJ",
-    "Dominica": "DM",
-    "Egypt": "EG",
-    "United Arab Emirates": "AE",
-    "Ecuador": "EC",
-    "Eritrea": "ER",
-    "Spain": "ES",
-    "Estonia": "EE",
+    Croatia: "HR",
+    Cuba: "CU",
+    Denmark: "DK",
+    Djibouti: "DJ",
+    Dominica: "DM",
+    Egypt: "EG",
+    Ecuador: "EC",
+    Eritrea: "ER",
+    Spain: "ES",
+    Estonia: "EE",
     "United States": "US",
-    "Ethiopia": "ET",
-    "Fiji": "FJ",
-    "Finland": "FI",
-    "France": "FR",
-    "Other": "US", // Default fallback
-    
+    Ethiopia: "ET",
+    Fiji: "FJ",
+    Finland: "FI",
+    France: "FR",
+    Other: "US", // Default fallback
+
     // French names
-    "Afganistán": "AF",
-    "Sudáfrica": "ZA",
-    "Argelia": "DZ",
-    "Alemania": "DE",
+    Afganistán: "AF",
+    Sudáfrica: "ZA",
+    Argelia: "DZ",
+    Alemania: "DE",
     "Arabia Saudita": "SA",
-    "Bélgica": "BE",
-    "Belice": "BZ",
-    "Benín": "BJ",
-    "Bután": "BT",
-    "Bielorrusia": "BY",
-    "Birmania": "MM",
-    "Botsuana": "BW",
-    "Brasil": "BR",
-    "Brunéi": "BN",
-    "Bangladés": "BD",
+    Bélgica: "BE",
+    Belice: "BZ",
+    Benín: "BJ",
+    Bután: "BT",
+    Bielorrusia: "BY",
+    Birmania: "MM",
+    Botsuana: "BW",
+    Brasil: "BR",
+    Brunéi: "BN",
+    Bangladés: "BD",
     "Cabo Verde": "CV",
-    "Camboya": "KH",
-    "Camerún": "CM",
-    "Canadá": "CA",
-    "Chipre": "CY",
+    Camboya: "KH",
+    Camerún: "CM",
+    Canadá: "CA",
+    Chipre: "CY",
     "Corea del Norte": "KP",
     "Corea del Sur": "KR",
     "Costa de Marfil": "CI",
-    "Croacia": "HR",
-    "Dinamarca": "DK",
-    "Yibuti": "DJ",
-    "Egipto": "EG",
+    Croacia: "HR",
+    Dinamarca: "DK",
+    Yibuti: "DJ",
+    Egipto: "EG",
     "Emiratos Árabes Unidos": "AE",
 
-    "España": "ES",
+    España: "ES",
     "Estados Unidos": "US",
-    "Etiopía": "ET",
-    "Fiyi": "FJ",
-    "Finlandia": "FI",
-    "Francia": "FR",
-    "Otro": "US",
-    
+    Etiopía: "ET",
+    Fiyi: "FJ",
+    Finlandia: "FI",
+    Francia: "FR",
+    Otro: "US",
+
     // French names (fr)
 
     "Afrique du Sud": "ZA",
-    "Albanie": "AL",
-    "Algérie": "DZ",
-    "Allemagne": "DE",
+    Albanie: "AL",
+    Algérie: "DZ",
+    Allemagne: "DE",
     "Arabie Saoudite": "SA",
-    "Arménie": "AM",
-    "Australie": "AU",
-    "Autriche": "AT",
-    "Azerbaïdjan": "AZ",
-    "Bahreïn": "BH",
-    "Belgique": "BE",
-    "Biélorussie": "BY",
-    "Birmanie": "MM",
+    Arménie: "AM",
+    Australie: "AU",
+    Autriche: "AT",
+    Azerbaïdjan: "AZ",
+    Bahreïn: "BH",
+    Belgique: "BE",
+    Biélorussie: "BY",
+    Birmanie: "MM",
     "Bosnie-Herzégovine": "BA",
-    "Brésil": "BR",
-    "Bulgarie": "BG",
+    Brésil: "BR",
+    Bulgarie: "BG",
     "Côte d'Ivoire": "CI",
-    "Croatie": "HR",
-    "Danemark": "DK",
-    "Dominique": "DM",
-    "Égypte": "EG",
+    Croatie: "HR",
+    Danemark: "DK",
+    Dominique: "DM",
+    Égypte: "EG",
     "Émirats arabes unis": "AE",
-    "Équateur": "EC",
-    "Érythrée": "ER",
-    "Espagne": "ES",
-    "Estonie": "EE",
+    Équateur: "EC",
+    Érythrée: "ER",
+    Espagne: "ES",
+    Estonie: "EE",
     "États-Unis": "US",
-    "Éthiopie": "ET",
-    "Finlande": "FI",
-    "Autre": "US",
-    
+    Éthiopie: "ET",
+    Finlande: "FI",
+    Autre: "US",
+
     // German names (de)
-    "Südafrika": "ZA",
-    "Albanien": "AL",
-    "Algerien": "DZ",
-    "Deutschland": "DE",
+    Südafrika: "ZA",
+    Albanien: "AL",
+    Algerien: "DZ",
+    Deutschland: "DE",
     "Saudi-Arabien": "SA",
-    "Argentinien": "AR",
-    "Armenien": "AM",
-    "Australien": "AU",
-    "Österreich": "AT",
-    "Aserbaidschan": "AZ",
-    "Bangladesch": "BD",
-    "Belgien": "BE",
-  
+    Argentinien: "AR",
+    Armenien: "AM",
+    Australien: "AU",
+    Österreich: "AT",
+    Aserbaidschan: "AZ",
+    Bangladesch: "BD",
+    Belgien: "BE",
+
     "Bosnien und Herzegowina": "BA",
-    "Brasilien": "BR",
-    "Bulgarien": "BG",
-  
-    "Kambodscha": "KH",
-    "Kamerun": "CM",
-    "Kanada": "CA",
+    Brasilien: "BR",
+    Bulgarien: "BG",
+
+    Kambodscha: "KH",
+    Kamerun: "CM",
+    Kanada: "CA",
     "Kap Verde": "CV",
-    "Kolumbien": "CO",
-    "Komoren": "KM",
-    "Kongo": "CG",
-    "Nordkorea": "KP",
-    "Südkorea": "KR",
-    "Elfenbeinküste": "CI",
-    "Kroatien": "HR",
-    "Dänemark": "DK",
-    "Dschibuti": "DJ",
-    "Ägypten": "EG",
+    Kolumbien: "CO",
+    Komoren: "KM",
+    Kongo: "CG",
+    Nordkorea: "KP",
+    Südkorea: "KR",
+    Elfenbeinküste: "CI",
+    Kroatien: "HR",
+    Dänemark: "DK",
+    Dschibuti: "DJ",
+    Ägypten: "EG",
     "Vereinigte Arabische Emirate": "AE",
-    "Äthiopien": "ET",
-    "Fidschi": "FJ",
-    "Finnland": "FI",
-    "Frankreich": "FR",
+    Äthiopien: "ET",
+    Fidschi: "FJ",
+    Finnland: "FI",
+    Frankreich: "FR",
     "Vereinigte Staaten": "US",
-    "Andere": "US",
-    
+    Andere: "US",
+
     // Russian names (ru)
-    "Афганистан": "AF",
+    Афганистан: "AF",
     "Южная Африка": "ZA",
-    "Албания": "AL",
-    "Алжир": "DZ",
-    "Германия": "DE",
-    "Андорра": "AD",
-    "Ангола": "AO",
+    Албания: "AL",
+    Алжир: "DZ",
+    Германия: "DE",
+    Андорра: "AD",
+    Ангола: "AO",
     "Саудовская Аравия": "SA",
-    "Аргентина": "AR",
-    "Армения": "AM",
-    "Австралия": "AU",
-    "Австрия": "AT",
-    "Азербайджан": "AZ",
-    "Багамы": "BS",
-    "Бахрейн": "BH",
-    "Бангладеш": "BD",
-    "Барбадос": "BB",
-    "Бельгия": "BE",
-    "Белиз": "BZ",
-    "Бенин": "BJ",
-    "Бутан": "BT",
-    "Беларусь": "BY",
-    "Мьянма": "MM",
-    "Боливия": "BO",
+    Аргентина: "AR",
+    Армения: "AM",
+    Австралия: "AU",
+    Австрия: "AT",
+    Азербайджан: "AZ",
+    Багамы: "BS",
+    Бахрейн: "BH",
+    Бангладеш: "BD",
+    Барбадос: "BB",
+    Бельгия: "BE",
+    Белиз: "BZ",
+    Бенин: "BJ",
+    Бутан: "BT",
+    Беларусь: "BY",
+    Мьянма: "MM",
+    Боливия: "BO",
     "Босния и Герцеговина": "BA",
-    "Ботсвана": "BW",
-    "Бразилия": "BR",
-    "Бруней": "BN",
-    "Болгария": "BG",
+    Ботсвана: "BW",
+    Бразилия: "BR",
+    Бруней: "BN",
+    Болгария: "BG",
     "Буркина-Фасо": "BF",
-    "Бурунди": "BI",
-    "Камбоджа": "KH",
-    "Камерун": "CM",
-    "Канада": "CA",
-  
-    "Чили": "CL",
-    "Китай": "CN",
-    "Кипр": "CY",
-    "Колумбия": "CO",
-    "Коморы": "KM",
-    "Конго": "CG",
+    Бурунди: "BI",
+    Камбоджа: "KH",
+    Камерун: "CM",
+    Канада: "CA",
+
+    Чили: "CL",
+    Китай: "CN",
+    Кипр: "CY",
+    Колумбия: "CO",
+    Коморы: "KM",
+    Конго: "CG",
     "Северная Корея": "KP",
     "Южная Корея": "KR",
     "Коста-Рика": "CR",
     "Кот-д'Ивуар": "CI",
-    "Хорватия": "HR",
- 
-    "Дания": "DK",
-    "Джибути": "DJ",
-    "Доминика": "DM",
-    "Египет": "EG",
+    Хорватия: "HR",
+
+    Дания: "DK",
+    Джибути: "DJ",
+    Доминика: "DM",
+    Египет: "EG",
     "Объединённые Арабские Эмираты": "AE",
-    "Эквадор": "EC",
-    "Эритрея": "ER",
-    "Испания": "ES",
-    "Эстония": "EE",
+    Эквадор: "EC",
+    Эритрея: "ER",
+    Испания: "ES",
+    Эстония: "EE",
     "Соединённые Штаты": "US",
-    "Эфиопия": "ET",
-    "Фиджи": "FJ",
-    "Финляндия": "FI",
-    "Франция": "FR",
-    "Другое": "US",
+    Эфиопия: "ET",
+    Фиджи: "FJ",
+    Финляндия: "FI",
+    Франция: "FR",
+    Другое: "US",
   };
 
   // Try to get code, fallback to US if not found
   return countryMap[countryName] || "US";
 };
-
 
 // const SPECIALTIES: MultiLangDuo[] = [
 //   { fr: "Droit de l'immigration", en: "Immigration Law" },
@@ -2134,6 +2131,10 @@ const RegisterLawyer: React.FC = () => {
       }
 
       try {
+        console.log("🔐 Setting auth persistence to LOCAL...");
+        await setPersistence(auth, browserLocalPersistence);
+        console.log("✅ Auth persistence set");
+
         const languageCodes = (selectedLanguages as LanguageOption[]).map(
           (l) => l.value
         );
@@ -2188,53 +2189,56 @@ const RegisterLawyer: React.FC = () => {
         await register(userData, form.password);
 
         // ============================================
-console.log("💳 Starting Stripe onboarding...");
+        console.log("💳 Starting Stripe onboarding...");
 
-const { getFunctions, httpsCallable } = await import("firebase/functions");
-const functions = getFunctions(undefined, "europe-west1");
-const completeLawyerOnboarding = httpsCallable(
-  functions,
-  "completeLawyerOnboarding"
-);
+        const { getFunctions, httpsCallable } = await import(
+          "firebase/functions"
+        );
+        const functions = getFunctions(undefined, "europe-west1");
+        const completeLawyerOnboarding = httpsCallable(
+          functions,
+          "completeLawyerOnboarding"
+        );
 
-const other = lang === "en" ? "Other" : "Autre";
-const selectedCountryName = form.currentCountry === other 
-  ? form.customCountry 
-  : form.currentCountry;
+        const other = lang === "en" ? "Other" : "Autre";
+        const selectedCountryName =
+          form.currentCountry === other
+            ? form.customCountry
+            : form.currentCountry;
 
-const onboardingResult = await completeLawyerOnboarding({
-  firstName: form.firstName.trim(),
-  lastName: form.lastName.trim(),
-  email: form.email.trim().toLowerCase(),
-  dateOfBirth: form.dateOfBirth,
-  phone: form.phone,
-  whatsapp: form.whatsapp,
-  address: form.address.trim(),
-  currentCountry: getCountryCode(selectedCountryName), // Convert to ISO code
-  currentPresenceCountry: form.currentPresenceCountry,
-  panNumber: form.panNumber.trim(),
-  panDocument: form.panDocument,
-  bankAccountNumber: form.bankAccountNumber.trim(),
-  ifscCode: form.ifscCode.trim().toUpperCase(),
-  profilePhoto: form.profilePhoto,
-  bio: form.bio.trim(),
-  specialties: form.specialties,
-  practiceCountries: form.practiceCountries,
-  yearsOfExperience: form.yearsOfExperience,
-});
+        const onboardingResult = await completeLawyerOnboarding({
+          firstName: form.firstName.trim(),
+          lastName: form.lastName.trim(),
+          email: form.email.trim().toLowerCase(),
+          dateOfBirth: form.dateOfBirth,
+          phone: form.phone,
+          whatsapp: form.whatsapp,
+          address: form.address.trim(),
+          currentCountry: getCountryCode(selectedCountryName), // Convert to ISO code
+          currentPresenceCountry: form.currentPresenceCountry,
+          panNumber: form.panNumber.trim(),
+          panDocument: form.panDocument,
+          bankAccountNumber: form.bankAccountNumber.trim(),
+          ifscCode: form.ifscCode.trim().toUpperCase(),
+          profilePhoto: form.profilePhoto,
+          bio: form.bio.trim(),
+          specialties: form.specialties,
+          practiceCountries: form.practiceCountries,
+          yearsOfExperience: form.yearsOfExperience,
+        });
 
-const result = onboardingResult.data as {
-  success: boolean;
-  accountId: string;
-  onboardingUrl: string; // ✅ NEW: Stripe hosted page URL
-  message: { en: string; fr: string };
-};
+        const result = onboardingResult.data as {
+          success: boolean;
+          accountId: string;
+          onboardingUrl: string; // ✅ NEW: Stripe hosted page URL
+          message: { en: string; fr: string };
+        };
 
-console.log("✅ Stripe onboarding initiated:", result);
+        console.log("✅ Stripe onboarding initiated:", result);
 
-// ✅ NEW: Redirect to Stripe's onboarding page
-// Lawyer will complete KYC there and return to your site
-window.location.href = result.onboardingUrl;
+        // ✅ NEW: Redirect to Stripe's onboarding page
+        // Lawyer will complete KYC there and return to your site
+        window.location.href = result.onboardingUrl;
 
         // navigate(redirect, {
         //   replace: true,
