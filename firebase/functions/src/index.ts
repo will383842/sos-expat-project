@@ -73,6 +73,19 @@ setGlobalOptions({
   secrets: GLOBAL_SECRETS,
 } as any);
 
+
+
+// ✅ ADD YOUR STRIPE CONNECT FUNCTIONS HERE
+export {
+  createCustomAccount,
+  submitKycData,
+  addBankAccount,
+  checkKycStatus
+} from './stripeAutomaticKyc'
+
+
+export { completeLawyerOnboarding } from './lawyerOnboarding';
+
 // ====== IMPORTS PRINCIPAUX ======
 import {
   onRequest,
@@ -656,7 +669,7 @@ export const adminBulkUpdateStatus = onCall(
 // ========================================
 let stripe: Stripe | null = null;
 
-const getStripe = traceFunction(
+export const getStripe = traceFunction(
   (): Stripe | null => {
     if (!stripe) {
       ultraLogger.info("STRIPE_INIT", "Initialisation de Stripe", {
@@ -1855,62 +1868,10 @@ export const scheduledFirestoreExport = onSchedule(
   }
 );
 
-import { stripeKYCManager } from "./stripeAutomaticKyc";
 
-interface CreateProviderKYCData {
-  email: string;
-  country: string;
-  firstName: string;
-  lastName: string;
-  businessType?: 'individual' | 'company';
-}
 
-export const createProviderWithKYC = onCall(
-  {
-    region: "europe-west1",
-    memory: "512MiB",
-    secrets: [STRIPE_SECRET_KEY_TEST, STRIPE_SECRET_KEY_LIVE],
-  },
-  wrapCallableFunction(
-    "createProviderWithKYC",
-    async (request: CallableRequest<CreateProviderKYCData>) => {  // ✅ CORRECT - specific type
-      // Now TypeScript knows request.data has email, country, etc.
-      const result = await stripeKYCManager.createConnectedAccount(
-        request.data,  // ✅ TypeScript knows this matches CreateConnectedAccountData
-        request.auth!.uid
-      );
-      
-      return result;
-    }
-  )
-);
 
-interface CheckKYCStatusData {
-  accountId: string;
-}
 
-export const checkProviderKYCStatus = onCall(
-  {
-    region: "europe-west1",
-    memory: "256MiB",
-    cpu: 0.25,
-    maxInstances: 5,
-    minInstances: 0,
-    concurrency: 1,
-    timeoutSeconds: 30,
-    secrets: [STRIPE_SECRET_KEY_TEST, STRIPE_SECRET_KEY_LIVE],
-  },
-  wrapCallableFunction(
-    "checkProviderKYCStatus", 
-    async (request: CallableRequest<CheckKYCStatusData>) => {  // ✅ Add type here
-      if (!request.auth) {
-        throw new HttpsError("unauthenticated", "Must be authenticated");
-      }
-
-      return await stripeKYCManager.checkKYCStatus(request.data.accountId);
-    }
-  )
-);
 
 
 

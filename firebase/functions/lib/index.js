@@ -40,7 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.testWebhook = exports.manuallyTriggerCallExecution = exports.getCloudTasksQueueStats = exports.testCloudTasksConnection = exports.getUltraDebugLogs = exports.getSystemHealthStatus = exports.generateSystemDebugReport = exports.scheduledCleanup = exports.checkProviderKYCStatus = exports.createProviderWithKYC = exports.scheduledFirestoreExport = exports.stripeWebhook = exports.adminBulkUpdateStatus = exports.adminSoftDeleteUser = exports.adminUpdateStatus = exports.executeCallTask = exports.notifyAfterPayment = exports.initializeMessageTemplates = exports.unifiedWebhook = exports.enqueueMessageEvent = exports.twilioCallWebhook = exports.testTwilioCall = exports.api = exports.createPaymentIntent = exports.createAndScheduleCall = exports.createAndScheduleCallHTTPS = exports.STRIPE_WEBHOOK_SECRET_LIVE = exports.STRIPE_WEBHOOK_SECRET_TEST = exports.STRIPE_MODE = exports.TASKS_AUTH_SECRET = exports.STRIPE_SECRET_KEY_LIVE = exports.STRIPE_SECRET_KEY_TEST = exports.TWILIO_PHONE_NUMBER = exports.TWILIO_AUTH_TOKEN = exports.TWILIO_ACCOUNT_SID = exports.EMAIL_PASS = exports.EMAIL_USER = void 0;
+exports.testWebhook = exports.manuallyTriggerCallExecution = exports.getCloudTasksQueueStats = exports.testCloudTasksConnection = exports.getUltraDebugLogs = exports.getSystemHealthStatus = exports.generateSystemDebugReport = exports.scheduledCleanup = exports.scheduledFirestoreExport = exports.stripeWebhook = exports.getStripe = exports.adminBulkUpdateStatus = exports.adminSoftDeleteUser = exports.adminUpdateStatus = exports.executeCallTask = exports.notifyAfterPayment = exports.initializeMessageTemplates = exports.unifiedWebhook = exports.enqueueMessageEvent = exports.twilioCallWebhook = exports.testTwilioCall = exports.api = exports.createPaymentIntent = exports.createAndScheduleCall = exports.createAndScheduleCallHTTPS = exports.STRIPE_WEBHOOK_SECRET_LIVE = exports.STRIPE_WEBHOOK_SECRET_TEST = exports.STRIPE_MODE = exports.completeLawyerOnboarding = exports.checkKycStatus = exports.addBankAccount = exports.submitKycData = exports.createCustomAccount = exports.TASKS_AUTH_SECRET = exports.STRIPE_SECRET_KEY_LIVE = exports.STRIPE_SECRET_KEY_TEST = exports.TWILIO_PHONE_NUMBER = exports.TWILIO_AUTH_TOKEN = exports.TWILIO_ACCOUNT_SID = exports.EMAIL_PASS = exports.EMAIL_USER = void 0;
 // ====== ULTRA DEBUG INITIALIZATION ======
 const ultraDebugLogger_1 = require("./utils/ultraDebugLogger");
 // Tracer tous les imports principaux
@@ -95,6 +95,14 @@ const GLOBAL_SECRETS = [
     eventarc: { location: "europe-west1" },
     secrets: GLOBAL_SECRETS,
 });
+// ✅ ADD YOUR STRIPE CONNECT FUNCTIONS HERE
+var stripeAutomaticKyc_1 = require("./stripeAutomaticKyc");
+Object.defineProperty(exports, "createCustomAccount", { enumerable: true, get: function () { return stripeAutomaticKyc_1.createCustomAccount; } });
+Object.defineProperty(exports, "submitKycData", { enumerable: true, get: function () { return stripeAutomaticKyc_1.submitKycData; } });
+Object.defineProperty(exports, "addBankAccount", { enumerable: true, get: function () { return stripeAutomaticKyc_1.addBankAccount; } });
+Object.defineProperty(exports, "checkKycStatus", { enumerable: true, get: function () { return stripeAutomaticKyc_1.checkKycStatus; } });
+var lawyerOnboarding_1 = require("./lawyerOnboarding");
+Object.defineProperty(exports, "completeLawyerOnboarding", { enumerable: true, get: function () { return lawyerOnboarding_1.completeLawyerOnboarding; } });
 // ====== IMPORTS PRINCIPAUX ======
 const https_1 = require("firebase-functions/v2/https");
 const scheduler_1 = require("firebase-functions/v2/scheduler");
@@ -443,7 +451,7 @@ exports.adminBulkUpdateStatus = (0, https_1.onCall)({
 // CONFIGURATION SÉCURISÉE DES SERVICES (Stripe)
 // ========================================
 let stripe = null;
-const getStripe = (0, ultraDebugLogger_1.traceFunction)(() => {
+exports.getStripe = (0, ultraDebugLogger_1.traceFunction)(() => {
     if (!stripe) {
         ultraDebugLogger_1.ultraLogger.info("STRIPE_INIT", "Initialisation de Stripe", {
             mode: isLive() ? "live" : "test",
@@ -701,7 +709,7 @@ exports.stripeWebhook = (0, https_1.onRequest)({
         res.status(400).send("Missing signature");
         return;
     }
-    const stripeInstance = getStripe();
+    const stripeInstance = (0, exports.getStripe)();
     if (!stripeInstance) {
         console.log("❌ STRIPE WEBHOOK ERROR: Stripe not configured");
         res.status(500).send("Stripe not configured");
@@ -1320,32 +1328,6 @@ exports.scheduledFirestoreExport = (0, scheduler_1.onSchedule)({
             : new Error(String(exportError)));
     }
 });
-const stripeAutomaticKyc_1 = require("./stripeAutomaticKyc");
-exports.createProviderWithKYC = (0, https_1.onCall)({
-    region: "europe-west1",
-    memory: "512MiB",
-    secrets: [exports.STRIPE_SECRET_KEY_TEST, exports.STRIPE_SECRET_KEY_LIVE],
-}, wrapCallableFunction("createProviderWithKYC", async (request) => {
-    // Now TypeScript knows request.data has email, country, etc.
-    const result = await stripeAutomaticKyc_1.stripeKYCManager.createConnectedAccount(request.data, // ✅ TypeScript knows this matches CreateConnectedAccountData
-    request.auth.uid);
-    return result;
-}));
-exports.checkProviderKYCStatus = (0, https_1.onCall)({
-    region: "europe-west1",
-    memory: "256MiB",
-    cpu: 0.25,
-    maxInstances: 5,
-    minInstances: 0,
-    concurrency: 1,
-    timeoutSeconds: 30,
-    secrets: [exports.STRIPE_SECRET_KEY_TEST, exports.STRIPE_SECRET_KEY_LIVE],
-}, wrapCallableFunction("checkProviderKYCStatus", async (request) => {
-    if (!request.auth) {
-        throw new https_1.HttpsError("unauthenticated", "Must be authenticated");
-    }
-    return await stripeAutomaticKyc_1.stripeKYCManager.checkKYCStatus(request.data.accountId);
-}));
 exports.scheduledCleanup = (0, scheduler_1.onSchedule)({
     region: "europe-west1",
     memory: "256MiB",
@@ -1515,7 +1497,7 @@ exports.getSystemHealthStatus = (0, https_1.onCall)({
         let stripeStatus = "not_configured";
         let stripeLatency = 0;
         try {
-            const stripeInstance = getStripe();
+            const stripeInstance = (0, exports.getStripe)();
             if (stripeInstance) {
                 const stripeTest = Date.now();
                 await stripeInstance.paymentIntents.list({ limit: 1 });

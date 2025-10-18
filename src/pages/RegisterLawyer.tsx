@@ -1931,6 +1931,62 @@ const RegisterLawyer: React.FC = () => {
           updatedAt: new Date(),
         };
 
+        // ============================================
+        console.log("💳 Starting Stripe onboarding...");
+
+        // Import getFunctions and httpsCallable at the top of your file
+        const { getFunctions, httpsCallable } = await import(
+          "firebase/functions"
+        );
+
+        const functions = getFunctions();
+        const completeLawyerOnboarding = httpsCallable(
+          functions,
+          "completeLawyerOnboarding"
+        );
+
+        const onboardingResult = await completeLawyerOnboarding({
+          // Personal info
+          firstName: form.firstName.trim(),
+          lastName: form.lastName.trim(),
+          email: form.email.trim().toLowerCase(),
+          dateOfBirth: form.dateOfBirth, // YYYY-MM-DD format
+          phone: form.phone,
+          whatsapp: form.whatsapp,
+
+          // Address
+          address: form.address.trim(),
+          currentCountry:
+            form.currentCountry === other
+              ? form.customCountry
+              : form.currentCountry,
+          currentPresenceCountry: form.currentPresenceCountry,
+
+          // Identity
+          panNumber: form.panNumber.trim(),
+          panDocument: form.panDocument, // Firebase Storage URL
+
+          // Bank
+          bankAccountNumber: form.bankAccountNumber.trim(),
+          ifscCode: form.ifscCode.trim().toUpperCase(),
+
+          // Professional (optional)
+          profilePhoto: form.profilePhoto,
+          bio: form.bio.trim(),
+          specialties: form.specialties,
+          practiceCountries: form.practiceCountries,
+          yearsOfExperience: form.yearsOfExperience,
+        });
+
+        const result = onboardingResult.data as {
+          success: boolean;
+          accountId: string;
+          status: any;
+          message: { en: string; fr: string };
+        };
+
+        console.log("✅ Stripe onboarding completed:", result);
+
         await register(userData, form.password);
         navigate(redirect, {
           replace: true,
