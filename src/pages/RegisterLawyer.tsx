@@ -2136,7 +2136,7 @@ const RegisterLawyer: React.FC = () => {
         const languageCodes = (selectedLanguages as LanguageOption[]).map(
           (l) => l.value
         );
-        const other = lang === "en" ? "Other" : "Autre";
+        const someOther = lang === "en" ? "Other" : "Autre";
 
         const userData = {
           role: "lawyer" as const,
@@ -2155,7 +2155,7 @@ const RegisterLawyer: React.FC = () => {
           phone: form.phone,
           whatsapp: form.whatsapp,
           currentCountry:
-            form.currentCountry === other
+            form.currentCountry === someOther
               ? form.customCountry
               : form.currentCountry,
           currentPresenceCountry: form.currentPresenceCountry,
@@ -2187,75 +2187,64 @@ const RegisterLawyer: React.FC = () => {
         await register(userData, form.password);
 
         // ============================================
-        console.log("💳 Starting Stripe onboarding...");
+console.log("💳 Starting Stripe onboarding...");
 
-        // Import getFunctions and httpsCallable at the top of your file
-        const { getFunctions, httpsCallable } = await import(
-          "firebase/functions"
-        );
+const { getFunctions, httpsCallable } = await import("firebase/functions");
+const functions = getFunctions(undefined, "europe-west1");
+const completeLawyerOnboarding = httpsCallable(
+  functions,
+  "completeLawyerOnboarding"
+);
 
-        const functions = getFunctions(undefined, "europe-west1");
-        const completeLawyerOnboarding = httpsCallable(
-          functions,
-          "completeLawyerOnboarding"
-        );
+const other = lang === "en" ? "Other" : "Autre";
+const selectedCountryName = form.currentCountry === other 
+  ? form.customCountry 
+  : form.currentCountry;
 
+const onboardingResult = await completeLawyerOnboarding({
+  firstName: form.firstName.trim(),
+  lastName: form.lastName.trim(),
+  email: form.email.trim().toLowerCase(),
+  dateOfBirth: form.dateOfBirth,
+  phone: form.phone,
+  whatsapp: form.whatsapp,
+  address: form.address.trim(),
+  currentCountry: getCountryCode(selectedCountryName), // Convert to ISO code
+  currentPresenceCountry: form.currentPresenceCountry,
+  panNumber: form.panNumber.trim(),
+  panDocument: form.panDocument,
+  bankAccountNumber: form.bankAccountNumber.trim(),
+  ifscCode: form.ifscCode.trim().toUpperCase(),
+  profilePhoto: form.profilePhoto,
+  bio: form.bio.trim(),
+  specialties: form.specialties,
+  practiceCountries: form.practiceCountries,
+  yearsOfExperience: form.yearsOfExperience,
+});
 
-          const selectedCountryName = form.currentCountry === other 
-        ? form.customCountry 
-        : form.currentCountry;
+const result = onboardingResult.data as {
+  success: boolean;
+  accountId: string;
+  onboardingUrl: string; // ✅ NEW: Stripe hosted page URL
+  message: { en: string; fr: string };
+};
 
-        const onboardingResult = await completeLawyerOnboarding({
-          // Personal info
-          firstName: form.firstName.trim(),
-          lastName: form.lastName.trim(),
-          email: form.email.trim().toLowerCase(),
-          dateOfBirth: form.dateOfBirth, // YYYY-MM-DD format
-          phone: form.phone,
-          whatsapp: form.whatsapp,
+console.log("✅ Stripe onboarding initiated:", result);
 
-          // Address
-          address: form.address.trim(),
-          currentCountry: getCountryCode(selectedCountryName),
-     
-         
-          currentPresenceCountry: form.currentPresenceCountry,
+// ✅ NEW: Redirect to Stripe's onboarding page
+// Lawyer will complete KYC there and return to your site
+window.location.href = result.onboardingUrl;
 
-          // Identity
-          panNumber: form.panNumber.trim(),
-          panDocument: form.panDocument, // Firebase Storage URL
-
-          // Bank
-          bankAccountNumber: form.bankAccountNumber.trim(),
-          ifscCode: form.ifscCode.trim().toUpperCase(),
-
-          // Professional (optional)
-          profilePhoto: form.profilePhoto,
-          bio: form.bio.trim(),
-          specialties: form.specialties,
-          practiceCountries: form.practiceCountries,
-          yearsOfExperience: form.yearsOfExperience,
-        });
-
-        const result = onboardingResult.data as {
-          success: boolean;
-          accountId: string;
-          status: any;
-          message: { en: string; fr: string };
-        };
-
-        console.log("✅ Stripe onboarding completed:", result);
-
-        navigate(redirect, {
-          replace: true,
-          state: {
-            message:
-              lang === "en"
-                ? "Registration successful! Your profile will be validated within 24h."
-                : "Inscription réussie ! Votre profil sera validé sous 24h.",
-            type: "success",
-          },
-        });
+        // navigate(redirect, {
+        //   replace: true,
+        //   state: {
+        //     message:
+        //       lang === "en"
+        //         ? "Registration successful! Your profile will be validated within 24h."
+        //         : "Inscription réussie ! Votre profil sera validé sous 24h.",
+        //     type: "success",
+        //   },
+        // });
       } catch (err: unknown) {
         const msg = err instanceof Error ? err.message : "Error";
         setFieldErrors((prev) => ({ ...prev, general: msg }));
