@@ -458,6 +458,7 @@ const getCountryCode = (countryName: string, locale: string = "en"): string => {
     "Argentina": "AR",
     "Armenia": "AM",
     "Australia": "AU",
+     "United Arab Emirates": "AE", // ✅ ADD THIS LINE
     "Austria": "AT",
     "Azerbaijan": "AZ",
     "Bahamas": "BS",
