@@ -440,6 +440,18 @@ const COUNTRIES: MultiLangDuo[] = [
   { fr: "Autre", es: "Otro", en: "Other", de: "Andere", ru: "Другое" },
 ];
 
+const inputClass = (hasErr?: boolean) =>
+  `w-full px-3 py-3 border-2 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:outline-none transition-all duration-200 text-base 
+  
+    [&_input]:border-0 [&_input]:outline-none [&_input]:shadow-none
+    [&_input:focus]:border-0 [&_input:focus]:outline-none [&_input:focus]:shadow-none
+    [&_select]:outline-none [&_select:focus]:outline-none
+  ${
+    hasErr
+      ? "border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-red-50"
+      : "border-gray-200 hover:border-gray-300 focus:border-red-600"
+  }`;
+
 // Add this at the top of your RegisterLawyer.tsx file (outside component)
 
 // Country name to ISO code mapping (Stripe requires 2-letter codes)
@@ -2690,7 +2702,7 @@ const RegisterLawyer: React.FC = () => {
                       </p>
                     </div> */}
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-4">
                       {/* Phone Number */}
                       <div>
                         <label className="block text-sm font-semibold text-gray-800 mb-1">
@@ -2721,10 +2733,10 @@ const RegisterLawyer: React.FC = () => {
                             }
                           }}
                           onBlur={() => markTouched("phone")}
-                          defaultCountry="IN"
+                          defaultCountry="FR"
                           international
                           countryCallingCodeEditable={false}
-                          className={getInputClassName("phone")}
+                          className={inputClass()}
                           placeholder="+91 98765 43210"
                         />
 
@@ -2779,11 +2791,11 @@ const RegisterLawyer: React.FC = () => {
                             }
                           }}
                           onBlur={() => markTouched("whatsapp")}
-                          defaultCountry="IN"
+                          defaultCountry="FR"
                           international
                           countryCallingCodeEditable={false}
-                          className={getInputClassName("whatsapp")}
-                          placeholder="+91 98765 43210"
+                          className={inputClass()}
+                          placeholder="+33 1 23 45 67 89"
                         />
 
                         {form.whatsapp && (

@@ -22,7 +22,8 @@ export default function StripeKYC({ onComplete }: Props) {
           "getStripeAccountSession"
         );
 
-        const result = await getStripeAccountSession();
+          const result = await getStripeAccountSession();
+          console.log(result.data)
         const data = result.data as {
           success: boolean;
           accountId: string;
