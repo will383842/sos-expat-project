@@ -440,8 +440,9 @@ const COUNTRIES: MultiLangDuo[] = [
   { fr: "Autre", es: "Otro", en: "Other", de: "Andere", ru: "Другое" },
 ];
 
-const inputClass = (hasErr?: boolean) =>
-  `w-full px-3 py-3 border-2 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:outline-none transition-all duration-200 text-base 
+
+  const inputClass = (hasErr?: boolean) =>
+    `w-full px-3 py-3 border-2 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:outline-none transition-all duration-200 text-base 
   
     [&_input]:border-0 [&_input]:outline-none [&_input]:shadow-none
     [&_input:focus]:border-0 [&_input:focus]:outline-none [&_input:focus]:shadow-none
@@ -2735,8 +2736,9 @@ const RegisterLawyer: React.FC = () => {
                           onBlur={() => markTouched("phone")}
                           defaultCountry="FR"
                           international
+                         
                           countryCallingCodeEditable={false}
-                          className={inputClass()}
+                           className={inputClass()}
                           placeholder="+91 98765 43210"
                         />
 
@@ -2794,7 +2796,7 @@ const RegisterLawyer: React.FC = () => {
                           defaultCountry="FR"
                           international
                           countryCallingCodeEditable={false}
-                          className={inputClass()}
+                           className={inputClass()}
                           placeholder="+33 1 23 45 67 89"
                         />
 
