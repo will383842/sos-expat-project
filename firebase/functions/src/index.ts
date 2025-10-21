@@ -50,6 +50,11 @@ export const TWILIO_PHONE_NUMBER = defineSecret("TWILIO_PHONE_NUMBER");
 export const STRIPE_SECRET_KEY_TEST = defineSecret("STRIPE_SECRET_KEY_TEST");
 export const STRIPE_SECRET_KEY_LIVE = defineSecret("STRIPE_SECRET_KEY_LIVE");
 
+
+// kyc 
+export { createLawyerStripeAccount } from "./createLawyerAccount";
+export { getStripeAccountSession } from "./getAccountSession";
+
 // Cloud Tasks auth
 export const TASKS_AUTH_SECRET = defineSecret("TASKS_AUTH_SECRET");
 

@@ -864,14 +864,6 @@ interface LawyerFormData {
   phone: string;
   whatsapp: string;
 
-  // Add these new fields
-  dateOfBirth: string;
-  address: string;
-  panNumber: string;
-  panDocument: string; // URL to uploaded document
-  bankAccountNumber: string;
-  ifscCode: string;
-
   currentCountry: string;
   currentPresenceCountry: string;
   customCountry: string;
@@ -1533,14 +1525,6 @@ const RegisterLawyer: React.FC = () => {
     phone: "",
     whatsapp: "",
 
-    // Add these
-    dateOfBirth: "",
-    address: "",
-    panNumber: "",
-    panDocument: "",
-    bankAccountNumber: "",
-    ifscCode: "",
-
     currentCountry: "",
     currentPresenceCountry: "",
     customCountry: "",
@@ -1603,13 +1587,7 @@ const RegisterLawyer: React.FC = () => {
       form.password.length >= 6,
       !!form.phone,
       !!form.whatsapp,
-      // Add new fields
-      !!form.dateOfBirth && /^\d{4}-\d{2}-\d{2}$/.test(form.dateOfBirth),
-      !!form.address.trim(),
-      !!form.panNumber.trim(),
-      !!form.panDocument,
-      !!form.bankAccountNumber.trim(),
-      !!form.ifscCode.trim() && /^[A-Z]{4}0[A-Z0-9]{6}$/.test(form.ifscCode),
+
       !!form.currentCountry,
       !!form.currentPresenceCountry,
       form.bio.trim().length >= 50,
@@ -1863,45 +1841,6 @@ const RegisterLawyer: React.FC = () => {
         id: "registerLawyer.errors.emailInvalid",
       });
 
-    // Add new validations
-    if (!form.dateOfBirth)
-      e.dateOfBirth = intl.formatMessage({
-        id: "registerLawyer.errors.dobRequired",
-      });
-    else if (!/^\d{4}-\d{2}-\d{2}$/.test(form.dateOfBirth))
-      e.dateOfBirth = intl.formatMessage({
-        id: "registerLawyer.errors.dobInvalid",
-      });
-
-    if (!form.address.trim())
-      e.address = intl.formatMessage({
-        id: "registerLawyer.errors.addressRequired",
-      });
-
-    if (!form.panNumber.trim())
-      e.panNumber = intl.formatMessage({
-        id: "registerLawyer.errors.panRequired",
-      });
-
-    if (!form.panDocument)
-      e.panDocument = intl.formatMessage({
-        id: "registerLawyer.errors.panDocumentRequired",
-      });
-
-    if (!form.bankAccountNumber.trim())
-      e.bankAccountNumber = intl.formatMessage({
-        id: "registerLawyer.errors.bankAccountRequired",
-      });
-
-    if (!form.ifscCode.trim())
-      e.ifscCode = intl.formatMessage({
-        id: "registerLawyer.errors.ifscRequired",
-      });
-    else if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(form.ifscCode))
-      e.ifscCode = intl.formatMessage({
-        id: "registerLawyer.errors.ifscInvalid",
-      });
-
     if (!form.password || form.password.length < 6)
       e.password = intl.formatMessage({
         id: "registerLawyer.errors.passwordTooShort",
@@ -2148,12 +2087,7 @@ const RegisterLawyer: React.FC = () => {
           name: `${form.firstName.trim()} ${form.lastName.trim()}`,
           firstName: form.firstName.trim(),
           lastName: form.lastName.trim(),
-          dateOfBirth: form.dateOfBirth,
-          address: form.address.trim(),
-          panNumber: form.panNumber.trim(),
-          panDocument: form.panDocument,
-          bankAccountNumber: form.bankAccountNumber.trim(),
-          ifscCode: form.ifscCode.trim().toUpperCase(),
+
           phone: form.phone,
           whatsapp: form.whatsapp,
           currentCountry:
@@ -2189,67 +2123,49 @@ const RegisterLawyer: React.FC = () => {
         await register(userData, form.password);
 
         // ============================================
-        console.log("💳 Starting Stripe onboarding...");
+        // STEP 2: Create Stripe Account (NOT KYC yet!)
+        // ============================================
+        console.log("💳 Creating Stripe account...");
 
         const { getFunctions, httpsCallable } = await import(
           "firebase/functions"
         );
         const functions = getFunctions(undefined, "europe-west1");
-        const completeLawyerOnboarding = httpsCallable(
+        const createLawyerStripeAccount = httpsCallable(
           functions,
-          "completeLawyerOnboarding"
+          "createLawyerStripeAccount"
         );
 
-        const other = lang === "en" ? "Other" : "Autre";
         const selectedCountryName =
-          form.currentCountry === other
+          form.currentCountry === "other"
             ? form.customCountry
             : form.currentCountry;
 
-        const onboardingResult = await completeLawyerOnboarding({
+        const stripeResult = await createLawyerStripeAccount({
+          email: form.email.trim().toLowerCase(),
+          currentCountry: getCountryCode(selectedCountryName),
           firstName: form.firstName.trim(),
           lastName: form.lastName.trim(),
-          email: form.email.trim().toLowerCase(),
-          dateOfBirth: form.dateOfBirth,
-          phone: form.phone,
-          whatsapp: form.whatsapp,
-          address: form.address.trim(),
-          currentCountry: getCountryCode(selectedCountryName), // Convert to ISO code
-          currentPresenceCountry: form.currentPresenceCountry,
-          panNumber: form.panNumber.trim(),
-          panDocument: form.panDocument,
-          bankAccountNumber: form.bankAccountNumber.trim(),
-          ifscCode: form.ifscCode.trim().toUpperCase(),
-          profilePhoto: form.profilePhoto,
-          bio: form.bio.trim(),
-          specialties: form.specialties,
-          practiceCountries: form.practiceCountries,
-          yearsOfExperience: form.yearsOfExperience,
         });
 
-        const result = onboardingResult.data as {
+        const result = stripeResult.data as {
           success: boolean;
           accountId: string;
-          onboardingUrl: string; // ✅ NEW: Stripe hosted page URL
-          message: { en: string; fr: string };
+          message: string;
         };
 
-        console.log("✅ Stripe onboarding initiated:", result);
+        console.log("✅ Stripe account created:", result.accountId);
 
-        // ✅ NEW: Redirect to Stripe's onboarding page
-        // Lawyer will complete KYC there and return to your site
-        window.location.href = result.onboardingUrl;
-
-        // navigate(redirect, {
-        //   replace: true,
-        //   state: {
-        //     message:
-        //       lang === "en"
-        //         ? "Registration successful! Your profile will be validated within 24h."
-        //         : "Inscription réussie ! Votre profil sera validé sous 24h.",
-        //     type: "success",
-        //   },
-        // });
+        navigate(redirect, {
+          replace: true,
+          state: {
+            message:
+              lang === "en"
+                ? "Registration successful! Your profile will be validated within 24h."
+                : "Inscription réussie ! Votre profil sera validé sous 24h.",
+            type: "success",
+          },
+        });
       } catch (err: unknown) {
         const msg = err instanceof Error ? err.message : "Error";
         setFieldErrors((prev) => ({ ...prev, general: msg }));
@@ -2880,260 +2796,6 @@ const RegisterLawyer: React.FC = () => {
                         <FieldError
                           error={fieldErrors.whatsapp}
                           show={!!fieldErrors.whatsapp && touched.whatsapp}
-                        />
-                      </div>
-                    </div>
-                  </section>
-
-                  {/* Financial & Identity Information */}
-                  <section className="p-5 sm:p-6 border-t border-gray-50">
-                    <SectionHeader
-                      icon={<ShieldCheck className="w-5 h-5" />}
-                      title={intl.formatMessage({
-                        id: "registerLawyer.ui.financialInfo",
-                      })}
-                      subtitle="Required for payments and verification"
-                    />
-
-                    {/* Date of Birth */}
-                    <div className="mb-4">
-                      <label
-                        htmlFor="dateOfBirth"
-                        className="block text-sm font-semibold text-gray-800 mb-1"
-                      >
-                        <FormattedMessage id="registerLawyer.fields.dateOfBirth" />{" "}
-                        <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        id="dateOfBirth"
-                        name="dateOfBirth"
-                        type="date"
-                        value={form.dateOfBirth}
-                        onChange={onChange}
-                        onBlur={() => markTouched("dateOfBirth")}
-                        className={getInputClassName("dateOfBirth")}
-                        placeholder={intl.formatMessage({
-                          id: "registerLawyer.placeholder.dateOfBirth",
-                        })}
-                      />
-                      <FieldError
-                        error={fieldErrors.dateOfBirth}
-                        show={
-                          !!(fieldErrors.dateOfBirth && touched.dateOfBirth)
-                        }
-                      />
-                      <FieldSuccess
-                        show={
-                          !fieldErrors.dateOfBirth &&
-                          !!touched.dateOfBirth &&
-                          !!form.dateOfBirth
-                        }
-                        message={intl.formatMessage({
-                          id: "registerLawyer.success.fieldValid",
-                        })}
-                      />
-                    </div>
-
-                    {/* Address */}
-                    <div className="mb-4">
-                      <label
-                        htmlFor="address"
-                        className="block text-sm font-semibold text-gray-800 mb-1"
-                      >
-                        <FormattedMessage id="registerLawyer.fields.address" />{" "}
-                        <span className="text-red-500">*</span>
-                      </label>
-                      <textarea
-                        id="address"
-                        name="address"
-                        rows={3}
-                        value={form.address}
-                        onChange={onChange}
-                        onBlur={() => markTouched("address")}
-                        className={getInputClassName("address")}
-                        placeholder={intl.formatMessage({
-                          id: "registerLawyer.placeholder.address",
-                        })}
-                      />
-                      <FieldError
-                        error={fieldErrors.address}
-                        show={!!(fieldErrors.address && touched.address)}
-                      />
-                      <FieldSuccess
-                        show={
-                          !fieldErrors.address &&
-                          !!touched.address &&
-                          !!form.address
-                        }
-                        message={intl.formatMessage({
-                          id: "registerLawyer.success.fieldValid",
-                        })}
-                      />
-                    </div>
-
-                    {/* PAN Number */}
-                    <div className="mb-4">
-                      <label
-                        htmlFor="panNumber"
-                        className="block text-sm font-semibold text-gray-800 mb-1"
-                      >
-                        <FormattedMessage id="registerLawyer.fields.panNumber" />{" "}
-                        <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        id="panNumber"
-                        name="panNumber"
-                        type="text"
-                        value={form.panNumber}
-                        onChange={onChange}
-                        onBlur={() => markTouched("panNumber")}
-                        className={getInputClassName("panNumber")}
-                        placeholder={intl.formatMessage({
-                          id: "registerLawyer.placeholder.panNumber",
-                        })}
-                      />
-                      <FieldError
-                        error={fieldErrors.panNumber}
-                        show={!!(fieldErrors.panNumber && touched.panNumber)}
-                      />
-                      <FieldSuccess
-                        show={
-                          !fieldErrors.panNumber &&
-                          !!touched.panNumber &&
-                          !!form.panNumber
-                        }
-                        message={intl.formatMessage({
-                          id: "registerLawyer.success.fieldValid",
-                        })}
-                      />
-                    </div>
-
-                    {/* PAN Document Upload */}
-                    <div
-                      className={`mb-4 rounded-xl border ${THEME.border} p-4 ${THEME.subtle}`}
-                    >
-                      <label className="flex items-center text-sm font-semibold text-gray-900 mb-2">
-                        <FormattedMessage id="registerLawyer.fields.panDocument" />{" "}
-                        <span className="text-red-500 ml-1">*</span>
-                      </label>
-                      <Suspense
-                        fallback={
-                          <div className="py-6">
-                            <div className="h-24 bg-gray-100 animate-pulse rounded-xl" />
-                          </div>
-                        }
-                      >
-                        <ImageUploader
-                          locale={"fr"}
-                          currentImage={form.panDocument}
-                          onImageUploaded={(url: string) => {
-                            setForm((prev) => ({ ...prev, panDocument: url }));
-                            setFieldErrors((prev) => ({
-                              ...prev,
-                              panDocument: "",
-                            }));
-                            setTouched((p) => ({ ...p, panDocument: true }));
-                          }}
-                          hideNativeFileLabel
-                          cropShape="rect"
-                          outputSize={1024}
-                          uploadPath="documents/pan"
-                          isRegistration={true}
-                        />
-                      </Suspense>
-                      <FieldError
-                        error={fieldErrors.panDocument}
-                        show={!!fieldErrors.panDocument}
-                      />
-                      <FieldSuccess
-                        show={!!form.panDocument}
-                        message={intl.formatMessage({
-                          id: "registerLawyer.success.fieldValid",
-                        })}
-                      />
-                      <p className="text-xs text-gray-500 mt-1">
-                        Upload a clear copy of your PAN card or
-                        government-issued ID
-                      </p>
-                    </div>
-
-                    {/* Bank Details */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label
-                          htmlFor="bankAccountNumber"
-                          className="block text-sm font-semibold text-gray-800 mb-1"
-                        >
-                          <FormattedMessage id="registerLawyer.fields.bankAccountNumber" />{" "}
-                          <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          id="bankAccountNumber"
-                          name="bankAccountNumber"
-                          type="text"
-                          value={form.bankAccountNumber}
-                          onChange={onChange}
-                          onBlur={() => markTouched("bankAccountNumber")}
-                          className={getInputClassName("bankAccountNumber")}
-                          placeholder={intl.formatMessage({
-                            id: "registerLawyer.placeholder.bankAccountNumber",
-                          })}
-                        />
-                        <FieldError
-                          error={fieldErrors.bankAccountNumber}
-                          show={
-                            !!(
-                              fieldErrors.bankAccountNumber &&
-                              touched.bankAccountNumber
-                            )
-                          }
-                        />
-                        <FieldSuccess
-                          show={
-                            !fieldErrors.bankAccountNumber &&
-                            !!touched.bankAccountNumber &&
-                            !!form.bankAccountNumber
-                          }
-                          message={intl.formatMessage({
-                            id: "registerLawyer.success.fieldValid",
-                          })}
-                        />
-                      </div>
-
-                      <div>
-                        <label
-                          htmlFor="ifscCode"
-                          className="block text-sm font-semibold text-gray-800 mb-1"
-                        >
-                          <FormattedMessage id="registerLawyer.fields.ifscCode" />{" "}
-                          <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          id="ifscCode"
-                          name="ifscCode"
-                          type="text"
-                          value={form.ifscCode}
-                          onChange={onChange}
-                          onBlur={() => markTouched("ifscCode")}
-                          className={getInputClassName("ifscCode")}
-                          placeholder={intl.formatMessage({
-                            id: "registerLawyer.placeholder.ifscCode",
-                          })}
-                          maxLength={11}
-                        />
-                        <FieldError
-                          error={fieldErrors.ifscCode}
-                          show={!!(fieldErrors.ifscCode && touched.ifscCode)}
-                        />
-                        <FieldSuccess
-                          show={
-                            !fieldErrors.ifscCode &&
-                            !!touched.ifscCode &&
-                            !!form.ifscCode
-                          }
-                          message={intl.formatMessage({
-                            id: "registerLawyer.success.fieldValid",
-                          })}
                         />
                       </div>
                     </div>

@@ -52,6 +52,18 @@ export interface User {
   isVisible?: boolean;
   isOnline?: boolean;
 
+  stripeAccountId?: string;
+  kycStatus?:
+    | "not_started"
+    | "incomplete"
+    | "under_review"
+    | "verified"
+    | "disconnected";
+  stripeOnboardingComplete?: boolean;
+  chargesEnabled?: boolean;
+  payoutsEnabled?: boolean;
+  stripeAccountDisconnected?: boolean;
+
   // Contact
   phone?: string;
   phoneNumber?: string;
