@@ -794,7 +794,7 @@ const Dashboard: React.FC = () => {
       {user &&
         (user?.kycStatus === "not_started" ||
           !user?.stripeOnboardingComplete) && (
-          <div className="my-8 mx-auto mx-10 px-4">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="mb-8 bg-gradient-to-r from-orange-500 to-red-600 rounded-2xl shadow-xl overflow-hidden ">
               <div className="px-6 py-8 sm:px-8">
                 <div className="flex items-center justify-between mb-6">
