@@ -50,10 +50,10 @@ export const TWILIO_PHONE_NUMBER = defineSecret("TWILIO_PHONE_NUMBER");
 export const STRIPE_SECRET_KEY_TEST = defineSecret("STRIPE_SECRET_KEY_TEST");
 export const STRIPE_SECRET_KEY_LIVE = defineSecret("STRIPE_SECRET_KEY_LIVE");
 
-
-// kyc 
+// kyc
 export { createLawyerStripeAccount } from "./createLawyerAccount";
 export { getStripeAccountSession } from "./getAccountSession";
+export { checkStripeAccountStatus } from "./checkStripeAccountStatus";
 
 // Cloud Tasks auth
 export const TASKS_AUTH_SECRET = defineSecret("TASKS_AUTH_SECRET");
@@ -78,18 +78,15 @@ setGlobalOptions({
   secrets: GLOBAL_SECRETS,
 } as any);
 
-
-
 // ✅ ADD YOUR STRIPE CONNECT FUNCTIONS HERE
 export {
   createCustomAccount,
   submitKycData,
   addBankAccount,
-  checkKycStatus
-} from './stripeAutomaticKyc'
+  checkKycStatus,
+} from "./stripeAutomaticKyc";
 
-
-export { completeLawyerOnboarding } from './lawyerOnboarding';
+export { completeLawyerOnboarding } from "./lawyerOnboarding";
 
 // ====== IMPORTS PRINCIPAUX ======
 import {
@@ -1242,6 +1239,52 @@ export const stripeWebhook = onRequest(
               console.log("🔄 Processing refund.updated");
               break;
 
+            case "account.updated":
+              console.log("🏦 Processing account.updated (Stripe Connect)");
+              break;
+            case "account.application.authorized": {
+              console.log(
+                "✅ [ACCOUNT.APPLICATION.AUTHORIZED] User authorized your platform"
+              );
+              const application = event.data.object as any;
+              console.log("Application details:", {
+                accountId: application.account,
+                name: application.name,
+              });
+              break;
+            }
+
+            case "account.application.deauthorized":
+              console.log(
+                "❌ [ACCOUNT.APPLICATION.DEAUTHORIZED] User disconnected account"
+              );
+              break;
+
+            case "account.external_account.created":
+              console.log(
+                "🏦 [ACCOUNT.EXTERNAL_ACCOUNT.CREATED] Bank account added"
+              );
+              const externalAccount = event.data.object as any;
+              console.log("External account details:", {
+                accountId: externalAccount.account,
+                type: externalAccount.object, // 'bank_account' or 'card'
+                last4: externalAccount.last4,
+                bankName: externalAccount.bank_name,
+                country: externalAccount.country,
+              });
+              break;
+
+            case "account.external_account.updated":
+              console.log(
+                "📝 [ACCOUNT.EXTERNAL_ACCOUNT.UPDATED] Bank account updated"
+              );
+
+              console.log("Updated external account:", {
+                accountId: externalAccount.account,
+                last4: externalAccount.last4,
+              });
+              break;
+
             default:
               console.log("❓ Unhandled event type:", event.type);
           }
@@ -1872,13 +1915,6 @@ export const scheduledFirestoreExport = onSchedule(
     }
   }
 );
-
-
-
-
-
-
-
 
 export const scheduledCleanup = onSchedule(
   {

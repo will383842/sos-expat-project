@@ -4,7 +4,7 @@ import { getStripe } from "./index";
 
 export const getStripeAccountSession = onCall(
   {
-    region: "europe-west1", // ✅ ADD THIS
+    region: "europe-west1",
   },
   async (request) => {
     if (!request.auth) {
@@ -39,19 +39,23 @@ export const getStripeAccountSession = onCall(
 
       console.log("🔗 Creating Account Session for:", accountId);
 
-      // Create Account Session
+      // Create Account Session with FULL collection options
       const accountSession = await stripe.accountSessions.create({
         account: accountId,
         components: {
-          account_onboarding: { enabled: true },
-          // account_management: { enabled: true },
-          // notification_banner: { enabled: true },
+          account_onboarding: {
+            enabled: true,
+            features: {
+              // ✅ ADD THESE FEATURES to collect everything in embedded form
+              external_account_collection: true,  // Collects bank account
+            },
+          },
           payments: { enabled: true },
           payouts: { enabled: true },
         },
       });
 
-      console.log("✅ Account Session created");
+      console.log("✅ Account Session created with full collection");
 
       return {
         success: true,

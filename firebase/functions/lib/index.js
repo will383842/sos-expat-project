@@ -40,7 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.testWebhook = exports.manuallyTriggerCallExecution = exports.getCloudTasksQueueStats = exports.testCloudTasksConnection = exports.getUltraDebugLogs = exports.getSystemHealthStatus = exports.generateSystemDebugReport = exports.scheduledCleanup = exports.scheduledFirestoreExport = exports.stripeWebhook = exports.getStripe = exports.adminBulkUpdateStatus = exports.adminSoftDeleteUser = exports.adminUpdateStatus = exports.executeCallTask = exports.notifyAfterPayment = exports.initializeMessageTemplates = exports.unifiedWebhook = exports.enqueueMessageEvent = exports.twilioCallWebhook = exports.testTwilioCall = exports.api = exports.createPaymentIntent = exports.createAndScheduleCall = exports.createAndScheduleCallHTTPS = exports.STRIPE_WEBHOOK_SECRET_LIVE = exports.STRIPE_WEBHOOK_SECRET_TEST = exports.STRIPE_MODE = exports.completeLawyerOnboarding = exports.checkKycStatus = exports.addBankAccount = exports.submitKycData = exports.createCustomAccount = exports.TASKS_AUTH_SECRET = exports.getStripeAccountSession = exports.createLawyerStripeAccount = exports.STRIPE_SECRET_KEY_LIVE = exports.STRIPE_SECRET_KEY_TEST = exports.TWILIO_PHONE_NUMBER = exports.TWILIO_AUTH_TOKEN = exports.TWILIO_ACCOUNT_SID = exports.EMAIL_PASS = exports.EMAIL_USER = void 0;
+exports.testWebhook = exports.manuallyTriggerCallExecution = exports.getCloudTasksQueueStats = exports.testCloudTasksConnection = exports.getUltraDebugLogs = exports.getSystemHealthStatus = exports.generateSystemDebugReport = exports.scheduledCleanup = exports.scheduledFirestoreExport = exports.stripeWebhook = exports.getStripe = exports.adminBulkUpdateStatus = exports.adminSoftDeleteUser = exports.adminUpdateStatus = exports.executeCallTask = exports.notifyAfterPayment = exports.initializeMessageTemplates = exports.unifiedWebhook = exports.enqueueMessageEvent = exports.twilioCallWebhook = exports.testTwilioCall = exports.api = exports.createPaymentIntent = exports.createAndScheduleCall = exports.createAndScheduleCallHTTPS = exports.STRIPE_WEBHOOK_SECRET_LIVE = exports.STRIPE_WEBHOOK_SECRET_TEST = exports.STRIPE_MODE = exports.completeLawyerOnboarding = exports.checkKycStatus = exports.addBankAccount = exports.submitKycData = exports.createCustomAccount = exports.TASKS_AUTH_SECRET = exports.checkStripeAccountStatus = exports.getStripeAccountSession = exports.createLawyerStripeAccount = exports.STRIPE_SECRET_KEY_LIVE = exports.STRIPE_SECRET_KEY_TEST = exports.TWILIO_PHONE_NUMBER = exports.TWILIO_AUTH_TOKEN = exports.TWILIO_ACCOUNT_SID = exports.EMAIL_PASS = exports.EMAIL_USER = void 0;
 // ====== ULTRA DEBUG INITIALIZATION ======
 const ultraDebugLogger_1 = require("./utils/ultraDebugLogger");
 // Tracer tous les imports principaux
@@ -75,11 +75,13 @@ exports.TWILIO_PHONE_NUMBER = (0, params_1.defineSecret)("TWILIO_PHONE_NUMBER");
 // Stripe
 exports.STRIPE_SECRET_KEY_TEST = (0, params_1.defineSecret)("STRIPE_SECRET_KEY_TEST");
 exports.STRIPE_SECRET_KEY_LIVE = (0, params_1.defineSecret)("STRIPE_SECRET_KEY_LIVE");
-// kyc 
+// kyc
 var createLawyerAccount_1 = require("./createLawyerAccount");
 Object.defineProperty(exports, "createLawyerStripeAccount", { enumerable: true, get: function () { return createLawyerAccount_1.createLawyerStripeAccount; } });
 var getAccountSession_1 = require("./getAccountSession");
 Object.defineProperty(exports, "getStripeAccountSession", { enumerable: true, get: function () { return getAccountSession_1.getStripeAccountSession; } });
+var checkStripeAccountStatus_1 = require("./checkStripeAccountStatus");
+Object.defineProperty(exports, "checkStripeAccountStatus", { enumerable: true, get: function () { return checkStripeAccountStatus_1.checkStripeAccountStatus; } });
 // Cloud Tasks auth
 exports.TASKS_AUTH_SECRET = (0, params_1.defineSecret)("TASKS_AUTH_SECRET");
 // ✅ Centralise la liste globale
@@ -885,6 +887,39 @@ exports.stripeWebhook = (0, https_1.onRequest)({
                     break;
                 case "refund.updated":
                     console.log("🔄 Processing refund.updated");
+                    break;
+                case "account.updated":
+                    console.log("🏦 Processing account.updated (Stripe Connect)");
+                    break;
+                case "account.application.authorized": {
+                    console.log("✅ [ACCOUNT.APPLICATION.AUTHORIZED] User authorized your platform");
+                    const application = event.data.object;
+                    console.log("Application details:", {
+                        accountId: application.account,
+                        name: application.name,
+                    });
+                    break;
+                }
+                case "account.application.deauthorized":
+                    console.log("❌ [ACCOUNT.APPLICATION.DEAUTHORIZED] User disconnected account");
+                    break;
+                case "account.external_account.created":
+                    console.log("🏦 [ACCOUNT.EXTERNAL_ACCOUNT.CREATED] Bank account added");
+                    const externalAccount = event.data.object;
+                    console.log("External account details:", {
+                        accountId: externalAccount.account,
+                        type: externalAccount.object, // 'bank_account' or 'card'
+                        last4: externalAccount.last4,
+                        bankName: externalAccount.bank_name,
+                        country: externalAccount.country,
+                    });
+                    break;
+                case "account.external_account.updated":
+                    console.log("📝 [ACCOUNT.EXTERNAL_ACCOUNT.UPDATED] Bank account updated");
+                    console.log("Updated external account:", {
+                        accountId: externalAccount.account,
+                        last4: externalAccount.last4,
+                    });
                     break;
                 default:
                     console.log("❓ Unhandled event type:", event.type);
