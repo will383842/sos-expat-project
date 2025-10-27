@@ -1482,7 +1482,17 @@
   "registerExpat.errors.ifscRequired": "IFSC code is required",
   "registerExpat.errors.ifscInvalid": "Invalid IFSC code format",
   
-  "registerExpat.ui.financialInfo": "Financial & Identity Information"
+  "registerExpat.ui.financialInfo": "Financial & Identity Information",
+    "validators.firstName": "First name is required",
+  "validators.lastName": "Last name is required",
+  "validators.title": "Title is required",
+  "validators.description": "Description is required",
+  "validators.phone": "Phone number is required",
+  "validators.nationality": "Nationality is required",
+  "validators.currentCountry": "Current country is required",
+  "validators.languages": "At least one language is required",
+  "validators.langMismatch": "Please select a valid language",
+  "validators.accept": "You must accept the terms"
 
 
 }

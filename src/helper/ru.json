@@ -1459,7 +1459,17 @@
   "registerExpat.errors.ifscRequired": "Код IFSC обязателен",
   "registerExpat.errors.ifscInvalid": "Неверный формат кода IFSC",
   
-  "registerExpat.ui.financialInfo": "Финансовая информация и удостоверение личности"
+  "registerExpat.ui.financialInfo": "Финансовая информация и удостоверение личности",
+   "validators.firstName": "Имя обязательно",
+  "validators.lastName": "Фамилия обязательна",
+  "validators.title": "Заголовок обязателен",
+  "validators.description": "Описание обязательно",
+  "validators.phone": "Номер телефона обязателен",
+  "validators.nationality": "Национальность обязательна",
+  "validators.currentCountry": "Текущая страна обязательна",
+  "validators.languages": "Требуется хотя бы один язык",
+  "validators.langMismatch": "Пожалуйста, выберите допустимый язык",
+  "validators.accept": "Вы должны принять условия"
 
 
 }

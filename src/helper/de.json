@@ -1497,7 +1497,17 @@
   "registerExpat.errors.ifscRequired": "IFSC-Code ist erforderlich",
   "registerExpat.errors.ifscInvalid": "Ungültiges IFSC-Code-Format",
   
-  "registerExpat.ui.financialInfo": "Finanz- und Identitätsinformationen"
+  "registerExpat.ui.financialInfo": "Finanz- und Identitätsinformationen",
+  "validators.firstName": "Vorname ist erforderlich",
+  "validators.lastName": "Nachname ist erforderlich",
+  "validators.title": "Titel ist erforderlich",
+  "validators.description": "Beschreibung ist erforderlich",
+  "validators.phone": "Telefonnummer ist erforderlich",
+  "validators.nationality": "Nationalität ist erforderlich",
+  "validators.currentCountry": "Aktuelles Land ist erforderlich",
+  "validators.languages": "Mindestens eine Sprache ist erforderlich",
+  "validators.langMismatch": "Bitte wählen Sie eine gültige Sprache",
+  "validators.accept": "Sie müssen die Bedingungen akzeptieren"
 
 
 

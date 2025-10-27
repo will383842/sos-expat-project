@@ -1506,5 +1506,15 @@
   "registerExpat.errors.ifscRequired": "El código IFSC es obligatorio",
   "registerExpat.errors.ifscInvalid": "Formato de código IFSC inválido",
 
-  "registerExpat.ui.financialInfo": "Información financiera y de identidad"
+  "registerExpat.ui.financialInfo": "Información financiera y de identidad",
+    "validators.firstName": "El nombre es obligatorio",
+  "validators.lastName": "El apellido es obligatorio",
+  "validators.title": "El título es obligatorio",
+  "validators.description": "La descripción es obligatoria",
+  "validators.phone": "El número de teléfono es obligatorio",
+  "validators.nationality": "La nacionalidad es obligatoria",
+  "validators.currentCountry": "El país actual es obligatorio",
+  "validators.languages": "Se requiere al menos un idioma",
+  "validators.langMismatch": "Por favor seleccione un idioma válido",
+  "validators.accept": "Debe aceptar los términos"
 }

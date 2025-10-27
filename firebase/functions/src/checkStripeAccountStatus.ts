@@ -83,6 +83,27 @@ export const checkStripeAccountStatus = onCall(
           updatedAt: admin.firestore.FieldValue.serverTimestamp(),
         });
 
+      if (isComplete) {
+        const sosProfileRef = admin
+          .firestore()
+          .collection("sos_profiles")
+          .doc(userId);
+        const sosProfileDoc = await sosProfileRef.get();
+
+        if (sosProfileDoc.exists) {
+          await sosProfileRef.update({
+            isApproved: true, // ✅ Matches your field
+            isVisible: true, // ✅ Matches your field
+            kycCompleted: true,
+            kycCompletedAt: admin.firestore.FieldValue.serverTimestamp(),
+            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+          });
+          console.log(
+            "✅ Updated sos_profiles - Lawyer now visible in SOS route"
+          );
+        }
+      }
+
       console.log(isComplete ? "✅ KYC Complete" : "⏳ KYC Incomplete");
 
       // Return status
@@ -98,13 +119,17 @@ export const checkStripeAccountStatus = onCall(
     } catch (error: unknown) {
       // Proper error handling with type checking
       console.error("❌ Error checking account status:", error);
-      
+
       if (error instanceof HttpsError) {
         throw error;
       }
-      
-      const errorMessage = error instanceof Error ? error.message : "Unknown error";
-      throw new HttpsError("internal", `Failed to check status: ${errorMessage}`);
+
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      throw new HttpsError(
+        "internal",
+        `Failed to check status: ${errorMessage}`
+      );
     }
   }
 );
