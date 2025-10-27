@@ -435,6 +435,7 @@ const Dashboard: React.FC = () => {
   }, [user, navigate]);
 
   // Status en temps réel (priorité = sos_profiles, fallback = users)
+
   useEffect(() => {
     if (!user?.id) return;
 

@@ -13,6 +13,8 @@ export const getStripeAccountSession = onCall<{ userType: "lawyer" | "expat" }>(
     const { userType } = request.data;
     const stripe = getStripe();
 
+    console.log(`🔗 Creating Account Session for ${userType}:`, userId);
+
     if (!stripe) {
       throw new HttpsError("internal", "Stripe is not configured");
     }
