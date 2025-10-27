@@ -2,52 +2,55 @@ import * as admin from "firebase-admin";
 import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { getStripe } from "./index";
 
-export const getStripeAccountSession = onCall(
-  {
-    region: "europe-west1",
-  },
+export const getStripeAccountSession = onCall<{ userType: "lawyer" | "expat" }>(
+  { region: "europe-west1" },
   async (request) => {
     if (!request.auth) {
       throw new HttpsError("unauthenticated", "User must be authenticated");
     }
 
     const userId = request.auth.uid;
+    const { userType } = request.data;
     const stripe = getStripe();
 
     if (!stripe) {
       throw new HttpsError("internal", "Stripe is not configured");
     }
 
+    // ✅ Validate userType
+    if (!userType || !["lawyer", "expat"].includes(userType)) {
+      throw new HttpsError("invalid-argument", "userType must be 'lawyer' or 'expat'");
+    }
+
     try {
-      // Get lawyer's Stripe account ID from Firestore
-      const lawyerDoc = await admin
+      // ✅ Get from correct collection based on userType
+      const collectionName = userType === "lawyer" ? "lawyers" : "expats";
+      const userDoc = await admin
         .firestore()
-        .collection("lawyers")
+        .collection(collectionName)
         .doc(userId)
         .get();
 
-      if (!lawyerDoc.exists) {
-        throw new HttpsError("not-found", "Lawyer profile not found");
+      if (!userDoc.exists) {
+        throw new HttpsError("not-found", `${userType} profile not found`);
       }
 
-      const lawyerData = lawyerDoc.data();
-      const accountId = lawyerData?.stripeAccountId;
+      const userData = userDoc.data();
+      const accountId = userData?.stripeAccountId;
 
       if (!accountId) {
         throw new HttpsError("failed-precondition", "No Stripe account found");
       }
 
-      console.log("🔗 Creating Account Session for:", accountId);
+      console.log(`🔗 Creating Account Session for ${userType}:`, accountId);
 
-      // Create Account Session with FULL collection options
       const accountSession = await stripe.accountSessions.create({
         account: accountId,
         components: {
           account_onboarding: {
             enabled: true,
             features: {
-              // ✅ ADD THESE FEATURES to collect everything in embedded form
-              external_account_collection: true,  // Collects bank account
+              external_account_collection: true,
             },
           },
           payments: { enabled: true },
@@ -55,7 +58,7 @@ export const getStripeAccountSession = onCall(
         },
       });
 
-      console.log("✅ Account Session created with full collection");
+      console.log("✅ Account Session created");
 
       return {
         success: true,

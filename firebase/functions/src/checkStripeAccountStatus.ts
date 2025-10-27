@@ -1,88 +1,96 @@
 import * as admin from "firebase-admin";
 import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { getStripe } from "./index"; // Adjust import path as needed
-import Stripe from "stripe";
 
-export const checkStripeAccountStatus = onCall(
+
+export const checkStripeAccountStatus = onCall<{ userType: "lawyer" | "expat" }>(
   { region: "europe-west1" },
   async (request) => {
-    // Check authentication
     if (!request.auth) {
       throw new HttpsError("unauthenticated", "User must be authenticated");
     }
 
     const userId = request.auth.uid;
+    const { userType } = request.data;
     const stripe = getStripe();
 
     if (!stripe) {
       throw new HttpsError("internal", "Stripe not configured");
     }
 
+    // ✅ Validate userType
+    if (!userType || !["lawyer", "expat"].includes(userType)) {
+      throw new HttpsError("invalid-argument", "userType must be 'lawyer' or 'expat'");
+    }
+
     try {
-      // Get lawyer's Stripe account ID from Firestore
-      const lawyerDoc = await admin
+      // ✅ Get from correct collection
+      const collectionName = userType === "lawyer" ? "lawyers" : "expats";
+      const userDoc = await admin
         .firestore()
-        .collection("lawyers")
+        .collection(collectionName)
         .doc(userId)
         .get();
 
-      if (!lawyerDoc.exists) {
-        throw new HttpsError("not-found", "Lawyer profile not found");
+      if (!userDoc.exists) {
+        throw new HttpsError("not-found", `${userType} profile not found`);
       }
 
-      const lawyerData = lawyerDoc.data();
-      const accountId = lawyerData?.stripeAccountId as string | undefined;
+      const userData = userDoc.data();
+      const accountId = userData?.stripeAccountId as string | undefined;
 
       if (!accountId) {
         throw new HttpsError("failed-precondition", "No Stripe account found");
       }
 
-      console.log("🔍 Checking Stripe account:", accountId);
+      console.log(`🔍 Checking Stripe account for ${userType}:`, accountId);
 
-      // Query Stripe directly for current status
-      const account: Stripe.Account = await stripe.accounts.retrieve(accountId);
+      const account = await stripe.accounts.retrieve(accountId);
 
-      // Safely access requirements with type checking
       const currentlyDue = account.requirements?.currently_due || [];
       const eventuallyDue = account.requirements?.eventually_due || [];
       const pastDue = account.requirements?.past_due || [];
 
-      // Check completion status
       const isComplete =
         account.details_submitted === true &&
         account.charges_enabled === true &&
         currentlyDue.length === 0;
 
       console.log("📊 Account Status:", {
+        userType,
         detailsSubmitted: account.details_submitted,
         chargesEnabled: account.charges_enabled,
         payoutsEnabled: account.payouts_enabled,
         isComplete,
       });
 
-      // Update Firestore with latest status
+      // ✅ Update both collections
+      const updateData = {
+        stripeAccountStatus: {
+          detailsSubmitted: account.details_submitted || false,
+          chargesEnabled: account.charges_enabled || false,
+          payoutsEnabled: account.payouts_enabled || false,
+          requirementsCurrentlyDue: currentlyDue,
+          requirementsEventuallyDue: eventuallyDue,
+          requirementsPastDue: pastDue,
+          disabledReason: account.requirements?.disabled_reason || null,
+          lastChecked: admin.firestore.FieldValue.serverTimestamp(),
+        },
+        kycCompleted: isComplete,
+        kycCompletedAt: isComplete
+          ? admin.firestore.FieldValue.serverTimestamp()
+          : null,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      };
+
+      // Update type-specific collection
       await admin
         .firestore()
-        .collection("lawyers")
+        .collection(collectionName)
         .doc(userId)
-        .update({
-          stripeAccountStatus: {
-            detailsSubmitted: account.details_submitted || false,
-            chargesEnabled: account.charges_enabled || false,
-            payoutsEnabled: account.payouts_enabled || false,
-            requirementsCurrentlyDue: currentlyDue,
-            requirementsEventuallyDue: eventuallyDue,
-            requirementsPastDue: pastDue,
-            disabledReason: account.requirements?.disabled_reason || null,
-            lastChecked: admin.firestore.FieldValue.serverTimestamp(),
-          },
-          kycCompleted: isComplete,
-          kycCompletedAt: isComplete
-            ? admin.firestore.FieldValue.serverTimestamp()
-            : null,
-          updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-        });
+        .update(updateData);
 
+      // ✅ Update sos_profiles collection when KYC is complete
       if (isComplete) {
         const sosProfileRef = admin
           .firestore()
@@ -92,21 +100,18 @@ export const checkStripeAccountStatus = onCall(
 
         if (sosProfileDoc.exists) {
           await sosProfileRef.update({
-            isApproved: true, // ✅ Matches your field
-            isVisible: true, // ✅ Matches your field
+            isApproved: true,
+            isVisible: true,
             kycCompleted: true,
             kycCompletedAt: admin.firestore.FieldValue.serverTimestamp(),
             updatedAt: admin.firestore.FieldValue.serverTimestamp(),
           });
-          console.log(
-            "✅ Updated sos_profiles - Lawyer now visible in SOS route"
-          );
+          console.log(`✅ Updated sos_profiles - ${userType} now visible`);
         }
       }
 
       console.log(isComplete ? "✅ KYC Complete" : "⏳ KYC Incomplete");
 
-      // Return status
       return {
         accountId: account.id,
         detailsSubmitted: account.details_submitted || false,
@@ -117,7 +122,6 @@ export const checkStripeAccountStatus = onCall(
         kycCompleted: isComplete,
       };
     } catch (error: unknown) {
-      // Proper error handling with type checking
       console.error("❌ Error checking account status:", error);
 
       if (error instanceof HttpsError) {
@@ -133,3 +137,4 @@ export const checkStripeAccountStatus = onCall(
     }
   }
 );
+

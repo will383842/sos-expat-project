@@ -141,6 +141,252 @@ type MultiLangDuo = {
   ru: string;
 };
 
+const getCountryCode = (countryName: string, locale: string = "en"): string => {
+  // Mapping for English country names
+  const countryMap: Record<string, string> = {
+    Afghanistan: "AF",
+    "South Africa": "ZA",
+    Albania: "AL",
+    Algeria: "DZ",
+    Germany: "DE",
+    Andorra: "AD",
+    Angola: "AO",
+    "Saudi Arabia": "SA",
+    Argentina: "AR",
+    Armenia: "AM",
+    Australia: "AU",
+    "United Arab Emirates": "AE",
+    Austria: "AT",
+    Azerbaijan: "AZ",
+    Bahamas: "BS",
+    Bahrain: "BH",
+    Bangladesh: "BD",
+    Barbados: "BB",
+    Belgium: "BE",
+    Belize: "BZ",
+    Benin: "BJ",
+    Bhutan: "BT",
+    Belarus: "BY",
+    Myanmar: "MM",
+    Bolivia: "BO",
+    "Bosnia and Herzegovina": "BA",
+    Botswana: "BW",
+    Brazil: "BR",
+    Brunei: "BN",
+    Bulgaria: "BG",
+    "Burkina Faso": "BF",
+    Burundi: "BI",
+    Cambodia: "KH",
+    Cameroon: "CM",
+    Canada: "CA",
+    "Cape Verde": "CV",
+    Chile: "CL",
+    China: "CN",
+    Cyprus: "CY",
+    Colombia: "CO",
+    Comoros: "KM",
+    Congo: "CG",
+    "North Korea": "KP",
+    "South Korea": "KR",
+    "Costa Rica": "CR",
+    "Ivory Coast": "CI",
+    Croatia: "HR",
+    Cuba: "CU",
+    Denmark: "DK",
+    Djibouti: "DJ",
+    Dominica: "DM",
+    Egypt: "EG",
+    Ecuador: "EC",
+    Eritrea: "ER",
+    Spain: "ES",
+    Estonia: "EE",
+    "United States": "US",
+    Ethiopia: "ET",
+    Fiji: "FJ",
+    Finland: "FI",
+    France: "FR",
+    Other: "US", // Default fallback
+
+    // French names
+    Afganistán: "AF",
+    Sudáfrica: "ZA",
+    Argelia: "DZ",
+    Alemania: "DE",
+    "Arabia Saudita": "SA",
+    Bélgica: "BE",
+    Belice: "BZ",
+    Benín: "BJ",
+    Bután: "BT",
+    Bielorrusia: "BY",
+    Birmania: "MM",
+    Botsuana: "BW",
+    Brasil: "BR",
+    Brunéi: "BN",
+    Bangladés: "BD",
+    "Cabo Verde": "CV",
+    Camboya: "KH",
+    Camerún: "CM",
+    Canadá: "CA",
+    Chipre: "CY",
+    "Corea del Norte": "KP",
+    "Corea del Sur": "KR",
+    "Costa de Marfil": "CI",
+    Croacia: "HR",
+    Dinamarca: "DK",
+    Yibuti: "DJ",
+    Egipto: "EG",
+    "Emiratos Árabes Unidos": "AE",
+
+    España: "ES",
+    "Estados Unidos": "US",
+    Etiopía: "ET",
+    Fiyi: "FJ",
+    Finlandia: "FI",
+    Francia: "FR",
+    Otro: "US",
+
+    // French names (fr)
+
+    "Afrique du Sud": "ZA",
+    Albanie: "AL",
+    Algérie: "DZ",
+    Allemagne: "DE",
+    "Arabie Saoudite": "SA",
+    Arménie: "AM",
+    Australie: "AU",
+    Autriche: "AT",
+    Azerbaïdjan: "AZ",
+    Bahreïn: "BH",
+    Belgique: "BE",
+    Biélorussie: "BY",
+    Birmanie: "MM",
+    "Bosnie-Herzégovine": "BA",
+    Brésil: "BR",
+    Bulgarie: "BG",
+    "Côte d'Ivoire": "CI",
+    Croatie: "HR",
+    Danemark: "DK",
+    Dominique: "DM",
+    Égypte: "EG",
+    "Émirats arabes unis": "AE",
+    Équateur: "EC",
+    Érythrée: "ER",
+    Espagne: "ES",
+    Estonie: "EE",
+    "États-Unis": "US",
+    Éthiopie: "ET",
+    Finlande: "FI",
+    Autre: "US",
+
+    // German names (de)
+    Südafrika: "ZA",
+    Albanien: "AL",
+    Algerien: "DZ",
+    Deutschland: "DE",
+    "Saudi-Arabien": "SA",
+    Argentinien: "AR",
+    Armenien: "AM",
+    Australien: "AU",
+    Österreich: "AT",
+    Aserbaidschan: "AZ",
+    Bangladesch: "BD",
+    Belgien: "BE",
+
+    "Bosnien und Herzegowina": "BA",
+    Brasilien: "BR",
+    Bulgarien: "BG",
+
+    Kambodscha: "KH",
+    Kamerun: "CM",
+    Kanada: "CA",
+    "Kap Verde": "CV",
+    Kolumbien: "CO",
+    Komoren: "KM",
+    Kongo: "CG",
+    Nordkorea: "KP",
+    Südkorea: "KR",
+    Elfenbeinküste: "CI",
+    Kroatien: "HR",
+    Dänemark: "DK",
+    Dschibuti: "DJ",
+    Ägypten: "EG",
+    "Vereinigte Arabische Emirate": "AE",
+    Äthiopien: "ET",
+    Fidschi: "FJ",
+    Finnland: "FI",
+    Frankreich: "FR",
+    "Vereinigte Staaten": "US",
+    Andere: "US",
+
+    // Russian names (ru)
+    Афганистан: "AF",
+    "Южная Африка": "ZA",
+    Албания: "AL",
+    Алжир: "DZ",
+    Германия: "DE",
+    Андорра: "AD",
+    Ангола: "AO",
+    "Саудовская Аравия": "SA",
+    Аргентина: "AR",
+    Армения: "AM",
+    Австралия: "AU",
+    Австрия: "AT",
+    Азербайджан: "AZ",
+    Багамы: "BS",
+    Бахрейн: "BH",
+    Бангладеш: "BD",
+    Барбадос: "BB",
+    Бельгия: "BE",
+    Белиз: "BZ",
+    Бенин: "BJ",
+    Бутан: "BT",
+    Беларусь: "BY",
+    Мьянма: "MM",
+    Боливия: "BO",
+    "Босния и Герцеговина": "BA",
+    Ботсвана: "BW",
+    Бразилия: "BR",
+    Бруней: "BN",
+    Болгария: "BG",
+    "Буркина-Фасо": "BF",
+    Бурунди: "BI",
+    Камбоджа: "KH",
+    Камерун: "CM",
+    Канада: "CA",
+
+    Чили: "CL",
+    Китай: "CN",
+    Кипр: "CY",
+    Колумбия: "CO",
+    Коморы: "KM",
+    Конго: "CG",
+    "Северная Корея": "KP",
+    "Южная Корея": "KR",
+    "Коста-Рика": "CR",
+    "Кот-д'Ивуар": "CI",
+    Хорватия: "HR",
+
+    Дания: "DK",
+    Джибути: "DJ",
+    Доминика: "DM",
+    Египет: "EG",
+    "Объединённые Арабские Эмираты": "AE",
+    Эквадор: "EC",
+    Эритрея: "ER",
+    Испания: "ES",
+    Эстония: "EE",
+    "Соединённые Штаты": "US",
+    Эфиопия: "ET",
+    Фиджи: "FJ",
+    Финляндия: "FI",
+    Франция: "FR",
+    Другое: "US",
+  };
+
+  // Try to get code, fallback to US if not found
+  return countryMap[countryName] || "US";
+};
+
 const COUNTRIES: MultiLangDuo[] = [
   {
     fr: "Afghanistan",
@@ -609,13 +855,6 @@ interface ExpatFormData {
   email: string;
   password: string;
   phone: string; // E.164 (via PhoneField)
-
-  dateOfBirth: string;
-  address: string;
-  panNumber: string;
-  panDocument: string;
-  bankAccountNumber: string;
-  ifscCode: string;
 
   currentCountry: string;
   currentPresenceCountry: string;
@@ -1226,12 +1465,7 @@ const RegisterExpat: React.FC = () => {
     email: "",
     password: "",
     phone: "", // E.164 (via PhoneField)
-    dateOfBirth: "",
-    address: "",
-    panNumber: "",
-    panDocument: "",
-    bankAccountNumber: "",
-    ifscCode: "",
+
     currentCountry: "",
     currentPresenceCountry: "",
     interventionCountry: "",
@@ -1313,15 +1547,6 @@ const RegisterExpat: React.FC = () => {
         }
       })(),
 
-      dateOfBirth:
-        !!form.dateOfBirth && /^\d{4}-\d{2}-\d{2}$/.test(form.dateOfBirth),
-      address: !!form.address.trim(),
-      panNumber: !!form.panNumber.trim(),
-      panDocument: !!form.panDocument,
-      bankAccountNumber: !!form.bankAccountNumber.trim(),
-      ifscCode:
-        !!form.ifscCode.trim() && /^[A-Z]{4}0[A-Z0-9]{6}$/.test(form.ifscCode),
-
       currentCountry: !!form.currentCountry,
       currentPresenceCountry: !!form.currentPresenceCountry,
       interventionCountry: !!form.interventionCountry,
@@ -1353,12 +1578,7 @@ const RegisterExpat: React.FC = () => {
             return false;
           }
         })(),
-      !!form.dateOfBirth && /^\d{4}-\d{2}-\d{2}$/.test(form.dateOfBirth),
-      !!form.address.trim(),
-      !!form.panNumber.trim(),
-      !!form.panDocument,
-      !!form.bankAccountNumber.trim(),
-      !!form.ifscCode.trim() && /^[A-Z]{4}0[A-Z0-9]{6}$/.test(form.ifscCode),
+
       !!form.currentCountry,
       !!form.currentPresenceCountry,
       !!form.interventionCountry,
@@ -1533,44 +1753,6 @@ const RegisterExpat: React.FC = () => {
         id: "registerExpat.errors.acceptTermsRequired",
       });
 
-    if (!form.dateOfBirth)
-      e.dateOfBirth = intl.formatMessage({
-        id: "registerExpat.errors.dobRequired",
-      });
-    else if (!/^\d{4}-\d{2}-\d{2}$/.test(form.dateOfBirth))
-      e.dateOfBirth = intl.formatMessage({
-        id: "registerExpat.errors.dobInvalid",
-      });
-
-    if (!form.address.trim())
-      e.address = intl.formatMessage({
-        id: "registerExpat.errors.addressRequired",
-      });
-
-    if (!form.panNumber.trim())
-      e.panNumber = intl.formatMessage({
-        id: "registerExpat.errors.panRequired",
-      });
-
-    if (!form.panDocument)
-      e.panDocument = intl.formatMessage({
-        id: "registerExpat.errors.panDocumentRequired",
-      });
-
-    if (!form.bankAccountNumber.trim())
-      e.bankAccountNumber = intl.formatMessage({
-        id: "registerExpat.errors.bankAccountRequired",
-      });
-
-    if (!form.ifscCode.trim())
-      e.ifscCode = intl.formatMessage({
-        id: "registerExpat.errors.ifscRequired",
-      });
-    else if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(form.ifscCode))
-      e.ifscCode = intl.formatMessage({
-        id: "registerExpat.errors.ifscInvalid",
-      });
-
     setFieldErrors(e);
     if (Object.keys(e).length) {
       setFormError(intl.formatMessage({ id: "registerExpat.errors.title" }));
@@ -1648,8 +1830,10 @@ const RegisterExpat: React.FC = () => {
           description: form.bio.trim(),
           availability: form.availability,
           isOnline: form.availability === "available",
-          isApproved: true,
-          isVisible: true,
+          // isApproved: true,
+          // isVisible: true,
+          isApproved: false,
+          isVisible: false,
           isActive: true,
           preferredLanguage: form.preferredLanguage,
           createdAt: new Date(),
@@ -1657,6 +1841,41 @@ const RegisterExpat: React.FC = () => {
         };
 
         await register(userData, form.password);
+
+        // ============================================
+        // STEP 2: Create Stripe Account (NOT KYC yet!)
+        // ============================================
+        console.log("💳 Creating Stripe account...");
+
+        const { getFunctions, httpsCallable } = await import(
+          "firebase/functions"
+        );
+        const functions = getFunctions(undefined, "europe-west1");
+
+        const createStripeAccount = httpsCallable(
+          functions,
+          "createStripeAccount"
+        );
+
+       
+
+        const stripeResult = await createStripeAccount({
+          email: form.email.trim().toLowerCase(),
+          currentCountry: getCountryCode(form.currentCountry),
+          firstName: form.firstName.trim(),
+          lastName: form.lastName.trim(),
+          userType: "expat", // ✅ Specify expat
+        });
+        
+        const result = stripeResult.data as {
+          success: boolean;
+          accountId: string;
+          message: string;
+        };
+
+        console.log("✅ Stripe account created:", result.accountId);
+        // ============================================
+
         navigate(redirect, {
           replace: true,
           state: {
@@ -1702,12 +1921,6 @@ const RegisterExpat: React.FC = () => {
       valid.interventionCountry &&
       valid.yearsAsExpat &&
       valid.phone &&
-      valid.dateOfBirth &&
-      valid.address &&
-      valid.panNumber &&
-      valid.panDocument &&
-      valid.bankAccountNumber &&
-      valid.ifscCode &&
       !isLoading &&
       !isSubmitting &&
       !Object.keys(fieldErrors).length,
@@ -2032,12 +2245,6 @@ const RegisterExpat: React.FC = () => {
       "Intervention Country": valid.interventionCountry,
       "Years as Expat": valid.yearsAsExpat,
       Phone: valid.phone,
-      "Date of Birth": valid.dateOfBirth,
-      Address: valid.address,
-      "PAN Number": valid.panNumber,
-      "PAN Document": valid.panDocument,
-      "Bank Account Number": valid.bankAccountNumber,
-      "IFSC Code": valid.ifscCode,
     };
 
     console.log("📋 FIELD VALIDATIONS:");
@@ -2530,249 +2737,6 @@ const RegisterExpat: React.FC = () => {
                         <Info className="w-3.5 h-3.5 mr-1" />
                         <FormattedMessage id="registerExpat.help.contactInfo" />
                       </p>
-                    </div>
-                  </section>
-
-                  {/* Financial & Identity Information */}
-                  <section className="p-5 sm:p-6 border-t border-gray-50">
-                    <SectionHeader
-                      icon={<ShieldCheck className="w-5 h-5" />}
-                      title={intl.formatMessage({
-                        id: "registerExpat.ui.financialInfo",
-                      })}
-                    />
-
-                    {/* Date of Birth */}
-                    <div className="mb-4">
-                      <label
-                        htmlFor="dateOfBirth"
-                        className="block text-sm font-semibold text-gray-800 mb-1"
-                      >
-                        <FormattedMessage id="registerExpat.fields.dateOfBirth" />{" "}
-                        <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        id="dateOfBirth"
-                        name="dateOfBirth"
-                        type="date"
-                        value={form.dateOfBirth}
-                        onChange={onChange}
-                        className={`w-full px-4 py-3 border-2 rounded-xl bg-gray-50 hover:bg-white ${THEME.ring} focus:bg-white transition ${
-                          fieldErrors.dateOfBirth
-                            ? "border-red-500 bg-red-50"
-                            : valid.dateOfBirth
-                              ? "border-green-300 bg-green-50"
-                              : "border-gray-200"
-                        }`}
-                        placeholder={intl.formatMessage({
-                          id: "registerExpat.placeholder.dateOfBirth",
-                        })}
-                      />
-                      {fieldErrors.dateOfBirth && (
-                        <p className="mt-1 text-sm text-red-600">
-                          {fieldErrors.dateOfBirth}
-                        </p>
-                      )}
-                      <FieldSuccess show={valid.dateOfBirth}>
-                        <FormattedMessage id="registerExpat.success.fieldValid" />
-                      </FieldSuccess>
-                    </div>
-
-                    {/* Address */}
-                    <div className="mb-4">
-                      <label
-                        htmlFor="address"
-                        className="block text-sm font-semibold text-gray-800 mb-1"
-                      >
-                        <FormattedMessage id="registerExpat.fields.address" />{" "}
-                        <span className="text-red-500">*</span>
-                      </label>
-                      <textarea
-                        id="address"
-                        name="address"
-                        rows={3}
-                        value={form.address}
-                        onChange={onChange}
-                        className={`w-full px-4 py-3 border-2 rounded-xl bg-gray-50 hover:bg-white ${THEME.ring} focus:bg-white transition ${
-                          fieldErrors.address
-                            ? "border-red-500 bg-red-50"
-                            : valid.address
-                              ? "border-green-300 bg-green-50"
-                              : "border-gray-200"
-                        }`}
-                        placeholder={intl.formatMessage({
-                          id: "registerExpat.placeholder.address",
-                        })}
-                      />
-                      {fieldErrors.address && (
-                        <p className="mt-1 text-sm text-red-600">
-                          {fieldErrors.address}
-                        </p>
-                      )}
-                      <FieldSuccess show={valid.address}>
-                        <FormattedMessage id="registerExpat.success.fieldValid" />
-                      </FieldSuccess>
-                    </div>
-
-                    {/* PAN Number */}
-                    <div className="mb-4">
-                      <label
-                        htmlFor="panNumber"
-                        className="block text-sm font-semibold text-gray-800 mb-1"
-                      >
-                        <FormattedMessage id="registerExpat.fields.panNumber" />{" "}
-                        <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        id="panNumber"
-                        name="panNumber"
-                        type="text"
-                        value={form.panNumber}
-                        onChange={onChange}
-                        className={`w-full px-4 py-3 border-2 rounded-xl bg-gray-50 hover:bg-white ${THEME.ring} focus:bg-white transition ${
-                          fieldErrors.panNumber
-                            ? "border-red-500 bg-red-50"
-                            : valid.panNumber
-                              ? "border-green-300 bg-green-50"
-                              : "border-gray-200"
-                        }`}
-                        placeholder={intl.formatMessage({
-                          id: "registerExpat.placeholder.panNumber",
-                        })}
-                      />
-                      {fieldErrors.panNumber && (
-                        <p className="mt-1 text-sm text-red-600">
-                          {fieldErrors.panNumber}
-                        </p>
-                      )}
-                      <FieldSuccess show={valid.panNumber}>
-                        <FormattedMessage id="registerExpat.success.fieldValid" />
-                      </FieldSuccess>
-                    </div>
-
-                    {/* PAN Document Upload */}
-                    <div
-                      className={`mb-4 rounded-xl border ${THEME.border} p-4 ${THEME.subtle}`}
-                    >
-                      <label className="flex items-center text-sm font-semibold text-gray-900 mb-2">
-                        <FormattedMessage id="registerExpat.fields.panDocument" />{" "}
-                        <span className="text-red-500 ml-1">*</span>
-                      </label>
-                      <Suspense
-                        fallback={
-                          <div className="py-6">
-                            <div className="h-24 bg-gray-100 animate-pulse rounded-xl" />
-                          </div>
-                        }
-                      >
-                        <ImageUploader
-                          locale={lang}
-                          currentImage={form.panDocument}
-                          onImageUploaded={(url: string) => {
-                            setForm((prev) => ({ ...prev, panDocument: url }));
-                            setFieldErrors((prev) => ({
-                              ...prev,
-                            }));
-
-                            setFieldErrors((prev) => {
-                              const { panDocument, ...rest } = prev;
-                              return rest;
-                            });
-                          }}
-                          hideNativeFileLabel
-                          cropShape="rect"
-                          outputSize={1024}
-                          uploadPath="documents/pan"
-                          isRegistration={true}
-                        />
-                      </Suspense>
-                      {fieldErrors.panDocument && (
-                        <p className="text-sm text-red-600 mt-2">
-                          {fieldErrors.panDocument}
-                        </p>
-                      )}
-                      <FieldSuccess show={!!form.panDocument}>
-                        <FormattedMessage id="registerExpat.success.fieldValid" />
-                      </FieldSuccess>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {intl.formatMessage({
-                          id: "registerExpat.help.panDocumentHint",
-                        })}
-                      </p>
-                    </div>
-
-                    {/* Bank Details */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label
-                          htmlFor="bankAccountNumber"
-                          className="block text-sm font-semibold text-gray-800 mb-1"
-                        >
-                          <FormattedMessage id="registerExpat.fields.bankAccountNumber" />{" "}
-                          <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          id="bankAccountNumber"
-                          name="bankAccountNumber"
-                          type="text"
-                          value={form.bankAccountNumber}
-                          onChange={onChange}
-                          className={`w-full px-4 py-3 border-2 rounded-xl bg-gray-50 hover:bg-white ${THEME.ring} focus:bg-white transition ${
-                            fieldErrors.bankAccountNumber
-                              ? "border-red-500 bg-red-50"
-                              : valid.bankAccountNumber
-                                ? "border-green-300 bg-green-50"
-                                : "border-gray-200"
-                          }`}
-                          placeholder={intl.formatMessage({
-                            id: "registerExpat.placeholder.bankAccountNumber",
-                          })}
-                        />
-                        {fieldErrors.bankAccountNumber && (
-                          <p className="mt-1 text-sm text-red-600">
-                            {fieldErrors.bankAccountNumber}
-                          </p>
-                        )}
-                        <FieldSuccess show={valid.bankAccountNumber}>
-                          <FormattedMessage id="registerExpat.success.fieldValid" />
-                        </FieldSuccess>
-                      </div>
-
-                      <div>
-                        <label
-                          htmlFor="ifscCode"
-                          className="block text-sm font-semibold text-gray-800 mb-1"
-                        >
-                          <FormattedMessage id="registerExpat.fields.ifscCode" />{" "}
-                          <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          id="ifscCode"
-                          name="ifscCode"
-                          type="text"
-                          value={form.ifscCode}
-                          onChange={onChange}
-                          className={`w-full px-4 py-3 border-2 rounded-xl bg-gray-50 hover:bg-white ${THEME.ring} focus:bg-white transition ${
-                            fieldErrors.ifscCode
-                              ? "border-red-500 bg-red-50"
-                              : valid.ifscCode
-                                ? "border-green-300 bg-green-50"
-                                : "border-gray-200"
-                          }`}
-                          placeholder={intl.formatMessage({
-                            id: "registerExpat.placeholder.ifscCode",
-                          })}
-                          maxLength={11}
-                        />
-                        {fieldErrors.ifscCode && (
-                          <p className="mt-1 text-sm text-red-600">
-                            {fieldErrors.ifscCode}
-                          </p>
-                        )}
-                        <FieldSuccess show={valid.ifscCode}>
-                          <FormattedMessage id="registerExpat.success.fieldValid" />
-                        </FieldSuccess>
-                      </div>
                     </div>
                   </section>
 

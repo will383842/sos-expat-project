@@ -52,6 +52,7 @@ export const STRIPE_SECRET_KEY_LIVE = defineSecret("STRIPE_SECRET_KEY_LIVE");
 
 // kyc
 export { createLawyerStripeAccount } from "./createLawyerAccount";
+export { createStripeAccount } from "./createStripeAccount";
 export { getStripeAccountSession } from "./getAccountSession";
 export { checkStripeAccountStatus } from "./checkStripeAccountStatus";
 

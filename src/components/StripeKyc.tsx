@@ -9,12 +9,14 @@ import { useAuth } from "@/contexts/AuthContext";
 
 interface Props {
   onComplete?: () => void;
+  userType: "lawyer" | "expat"; // ✅ NEW: Required prop
 }
 
-export default function StripeKYC({ onComplete }: Props) {
+export default function StripeKYC({ onComplete, userType }: Props) {
   const { user } = useAuth();
   const [stripeConnectInstance, setStripeConnectInstance] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [isKycComplete, setIsKycComplete] = useState(false); // ✅ NEW: Track completion
   const initStartedRef = useRef(false);
 
   useEffect(() => {
@@ -23,9 +25,9 @@ export default function StripeKYC({ onComplete }: Props) {
       return;
     }
 
-    // ✅ Define keys inside useEffect so they're consistent
-    const checkKey = `stripe_kyc_${user.uid}_check_in_progress`;
-    const completedKey = `stripe_kyc_${user.uid}_completed`;
+    // ✅ Include userType in session keys
+    const checkKey = `stripe_kyc_${user.uid}_${userType}_check_in_progress`;
+    const completedKey = `stripe_kyc_${user.uid}_${userType}_completed`;
 
     // ✅ Guard 1: Check sessionStorage
     if (sessionStorage.getItem(checkKey) === "true") {
@@ -36,6 +38,7 @@ export default function StripeKYC({ onComplete }: Props) {
 
     if (sessionStorage.getItem(completedKey) === "true") {
       console.log("⚠️ Already completed in this session, skipping...");
+      setIsKycComplete(true); // ✅ Set completed state
       setLoading(false);
       return;
     }
@@ -46,7 +49,7 @@ export default function StripeKYC({ onComplete }: Props) {
       return;
     }
 
-    console.log("🚀 Starting initialization...");
+    console.log(`🚀 Starting initialization for ${userType}...`);
     initStartedRef.current = true;
     sessionStorage.setItem(checkKey, "true");
 
@@ -60,7 +63,8 @@ export default function StripeKYC({ onComplete }: Props) {
             functions,
             "checkStripeAccountStatus"
           );
-          const statusResult = await checkStatus();
+          // ✅ Pass userType to backend
+          const statusResult = await checkStatus({ userType });
           const statusData = statusResult.data as {
             kycCompleted: boolean;
             detailsSubmitted: boolean;
@@ -75,6 +79,7 @@ export default function StripeKYC({ onComplete }: Props) {
 
             sessionStorage.setItem(completedKey, "true");
             sessionStorage.removeItem(checkKey);
+            setIsKycComplete(true); // ✅ Set completed state
             setLoading(false);
 
             setTimeout(() => {
@@ -99,7 +104,8 @@ export default function StripeKYC({ onComplete }: Props) {
           "getStripeAccountSession"
         );
 
-        const result = await getStripeAccountSession();
+        // ✅ Pass userType to backend
+        const result = await getStripeAccountSession({ userType });
         const data = result.data as {
           success: boolean;
           accountId: string;
@@ -130,8 +136,9 @@ export default function StripeKYC({ onComplete }: Props) {
     };
 
     initializeStripe();
-  }, [user?.uid, onComplete]); // ✅ Add onComplete to dependencies
+  }, [user?.uid, userType, onComplete]); // ✅ Add userType to dependencies
 
+  // ✅ Show loading state while checking
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -143,36 +150,44 @@ export default function StripeKYC({ onComplete }: Props) {
     );
   }
 
+  // ✅ If KYC is complete, render nothing (component will unmount/hide)
+  if (isKycComplete) {
+    return (
+        <h2 className="text-2xl font-semibold text-gray-800 mb-2">
+            ✅ Thankyou, You're already verified! 
+          </h2>
+    );
+  }
+
+  // ✅ If no Stripe instance and not complete, show error state
   if (!stripeConnectInstance) {
     return (
       <div className="flex items-center justify-center p-8">
         <div className="text-center">
-          <div className="text-green-600 text-6xl mb-4">✅</div>
+          {/* <div className="text-red-600 text-6xl mb-4">⚠️</div> */}
           <h2 className="text-2xl font-semibold text-gray-800 mb-2">
-            Already Verified!
+           Stripe is loading , please wait!
           </h2>
-          <p className="text-gray-600">
-            Your account is already verified and ready to accept payments.
-          </p>
+          {/* <p className="text-gray-600">Please refresh the page to try again.</p> */}
         </div>
       </div>
     );
   }
 
+  // ✅ Show KYC form
   return (
     <div className="max-w-4xl mx-auto p-4">
       <ConnectComponentsProvider connectInstance={stripeConnectInstance}>
         <ConnectAccountOnboarding
           collectionOptions={{
-            // fields: "currently_due",
             fields: "eventually_due",
-
             futureRequirements: "include",
           }}
           onExit={async () => {
             console.log("User exited onboarding, checking status...");
 
-            const completedKey = `stripe_kyc_${user?.uid}_completed`;
+            // ✅ Include userType in session key
+            const completedKey = `stripe_kyc_${user?.uid}_${userType}_completed`;
 
             if (sessionStorage.getItem(completedKey) === "true") {
               console.log("⚠️ Already completed, skipping...");
@@ -185,7 +200,8 @@ export default function StripeKYC({ onComplete }: Props) {
                 functions,
                 "checkStripeAccountStatus"
               );
-              const result = await checkStatus();
+              // ✅ Pass userType to backend
+              const result = await checkStatus({ userType });
               const data = result.data as {
                 kycCompleted: boolean;
                 detailsSubmitted: boolean;
@@ -199,6 +215,7 @@ export default function StripeKYC({ onComplete }: Props) {
                 console.log("✅ KYC Complete!");
 
                 sessionStorage.setItem(completedKey, "true");
+                setIsKycComplete(true); // ✅ Update state
 
                 setTimeout(() => {
                   onComplete?.();
