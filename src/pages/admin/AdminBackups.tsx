@@ -287,9 +287,8 @@ const AdminBackups: React.FC = () => {
     if (!(await ensureAdminOrExplain())) return;
     setLoading(true);
     try {
-      console.log("I called the schedule function.");
-      await updateBackupSchedule(cron, timeZone);
 
+      await updateBackupSchedule(cron, timeZone);
       alert("Planification mise à jour.");
     } catch (e: unknown) {
       alert(getErrMsg(e) || "Erreur planification");
@@ -329,14 +328,11 @@ const AdminBackups: React.FC = () => {
         "Supprimer cette sauvegarde ? Les fichiers seront effacés du bucket."
       )
     )
-      return;
+    return;
     setLoading(true);
     try {
-   
       // await deleteBackup(id);
-
       await deleteDoc(doc(db, "backups", id));
-
       alert("Sauvegarde supprimée.");
     } catch (e: unknown) {
       alert(getErrMsg(e) || "Erreur suppression");
