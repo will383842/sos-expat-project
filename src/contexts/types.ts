@@ -54,7 +54,8 @@ export interface User {
 
   stripeAccountId?: string;
   kycStatus?:
-    | "not_started"
+  | "not_started"
+  | "in_progress"
     | "incomplete"
     | "under_review"
     | "verified"

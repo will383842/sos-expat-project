@@ -56,6 +56,10 @@ export { createStripeAccount } from "./createStripeAccount";
 export { getStripeAccountSession } from "./getAccountSession";
 export { checkStripeAccountStatus } from "./checkStripeAccountStatus";
 
+// backup
+export { createManualBackup } from "./manualBackup";
+export { scheduledBackup } from "./scheduledBackup";
+
 // Cloud Tasks auth
 export const TASKS_AUTH_SECRET = defineSecret("TASKS_AUTH_SECRET");
 

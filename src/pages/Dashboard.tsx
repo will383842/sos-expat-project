@@ -795,6 +795,7 @@ const Dashboard: React.FC = () => {
       {user &&
         (user.role === "lawyer" || user.role === "expat") &&
         (user?.kycStatus === "not_started" ||
+          user?.kycStatus === "in_progress" ||
           !user?.stripeOnboardingComplete) && (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="mb-8 bg-gradient-to-r from-orange-500 to-red-600 rounded-2xl shadow-xl overflow-hidden">
@@ -819,7 +820,7 @@ const Dashboard: React.FC = () => {
 
               <div className="bg-white rounded-xl shadow-lg p-6">
                 <StripeKYC
-                  userType={user.role as "lawyer" | "expat"} 
+                  userType={user.role as "lawyer" | "expat"}
                   onComplete={() => window.location.reload()}
                 />
               </div>

@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { 
-  Settings, 
-  Globe, 
-  Database, 
-  TestTube, 
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Settings,
+  Globe,
+  Database,
+  TestTube,
   Download,
   Upload,
   RefreshCw,
@@ -14,14 +14,24 @@ import {
   Smartphone,
   CreditCard,
   Shield,
-  Map
-} from 'lucide-react';
-import { collection, query, getDocs, doc, updateDoc, addDoc, serverTimestamp, getDoc } from 'firebase/firestore';
-import { db } from '../../config/firebase';
-import AdminLayout from '../../components/admin/AdminLayout';
-import Button from '../../components/common/Button';
-import Modal from '../../components/common/Modal';
-import { useAuth } from '../../contexts/AuthContext';
+  Map,
+} from "lucide-react";
+import {
+  collection,
+  query,
+  getDocs,
+  doc,
+  updateDoc,
+  addDoc,
+  serverTimestamp,
+  getDoc,
+} from "firebase/firestore";
+import { db } from "../../config/firebase";
+import AdminLayout from "../../components/admin/AdminLayout";
+import Button from "../../components/common/Button";
+import Modal from "../../components/common/Modal";
+import { useAuth } from "../../contexts/AuthContext";
+import { getFunctions, httpsCallable } from "firebase/functions";
 
 const AdminSettings: React.FC = () => {
   const navigate = useNavigate();
@@ -34,16 +44,16 @@ const AdminSettings: React.FC = () => {
   const [showRefundModal, setShowRefundModal] = useState(false);
   const [showMapSettingsModal, setShowMapSettingsModal] = useState(false);
   const [pendingRefunds, setPendingRefunds] = useState<any[]>([]);
-  const [backupStatus, setBackupStatus] = useState('');
+  const [backupStatus, setBackupStatus] = useState("");
   const [testResults, setTestResults] = useState<any[]>([]);
   const [mapSettings, setMapSettings] = useState({
-    showMapOnHomePage: true
+    showMapOnHomePage: true,
   });
 
   useEffect(() => {
     // Check if user is admin
-    if (!currentUser || currentUser.role !== 'admin') {
-      navigate('/admin/login');
+    if (!currentUser || currentUser.role !== "admin") {
+      navigate("/admin/login");
       return;
     }
 
@@ -54,75 +64,75 @@ const AdminSettings: React.FC = () => {
 
   const loadMapSettings = async () => {
     try {
-      const settingsDoc = await getDoc(doc(db, 'app_settings', 'main'));
+      const settingsDoc = await getDoc(doc(db, "app_settings", "main"));
       if (settingsDoc.exists()) {
         setMapSettings({
-          showMapOnHomePage: settingsDoc.data().showMapOnHomePage !== false
+          showMapOnHomePage: settingsDoc.data().showMapOnHomePage !== false,
         });
       }
     } catch (error) {
-      console.error('Error loading map settings:', error);
+      console.error("Error loading map settings:", error);
     }
   };
 
   const loadCountries = async () => {
     try {
-      const countriesQuery = query(collection(db, 'countries'));
+      const countriesQuery = query(collection(db, "countries"));
       const countriesSnapshot = await getDocs(countriesQuery);
-      
-      const countriesData = countriesSnapshot.docs.map(doc => ({
+
+      const countriesData = countriesSnapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data()
+        ...doc.data(),
       }));
-      
+
       setCountries(countriesData);
     } catch (error) {
-      console.error('Error loading countries:', error);
+      console.error("Error loading countries:", error);
     }
   };
 
   const loadPendingRefunds = async () => {
     try {
       const refundsQuery = query(
-        collection(db, 'refund_requests'),
+        collection(db, "refund_requests")
         // where('status', '==', 'pending')
       );
       const refundsSnapshot = await getDocs(refundsQuery);
-      
-      const refundsData = refundsSnapshot.docs.map(doc => ({
+
+      const refundsData = refundsSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate() || new Date()
+        createdAt: doc.data().createdAt?.toDate() || new Date(),
       }));
-      
+
       setPendingRefunds(refundsData);
     } catch (error) {
-      console.error('Error loading pending refunds:', error);
+      console.error("Error loading pending refunds:", error);
     }
   };
 
   const handleCountryToggle = async (countryId: string, isActive: boolean) => {
     try {
       setIsLoading(true);
-      
-      await updateDoc(doc(db, 'countries', countryId), {
+
+      await updateDoc(doc(db, "countries", countryId), {
         isActive: !isActive,
-        updatedAt: serverTimestamp()
+        updatedAt: serverTimestamp(),
       });
-      
+
       // Update local state
-      setCountries(prev => 
-        prev.map(country => 
-          country.id === countryId 
+      setCountries((prev) =>
+        prev.map((country) =>
+          country.id === countryId
             ? { ...country, isActive: !isActive }
             : country
         )
       );
-      
-      alert(`Pays ${!isActive ? 'activé' : 'désactivé'} avec succès`);
+
+      alert(`Pays ${!isActive ? "activé" : "désactivé"} avec succès`);
     } catch (error) {
-      console.error('Error updating country:', error);
-      alert('Erreur lors de la mise à jour du pays');
+      console.error("Error updating country:", error);
+      alert("Erreur lors de la mise à jour du pays");
     } finally {
       setIsLoading(false);
     }
@@ -131,17 +141,17 @@ const AdminSettings: React.FC = () => {
   const handleSaveMapSettings = async () => {
     try {
       setIsLoading(true);
-      
-      await updateDoc(doc(db, 'app_settings', 'main'), {
+
+      await updateDoc(doc(db, "app_settings", "main"), {
         showMapOnHomePage: mapSettings.showMapOnHomePage,
-        updatedAt: serverTimestamp()
+        updatedAt: serverTimestamp(),
       });
-      
+
       setShowMapSettingsModal(false);
-      alert('Paramètres de la carte mis à jour avec succès');
+      alert("Paramètres de la carte mis à jour avec succès");
     } catch (error) {
-      console.error('Error saving map settings:', error);
-      alert('Erreur lors de la sauvegarde des paramètres de la carte');
+      console.error("Error saving map settings:", error);
+      alert("Erreur lors de la sauvegarde des paramètres de la carte");
     } finally {
       setIsLoading(false);
     }
@@ -150,24 +160,36 @@ const AdminSettings: React.FC = () => {
   const handleBackupNow = async () => {
     try {
       setIsLoading(true);
-      setBackupStatus('Sauvegarde en cours...');
-      
+      setBackupStatus("Sauvegarde en cours...");
+
       // Simulate backup process
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      
-      // Create backup record
-      await addDoc(collection(db, 'backups'), {
-        type: 'manual',
-        status: 'completed',
-        createdAt: serverTimestamp(),
-        createdBy: currentUser?.id
-      });
-      
-      setBackupStatus('Sauvegarde terminée avec succès');
-      setTimeout(() => setBackupStatus(''), 3000);
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      // // Create backup record
+      // await addDoc(collection(db, "backups"), {
+      //   type: "manual",
+      //   status: "completed",
+      //   createdAt: serverTimestamp(),
+      //   createdBy: currentUser?.id,
+      // });
+
+      // ✅ Get functions instance with europe-west1 region
+      const europeFunctions = getFunctions(undefined, "europe-west1");
+
+      // ✅ Call the backup function
+      const backupFunction = httpsCallable(
+        europeFunctions,
+        "createManualBackup"
+      );
+      const result = await backupFunction();
+
+      console.log("Backup result:", result.data);
+
+      setBackupStatus("Sauvegarde terminée avec succès");
+      setTimeout(() => setBackupStatus(""), 3000);
     } catch (error) {
-      console.error('Error creating backup:', error);
-      setBackupStatus('Erreur lors de la sauvegarde');
+      console.error("Error creating backup:", error);
+      setBackupStatus("Erreur lors de la sauvegarde");
     } finally {
       setIsLoading(false);
     }
@@ -177,57 +199,62 @@ const AdminSettings: React.FC = () => {
     try {
       setIsLoading(true);
       setTestResults([]);
-      
+
       const tests = [
-        { name: 'Connexion Firebase', status: 'running' },
-        { name: 'API Stripe', status: 'running' },
-        { name: 'Service Twilio', status: 'running' },
-        { name: 'Génération PDF', status: 'running' },
-        { name: 'Upload fichiers', status: 'running' }
+        { name: "Connexion Firebase", status: "running" },
+        { name: "API Stripe", status: "running" },
+        { name: "Service Twilio", status: "running" },
+        { name: "Génération PDF", status: "running" },
+        { name: "Upload fichiers", status: "running" },
       ];
-      
+
       setTestResults(tests);
-      
+
       // Simulate test execution
       for (let i = 0; i < tests.length; i++) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
         const success = Math.random() > 0.2; // 80% success rate
-        
-        setTestResults(prev => 
-          prev.map((test, index) => 
-            index === i 
-              ? { ...test, status: success ? 'success' : 'error' }
+
+        setTestResults((prev) =>
+          prev.map((test, index) =>
+            index === i
+              ? { ...test, status: success ? "success" : "error" }
               : test
           )
         );
       }
     } catch (error) {
-      console.error('Error running tests:', error);
+      console.error("Error running tests:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleRefundAction = async (refundId: string, action: 'approve' | 'reject') => {
+  const handleRefundAction = async (
+    refundId: string,
+    action: "approve" | "reject"
+  ) => {
     try {
       setIsLoading(true);
-      
-      await updateDoc(doc(db, 'refund_requests', refundId), {
-        status: action === 'approve' ? 'approved' : 'rejected',
+
+      await updateDoc(doc(db, "refund_requests", refundId), {
+        status: action === "approve" ? "approved" : "rejected",
         processedAt: serverTimestamp(),
-        processedBy: currentUser?.id
+        processedBy: currentUser?.id,
       });
-      
+
       // Update local state
-      setPendingRefunds(prev => 
-        prev.filter(refund => refund.id !== refundId)
+      setPendingRefunds((prev) =>
+        prev.filter((refund) => refund.id !== refundId)
       );
-      
-      alert(`Remboursement ${action === 'approve' ? 'approuvé' : 'rejeté'} avec succès`);
+
+      alert(
+        `Remboursement ${action === "approve" ? "approuvé" : "rejeté"} avec succès`
+      );
     } catch (error) {
-      console.error('Error processing refund:', error);
-      alert('Erreur lors du traitement du remboursement');
+      console.error("Error processing refund:", error);
+      alert("Erreur lors du traitement du remboursement");
     } finally {
       setIsLoading(false);
     }
@@ -236,36 +263,37 @@ const AdminSettings: React.FC = () => {
   const handleCreateIndexes = async () => {
     try {
       setIsLoading(true);
-      
+
       // This would typically require Firebase Admin SDK
       // For now, we'll show instructions
-      alert('Pour créer les index automatiquement, exécutez la commande suivante dans votre terminal :\n\nfirebase deploy --only firestore:indexes');
-      
+      alert(
+        "Pour créer les index automatiquement, exécutez la commande suivante dans votre terminal :\n\nfirebase deploy --only firestore:indexes"
+      );
     } catch (error) {
-      console.error('Error creating indexes:', error);
-      alert('Erreur lors de la création des index');
+      console.error("Error creating indexes:", error);
+      alert("Erreur lors de la création des index");
     } finally {
       setIsLoading(false);
     }
   };
 
   const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('fr-FR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Intl.DateTimeFormat("fr-FR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     }).format(date);
   };
 
   const getTestStatusIcon = (status: string) => {
     switch (status) {
-      case 'success':
+      case "success":
         return <CheckCircle className="w-5 h-5 text-green-600" />;
-      case 'error':
+      case "error":
         return <XCircle className="w-5 h-5 text-red-600" />;
-      case 'running':
+      case "running":
         return <RefreshCw className="w-5 h-5 text-blue-600 animate-spin" />;
       default:
         return <AlertTriangle className="w-5 h-5 text-gray-400" />;
@@ -276,7 +304,9 @@ const AdminSettings: React.FC = () => {
     <AdminLayout>
       <div className="px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Paramètres de la plateforme</h1>
+          <h1 className="text-2xl font-bold text-gray-900">
+            Paramètres de la plateforme
+          </h1>
         </div>
 
         {/* Settings Cards */}
@@ -286,24 +316,33 @@ const AdminSettings: React.FC = () => {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
                 <Globe className="w-6 h-6 text-blue-600 mr-3" />
-                <h3 className="text-lg font-semibold text-gray-900">Pays disponibles</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Pays disponibles
+                </h3>
               </div>
             </div>
-            <p className="text-gray-600 mb-4">Gérer la disponibilité de la plateforme par pays</p>
+            <p className="text-gray-600 mb-4">
+              Gérer la disponibilité de la plateforme par pays
+            </p>
             <div className="space-y-2 max-h-40 overflow-y-auto">
               {countries.map((country) => (
-                <div key={country.id} className="flex items-center justify-between">
+                <div
+                  key={country.id}
+                  className="flex items-center justify-between"
+                >
                   <span className="text-sm text-gray-700">{country.name}</span>
                   <button
-                    onClick={() => handleCountryToggle(country.id, country.isActive)}
+                    onClick={() =>
+                      handleCountryToggle(country.id, country.isActive)
+                    }
                     className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      country.isActive ? 'bg-green-600' : 'bg-gray-200'
+                      country.isActive ? "bg-green-600" : "bg-gray-200"
                     }`}
                     disabled={isLoading}
                   >
                     <span
                       className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        country.isActive ? 'translate-x-6' : 'translate-x-1'
+                        country.isActive ? "translate-x-6" : "translate-x-1"
                       }`}
                     />
                   </button>
@@ -317,10 +356,14 @@ const AdminSettings: React.FC = () => {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
                 <Database className="w-6 h-6 text-green-600 mr-3" />
-                <h3 className="text-lg font-semibold text-gray-900">Sauvegardes</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Sauvegardes
+                </h3>
               </div>
             </div>
-            <p className="text-gray-600 mb-4">Sauvegarde automatique toutes les 12h</p>
+            <p className="text-gray-600 mb-4">
+              Sauvegarde automatique toutes les 12h
+            </p>
             {backupStatus && (
               <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
                 <p className="text-sm text-blue-800">{backupStatus}</p>
@@ -341,12 +384,16 @@ const AdminSettings: React.FC = () => {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
                 <TestTube className="w-6 h-6 text-purple-600 mr-3" />
-                <h3 className="text-lg font-semibold text-gray-900">Mode test</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Mode test
+                </h3>
               </div>
             </div>
-            <p className="text-gray-600 mb-4">Tester les fonctionnalités critiques</p>
+            <p className="text-gray-600 mb-4">
+              Tester les fonctionnalités critiques
+            </p>
             <Button
-              onClick={() => navigate('/test-production')}
+              onClick={() => navigate("/test-production")}
               variant="outline"
               className="w-full"
             >
@@ -360,7 +407,9 @@ const AdminSettings: React.FC = () => {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
                 <CreditCard className="w-6 h-6 text-red-600 mr-3" />
-                <h3 className="text-lg font-semibold text-gray-900">Remboursements</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Remboursements
+                </h3>
               </div>
               {pendingRefunds.length > 0 && (
                 <span className="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
@@ -368,7 +417,9 @@ const AdminSettings: React.FC = () => {
                 </span>
               )}
             </div>
-            <p className="text-gray-600 mb-4">Gérer les demandes de remboursement</p>
+            <p className="text-gray-600 mb-4">
+              Gérer les demandes de remboursement
+            </p>
             <Button
               onClick={() => setShowRefundModal(true)}
               variant="outline"
@@ -384,10 +435,14 @@ const AdminSettings: React.FC = () => {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
                 <Smartphone className="w-6 h-6 text-indigo-600 mr-3" />
-                <h3 className="text-lg font-semibold text-gray-900">Application PWA</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Application PWA
+                </h3>
               </div>
             </div>
-            <p className="text-gray-600 mb-4">Configuration de l'app installable</p>
+            <p className="text-gray-600 mb-4">
+              Configuration de l'app installable
+            </p>
             <Button
               onClick={() => setShowPWAModal(true)}
               variant="outline"
@@ -403,10 +458,14 @@ const AdminSettings: React.FC = () => {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
                 <Map className="w-6 h-6 text-purple-600 mr-3" />
-                <h3 className="text-lg font-semibold text-gray-900">Paramètres de la carte</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Paramètres de la carte
+                </h3>
               </div>
             </div>
-            <p className="text-gray-600 mb-4">Configuration de l'affichage de la carte mondiale</p>
+            <p className="text-gray-600 mb-4">
+              Configuration de l'affichage de la carte mondiale
+            </p>
             <Button
               onClick={() => setShowMapSettingsModal(true)}
               variant="outline"
@@ -422,10 +481,14 @@ const AdminSettings: React.FC = () => {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
                 <Shield className="w-6 h-6 text-orange-600 mr-3" />
-                <h3 className="text-lg font-semibold text-gray-900">Index Firebase</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Index Firebase
+                </h3>
               </div>
             </div>
-            <p className="text-gray-600 mb-4">Créer tous les index nécessaires</p>
+            <p className="text-gray-600 mb-4">
+              Créer tous les index nécessaires
+            </p>
             <Button
               onClick={handleCreateIndexes}
               variant="outline"
@@ -449,14 +512,18 @@ const AdminSettings: React.FC = () => {
         <div className="space-y-4">
           <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
             <p className="text-sm text-blue-800">
-              Ces tests vérifient le bon fonctionnement des services critiques de la plateforme.
+              Ces tests vérifient le bon fonctionnement des services critiques
+              de la plateforme.
             </p>
           </div>
 
           {testResults.length > 0 && (
             <div className="space-y-3">
               {testResults.map((test, index) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div
+                  key={index}
+                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                >
                   <span className="font-medium text-gray-900">{test.name}</span>
                   {getTestStatusIcon(test.status)}
                 </div>
@@ -465,17 +532,11 @@ const AdminSettings: React.FC = () => {
           )}
 
           <div className="flex justify-end space-x-3">
-            <Button
-              onClick={() => setShowTestModal(false)}
-              variant="outline"
-            >
+            <Button onClick={() => setShowTestModal(false)} variant="outline">
               Fermer
             </Button>
-            <Button
-              onClick={handleRunTests}
-              disabled={isLoading}
-            >
-              {isLoading ? 'Tests en cours...' : 'Lancer les tests'}
+            <Button onClick={handleRunTests} disabled={isLoading}>
+              {isLoading ? "Tests en cours..." : "Lancer les tests"}
             </Button>
           </div>
         </div>
@@ -491,16 +552,25 @@ const AdminSettings: React.FC = () => {
         <div className="space-y-4">
           {pendingRefunds.length > 0 ? (
             pendingRefunds.map((refund) => (
-              <div key={refund.id} className="border border-gray-200 rounded-lg p-4">
+              <div
+                key={refund.id}
+                className="border border-gray-200 rounded-lg p-4"
+              >
                 <div className="flex justify-between items-start mb-3">
                   <div>
-                    <h4 className="font-medium text-gray-900">{refund.clientName}</h4>
-                    <p className="text-sm text-gray-500">Montant: {refund.amount}€</p>
-                    <p className="text-sm text-gray-500">Date: {formatDate(refund.createdAt)}</p>
+                    <h4 className="font-medium text-gray-900">
+                      {refund.clientName}
+                    </h4>
+                    <p className="text-sm text-gray-500">
+                      Montant: {refund.amount}€
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Date: {formatDate(refund.createdAt)}
+                    </p>
                   </div>
                   <div className="flex space-x-2">
                     <Button
-                      onClick={() => handleRefundAction(refund.id, 'approve')}
+                      onClick={() => handleRefundAction(refund.id, "approve")}
                       size="small"
                       className="bg-green-600 hover:bg-green-700"
                       disabled={isLoading}
@@ -508,7 +578,7 @@ const AdminSettings: React.FC = () => {
                       Approuver
                     </Button>
                     <Button
-                      onClick={() => handleRefundAction(refund.id, 'reject')}
+                      onClick={() => handleRefundAction(refund.id, "reject")}
                       size="small"
                       variant="outline"
                       className="text-red-600 border-red-600 hover:bg-red-50"
@@ -545,24 +615,35 @@ const AdminSettings: React.FC = () => {
 
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <label className="text-gray-700 font-medium">Afficher la carte sur la page d'accueil</label>
+              <label className="text-gray-700 font-medium">
+                Afficher la carte sur la page d'accueil
+              </label>
               <div className="relative inline-block w-12 h-6 transition duration-200 ease-in-out rounded-full cursor-pointer">
                 <input
                   type="checkbox"
                   id="showMapOnHomePage"
                   checked={mapSettings.showMapOnHomePage}
-                  onChange={(e) => setMapSettings(prev => ({ ...prev, showMapOnHomePage: e.target.checked }))}
+                  onChange={(e) =>
+                    setMapSettings((prev) => ({
+                      ...prev,
+                      showMapOnHomePage: e.target.checked,
+                    }))
+                  }
                   className="absolute w-0 h-0 opacity-0"
                 />
                 <label
                   htmlFor="showMapOnHomePage"
                   className={`block h-6 overflow-hidden rounded-full cursor-pointer ${
-                    mapSettings.showMapOnHomePage ? 'bg-blue-600' : 'bg-gray-300'
+                    mapSettings.showMapOnHomePage
+                      ? "bg-blue-600"
+                      : "bg-gray-300"
                   }`}
                 >
                   <span
                     className={`block h-6 w-6 rounded-full bg-white transform transition-transform duration-200 ${
-                      mapSettings.showMapOnHomePage ? 'translate-x-6' : 'translate-x-0'
+                      mapSettings.showMapOnHomePage
+                        ? "translate-x-6"
+                        : "translate-x-0"
                     }`}
                   />
                 </label>
@@ -606,8 +687,8 @@ const AdminSettings: React.FC = () => {
                 </h3>
                 <div className="mt-2 text-sm text-green-700">
                   <p>
-                    L'application est déjà configurée comme PWA installable.
-                    Les utilisateurs peuvent l'installer depuis leur navigateur.
+                    L'application est déjà configurée comme PWA installable. Les
+                    utilisateurs peuvent l'installer depuis leur navigateur.
                   </p>
                 </div>
               </div>
@@ -639,4 +720,3 @@ const AdminSettings: React.FC = () => {
 };
 
 export default AdminSettings;
-
