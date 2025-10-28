@@ -627,15 +627,15 @@ As soon as an **expert** (lawyer/expat) speaking your language is available, you
     html = html
       .replace(
         /^### (.*)$/gm,
-        '<h3 class="mt-6 mb-2 text-xl font-extrabold">$1</h3>'
+        '<h3 class="mt-6 mb-2 text-xl font-white text-white font-extrabold">$1</h3>'
       )
       .replace(
         /^## (.*)$/gm,
-        '<h2 class="mt-8 mb-3 text-2xl font-black">$1</h2>'
+        '<h2 class="mt-8 mb-3 text-2xl font-white text-white">$1</h2>'
       )
       .replace(
         /^# (.*)$/gm,
-        '<h1 class="mt-10 mb-4 text-3xl md:text-4xl font-black">$1</h1>'
+        '<h1 class="mt-10 mb-4 text-3xl md:text-4xl font-white text-white">$1</h1>'
       );
 
     // Gras
@@ -690,7 +690,7 @@ As soon as an **expert** (lawyer/expat) speaking your language is available, you
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 mt-12">
             <article className="relative rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl p-6 sm:p-10 text-white shadow-2xl">
               <div className="mb-6">
-                <h1 className="text-3xl md:text-4xl font-black tracking-tight">
+                <h1 className="text-3xl md:text-4xl text-white tracking-tight">
                   {selectedArticle.title}
                 </h1>
                 <div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
