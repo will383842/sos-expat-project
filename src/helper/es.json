@@ -637,7 +637,8 @@
   "bookingRequest.fields.title": "Título de tu solicitud",
   "bookingRequest.fields.description": "Descripción detallada",
   "bookingRequest.fields.phone": "Teléfono",
-  "bookingRequest.fields.whatsapp": "Número de WhatsApp (opcional)",
+  "bookingRequest.fields.whatsapp": "Número de WhatsApp ",
+    "bookingRequest.validators.whatsapp": "Número de WhatsApp requerido",
   "bookingRequest.fields.accept": "Acepto los ",
   "bookingRequest.fields.andConfirm": " y confirmo que la información proporcionada es correcta.",
   "bookingRequest.placeholders.firstName": "Tu nombre",
@@ -1516,5 +1517,6 @@
   "validators.currentCountry": "El país actual es obligatorio",
   "validators.languages": "Se requiere al menos un idioma",
   "validators.langMismatch": "Por favor seleccione un idioma válido",
-  "validators.accept": "Debe aceptar los términos"
+  "validators.accept": "Debe aceptar los términos",
+  "bookingRequest.validators.selectCountry":"Por favor seleccione un país"
 }

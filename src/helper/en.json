@@ -612,7 +612,8 @@
   "bookingRequest.fields.title": "Request title",
   "bookingRequest.fields.description": "Detailed description",
   "bookingRequest.fields.phone": "Phone",
-  "bookingRequest.fields.whatsapp": "WhatsApp number (optional)",
+  "bookingRequest.fields.whatsapp": "WhatsApp number ",
+    "bookingRequest.validators.whatsapp": "WhatsApp number required",
   "bookingRequest.fields.accept": "I accept the ",
   "bookingRequest.fields.andConfirm": " and confirm the information is accurate.",
   "bookingRequest.placeholders.firstName": "Your first name",
@@ -1492,7 +1493,8 @@
   "validators.currentCountry": "Current country is required",
   "validators.languages": "At least one language is required",
   "validators.langMismatch": "Please select a valid language",
-  "validators.accept": "You must accept the terms"
+  "validators.accept": "You must accept the terms",
+  "bookingRequest.validators.selectCountry":"Please select a country"
 
 
 }

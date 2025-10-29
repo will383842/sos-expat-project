@@ -1504,10 +1504,12 @@
   "validators.description": "Beschreibung ist erforderlich",
   "validators.phone": "Telefonnummer ist erforderlich",
   "validators.nationality": "Nationalität ist erforderlich",
+   "bookingRequest.validators.whatsapp": "WhatsApp-Nummer erforderlich",
   "validators.currentCountry": "Aktuelles Land ist erforderlich",
   "validators.languages": "Mindestens eine Sprache ist erforderlich",
   "validators.langMismatch": "Bitte wählen Sie eine gültige Sprache",
-  "validators.accept": "Sie müssen die Bedingungen akzeptieren"
+  "validators.accept": "Sie müssen die Bedingungen akzeptieren",
+  "bookingRequest.validators.selectCountry":" Bitte wählen Sie ein Land aus"
 
 
 
