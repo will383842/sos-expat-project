@@ -147,6 +147,7 @@ const Footer: React.FC = () => {
         ariaLabel: intl.formatMessage({ id: "footer.contact.phoneAria" }),
       },
       {
+        target: "_blank",
         icon: Globe,
         text: intl.formatMessage({ id: "footer.contact.ulixai" }),
         href: "https://www.ulixai.com/",
@@ -578,8 +579,9 @@ const Footer: React.FC = () => {
                           aria-hidden
                         />
                       </div>
-                      {item.href ? (
+                      {/* {item.href ? (
                         <Link
+                          target="_blank"
                           to={item.href}
                           className="text-gray-400 hover:text-white focus:text-white 
                                      transition-colors duration-300 text-sm 
@@ -592,7 +594,38 @@ const Footer: React.FC = () => {
                         <span className="text-gray-400 text-sm leading-relaxed">
                           {item.text}
                         </span>
-                      )}
+                      )} */}
+
+
+                      {item.href ? (
+  item.href.startsWith('http') ? (
+    <a
+      href={item.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-gray-400 hover:text-white focus:text-white 
+                 transition-colors duration-300 text-sm 
+                 focus:outline-none leading-relaxed touch-manipulation"
+      aria-label={item.ariaLabel}
+    >
+      {item.text}
+    </a>
+  ) : (
+    <Link
+      to={item.href}
+      className="text-gray-400 hover:text-white focus:text-white 
+                 transition-colors duration-300 text-sm 
+                 focus:outline-none leading-relaxed touch-manipulation"
+      aria-label={item.ariaLabel}
+    >
+      {item.text}
+    </Link>
+  )
+) : (
+  <span className="text-gray-400 text-sm leading-relaxed">
+    {item.text}
+  </span>
+)}
                     </div>
                   </li>
                 ))}
