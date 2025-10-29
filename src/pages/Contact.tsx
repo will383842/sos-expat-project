@@ -481,7 +481,7 @@ const Contact: React.FC = () => {
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
-  }, [formData, spokenLanguages, t]);
+  }, [formData, spokenLanguages, t, acceptTerms]);
 
   const handleInputChange = useCallback(
     (
@@ -1946,8 +1946,9 @@ const Contact: React.FC = () => {
                             onChange={(e) => {
                               console.log(
                                 e.target.checked,
-                                ": is it checked ?"
+                                " : can submit form "
                               );
+
                               setAcceptTerms(e.target.checked);
                               if (e.target.checked && formErrors.acceptTerms) {
                                 setFormErrors((prev) => {
