@@ -800,8 +800,12 @@ const OptimizedHomePage: React.FC = () => {
                 <Sparkles className="w-5 h-5 text-yellow-400" />
                 <span className="text-white font-medium">
                   {/* Nouveau — téléchargez l’appli <strong>SOS Expat d’Ulixai</strong> ! */}
+                  {/* <strong>Ulixai.com</strong> */}
+                  <a href="https://ulixai.com" target="_blank" rel="noopener noreferrer">
+                    <strong>Ulixai.com</strong>
+                  </a>
                   <FormattedMessage id="appDownloadAnnouncement" />
-                  <strong>SOS Expat d'Ulixai</strong>
+                  {/* <strong>SOS Expat d'Ulixai</strong> */}
                 </span>
                 <PWAInstallIconWithHint
                   canInstall={canInstall}
