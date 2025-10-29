@@ -1463,20 +1463,20 @@ const OptimizedHomePage: React.FC = () => {
                                     {currencySymbol}
                                     {eff.standard.totalAmount.toFixed(2)}
                                   </span>
-                                  <span className="text-2xl sm:text-5xl font-bold">
+                                  <span className="text-2xl sm:text-5xl font-bold ">
                                     {currencySymbol}
                                     {eff.price.totalAmount.toFixed(2)}
                                   </span>
                                   {eff.override?.label && (
                                     <span className="text-xs px-2 py-1 bg-red-100 text-red-700 rounded-full">
-                                      {/* {eff.override.label} */}
+                                      {eff.override.label}
                                     </span>
                                   )}
                                 </div>
                               ) : (
-                                <span className="text-2xl sm:text-5xl font-bold">
+                                <span className="text-2xl sm:text-5xl font-bold ">
                                   {currencySymbol}
-                                  {eff.price.totalAmount.toFixed(2)}
+                                  {eff.price.totalAmount.toFixed(0)}
                                 </span>
                               )}
                             </div>
