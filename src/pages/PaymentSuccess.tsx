@@ -115,7 +115,7 @@ const SuccessPayment: React.FC = () => {
     callStatus === "failed" ? "failed" : "connecting"
   );
   const [timeRemaining, setTimeRemaining] = useState(0);
-  const [countdownToCall, setCountdownToCall] = useState(300); // 5 minutes
+  const [countdownToCall, setCountdownToCall] = useState(240); // 5 minutes
   const [paymentTimestamp, setPaymentTimestamp] = useState<number | null>(null);
 
   // Service data
@@ -298,7 +298,7 @@ const SuccessPayment: React.FC = () => {
     const updateCountdown = () => {
       const now = Date.now();
       const elapsedSeconds = Math.floor((now - paymentTimestamp) / 1000);
-      const totalCountdownSeconds = 300; // 5 min
+      const totalCountdownSeconds = 240; // 5 min
       const remainingSeconds = Math.max(
         0,
         totalCountdownSeconds - elapsedSeconds

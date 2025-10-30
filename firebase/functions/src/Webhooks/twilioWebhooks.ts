@@ -10,7 +10,7 @@ import { Request } from 'firebase-functions/v2/https';
 interface TwilioCallWebhookBody {
   CallSid: string;
   CallStatus: string;
-  CallDuration?: string;
+CallDuration?: string;
   From: string;
   To: string;
   AnsweredBy?: string;
