@@ -41,7 +41,7 @@ import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { useForm } from "react-hook-form";
 import { saveProviderMessage } from "@/firebase/saveProviderMessage";
 import { useApp } from "@/contexts/AppContext";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
 /* -------------------------- Stripe singleton (HMR-safe) ------------------ */
 // Conserve la même Promise Stripe à travers les rechargements HMR.
@@ -62,7 +62,7 @@ const stripePromise = getStripePromise();
 /* --------------------------------- Types --------------------------------- */
 type Currency = "eur" | "usd";
 type ServiceKind = "lawyer" | "expat";
-type Lang = "fr" | "en";
+type Lang = "fr" | "en" | "es" | "ru" | "de";
 
 interface ServiceData {
   providerId: string;
@@ -181,160 +181,65 @@ const getGtag = (): GtagFunction | undefined =>
 const useTranslation = () => {
   // const { language: ctxLang } = { language: "fr" as Lang };
   const { language: ctxLang } = useApp();
-  const language: Lang = ctxLang === "en" ? "en" : "fr";
+  // const language: Lang = ctxLang === "en" ? "en" : "fr";
+  const language: Lang = 
+    (["es", "de", "ru", "en", "fr"].includes(ctxLang) ? ctxLang : "fr") as Lang;
 
-  const dict: Record<string, Record<Lang, string>> = {
-    "meta.title": {
-      fr: "Paiement & Mise en relation - SOS Expats",
-      en: "Checkout & Connection - SOS Expats",
-    },
-    "meta.description": {
-      fr: "Réglez en toute sécurité et lancez votre consultation avec l'expert sélectionné.",
-      en: "Pay securely and start your consultation with the selected expert.",
-    },
-    "meta.keywords": {
-      fr: "paiement, consultation, avocat, expatriés, SOS Expats, appel",
-      en: "payment, consultation, lawyer, expats, call",
-    },
-    "meta.og_title": {
-      fr: "Paiement sécurisé - SOS Expats",
-      en: "Secure Checkout - SOS Expats",
-    },
-    "meta.og_description": {
-      fr: "Paiement SSL, mise en relation automatique avec votre expert.",
-      en: "SSL payment, automatic connection with your expert.",
-    },
-    "meta.og_image_alt": {
-      fr: "Paiement SOS Expats",
-      en: "SOS Expats Checkout",
-    },
-    "meta.twitter_image_alt": {
-      fr: "Interface de paiement SOS Expats",
-      en: "SOS Expats checkout interface",
-    },
-
-    "ui.back": { fr: "Retour", en: "Back" },
-    "ui.securePayment": { fr: "Paiement sécurisé", en: "Secure payment" },
-    "ui.connecting": { fr: "Mise en relation", en: "Connecting" },
-    "ui.completed": {
-      fr: "Consultation terminée",
-      en: "Consultation completed",
-    },
-    "ui.payToStart": {
-      fr: "Validez pour lancer la consultation",
-      en: "Confirm to start the consultation",
-    },
-    "ui.connectingExpert": {
-      fr: "Connexion avec votre expert",
-      en: "Connecting to your expert",
-    },
-    "ui.thanks": {
-      fr: "Merci d'avoir utilisé nos services",
-      en: "Thank you for using our services",
-    },
-
-    "card.title": { fr: "Paiement", en: "Payment" },
-    "card.number": { fr: "Numéro de carte", en: "Card number" },
-    "card.expiry": { fr: "Expiration", en: "Expiry" },
-    "card.cvc": { fr: "CVC", en: "CVC" },
-
-    "summary.title": { fr: "Récapitulatif", en: "Summary" },
-    "summary.expert": { fr: "Expert", en: "Expert" },
-    "summary.service": { fr: "Service", en: "Service" },
-    "summary.duration": { fr: "Durée", en: "Duration" },
-    "summary.total": { fr: "Total", en: "Total" },
-
-    "btn.pay": { fr: "Payer", en: "Pay" },
-    "btn.evaluate": { fr: "Évaluer", en: "Review" },
-    "btn.receipt": { fr: "Télécharger le reçu", en: "Download receipt" },
-    "btn.home": { fr: "Retour à l'accueil", en: "Back to home" },
-
-    "status.paid": { fr: "Paiement confirmé", en: "Payment confirmed" },
-    "status.expertContacted": {
-      fr: "Expert contacté(e)",
-      en: "Expert contacted",
-    },
-    "status.callStarted": {
-      fr: "Consultation démarrée",
-      en: "Consultation started",
-    },
-
-    "alert.missingDataTitle": { fr: "Données manquantes", en: "Missing data" },
-    "alert.missingDataText": {
-      fr: "Veuillez sélectionner à nouveau un expert.",
-      en: "Please select an expert again.",
-    },
-    "alert.loginRequiredTitle": {
-      fr: "Connexion requise",
-      en: "Login required",
-    },
-    "alert.loginRequiredText": {
-      fr: "Connectez-vous pour lancer une consultation.",
-      en: "Sign in to start a consultation.",
-    },
-
-    "banner.secure": { fr: "Paiement sécurisé", en: "Secure payment" },
-    "banner.ssl": {
-      fr: "Données protégées par SSL. Appel lancé automatiquement après paiement.",
-      en: "Data protected by SSL. Call launched automatically after payment.",
-    },
-
-    "err.invalidConfig": {
-      fr: "Configuration de paiement invalide",
-      en: "Invalid payment configuration",
-    },
-    "err.unauth": {
-      fr: "Utilisateur non authentifié",
-      en: "Unauthenticated user",
-    },
-    "err.sameUser": {
-      fr: "Vous ne pouvez pas réserver avec vous-même",
-      en: "You can't book yourself",
-    },
-    "err.minAmount": { fr: "Montant minimum 5€", en: "Minimum amount €5" },
-    "err.maxAmount": { fr: "Montant maximum 500€", en: "Maximum amount €500" },
-    "err.amountMismatch": {
-      fr: "Montant invalide. Merci de réessayer.",
-      en: "Invalid amount. Please try again.",
-    },
-    "err.noClientSecret": {
-      fr: "ClientSecret manquant",
-      en: "Missing ClientSecret",
-    },
-    "err.noCardElement": {
-      fr: "Champ carte introuvable",
-      en: "Card field not found",
-    },
-    "err.stripe": {
-      fr: "Erreur de paiement Stripe",
-      en: "Stripe payment error",
-    },
-    "err.paymentFailed": { fr: "Le paiement a échoué", en: "Payment failed" },
-    "err.actionRequired": {
-      fr: "Authentification supplémentaire requise",
-      en: "Additional authentication required",
-    },
-    "err.invalidMethod": {
-      fr: "Méthode de paiement invalide",
-      en: "Invalid payment method",
-    },
-    "err.canceled": {
-      fr: "Le paiement a été annulé",
-      en: "Payment was canceled",
-    },
-    "err.unexpectedStatus": {
-      fr: "Statut de paiement inattendu",
-      en: "Unexpected payment status",
-    },
-    "err.genericPayment": {
-      fr: "Une erreur est survenue lors du paiement",
-      en: "An error occurred during payment",
-    },
-    "err.invalidPhone": {
-      fr: "Numéro de téléphone invalide",
-      en: "Invalid phone number",
-    },
+const dict: Record<string, Record<Lang, string>> = {
+    "meta.title": {fr: "Paiement & Mise en relation - SOS Expats", en: "Checkout & Connection - SOS Expats", es: "Pago y Conexión - SOS Expats", de: "Zahlung und Verbindung - SOS Expats", ru: "Оплата и подключение - SOS Expats" },
+    "meta.description": {fr: "Réglez en toute sécurité et lancez votre consultation avec l'expert sélectionné.", en: "Pay securely and start your consultation with the selected expert.", es: "Pague con seguridad e inicie su consulta con el experto seleccionado.", de: "Zahlen Sie sicher und starten Sie Ihre Beratung mit dem ausgewählten Experten.", ru: "Платите безопасно и начните консультацию с выбранным экспертом." },
+    "meta.keywords": {fr: "paiement, consultation, avocat, expatriés, SOS Expats, appel", en: "payment, consultation, lawyer, expats, call", es: "pago, consulta, abogado, expatriados, SOS Expats, llamada", de: "zahlung, beratung, anwalt, expats, anruf", ru: "платеж, консультация, адвокат, экспаты, звонок" },
+    "meta.og_title": {fr: "Paiement sécurisé - SOS Expats", en: "Secure Checkout - SOS Expats", es: "Pago seguro - SOS Expats", de: "Sichere Zahlung - SOS Expats", ru: "Безопасная оплата - SOS Expats" },
+    "meta.og_description": {fr: "Paiement SSL, mise en relation automatique avec votre expert.", en: "SSL payment, automatic connection with your expert.", es: "Pago SSL, conexión automática con su experto.", de: "SSL-Zahlung, automatische Verbindung mit Ihrem Experten.", ru: "SSL-платеж, автоматическое подключение к вашему эксперту." },
+    "meta.og_image_alt": {fr: "Paiement SOS Expats", en: "SOS Expats Checkout", es: "Pago SOS Expats", de: "SOS Expats Zahlung", ru: "Платеж SOS Expats" },
+    "meta.twitter_image_alt": {fr: "Interface de paiement SOS Expats", en: "SOS Expats checkout interface", es: "Interfaz de pago SOS Expats", de: "SOS Expats-Zahlungsschnittstelle", ru: "Интерфейс оплаты SOS Expats" },
+    "ui.back": {fr: "Retour", en: "Back", es: "Atrás", de: "Zurück", ru: "Назад" },
+    "ui.securePayment": {fr: "Paiement sécurisé", en: "Secure payment", es: "Pago seguro", de: "Sichere Zahlung", ru: "Безопасный платеж" },
+    "ui.connecting": {fr: "Mise en relation", en: "Connecting", es: "Conectando", de: "Verbindung wird hergestellt", ru: "Подключение" },
+    "ui.completed": {fr: "Consultation terminée", en: "Consultation completed", es: "Consulta completada", de: "Beratung abgeschlossen", ru: "Консультация завершена" },
+    "ui.payToStart": {fr: "Validez pour lancer la consultation", en: "Confirm to start the consultation", es: "Confirmar para iniciar la consulta", de: "Bestätigen Sie, um die Beratung zu starten", ru: "Подтвердите для начала консультации" },
+    "ui.connectingExpert": {fr: "Connexion avec votre expert", en: "Connecting to your expert", es: "Conectando con tu experto", de: "Verbindung mit Ihrem Experten", ru: "Подключение к вашему эксперту" },
+    "ui.thanks": {fr: "Merci d'avoir utilisé nos services", en: "Thank you for using our services", es: "Gracias por usar nuestros servicios", de: "Danke, dass Sie unsere Dienste nutzen", ru: "Спасибо за использование наших услуг" },
+    "card.title": {fr: "Paiement", en: "Payment", es: "Pago", de: "Zahlung", ru: "Платеж" },
+    "card.number": {fr: "Numéro de carte", en: "Card number", es: "Número de tarjeta", de: "Kartennummer", ru: "Номер карты" },
+    "card.expiry": {fr: "Expiration", en: "Expiry", es: "Vencimiento", de: "Ablaufdatum", ru: "Срок действия" },
+    "card.cvc": {fr: "CVC", en: "CVC", es: "CVC", de: "CVC", ru: "CVC" },
+    "summary.title": {fr: "Récapitulatif", en: "Summary", es: "Resumen", de: "Zusammenfassung", ru: "Сводка" },
+    "summary.expert": {fr: "Expert", en: "Expert", es: "Experto", de: "Experte", ru: "Эксперт" },
+    "summary.service": {fr: "Service", en: "Service", es: "Servicio", de: "Dienstleistung", ru: "Услуга" },
+    "summary.duration": {fr: "Durée", en: "Duration", es: "Duración", de: "Dauer", ru: "Продолжительность" },
+    "summary.total": {fr: "Total", en: "Total", es: "Total", de: "Gesamt", ru: "Всего" },
+    "btn.pay": {fr: "Payer", en: "Pay", es: "Pagar", de: "Zahlen", ru: "Оплатить" },
+    "btn.evaluate": {fr: "Évaluer", en: "Review", es: "Reseña", de: "Bewertung", ru: "Отзыв" },
+    "btn.receipt": {fr: "Télécharger le reçu", en: "Download receipt", es: "Descargar recibo", de: "Quittung herunterladen", ru: "Загрузить квитанцию" },
+    "btn.home": {fr: "Retour à l'accueil", en: "Back to home", es: "Volver a inicio", de: "Zurück zur Startseite", ru: "Вернуться auf Startseite" },
+    "status.paid": {fr: "Paiement confirmé", en: "Payment confirmed", es: "Pago confirmado", de: "Zahlung bestätigt", ru: "Платеж подтвержден" },
+    "status.expertContacted": {fr: "Expert contacté(e)", en: "Expert contacted", es: "Experto contactado", de: "Experte kontaktiert", ru: "Эксперт связан" },
+    "status.callStarted": {fr: "Consultation démarrée", en: "Consultation started", es: "Consulta iniciada", de: "Beratung gestartet", ru: "Консультация начата" },
+    "alert.missingDataTitle": {fr: "Données manquantes", en: "Missing data", es: "Datos faltantes", de: "Fehlende Daten", ru: "Отсутствующие данные" },
+    "alert.missingDataText": {fr: "Veuillez sélectionner à nouveau un expert.", en: "Please select an expert again.", es: "Por favor, selecciona un experto nuevamente.", de: "Bitte wählen Sie einen Experten erneut aus.", ru: "Пожалуйста, выберите эксперта снова." },
+    "alert.loginRequiredTitle": {fr: "Connexion requise", en: "Login required", es: "Inicio de sesión requerido", de: "Anmeldung erforderlich", ru: "Требуется вход" },
+    "alert.loginRequiredText": {fr: "Connectez-vous pour lancer une consultation.", en: "Sign in to start a consultation.", es: "Inicia sesión para comenzar una consulta.", de: "Melden Sie sich an, um eine Beratung zu starten.", ru: "Войдите для начала консультации." },
+    "banner.secure": {fr: "Paiement sécurisé", en: "Secure payment", es: "Pago seguro", de: "Sichere Zahlung", ru: "Безопасный платеж" },
+    "banner.ssl": {fr: "Données protégées par SSL. Appel lancé automatiquement après paiement.", en: "Data protected by SSL. Call launched automatically after payment.", es: "Datos protegidos por SSL. Llamada iniciada automáticamente después del pago.", de: "Daten durch SSL geschützt. Anruf startet automatisch nach Zahlung.", ru: "Данные защищены SSL. Звонок начинается автоматически после оплаты." },
+    "err.invalidConfig": {fr: "Configuration de paiement invalide", en: "Invalid payment configuration", es: "Configuración de pago inválida", de: "Ungültige Zahlungskonfiguration", ru: "Неверная конфигурация платежа" },
+    "err.unauth": {fr: "Utilisateur non authentifié", en: "Unauthenticated user", es: "Usuario no autenticado", de: "Nicht authentifizierter Benutzer", ru: "Неаутентифицированный пользователь" },
+    "err.sameUser": {fr: "Vous ne pouvez pas réserver avec vous-même", en: "You can't book yourself", es: "No puedes reservar contigo mismo", de: "Du kannst dich nicht selbst buchen", ru: "Вы не можете забронировать себя" },
+    "err.minAmount": {fr: "Montant minimum 5€", en: "Minimum amount €5", es: "Monto mínimo 5€", de: "Mindestbetrag 5€", ru: "Минимальная сумма 5€" },
+    "err.maxAmount": {fr: "Montant maximum 500€", en: "Maximum amount €500", es: "Monto máximo 500€", de: "Höchstbetrag 500€", ru: "Максимальная сумма 500€" },
+    "err.amountMismatch": {fr: "Montant invalide. Merci de réessayer.", en: "Invalid amount. Please try again.", es: "Monto inválido. Por favor, intenta de nuevo.", de: "Ungültiger Betrag. Bitte versuchen Sie es erneut.", ru: "Неверная сумма. Пожалуйста, попробуйте снова." },
+    "err.noClientSecret": {fr: "ClientSecret manquant", en: "Missing ClientSecret", es: "ClientSecret faltante", de: "ClientSecret fehlt", ru: "ClientSecret отсутствует" },
+    "err.noCardElement": {fr: "Champ carte introuvable", en: "Card field not found", es: "Campo de tarjeta no encontrado", de: "Kartenfeld nicht gefunden", ru: "Поле карты не найдено" },
+    "err.stripe": {fr: "Erreur de paiement Stripe", en: "Stripe payment error", es: "Error de pago en Stripe", de: "Stripe-Zahlungsfehler", ru: "Ошибка платежа Stripe" },
+    "err.paymentFailed": {fr: "Le paiement a échoué", en: "Payment failed", es: "El pago falló", de: "Zahlung fehlgeschlagen", ru: "Платеж не прошел" },
+    "err.actionRequired": {fr: "Authentification supplémentaire requise", en: "Additional authentication required", es: "Se requiere autenticación adicional", de: "Zusätzliche Authentifizierung erforderlich", ru: "Требуется дополнительная аутентификация" },
+    "err.invalidMethod": {fr: "Méthode de paiement invalide", en: "Invalid payment method", es: "Método de pago inválido", de: "Ungültige Zahlungsmethode", ru: "Неверный способ оплаты" },
+    "err.canceled": {fr: "Le paiement a été annulé", en: "Payment was canceled", es: "El pago fue cancelado", de: "Zahlung wurde storniert", ru: "Платеж отменен" },
+    "err.unexpectedStatus": {fr: "Statut de paiement inattendu", en: "Unexpected payment status", es: "Estado de pago inesperado", de: "Unerwarteter Zahlungsstatus", ru: "Неожиданный статус платежа" },
+    "err.genericPayment": {fr: "Une erreur est survenue lors du paiement", en: "An error occurred during payment", es: "Ocurrió un error durante el pago", de: "Während der Zahlung ist ein Fehler aufgetreten", ru: "При оплате произошла ошибка" },
+    "err.invalidPhone": {fr: "Numéro de téléphone invalide", en: "Invalid phone number", es: "Número de teléfono inválido", de: "Ungültige Telefonnummer", ru: "Неверный номер телефона" },
   };
+
 
   const t = (key: keyof typeof dict, fallback?: string) =>
     dict[key]?.[language] ?? fallback ?? String(key);
@@ -1405,11 +1310,31 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
 
           <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
             <h4 className="font-semibold text-gray-900 mb-3 text-sm">
-              Summary
+             {(() => {
+  switch(language) {
+    case "es": return "Resumen";
+    case "de": return "Zusammenfassung";
+    case "ru": return "Сводка";
+    case "en": return "Summary";
+    case "fr":
+    default: return "Récapitulatif";
+  }
+})()}
             </h4>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">Expert</span>
+                <span className="text-gray-600">
+                  {(() => {
+  switch(language) {
+    case "es": return "Experto";
+    case "de": return "Experte";
+    case "ru": return "Эксперт";
+    case "en": return "Expert";
+    case "fr":
+    default: return "Expert";
+  }
+})()}
+                </span>
                 <div className="flex items-center space-x-2">
                   <img
                     src={
@@ -1432,13 +1357,36 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
                 </div>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">Service</span>
+                <span className="text-gray-600">
+                  {(() => {
+  switch(language) {
+    case "es": return "Servicio";
+    case "de": return "Dienstleistung";
+    case "ru": return "Услуга";
+    case "en": return "Service";
+    case "fr":
+    default: return "Service";
+  }
+})()}
+
+                </span>
                 <span className="font-medium text-gray-800 text-xs">
                   {serviceTypeDisplay}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">Durée</span>
+                <span className="text-gray-600">
+                  {(() => {
+  switch(language) {
+    case "es": return "Duración";
+    case "de": return "Dauer";
+    case "ru": return "Продолжительность";
+    case "en": return "Duration";
+    case "fr":
+    default: return "Durée";
+  }
+})()}
+                </span>
                 <span className="font-medium text-gray-800 text-xs">
                   {adminPricing.duration} min
                 </span>
@@ -1486,7 +1434,17 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
               <div className="flex items-center justify-center space-x-2">
                 <Lock className="w-5 h-5" aria-hidden="true" />
                 <span>
-                  {language === "fr" ? "Payer " : "Pay "}
+                  {/* {language === "fr" ? "Payer " : "Pay "} */}
+                  {(() => {
+  switch(language) {
+    case "es": return "Pagar ";
+    case "de": return "Zahlen ";
+    case "ru": return "Оплатить ";
+    case "en": return "Pay ";
+    case "fr":
+    default: return "Payer ";
+  }
+})()} 
                   {new Intl.NumberFormat(
                     language === "fr" ? "fr-FR" : "en-US",
                     {
@@ -1566,6 +1524,7 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({
   onGoBack,
 }) => {
   const { t, language } = useTranslation();
+  const intl = useIntl();
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -2076,7 +2035,16 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({
                   <span>{adminPricing.duration} min</span>
                   <span>•</span>
                   <span className="text-green-600 font-medium">
-                    {language === "fr" ? "Disponible" : "Available"}
+                  {(() => {
+  switch(language) {
+    case "es": return "Disponible";
+    case "de": return "Verfügbar";
+    case "ru": return "Доступно";
+    case "en": return "Available";
+    case "fr":
+    default: return "Disponible";
+  }
+})()}
                   </span>
                 </div>
               </div>
