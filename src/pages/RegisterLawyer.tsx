@@ -1970,13 +1970,13 @@ const RegisterLawyer: React.FC = () => {
       },
       {
         key: "phone",
-        ok: !!form.phone,
+        ok: !!form.phone && !!(parsePhoneNumberFromString(form.phone) && parsePhoneNumberFromString(form.phone).isValid()),
         labelFr: "Téléphone",
         labelEn: "Phone",
       },
       {
         key: "whatsapp",
-        ok: !!form.whatsapp,
+        ok: !!form.whatsapp && !!(parsePhoneNumberFromString(form.whatsapp) && parsePhoneNumberFromString(form.whatsapp).isValid()),
         labelFr: "WhatsApp",
         labelEn: "WhatsApp",
       },
@@ -2712,73 +2712,81 @@ const RegisterLawyer: React.FC = () => {
                           <FormattedMessage id="registerExpat.fields.phone" />
                           <span className="text-red-500">*</span>
                         </label>
+                       
+                          <PhoneInput
+                            value={form.phone}
+                            onChange={(value) => {
+                              const phoneValue = value || "";
+                              setForm((prev) => ({ ...prev, phone: phoneValue }));
 
-                        <PhoneInput
-                          value={form.phone}
-                          onChange={(value) => {
-                            setForm((prev) => ({
-                              ...prev,
-                              phone: value || "",
-                            }));
+                              if (!touched.phone) {
+                                markTouched("phone");
+                              }
 
-                            // Clear error if valid
-                            if (value) {
                               try {
-                                const parsed =
-                                  parsePhoneNumberFromString(value);
-                                if (parsed && parsed.isValid()) {
+                                const parsed = parsePhoneNumberFromString(phoneValue);
+
+                                if (!phoneValue) {
+                                  // Empty → clear error
+                                  setFieldErrors((prev) => {
+                                    const { phone, ...rest } = prev;
+                                    return rest;
+                                  });
+                                } else if (!parsed || !parsed.isValid()) {
+                                  setFieldErrors((prev) => ({
+                                    ...prev,
+                                    phone: intl.formatMessage({
+                                      id: "registerLawyer.errors.phoneInvalid",
+                                    }),
+                                  }));
+                                } else {
                                   setFieldErrors((prev) => {
                                     const { phone, ...rest } = prev;
                                     return rest;
                                   });
                                 }
-                              } catch {}
-                            }
-                          }}
-                          onBlur={() => markTouched("phone")}
-                          defaultCountry="FR"
-                          international
-                          countryCallingCodeEditable={false}
-                          className={inputClass()}
-                          placeholder="+33 6 12 34 56 78"
-                        />
+                              } catch {
+                                setFieldErrors((prev) => ({
+                                  ...prev,
+                                  phone: intl.formatMessage({
+                                    id: "registerLawyer.errors.phoneInvalid",
+                                  }),
+                                }));
+                              }
+                            }}
+                            onBlur={() => markTouched("phone")}
+                            defaultCountry="FR"
+                            international
+                            countryCallingCodeEditable={false}
+                            className={inputClass()}
+                            placeholder="+33 6 12 34 56 78"
+                          />
 
-                        {form.phone && (
-                          <div className="mt-1 text-xs text-gray-500">
-                            Format:{" "}
-                            <span className="font-mono">{form.phone}</span>
-                          </div>
-                        )}
+                          {form.phone && (
+                            <div className="mt-1 text-xs text-gray-500">
+                              Format: <span className="font-mono">{form.phone}</span>
+                            </div>
+                          )}
 
-                        <FieldError
-                          error={
-                            fieldErrors.phone ||
-                            (parsePhoneNumberFromString(form.phone) && !parsePhoneNumberFromString(form.phone).isValid() && touched.phone
-                              ? intl.formatMessage({
-                                  id: "registerLawyer.errors.phoneInvalid",
-                                })
-                              : undefined)
-                          }
-                          show={
-                            !!(
-                              touched.phone &&
-                              (!!fieldErrors.phone ||
-                                parsePhoneNumberFromString(form.phone) && !parsePhoneNumberFromString(form.phone).isValid())
-                            )
-                          }
-                        />
+                          <FieldError
+                            error={fieldErrors.phone}
+                            show={!!(touched.phone && fieldErrors.phone)}
+                          />
 
-                        <FieldSuccess
-                          show={
-                            !fieldErrors.phone &&
-                            !!touched.phone &&
-                            parsePhoneNumberFromString(form.phone) && parsePhoneNumberFromString(form.phone).isValid()
-                          }
-                          message={intl.formatMessage({
-                            id: "registerExpat.success.fieldValid",
-                          })}
-                        />
-                      </div>
+                          {(() => {
+                            const phoneNumber = parsePhoneNumberFromString(form.phone);
+                            const isValidPhone = phoneNumber?.isValid?.();
+
+                            return (
+                              <FieldSuccess
+                                show={!!(touched.phone && !fieldErrors.phone && isValidPhone)}
+                                message={intl.formatMessage({
+                                  id: "registerExpat.success.fieldValid",
+                                })}
+                              />
+                            );
+                          })()}
+                        </div>
 
                       {/* WhatsApp Number */}
                       <div>
@@ -2786,72 +2794,80 @@ const RegisterLawyer: React.FC = () => {
                           <FormattedMessage id="registerLawyer.fields.whatsapp" />
                         </label>
 
-                        <PhoneInput
-                          value={form.whatsapp}
-                          onChange={(value) => {
-                            setForm((prev) => ({
-                              ...prev,
-                              whatsapp: value || "",
-                            }));
+                         <PhoneInput
+                            value={form.whatsapp}
+                            onChange={(value) => {
+                              const whatsappValue = value || "";
+                              setForm((prev) => ({ ...prev, whatsapp: whatsappValue }));
 
-                            if (value) {
+                              if (!touched.whatsapp) {
+                                markTouched("whatsapp");
+                              }
+
                               try {
-                                const parsed =
-                                  parsePhoneNumberFromString(value);
-                                if (parsed && parsed.isValid()) {
+                                const parsed = parsePhoneNumberFromString(whatsappValue);
+
+                                if (!whatsappValue) {
+                                  // Empty → clear error
+                                  setFieldErrors((prev) => {
+                                    const { whatsapp, ...rest } = prev;
+                                    return rest;
+                                  });
+                                } else if (!parsed || !parsed.isValid()) {
+                                  setFieldErrors((prev) => ({
+                                    ...prev,
+                                    whatsapp: intl.formatMessage({
+                                      id: "registerLawyer.errors.whatsappInvalid",
+                                    }),
+                                  }));
+                                } else {
                                   setFieldErrors((prev) => {
                                     const { whatsapp, ...rest } = prev;
                                     return rest;
                                   });
                                 }
-                              } catch {}
-                            }
-                          }}
-                          onBlur={() => markTouched("whatsapp")}
-                          defaultCountry="FR"
-                          international
-                          countryCallingCodeEditable={false}
-                          className={inputClass()}
-                          placeholder="+33 1 23 45 67 89"
-                        />
+                              } catch {
+                                setFieldErrors((prev) => ({
+                                  ...prev,
+                                  phone: intl.formatMessage({
+                                    id: "registerLawyer.errors.whatsappInvalid",
+                                  }),
+                                }));
+                              }
+                            }}
+                            onBlur={() => markTouched("whatsapp")}
+                            defaultCountry="FR"
+                            international
+                            countryCallingCodeEditable={false}
+                            className={inputClass()}
+                            placeholder="+33 6 12 34 56 78"
+                          />
 
-                        {form.whatsapp && (
-                          <div className="mt-1 text-xs text-gray-500">
-                            Format:{" "}
-                            <span className="font-mono">{form.whatsapp}</span>
-                          </div>
-                        )}
+                          {form.whatsapp && (
+                            <div className="mt-1 text-xs text-gray-500">
+                              Format: <span className="font-mono">{form.whatsapp}</span>
+                            </div>
+                          )}
 
-                        <FieldError
-                          error={
-                            fieldErrors.whatsapp ||
-                            (parsePhoneNumberFromString(form.whatsapp) && !parsePhoneNumberFromString(form.whatsapp).isValid() && touched.whatsapp
-                              ? intl.formatMessage({
-                                  id: "registerLawyer.errors.whatsappInvalid",
-                                })
-                              : undefined)
-                          }
-                          show={
-                            !!(
-                              touched.whatsapp &&
-                              (!!fieldErrors.whatsapp ||
-                                parsePhoneNumberFromString(form.whatsapp) && !parsePhoneNumberFromString(form.whatsapp).isValid())
-                            )
-                          }
-                        />
+                          <FieldError
+                            error={fieldErrors.whatsapp}
+                            show={!!(touched.whatsapp && fieldErrors.whatsapp)}
+                          />
 
-                         <FieldSuccess
-                          show={
-                            !fieldErrors.whatsapp &&
-                            !!touched.whatsapp &&
-                            parsePhoneNumberFromString(form.whatsapp) && parsePhoneNumberFromString(form.whatsapp).isValid()
-                          }
-                          message={intl.formatMessage({
-                            id: "registerExpat.success.fieldValid",
-                          })}
-                        />
+                          {(() => {
+                            const whatsappNumber = parsePhoneNumberFromString(form.whatsapp);
+                            const whatsapp = whatsappNumber?.isValid?.();
 
-                       
+                            return (
+                              <FieldSuccess
+                                show={!!(touched.whatsapp && !fieldErrors.whatsapp && whatsapp)}
+                                message={intl.formatMessage({
+                                  id: "registerExpat.success.fieldValid",
+                                })}
+                              />
+                            );
+                          })()}
+
                       </div>
                     </div>
                   </section>
