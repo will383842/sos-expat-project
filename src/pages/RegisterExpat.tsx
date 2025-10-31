@@ -30,6 +30,7 @@ import {
   Info,
   MapPin,
   ShieldCheck,
+  XCircle
 } from "lucide-react";
 import Layout from "../components/layout/Layout";
 import Button from "../components/common/Button";
@@ -1033,6 +1034,21 @@ const FieldSuccess = ({
   show ? (
     <div className="mt-1 text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg px-2 py-1 inline-flex items-center">
       <CheckCircle className="w-4 h-4 mr-1" /> {children}
+    </div>
+  ) : null;
+
+
+const FieldError = ({
+  show,
+  children,
+}: {
+  show: boolean;
+  children: React.ReactNode;
+}) =>
+  show ? (
+    <div className="mt-1 flex items-center gap-1 text-sm text-red-600 bg-red-50 rounded-lg px-2 py-1">
+        <XCircle className="h-4 w-4 flex-shrink-0" />
+        <span>{children}</span>
     </div>
   ) : null;
 
@@ -2709,11 +2725,11 @@ const RegisterExpat: React.FC = () => {
                             } catch {}
                           }
                         }}
-                        defaultCountry="IN"
+                        defaultCountry="FR"
                         international
                         countryCallingCodeEditable={false}
                         className={`w-full ${fieldErrors.phone ? "border-red-500 bg-red-50" : valid.phone ? "border-green-300 bg-green-50" : "border-gray-200"}`}
-                        placeholder="+91 98765 43210"
+                        placeholder="+33 6 12 34 56 78"
                       />
 
                       {form.phone && (
@@ -2723,11 +2739,9 @@ const RegisterExpat: React.FC = () => {
                         </div>
                       )}
 
-                      {fieldErrors.phone && (
-                        <p className="mt-1 text-sm text-red-600">
-                          {fieldErrors.phone}
-                        </p>
-                      )}
+                      <FieldError show={form.phone && !valid.phone}>
+                        <FormattedMessage id="registerExpat.errors.phoneInvalid" />
+                      </FieldError>
 
                       <FieldSuccess show={valid.phone}>
                         <FormattedMessage id="registerExpat.success.phoneValid" />

@@ -1394,6 +1394,7 @@
   "registerLawyer.success.passwordValid": "Passwort validiert 🔒",
   "registerLawyer.success.allGood": "Alles bereit — Zeit zu glänzen 🌟",
 
+
   "registerLawyer.errors.title": "Kleine Anpassungen vor dem Start ✨",
   "registerLawyer.errors.firstNameRequired": "Wir würden Sie gerne ansprechen… wie heißen Sie? 😄",
   "registerLawyer.errors.lastNameRequired": "Ein Nachname wirkt professionell 👔",
@@ -1402,7 +1403,9 @@
   "registerLawyer.errors.emailTaken": "Diese E-Mail wird bereits verwendet. Haben Sie vielleicht schon ein Konto? 🔑",
   "registerLawyer.errors.passwordTooShort": "Mindestens 6 Zeichen — ganz einfach! 💪",
   "registerLawyer.errors.phoneRequired": "Wo können wir Sie anrufen? 📞",
+  "registerLawyer.errors.phoneInvalid": "Ungültige Telefonnummer",
   "registerLawyer.errors.whatsappRequired": "WhatsApp-Nummer bitte? 💬",
+  "registerLawyer.errors.whatsappInvalid":"Ungültige WhatsApp-Nummer",
   "registerLawyer.errors.needCountry": "Ihr Wohnsitzland, bitte 🌍",
   "registerLawyer.errors.needPresence": "Wo befinden Sie sich gerade? ✈️",
   "registerLawyer.errors.needPractice": "Fügen Sie mindestens ein Tätigkeitsland hinzu 🗺️",
@@ -1497,7 +1500,8 @@
   "registerExpat.errors.bankAccountRequired": "Bankkontonummer ist erforderlich",
   "registerExpat.errors.ifscRequired": "IFSC-Code ist erforderlich",
   "registerExpat.errors.ifscInvalid": "Ungültiges IFSC-Code-Format",
-
+  "registerExpat.errors.phoneInvalid": "Ungültige Telefonnummer",
+  
   "registerExpat.ui.financialInfo": "Finanz- und Identitätsinformationen",
   "validators.firstName": "Vorname ist erforderlich",
   "validators.lastName": "Nachname ist erforderlich",

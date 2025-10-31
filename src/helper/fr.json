@@ -1458,7 +1458,9 @@
   "registerLawyer.errors.emailTaken": "Oups, cet email est déjà utilisé. Vous avez peut-être déjà un compte ? 🔑",
   "registerLawyer.errors.passwordTooShort": "Juste 6 caractères minimum — easy ! 💪",
   "registerLawyer.errors.phoneRequired": "On vous sonne où ? 📞",
+  "registerLawyer.errors.phoneInvalid": "Numéro de téléphone invalide",
   "registerLawyer.errors.whatsappRequired": "On papote aussi sur WhatsApp ? 💬",
+  "registerLawyer.errors.whatsappInvalid":"Numéro WhatsApp invalide",
   "registerLawyer.errors.needCountry": "Votre pays de résidence, s'il vous plaît 🌍",
   "registerLawyer.errors.needPresence": "Où êtes-vous actuellement ? ✈️",
   "registerLawyer.errors.needPractice": "Ajoutez au moins un pays d'intervention 🗺️",
@@ -1553,6 +1555,7 @@
   "registerExpat.errors.bankAccountRequired": "Le numéro de compte bancaire est requis",
   "registerExpat.errors.ifscRequired": "Le code IFSC est requis",
   "registerExpat.errors.ifscInvalid": "Format de code IFSC invalide",
+  "registerExpat.errors.phoneInvalid": "Numéro de téléphone invalide",
 
   "registerExpat.ui.financialInfo": "Informations financières et d'identité",
   "validators.firstName": "Le prénom est requis",

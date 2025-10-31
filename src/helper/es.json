@@ -1422,7 +1422,9 @@
   "registerLawyer.errors.emailTaken": "Este email ya está en uso. ¿Quizás ya tienes una cuenta? 🔑",
   "registerLawyer.errors.passwordTooShort": "Mínimo 6 caracteres — ¡fácil! 💪",
   "registerLawyer.errors.phoneRequired": "¿Dónde te llamamos? 📞",
+  "registerLawyer.errors.phoneInvalid": "Número de teléfono inválido",
   "registerLawyer.errors.whatsappRequired": "¿Número de WhatsApp por favor? 💬",
+  "registerLawyer.errors.whatsappInvalid": "Número de WhatsApp inválido",
   "registerLawyer.errors.needCountry": "Tu país de residencia, por favor 🌍",
   "registerLawyer.errors.needPresence": "¿Dónde estás ahora? ✈️",
   "registerLawyer.errors.needPractice": "Añade al menos un país de práctica 🗺️",
@@ -1517,6 +1519,7 @@
   "registerExpat.errors.bankAccountRequired": "El número de cuenta bancaria es obligatorio",
   "registerExpat.errors.ifscRequired": "El código IFSC es obligatorio",
   "registerExpat.errors.ifscInvalid": "Formato de código IFSC inválido",
+  "registerExpat.errors.phoneInvalid": "Número de teléfono inválido",
 
   "registerExpat.ui.financialInfo": "Información financiera y de identidad",
     "validators.firstName": "El nombre es obligatorio",

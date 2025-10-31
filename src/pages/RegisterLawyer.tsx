@@ -2207,7 +2207,9 @@ const RegisterLawyer: React.FC = () => {
       EMAIL_REGEX.test(form.email) &&
       form.password.length >= 6 &&
       !!form.phone &&
+      !!(parsePhoneNumberFromString(form.phone) && parsePhoneNumberFromString(form.phone).isValid()) && 
       !!form.whatsapp &&
+      !!(parsePhoneNumberFromString(form.whatsapp) && parsePhoneNumberFromString(form.whatsapp).isValid()) &&
       !!form.currentCountry &&
       !!form.currentPresenceCountry &&
       form.bio.trim().length >= 50 &&
@@ -2484,7 +2486,7 @@ const RegisterLawyer: React.FC = () => {
                           fieldErrors.email ||
                           (!EMAIL_REGEX.test(form.email) && touched.email
                             ? intl.formatMessage({
-                                id: "registerLawyer.success.emailValid",
+                                id: "registerLawyer.errors.emailInvalid",
                               })
                             : undefined)
                         }
@@ -2738,7 +2740,7 @@ const RegisterLawyer: React.FC = () => {
                           international
                           countryCallingCodeEditable={false}
                           className={inputClass()}
-                          placeholder="+91 98765 43210"
+                          placeholder="+33 6 12 34 56 78"
                         />
 
                         {form.phone && (
@@ -2749,14 +2751,28 @@ const RegisterLawyer: React.FC = () => {
                         )}
 
                         <FieldError
-                          error={fieldErrors.phone}
-                          show={!!fieldErrors.phone && touched.phone}
+                          error={
+                            fieldErrors.phone ||
+                            (parsePhoneNumberFromString(form.phone) && !parsePhoneNumberFromString(form.phone).isValid() && touched.phone
+                              ? intl.formatMessage({
+                                  id: "registerLawyer.errors.phoneInvalid",
+                                })
+                              : undefined)
+                          }
+                          show={
+                            !!(
+                              touched.phone &&
+                              (!!fieldErrors.phone ||
+                                parsePhoneNumberFromString(form.phone) && !parsePhoneNumberFromString(form.phone).isValid())
+                            )
+                          }
                         />
+
                         <FieldSuccess
                           show={
                             !fieldErrors.phone &&
                             !!touched.phone &&
-                            !!form.phone
+                            parsePhoneNumberFromString(form.phone) && parsePhoneNumberFromString(form.phone).isValid()
                           }
                           message={intl.formatMessage({
                             id: "registerExpat.success.fieldValid",
@@ -2807,9 +2823,35 @@ const RegisterLawyer: React.FC = () => {
                         )}
 
                         <FieldError
-                          error={fieldErrors.whatsapp}
-                          show={!!fieldErrors.whatsapp && touched.whatsapp}
+                          error={
+                            fieldErrors.whatsapp ||
+                            (parsePhoneNumberFromString(form.whatsapp) && !parsePhoneNumberFromString(form.whatsapp).isValid() && touched.whatsapp
+                              ? intl.formatMessage({
+                                  id: "registerLawyer.errors.whatsappInvalid",
+                                })
+                              : undefined)
+                          }
+                          show={
+                            !!(
+                              touched.whatsapp &&
+                              (!!fieldErrors.whatsapp ||
+                                parsePhoneNumberFromString(form.whatsapp) && !parsePhoneNumberFromString(form.whatsapp).isValid())
+                            )
+                          }
                         />
+
+                         <FieldSuccess
+                          show={
+                            !fieldErrors.whatsapp &&
+                            !!touched.whatsapp &&
+                            parsePhoneNumberFromString(form.whatsapp) && parsePhoneNumberFromString(form.whatsapp).isValid()
+                          }
+                          message={intl.formatMessage({
+                            id: "registerExpat.success.fieldValid",
+                          })}
+                        />
+
+                       
                       </div>
                     </div>
                   </section>

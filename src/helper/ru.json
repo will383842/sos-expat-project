@@ -1375,7 +1375,9 @@
   "registerLawyer.errors.emailTaken": "Эта почта уже используется. Может, у вас уже есть аккаунт? 🔑",
   "registerLawyer.errors.passwordTooShort": "Минимум 6 символов — легко! 💪",
   "registerLawyer.errors.phoneRequired": "Куда нам вам позвонить? 📞",
+  "registerLawyer.errors.phoneInvalid":"Недействительный номер телефона",
   "registerLawyer.errors.whatsappRequired": "Номер WhatsApp, пожалуйста? 💬",
+  "registerLawyer.errors.whatsappInvalid": "Недействительный номер WhatsApp",
   "registerLawyer.errors.needCountry": "Ваша страна проживания, пожалуйста 🌍",
   "registerLawyer.errors.needPresence": "Где вы сейчас? ✈️",
   "registerLawyer.errors.needPractice": "Добавьте хотя бы одну страну практики 🗺️",
@@ -1470,6 +1472,7 @@
   "registerExpat.errors.bankAccountRequired": "Номер банковского счета обязателен",
   "registerExpat.errors.ifscRequired": "Код IFSC обязателен",
   "registerExpat.errors.ifscInvalid": "Неверный формат кода IFSC",
+  "registerExpat.errors.phoneInvalid":"Недействительный номер телефона",
 
   "registerExpat.ui.financialInfo": "Финансовая информация и удостоверение личности",
   "validators.firstName": "Имя обязательно",
