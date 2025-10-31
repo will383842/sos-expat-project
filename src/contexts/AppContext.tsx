@@ -9,7 +9,7 @@ import { Service, AppSettings, Notification, EnhancedSettings } from "./types";
 import { ensureCollectionsExist } from "../utils/firestore";
 
 // ✅ ADD "es" to the type
-type Language = "fr" | "en" | "es" | "ru" | "de";
+type Language = "fr" | "en" | "es" | "ru" | "de" | "hi";
 
 interface AppContextType {
   services: Service[];
@@ -131,7 +131,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     ) as Language | null;
     if (
       savedLanguage &&
-      ["fr", "en", "es", "ru", "de"].includes(savedLanguage)
+      ["fr", "en", "es", "ru", "de", "hi"].includes(savedLanguage)
     ) {
       setLanguage(savedLanguage as Language);
     }

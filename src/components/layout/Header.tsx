@@ -50,7 +50,7 @@ declare global {
 }
 
 interface Language {
-  code: "fr" | "en" | "es" | "ru" | "de" ;
+  code: "fr" | "en" | "es" | "ru" | "de" | "hi" ;
   name: string;
   nativeName: string;
   flag: React.ReactNode;
@@ -175,6 +175,29 @@ const GermanFlag = memo(() => (
 ));
 GermanFlag.displayName = "GermanFlag";
 
+
+const IndianFlag = memo(() => (
+  <div
+    className="relative p-1 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg ring-1 ring-white/20"
+    role="img"
+    aria-label="भारतीय ध्वज"
+  >
+    <div className="w-6 h-4 rounded-md overflow-hidden shadow-sm flex flex-col">
+      <div className="w-full h-1/3 bg-orange-500" />
+      <div className="w-full h-1/3 bg-white flex items-center justify-center">
+        <div className="w-2 h-2 border-2 border-blue-800 rounded-full relative">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-1 h-1 bg-blue-800 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+      <div className="w-full h-1/3 bg-green-600" />
+    </div>
+    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-lg pointer-events-none" />
+  </div>
+));
+IndianFlag.displayName = "IndianFlag";
+
 /** ================================
  *  i18n Config
  *  ================================ */
@@ -184,6 +207,7 @@ const SUPPORTED_LANGUAGES: Language[] = [
   { code: "es", name: "Spanish", nativeName: "Español", flag: <SpanishFlag /> },
   { code: "ru", name: "Russian", nativeName: "Русский", flag: <RussianFlag /> },
   { code: "de", name: "German", nativeName: "Deutsch", flag: <GermanFlag /> },
+  { code: "hi", name: "Hindi", nativeName: "हिंदी", flag: <IndianFlag /> },
 ];
 
 const LEFT_NAVIGATION_ITEMS: NavigationItem[] = [
@@ -560,7 +584,7 @@ const LanguageDropdown = memo<{
   }, []);
 
   const handleLanguageChange = useCallback(
-    (langCode: "fr" | "en" | "es" | "ru" | "de") => {
+    (langCode: "fr" | "en" | "es" | "ru" | "de" | "hi") => {
       setLanguage(langCode);
       setOpen(false);
       window.gtag?.("event", "language_change", {
@@ -810,12 +834,51 @@ const UserMenu = memo<{ isMobile?: boolean; scrolled?: boolean }>(
     //   logout: language === "fr" ? "Déconnexion" : "Logout",
     // };
 
-  const t = {
+//   const t = {
+//   login:
+//     language === "fr" ? "Connexion"
+//     : language === "es" ? "Iniciar sesión"
+//     : language === "de" ? "Anmelden"
+//     : language === "ru" ? "Войти"
+//     : "Login",
+    
+//   signup:
+//     language === "fr" ? "S'inscrire"
+//     : language === "es" ? "Registrarse"
+//     : language === "de" ? "Registrieren"
+//     : language === "ru" ? "Зарегистрироваться"
+//     : "Sign up",
+    
+//   dashboard:
+//     language === "fr" ? "Tableau de bord"
+//     : language === "es" ? "Panel de control"
+//     : language === "de" ? "Dashboard"
+//     : language === "ru" ? "Панель управления"
+//     : "Dashboard",
+    
+//   adminConsole:
+//     language === "fr" ? "Console Admin"
+//     : language === "es" ? "Consola de Administración"
+//     : language === "de" ? "Admin-Konsole"
+//     : language === "ru" ? "Консоль администратора"
+//     : "Admin Console",
+    
+//   logout:
+//     language === "fr" ? "Déconnexion"
+//     : language === "es" ? "Cerrar sesión"
+//     : language === "de" ? "Abmelden"
+//     : language === "ru" ? "Выйти"
+//     : "Logout",
+// };
+
+
+const t = {
   login:
     language === "fr" ? "Connexion"
     : language === "es" ? "Iniciar sesión"
     : language === "de" ? "Anmelden"
     : language === "ru" ? "Войти"
+    : language === "hi" ? "लॉगिन"
     : "Login",
     
   signup:
@@ -823,6 +886,7 @@ const UserMenu = memo<{ isMobile?: boolean; scrolled?: boolean }>(
     : language === "es" ? "Registrarse"
     : language === "de" ? "Registrieren"
     : language === "ru" ? "Зарегистрироваться"
+    : language === "hi" ? "साइन अप करें"
     : "Sign up",
     
   dashboard:
@@ -830,6 +894,7 @@ const UserMenu = memo<{ isMobile?: boolean; scrolled?: boolean }>(
     : language === "es" ? "Panel de control"
     : language === "de" ? "Dashboard"
     : language === "ru" ? "Панель управления"
+    : language === "hi" ? "डैशबोर्ड"
     : "Dashboard",
     
   adminConsole:
@@ -837,6 +902,7 @@ const UserMenu = memo<{ isMobile?: boolean; scrolled?: boolean }>(
     : language === "es" ? "Consola de Administración"
     : language === "de" ? "Admin-Konsole"
     : language === "ru" ? "Консоль администратора"
+    : language === "hi" ? "एडमिन कंसोल"
     : "Admin Console",
     
   logout:
@@ -844,8 +910,10 @@ const UserMenu = memo<{ isMobile?: boolean; scrolled?: boolean }>(
     : language === "es" ? "Cerrar sesión"
     : language === "de" ? "Abmelden"
     : language === "ru" ? "Выйти"
+    : language === "hi" ? "लॉग आउट"
     : "Logout",
 };
+
 
 
     if (!typedUser) {
@@ -1074,7 +1142,7 @@ const Header: React.FC = () => {
     (labelKey: string): string => {
       const translations: Record<
         string,
-        Record<"fr" | "en" | "es" | "ru" | "de", string>
+        Record<"fr" | "en" | "es" | "ru" | "de" | "hi", string>
       > = {
         "nav.home": {
           fr: "Accueil",
@@ -1082,6 +1150,7 @@ const Header: React.FC = () => {
           es: "Inicio",
           ru: "Главная",
           de: "Startseite",
+              hi: "होम",
         },
         "nav.viewProfiles": {
           fr: "Profils aidants",
@@ -1089,6 +1158,7 @@ const Header: React.FC = () => {
           es: "Perfiles de ayuda",
           ru: "Профили помощников",
           de: "Helferprofile",
+              hi: "सहायक प्रोफाइल",
         },
         "nav.testimonials": {
           fr: "Avis",
@@ -1096,6 +1166,7 @@ const Header: React.FC = () => {
           es: "Reseñas",
           ru: "Отзывы",
           de: "Bewertungen",
+                hi: "समीक्षाएं",
         },
         "nav.howItWorks": {
           fr: "Comment ça marche",
@@ -1103,6 +1174,7 @@ const Header: React.FC = () => {
           es: "Cómo funciona",
           ru: "Как это работает",
           de: "Wie es funktioniert",
+                 hi: "यह कैसे काम करता है",
         },
         "nav.pricing": {
           fr: "Tarifs",
@@ -1110,6 +1182,7 @@ const Header: React.FC = () => {
           es: "Precios",
           ru: "Тарифы",
           de: "Preise",
+                hi: "मूल्य निर्धारण",
         },
       };
 

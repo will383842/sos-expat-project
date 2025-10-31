@@ -18,6 +18,7 @@ import esMessages from "./helper/es.json";
 import frMessages from "./helper/fr.json";
 import ruMessages from "./helper/ru.json";
 import deMessages from "./helper/de.json";
+import hiMessages from "./helper/hi.json";
 import { useApp } from "./contexts/AppContext";
 
 // --------------------------------------------
@@ -91,6 +92,7 @@ const messages = {
   fr: frMessages,
   ru: ruMessages,
   de: deMessages,
+  hi: hiMessages,
 };
 
 // --------------------------------------------
