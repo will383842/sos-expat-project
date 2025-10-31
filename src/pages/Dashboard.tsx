@@ -52,6 +52,10 @@ import {
 } from "firebase/auth";
 import { FormattedMessage, useIntl } from "react-intl";
 import StripeKYC from "@/components/StripeKyc";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
+import { useForm, Controller } from "react-hook-form";
 
 // ===============================
 // 🎨 DESIGN TOKENS (UI only — aucune incidence métier)
@@ -356,6 +360,28 @@ const Dashboard: React.FC = () => {
   const { user, firebaseUser, logout, refreshUser } = useAuth();
   const { language } = useApp();
 
+  //   const { control: phoneControl, setValue: setPhoneValue, watch: watchPhone } = useForm({
+  //   defaultValues: {
+  //     phone: profileData.phone || '',
+  //     whatsappNumber: profileData.whatsappNumber || '',
+  //   },
+  //   mode: 'onChange',
+  // });
+
+  // const phoneValue = watchPhone('phone');
+  // const whatsappValue = watchPhone('whatsappNumber');
+
+  // const { control: phoneControl, setValue: setPhoneValue, watch: watchPhone } = useForm({
+  //   defaultValues: {
+  //     phone: profileData.phone || '',
+  //     whatsappNumber: profileData.whatsappNumber || '',
+  //   },
+  //   mode: 'onChange',
+  // });
+
+  // const phoneValue = watchPhone('phone');
+  // const whatsappValue = watchPhone('whatsappNumber');
+
   // UI & feedback
   const [activeTab, setActiveTab] = useState<TabType>("profile");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -423,6 +449,21 @@ const Dashboard: React.FC = () => {
     [user]
   );
   const [profileData, setProfileData] = useState<ProfileData>(baseProfile);
+
+  const {
+    control: phoneControl,
+    setValue: setPhoneValue,
+    watch: watchPhone,
+  } = useForm({
+    defaultValues: {
+      phone: baseProfile.phone || "",
+      whatsappNumber: baseProfile.whatsappNumber || "",
+    },
+    mode: "onChange",
+  });
+
+  const phoneValue = watchPhone("phone");
+  const whatsappValue = watchPhone("whatsappNumber");
 
   // Langues (sélecteur identique aux formulaires)
   const [selectedLanguages, setSelectedLanguages] = useState<
@@ -631,6 +672,26 @@ const Dashboard: React.FC = () => {
     [user, refreshUser, language]
   );
 
+  // Sync phone field with profileData
+  useEffect(() => {
+    if (phoneValue !== undefined) {
+      setProfileData((prev) => ({ ...prev, phone: phoneValue }));
+    }
+  }, [phoneValue]);
+
+  // Sync whatsapp field with profileData
+  useEffect(() => {
+    if (whatsappValue !== undefined) {
+      setProfileData((prev) => ({ ...prev, whatsappNumber: whatsappValue }));
+    }
+  }, [whatsappValue]);
+
+  // Update form when baseProfile changes (initialization)
+  useEffect(() => {
+    setPhoneValue("phone", baseProfile.phone || "");
+    setPhoneValue("whatsappNumber", baseProfile.whatsappNumber || "");
+  }, [baseProfile.phone, baseProfile.whatsappNumber, setPhoneValue]);
+
   // ===============================
   // Sauvegarde des paramètres
   // ===============================
@@ -642,14 +703,44 @@ const Dashboard: React.FC = () => {
     setErrorMessage(null);
 
     try {
+      let validatedPhone = "";
+      let validatedWhatsApp = "";
+
+      if (profileData.phone) {
+        try {
+          const parsed = parsePhoneNumberFromString(profileData.phone);
+          if (parsed && parsed.isValid()) {
+            validatedPhone = parsed.number; // E.164 format
+          }
+        } catch {
+          throw new Error(intl.formatMessage({ id: "dashboard.invalidPhone" }));
+        }
+      }
+
+      if (profileData.whatsappNumber) {
+        try {
+          const parsed = parsePhoneNumberFromString(profileData.whatsappNumber);
+          if (parsed && parsed.isValid()) {
+            validatedWhatsApp = parsed.number; // E.164 format
+          }
+        } catch {
+          throw new Error(
+            intl.formatMessage({ id: "dashboard.invalidWhatsApp" })
+          );
+        }
+      }
+
       // langues depuis le MultiLanguageSelect
       const languagesFromSelect = selectedLanguages.map((o) => o.value);
 
       const payload: Record<string, unknown> = {
         email: profileData.email.trim().toLowerCase(),
-        phone: profileData.phone || "",
+        phone: validatedPhone || "",
+        // phone: profileData.phone || "",
         phoneCountryCode: profileData.phoneCountryCode || "+33",
-        whatsappNumber: profileData.whatsappNumber || "",
+        // whatsappNumber: profileData.whatsappNumber || "",
+        whatsappNumber: validatedWhatsApp || "",
+
         whatsappCountryCode: profileData.whatsappCountryCode || "+33",
         currentCountry: profileData.currentCountry || "",
         currentPresenceCountry: profileData.currentPresenceCountry || "",
@@ -1480,9 +1571,9 @@ const Dashboard: React.FC = () => {
                         type="email"
                       />
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        {/* <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                           {intl.formatMessage({ id: "dashboard.phone" })}
-                        </label>
+                        </label> */}
                         <div className="flex gap-2">
                           {/* <select
                             value={profileData.phoneCountryCode}
@@ -1501,7 +1592,7 @@ const Dashboard: React.FC = () => {
                             <option value="+34">🇪🇸 +34</option>
                             <option value="+39">🇮🇹 +39</option>
                           </select> */}
-                          <input
+                          {/* <input
                             value={profileData.phone}
                             onChange={(e) =>
                               setProfileData((p) => ({
@@ -1511,7 +1602,65 @@ const Dashboard: React.FC = () => {
                             }
                             className="flex-1 px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500"
                             placeholder="612345678"
-                          />
+                          /> */}
+                          {/* Phone Number with country selector */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                              {intl.formatMessage({ id: "dashboard.phone" })}
+                            </label>
+
+                            <Controller
+                              control={phoneControl}
+                              name="phone"
+                              rules={{
+                                validate: (v) => {
+                                  if (!v) return true; // Optional field
+                                  try {
+                                    const p = parsePhoneNumberFromString(v);
+                                    return p && p.isValid()
+                                      ? true
+                                      : intl.formatMessage({
+                                          id: "dashboard.invalidPhone",
+                                        });
+                                  } catch {
+                                    return intl.formatMessage({
+                                      id: "dashboard.invalidPhone",
+                                    });
+                                  }
+                                },
+                              }}
+                              render={({ field, fieldState: { error } }) => (
+                                <>
+                                  <PhoneInput
+                                    {...field}
+                                    defaultCountry="FR"
+                                    international
+                                    countryCallingCodeEditable={false}
+                                    className="w-full px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 transition"
+                                    placeholder="+33 6 12 34 56 78"
+                                  />
+
+                                  {error && (
+                                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                                      {error.message}
+                                    </p>
+                                  )}
+
+                                  {field.value && !error && (
+                                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                      {intl.formatMessage({
+                                        id: "dashboard.phoneFormat",
+                                      })}
+                                      :{" "}
+                                      <span className="font-mono">
+                                        {field.value}
+                                      </span>
+                                    </p>
+                                  )}
+                                </>
+                              )}
+                            />
+                          </div>
                         </div>
                       </div>
 
@@ -1547,9 +1696,9 @@ const Dashboard: React.FC = () => {
 
                       {/* WhatsApp */}
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        {/* <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                           WhatsApp
-                        </label>
+                        </label> */}
                         <div className="flex gap-2">
                           {/* <select
                             value={profileData.whatsappCountryCode || "+33"}
@@ -1568,7 +1717,7 @@ const Dashboard: React.FC = () => {
                             <option value="+34">🇪🇸 +34</option>
                             <option value="+39">🇮🇹 +39</option>
                           </select> */}
-                          <input
+                          {/* <input
                             value={profileData.whatsappNumber || ""}
                             onChange={(e) =>
                               setProfileData((p) => ({
@@ -1578,7 +1727,63 @@ const Dashboard: React.FC = () => {
                             }
                             className="flex-1 px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500"
                             placeholder="612345678"
-                          />
+                          /> */}
+
+                          {/* WhatsApp Number with country selector */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                              WhatsApp
+                            </label>
+
+                            <Controller
+                              control={phoneControl}
+                              name="whatsappNumber"
+                              rules={{
+                                validate: (v) => {
+                                  if (!v) return true; // Optional field
+                                  try {
+                                    const p = parsePhoneNumberFromString(v);
+                                    return p && p.isValid()
+                                      ? true
+                                      : intl.formatMessage({
+                                          id: "dashboard.invalidWhatsApp",
+                                        });
+                                  } catch {
+                                    return intl.formatMessage({
+                                      id: "dashboard.invalidWhatsApp",
+                                    });
+                                  }
+                                },
+                              }}
+                              render={({ field, fieldState: { error } }) => (
+                                <>
+                                  <PhoneInput
+                                    {...field}
+                                    defaultCountry="FR"
+                                    international
+                                    countryCallingCodeEditable={false}
+                                    className="w-full px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 transition"
+                                    placeholder="+33 6 12 34 56 78"
+                                  />
+
+                                  {error && (
+                                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                                      {error.message}
+                                    </p>
+                                  )}
+
+                                  {field.value && !error && (
+                                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                      WhatsApp:{" "}
+                                      <span className="font-mono">
+                                        {field.value}
+                                      </span>
+                                    </p>
+                                  )}
+                                </>
+                              )}
+                            />
+                          </div>
                         </div>
                       </div>
 
