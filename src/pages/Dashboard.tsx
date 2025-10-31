@@ -432,6 +432,7 @@ const Dashboard: React.FC = () => {
   // Redirect si pas loggé
   useEffect(() => {
     if (!user) navigate("/login");
+    console.log(user, " : this is the user .");
   }, [user, navigate]);
 
   // Status en temps réel (priorité = sos_profiles, fallback = users)
@@ -1243,7 +1244,7 @@ const Dashboard: React.FC = () => {
                               label={intl.formatMessage({
                                 id: "dashboard.phone",
                               })}
-                              value={`${(user as { phoneCountryCode?: string }).phoneCountryCode || "+33"} ${(user as { phone?: string }).phone}`}
+                              value={`${(user as { phone?: string }).phone}`}
                             />
                           )}
                           {user.role !== "client" && (
@@ -1483,7 +1484,7 @@ const Dashboard: React.FC = () => {
                           {intl.formatMessage({ id: "dashboard.phone" })}
                         </label>
                         <div className="flex gap-2">
-                          <select
+                          {/* <select
                             value={profileData.phoneCountryCode}
                             onChange={(e) =>
                               setProfileData((p) => ({
@@ -1499,7 +1500,7 @@ const Dashboard: React.FC = () => {
                             <option value="+49">🇩🇪 +49</option>
                             <option value="+34">🇪🇸 +34</option>
                             <option value="+39">🇮🇹 +39</option>
-                          </select>
+                          </select> */}
                           <input
                             value={profileData.phone}
                             onChange={(e) =>
@@ -1550,7 +1551,7 @@ const Dashboard: React.FC = () => {
                           WhatsApp
                         </label>
                         <div className="flex gap-2">
-                          <select
+                          {/* <select
                             value={profileData.whatsappCountryCode || "+33"}
                             onChange={(e) =>
                               setProfileData((p) => ({
@@ -1566,7 +1567,7 @@ const Dashboard: React.FC = () => {
                             <option value="+49">🇩🇪 +49</option>
                             <option value="+34">🇪🇸 +34</option>
                             <option value="+39">🇮🇹 +39</option>
-                          </select>
+                          </select> */}
                           <input
                             value={profileData.whatsappNumber || ""}
                             onChange={(e) =>

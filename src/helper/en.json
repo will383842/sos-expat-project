@@ -88,6 +88,8 @@
   "Des conseils concrets, locaux, et tout de suite.": "Concrete, local advice, right away.",
   "Une réponse claire, exploitable, adaptée à votre cas.": "A clear, useful, tailor-made response.",
   "whyChooseHighlight": "SOS Expats",
+  "registerClient.help.phoneHint": "International format with country code (e.g., +33 6 12 34 56 78)",
+
   "type": "TYPE",
   "filter.all": "All",
   "filter.lawyer": "Lawyers",
@@ -1147,6 +1149,16 @@
   "registerClient.fields.languagesSpoken": "Languages you speak",
   "registerClient.fields.phone": "Phone",
   "registerClient.fields.whatsapp": "WhatsApp number (optional)",
+  "registerClient.errors.whatsappRequired": "WhatsApp number is required",
+  "registerClient.errors.whatsappInvalid": "Please enter a valid WhatsApp number",
+  "registerClient.help.whatsappHint": "WhatsApp number with country code (e.g., +33 6 12 34 56 78)",
+  "registerClient.success.whatsappValid": "Valid WhatsApp number ✓",
+  
+
+  "registerClient.errors.phoneRequired": "Phone number is required",
+  "registerClient.errors.phoneInvalid": "Please enter a valid phone number",
+  "registerClient.success.phoneValid": "Valid phone number ✓",
+
 
   "registerClient.actions.addLanguage": "Add a language",
   "registerClient.actions.remove": "Remove",
