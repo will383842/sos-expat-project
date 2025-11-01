@@ -50,6 +50,10 @@ type TranslationUnit = {
 type Translations = {
   fr: TranslationUnit;
   en: TranslationUnit;
+  es: TranslationUnit;
+  de: TranslationUnit;
+  ru: TranslationUnit;
+  hi: TranslationUnit;
 };
 
 const PrivacyPolicy: React.FC = () => {
@@ -62,11 +66,13 @@ const PrivacyPolicy: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   // Local toggle without changing global app language
-  const [selectedLanguage, setSelectedLanguage] = useState<"fr" | "en">(
-    (language as "fr" | "en") || "fr"
-  );
+  const [selectedLanguage, setSelectedLanguage] = useState<
+    "fr" | "en" | "es" | "de" | "ru" | "hi"
+  >((language as "fr" | "en" | "es" | "de" | "ru" | "hi") || "fr");
+
   useEffect(() => {
-    if (language) setSelectedLanguage(language as "fr" | "en");
+    if (language)
+      setSelectedLanguage(language as "fr" | "en" | "es" | "de" | "ru" | "hi");
   }, [language]);
 
   // --- Static texts / i18n ---
@@ -237,6 +243,40 @@ const PrivacyPolicy: React.FC = () => {
         contactCta: "Контактная форма",
         editHint: "Документ редактируется через консоль администратора (RU)",
       },
+
+      hi: {
+        title: "गोपनीयता नीति",
+        subtitle: "आपकी गोपनीयता हमारी प्राथमिकता है",
+        lastUpdated: "संस्करण 2.2 – अंतिम अपडेट: 16 जून 2025",
+        dataCollection: "डेटा संग्रह",
+        dataProtection: "डेटा सुरक्षा",
+        dataSharing: "डेटा साझाकरण",
+        yourRights: "आपके अधिकार",
+        contact: "संपर्क",
+        dataCollectionContent:
+          "हम केवल हमारी सेवाएं प्रदान करने के लिए आवश्यक जानकारी एकत्र करते हैं। इसमें आपके संपर्क विवरण, तकनीकी मेटाडेटा (कॉल, मैसेजिंग) और आपके अनुरोध के लिए आवश्यक विवरण शामिल हैं।",
+        dataProtectionContent:
+          "आपका डेटा ट्रांज़िट और स्टोरेज में एन्क्रिप्ट किया गया है और सुरक्षित रूप से संग्रहीत है। हम अनधिकृत पहुंच को रोकने के लिए तकनीकी और संगठनात्मक उपाय लागू करते हैं।",
+        dataSharingContent:
+          "हम कभी भी आपके व्यक्तिगत डेटा को नहीं बेचते। हम केवल आवश्यक जानकारी सत्यापित प्रदाताओं (भुगतान, टेलीफोनी, होस्टिंग) के साथ साझा करते हैं ताकि सेवा प्रदान की जा सके।",
+        rights: [
+          "पहुंच का अधिकार",
+          "सुधार का अधिकार",
+          "हटाने का अधिकार (कानूनी सीमाओं के भीतर)",
+          "डेटा पोर्टेबिलिटी का अधिकार",
+          "आपत्ति और प्रतिबंध का अधिकार",
+        ],
+        contactContent:
+          "प्रश्नों के लिए या अपने अधिकारों का प्रयोग करने के लिए, कृपया नीचे दिए गए फॉर्म का उपयोग करें।",
+        features: [
+          "एन्क्रिप्शन",
+          "पारदर्शिता",
+          "उपयोगकर्ता नियंत्रण",
+          "डेटा पुनर्विक्रय नहीं",
+        ],
+        contactCta: "संपर्क फॉर्म",
+        editHint: "एडमिन कंसोल से संपादन योग्य दस्तावेज़ (HI)",
+      },
     }),
     []
   );
@@ -302,7 +342,9 @@ const PrivacyPolicy: React.FC = () => {
     fetchPrivacyPolicy();
   }, [selectedLanguage]);
 
-  const handleLanguageChange = (newLang: "fr" | "en") => {
+  const handleLanguageChange = (
+    newLang: "fr" | "en" | "es" | "de" | "ru" | "hi"
+  ) => {
     setSelectedLanguage(newLang);
   };
 
@@ -464,6 +506,35 @@ const PrivacyPolicy: React.FC = () => {
     return elements;
   };
 
+  const defaultHi = `
+# ${t.title}
+
+**${t.lastUpdated}**
+
+---
+
+## 1. ${t.dataCollection}
+हम केवल **सख्ती से आवश्यक** डेटा एकत्र करते हैं ताकि हमारी सेवाएं प्रदान की जा सकें (संपर्क विवरण, तकनीकी मेटाडेटा, अनुरोध विवरण)।
+
+## 2. ${t.dataProtection}
+**ट्रांज़िट** और **स्टोरेज** में एन्क्रिप्शन जहां संभव हो। मजबूत तकनीकी और संगठनात्मक सुरक्षा उपाय।
+
+## 3. ${t.dataSharing}
+कोई **डेटा पुनर्विक्रय** नहीं। सेवा प्रदान करने के लिए **सत्यापित** प्रोसेसर के साथ सीमित साझाकरण।
+
+## 4. ${t.yourRights}
+- ${t.rights[0]}
+- ${t.rights[1]}
+- ${t.rights[2]}
+- ${t.rights[3]}
+- ${t.rights[4]}
+
+---
+
+## 5. ${t.contact}
+http://localhost:5174/contact
+`;
+
   // --- Default bilingual content (shown if no Firestore content) ---
   const defaultFr = `
 # Politique de confidentialité
@@ -523,7 +594,19 @@ No **data resale**. Limited sharing with **vetted** processors to provide the se
 http://localhost:5174/contact
 `;
 
-  const defaultContent = selectedLanguage === "fr" ? defaultFr : defaultEn;
+  // const defaultContent = selectedLanguage === "fr" ? defaultFr : defaultEn;
+  const defaultContent = 
+  selectedLanguage === "fr" 
+    ? defaultFr 
+    : selectedLanguage === "es"
+    ? texts.es.title // Use Spanish default if you have it
+    : selectedLanguage === "de"
+    ? texts.de.title // Use German default if you have it
+    : selectedLanguage === "ru"
+    ? texts.ru.title // Use Russian default if you have it
+    : selectedLanguage === "hi"
+    ? defaultHi
+    : defaultEn;
 
   return (
     <Layout>

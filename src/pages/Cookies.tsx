@@ -28,13 +28,13 @@ const Cookies: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [selectedLanguage, setSelectedLanguage] = useState<
-    "fr" | "en" | "es" | "de" | "ru"
-  >((language as "fr" | "en" | "es" | "de" | "ru") || "fr");
+    "fr" | "en" | "es" | "de" | "ru" | "hi"
+  >((language as "fr" | "en" | "es" | "de" | "ru" | "hi") || "fr");
 
   // Rester aligné avec la langue globale si elle change
   useEffect(() => {
     if (language)
-      setSelectedLanguage(language as "fr" | "en" | "es" | "de" | "ru");
+      setSelectedLanguage(language as "fr" | "en" | "es" | "de" | "ru" | "hi");
   }, [language]);
 
   // Récupération Firestore (même logique métier)
@@ -145,6 +145,21 @@ const Cookies: React.FC = () => {
       contactCta: "Свяжитесь с нами",
       editHint: "Документ редактируется через консоль администратора",
     },
+      hi: {
+    title: "कुकीज़ नीति",
+    subtitle: "हम अपनी साइट पर कुकीज़ का उपयोग कैसे करते हैं",
+    lastUpdated: "संस्करण 2.2 – अंतिम अपडेट: 16 जून 2025",
+    loading: "लोड हो रहा है...",
+    features: [
+      "सहमति बैनर",
+      "विस्तृत नियंत्रण",
+      "GDPR अनुपालन",
+      "पूर्ण पारदर्शिता",
+    ],
+    anchorTitle: "सारांश",
+    contactCta: "हमसे संपर्क करें",
+    editHint: "एडमिन कंसोल से संपादन योग्य दस्तावेज़",
+  },
   };
 
   const t = translations[selectedLanguage];
@@ -273,9 +288,11 @@ const Cookies: React.FC = () => {
               className="inline-flex items-center gap-3 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg"
             >
               <Globe className="w-5 h-5" />
-              {selectedLanguage === "fr"
+              {/* {selectedLanguage === "fr"
                 ? "Formulaire de contact"
-                : "Contact form"}
+                : "Contact form"} */}
+
+              {t.contactCta}
             </a>
           </div>
         );
@@ -314,6 +331,84 @@ const Cookies: React.FC = () => {
   };
 
   // ---------- Contenu par défaut (bilingue) ----------
+
+
+  const defaultHi = `
+# कुकीज़ नीति
+
+**संस्करण 2.2 – अंतिम अपडेट: 16 जून 2025**
+
+---
+
+## 1. कुकी क्या है?
+
+एक **कुकी** एक छोटी टेक्स्ट फ़ाइल है जो किसी वेबसाइट पर जाने पर आपके डिवाइस (कंप्यूटर, मोबाइल, टैबलेट) पर संग्रहीत की जाती है। यह साइट को **आपके डिवाइस को पहचानने**, आपकी प्राथमिकताओं को **याद रखने** और आपके अनुभव को **बेहतर बनाने** में मदद करती है।
+
+---
+
+## 2. हम कुकीज़ का उपयोग क्यों करते हैं?
+
+2.1. **आवश्यक संचालन**: प्रमाणीकरण, सुरक्षा, भाषा चयन और आपके सत्र को बनाए रखना सुनिश्चित करना।
+2.2. **ऑडियंस माप**: साइट के उपयोग को समझना ताकि इसे बेहतर बनाया जा सके (देखे गए पेज, बिताया गया समय, घटनाएं)।
+2.3. **प्रदर्शन**: लोडिंग गति और स्थिरता को अनुकूलित करना।
+2.4. **संचार**: टेलीफोनी/वीडियो और तकनीकी सूचनाओं को सक्षम करना।
+
+---
+
+## 3. कुकीज़ के प्रकार
+
+3.1. **आवश्यक कुकीज़**: साइट के संचालन के लिए सख्ती से आवश्यक।
+3.2. **विश्लेषणात्मक कुकीज़**: एकत्रित उपयोग के आंकड़े, जहां संभव हो गुमनाम किए गए।
+3.3. **प्रदर्शन कुकीज़**: प्रदर्शन सुधार, कैश और सामग्री वितरण।
+
+---
+
+## 4. कानूनी आधार और अवधि
+
+4.1. **आवश्यक**: वैध हित (अनुरोधित सेवा प्रदान करना)।
+4.2. **विश्लेषणात्मक/प्रदर्शन**: बैनर के माध्यम से **आपकी सहमति**।
+4.3. **अवधि**: सत्र (बंद करने पर हटा दिया गया) या स्थायी (उद्देश्य के आधार पर कुछ घंटों से अधिकतम 13 महीने तक)।
+
+---
+
+## 5. आपकी सहमति का प्रबंधन
+
+5.1. आप हमारे **सहमति बैनर** के माध्यम से गैर-आवश्यक श्रेणियों को **स्वीकार/अस्वीकार** कर सकते हैं।
+5.2. आप किसी भी समय पेज के निचले भाग में "कुकी प्राथमिकताएं" लिंक से **अपनी सहमति वापस ले सकते हैं**।
+5.3. कुकीज़ को ब्लॉक/हटाने के लिए अपने **ब्राउज़र** को भी कॉन्फ़िगर करें।
+
+---
+
+## 6. तृतीय पक्षों द्वारा जारी कुकीज़
+
+हम ऐसे प्रदाताओं का उपयोग कर सकते हैं जो अपनी स्वयं की कुकीज़ जमा कर सकते हैं: **Stripe** (भुगतान), **Twilio** (टेलीफोनी), **Firebase** (प्रमाणीकरण/डेटाबेस/होस्टिंग) और, सक्रियण के आधार पर, एक **ऑडियंस विश्लेषण** उपकरण। ये तृतीय पक्ष **EU के बाहर** काम कर सकते हैं; आवश्यकता पड़ने पर **उपयुक्त सुरक्षा उपाय** लागू किए जाते हैं।
+
+---
+
+## 7. अंतर्राष्ट्रीय स्थानांतरण
+
+जब डेटा स्थानांतरण आपके देश के बाहर होता है, तो हम सुनिश्चित करते हैं कि वे मान्यता प्राप्त **सुरक्षा तंत्रों** (मानक संविदात्मक खंड, पर्याप्तता निर्णय, आदि) पर आधारित हों जब कानून की आवश्यकता हो।
+
+---
+
+## 8. आपके अधिकार
+
+लागू कानून (जैसे GDPR) के अनुसार, आपके पास कानून द्वारा प्रदान की गई शर्तों के तहत **पहुंच**, **सुधार**, **मिटाने**, **आपत्ति**, **सीमा** और **पोर्टेबिलिटी** के अधिकार हैं। आप हमारे **संपर्क फॉर्म** के माध्यम से अपने अधिकारों का प्रयोग कर सकते हैं: http://localhost:5174/contact
+
+---
+
+## 9. इस नीति का अद्यतन
+
+हम नियामक या तकनीकी विकास को प्रतिबिंबित करने के लिए इस नीति को संशोधित कर सकते हैं। अद्यतन संस्करण **अपडेट तारीख** के साथ इस पृष्ठ पर प्रकाशित किया गया है।
+
+---
+
+## 10. संपर्क
+
+कुकीज़ या डेटा सुरक्षा से संबंधित किसी भी प्रश्न के लिए, हमसे संपर्क करें: [**http://localhost:5174/contact**](http://localhost:5174/contact)
+`;
+
+  
   const defaultFr = `
 # Politique des Cookies
 
@@ -699,6 +794,8 @@ Bei Fragen zu Cookies oder Datenschutz kontaktieren Sie uns bitte: [**http://loc
           ? defaultDe
           : selectedLanguage === "ru"
             ? defaultRu
+            : selectedLanguage === "hi"
+              ? defaultHi
             : defaultEn;
 
   // Sommaire UI
@@ -759,141 +856,299 @@ Bei Fragen zu Cookies oder Datenschutz kontaktieren Sie uns bitte: [**http://loc
   //   [selectedLanguage]
   // );
 
+  // const anchorMap = useMemo(
+  //   () => [
+  //     {
+  //       num: 1,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Qu'est-ce qu'un cookie ?"
+  //           : selectedLanguage === "es"
+  //             ? "¿Qué es una cookie?"
+  //             : selectedLanguage === "de"
+  //               ? "Was ist ein Cookie?"
+  //               : selectedLanguage === "ru"
+  //                 ? "Что такое файл cookie?"
+  //                 : "What is a cookie?",
+  //     },
+  //     {
+  //       num: 2,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Pourquoi nous les utilisons"
+  //           : selectedLanguage === "es"
+  //             ? "Por qué los utilizamos"
+  //             : selectedLanguage === "de"
+  //               ? "Warum wir sie verwenden"
+  //               : selectedLanguage === "ru"
+  //                 ? "Почему мы их используем"
+  //                 : "Why we use them",
+  //     },
+  //     {
+  //       num: 3,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Types de cookies"
+  //           : selectedLanguage === "es"
+  //             ? "Tipos de cookies"
+  //             : selectedLanguage === "de"
+  //               ? "Cookie-Typen"
+  //               : selectedLanguage === "ru"
+  //                 ? "Типы файлов cookie"
+  //                 : "Types of cookies",
+  //     },
+  //     {
+  //       num: 4,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Base légale & durée"
+  //           : selectedLanguage === "es"
+  //             ? "Base legal y duración"
+  //             : selectedLanguage === "de"
+  //               ? "Rechtsgrundlage & Dauer"
+  //               : selectedLanguage === "ru"
+  //                 ? "Правовая основа и продолжительность"
+  //                 : "Legal basis & duration",
+  //     },
+  //     {
+  //       num: 5,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Gestion du consentement"
+  //           : selectedLanguage === "es"
+  //             ? "Gestión del consentimiento"
+  //             : selectedLanguage === "de"
+  //               ? "Verwaltung der Zustimmung"
+  //               : selectedLanguage === "ru"
+  //                 ? "Управление согласием"
+  //                 : "Managing consent",
+  //     },
+  //     {
+  //       num: 6,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Cookies tiers"
+  //           : selectedLanguage === "es"
+  //             ? "Cookies de terceros"
+  //             : selectedLanguage === "de"
+  //               ? "Drittanbieter-Cookies"
+  //               : selectedLanguage === "ru"
+  //                 ? "Файлы cookie третьих лиц"
+  //                 : "Third-party cookies",
+  //     },
+  //     {
+  //       num: 7,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Transferts internationaux"
+  //           : selectedLanguage === "es"
+  //             ? "Transferencias internacionales"
+  //             : selectedLanguage === "de"
+  //               ? "Internationale Übermittlungen"
+  //               : selectedLanguage === "ru"
+  //                 ? "Международные передачи"
+  //                 : "International transfers",
+  //     },
+  //     {
+  //       num: 8,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Vos droits"
+  //           : selectedLanguage === "es"
+  //             ? "Sus derechos"
+  //             : selectedLanguage === "de"
+  //               ? "Ihre Rechte"
+  //               : selectedLanguage === "ru"
+  //                 ? "Ваши права"
+  //                 : "Your rights",
+  //     },
+  //     {
+  //       num: 9,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Mises à jour"
+  //           : selectedLanguage === "es"
+  //             ? "Actualizaciones"
+  //             : selectedLanguage === "de"
+  //               ? "Aktualisierungen"
+  //               : selectedLanguage === "ru"
+  //                 ? "Обновления"
+  //                 : "Updates",
+  //     },
+  //     {
+  //       num: 10,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Contact"
+  //           : selectedLanguage === "es"
+  //             ? "Contacto"
+  //             : selectedLanguage === "de"
+  //               ? "Kontakt"
+  //               : selectedLanguage === "ru"
+  //                 ? "Контакт"
+  //                 : "Contact",
+  //     },
+  //   ],
+  //   [selectedLanguage]
+  // );
+
+
   const anchorMap = useMemo(
-    () => [
-      {
-        num: 1,
-        label:
-          selectedLanguage === "fr"
-            ? "Qu'est-ce qu'un cookie ?"
-            : selectedLanguage === "es"
-              ? "¿Qué es una cookie?"
-              : selectedLanguage === "de"
-                ? "Was ist ein Cookie?"
-                : selectedLanguage === "ru"
-                  ? "Что такое файл cookie?"
-                  : "What is a cookie?",
-      },
-      {
-        num: 2,
-        label:
-          selectedLanguage === "fr"
-            ? "Pourquoi nous les utilisons"
-            : selectedLanguage === "es"
-              ? "Por qué los utilizamos"
-              : selectedLanguage === "de"
-                ? "Warum wir sie verwenden"
-                : selectedLanguage === "ru"
-                  ? "Почему мы их используем"
-                  : "Why we use them",
-      },
-      {
-        num: 3,
-        label:
-          selectedLanguage === "fr"
-            ? "Types de cookies"
-            : selectedLanguage === "es"
-              ? "Tipos de cookies"
-              : selectedLanguage === "de"
-                ? "Cookie-Typen"
-                : selectedLanguage === "ru"
-                  ? "Типы файлов cookie"
-                  : "Types of cookies",
-      },
-      {
-        num: 4,
-        label:
-          selectedLanguage === "fr"
-            ? "Base légale & durée"
-            : selectedLanguage === "es"
-              ? "Base legal y duración"
-              : selectedLanguage === "de"
-                ? "Rechtsgrundlage & Dauer"
-                : selectedLanguage === "ru"
-                  ? "Правовая основа и продолжительность"
-                  : "Legal basis & duration",
-      },
-      {
-        num: 5,
-        label:
-          selectedLanguage === "fr"
-            ? "Gestion du consentement"
-            : selectedLanguage === "es"
-              ? "Gestión del consentimiento"
-              : selectedLanguage === "de"
-                ? "Verwaltung der Zustimmung"
-                : selectedLanguage === "ru"
-                  ? "Управление согласием"
-                  : "Managing consent",
-      },
-      {
-        num: 6,
-        label:
-          selectedLanguage === "fr"
-            ? "Cookies tiers"
-            : selectedLanguage === "es"
-              ? "Cookies de terceros"
-              : selectedLanguage === "de"
-                ? "Drittanbieter-Cookies"
-                : selectedLanguage === "ru"
-                  ? "Файлы cookie третьих лиц"
-                  : "Third-party cookies",
-      },
-      {
-        num: 7,
-        label:
-          selectedLanguage === "fr"
-            ? "Transferts internationaux"
-            : selectedLanguage === "es"
-              ? "Transferencias internacionales"
-              : selectedLanguage === "de"
-                ? "Internationale Übermittlungen"
-                : selectedLanguage === "ru"
-                  ? "Международные передачи"
-                  : "International transfers",
-      },
-      {
-        num: 8,
-        label:
-          selectedLanguage === "fr"
-            ? "Vos droits"
-            : selectedLanguage === "es"
-              ? "Sus derechos"
-              : selectedLanguage === "de"
-                ? "Ihre Rechte"
-                : selectedLanguage === "ru"
-                  ? "Ваши права"
-                  : "Your rights",
-      },
-      {
-        num: 9,
-        label:
-          selectedLanguage === "fr"
-            ? "Mises à jour"
-            : selectedLanguage === "es"
-              ? "Actualizaciones"
-              : selectedLanguage === "de"
-                ? "Aktualisierungen"
-                : selectedLanguage === "ru"
-                  ? "Обновления"
-                  : "Updates",
-      },
-      {
-        num: 10,
-        label:
-          selectedLanguage === "fr"
-            ? "Contact"
-            : selectedLanguage === "es"
-              ? "Contacto"
-              : selectedLanguage === "de"
-                ? "Kontakt"
-                : selectedLanguage === "ru"
-                  ? "Контакт"
-                  : "Contact",
-      },
-    ],
-    [selectedLanguage]
-  );
+  () => [
+    {
+      num: 1,
+      label:
+        selectedLanguage === "fr"
+          ? "Qu'est-ce qu'un cookie ?"
+          : selectedLanguage === "es"
+          ? "¿Qué es una cookie?"
+          : selectedLanguage === "de"
+            ? "Was ist ein Cookie?"
+            : selectedLanguage === "ru"
+              ? "Что такое файл cookie?"
+              : selectedLanguage === "hi"
+                ? "कुकी क्या है?"
+                : "What is a cookie?",
+    },
+    {
+      num: 2,
+      label:
+        selectedLanguage === "fr"
+          ? "Pourquoi nous les utilisons"
+          : selectedLanguage === "es"
+          ? "Por qué los utilizamos"
+          : selectedLanguage === "de"
+            ? "Warum wir sie verwenden"
+            : selectedLanguage === "ru"
+              ? "Почему мы их используем"
+              : selectedLanguage === "hi"
+                ? "हम इनका उपयोग क्यों करते हैं"
+                : "Why we use them",
+    },
+    {
+      num: 3,
+      label:
+        selectedLanguage === "fr"
+          ? "Types de cookies"
+          : selectedLanguage === "es"
+          ? "Tipos de cookies"
+          : selectedLanguage === "de"
+            ? "Cookie-Typen"
+            : selectedLanguage === "ru"
+              ? "Типы файлов cookie"
+              : selectedLanguage === "hi"
+                ? "कुकीज़ के प्रकार"
+                : "Types of cookies",
+    },
+    {
+      num: 4,
+      label:
+        selectedLanguage === "fr"
+          ? "Base légale & durée"
+          : selectedLanguage === "es"
+          ? "Base legal y duración"
+          : selectedLanguage === "de"
+            ? "Rechtsgrundlage & Dauer"
+            : selectedLanguage === "ru"
+              ? "Правовая основа и продолжительность"
+              : selectedLanguage === "hi"
+                ? "कानूनी आधार और अवधि"
+                : "Legal basis & duration",
+    },
+    {
+      num: 5,
+      label:
+        selectedLanguage === "fr"
+          ? "Gestion du consentement"
+          : selectedLanguage === "es"
+          ? "Gestión del consentimiento"
+          : selectedLanguage === "de"
+            ? "Verwaltung der Zustimmung"
+            : selectedLanguage === "ru"
+              ? "Управление согласием"
+              : selectedLanguage === "hi"
+                ? "सहमति प्रबंधन"
+                : "Managing consent",
+    },
+    {
+      num: 6,
+      label:
+        selectedLanguage === "fr"
+          ? "Cookies tiers"
+          : selectedLanguage === "es"
+          ? "Cookies de terceros"
+          : selectedLanguage === "de"
+            ? "Drittanbieter-Cookies"
+            : selectedLanguage === "ru"
+              ? "Файлы cookie третьих лиц"
+              : selectedLanguage === "hi"
+                ? "तृतीय पक्ष कुकीज़"
+                : "Third-party cookies",
+    },
+    {
+      num: 7,
+      label:
+        selectedLanguage === "fr"
+          ? "Transferts internationaux"
+          : selectedLanguage === "es"
+          ? "Transferencias internacionales"
+          : selectedLanguage === "de"
+            ? "Internationale Übermittlungen"
+            : selectedLanguage === "ru"
+              ? "Международные передачи"
+              : selectedLanguage === "hi"
+                ? "अंतर्राष्ट्रीय स्थानांतरण"
+                : "International transfers",
+    },
+    {
+      num: 8,
+      label:
+        selectedLanguage === "fr"
+          ? "Vos droits"
+          : selectedLanguage === "es"
+          ? "Sus derechos"
+          : selectedLanguage === "de"
+            ? "Ihre Rechte"
+            : selectedLanguage === "ru"
+              ? "Ваши права"
+              : selectedLanguage === "hi"
+                ? "आपके अधिकार"
+                : "Your rights",
+    },
+    {
+      num: 9,
+      label:
+        selectedLanguage === "fr"
+          ? "Mises à jour"
+          : selectedLanguage === "es"
+          ? "Actualizaciones"
+          : selectedLanguage === "de"
+            ? "Aktualisierungen"
+            : selectedLanguage === "ru"
+              ? "Обновления"
+              : selectedLanguage === "hi"
+                ? "अपडेट"
+                : "Updates",
+    },
+    {
+      num: 10,
+      label:
+        selectedLanguage === "fr"
+          ? "Contact"
+          : selectedLanguage === "es"
+          ? "Contacto"
+          : selectedLanguage === "de"
+            ? "Kontakt"
+            : selectedLanguage === "ru"
+              ? "Контакт"
+              : selectedLanguage === "hi"
+                ? "संपर्क"
+                : "Contact",
+    },
+  ],
+  [selectedLanguage]
+);
+
 
   const body = content || defaultContent;
 
