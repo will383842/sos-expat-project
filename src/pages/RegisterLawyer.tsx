@@ -75,6 +75,7 @@ type MultiLangDuo = {
   en: string;
   de: string;
   ru: string;
+   hi: string;
 };
 // const COUNTRIES: MultiLangDuo[] = [
 //   { fr: "Afghanistan", en: "Afghanistan" },
@@ -148,6 +149,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Afghanistan",
     de: "Afghanistan",
     ru: "Афганистан",
+    hi: "अफ़गानिस्तान",
   },
   {
     fr: "Afrique du Sud",
@@ -155,6 +157,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "South Africa",
     de: "Südafrika",
     ru: "Южная Африка",
+    hi: "दक्षिण अफ्रीका",
   },
   {
     fr: "Albanie",
@@ -162,23 +165,26 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Albania",
     de: "Albanien",
     ru: "Албания",
+    hi: "अल्बानिया",
   },
-  { fr: "Algérie", es: "Argelia", en: "Algeria", de: "Algerien", ru: "Алжир" },
+  { fr: "Algérie", es: "Argelia", en: "Algeria", de: "Algerien", ru: "Алжир", hi: "अल्जीरिया" },
   {
     fr: "Allemagne",
     es: "Alemania",
     en: "Germany",
     de: "Deutschland",
     ru: "Германия",
+    hi: "जर्मनी",
   },
-  { fr: "Andorre", es: "Andorra", en: "Andorra", de: "Andorra", ru: "Андорра" },
-  { fr: "Angola", es: "Angola", en: "Angola", de: "Angola", ru: "Ангола" },
+  { fr: "Andorre", es: "Andorra", en: "Andorra", de: "Andorra", ru: "Андорра", hi: "अंडोरा" },
+  { fr: "Angola", es: "Angola", en: "Angola", de: "Angola", ru: "Ангола", hi: "अंगोला" },
   {
     fr: "Arabie Saoudite",
     es: "Arabia Saudita",
     en: "Saudi Arabia",
     de: "Saudi-Arabien",
     ru: "Саудовская Аравия",
+    hi: "सऊदी अरब",
   },
   {
     fr: "Argentine",
@@ -186,6 +192,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Argentina",
     de: "Argentinien",
     ru: "Аргентина",
+    hi: "अर्जेंटीना",
   },
   {
     fr: "Arménie",
@@ -193,6 +200,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Armenia",
     de: "Armenien",
     ru: "Армения",
+    hi: "आर्मेनिया",
   },
   {
     fr: "Australie",
@@ -200,6 +208,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Australia",
     de: "Australien",
     ru: "Австралия",
+    hi: "ऑस्ट्रेलिया",
   },
   {
     fr: "Autriche",
@@ -207,6 +216,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Austria",
     de: "Österreich",
     ru: "Австрия",
+    hi: "ऑस्ट्रिया",
   },
   {
     fr: "Azerbaïdjan",
@@ -214,15 +224,17 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Azerbaijan",
     de: "Aserbaidschan",
     ru: "Азербайджан",
+    hi: "अज़रबैजान",
   },
-  { fr: "Bahamas", es: "Bahamas", en: "Bahamas", de: "Bahamas", ru: "Багамы" },
-  { fr: "Bahreïn", es: "Baréin", en: "Bahrain", de: "Bahrain", ru: "Бахрейн" },
+  { fr: "Bahamas", es: "Bahamas", en: "Bahamas", de: "Bahamas", ru: "Багамы", hi: "बहामास" },
+  { fr: "Bahreïn", es: "Baréin", en: "Bahrain", de: "Bahrain", ru: "Бахрейн", hi: "बहरीन" },
   {
     fr: "Bangladesh",
     es: "Bangladés",
     en: "Bangladesh",
     de: "Bangladesch",
     ru: "Бангладеш",
+    hi: "बांग्लादेश",
   },
   {
     fr: "Barbade",
@@ -230,6 +242,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Barbados",
     de: "Barbados",
     ru: "Барбадос",
+    hi: "बारबाडोस",
   },
   {
     fr: "Belgique",
@@ -237,16 +250,18 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Belgium",
     de: "Belgien",
     ru: "Бельгия",
+    hi: "बेल्जियम",
   },
-  { fr: "Belize", es: "Belice", en: "Belize", de: "Belize", ru: "Белиз" },
-  { fr: "Bénin", es: "Benín", en: "Benin", de: "Benin", ru: "Бенин" },
-  { fr: "Bhoutan", es: "Bután", en: "Bhutan", de: "Bhutan", ru: "Бутан" },
+  { fr: "Belize", es: "Belice", en: "Belize", de: "Belize", ru: "Белиз", hi: "बेलीज़" },
+  { fr: "Bénin", es: "Benín", en: "Benin", de: "Benin", ru: "Бенин", hi: "बेनिन" },
+  { fr: "Bhoutan", es: "Bután", en: "Bhutan", de: "Bhutan", ru: "Бутан", hi: "भूटान" },
   {
     fr: "Biélorussie",
     es: "Bielorrusia",
     en: "Belarus",
     de: "Belarus",
     ru: "Беларусь",
+    hi: "बेलारूस",
   },
   {
     fr: "Birmanie",
@@ -254,6 +269,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Myanmar",
     de: "Myanmar",
     ru: "Мьянма",
+    hi: "म्यांमार",
   },
   {
     fr: "Bolivie",
@@ -261,6 +277,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Bolivia",
     de: "Bolivien",
     ru: "Боливия",
+    hi: "बोलीविया",
   },
   {
     fr: "Bosnie-Herzégovine",
@@ -268,6 +285,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Bosnia and Herzegovina",
     de: "Bosnien und Herzegowina",
     ru: "Босния и Герцеговина",
+    hi: "बोस्निया और हर्जेगोविना",
   },
   {
     fr: "Botswana",
@@ -275,15 +293,17 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Botswana",
     de: "Botswana",
     ru: "Ботсвана",
+    hi: "बोत्सवाना",
   },
-  { fr: "Brésil", es: "Brasil", en: "Brazil", de: "Brasilien", ru: "Бразилия" },
-  { fr: "Brunei", es: "Brunéi", en: "Brunei", de: "Brunei", ru: "Бруней" },
+  { fr: "Brésil", es: "Brasil", en: "Brazil", de: "Brasilien", ru: "Бразилия", hi: "ब्राज़ील" },
+  { fr: "Brunei", es: "Brunéi", en: "Brunei", de: "Brunei", ru: "Бруней", hi: "ब्रुनेई" },
   {
     fr: "Bulgarie",
     es: "Bulgaria",
     en: "Bulgaria",
     de: "Bulgarien",
     ru: "Болгария",
+    hi: "बुल्गारिया",
   },
   {
     fr: "Burkina Faso",
@@ -291,14 +311,16 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Burkina Faso",
     de: "Burkina Faso",
     ru: "Буркина-Фасо",
+    hi: "बुर्किना फासो",
   },
-  { fr: "Burundi", es: "Burundi", en: "Burundi", de: "Burundi", ru: "Бурунди" },
+  { fr: "Burundi", es: "Burundi", en: "Burundi", de: "Burundi", ru: "Бурунди", hi: "बुरुंडी" },
   {
     fr: "Cambodge",
     es: "Camboya",
     en: "Cambodia",
     de: "Kambodscha",
     ru: "Камбоджа",
+    hi: "कंबोडिया",
   },
   {
     fr: "Cameroun",
@@ -306,33 +328,37 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Cameroon",
     de: "Kamerun",
     ru: "Камерун",
+    hi: "कैमरून",
   },
-  { fr: "Canada", es: "Canadá", en: "Canada", de: "Kanada", ru: "Канада" },
+  { fr: "Canada", es: "Canadá", en: "Canada", de: "Kanada", ru: "Канада", hi: "कनाडा" },
   {
     fr: "Cap-Vert",
     es: "Cabo Verde",
     en: "Cape Verde",
     de: "Kap Verde",
-    ru: "Кабо-Верде",
+    ru: "Кабो-Верде",
+    hi: "केप वेर्डे",
   },
-  { fr: "Chili", es: "Chile", en: "Chile", de: "Chile", ru: "Чили" },
-  { fr: "Chine", es: "China", en: "China", de: "China", ru: "Китай" },
-  { fr: "Chypre", es: "Chipre", en: "Cyprus", de: "Zypern", ru: "Кипр" },
+  { fr: "Chili", es: "Chile", en: "Chile", de: "Chile", ru: "Чили", hi: "चिली" },
+  { fr: "Chine", es: "China", en: "China", de: "China", ru: "Китай", hi: "चीन" },
+  { fr: "Chypre", es: "Chipre", en: "Cyprus", de: "Zypern", ru: "Кипр", hi: "साइप्रस" },
   {
     fr: "Colombie",
     es: "Colombia",
     en: "Colombia",
     de: "Kolumbien",
     ru: "Колумбия",
+    hi: "कोलंबिया",
   },
-  { fr: "Comores", es: "Comoras", en: "Comoros", de: "Komoren", ru: "Коморы" },
-  { fr: "Congo", es: "Congo", en: "Congo", de: "Kongo", ru: "Конго" },
+  { fr: "Comores", es: "Comoras", en: "Comoros", de: "Komoren", ru: "Коморы", hi: "कोमोरोस" },
+  { fr: "Congo", es: "Congo", en: "Congo", de: "Kongo", ru: "Конго", hi: "कांगो" },
   {
     fr: "Corée du Nord",
     es: "Corea del Norte",
     en: "North Korea",
     de: "Nordkorea",
     ru: "Северная Корея",
+    hi: "उत्तर कोरिया",
   },
   {
     fr: "Corée du Sud",
@@ -340,6 +366,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "South Korea",
     de: "Südkorea",
     ru: "Южная Корея",
+    hi: "दक्षिण कोरिया",
   },
   {
     fr: "Costa Rica",
@@ -347,6 +374,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Costa Rica",
     de: "Costa Rica",
     ru: "Коста-Рика",
+    hi: "कोस्टा रिका",
   },
   {
     fr: "Côte d'Ivoire",
@@ -354,6 +382,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Ivory Coast",
     de: "Elfenbeinküste",
     ru: "Кот-д'Ивуар",
+    hi: "आइवरी कोस्ट",
   },
   {
     fr: "Croatie",
@@ -361,14 +390,16 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Croatia",
     de: "Kroatien",
     ru: "Хорватия",
+    hi: "क्रोएशिया",
   },
-  { fr: "Cuba", es: "Cuba", en: "Cuba", de: "Kuba", ru: "Куба" },
+  { fr: "Cuba", es: "Cuba", en: "Cuba", de: "Kuba", ru: "Куба", hi: "क्यूबा" },
   {
     fr: "Danemark",
     es: "Dinamarca",
     en: "Denmark",
     de: "Dänemark",
     ru: "Дания",
+    hi: "डेनमार्क",
   },
   {
     fr: "Djibouti",
@@ -376,6 +407,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Djibouti",
     de: "Dschibuti",
     ru: "Джибути",
+    hi: "जिबूती",
   },
   {
     fr: "Dominique",
@@ -383,14 +415,16 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Dominica",
     de: "Dominica",
     ru: "Доминика",
+    hi: "डोमिनिका",
   },
-  { fr: "Égypte", es: "Egipto", en: "Egypt", de: "Ägypten", ru: "Египет" },
+  { fr: "Égypte", es: "Egipto", en: "Egypt", de: "Ägypten", ru: "Египет", hi: "मिस्र" },
   {
     fr: "Émirats arabes unis",
     es: "Emiratos Árabes Unidos",
     en: "United Arab Emirates",
     de: "Vereinigte Arabische Emirate",
     ru: "Объединённые Арабские Эмираты",
+    hi: "संयुक्त अरब अमीरात",
   },
   {
     fr: "Équateur",
@@ -398,6 +432,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Ecuador",
     de: "Ecuador",
     ru: "Эквадор",
+    hi: "इक्वाडोर",
   },
   {
     fr: "Érythrée",
@@ -405,15 +440,17 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Eritrea",
     de: "Eritrea",
     ru: "Эритрея",
+    hi: "इरिट्रिया",
   },
-  { fr: "Espagne", es: "España", en: "Spain", de: "Spanien", ru: "Испания" },
-  { fr: "Estonie", es: "Estonia", en: "Estonia", de: "Estland", ru: "Эстония" },
+  { fr: "Espagne", es: "España", en: "Spain", de: "Spanien", ru: "Испания", hi: "स्पेन" },
+  { fr: "Estonie", es: "Estonia", en: "Estonia", de: "Estland", ru: "Эстония", hi: "एस्टोनिया" },
   {
     fr: "États-Unis",
     es: "Estados Unidos",
     en: "United States",
     de: "Vereinigte Staaten",
     ru: "Соединённые Штаты",
+    hi: "संयुक्त राज्य अमेरिका",
   },
   {
     fr: "Éthiopie",
@@ -421,14 +458,16 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Ethiopia",
     de: "Äthiopien",
     ru: "Эфиопия",
+    hi: "इथियोपिया",
   },
-  { fr: "Fidji", es: "Fiyi", en: "Fiji", de: "Fidschi", ru: "Фиджи" },
+  { fr: "Fidji", es: "Fiyi", en: "Fiji", de: "Fidschi", ru: "Фиджи", hi: "फिजी" },
   {
     fr: "Finlande",
     es: "Finlandia",
     en: "Finland",
     de: "Finnland",
     ru: "Финляндия",
+    hi: "फिनलैंड",
   },
   {
     fr: "France",
@@ -436,9 +475,11 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "France",
     de: "Frankreich",
     ru: "Франция",
+    hi: "फ्रांस",
   },
-  { fr: "Autre", es: "Otro", en: "Other", de: "Andere", ru: "Другое" },
+  { fr: "Autre", es: "Otro", en: "Other", de: "Andere", ru: "Другое", hi: "अन्य" },
 ];
+
 
 const inputClass = (hasErr?: boolean) =>
   `w-full px-3 py-3 border-2 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:outline-none transition-all duration-200 text-base 
@@ -724,6 +765,150 @@ const getCountryCode = (countryName: string, locale: string = "en"): string => {
 //   { fr: "Autre", en: "Other" },
 // ];
 
+// const SPECIALTIES: MultiLangDuo[] = [
+//   {
+//     fr: "Droit de l'immigration",
+//     es: "Derecho de inmigración",
+//     en: "Immigration Law",
+//     de: "Einwanderungsrecht",
+//     ru: "Иммиграционное право",
+//   },
+//   {
+//     fr: "Droit du travail",
+//     es: "Derecho laboral",
+//     en: "Labor Law",
+//     de: "Arbeitsrecht",
+//     ru: "Трудовое право",
+//   },
+//   {
+//     fr: "Droit immobilier",
+//     es: "Derecho inmobiliario",
+//     en: "Real Estate Law",
+//     de: "Immobilienrecht",
+//     ru: "Недвижимость",
+//   },
+//   {
+//     fr: "Droit des affaires",
+//     es: "Derecho empresarial",
+//     en: "Business Law",
+//     de: "Wirtschaftsrecht",
+//     ru: "Коммерческое право",
+//   },
+//   {
+//     fr: "Droit de la famille",
+//     es: "Derecho de familia",
+//     en: "Family Law",
+//     de: "Familienrecht",
+//     ru: "Семейное право",
+//   },
+//   {
+//     fr: "Droit pénal",
+//     es: "Derecho penal",
+//     en: "Criminal Law",
+//     de: "Strafrecht",
+//     ru: "Уголовное право",
+//   },
+//   {
+//     fr: "Droit fiscal",
+//     es: "Derecho fiscal",
+//     en: "Tax Law",
+//     de: "Steuerrecht",
+//     ru: "Налоговое право",
+//   },
+//   {
+//     fr: "Droit international",
+//     es: "Derecho internacional",
+//     en: "International Law",
+//     de: "Internationales Recht",
+//     ru: "Международное право",
+//   },
+//   {
+//     fr: "Droit des contrats",
+//     es: "Derecho de contratos",
+//     en: "Contract Law",
+//     de: "Vertragsrecht",
+//     ru: "Договорное право",
+//   },
+//   {
+//     fr: "Propriété intellectuelle",
+//     es: "Propiedad intelectual",
+//     en: "Intellectual Property",
+//     de: "Geistiges Eigentum",
+//     ru: "Интеллектуальная собственность",
+//   },
+//   {
+//     fr: "Droit de la consommation",
+//     es: "Derecho del consumidor",
+//     en: "Consumer Law",
+//     de: "Verbraucherschutzrecht",
+//     ru: "Защита прав потребителей",
+//   },
+//   {
+//     fr: "Droit bancaire",
+//     es: "Derecho bancario",
+//     en: "Banking Law",
+//     de: "Bankrecht",
+//     ru: "Банковское право",
+//   },
+//   {
+//     fr: "Droit de l'environnement",
+//     es: "Derecho ambiental",
+//     en: "Environmental Law",
+//     de: "Umweltrecht",
+//     ru: "Экологическое право",
+//   },
+//   {
+//     fr: "Droit médical",
+//     es: "Derecho médico",
+//     en: "Medical Law",
+//     de: "Medizinrecht",
+//     ru: "Медицинское право",
+//   },
+//   {
+//     fr: "Droit des sociétés",
+//     es: "Derecho corporativo",
+//     en: "Corporate Law",
+//     de: "Gesellschaftsrecht",
+//     ru: "Корпоративное право",
+//   },
+//   {
+//     fr: "Droit des successions",
+//     es: "Derecho de sucesiones",
+//     en: "Estate Law",
+//     de: "Erbrecht",
+//     ru: "Наследственное право",
+//   },
+//   {
+//     fr: "Droit administratif",
+//     es: "Derecho administrativo",
+//     en: "Administrative Law",
+//     de: "Verwaltungsrecht",
+//     ru: "Административное право",
+//   },
+//   {
+//     fr: "Droit européen",
+//     es: "Derecho europeo",
+//     en: "European Law",
+//     de: "Europarecht",
+//     ru: "Европейское право",
+//   },
+//   {
+//     fr: "Droit des étrangers",
+//     es: "Derecho de extranjería",
+//     en: "Immigrant Rights",
+//     de: "Ausländerrecht",
+//     ru: "Право иностранцев",
+//   },
+//   {
+//     fr: "Autre",
+//     es: "Otro",
+//     en: "Other",
+//     de: "Andere",
+//     ru: "Другое",
+//   },
+// ];
+
+
 const SPECIALTIES: MultiLangDuo[] = [
   {
     fr: "Droit de l'immigration",
@@ -731,6 +916,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     en: "Immigration Law",
     de: "Einwanderungsrecht",
     ru: "Иммиграционное право",
+    hi: "आप्रवासन कानून",
   },
   {
     fr: "Droit du travail",
@@ -738,6 +924,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     en: "Labor Law",
     de: "Arbeitsrecht",
     ru: "Трудовое право",
+    hi: "श्रम कानून",
   },
   {
     fr: "Droit immobilier",
@@ -745,6 +932,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     en: "Real Estate Law",
     de: "Immobilienrecht",
     ru: "Недвижимость",
+    hi: "रियल एस्टेट कानून",
   },
   {
     fr: "Droit des affaires",
@@ -752,6 +940,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     en: "Business Law",
     de: "Wirtschaftsrecht",
     ru: "Коммерческое право",
+    hi: "व्यावसायिक कानून",
   },
   {
     fr: "Droit de la famille",
@@ -759,6 +948,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     en: "Family Law",
     de: "Familienrecht",
     ru: "Семейное право",
+    hi: "पारिवारिक कानून",
   },
   {
     fr: "Droit pénal",
@@ -766,6 +956,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     en: "Criminal Law",
     de: "Strafrecht",
     ru: "Уголовное право",
+    hi: "आपराधिक कानून",
   },
   {
     fr: "Droit fiscal",
@@ -773,6 +964,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     en: "Tax Law",
     de: "Steuerrecht",
     ru: "Налоговое право",
+    hi: "कर कानून",
   },
   {
     fr: "Droit international",
@@ -780,6 +972,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     en: "International Law",
     de: "Internationales Recht",
     ru: "Международное право",
+    hi: "अंतर्राष्ट्रीय कानून",
   },
   {
     fr: "Droit des contrats",
@@ -787,6 +980,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     en: "Contract Law",
     de: "Vertragsrecht",
     ru: "Договорное право",
+    hi: "संविदा कानून",
   },
   {
     fr: "Propriété intellectuelle",
@@ -794,6 +988,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     en: "Intellectual Property",
     de: "Geistiges Eigentum",
     ru: "Интеллектуальная собственность",
+    hi: "बौद्धिक संपदा",
   },
   {
     fr: "Droit de la consommation",
@@ -801,6 +996,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     en: "Consumer Law",
     de: "Verbraucherschutzrecht",
     ru: "Защита прав потребителей",
+    hi: "उपभोक्ता कानून",
   },
   {
     fr: "Droit bancaire",
@@ -808,6 +1004,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     en: "Banking Law",
     de: "Bankrecht",
     ru: "Банковское право",
+    hi: "बैंकिंग कानून",
   },
   {
     fr: "Droit de l'environnement",
@@ -815,6 +1012,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     en: "Environmental Law",
     de: "Umweltrecht",
     ru: "Экологическое право",
+    hi: "पर्यावरण कानून",
   },
   {
     fr: "Droit médical",
@@ -822,6 +1020,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     en: "Medical Law",
     de: "Medizinrecht",
     ru: "Медицинское право",
+    hi: "चिकित्सा कानून",
   },
   {
     fr: "Droit des sociétés",
@@ -829,6 +1028,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     en: "Corporate Law",
     de: "Gesellschaftsrecht",
     ru: "Корпоративное право",
+    hi: "कॉर्पोरेट कानून",
   },
   {
     fr: "Droit des successions",
@@ -836,6 +1036,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     en: "Estate Law",
     de: "Erbrecht",
     ru: "Наследственное право",
+    hi: "संपत्ति कानून",
   },
   {
     fr: "Droit administratif",
@@ -843,6 +1044,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     en: "Administrative Law",
     de: "Verwaltungsrecht",
     ru: "Административное право",
+    hi: "प्रशासनिक कानून",
   },
   {
     fr: "Droit européen",
@@ -850,6 +1052,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     en: "European Law",
     de: "Europarecht",
     ru: "Европейское право",
+    hi: "यूरोपीय कानून",
   },
   {
     fr: "Droit des étrangers",
@@ -857,6 +1060,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     en: "Immigrant Rights",
     de: "Ausländerrecht",
     ru: "Право иностранцев",
+    hi: "विदेशी अधिकार",
   },
   {
     fr: "Autre",
@@ -864,8 +1068,10 @@ const SPECIALTIES: MultiLangDuo[] = [
     en: "Other",
     de: "Andere",
     ru: "Другое",
+    hi: "अन्य",
   },
 ];
+
 
 // ===== Types =====
 interface LawyerFormData {
@@ -1194,6 +1400,157 @@ const Avatar = ({ src, name }: { src?: string; name: string }) => {
   );
 };
 
+// const LawyerPreviewCard = ({
+//   lang,
+//   t,
+//   progress,
+//   fullName,
+//   photo,
+//   currentCountry,
+//   presenceCountry,
+//   practiceCountries,
+//   specialties,
+//   languages,
+//   whatsapp,
+//   yearsOfExperience,
+// }: {
+//   lang: I18nKey;
+//   t: I18nShape;
+//   progress: number;
+//   fullName: string;
+//   photo?: string;
+//   currentCountry?: string;
+//   presenceCountry?: string;
+//   practiceCountries: string[];
+//   specialties: string[];
+//   languages: string[];
+//   whatsapp?: string;
+//   yearsOfExperience?: number;
+// }) => {
+//   const intl = useIntl();
+//   return (
+//     <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-5">
+//       <div className="flex items-center gap-3">
+//         <Avatar src={photo} name={fullName} />
+//         <div>
+//           <h3 className="text-lg font-extrabold text-gray-900 leading-tight">
+//             {fullName || (lang === "en" ? "Your Name" : "Votre nom")}
+//           </h3>
+//           <p className="text-xs text-gray-500">
+//             {lang === "en" ? "Lawyer" : "Avocat"} • {progress}%{" "}
+//             {lang === "en" ? "complete" : "complet"}
+//           </p>
+//         </div>
+//       </div>
+
+//       <div className="mt-3">
+//         <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+//           <div
+//             className="h-2 bg-indigo-500"
+//             style={{ width: `${progress}%` }}
+//           />
+//         </div>
+//       </div>
+
+//       <div className="mt-4 grid grid-cols-1 gap-2 text-sm">
+//         {(currentCountry || presenceCountry) && (
+//           <div className="flex items-center gap-2 text-gray-700">
+//             <MapPin className="w-4 h-4 text-indigo-600" />
+//             <span className="font-medium">
+//               {currentCountry || (lang === "en" ? "Residence" : "Résidence")}
+//             </span>
+//             {presenceCountry && (
+//               <span className="ml-auto rounded-full px-2 py-0.5 text-xs bg-indigo-50 border border-indigo-200">
+//                 {presenceCountry}
+//               </span>
+//             )}
+//           </div>
+//         )}
+//         {typeof yearsOfExperience === "number" && yearsOfExperience >= 0 && (
+//           <div className="text-gray-700">
+//             {lang === "en" ? "Experience:" : "Expérience :"}{" "}
+//             <strong>{yearsOfExperience}</strong>{" "}
+//             {lang === "en" ? "years" : "ans"}
+//           </div>
+//         )}
+//       </div>
+
+//       {!!languages.length && (
+//         <div className="mt-4">
+//           <p className="text-xs font-semibold text-gray-700 mb-1">
+//             {lang === "en" ? "Languages" : "Langues"}
+//           </p>
+//           <div className="flex flex-wrap gap-2">
+//             {languages.map((l) => (
+//               <span
+//                 key={l}
+//                 className="px-2 py-1 rounded-lg bg-indigo-100 text-indigo-800 text-xs border border-indigo-200"
+//               >
+//                 {l.toUpperCase()}
+//               </span>
+//             ))}
+//           </div>
+//         </div>
+//       )}
+
+//       {!!specialties.length && (
+//         <div className="mt-3">
+//           <p className="text-xs font-semibold text-gray-700 mb-1">
+//             {/* {t.specialties} */}
+//             {intl.formatMessage({ id: "registerLawyer.fields.specialties" })}
+//           </p>
+//           <div className="flex flex-wrap gap-2">
+//             {specialties.map((s, i) => (
+//               <span
+//                 key={`${s}-${i}`}
+//                 className="px-2 py-1 rounded-lg bg-white text-gray-800 text-xs border border-indigo-200"
+//               >
+//                 {s}
+//               </span>
+//             ))}
+//           </div>
+//         </div>
+//       )}
+
+//       {!!practiceCountries.length && (
+//         <div className="mt-3">
+//           <p className="text-xs font-semibold text-gray-700 mb-1">
+//             {/* {t.practiceCountries} */}
+//             {intl.formatMessage({
+//               id: "registerLawyer.fields.practiceCountries",
+//             })}
+//           </p>
+//           <div className="flex flex-wrap gap-2">
+//             {practiceCountries.map((c, i) => (
+//               <span
+//                 key={`${c}-${i}`}
+//                 className="px-2 py-1 rounded-lg bg-white text-gray-800 text-xs border border-indigo-200"
+//               >
+//                 {c}
+//               </span>
+//             ))}
+//           </div>
+//         </div>
+//       )}
+
+//       {whatsapp && (
+//         <div className="mt-4 flex items-center gap-2 text-sm text-gray-700">
+//           <MessageCircle className="w-4 h-4 text-indigo-600" />
+//           <span className="truncate">{whatsapp}</span>
+//         </div>
+//       )}
+
+//       <p className="mt-4 text-xs text-gray-500">
+//         {lang === "en"
+//           ? "This is what clients will see. Make it shine ✨"
+//           : "Ce que les clients verront. Faites briller votre profil ✨"}
+//       </p>
+//     </div>
+//   );
+// };
+
+
+
 const LawyerPreviewCard = ({
   lang,
   t,
@@ -1222,17 +1579,89 @@ const LawyerPreviewCard = ({
   yearsOfExperience?: number;
 }) => {
   const intl = useIntl();
+  
+  // Translation helper
+  const getText = (key: string): string => {
+    const translations: Record<string, Record<string, string>> = {
+      yourName: {
+        en: "Your Name",
+        fr: "Votre nom",
+        es: "Tu nombre",
+        de: "Ihr Name",
+        ru: "Ваше имя",
+        hi: "आपका नाम",
+      },
+      lawyer: {
+        en: "Lawyer",
+        fr: "Avocat",
+        es: "Abogado",
+        de: "Anwalt",
+        ru: "Юрист",
+        hi: "वकील",
+      },
+      complete: {
+        en: "complete",
+        fr: "complet",
+        es: "completo",
+        de: "vollständig",
+        ru: "завершено",
+        hi: "पूर्ण",
+      },
+      residence: {
+        en: "Residence",
+        fr: "Résidence",
+        es: "Residencia",
+        de: "Wohnsitz",
+        ru: "Резиденция",
+        hi: "निवास",
+      },
+      experience: {
+        en: "Experience:",
+        fr: "Expérience :",
+        es: "Experiencia:",
+        de: "Erfahrung:",
+        ru: "Опыт:",
+        hi: "अनुभव:",
+      },
+      years: {
+        en: "years",
+        fr: "ans",
+        es: "años",
+        de: "Jahre",
+        ru: "лет",
+        hi: "वर्ष",
+      },
+      languages: {
+        en: "Languages",
+        fr: "Langues",
+        es: "Idiomas",
+        de: "Sprachen",
+        ru: "Языки",
+        hi: "भाषाएं",
+      },
+      clientPreview: {
+        en: "This is what clients will see. Make it shine ✨",
+        fr: "Ce que les clients verront. Faites briller votre profil ✨",
+        es: "Esto es lo que verán los clientes. Hazlo brillar ✨",
+        de: "Das sehen Kunden. Lassen Sie es glänzen ✨",
+        ru: "Это увидят клиенты. Сделайте его ярким ✨",
+        hi: "ग्राहक यह देखेंगे। इसे चमकाएं ✨",
+      },
+    };
+    
+    return translations[key]?.[lang] || translations[key]?.en || "";
+  };
+
   return (
     <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-5">
       <div className="flex items-center gap-3">
         <Avatar src={photo} name={fullName} />
         <div>
           <h3 className="text-lg font-extrabold text-gray-900 leading-tight">
-            {fullName || (lang === "en" ? "Your Name" : "Votre nom")}
+            {fullName || getText("yourName")}
           </h3>
           <p className="text-xs text-gray-500">
-            {lang === "en" ? "Lawyer" : "Avocat"} • {progress}%{" "}
-            {lang === "en" ? "complete" : "complet"}
+            {getText("lawyer")} • {progress}% {getText("complete")}
           </p>
         </div>
       </div>
@@ -1251,7 +1680,7 @@ const LawyerPreviewCard = ({
           <div className="flex items-center gap-2 text-gray-700">
             <MapPin className="w-4 h-4 text-indigo-600" />
             <span className="font-medium">
-              {currentCountry || (lang === "en" ? "Residence" : "Résidence")}
+              {currentCountry || getText("residence")}
             </span>
             {presenceCountry && (
               <span className="ml-auto rounded-full px-2 py-0.5 text-xs bg-indigo-50 border border-indigo-200">
@@ -1262,9 +1691,8 @@ const LawyerPreviewCard = ({
         )}
         {typeof yearsOfExperience === "number" && yearsOfExperience >= 0 && (
           <div className="text-gray-700">
-            {lang === "en" ? "Experience:" : "Expérience :"}{" "}
-            <strong>{yearsOfExperience}</strong>{" "}
-            {lang === "en" ? "years" : "ans"}
+            {getText("experience")} <strong>{yearsOfExperience}</strong>{" "}
+            {getText("years")}
           </div>
         )}
       </div>
@@ -1272,7 +1700,7 @@ const LawyerPreviewCard = ({
       {!!languages.length && (
         <div className="mt-4">
           <p className="text-xs font-semibold text-gray-700 mb-1">
-            {lang === "en" ? "Languages" : "Langues"}
+            {getText("languages")}
           </p>
           <div className="flex flex-wrap gap-2">
             {languages.map((l) => (
@@ -1290,7 +1718,6 @@ const LawyerPreviewCard = ({
       {!!specialties.length && (
         <div className="mt-3">
           <p className="text-xs font-semibold text-gray-700 mb-1">
-            {/* {t.specialties} */}
             {intl.formatMessage({ id: "registerLawyer.fields.specialties" })}
           </p>
           <div className="flex flex-wrap gap-2">
@@ -1309,7 +1736,6 @@ const LawyerPreviewCard = ({
       {!!practiceCountries.length && (
         <div className="mt-3">
           <p className="text-xs font-semibold text-gray-700 mb-1">
-            {/* {t.practiceCountries} */}
             {intl.formatMessage({
               id: "registerLawyer.fields.practiceCountries",
             })}
@@ -1335,13 +1761,14 @@ const LawyerPreviewCard = ({
       )}
 
       <p className="mt-4 text-xs text-gray-500">
-        {lang === "en"
-          ? "This is what clients will see. Make it shine ✨"
-          : "Ce que les clients verront. Faites briller votre profil ✨"}
+        {getText("clientPreview")}
       </p>
     </div>
   );
 };
+
+
+
 
 /* ========= Helpers ========= */
 const computePasswordStrength = (pw: string) => {
@@ -1485,7 +1912,7 @@ const RegisterLawyer: React.FC = () => {
   // Hooks simples sans react-hook-form
   const { register, isLoading, error } = useAuth();
   const { language } = useApp(); // 'fr' | 'en'
-  const lang = (language as I18nKey) || "fr";
+  const lang = (language as I18nKey) || "fr" || "en" || "es" || "de" || "ru" || "hi";
   const t = I18N[lang];
 
   // ---- SEO / OG meta ----
@@ -2899,9 +3326,17 @@ const RegisterLawyer: React.FC = () => {
                           className={getInputClassName("currentCountry")}
                         >
                           <option value="">
-                            {lang === "en"
-                              ? "Select your country"
-                              : "Sélectionnez votre pays"}
+                           {lang === "fr"
+  ? "Sélectionnez votre pays"
+  : lang === "es"
+  ? "Selecciona tu país"
+  : lang === "de"
+  ? "Wählen Sie Ihr Land"
+  : lang === "ru"
+  ? "Выберите свою страну"
+  : lang === "hi"
+  ? "अपना देश चुनें"
+  : "Select your country"}
                           </option>
                           {countryOptions.map((c) => (
                             <option key={c} value={c}>
@@ -2964,9 +3399,21 @@ const RegisterLawyer: React.FC = () => {
                           )}
                         >
                           <option value="">
-                            {lang === "en"
+                            {/* {lang === "en"
                               ? "Select your presence country"
-                              : "Sélectionnez votre pays de présence"}
+                              : "Sélectionnez votre pays de présence"} */}
+
+                              {lang === "fr"
+  ? "Sélectionnez votre pays de présence"
+  : lang === "es"
+  ? "Selecciona tu país de presencia"
+  : lang === "de"
+  ? "Wählen Sie Ihr Aufenthaltsland"
+  : lang === "ru"
+  ? "Выберите страну вашего пребывания"
+  : lang === "hi"
+  ? "अपनी उपस्थिति का देश चुनें"
+  : "Select your presence country"}
                           </option>
                           {countryOptions.map((c) => (
                             <option key={c} value={c}>
@@ -3360,13 +3807,37 @@ const RegisterLawyer: React.FC = () => {
                                 : "text-green-600"
                             }
                           >
-                            {form.bio.length < 50
+                            {/* {form.bio.length < 50
                               ? lang === "en"
                                 ? `Just ${50 - form.bio.length} chars to go — you've got this! 💪`
                                 : `Encore ${50 - form.bio.length} caractères — vous y êtes presque ! 💪`
                               : lang === "en"
                                 ? "✓ Nice! Field validated."
-                                : "✓ Top ! Champ validé."}
+                                : "✓ Top ! Champ validé."} */}
+
+                                {form.bio.length < 50
+  ? lang === "fr"
+    ? `Encore ${50 - form.bio.length} caractères — vous y êtes presque ! 💪`
+    : lang === "es"
+    ? `Solo ${50 - form.bio.length} caracteres más — ¡puedes hacerlo! 💪`
+    : lang === "de"
+    ? `Nur noch ${50 - form.bio.length} Zeichen — Sie schaffen das! 💪`
+    : lang === "ru"
+    ? `Осталось ${50 - form.bio.length} символов — вы почти у цели! 💪`
+    : lang === "hi"
+    ? `बस ${50 - form.bio.length} अक्षर और — आप कर सकते हैं! 💪`
+    : `Just ${50 - form.bio.length} chars to go — you've got this! 💪`
+  : lang === "fr"
+    ? "✓ Top ! Champ validé."
+    : lang === "es"
+    ? "✓ ¡Perfecto! Campo validado."
+    : lang === "de"
+    ? "✓ Toll! Feld validiert."
+    : lang === "ru"
+    ? "✓ Отлично! Поле проверено."
+    : lang === "hi"
+    ? "✓ बढ़िया! फ़ील्ड सत्यापित।"
+    : "✓ Nice! Field validated."}
                           </span>
                           <span
                             className={

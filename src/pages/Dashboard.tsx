@@ -1132,6 +1132,7 @@ const Dashboard: React.FC = () => {
                         es: "Mi perfil",
                         de: "Mein Profil",
                         ru: "Мой профиль",
+                        hi: "मेरी प्रोफ़ाइल",
                       },
                       {
                         key: "settings",
@@ -1141,6 +1142,7 @@ const Dashboard: React.FC = () => {
                         es: "Configuración",
                         de: "Einstellungen",
                         ru: "Настройки",
+                        hi: "सेटिंग्स",
                       },
                       {
                         key: "calls",
@@ -1150,6 +1152,7 @@ const Dashboard: React.FC = () => {
                         es: "Mis llamadas",
                         de: "Meine Anrufe",
                         ru: "Мои звонки",
+                        hi: "मेरी कॉलें",
                       },
                       {
                         key: "invoices",
@@ -1159,6 +1162,7 @@ const Dashboard: React.FC = () => {
                         es: "Mis facturas",
                         de: "Meine Rechnungen",
                         ru: "Мои счета",
+                        hi: "मेरे बिल",
                       },
                       {
                         key: "reviews",
@@ -1168,6 +1172,7 @@ const Dashboard: React.FC = () => {
                         es: "Mis reseñas",
                         de: "Meine Bewertungen",
                         ru: "Мои отзывы",
+                        hi: "मेरी समीक्षाएं",
                       },
                       {
                         key: "notifications",
@@ -1177,6 +1182,7 @@ const Dashboard: React.FC = () => {
                         es: "Notificaciones",
                         de: "Benachrichtigungen",
                         ru: "Уведомления",
+                        hi: "सूचनाएं",
                       },
                       {
                         key: "messages",
@@ -1186,6 +1192,7 @@ const Dashboard: React.FC = () => {
                         es: "Mis mensajes",
                         de: "Meine Nachrichten",
                         ru: "Мои сообщения",
+                        hi: "मेरे संदेश",
                       },
                       {
                         key: "favorites",
@@ -1195,6 +1202,7 @@ const Dashboard: React.FC = () => {
                         es: "Mis favoritos",
                         de: "Meine Favoriten",
                         ru: "Мои избранные",
+                        hi: "मेरे पसंदीदा",
                       },
                     ].map((item) => (
                       <li key={item.key}>
@@ -1216,7 +1224,9 @@ const Dashboard: React.FC = () => {
                                   ? item.de
                                   : language === "ru"
                                     ? item.ru
-                                    : item.en
+                                    : language === "hi"
+                                      ? item.hi
+                                      : item.en
                           }
                         >
                           {/* Barre active à gauche (UI only) */}
@@ -1237,7 +1247,9 @@ const Dashboard: React.FC = () => {
                                 ? item.de
                                 : language === "ru"
                                   ? item.ru
-                                  : item.en}
+                                  : language === "hi"
+                                    ? item.hi
+                                    : item.en}
 
                           {activeTab === (item.key as TabType) && (
                             <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded bg-red-100 text-red-700 dark:bg-white/10 dark:text-white">
@@ -1276,7 +1288,7 @@ const Dashboard: React.FC = () => {
                   </ul>
                 </nav>
 
-                <div className="p-6">
+              <div className="p-6">
                   <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">
                     {intl.formatMessage({ id: "dashboard.availabilityStatus" })}
                   </h3>

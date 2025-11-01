@@ -186,425 +186,424 @@ const useTranslation = () => {
     ["es", "de", "ru", "en", "fr", "hi"].includes(ctxLang) ? ctxLang : "fr"
   ) as Lang;
 
- const dict: Record<string, Record<Lang, string>> = {
-  "meta.title": {
-    fr: "Paiement & Mise en relation - SOS Expats",
-    en: "Checkout & Connection - SOS Expats",
-    es: "Pago y Conexión - SOS Expats",
-    de: "Zahlung und Verbindung - SOS Expats",
-    ru: "Оплата и подключение - SOS Expats",
-    hi: "भुगतान और कनेक्शन - SOS Expats",
-  },
-  "meta.description": {
-    fr: "Réglez en toute sécurité et lancez votre consultation avec l'expert sélectionné.",
-    en: "Pay securely and start your consultation with the selected expert.",
-    es: "Pague con seguridad e inicie su consulta con el experto seleccionado.",
-    de: "Zahlen Sie sicher und starten Sie Ihre Beratung mit dem ausgewählten Experten.",
-    ru: "Платите безопасно и начните консультацию с выбранным экспертом.",
-    hi: "सुरक्षित रूप से भुगतान करें और चयनित विशेषज्ञ के साथ अपना परामर्श शुरू करें।",
-  },
-  "meta.keywords": {
-    fr: "paiement, consultation, avocat, expatriés, SOS Expats, appel",
-    en: "payment, consultation, lawyer, expats, call",
-    es: "pago, consulta, abogado, expatriados, SOS Expats, llamada",
-    de: "zahlung, beratung, anwalt, expats, anruf",
-    ru: "платеж, консультация, адвокат, экспаты, звонок",
-    hi: "भुगतान, परामर्श, वकील, प्रवासी, कॉल",
-  },
-  "meta.og_title": {
-    fr: "Paiement sécurisé - SOS Expats",
-    en: "Secure Checkout - SOS Expats",
-    es: "Pago seguro - SOS Expats",
-    de: "Sichere Zahlung - SOS Expats",
-    ru: "Безопасная оплата - SOS Expats",
-    hi: "सुरक्षित भुगतान - SOS Expats",
-  },
-  "meta.og_description": {
-    fr: "Paiement SSL, mise en relation automatique avec votre expert.",
-    en: "SSL payment, automatic connection with your expert.",
-    es: "Pago SSL, conexión automática con su experto.",
-    de: "SSL-Zahlung, automatische Verbindung mit Ihrem Experten.",
-    ru: "SSL-платеж, автоматическое подключение к вашему эксперту.",
-    hi: "SSL भुगतान, आपके विशेषज्ञ के साथ स्वचालित कनेक्शन।",
-  },
-  "meta.og_image_alt": {
-    fr: "Paiement SOS Expats",
-    en: "SOS Expats Checkout",
-    es: "Pago SOS Expats",
-    de: "SOS Expats Zahlung",
-    ru: "Платеж SOS Expats",
-    hi: "SOS Expats भुगतान",
-  },
-  "meta.twitter_image_alt": {
-    fr: "Interface de paiement SOS Expats",
-    en: "SOS Expats checkout interface",
-    es: "Interfaz de pago SOS Expats",
-    de: "SOS Expats-Zahlungsschnittstelle",
-    ru: "Интерфейс оплаты SOS Expats",
-    hi: "SOS Expats भुगतान इंटरफ़ेस",
-  },
-  "ui.back": {
-    fr: "Retour",
-    en: "Back",
-    es: "Atrás",
-    de: "Zurück",
-    ru: "Назад",
-    hi: "वापस",
-  },
-  "ui.securePayment": {
-    fr: "Paiement sécurisé",
-    en: "Secure payment",
-    es: "Pago seguro",
-    de: "Sichere Zahlung",
-    ru: "Безопасный платеж",
-    hi: "सुरक्षित भुगतान",
-  },
-  "ui.connecting": {
-    fr: "Mise en relation",
-    en: "Connecting",
-    es: "Conectando",
-    de: "Verbindung wird hergestellt",
-    ru: "Подключение",
-    hi: "कनेक्ट हो रहा है",
-  },
-  "ui.completed": {
-    fr: "Consultation terminée",
-    en: "Consultation completed",
-    es: "Consulta completada",
-    de: "Beratung abgeschlossen",
-    ru: "Консультация завершена",
-    hi: "परामर्श पूर्ण हुआ",
-  },
-  "ui.payToStart": {
-    fr: "Validez pour lancer la consultation",
-    en: "Confirm to start the consultation",
-    es: "Confirmar para iniciar la consulta",
-    de: "Bestätigen Sie, um die Beratung zu starten",
-    ru: "Подтвердите для начала консультации",
-    hi: "परामर्श शुरू करने के लिए पुष्टि करें",
-  },
-  "ui.connectingExpert": {
-    fr: "Connexion avec votre expert",
-    en: "Connecting to your expert",
-    es: "Conectando con tu experto",
-    de: "Verbindung mit Ihrem Experten",
-    ru: "Подключение к вашему эксперту",
-    hi: "आपके विशेषज्ञ से कनेक्ट हो रहे हैं",
-  },
-  "ui.thanks": {
-    fr: "Merci d'avoir utilisé nos services",
-    en: "Thank you for using our services",
-    es: "Gracias por usar nuestros servicios",
-    de: "Danke, dass Sie unsere Dienste nutzen",
-    ru: "Спасибо за использование наших услуг",
-    hi: "हमारी सेवाओं का उपयोग करने के लिए धन्यवाद",
-  },
-  "card.title": {
-    fr: "Paiement",
-    en: "Payment",
-    es: "Pago",
-    de: "Zahlung",
-    ru: "Платеж",
-    hi: "भुगतान",
-  },
-  "card.number": {
-    fr: "Numéro de carte",
-    en: "Card number",
-    es: "Número de tarjeta",
-    de: "Kartennummer",
-    ru: "Номер карты",
-    hi: "कार्ड नंबर",
-  },
-  "card.expiry": {
-    fr: "Expiration",
-    en: "Expiry",
-    es: "Vencimiento",
-    de: "Ablaufdatum",
-    ru: "Срок действия",
-    hi: "समाप्ति तिथि",
-  },
-  "card.cvc": { 
-    fr: "CVC", 
-    en: "CVC", 
-    es: "CVC", 
-    de: "CVC", 
-    ru: "CVC",
-    hi: "CVC",
-  },
-  "summary.title": {
-    fr: "Récapitulatif",
-    en: "Summary",
-    es: "Resumen",
-    de: "Zusammenfassung",
-    ru: "Сводка",
-    hi: "सारांश",
-  },
-  "summary.expert": {
-    fr: "Expert",
-    en: "Expert",
-    es: "Experto",
-    de: "Experte",
-    ru: "Эксперт",
-    hi: "विशेषज्ञ",
-  },
-  "summary.service": {
-    fr: "Service",
-    en: "Service",
-    es: "Servicio",
-    de: "Dienstleistung",
-    ru: "Услуга",
-    hi: "सेवा",
-  },
-  "summary.duration": {
-    fr: "Durée",
-    en: "Duration",
-    es: "Duración",
-    de: "Dauer",
-    ru: "Продолжительность",
-    hi: "अवधि",
-  },
-  "summary.total": {
-    fr: "Total",
-    en: "Total",
-    es: "Total",
-    de: "Gesamt",
-    ru: "Всего",
-    hi: "कुल",
-  },
-  "btn.pay": {
-    fr: "Payer",
-    en: "Pay",
-    es: "Pagar",
-    de: "Zahlen",
-    ru: "Оплатить",
-    hi: "भुगतान करें",
-  },
-  "btn.evaluate": {
-    fr: "Évaluer",
-    en: "Review",
-    es: "Reseña",
-    de: "Bewertung",
-    ru: "Отзыв",
-    hi: "समीक्षा करें",
-  },
-  "btn.receipt": {
-    fr: "Télécharger le reçu",
-    en: "Download receipt",
-    es: "Descargar recibo",
-    de: "Quittung herunterladen",
-    ru: "Загрузить квитанцию",
-    hi: "रसीद डाउनलोड करें",
-  },
-  "btn.home": {
-    fr: "Retour à l'accueil",
-    en: "Back to home",
-    es: "Volver a inicio",
-    de: "Zurück zur Startseite",
-    ru: "Вернуться на главную",
-    hi: "होम पर वापस जाएं",
-  },
-  "status.paid": {
-    fr: "Paiement confirmé",
-    en: "Payment confirmed",
-    es: "Pago confirmado",
-    de: "Zahlung bestätigt",
-    ru: "Платеж подтвержден",
-    hi: "भुगतान की पुष्टि हुई",
-  },
-  "status.expertContacted": {
-    fr: "Expert contacté(e)",
-    en: "Expert contacted",
-    es: "Experto contactado",
-    de: "Experte kontaktiert",
-    ru: "Эксперт связан",
-    hi: "विशेषज्ञ से संपर्क किया गया",
-  },
-  "status.callStarted": {
-    fr: "Consultation démarrée",
-    en: "Consultation started",
-    es: "Consulta iniciada",
-    de: "Beratung gestartet",
-    ru: "Консультация начата",
-    hi: "परामर्श शुरू हुआ",
-  },
-  "alert.missingDataTitle": {
-    fr: "Données manquantes",
-    en: "Missing data",
-    es: "Datos faltantes",
-    de: "Fehlende Daten",
-    ru: "Отсутствующие данные",
-    hi: "डेटा गायब है",
-  },
-  "alert.missingDataText": {
-    fr: "Veuillez sélectionner à nouveau un expert.",
-    en: "Please select an expert again.",
-    es: "Por favor, selecciona un experto nuevamente.",
-    de: "Bitte wählen Sie einen Experten erneut aus.",
-    ru: "Пожалуйста, выберите эксперта снова.",
-    hi: "कृपया फिर से एक विशेषज्ञ चुनें।",
-  },
-  "alert.loginRequiredTitle": {
-    fr: "Connexion requise",
-    en: "Login required",
-    es: "Inicio de sesión requerido",
-    de: "Anmeldung erforderlich",
-    ru: "Требуется вход",
-    hi: "लॉगिन आवश्यक है",
-  },
-  "alert.loginRequiredText": {
-    fr: "Connectez-vous pour lancer une consultation.",
-    en: "Sign in to start a consultation.",
-    es: "Inicia sesión para comenzar una consulta.",
-    de: "Melden Sie sich an, um eine Beratung zu starten.",
-    ru: "Войдите для начала консультации.",
-    hi: "परामर्श शुरू करने के लिए साइन इन करें।",
-  },
-  "banner.secure": {
-    fr: "Paiement sécurisé",
-    en: "Secure payment",
-    es: "Pago seguro",
-    de: "Sichere Zahlung",
-    ru: "Безопасный платеж",
-    hi: "सुरक्षित भुगतान",
-  },
-  "banner.ssl": {
-    fr: "Données protégées par SSL. Appel lancé automatiquement après paiement.",
-    en: "Data protected by SSL. Call launched automatically after payment.",
-    es: "Datos protegidos por SSL. Llamada iniciada automáticamente después del pago.",
-    de: "Daten durch SSL geschützt. Anruf startet automatisch nach Zahlung.",
-    ru: "Данные защищены SSL. Звонок начинается автоматически после оплаты.",
-    hi: "SSL द्वारा सुरक्षित डेटा। भुगतान के बाद स्वचालित रूप से कॉल शुरू होती है।",
-  },
-  "err.invalidConfig": {
-    fr: "Configuration de paiement invalide",
-    en: "Invalid payment configuration",
-    es: "Configuración de pago inválida",
-    de: "Ungültige Zahlungskonfiguration",
-    ru: "Неверная конфигурация платежа",
-    hi: "अमान्य भुगतान कॉन्फ़िगरेशन",
-  },
-  "err.unauth": {
-    fr: "Utilisateur non authentifié",
-    en: "Unauthenticated user",
-    es: "Usuario no autenticado",
-    de: "Nicht authentifizierter Benutzer",
-    ru: "Неаутентифицированный пользователь",
-    hi: "अप्रमाणित उपयोगकर्ता",
-  },
-  "err.sameUser": {
-    fr: "Vous ne pouvez pas réserver avec vous-même",
-    en: "You can't book yourself",
-    es: "No puedes reservar contigo mismo",
-    de: "Du kannst dich nicht selbst buchen",
-    ru: "Вы не можете забронировать себя",
-    hi: "आप स्वयं को बुक नहीं कर सकते",
-  },
-  "err.minAmount": {
-    fr: "Montant minimum 5€",
-    en: "Minimum amount €5",
-    es: "Monto mínimo 5€",
-    de: "Mindestbetrag 5€",
-    ru: "Минимальная сумма 5€",
-    hi: "न्यूनतम राशि €5",
-  },
-  "err.maxAmount": {
-    fr: "Montant maximum 500€",
-    en: "Maximum amount €500",
-    es: "Monto máximo 500€",
-    de: "Höchstbetrag 500€",
-    ru: "Максимальная сумма 500€",
-    hi: "अधिकतम राशि €500",
-  },
-  "err.amountMismatch": {
-    fr: "Montant invalide. Merci de réessayer.",
-    en: "Invalid amount. Please try again.",
-    es: "Monto inválido. Por favor, intenta de nuevo.",
-    de: "Ungültiger Betrag. Bitte versuchen Sie es erneut.",
-    ru: "Неверная сумма. Пожалуйста, попробуйте снова.",
-    hi: "अमान्य राशि। कृपया पुनः प्रयास करें।",
-  },
-  "err.noClientSecret": {
-    fr: "ClientSecret manquant",
-    en: "Missing ClientSecret",
-    es: "ClientSecret faltante",
-    de: "ClientSecret fehlt",
-    ru: "ClientSecret отсутствует",
-    hi: "ClientSecret गायब है",
-  },
-  "err.noCardElement": {
-    fr: "Champ carte introuvable",
-    en: "Card field not found",
-    es: "Campo de tarjeta no encontrado",
-    de: "Kartenfeld nicht gefunden",
-    ru: "Поле карты не найдено",
-    hi: "कार्ड फ़ील्ड नहीं मिला",
-  },
-  "err.stripe": {
-    fr: "Erreur de paiement Stripe",
-    en: "Stripe payment error",
-    es: "Error de pago en Stripe",
-    de: "Stripe-Zahlungsfehler",
-    ru: "Ошибка платежа Stripe",
-    hi: "Stripe भुगतान त्रुटि",
-  },
-  "err.paymentFailed": {
-    fr: "Le paiement a échoué",
-    en: "Payment failed",
-    es: "El pago falló",
-    de: "Zahlung fehlgeschlagen",
-    ru: "Платеж не прошел",
-    hi: "भुगतान विफल रहा",
-  },
-  "err.actionRequired": {
-    fr: "Authentification supplémentaire requise",
-    en: "Additional authentication required",
-    es: "Se requiere autenticación adicional",
-    de: "Zusätzliche Authentifizierung erforderlich",
-    ru: "Требуется дополнительная аутентификация",
-    hi: "अतिरिक्त प्रमाणीकरण आवश्यक है",
-  },
-  "err.invalidMethod": {
-    fr: "Méthode de paiement invalide",
-    en: "Invalid payment method",
-    es: "Método de pago inválido",
-    de: "Ungültige Zahlungsmethode",
-    ru: "Неверный способ оплаты",
-    hi: "अमान्य भुगतान विधि",
-  },
-  "err.canceled": {
-    fr: "Le paiement a été annulé",
-    en: "Payment was canceled",
-    es: "El pago fue cancelado",
-    de: "Zahlung wurde storniert",
-    ru: "Платеж отменен",
-    hi: "भुगतान रद्द किया गया",
-  },
-  "err.unexpectedStatus": {
-    fr: "Statut de paiement inattendu",
-    en: "Unexpected payment status",
-    es: "Estado de pago inesperado",
-    de: "Unerwarteter Zahlungsstatus",
-    ru: "Неожиданный статус платежа",
-    hi: "अप्रत्याशित भुगतान स्थिति",
-  },
-  "err.genericPayment": {
-    fr: "Une erreur est survenue lors du paiement",
-    en: "An error occurred during payment",
-    es: "Ocurrió un error durante el pago",
-    de: "Während der Zahlung ist ein Fehler aufgetreten",
-    ru: "При оплате произошла ошибка",
-    hi: "भुगतान के दौरान एक त्रुटि हुई",
-  },
-  "err.invalidPhone": {
-    fr: "Numéro de téléphone invalide",
-    en: "Invalid phone number",
-    es: "Número de teléfono inválido",
-    de: "Ungültige Telefonnummer",
-    ru: "Неверный номер телефона",
-    hi: "अमान्य फ़ोन नंबर",
-  },
-};
-
+  const dict: Record<string, Record<Lang, string>> = {
+    "meta.title": {
+      fr: "Paiement & Mise en relation - SOS Expats",
+      en: "Checkout & Connection - SOS Expats",
+      es: "Pago y Conexión - SOS Expats",
+      de: "Zahlung und Verbindung - SOS Expats",
+      ru: "Оплата и подключение - SOS Expats",
+      hi: "भुगतान और कनेक्शन - SOS Expats",
+    },
+    "meta.description": {
+      fr: "Réglez en toute sécurité et lancez votre consultation avec l'expert sélectionné.",
+      en: "Pay securely and start your consultation with the selected expert.",
+      es: "Pague con seguridad e inicie su consulta con el experto seleccionado.",
+      de: "Zahlen Sie sicher und starten Sie Ihre Beratung mit dem ausgewählten Experten.",
+      ru: "Платите безопасно и начните консультацию с выбранным экспертом.",
+      hi: "सुरक्षित रूप से भुगतान करें और चयनित विशेषज्ञ के साथ अपना परामर्श शुरू करें।",
+    },
+    "meta.keywords": {
+      fr: "paiement, consultation, avocat, expatriés, SOS Expats, appel",
+      en: "payment, consultation, lawyer, expats, call",
+      es: "pago, consulta, abogado, expatriados, SOS Expats, llamada",
+      de: "zahlung, beratung, anwalt, expats, anruf",
+      ru: "платеж, консультация, адвокат, экспаты, звонок",
+      hi: "भुगतान, परामर्श, वकील, प्रवासी, कॉल",
+    },
+    "meta.og_title": {
+      fr: "Paiement sécurisé - SOS Expats",
+      en: "Secure Checkout - SOS Expats",
+      es: "Pago seguro - SOS Expats",
+      de: "Sichere Zahlung - SOS Expats",
+      ru: "Безопасная оплата - SOS Expats",
+      hi: "सुरक्षित भुगतान - SOS Expats",
+    },
+    "meta.og_description": {
+      fr: "Paiement SSL, mise en relation automatique avec votre expert.",
+      en: "SSL payment, automatic connection with your expert.",
+      es: "Pago SSL, conexión automática con su experto.",
+      de: "SSL-Zahlung, automatische Verbindung mit Ihrem Experten.",
+      ru: "SSL-платеж, автоматическое подключение к вашему эксперту.",
+      hi: "SSL भुगतान, आपके विशेषज्ञ के साथ स्वचालित कनेक्शन।",
+    },
+    "meta.og_image_alt": {
+      fr: "Paiement SOS Expats",
+      en: "SOS Expats Checkout",
+      es: "Pago SOS Expats",
+      de: "SOS Expats Zahlung",
+      ru: "Платеж SOS Expats",
+      hi: "SOS Expats भुगतान",
+    },
+    "meta.twitter_image_alt": {
+      fr: "Interface de paiement SOS Expats",
+      en: "SOS Expats checkout interface",
+      es: "Interfaz de pago SOS Expats",
+      de: "SOS Expats-Zahlungsschnittstelle",
+      ru: "Интерфейс оплаты SOS Expats",
+      hi: "SOS Expats भुगतान इंटरफ़ेस",
+    },
+    "ui.back": {
+      fr: "Retour",
+      en: "Back",
+      es: "Atrás",
+      de: "Zurück",
+      ru: "Назад",
+      hi: "वापस",
+    },
+    "ui.securePayment": {
+      fr: "Paiement sécurisé",
+      en: "Secure payment",
+      es: "Pago seguro",
+      de: "Sichere Zahlung",
+      ru: "Безопасный платеж",
+      hi: "सुरक्षित भुगतान",
+    },
+    "ui.connecting": {
+      fr: "Mise en relation",
+      en: "Connecting",
+      es: "Conectando",
+      de: "Verbindung wird hergestellt",
+      ru: "Подключение",
+      hi: "कनेक्ट हो रहा है",
+    },
+    "ui.completed": {
+      fr: "Consultation terminée",
+      en: "Consultation completed",
+      es: "Consulta completada",
+      de: "Beratung abgeschlossen",
+      ru: "Консультация завершена",
+      hi: "परामर्श पूर्ण हुआ",
+    },
+    "ui.payToStart": {
+      fr: "Validez pour lancer la consultation",
+      en: "Confirm to start the consultation",
+      es: "Confirmar para iniciar la consulta",
+      de: "Bestätigen Sie, um die Beratung zu starten",
+      ru: "Подтвердите для начала консультации",
+      hi: "परामर्श शुरू करने के लिए पुष्टि करें",
+    },
+    "ui.connectingExpert": {
+      fr: "Connexion avec votre expert",
+      en: "Connecting to your expert",
+      es: "Conectando con tu experto",
+      de: "Verbindung mit Ihrem Experten",
+      ru: "Подключение к вашему эксперту",
+      hi: "आपके विशेषज्ञ से कनेक्ट हो रहे हैं",
+    },
+    "ui.thanks": {
+      fr: "Merci d'avoir utilisé nos services",
+      en: "Thank you for using our services",
+      es: "Gracias por usar nuestros servicios",
+      de: "Danke, dass Sie unsere Dienste nutzen",
+      ru: "Спасибо за использование наших услуг",
+      hi: "हमारी सेवाओं का उपयोग करने के लिए धन्यवाद",
+    },
+    "card.title": {
+      fr: "Paiement",
+      en: "Payment",
+      es: "Pago",
+      de: "Zahlung",
+      ru: "Платеж",
+      hi: "भुगतान",
+    },
+    "card.number": {
+      fr: "Numéro de carte",
+      en: "Card number",
+      es: "Número de tarjeta",
+      de: "Kartennummer",
+      ru: "Номер карты",
+      hi: "कार्ड नंबर",
+    },
+    "card.expiry": {
+      fr: "Expiration",
+      en: "Expiry",
+      es: "Vencimiento",
+      de: "Ablaufdatum",
+      ru: "Срок действия",
+      hi: "समाप्ति तिथि",
+    },
+    "card.cvc": {
+      fr: "CVC",
+      en: "CVC",
+      es: "CVC",
+      de: "CVC",
+      ru: "CVC",
+      hi: "CVC",
+    },
+    "summary.title": {
+      fr: "Récapitulatif",
+      en: "Summary",
+      es: "Resumen",
+      de: "Zusammenfassung",
+      ru: "Сводка",
+      hi: "सारांश",
+    },
+    "summary.expert": {
+      fr: "Expert",
+      en: "Expert",
+      es: "Experto",
+      de: "Experte",
+      ru: "Эксперт",
+      hi: "विशेषज्ञ",
+    },
+    "summary.service": {
+      fr: "Service",
+      en: "Service",
+      es: "Servicio",
+      de: "Dienstleistung",
+      ru: "Услуга",
+      hi: "सेवा",
+    },
+    "summary.duration": {
+      fr: "Durée",
+      en: "Duration",
+      es: "Duración",
+      de: "Dauer",
+      ru: "Продолжительность",
+      hi: "अवधि",
+    },
+    "summary.total": {
+      fr: "Total",
+      en: "Total",
+      es: "Total",
+      de: "Gesamt",
+      ru: "Всего",
+      hi: "कुल",
+    },
+    "btn.pay": {
+      fr: "Payer",
+      en: "Pay",
+      es: "Pagar",
+      de: "Zahlen",
+      ru: "Оплатить",
+      hi: "भुगतान करें",
+    },
+    "btn.evaluate": {
+      fr: "Évaluer",
+      en: "Review",
+      es: "Reseña",
+      de: "Bewertung",
+      ru: "Отзыв",
+      hi: "समीक्षा करें",
+    },
+    "btn.receipt": {
+      fr: "Télécharger le reçu",
+      en: "Download receipt",
+      es: "Descargar recibo",
+      de: "Quittung herunterladen",
+      ru: "Загрузить квитанцию",
+      hi: "रसीद डाउनलोड करें",
+    },
+    "btn.home": {
+      fr: "Retour à l'accueil",
+      en: "Back to home",
+      es: "Volver a inicio",
+      de: "Zurück zur Startseite",
+      ru: "Вернуться на главную",
+      hi: "होम पर वापस जाएं",
+    },
+    "status.paid": {
+      fr: "Paiement confirmé",
+      en: "Payment confirmed",
+      es: "Pago confirmado",
+      de: "Zahlung bestätigt",
+      ru: "Платеж подтвержден",
+      hi: "भुगतान की पुष्टि हुई",
+    },
+    "status.expertContacted": {
+      fr: "Expert contacté(e)",
+      en: "Expert contacted",
+      es: "Experto contactado",
+      de: "Experte kontaktiert",
+      ru: "Эксперт связан",
+      hi: "विशेषज्ञ से संपर्क किया गया",
+    },
+    "status.callStarted": {
+      fr: "Consultation démarrée",
+      en: "Consultation started",
+      es: "Consulta iniciada",
+      de: "Beratung gestartet",
+      ru: "Консультация начата",
+      hi: "परामर्श शुरू हुआ",
+    },
+    "alert.missingDataTitle": {
+      fr: "Données manquantes",
+      en: "Missing data",
+      es: "Datos faltantes",
+      de: "Fehlende Daten",
+      ru: "Отсутствующие данные",
+      hi: "डेटा गायब है",
+    },
+    "alert.missingDataText": {
+      fr: "Veuillez sélectionner à nouveau un expert.",
+      en: "Please select an expert again.",
+      es: "Por favor, selecciona un experto nuevamente.",
+      de: "Bitte wählen Sie einen Experten erneut aus.",
+      ru: "Пожалуйста, выберите эксперта снова.",
+      hi: "कृपया फिर से एक विशेषज्ञ चुनें।",
+    },
+    "alert.loginRequiredTitle": {
+      fr: "Connexion requise",
+      en: "Login required",
+      es: "Inicio de sesión requerido",
+      de: "Anmeldung erforderlich",
+      ru: "Требуется вход",
+      hi: "लॉगिन आवश्यक है",
+    },
+    "alert.loginRequiredText": {
+      fr: "Connectez-vous pour lancer une consultation.",
+      en: "Sign in to start a consultation.",
+      es: "Inicia sesión para comenzar una consulta.",
+      de: "Melden Sie sich an, um eine Beratung zu starten.",
+      ru: "Войдите для начала консультации.",
+      hi: "परामर्श शुरू करने के लिए साइन इन करें।",
+    },
+    "banner.secure": {
+      fr: "Paiement sécurisé",
+      en: "Secure payment",
+      es: "Pago seguro",
+      de: "Sichere Zahlung",
+      ru: "Безопасный платеж",
+      hi: "सुरक्षित भुगतान",
+    },
+    "banner.ssl": {
+      fr: "Données protégées par SSL. Appel lancé automatiquement après paiement.",
+      en: "Data protected by SSL. Call launched automatically after payment.",
+      es: "Datos protegidos por SSL. Llamada iniciada automáticamente después del pago.",
+      de: "Daten durch SSL geschützt. Anruf startet automatisch nach Zahlung.",
+      ru: "Данные защищены SSL. Звонок начинается автоматически после оплаты.",
+      hi: "SSL द्वारा सुरक्षित डेटा। भुगतान के बाद स्वचालित रूप से कॉल शुरू होती है।",
+    },
+    "err.invalidConfig": {
+      fr: "Configuration de paiement invalide",
+      en: "Invalid payment configuration",
+      es: "Configuración de pago inválida",
+      de: "Ungültige Zahlungskonfiguration",
+      ru: "Неверная конфигурация платежа",
+      hi: "अमान्य भुगतान कॉन्फ़िगरेशन",
+    },
+    "err.unauth": {
+      fr: "Utilisateur non authentifié",
+      en: "Unauthenticated user",
+      es: "Usuario no autenticado",
+      de: "Nicht authentifizierter Benutzer",
+      ru: "Неаутентифицированный пользователь",
+      hi: "अप्रमाणित उपयोगकर्ता",
+    },
+    "err.sameUser": {
+      fr: "Vous ne pouvez pas réserver avec vous-même",
+      en: "You can't book yourself",
+      es: "No puedes reservar contigo mismo",
+      de: "Du kannst dich nicht selbst buchen",
+      ru: "Вы не можете забронировать себя",
+      hi: "आप स्वयं को बुक नहीं कर सकते",
+    },
+    "err.minAmount": {
+      fr: "Montant minimum 5€",
+      en: "Minimum amount €5",
+      es: "Monto mínimo 5€",
+      de: "Mindestbetrag 5€",
+      ru: "Минимальная сумма 5€",
+      hi: "न्यूनतम राशि €5",
+    },
+    "err.maxAmount": {
+      fr: "Montant maximum 500€",
+      en: "Maximum amount €500",
+      es: "Monto máximo 500€",
+      de: "Höchstbetrag 500€",
+      ru: "Максимальная сумма 500€",
+      hi: "अधिकतम राशि €500",
+    },
+    "err.amountMismatch": {
+      fr: "Montant invalide. Merci de réessayer.",
+      en: "Invalid amount. Please try again.",
+      es: "Monto inválido. Por favor, intenta de nuevo.",
+      de: "Ungültiger Betrag. Bitte versuchen Sie es erneut.",
+      ru: "Неверная сумма. Пожалуйста, попробуйте снова.",
+      hi: "अमान्य राशि। कृपया पुनः प्रयास करें।",
+    },
+    "err.noClientSecret": {
+      fr: "ClientSecret manquant",
+      en: "Missing ClientSecret",
+      es: "ClientSecret faltante",
+      de: "ClientSecret fehlt",
+      ru: "ClientSecret отсутствует",
+      hi: "ClientSecret गायब है",
+    },
+    "err.noCardElement": {
+      fr: "Champ carte introuvable",
+      en: "Card field not found",
+      es: "Campo de tarjeta no encontrado",
+      de: "Kartenfeld nicht gefunden",
+      ru: "Поле карты не найдено",
+      hi: "कार्ड फ़ील्ड नहीं मिला",
+    },
+    "err.stripe": {
+      fr: "Erreur de paiement Stripe",
+      en: "Stripe payment error",
+      es: "Error de pago en Stripe",
+      de: "Stripe-Zahlungsfehler",
+      ru: "Ошибка платежа Stripe",
+      hi: "Stripe भुगतान त्रुटि",
+    },
+    "err.paymentFailed": {
+      fr: "Le paiement a échoué",
+      en: "Payment failed",
+      es: "El pago falló",
+      de: "Zahlung fehlgeschlagen",
+      ru: "Платеж не прошел",
+      hi: "भुगतान विफल रहा",
+    },
+    "err.actionRequired": {
+      fr: "Authentification supplémentaire requise",
+      en: "Additional authentication required",
+      es: "Se requiere autenticación adicional",
+      de: "Zusätzliche Authentifizierung erforderlich",
+      ru: "Требуется дополнительная аутентификация",
+      hi: "अतिरिक्त प्रमाणीकरण आवश्यक है",
+    },
+    "err.invalidMethod": {
+      fr: "Méthode de paiement invalide",
+      en: "Invalid payment method",
+      es: "Método de pago inválido",
+      de: "Ungültige Zahlungsmethode",
+      ru: "Неверный способ оплаты",
+      hi: "अमान्य भुगतान विधि",
+    },
+    "err.canceled": {
+      fr: "Le paiement a été annulé",
+      en: "Payment was canceled",
+      es: "El pago fue cancelado",
+      de: "Zahlung wurde storniert",
+      ru: "Платеж отменен",
+      hi: "भुगतान रद्द किया गया",
+    },
+    "err.unexpectedStatus": {
+      fr: "Statut de paiement inattendu",
+      en: "Unexpected payment status",
+      es: "Estado de pago inesperado",
+      de: "Unerwarteter Zahlungsstatus",
+      ru: "Неожиданный статус платежа",
+      hi: "अप्रत्याशित भुगतान स्थिति",
+    },
+    "err.genericPayment": {
+      fr: "Une erreur est survenue lors du paiement",
+      en: "An error occurred during payment",
+      es: "Ocurrió un error durante el pago",
+      de: "Während der Zahlung ist ein Fehler aufgetreten",
+      ru: "При оплате произошла ошибка",
+      hi: "भुगतान के दौरान एक त्रुटि हुई",
+    },
+    "err.invalidPhone": {
+      fr: "Numéro de téléphone invalide",
+      en: "Invalid phone number",
+      es: "Número de teléfono inválido",
+      de: "Ungültige Telefonnummer",
+      ru: "Неверный номер телефона",
+      hi: "अमान्य फ़ोन नंबर",
+    },
+  };
 
   const t = (key: keyof typeof dict, fallback?: string) =>
     dict[key]?.[language] ?? fallback ?? String(key);
@@ -1685,6 +1684,8 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
                     return "Сводка";
                   case "en":
                     return "Summary";
+                  case "hi":
+                    return "सारांश";
                   case "fr":
                   default:
                     return "Récapitulatif";
@@ -1704,6 +1705,8 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
                         return "Эксперт";
                       case "en":
                         return "Expert";
+                      case "hi":
+                        return "विशेषज्ञ";
                       case "fr":
                       default:
                         return "Expert";
@@ -1743,6 +1746,8 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
                         return "Услуга";
                       case "en":
                         return "Service";
+                      case "hi":
+                        return "सेवा";
                       case "fr":
                       default:
                         return "Service";
@@ -1765,6 +1770,8 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
                         return "Продолжительность";
                       case "en":
                         return "Duration";
+                      case "hi":
+                        return "अवधि";
                       case "fr":
                       default:
                         return "Durée";
@@ -1778,7 +1785,25 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
 
               <div className="border-t-2 border-gray-400 pt-2 mt-2">
                 <div className="flex justify-between items-center">
-                  <span className="font-bold text-gray-900">Total</span>
+                  <span className="font-bold text-gray-900">
+                    {(() => {
+                      switch (language) {
+                        case "es":
+                          return "Total";
+                        case "de":
+                          return "Gesamt";
+                        case "ru":
+                          return "Итого";
+                        case "hi":
+                          return "कुल";
+                        case "en":
+                          return "Total";
+                        case "fr":
+                        default:
+                          return "Total";
+                      }
+                    })()}
+                  </span>
                   <span
                     className="text-lg font-black bg-gradient-to-r from-red-500 to-pink-600 bg-clip-text text-transparent"
                     {...priceInfo}
@@ -1827,9 +1852,12 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
                         return "Zahlen ";
                       case "ru":
                         return "Оплатить ";
+                      case "hi":
+                        return "भुगतान ";
                       case "en":
                         return "Pay ";
                       case "fr":
+
                       default:
                         return "Payer ";
                     }
@@ -2434,6 +2462,8 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({
                           return "Доступно";
                         case "en":
                           return "Available";
+                        case "hi":
+                          return "उपलब्ध";
                         case "fr":
                         default:
                           return "Disponible";
