@@ -702,6 +702,7 @@
   "checkout.summary.service": "Service",
   "checkout.summary.duration": "Durée",
   "checkout.summary.total": "Total",
+  "registerExpat.help.contactInfo": "Votre numéro sert uniquement à des mises en relation. Aucun spam.",
   "checkout.btn.pay": "Payer",
   "checkout.btn.evaluate": "Évaluer",
   "checkout.btn.receipt": "Télécharger le reçu",

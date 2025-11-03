@@ -16,6 +16,7 @@
    "dashboard.invalidPhone": "Por favor ingrese un número de teléfono válido",
   "dashboard.invalidWhatsApp": "Por favor ingrese un número de WhatsApp válido",
   "dashboard.phoneFormat": "Formato internacional",
+  "registerExpat.help.contactInfo": "Solo usamos tu teléfono para conectarte con personas que necesitan ayuda. Sin spam.",
   "registerClient.errors.whatsappRequired": "El número de WhatsApp es obligatorio",
   "registerClient.errors.whatsappInvalid": "Por favor ingrese un número de WhatsApp válido",
   "registerClient.help.whatsappHint": "Número de WhatsApp con código de país (ej: +34 612 34 56 78)",

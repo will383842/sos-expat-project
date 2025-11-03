@@ -30,7 +30,7 @@ import {
   Info,
   MapPin,
   ShieldCheck,
-  XCircle
+  XCircle,
 } from "lucide-react";
 import Layout from "../components/layout/Layout";
 import Button from "../components/common/Button";
@@ -140,6 +140,7 @@ type MultiLangDuo = {
   en: string;
   de: string;
   ru: string;
+  hi: string;
 };
 
 const getCountryCode = (countryName: string, locale: string = "en"): string => {
@@ -388,6 +389,304 @@ const getCountryCode = (countryName: string, locale: string = "en"): string => {
   return countryMap[countryName] || "US";
 };
 
+// const COUNTRIES: MultiLangDuo[] = [
+//   {
+//     fr: "Afghanistan",
+//     es: "Afganistán",
+//     en: "Afghanistan",
+//     de: "Afghanistan",
+//     ru: "Афганистан",
+//   },
+//   {
+//     fr: "Afrique du Sud",
+//     es: "Sudáfrica",
+//     en: "South Africa",
+//     de: "Südafrika",
+//     ru: "Южная Африка",
+//   },
+//   {
+//     fr: "Albanie",
+//     es: "Albania",
+//     en: "Albania",
+//     de: "Albanien",
+//     ru: "Албания",
+//   },
+//   { fr: "Algérie", es: "Argelia", en: "Algeria", de: "Algerien", ru: "Алжир" },
+//   {
+//     fr: "Allemagne",
+//     es: "Alemania",
+//     en: "Germany",
+//     de: "Deutschland",
+//     ru: "Германия",
+//   },
+//   { fr: "Andorre", es: "Andorra", en: "Andorra", de: "Andorra", ru: "Андорра" },
+//   { fr: "Angola", es: "Angola", en: "Angola", de: "Angola", ru: "Ангола" },
+//   {
+//     fr: "Arabie Saoudite",
+//     es: "Arabia Saudita",
+//     en: "Saudi Arabia",
+//     de: "Saudi-Arabien",
+//     ru: "Саудовская Аравия",
+//   },
+//   {
+//     fr: "Argentine",
+//     es: "Argentina",
+//     en: "Argentina",
+//     de: "Argentinien",
+//     ru: "Аргентина",
+//   },
+//   {
+//     fr: "Arménie",
+//     es: "Armenia",
+//     en: "Armenia",
+//     de: "Armenien",
+//     ru: "Армения",
+//   },
+//   {
+//     fr: "Australie",
+//     es: "Australia",
+//     en: "Australia",
+//     de: "Australien",
+//     ru: "Австралия",
+//   },
+//   {
+//     fr: "Autriche",
+//     es: "Austria",
+//     en: "Austria",
+//     de: "Österreich",
+//     ru: "Австрия",
+//   },
+//   {
+//     fr: "Azerbaïdjan",
+//     es: "Azerbaiyán",
+//     en: "Azerbaijan",
+//     de: "Aserbaidschan",
+//     ru: "Азербайджан",
+//   },
+//   { fr: "Bahamas", es: "Bahamas", en: "Bahamas", de: "Bahamas", ru: "Багамы" },
+//   { fr: "Bahreïn", es: "Baréin", en: "Bahrain", de: "Bahrain", ru: "Бахрейн" },
+//   {
+//     fr: "Bangladesh",
+//     es: "Bangladés",
+//     en: "Bangladesh",
+//     de: "Bangladesch",
+//     ru: "Бангладеш",
+//   },
+//   {
+//     fr: "Barbade",
+//     es: "Barbados",
+//     en: "Barbados",
+//     de: "Barbados",
+//     ru: "Барбадос",
+//   },
+//   {
+//     fr: "Belgique",
+//     es: "Bélgica",
+//     en: "Belgium",
+//     de: "Belgien",
+//     ru: "Бельгия",
+//   },
+//   { fr: "Belize", es: "Belice", en: "Belize", de: "Belize", ru: "Белиз" },
+//   { fr: "Bénin", es: "Benín", en: "Benin", de: "Benin", ru: "Бенин" },
+//   { fr: "Bhoutan", es: "Bután", en: "Bhutan", de: "Bhutan", ru: "Бутан" },
+//   {
+//     fr: "Biélorussie",
+//     es: "Bielorrusia",
+//     en: "Belarus",
+//     de: "Belarus",
+//     ru: "Беларусь",
+//   },
+//   {
+//     fr: "Birmanie",
+//     es: "Birmania",
+//     en: "Myanmar",
+//     de: "Myanmar",
+//     ru: "Мьянма",
+//   },
+//   {
+//     fr: "Bolivie",
+//     es: "Bolivia",
+//     en: "Bolivia",
+//     de: "Bolivien",
+//     ru: "Боливия",
+//   },
+//   {
+//     fr: "Bosnie-Herzégovine",
+//     es: "Bosnia y Herzegovina",
+//     en: "Bosnia and Herzegovina",
+//     de: "Bosnien und Herzegowina",
+//     ru: "Босния и Герцеговина",
+//   },
+//   {
+//     fr: "Botswana",
+//     es: "Botsuana",
+//     en: "Botswana",
+//     de: "Botswana",
+//     ru: "Ботсвана",
+//   },
+//   { fr: "Brésil", es: "Brasil", en: "Brazil", de: "Brasilien", ru: "Бразилия" },
+//   { fr: "Brunei", es: "Brunéi", en: "Brunei", de: "Brunei", ru: "Бруней" },
+//   {
+//     fr: "Bulgarie",
+//     es: "Bulgaria",
+//     en: "Bulgaria",
+//     de: "Bulgarien",
+//     ru: "Болгария",
+//   },
+//   {
+//     fr: "Burkina Faso",
+//     es: "Burkina Faso",
+//     en: "Burkina Faso",
+//     de: "Burkina Faso",
+//     ru: "Буркина-Фасо",
+//   },
+//   { fr: "Burundi", es: "Burundi", en: "Burundi", de: "Burundi", ru: "Бурунди" },
+//   {
+//     fr: "Cambodge",
+//     es: "Camboya",
+//     en: "Cambodia",
+//     de: "Kambodscha",
+//     ru: "Камбоджа",
+//   },
+//   {
+//     fr: "Cameroun",
+//     es: "Camerún",
+//     en: "Cameroon",
+//     de: "Kamerun",
+//     ru: "Камерун",
+//   },
+//   { fr: "Canada", es: "Canadá", en: "Canada", de: "Kanada", ru: "Канада" },
+//   {
+//     fr: "Cap-Vert",
+//     es: "Cabo Verde",
+//     en: "Cape Verde",
+//     de: "Kap Verde",
+//     ru: "Кабо-Верде",
+//   },
+//   { fr: "Chili", es: "Chile", en: "Chile", de: "Chile", ru: "Чили" },
+//   { fr: "Chine", es: "China", en: "China", de: "China", ru: "Китай" },
+//   { fr: "Chypre", es: "Chipre", en: "Cyprus", de: "Zypern", ru: "Кипр" },
+//   {
+//     fr: "Colombie",
+//     es: "Colombia",
+//     en: "Colombia",
+//     de: "Kolumbien",
+//     ru: "Колумбия",
+//   },
+//   { fr: "Comores", es: "Comoras", en: "Comoros", de: "Komoren", ru: "Коморы" },
+//   { fr: "Congo", es: "Congo", en: "Congo", de: "Kongo", ru: "Конго" },
+//   {
+//     fr: "Corée du Nord",
+//     es: "Corea del Norte",
+//     en: "North Korea",
+//     de: "Nordkorea",
+//     ru: "Северная Корея",
+//   },
+//   {
+//     fr: "Corée du Sud",
+//     es: "Corea del Sur",
+//     en: "South Korea",
+//     de: "Südkorea",
+//     ru: "Южная Корея",
+//   },
+//   {
+//     fr: "Costa Rica",
+//     es: "Costa Rica",
+//     en: "Costa Rica",
+//     de: "Costa Rica",
+//     ru: "Коста-Рика",
+//   },
+//   {
+//     fr: "Côte d'Ivoire",
+//     es: "Costa de Marfil",
+//     en: "Ivory Coast",
+//     de: "Elfenbeinküste",
+//     ru: "Кот-д'Ивуар",
+//   },
+//   {
+//     fr: "Croatie",
+//     es: "Croacia",
+//     en: "Croatia",
+//     de: "Kroatien",
+//     ru: "Хорватия",
+//   },
+//   { fr: "Cuba", es: "Cuba", en: "Cuba", de: "Kuba", ru: "Куба" },
+//   {
+//     fr: "Danemark",
+//     es: "Dinamarca",
+//     en: "Denmark",
+//     de: "Dänemark",
+//     ru: "Дания",
+//   },
+//   {
+//     fr: "Djibouti",
+//     es: "Yibuti",
+//     en: "Djibouti",
+//     de: "Dschibuti",
+//     ru: "Джибути",
+//   },
+//   {
+//     fr: "Dominique",
+//     es: "Dominica",
+//     en: "Dominica",
+//     de: "Dominica",
+//     ru: "Доминика",
+//   },
+//   { fr: "Égypte", es: "Egipto", en: "Egypt", de: "Ägypten", ru: "Египет" },
+//   {
+//     fr: "Émirats arabes unis",
+//     es: "Emiratos Árabes Unidos",
+//     en: "United Arab Emirates",
+//     de: "Vereinigte Arabische Emirate",
+//     ru: "Объединённые Арабские Эмираты",
+//   },
+//   {
+//     fr: "Équateur",
+//     es: "Ecuador",
+//     en: "Ecuador",
+//     de: "Ecuador",
+//     ru: "Эквадор",
+//   },
+//   {
+//     fr: "Érythrée",
+//     es: "Eritrea",
+//     en: "Eritrea",
+//     de: "Eritrea",
+//     ru: "Эритрея",
+//   },
+//   { fr: "Espagne", es: "España", en: "Spain", de: "Spanien", ru: "Испания" },
+//   { fr: "Estonie", es: "Estonia", en: "Estonia", de: "Estland", ru: "Эстония" },
+//   {
+//     fr: "États-Unis",
+//     es: "Estados Unidos",
+//     en: "United States",
+//     de: "Vereinigte Staaten",
+//     ru: "Соединённые Штаты",
+//   },
+//   {
+//     fr: "Éthiopie",
+//     es: "Etiopía",
+//     en: "Ethiopia",
+//     de: "Äthiopien",
+//     ru: "Эфиопия",
+//   },
+//   { fr: "Fidji", es: "Fiyi", en: "Fiji", de: "Fidschi", ru: "Фиджи" },
+//   {
+//     fr: "Finlande",
+//     es: "Finlandia",
+//     en: "Finland",
+//     de: "Finnland",
+//     ru: "Финляндия",
+//   },
+//   {
+//     fr: "France",
+//     es: "Francia",
+//     en: "France",
+//     de: "Frankreich",
+//     ru: "Франция",
+//   },
+//   { fr: "Autre", es: "Otro", en: "Other", de: "Andere", ru: "Другое" },
+// ];
 const COUNTRIES: MultiLangDuo[] = [
   {
     fr: "Afghanistan",
@@ -395,6 +694,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Afghanistan",
     de: "Afghanistan",
     ru: "Афганистан",
+    hi: "अफगानिस्तान",
   },
   {
     fr: "Afrique du Sud",
@@ -402,6 +702,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "South Africa",
     de: "Südafrika",
     ru: "Южная Африка",
+    hi: "दक्षिण अफ्रीका",
   },
   {
     fr: "Albanie",
@@ -409,23 +710,47 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Albania",
     de: "Albanien",
     ru: "Албания",
+    hi: "अल्बानिया",
   },
-  { fr: "Algérie", es: "Argelia", en: "Algeria", de: "Algerien", ru: "Алжир" },
+  {
+    fr: "Algérie",
+    es: "Argelia",
+    en: "Algeria",
+    de: "Algerien",
+    ru: "Алжир",
+    hi: "अल्जीरिया",
+  },
   {
     fr: "Allemagne",
     es: "Alemania",
     en: "Germany",
     de: "Deutschland",
     ru: "Германия",
+    hi: "जर्मनी",
   },
-  { fr: "Andorre", es: "Andorra", en: "Andorra", de: "Andorra", ru: "Андорра" },
-  { fr: "Angola", es: "Angola", en: "Angola", de: "Angola", ru: "Ангола" },
+  {
+    fr: "Andorre",
+    es: "Andorra",
+    en: "Andorra",
+    de: "Andorra",
+    ru: "Андорра",
+    hi: "अंडोरा",
+  },
+  {
+    fr: "Angola",
+    es: "Angola",
+    en: "Angola",
+    de: "Angola",
+    ru: "Ангола",
+    hi: "अंगोला",
+  },
   {
     fr: "Arabie Saoudite",
     es: "Arabia Saudita",
     en: "Saudi Arabia",
     de: "Saudi-Arabien",
     ru: "Саудовская Аравия",
+    hi: "सऊदी अरब",
   },
   {
     fr: "Argentine",
@@ -433,6 +758,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Argentina",
     de: "Argentinien",
     ru: "Аргентина",
+    hi: "अर्जेंटीना",
   },
   {
     fr: "Arménie",
@@ -440,6 +766,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Armenia",
     de: "Armenien",
     ru: "Армения",
+    hi: "आर्मेनिया",
   },
   {
     fr: "Australie",
@@ -447,6 +774,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Australia",
     de: "Australien",
     ru: "Австралия",
+    hi: "ऑस्ट्रेलिया",
   },
   {
     fr: "Autriche",
@@ -454,6 +782,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Austria",
     de: "Österreich",
     ru: "Австрия",
+    hi: "ऑस्ट्रिया",
   },
   {
     fr: "Azerbaïdjan",
@@ -461,15 +790,31 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Azerbaijan",
     de: "Aserbaidschan",
     ru: "Азербайджан",
+    hi: "अजरबैजान",
   },
-  { fr: "Bahamas", es: "Bahamas", en: "Bahamas", de: "Bahamas", ru: "Багамы" },
-  { fr: "Bahreïn", es: "Baréin", en: "Bahrain", de: "Bahrain", ru: "Бахрейн" },
+  {
+    fr: "Bahamas",
+    es: "Bahamas",
+    en: "Bahamas",
+    de: "Bahamas",
+    ru: "Багамы",
+    hi: "बहामा",
+  },
+  {
+    fr: "Bahreïn",
+    es: "Baréin",
+    en: "Bahrain",
+    de: "Bahrain",
+    ru: "Бахрейн",
+    hi: "बहरीन",
+  },
   {
     fr: "Bangladesh",
     es: "Bangladés",
     en: "Bangladesh",
     de: "Bangladesch",
     ru: "Бангладеш",
+    hi: "बांग्लादेश",
   },
   {
     fr: "Barbade",
@@ -477,6 +822,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Barbados",
     de: "Barbados",
     ru: "Барбадос",
+    hi: "बारबाडोस",
   },
   {
     fr: "Belgique",
@@ -484,16 +830,39 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Belgium",
     de: "Belgien",
     ru: "Бельгия",
+    hi: "बेल्जियम",
   },
-  { fr: "Belize", es: "Belice", en: "Belize", de: "Belize", ru: "Белиз" },
-  { fr: "Bénin", es: "Benín", en: "Benin", de: "Benin", ru: "Бенин" },
-  { fr: "Bhoutan", es: "Bután", en: "Bhutan", de: "Bhutan", ru: "Бутан" },
+  {
+    fr: "Belize",
+    es: "Belice",
+    en: "Belize",
+    de: "Belize",
+    ru: "Белиз",
+    hi: "बेलीज",
+  },
+  {
+    fr: "Bénin",
+    es: "Benín",
+    en: "Benin",
+    de: "Benin",
+    ru: "Бенин",
+    hi: "बेनिन",
+  },
+  {
+    fr: "Bhoutan",
+    es: "Bután",
+    en: "Bhutan",
+    de: "Bhutan",
+    ru: "Бутан",
+    hi: "भूटान",
+  },
   {
     fr: "Biélorussie",
     es: "Bielorrusia",
     en: "Belarus",
     de: "Belarus",
     ru: "Беларусь",
+    hi: "बेलारूस",
   },
   {
     fr: "Birmanie",
@@ -501,6 +870,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Myanmar",
     de: "Myanmar",
     ru: "Мьянма",
+    hi: "म्यांमार",
   },
   {
     fr: "Bolivie",
@@ -508,6 +878,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Bolivia",
     de: "Bolivien",
     ru: "Боливия",
+    hi: "बोलीविया",
   },
   {
     fr: "Bosnie-Herzégovine",
@@ -515,6 +886,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Bosnia and Herzegovina",
     de: "Bosnien und Herzegowina",
     ru: "Босния и Герцеговина",
+    hi: "बोस्निया और हर्जेगोविना",
   },
   {
     fr: "Botswana",
@@ -522,15 +894,31 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Botswana",
     de: "Botswana",
     ru: "Ботсвана",
+    hi: "बोत्सवाना",
   },
-  { fr: "Brésil", es: "Brasil", en: "Brazil", de: "Brasilien", ru: "Бразилия" },
-  { fr: "Brunei", es: "Brunéi", en: "Brunei", de: "Brunei", ru: "Бруней" },
+  {
+    fr: "Brésil",
+    es: "Brasil",
+    en: "Brazil",
+    de: "Brasilien",
+    ru: "Бразилия",
+    hi: "ब्राजील",
+  },
+  {
+    fr: "Brunei",
+    es: "Brunéi",
+    en: "Brunei",
+    de: "Brunei",
+    ru: "Бруней",
+    hi: "ब्रुनेई",
+  },
   {
     fr: "Bulgarie",
     es: "Bulgaria",
     en: "Bulgaria",
     de: "Bulgarien",
     ru: "Болгария",
+    hi: "बुल्गारिया",
   },
   {
     fr: "Burkina Faso",
@@ -538,14 +926,23 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Burkina Faso",
     de: "Burkina Faso",
     ru: "Буркина-Фасо",
+    hi: "बुर्किना फासो",
   },
-  { fr: "Burundi", es: "Burundi", en: "Burundi", de: "Burundi", ru: "Бурунди" },
+  {
+    fr: "Burundi",
+    es: "Burundi",
+    en: "Burundi",
+    de: "Burundi",
+    ru: "Бурунди",
+    hi: "बुरुंडी",
+  },
   {
     fr: "Cambodge",
     es: "Camboya",
     en: "Cambodia",
     de: "Kambodscha",
     ru: "Камбоджа",
+    hi: "कंबोडिया",
   },
   {
     fr: "Cameroun",
@@ -553,33 +950,79 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Cameroon",
     de: "Kamerun",
     ru: "Камерун",
+    hi: "कैमरून",
   },
-  { fr: "Canada", es: "Canadá", en: "Canada", de: "Kanada", ru: "Канада" },
+  {
+    fr: "Canada",
+    es: "Canadá",
+    en: "Canada",
+    de: "Kanada",
+    ru: "Канада",
+    hi: "कनाडा",
+  },
   {
     fr: "Cap-Vert",
     es: "Cabo Verde",
     en: "Cape Verde",
     de: "Kap Verde",
     ru: "Кабо-Верде",
+    hi: "केप वर्डे",
   },
-  { fr: "Chili", es: "Chile", en: "Chile", de: "Chile", ru: "Чили" },
-  { fr: "Chine", es: "China", en: "China", de: "China", ru: "Китай" },
-  { fr: "Chypre", es: "Chipre", en: "Cyprus", de: "Zypern", ru: "Кипр" },
+  {
+    fr: "Chili",
+    es: "Chile",
+    en: "Chile",
+    de: "Chile",
+    ru: "Чили",
+    hi: "चिली",
+  },
+  {
+    fr: "Chine",
+    es: "China",
+    en: "China",
+    de: "China",
+    ru: "Китай",
+    hi: "चीन",
+  },
+  {
+    fr: "Chypre",
+    es: "Chipre",
+    en: "Cyprus",
+    de: "Zypern",
+    ru: "Кипр",
+    hi: "साइप्रस",
+  },
   {
     fr: "Colombie",
     es: "Colombia",
     en: "Colombia",
     de: "Kolumbien",
     ru: "Колумбия",
+    hi: "कोलंबिया",
   },
-  { fr: "Comores", es: "Comoras", en: "Comoros", de: "Komoren", ru: "Коморы" },
-  { fr: "Congo", es: "Congo", en: "Congo", de: "Kongo", ru: "Конго" },
+  {
+    fr: "Comores",
+    es: "Comoras",
+    en: "Comoros",
+    de: "Komoren",
+    ru: "Коморы",
+    hi: "कोमोरोस",
+  },
+  {
+    fr: "Congo",
+    es: "Congo",
+    en: "Congo",
+    de: "Kongo",
+    ru: "Конго",
+    hi: "कांगो",
+  },
   {
     fr: "Corée du Nord",
     es: "Corea del Norte",
     en: "North Korea",
     de: "Nordkorea",
     ru: "Северная Корея",
+    hi: "उत्तर कोरिया",
   },
   {
     fr: "Corée du Sud",
@@ -587,6 +1030,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "South Korea",
     de: "Südkorea",
     ru: "Южная Корея",
+    hi: "दक्षिण कोरिया",
   },
   {
     fr: "Costa Rica",
@@ -594,6 +1038,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Costa Rica",
     de: "Costa Rica",
     ru: "Коста-Рика",
+    hi: "कोस्टा रिका",
   },
   {
     fr: "Côte d'Ivoire",
@@ -601,6 +1046,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Ivory Coast",
     de: "Elfenbeinküste",
     ru: "Кот-д'Ивуар",
+    hi: "आइवरी कोस्ट",
   },
   {
     fr: "Croatie",
@@ -608,14 +1054,16 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Croatia",
     de: "Kroatien",
     ru: "Хорватия",
+    hi: "क्रोएशिया",
   },
-  { fr: "Cuba", es: "Cuba", en: "Cuba", de: "Kuba", ru: "Куба" },
+  { fr: "Cuba", es: "Cuba", en: "Cuba", de: "Kuba", ru: "Куба", hi: "क्यूबा" },
   {
     fr: "Danemark",
     es: "Dinamarca",
     en: "Denmark",
     de: "Dänemark",
     ru: "Дания",
+    hi: "डेनमार्क",
   },
   {
     fr: "Djibouti",
@@ -623,6 +1071,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Djibouti",
     de: "Dschibuti",
     ru: "Джибути",
+    hi: "जिबूती",
   },
   {
     fr: "Dominique",
@@ -630,14 +1079,23 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Dominica",
     de: "Dominica",
     ru: "Доминика",
+    hi: "डोमिनिका",
   },
-  { fr: "Égypte", es: "Egipto", en: "Egypt", de: "Ägypten", ru: "Египет" },
+  {
+    fr: "Égypte",
+    es: "Egipto",
+    en: "Egypt",
+    de: "Ägypten",
+    ru: "Египет",
+    hi: "मिस्र",
+  },
   {
     fr: "Émirats arabes unis",
     es: "Emiratos Árabes Unidos",
     en: "United Arab Emirates",
     de: "Vereinigte Arabische Emirate",
     ru: "Объединённые Арабские Эмираты",
+    hi: "संयुक्त अरब अमीरात",
   },
   {
     fr: "Équateur",
@@ -645,6 +1103,7 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Ecuador",
     de: "Ecuador",
     ru: "Эквадор",
+    hi: "इक्वेडोर",
   },
   {
     fr: "Érythrée",
@@ -652,15 +1111,31 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Eritrea",
     de: "Eritrea",
     ru: "Эритрея",
+    hi: "इरिट्रिया",
   },
-  { fr: "Espagne", es: "España", en: "Spain", de: "Spanien", ru: "Испания" },
-  { fr: "Estonie", es: "Estonia", en: "Estonia", de: "Estland", ru: "Эстония" },
+  {
+    fr: "Espagne",
+    es: "España",
+    en: "Spain",
+    de: "Spanien",
+    ru: "Испания",
+    hi: "स्पेन",
+  },
+  {
+    fr: "Estonie",
+    es: "Estonia",
+    en: "Estonia",
+    de: "Estland",
+    ru: "Эстония",
+    hi: "एस्टोनिया",
+  },
   {
     fr: "États-Unis",
     es: "Estados Unidos",
     en: "United States",
     de: "Vereinigte Staaten",
     ru: "Соединённые Штаты",
+    hi: "संयुक्त राज्य अमेरिका",
   },
   {
     fr: "Éthiopie",
@@ -668,14 +1143,23 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "Ethiopia",
     de: "Äthiopien",
     ru: "Эфиопия",
+    hi: "इथियोपिया",
   },
-  { fr: "Fidji", es: "Fiyi", en: "Fiji", de: "Fidschi", ru: "Фиджи" },
+  {
+    fr: "Fidji",
+    es: "Fiyi",
+    en: "Fiji",
+    de: "Fidschi",
+    ru: "Фиджи",
+    hi: "फिजी",
+  },
   {
     fr: "Finlande",
     es: "Finlandia",
     en: "Finland",
     de: "Finnland",
     ru: "Финляндия",
+    hi: "फिनलैंड",
   },
   {
     fr: "France",
@@ -683,8 +1167,16 @@ const COUNTRIES: MultiLangDuo[] = [
     en: "France",
     de: "Frankreich",
     ru: "Франция",
+    hi: "फ्रांस",
   },
-  { fr: "Autre", es: "Otro", en: "Other", de: "Andere", ru: "Другое" },
+  {
+    fr: "Autre",
+    es: "Otro",
+    en: "Other",
+    de: "Andere",
+    ru: "Другое",
+    hi: "अन्य",
+  },
 ];
 
 // const HELP_TYPES: Duo[] = [
@@ -709,6 +1201,142 @@ const COUNTRIES: MultiLangDuo[] = [
 //   { fr: "Autre", en: "Other" },
 // ];
 
+// const HELP_TYPES: MultiLangDuo[] = [
+//   {
+//     fr: "Démarches administratives",
+//     es: "Trámites administrativos",
+//     en: "Administrative procedures",
+//     de: "Verwaltungsverfahren",
+//     ru: "Административные процедуры",
+//   },
+//   {
+//     fr: "Recherche de logement",
+//     es: "Búsqueda de vivienda",
+//     en: "Housing search",
+//     de: "Wohnungssuche",
+//     ru: "Поиск жилья",
+//   },
+//   {
+//     fr: "Ouverture de compte bancaire",
+//     es: "Apertura de cuenta bancaria",
+//     en: "Bank account opening",
+//     de: "Kontoeröffnung",
+//     ru: "Открытие банковского счета",
+//   },
+//   {
+//     fr: "Système de santé",
+//     es: "Sistema de salud",
+//     en: "Healthcare system",
+//     de: "Gesundheitssystem",
+//     ru: "Система здравоохранения",
+//   },
+//   {
+//     fr: "Éducation et écoles",
+//     es: "Educación y escuelas",
+//     en: "Education & schools",
+//     de: "Bildung und Schulen",
+//     ru: "Образование и школы",
+//   },
+//   {
+//     fr: "Transport",
+//     es: "Transporte",
+//     en: "Transport",
+//     de: "Transport",
+//     ru: "Транспорт",
+//   },
+//   {
+//     fr: "Recherche d'emploi",
+//     es: "Búsqueda de empleo",
+//     en: "Job search",
+//     de: "Jobsuche",
+//     ru: "Поиск работы",
+//   },
+//   {
+//     fr: "Création d'entreprise",
+//     es: "Creación de empresa",
+//     en: "Company creation",
+//     de: "Unternehmensgründung",
+//     ru: "Создание компании",
+//   },
+//   {
+//     fr: "Fiscalité locale",
+//     es: "Fiscalidad local",
+//     en: "Local taxation",
+//     de: "Lokale Besteuerung",
+//     ru: "Местное налогообложение",
+//   },
+//   {
+//     fr: "Culture et intégration",
+//     es: "Cultura e integración",
+//     en: "Culture & integration",
+//     de: "Kultur und Integration",
+//     ru: "Культура и интеграция",
+//   },
+//   {
+//     fr: "Visa et immigration",
+//     es: "Visa e inmigración",
+//     en: "Visa & immigration",
+//     de: "Visum und Einwanderung",
+//     ru: "Виза и иммиграция",
+//   },
+//   {
+//     fr: "Assurances",
+//     es: "Seguros",
+//     en: "Insurances",
+//     de: "Versicherungen",
+//     ru: "Страхование",
+//   },
+//   {
+//     fr: "Téléphonie et internet",
+//     es: "Telefonía e internet",
+//     en: "Phone & internet",
+//     de: "Telefon und Internet",
+//     ru: "Телефон и интернет",
+//   },
+//   {
+//     fr: "Alimentation et courses",
+//     es: "Alimentación y compras",
+//     en: "Groceries & food",
+//     de: "Lebensmittel und Einkauf",
+//     ru: "Продукты и покупки",
+//   },
+//   {
+//     fr: "Loisirs et sorties",
+//     es: "Ocio y salidas",
+//     en: "Leisure & going out",
+//     de: "Freizeit und Ausgehen",
+//     ru: "Досуг и развлечения",
+//   },
+//   {
+//     fr: "Sports et activités",
+//     es: "Deportes y actividades",
+//     en: "Sports & activities",
+//     de: "Sport und Aktivitäten",
+//     ru: "Спорт и активности",
+//   },
+//   {
+//     fr: "Sécurité",
+//     es: "Seguridad",
+//     en: "Safety",
+//     de: "Sicherheit",
+//     ru: "Безопасность",
+//   },
+//   {
+//     fr: "Urgences",
+//     es: "Emergencias",
+//     en: "Emergencies",
+//     de: "Notfälle",
+//     ru: "Чрезвычайные ситуации",
+//   },
+//   {
+//     fr: "Autre",
+//     es: "Otro",
+//     en: "Other",
+//     de: "Andere",
+//     ru: "Другое",
+//   },
+// ];
+
 const HELP_TYPES: MultiLangDuo[] = [
   {
     fr: "Démarches administratives",
@@ -716,6 +1344,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     en: "Administrative procedures",
     de: "Verwaltungsverfahren",
     ru: "Административные процедуры",
+    hi: "प्रशासनिक प्रक्रियाएं",
   },
   {
     fr: "Recherche de logement",
@@ -723,6 +1352,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     en: "Housing search",
     de: "Wohnungssuche",
     ru: "Поиск жилья",
+    hi: "आवास खोज",
   },
   {
     fr: "Ouverture de compte bancaire",
@@ -730,6 +1360,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     en: "Bank account opening",
     de: "Kontoeröffnung",
     ru: "Открытие банковского счета",
+    hi: "बैंक खाता खोलना",
   },
   {
     fr: "Système de santé",
@@ -737,6 +1368,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     en: "Healthcare system",
     de: "Gesundheitssystem",
     ru: "Система здравоохранения",
+    hi: "स्वास्थ्य सेवा प्रणाली",
   },
   {
     fr: "Éducation et écoles",
@@ -744,6 +1376,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     en: "Education & schools",
     de: "Bildung und Schulen",
     ru: "Образование и школы",
+    hi: "शिक्षा और स्कूल",
   },
   {
     fr: "Transport",
@@ -751,6 +1384,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     en: "Transport",
     de: "Transport",
     ru: "Транспорт",
+    hi: "परिवहन",
   },
   {
     fr: "Recherche d'emploi",
@@ -758,6 +1392,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     en: "Job search",
     de: "Jobsuche",
     ru: "Поиск работы",
+    hi: "नौकरी खोज",
   },
   {
     fr: "Création d'entreprise",
@@ -765,6 +1400,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     en: "Company creation",
     de: "Unternehmensgründung",
     ru: "Создание компании",
+    hi: "कंपनी निर्माण",
   },
   {
     fr: "Fiscalité locale",
@@ -772,6 +1408,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     en: "Local taxation",
     de: "Lokale Besteuerung",
     ru: "Местное налогообложение",
+    hi: "स्थानीय कराधान",
   },
   {
     fr: "Culture et intégration",
@@ -779,6 +1416,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     en: "Culture & integration",
     de: "Kultur und Integration",
     ru: "Культура и интеграция",
+    hi: "संस्कृति और एकीकरण",
   },
   {
     fr: "Visa et immigration",
@@ -786,6 +1424,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     en: "Visa & immigration",
     de: "Visum und Einwanderung",
     ru: "Виза и иммиграция",
+    hi: "वीजा और आप्रवास",
   },
   {
     fr: "Assurances",
@@ -793,6 +1432,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     en: "Insurances",
     de: "Versicherungen",
     ru: "Страхование",
+    hi: "बीमा",
   },
   {
     fr: "Téléphonie et internet",
@@ -800,6 +1440,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     en: "Phone & internet",
     de: "Telefon und Internet",
     ru: "Телефон и интернет",
+    hi: "फोन और इंटरनेट",
   },
   {
     fr: "Alimentation et courses",
@@ -807,6 +1448,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     en: "Groceries & food",
     de: "Lebensmittel und Einkauf",
     ru: "Продукты и покупки",
+    hi: "किराने का सामान और खाना",
   },
   {
     fr: "Loisirs et sorties",
@@ -814,6 +1456,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     en: "Leisure & going out",
     de: "Freizeit und Ausgehen",
     ru: "Досуг и развлечения",
+    hi: "अवकाश और बाहर जाना",
   },
   {
     fr: "Sports et activités",
@@ -821,6 +1464,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     en: "Sports & activities",
     de: "Sport und Aktivitäten",
     ru: "Спорт и активности",
+    hi: "खेल और गतिविधियां",
   },
   {
     fr: "Sécurité",
@@ -828,6 +1472,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     en: "Safety",
     de: "Sicherheit",
     ru: "Безопасность",
+    hi: "सुरक्षा",
   },
   {
     fr: "Urgences",
@@ -835,6 +1480,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     en: "Emergencies",
     de: "Notfälle",
     ru: "Чрезвычайные ситуации",
+    hi: "आपातकालीन स्थितियां",
   },
   {
     fr: "Autre",
@@ -842,6 +1488,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     en: "Other",
     de: "Andere",
     ru: "Другое",
+    hi: "अन्य",
   },
 ];
 
@@ -860,7 +1507,7 @@ interface ExpatFormData {
   currentCountry: string;
   currentPresenceCountry: string;
   interventionCountry: string;
-  preferredLanguage: "fr" | "en";
+  preferredLanguage: "fr" | "en" | "es" | "de" | "ru" | "hi";
   helpTypes: string[];
   customHelpType: string;
   yearsAsExpat: number;
@@ -1037,7 +1684,6 @@ const FieldSuccess = ({
     </div>
   ) : null;
 
-
 const FieldError = ({
   show,
   children,
@@ -1047,8 +1693,8 @@ const FieldError = ({
 }) =>
   show ? (
     <div className="mt-1 flex items-center gap-1 text-sm text-red-600 bg-red-50 rounded-lg px-2 py-1">
-        <XCircle className="h-4 w-4 flex-shrink-0" />
-        <span>{children}</span>
+      <XCircle className="h-4 w-4 flex-shrink-0" />
+      <span>{children}</span>
     </div>
   ) : null;
 
@@ -1110,19 +1756,63 @@ const SectionHeader = React.memo(
 SectionHeader.displayName = "SectionHeader";
 
 // ===== Helpers =====
+// const computePasswordStrength = (pw: string) => {
+//   if (!pw)
+//     return {
+//       percent: 0,
+//       labelFr: "Vide",
+//       labelEn: "Empty",
+//       color: "bg-gray-300",
+//     };
+//   let score = 0;
+//   if (pw.length >= 6) score++;
+//   if (pw.length >= 10) score++;
+//   if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++;
+//   if (/\d/.test(pw) || /[^A-Za-z]/.test(pw)) score++;
+//   const clamp = Math.min(score, 4);
+//   const percentMap = [10, 35, 60, 80, 100] as const;
+//   const colorMap = [
+//     "bg-red-400",
+//     "bg-orange-400",
+//     "bg-yellow-400",
+//     "bg-green-500",
+//     "bg-green-600",
+//   ] as const;
+//   const frMap = [
+//     "Très faible",
+//     "Faible",
+//     "Correct",
+//     "Bien",
+//     "Très solide",
+//   ] as const;
+//   const enMap = ["Very weak", "Weak", "Okay", "Good", "Very strong"] as const;
+//   return {
+//     percent: percentMap[clamp],
+//     labelFr: frMap[clamp],
+//     labelEn: enMap[clamp],
+//     color: colorMap[clamp],
+//   };
+// };
+
 const computePasswordStrength = (pw: string) => {
   if (!pw)
     return {
       percent: 0,
-      labelFr: "Vide",
       labelEn: "Empty",
+      labelEs: "Vacío",
+      labelFr: "Vide",
+      labelRu: "Пусто",
+      labelDe: "Leer",
+      labelHi: "खाली",
       color: "bg-gray-300",
     };
+
   let score = 0;
   if (pw.length >= 6) score++;
   if (pw.length >= 10) score++;
   if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++;
   if (/\d/.test(pw) || /[^A-Za-z]/.test(pw)) score++;
+
   const clamp = Math.min(score, 4);
   const percentMap = [10, 35, 60, 80, 100] as const;
   const colorMap = [
@@ -1132,6 +1822,15 @@ const computePasswordStrength = (pw: string) => {
     "bg-green-500",
     "bg-green-600",
   ] as const;
+
+  const enMap = ["Very weak", "Weak", "Okay", "Good", "Very strong"] as const;
+  const esMap = [
+    "Muy débil",
+    "Débil",
+    "Aceptable",
+    "Buena",
+    "Muy fuerte",
+  ] as const;
   const frMap = [
     "Très faible",
     "Faible",
@@ -1139,11 +1838,30 @@ const computePasswordStrength = (pw: string) => {
     "Bien",
     "Très solide",
   ] as const;
-  const enMap = ["Very weak", "Weak", "Okay", "Good", "Very strong"] as const;
+  const ruMap = [
+    "Очень слабый",
+    "Слабый",
+    "Нормальный",
+    "Хороший",
+    "Очень сильный",
+  ] as const;
+  const deMap = [
+    "Sehr schwach",
+    "Schwach",
+    "Okay",
+    "Gut",
+    "Sehr stark",
+  ] as const;
+  const hiMap = ["बहुत कमजोर", "कमजोर", "ठीक", "अच्छा", "बहुत मजबूत"] as const;
+
   return {
     percent: percentMap[clamp],
-    labelFr: frMap[clamp],
     labelEn: enMap[clamp],
+    labelEs: esMap[clamp],
+    labelFr: frMap[clamp],
+    labelRu: ruMap[clamp],
+    labelDe: deMap[clamp],
+    labelHi: hiMap[clamp],
     color: colorMap[clamp],
   };
 };
@@ -1184,7 +1902,7 @@ const PreviewCard = ({
   languages,
   helpTypes,
 }: {
-  lang: "fr" | "en";
+  lang: "fr" | "en" | "hi" | "es" | "de" | "ru";
   t: AnyI18N; // <- générique (fix 21)
   progress: number;
   fullName: string;
@@ -1236,7 +1954,20 @@ const PreviewCard = ({
           <div className="flex items-center gap-2 text-gray-700">
             <MapPin className="w-4 h-4 text-emerald-600" />
             <span className="font-medium">
-              {currentCountry || (lang === "en" ? "Residence" : "Résidence")}
+              {/* {currentCountry || (lang === "en" ? "Residence" : "Résidence")} */}
+              {currentCountry || (lang === "en"
+  ? "Residence"
+  : lang === "es"
+  ? "Residencia"
+  : lang === "fr"
+  ? "Résidence"
+  : lang === "ru"
+  ? "Резиденция"
+  : lang === "de"
+  ? "Wohnsitz"
+  : lang === "hi"
+  ? "निवास स्थान"
+  : "Residence")}
             </span>
             {presenceCountry && (
               <span className="ml-auto rounded-full px-2 py-0.5 text-xs bg-emerald-50 border border-emerald-200">
@@ -1249,7 +1980,20 @@ const PreviewCard = ({
           <div className="flex items-center gap-2 text-gray-700">
             <Globe className="w-4 h-4 text-emerald-600" />
             <span className="font-medium">
-              {lang === "en" ? "Main help in" : "Intervention"}:
+              {/* {lang === "en" ? "Main help in" : "Intervention"}: */}
+              {lang === "en"
+  ? "Main help in"
+  : lang === "es"
+  ? "Ayuda principal en"
+  : lang === "fr"
+  ? "Intervention"
+  : lang === "ru"
+  ? "Основная помощь в"
+  : lang === "de"
+  ? "Haupthilfe in"
+  : lang === "hi"
+  ? "मुख्य सहायता में"
+  : "Main help in"}:
             </span>
             <span className="ml-auto rounded-full px-2 py-0.5 text-xs bg-emerald-50 border border-emerald-200">
               {interventionCountry}
@@ -1258,7 +2002,20 @@ const PreviewCard = ({
         )}
         {typeof yearsAsExpat === "number" && yearsAsExpat > 0 && (
           <div className="text-gray-700">
-            {lang === "en" ? "Years abroad:" : "Années à l’étranger :"}{" "}
+            {/* {lang === "en" ? "Years abroad:" : "Années à l’étranger :"}{" "} */}
+            {lang === "en"
+  ? "Years abroad:"
+  : lang === "es"
+  ? "Años en el extranjero:"
+  : lang === "fr"
+  ? "Années à l'étranger :"
+  : lang === "ru"
+  ? "Лет за границей:"
+  : lang === "de"
+  ? "Jahre im Ausland:"
+  : lang === "hi"
+  ? "विदेश में वर्ष:"
+  : "Years abroad:"}{" "}
             <strong>{yearsAsExpat}</strong>
           </div>
         )}
@@ -1267,7 +2024,20 @@ const PreviewCard = ({
       {!!languages.length && (
         <div className="mt-4">
           <p className="text-xs font-semibold text-gray-700 mb-1">
-            {t.selectedLanguages}
+            {/* {t.selectedLanguages} */}
+             {t?.selectedLanguages || (lang === "en"
+  ? "Selected Languages"
+  : lang === "es"
+  ? "Idiomas seleccionados"
+  : lang === "fr"
+  ? "Langues sélectionnées"
+  : lang === "ru"
+  ? "Выбранные языки"
+  : lang === "de"
+  ? "Ausgewählte Sprachen"
+  : lang === "hi"
+  ? "चयनित भाषाएं"
+  : "Selected Languages")}
           </p>
           <div className="flex flex-wrap gap-2">
             {languages.map((l) => (
@@ -1357,9 +2127,23 @@ const BottomChecklist = ({
 
         <div className="mt-4">
           <span className="text-xs text-gray-700 bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-1 inline-block">
-            {lang === "en"
+            {/* {lang === "en"
               ? `Completion: ${progress}%`
-              : `Complétion : ${progress}%`}
+              : `Complétion : ${progress}%`} */}
+
+              {lang === "en"
+  ? `Completion: ${progress}%`
+  : lang === "es"
+  ? `Completado: ${progress}%`
+  : lang === "fr"
+  ? `Complétion : ${progress}%`
+  : lang === "ru"
+  ? `Завершено: ${progress}%`
+  : lang === "de"
+  ? `Fortschritt: ${progress}%`
+  : lang === "hi"
+  ? `पूर्णता: ${progress}%`
+  : `Completion: ${progress}%`}
             {/* <FormattedMessage
               id="registerExpat.checklist.completion"
               values={{ progress }}
@@ -1407,7 +2191,7 @@ const RegisterExpat: React.FC = () => {
 
   const { register, isLoading, error } = useAuth();
   const { language } = useApp(); // 'fr' | 'en'
-  const lang = (language as "fr" | "en") || "fr";
+  const lang = (language as "fr" | "en" | "es" | "de" | "ru" | "hi") || "fr";
   const t: AnyI18N = I18N[lang]; // <- annotation explicite
 
   // ---- SEO / OG meta ----
@@ -1873,8 +2657,6 @@ const RegisterExpat: React.FC = () => {
           "createStripeAccount"
         );
 
-       
-
         const stripeResult = await createStripeAccount({
           email: form.email.trim().toLowerCase(),
           currentCountry: getCountryCode(form.currentCountry),
@@ -1882,7 +2664,7 @@ const RegisterExpat: React.FC = () => {
           lastName: form.lastName.trim(),
           userType: "expat", // ✅ Specify expat
         });
-        
+
         const result = stripeResult.data as {
           success: boolean;
           accountId: string;
@@ -2566,9 +3348,22 @@ const RegisterExpat: React.FC = () => {
                         />
                       </div>
                       <p id="email-help" className="mt-1 text-xs text-gray-500">
+                        {/* {lang === "en"
+                          ? "We only email for your account & connections. 🤝"
+                          : "On vous écrit seulement pour le compte & les mises en relation. 🤝"} */}
                         {lang === "en"
                           ? "We only email for your account & connections. 🤝"
-                          : "On vous écrit seulement pour le compte & les mises en relation. 🤝"}
+                          : lang === "es"
+                            ? "Solo enviamos correos para tu cuenta y conexiones. 🤝"
+                            : lang === "fr"
+                              ? "On vous écrit seulement pour le compte & les mises en relation. 🤝"
+                              : lang === "ru"
+                                ? "Мы отправляем письма только для вашего аккаунта и связей. 🤝"
+                                : lang === "de"
+                                  ? "Wir senden E-Mails nur für Ihr Konto und Verbindungen. 🤝"
+                                  : lang === "hi"
+                                    ? "हम केवल आपके खाते और कनेक्शन के लिए ईमेल भेजते हैं। 🤝"
+                                    : "We only email for your account & connections. 🤝"}
                       </p>
                       {fieldErrors.email && (
                         <p className="mt-1 text-sm text-red-600">
@@ -2632,17 +3427,50 @@ const RegisterExpat: React.FC = () => {
                         </div>
                         <div className="mt-1 text-xs flex items-center justify-between">
                           <span className="text-gray-600">
-                            {lang === "en" ? "Strength:" : "Qualité :"}{" "}
+                            {/* {lang === "en" ? "Strength:" : "Qualité :"}{" "} */}
+                            {lang === "en"
+                              ? "Strength:"
+                              : lang === "es"
+                                ? "Calidad:"
+                                : lang === "fr"
+                                  ? "Qualité :"
+                                  : lang === "ru"
+                                    ? "Надёжность:"
+                                    : lang === "de"
+                                      ? "Stärke:"
+                                      : lang === "hi"
+                                        ? "मजबूती:"
+                                        : "Strength:"}{" "}
                             <strong>
                               {lang === "en"
                                 ? pwdStrength.labelEn
-                                : pwdStrength.labelFr}
+                                : lang === "es"
+                                  ? pwdStrength.labelEs
+                                  : lang === "fr"
+                                    ? pwdStrength.labelFr
+                                    : lang === "ru"
+                                      ? pwdStrength.labelRu
+                                      : lang === "de"
+                                        ? pwdStrength.labelDe
+                                        : lang === "hi"
+                                          ? pwdStrength.labelHi
+                                          : pwdStrength.labelEn}
                             </strong>
                           </span>
                           <span className="text-gray-500">
                             {lang === "en"
                               ? "Tip: mix A-z, 0-9 & symbols"
-                              : "Astuce : mixez A-z, 0-9 & symboles"}
+                              : lang === "es"
+                                ? "Consejo: mezcla A-z, 0-9 y símbolos"
+                                : lang === "fr"
+                                  ? "Astuce : mixez A-z, 0-9 & symboles"
+                                  : lang === "ru"
+                                    ? "Совет: смешайте A-z, 0-9 и символы"
+                                    : lang === "de"
+                                      ? "Tipp: A-z, 0-9 & Symbole mischen"
+                                      : lang === "hi"
+                                        ? "सुझाव: A-z, 0-9 और चिह्न मिलाएं"
+                                        : "Tip: mix A-z, 0-9 & symbols"}
                           </span>
                         </div>
                         {capsPassword && (
@@ -2650,7 +3478,17 @@ const RegisterExpat: React.FC = () => {
                             ↥{" "}
                             {lang === "en"
                               ? "Caps Lock is ON"
-                              : "Verr. Maj activée"}
+                              : lang === "es"
+                                ? "Bloq Mayús activado"
+                                : lang === "fr"
+                                  ? "Verr. Maj activée"
+                                  : lang === "ru"
+                                    ? "Caps Lock включён"
+                                    : lang === "de"
+                                      ? "Feststelltaste ist AN"
+                                      : lang === "hi"
+                                        ? "Caps Lock चालू है"
+                                        : "Caps Lock is ON"}
                           </p>
                         )}
                       </div>
@@ -2812,7 +3650,17 @@ const RegisterExpat: React.FC = () => {
                           <option value="">
                             {lang === "en"
                               ? "Select your presence country"
-                              : "Sélectionnez votre pays de présence"}
+                              : lang === "es"
+                                ? "Selecciona tu país de presencia"
+                                : lang === "fr"
+                                  ? "Sélectionnez votre pays de présence"
+                                  : lang === "ru"
+                                    ? "Выберите страну вашего присутствия"
+                                    : lang === "de"
+                                      ? "Wählen Sie Ihr Präsenzland"
+                                      : lang === "hi"
+                                        ? "अपने उपस्थिति देश का चयन करें"
+                                        : "Select your presence country"}
                           </option>
                           {countryOptions.map((c) => (
                             <option key={c} value={c}>
@@ -2842,7 +3690,17 @@ const RegisterExpat: React.FC = () => {
                           <option value="">
                             {lang === "en"
                               ? "Select your intervention country"
-                              : "Sélectionnez votre pays d'intervention"}
+                              : lang === "es"
+                                ? "Selecciona tu país de intervención"
+                                : lang === "fr"
+                                  ? "Sélectionnez votre pays d'intervention"
+                                  : lang === "ru"
+                                    ? "Выберите страну вашего вмешательства"
+                                    : lang === "de"
+                                      ? "Wählen Sie Ihr Interventionsland"
+                                      : lang === "hi"
+                                        ? "अपने हस्तक्षेप देश का चयन करें"
+                                        : "Select your intervention country"}
                           </option>
                           {countryOptions.map((c) => (
                             <option key={c} value={c}>
@@ -2919,10 +3777,26 @@ const RegisterExpat: React.FC = () => {
                             }
                           }}
                           locale={lang}
+                          // placeholder={
+                          //   lang === "fr"
+                          //     ? "Rechercher et sélectionner les langues..."
+                          //     : "Search and select languages..."
+                          // }
+
                           placeholder={
-                            lang === "fr"
-                              ? "Rechercher et sélectionner les langues..."
-                              : "Search and select languages..."
+                            lang === "en"
+                              ? "Search and select languages..."
+                              : lang === "es"
+                                ? "Buscar y seleccionar idiomas..."
+                                : lang === "fr"
+                                  ? "Rechercher et sélectionner les langues..."
+                                  : lang === "ru"
+                                    ? "Поиск и выбор языков..."
+                                    : lang === "de"
+                                      ? "Sprachen suchen und auswählen..."
+                                      : lang === "hi"
+                                        ? "भाषाओं को खोजें और चुनें..."
+                                        : "Search and select languages..."
                           }
                         />
                       </Suspense>
@@ -2951,10 +3825,26 @@ const RegisterExpat: React.FC = () => {
                         value={form.bio}
                         onChange={onChange}
                         className={`w-full px-4 py-3 border-2 rounded-xl bg-gray-50 hover:bg-white ${THEME.ring} min-h-[120px] ${fieldErrors.bio ? "border-red-500 bg-red-50" : valid.bio ? "border-green-300 bg-green-50" : "border-gray-200"}`}
+                        // placeholder={
+                        //   lang === "en"
+                        //     ? "In a few lines, share your journey + how you help (friendly + specific)."
+                        //     : "En quelques lignes, racontez votre parcours + comment vous aidez (sympa & concret)."
+                        // }
+
                         placeholder={
                           lang === "en"
                             ? "In a few lines, share your journey + how you help (friendly + specific)."
-                            : "En quelques lignes, racontez votre parcours + comment vous aidez (sympa & concret)."
+                            : lang === "es"
+                              ? "En pocas líneas, comparte tu trayecto + cómo ayudas (amigable y específico)."
+                              : lang === "fr"
+                                ? "En quelques lignes, racontez votre parcours + comment vous aidez (sympa & concret)."
+                                : lang === "ru"
+                                  ? "В несколько строк расскажите о вашем пути + как вы помогаете (дружелюбно и конкретно)."
+                                  : lang === "de"
+                                    ? "Erzählen Sie in wenigen Zeilen Ihre Geschichte + wie Sie helfen (freundlich & konkret)."
+                                    : lang === "hi"
+                                      ? "कुछ पंक्तियों में, अपनी यात्रा साझा करें + आप कैसे मदद करते हैं (मित्रवत + विशिष्ट)।"
+                                      : "In a few lines, share your journey + how you help (friendly + specific)."
                         }
                       />
                       <div className="mt-2">
@@ -3025,7 +3915,7 @@ const RegisterExpat: React.FC = () => {
                         }
                       >
                         <ImageUploader
-                          locale={"fr"}
+                          locale={lang}
                           currentImage={form.profilePhoto}
                           onImageUploaded={(url: string) => {
                             setForm((prev) => ({ ...prev, profilePhoto: url }));
@@ -3048,7 +3938,17 @@ const RegisterExpat: React.FC = () => {
                       <p className="text-xs text-gray-500 mt-1">
                         {lang === "en"
                           ? "Professional photo (JPG/PNG) required"
-                          : "Photo professionnelle (JPG/PNG) obligatoire"}
+                          : lang === "es"
+                            ? "Foto profesional (JPG/PNG) requerida"
+                            : lang === "fr"
+                              ? "Photo professionnelle (JPG/PNG) obligatoire"
+                              : lang === "ru"
+                                ? "Требуется профессиональное фото (JPG/PNG)"
+                                : lang === "de"
+                                  ? "Professionelles Foto (JPG/PNG) erforderlich"
+                                  : lang === "hi"
+                                    ? "पेशेवर फोटो (JPG/PNG) आवश्यक है"
+                                    : "Professional photo (JPG/PNG) required"}
                       </p>
                       <FieldSuccess show={valid.profilePhoto}>
                         {/* {lang === "en" ? "Nice photo! 📸" : "Belle photo ! 📸"} */}
@@ -3169,14 +4069,41 @@ const RegisterExpat: React.FC = () => {
                           htmlFor="acceptTerms"
                           className="text-sm text-gray-800"
                         >
-                          {lang === "en" ? "I accept the" : "J'accepte les"}{" "}
+                          {/* {lang === "en" ? "I accept the" : "J'accepte les"}{" "} */}
+                          {lang === "en"
+                            ? "I accept the"
+                            : lang === "es"
+                              ? "Acepto los"
+                              : lang === "fr"
+                                ? "J'accepte les"
+                                : lang === "ru"
+                                  ? "Я принимаю"
+                                  : lang === "de"
+                                    ? "Ich akzeptiere die"
+                                    : lang === "hi"
+                                      ? "मैं स्वीकार करता हूँ"
+                                      : "I accept the"}{" "}
                           <Link
                             to="/cgu-expatries"
                             className="text-emerald-700 underline font-semibold"
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            {lang === "en" ? "Expat T&Cs" : "CGU Expatriés"}
+                            {/* {lang === "en" ? "Expat T&Cs" : "CGU Expatriés"} */}
+                            {/* {lang === "en" ? "Expat T&Cs" : "CGU Expatriés"} */}
+                            {lang === "en"
+                              ? "Expat T&Cs"
+                              : lang === "es"
+                                ? "Términos y Condiciones de Expat"
+                                : lang === "fr"
+                                  ? "CGU Expatriés"
+                                  : lang === "ru"
+                                    ? "Условия использования для экспатов"
+                                    : lang === "de"
+                                      ? "Expat AGB"
+                                      : lang === "hi"
+                                        ? "एक्सपैट नियम और शर्तें"
+                                        : "Expat T&Cs"}
                           </Link>{" "}
                           <span className="text-red-500">*</span>
                         </label>

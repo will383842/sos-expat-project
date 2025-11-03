@@ -1232,6 +1232,9 @@
   "registerExpat.password.weak": "कमज़ोर",
   "registerExpat.password.okay": "ठीक",
   "registerExpat.password.good": "अच्छा",
+  "registerExpat.help.contactInfo": "हम आपके फ़ोन का उपयोग केवल मदद चाहने वालों से जोड़ने के लिए करते हैं। कोई स्पैम नहीं।",
+    "registerExpat.errors.phoneInvalid": "कृपया एक वैध फ़ोन नंबर दर्ज करें",
+
   "registerExpat.password.veryStrong": "बहुत मज़बूत",
   "registerExpat.password.tip": "टिप: बड़े-छोटे अक्षर, 0-9 और चिन्ह मिलाएँ",
   "registerExpat.password.capsLockOn": "Caps Lock चालू है",
