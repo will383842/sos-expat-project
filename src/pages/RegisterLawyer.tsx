@@ -75,7 +75,7 @@ type MultiLangDuo = {
   en: string;
   de: string;
   ru: string;
-   hi: string;
+  hi: string;
 };
 // const COUNTRIES: MultiLangDuo[] = [
 //   { fr: "Afghanistan", en: "Afghanistan" },
@@ -167,7 +167,14 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Албания",
     hi: "अल्बानिया",
   },
-  { fr: "Algérie", es: "Argelia", en: "Algeria", de: "Algerien", ru: "Алжир", hi: "अल्जीरिया" },
+  {
+    fr: "Algérie",
+    es: "Argelia",
+    en: "Algeria",
+    de: "Algerien",
+    ru: "Алжир",
+    hi: "अल्जीरिया",
+  },
   {
     fr: "Allemagne",
     es: "Alemania",
@@ -176,8 +183,22 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Германия",
     hi: "जर्मनी",
   },
-  { fr: "Andorre", es: "Andorra", en: "Andorra", de: "Andorra", ru: "Андорра", hi: "अंडोरा" },
-  { fr: "Angola", es: "Angola", en: "Angola", de: "Angola", ru: "Ангола", hi: "अंगोला" },
+  {
+    fr: "Andorre",
+    es: "Andorra",
+    en: "Andorra",
+    de: "Andorra",
+    ru: "Андорра",
+    hi: "अंडोरा",
+  },
+  {
+    fr: "Angola",
+    es: "Angola",
+    en: "Angola",
+    de: "Angola",
+    ru: "Ангола",
+    hi: "अंगोला",
+  },
   {
     fr: "Arabie Saoudite",
     es: "Arabia Saudita",
@@ -226,8 +247,22 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Азербайджан",
     hi: "अज़रबैजान",
   },
-  { fr: "Bahamas", es: "Bahamas", en: "Bahamas", de: "Bahamas", ru: "Багамы", hi: "बहामास" },
-  { fr: "Bahreïn", es: "Baréin", en: "Bahrain", de: "Bahrain", ru: "Бахрейн", hi: "बहरीन" },
+  {
+    fr: "Bahamas",
+    es: "Bahamas",
+    en: "Bahamas",
+    de: "Bahamas",
+    ru: "Багамы",
+    hi: "बहामास",
+  },
+  {
+    fr: "Bahreïn",
+    es: "Baréin",
+    en: "Bahrain",
+    de: "Bahrain",
+    ru: "Бахрейн",
+    hi: "बहरीन",
+  },
   {
     fr: "Bangladesh",
     es: "Bangladés",
@@ -252,9 +287,30 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Бельгия",
     hi: "बेल्जियम",
   },
-  { fr: "Belize", es: "Belice", en: "Belize", de: "Belize", ru: "Белиз", hi: "बेलीज़" },
-  { fr: "Bénin", es: "Benín", en: "Benin", de: "Benin", ru: "Бенин", hi: "बेनिन" },
-  { fr: "Bhoutan", es: "Bután", en: "Bhutan", de: "Bhutan", ru: "Бутан", hi: "भूटान" },
+  {
+    fr: "Belize",
+    es: "Belice",
+    en: "Belize",
+    de: "Belize",
+    ru: "Белиз",
+    hi: "बेलीज़",
+  },
+  {
+    fr: "Bénin",
+    es: "Benín",
+    en: "Benin",
+    de: "Benin",
+    ru: "Бенин",
+    hi: "बेनिन",
+  },
+  {
+    fr: "Bhoutan",
+    es: "Bután",
+    en: "Bhutan",
+    de: "Bhutan",
+    ru: "Бутан",
+    hi: "भूटान",
+  },
   {
     fr: "Biélorussie",
     es: "Bielorrusia",
@@ -295,8 +351,22 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Ботсвана",
     hi: "बोत्सवाना",
   },
-  { fr: "Brésil", es: "Brasil", en: "Brazil", de: "Brasilien", ru: "Бразилия", hi: "ब्राज़ील" },
-  { fr: "Brunei", es: "Brunéi", en: "Brunei", de: "Brunei", ru: "Бруней", hi: "ब्रुनेई" },
+  {
+    fr: "Brésil",
+    es: "Brasil",
+    en: "Brazil",
+    de: "Brasilien",
+    ru: "Бразилия",
+    hi: "ब्राज़ील",
+  },
+  {
+    fr: "Brunei",
+    es: "Brunéi",
+    en: "Brunei",
+    de: "Brunei",
+    ru: "Бруней",
+    hi: "ब्रुनेई",
+  },
   {
     fr: "Bulgarie",
     es: "Bulgaria",
@@ -313,7 +383,14 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Буркина-Фасо",
     hi: "बुर्किना फासो",
   },
-  { fr: "Burundi", es: "Burundi", en: "Burundi", de: "Burundi", ru: "Бурунди", hi: "बुरुंडी" },
+  {
+    fr: "Burundi",
+    es: "Burundi",
+    en: "Burundi",
+    de: "Burundi",
+    ru: "Бурунди",
+    hi: "बुरुंडी",
+  },
   {
     fr: "Cambodge",
     es: "Camboya",
@@ -330,7 +407,14 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Камерун",
     hi: "कैमरून",
   },
-  { fr: "Canada", es: "Canadá", en: "Canada", de: "Kanada", ru: "Канада", hi: "कनाडा" },
+  {
+    fr: "Canada",
+    es: "Canadá",
+    en: "Canada",
+    de: "Kanada",
+    ru: "Канада",
+    hi: "कनाडा",
+  },
   {
     fr: "Cap-Vert",
     es: "Cabo Verde",
@@ -339,9 +423,30 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Кабो-Верде",
     hi: "केप वेर्डे",
   },
-  { fr: "Chili", es: "Chile", en: "Chile", de: "Chile", ru: "Чили", hi: "चिली" },
-  { fr: "Chine", es: "China", en: "China", de: "China", ru: "Китай", hi: "चीन" },
-  { fr: "Chypre", es: "Chipre", en: "Cyprus", de: "Zypern", ru: "Кипр", hi: "साइप्रस" },
+  {
+    fr: "Chili",
+    es: "Chile",
+    en: "Chile",
+    de: "Chile",
+    ru: "Чили",
+    hi: "चिली",
+  },
+  {
+    fr: "Chine",
+    es: "China",
+    en: "China",
+    de: "China",
+    ru: "Китай",
+    hi: "चीन",
+  },
+  {
+    fr: "Chypre",
+    es: "Chipre",
+    en: "Cyprus",
+    de: "Zypern",
+    ru: "Кипр",
+    hi: "साइप्रस",
+  },
   {
     fr: "Colombie",
     es: "Colombia",
@@ -350,8 +455,22 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Колумбия",
     hi: "कोलंबिया",
   },
-  { fr: "Comores", es: "Comoras", en: "Comoros", de: "Komoren", ru: "Коморы", hi: "कोमोरोस" },
-  { fr: "Congo", es: "Congo", en: "Congo", de: "Kongo", ru: "Конго", hi: "कांगो" },
+  {
+    fr: "Comores",
+    es: "Comoras",
+    en: "Comoros",
+    de: "Komoren",
+    ru: "Коморы",
+    hi: "कोमोरोस",
+  },
+  {
+    fr: "Congo",
+    es: "Congo",
+    en: "Congo",
+    de: "Kongo",
+    ru: "Конго",
+    hi: "कांगो",
+  },
   {
     fr: "Corée du Nord",
     es: "Corea del Norte",
@@ -417,7 +536,14 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Доминика",
     hi: "डोमिनिका",
   },
-  { fr: "Égypte", es: "Egipto", en: "Egypt", de: "Ägypten", ru: "Египет", hi: "मिस्र" },
+  {
+    fr: "Égypte",
+    es: "Egipto",
+    en: "Egypt",
+    de: "Ägypten",
+    ru: "Египет",
+    hi: "मिस्र",
+  },
   {
     fr: "Émirats arabes unis",
     es: "Emiratos Árabes Unidos",
@@ -442,8 +568,22 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Эритрея",
     hi: "इरिट्रिया",
   },
-  { fr: "Espagne", es: "España", en: "Spain", de: "Spanien", ru: "Испания", hi: "स्पेन" },
-  { fr: "Estonie", es: "Estonia", en: "Estonia", de: "Estland", ru: "Эстония", hi: "एस्टोनिया" },
+  {
+    fr: "Espagne",
+    es: "España",
+    en: "Spain",
+    de: "Spanien",
+    ru: "Испания",
+    hi: "स्पेन",
+  },
+  {
+    fr: "Estonie",
+    es: "Estonia",
+    en: "Estonia",
+    de: "Estland",
+    ru: "Эстония",
+    hi: "एस्टोनिया",
+  },
   {
     fr: "États-Unis",
     es: "Estados Unidos",
@@ -460,7 +600,14 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Эфиопия",
     hi: "इथियोपिया",
   },
-  { fr: "Fidji", es: "Fiyi", en: "Fiji", de: "Fidschi", ru: "Фиджи", hi: "फिजी" },
+  {
+    fr: "Fidji",
+    es: "Fiyi",
+    en: "Fiji",
+    de: "Fidschi",
+    ru: "Фиджи",
+    hi: "फिजी",
+  },
   {
     fr: "Finlande",
     es: "Finlandia",
@@ -477,9 +624,15 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Франция",
     hi: "फ्रांस",
   },
-  { fr: "Autre", es: "Otro", en: "Other", de: "Andere", ru: "Другое", hi: "अन्य" },
+  {
+    fr: "Autre",
+    es: "Otro",
+    en: "Other",
+    de: "Andere",
+    ru: "Другое",
+    hi: "अन्य",
+  },
 ];
-
 
 const inputClass = (hasErr?: boolean) =>
   `w-full px-3 py-3 border-2 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:outline-none transition-all duration-200 text-base 
@@ -908,7 +1061,6 @@ const getCountryCode = (countryName: string, locale: string = "en"): string => {
 //   },
 // ];
 
-
 const SPECIALTIES: MultiLangDuo[] = [
   {
     fr: "Droit de l'immigration",
@@ -1071,7 +1223,6 @@ const SPECIALTIES: MultiLangDuo[] = [
     hi: "अन्य",
   },
 ];
-
 
 // ===== Types =====
 interface LawyerFormData {
@@ -1549,8 +1700,6 @@ const Avatar = ({ src, name }: { src?: string; name: string }) => {
 //   );
 // };
 
-
-
 const LawyerPreviewCard = ({
   lang,
   t,
@@ -1579,7 +1728,7 @@ const LawyerPreviewCard = ({
   yearsOfExperience?: number;
 }) => {
   const intl = useIntl();
-  
+
   // Translation helper
   const getText = (key: string): string => {
     const translations: Record<string, Record<string, string>> = {
@@ -1648,7 +1797,7 @@ const LawyerPreviewCard = ({
         hi: "ग्राहक यह देखेंगे। इसे चमकाएं ✨",
       },
     };
-    
+
     return translations[key]?.[lang] || translations[key]?.en || "";
   };
 
@@ -1760,15 +1909,10 @@ const LawyerPreviewCard = ({
         </div>
       )}
 
-      <p className="mt-4 text-xs text-gray-500">
-        {getText("clientPreview")}
-      </p>
+      <p className="mt-4 text-xs text-gray-500">{getText("clientPreview")}</p>
     </div>
   );
 };
-
-
-
 
 /* ========= Helpers ========= */
 const computePasswordStrength = (pw: string) => {
@@ -1912,7 +2056,8 @@ const RegisterLawyer: React.FC = () => {
   // Hooks simples sans react-hook-form
   const { register, isLoading, error } = useAuth();
   const { language } = useApp(); // 'fr' | 'en'
-  const lang = (language as I18nKey) || "fr" || "en" || "es" || "de" || "ru" || "hi";
+  const lang =
+    (language as I18nKey) || "fr" || "en" || "es" || "de" || "ru" || "hi";
   const t = I18N[lang];
 
   // ---- SEO / OG meta ----
@@ -2367,6 +2512,103 @@ const RegisterLawyer: React.FC = () => {
   }, [form, selectedLanguages, intl]);
 
   // ---- Missing checklist (UX clair) ----
+  // const missing = useMemo(() => {
+  //   const langs = (selectedLanguages as LanguageOption[]).length > 0;
+
+  //   return [
+  //     {
+  //       key: "firstName",
+  //       ok: !!form.firstName,
+  //       labelFr: "Prénom",
+  //       labelEn: "First name",
+  //     },
+  //     {
+  //       key: "lastName",
+  //       ok: !!form.lastName,
+  //       labelFr: "Nom",
+  //       labelEn: "Last name",
+  //     },
+  //     {
+  //       key: "email",
+  //       ok: EMAIL_REGEX.test(form.email),
+  //       labelFr: "Email valide",
+  //       labelEn: "Valid email",
+  //     },
+  //     {
+  //       key: "password",
+  //       ok: form.password.length >= 6,
+  //       labelFr: "Mot de passe (≥ 6 caractères)",
+  //       labelEn: "Password (≥ 6 chars)",
+  //     },
+  //     {
+  //       key: "phone",
+  //       ok: !!form.phone && !!(parsePhoneNumberFromString(form.phone) && parsePhoneNumberFromString(form.phone).isValid()),
+  //       labelFr: "Téléphone",
+  //       labelEn: "Phone",
+  //     },
+  //     {
+  //       key: "whatsapp",
+  //       ok: !!form.whatsapp && !!(parsePhoneNumberFromString(form.whatsapp) && parsePhoneNumberFromString(form.whatsapp).isValid()),
+  //       labelFr: "WhatsApp",
+  //       labelEn: "WhatsApp",
+  //     },
+  //     {
+  //       key: "currentCountry",
+  //       ok: !!form.currentCountry,
+  //       labelFr: "Pays de résidence",
+  //       labelEn: "Residence country",
+  //     },
+  //     {
+  //       key: "currentPresenceCountry",
+  //       ok: !!form.currentPresenceCountry,
+  //       labelFr: "Pays de présence",
+  //       labelEn: "Presence country",
+  //     },
+  //     {
+  //       key: "practiceCountries",
+  //       ok: form.practiceCountries.length > 0,
+  //       labelFr: "Au moins un pays d'intervention",
+  //       labelEn: "At least one practice country",
+  //     },
+  //     {
+  //       key: "languages",
+  //       ok: langs,
+  //       labelFr: "Au moins une langue",
+  //       labelEn: "At least one language",
+  //     },
+  //     {
+  //       key: "specialties",
+  //       ok: form.specialties.length > 0,
+  //       labelFr: "Au moins une spécialité",
+  //       labelEn: "At least one specialty",
+  //     },
+  //     {
+  //       key: "bio",
+  //       ok: form.bio.trim().length >= 50,
+  //       labelFr: "Bio (≥ 50 caractères)",
+  //       labelEn: "Bio (≥ 50 chars)",
+  //     },
+  //     {
+  //       key: "profilePhoto",
+  //       ok: !!form.profilePhoto,
+  //       labelFr: "Photo de profil",
+  //       labelEn: "Profile photo",
+  //     },
+  //     {
+  //       key: "educations",
+  //       ok: form.educations.some((v) => v.trim().length > 0),
+  //       labelFr: "Au moins une formation",
+  //       labelEn: "At least one education",
+  //     },
+  //     {
+  //       key: "acceptTerms",
+  //       ok: !!form.acceptTerms,
+  //       labelFr: "Accepter les CGU",
+  //       labelEn: "Accept T&Cs",
+  //     },
+  //   ];
+  // }, [form, selectedLanguages]);
+
   const missing = useMemo(() => {
     const langs = (selectedLanguages as LanguageOption[]).length > 0;
 
@@ -2374,92 +2616,192 @@ const RegisterLawyer: React.FC = () => {
       {
         key: "firstName",
         ok: !!form.firstName,
-        labelFr: "Prénom",
-        labelEn: "First name",
+        label: {
+          en: "First name",
+          es: "Nombre",
+          fr: "Prénom",
+          de: "Vorname",
+          ru: "Имя",
+          hi: "पहला नाम",
+        },
       },
       {
         key: "lastName",
         ok: !!form.lastName,
-        labelFr: "Nom",
-        labelEn: "Last name",
+        label: {
+          en: "Last name",
+          es: "Apellido",
+          fr: "Nom",
+          de: "Nachname",
+          ru: "Фамилия",
+          hi: "उपनाम",
+        },
       },
       {
         key: "email",
         ok: EMAIL_REGEX.test(form.email),
-        labelFr: "Email valide",
-        labelEn: "Valid email",
+        label: {
+          en: "Valid email",
+          es: "Email válido",
+          fr: "Email valide",
+          de: "Gültige E-Mail",
+          ru: "Действительный email",
+          hi: "मान्य ईमेल",
+        },
       },
       {
         key: "password",
         ok: form.password.length >= 6,
-        labelFr: "Mot de passe (≥ 6 caractères)",
-        labelEn: "Password (≥ 6 chars)",
+        label: {
+          en: "Password (≥ 6 chars)",
+          es: "Contraseña (≥ 6 caracteres)",
+          fr: "Mot de passe (≥ 6 caractères)",
+          de: "Passwort (≥ 6 Zeichen)",
+          ru: "Пароль (≥ 6 символов)",
+          hi: "पासवर्ड (≥ 6 अक्षर)",
+        },
       },
       {
         key: "phone",
-        ok: !!form.phone && !!(parsePhoneNumberFromString(form.phone) && parsePhoneNumberFromString(form.phone).isValid()),
-        labelFr: "Téléphone",
-        labelEn: "Phone",
+        ok:
+          !!form.phone &&
+          !!(
+            parsePhoneNumberFromString(form.phone) &&
+            parsePhoneNumberFromString(form.phone).isValid()
+          ),
+        label: {
+          en: "Phone",
+          es: "Teléfono",
+          fr: "Téléphone",
+          de: "Telefon",
+          ru: "Телефон",
+          hi: "फ़ोन",
+        },
       },
       {
         key: "whatsapp",
-        ok: !!form.whatsapp && !!(parsePhoneNumberFromString(form.whatsapp) && parsePhoneNumberFromString(form.whatsapp).isValid()),
-        labelFr: "WhatsApp",
-        labelEn: "WhatsApp",
+        ok:
+          !!form.whatsapp &&
+          !!(
+            parsePhoneNumberFromString(form.whatsapp) &&
+            parsePhoneNumberFromString(form.whatsapp).isValid()
+          ),
+        label: {
+          en: "WhatsApp",
+          es: "WhatsApp",
+          fr: "WhatsApp",
+          de: "WhatsApp",
+          ru: "WhatsApp",
+          hi: "WhatsApp",
+        },
       },
       {
         key: "currentCountry",
         ok: !!form.currentCountry,
-        labelFr: "Pays de résidence",
-        labelEn: "Residence country",
+        label: {
+          en: "Residence country",
+          es: "País de residencia",
+          fr: "Pays de résidence",
+          de: "Wohnsitzland",
+          ru: "Страна проживания",
+          hi: "निवास देश",
+        },
       },
       {
         key: "currentPresenceCountry",
         ok: !!form.currentPresenceCountry,
-        labelFr: "Pays de présence",
-        labelEn: "Presence country",
+        label: {
+          en: "Presence country",
+          es: "País de presencia",
+          fr: "Pays de présence",
+          de: "Anwesenheitsland",
+          ru: "Страна присутствия",
+          hi: "उपस्थिति देश",
+        },
       },
       {
         key: "practiceCountries",
         ok: form.practiceCountries.length > 0,
-        labelFr: "Au moins un pays d'intervention",
-        labelEn: "At least one practice country",
+        label: {
+          en: "At least one practice country",
+          es: "Al menos un país de práctica",
+          fr: "Au moins un pays d'intervention",
+          de: "Mindestens ein Praxisland",
+          ru: "Хотя бы одна страна практики",
+          hi: "कम से कम एक अभ्यास देश",
+        },
       },
       {
         key: "languages",
         ok: langs,
-        labelFr: "Au moins une langue",
-        labelEn: "At least one language",
+        label: {
+          en: "At least one language",
+          es: "Al menos un idioma",
+          fr: "Au moins une langue",
+          de: "Mindestens eine Sprache",
+          ru: "Хотя бы один язык",
+          hi: "कम से कम एक भाषा",
+        },
       },
       {
         key: "specialties",
         ok: form.specialties.length > 0,
-        labelFr: "Au moins une spécialité",
-        labelEn: "At least one specialty",
+        label: {
+          en: "At least one specialty",
+          es: "Al menos una especialidad",
+          fr: "Au moins une spécialité",
+          de: "Mindestens eine Spezialität",
+          ru: "Хотя бы одна специальность",
+          hi: "कम से कम एक विशेषता",
+        },
       },
       {
         key: "bio",
         ok: form.bio.trim().length >= 50,
-        labelFr: "Bio (≥ 50 caractères)",
-        labelEn: "Bio (≥ 50 chars)",
+        label: {
+          en: "Bio (≥ 50 chars)",
+          es: "Biografía (≥ 50 caracteres)",
+          fr: "Bio (≥ 50 caractères)",
+          de: "Bio (≥ 50 Zeichen)",
+          ru: "Биография (≥ 50 символов)",
+          hi: "बायो (≥ 50 अक्षर)",
+        },
       },
       {
         key: "profilePhoto",
         ok: !!form.profilePhoto,
-        labelFr: "Photo de profil",
-        labelEn: "Profile photo",
+        label: {
+          en: "Profile photo",
+          es: "Foto de perfil",
+          fr: "Photo de profil",
+          de: "Profilbild",
+          ru: "Фото профиля",
+          hi: "प्रोफ़ाइल फ़ोटो",
+        },
       },
       {
         key: "educations",
         ok: form.educations.some((v) => v.trim().length > 0),
-        labelFr: "Au moins une formation",
-        labelEn: "At least one education",
+        label: {
+          en: "At least one education",
+          es: "Al menos una formación",
+          fr: "Au moins une formation",
+          de: "Mindestens eine Ausbildung",
+          ru: "Хотя бы одно образование",
+          hi: "कम से कम एक शिक्षा",
+        },
       },
       {
         key: "acceptTerms",
         ok: !!form.acceptTerms,
-        labelFr: "Accepter les CGU",
-        labelEn: "Accept T&Cs",
+        label: {
+          en: "Accept T&Cs",
+          es: "Aceptar T&C",
+          fr: "Accepter les CGU",
+          de: "AGB akzeptieren",
+          ru: "Принять условия",
+          hi: "नियम स्वीकार करें",
+        },
       },
     ];
   }, [form, selectedLanguages]);
@@ -2634,9 +2976,15 @@ const RegisterLawyer: React.FC = () => {
       EMAIL_REGEX.test(form.email) &&
       form.password.length >= 6 &&
       !!form.phone &&
-      !!(parsePhoneNumberFromString(form.phone) && parsePhoneNumberFromString(form.phone).isValid()) && 
+      !!(
+        parsePhoneNumberFromString(form.phone) &&
+        parsePhoneNumberFromString(form.phone).isValid()
+      ) &&
       !!form.whatsapp &&
-      !!(parsePhoneNumberFromString(form.whatsapp) && parsePhoneNumberFromString(form.whatsapp).isValid()) &&
+      !!(
+        parsePhoneNumberFromString(form.whatsapp) &&
+        parsePhoneNumberFromString(form.whatsapp).isValid()
+      ) &&
       !!form.currentCountry &&
       !!form.currentPresenceCountry &&
       form.bio.trim().length >= 50 &&
@@ -3139,81 +3487,91 @@ const RegisterLawyer: React.FC = () => {
                           <FormattedMessage id="registerExpat.fields.phone" />
                           <span className="text-red-500">*</span>
                         </label>
-                       
-                          <PhoneInput
-                            value={form.phone}
-                            onChange={(value) => {
-                              const phoneValue = value || "";
-                              setForm((prev) => ({ ...prev, phone: phoneValue }));
 
-                              if (!touched.phone) {
-                                markTouched("phone");
-                              }
+                        <PhoneInput
+                          value={form.phone}
+                          onChange={(value) => {
+                            const phoneValue = value || "";
+                            setForm((prev) => ({ ...prev, phone: phoneValue }));
 
-                              try {
-                                const parsed = parsePhoneNumberFromString(phoneValue);
+                            if (!touched.phone) {
+                              markTouched("phone");
+                            }
 
-                                if (!phoneValue) {
-                                  // Empty → clear error
-                                  setFieldErrors((prev) => {
-                                    const { phone, ...rest } = prev;
-                                    return rest;
-                                  });
-                                } else if (!parsed || !parsed.isValid()) {
-                                  setFieldErrors((prev) => ({
-                                    ...prev,
-                                    phone: intl.formatMessage({
-                                      id: "registerLawyer.errors.phoneInvalid",
-                                    }),
-                                  }));
-                                } else {
-                                  setFieldErrors((prev) => {
-                                    const { phone, ...rest } = prev;
-                                    return rest;
-                                  });
-                                }
-                              } catch {
+                            try {
+                              const parsed =
+                                parsePhoneNumberFromString(phoneValue);
+
+                              if (!phoneValue) {
+                                // Empty → clear error
+                                setFieldErrors((prev) => {
+                                  const { phone, ...rest } = prev;
+                                  return rest;
+                                });
+                              } else if (!parsed || !parsed.isValid()) {
                                 setFieldErrors((prev) => ({
                                   ...prev,
                                   phone: intl.formatMessage({
                                     id: "registerLawyer.errors.phoneInvalid",
                                   }),
                                 }));
+                              } else {
+                                setFieldErrors((prev) => {
+                                  const { phone, ...rest } = prev;
+                                  return rest;
+                                });
                               }
-                            }}
-                            onBlur={() => markTouched("phone")}
-                            defaultCountry="FR"
-                            international
-                            countryCallingCodeEditable={false}
-                            className={inputClass()}
-                            placeholder="+33 6 12 34 56 78"
-                          />
+                            } catch {
+                              setFieldErrors((prev) => ({
+                                ...prev,
+                                phone: intl.formatMessage({
+                                  id: "registerLawyer.errors.phoneInvalid",
+                                }),
+                              }));
+                            }
+                          }}
+                          onBlur={() => markTouched("phone")}
+                          defaultCountry="FR"
+                          international
+                          countryCallingCodeEditable={false}
+                          className={inputClass()}
+                          placeholder="+33 6 12 34 56 78"
+                        />
 
-                          {form.phone && (
-                            <div className="mt-1 text-xs text-gray-500">
-                              Format: <span className="font-mono">{form.phone}</span>
-                            </div>
-                          )}
+                        {form.phone && (
+                          <div className="mt-1 text-xs text-gray-500">
+                            Format:{" "}
+                            <span className="font-mono">{form.phone}</span>
+                          </div>
+                        )}
 
-                          <FieldError
-                            error={fieldErrors.phone}
-                            show={!!(touched.phone && fieldErrors.phone)}
-                          />
+                        <FieldError
+                          error={fieldErrors.phone}
+                          show={!!(touched.phone && fieldErrors.phone)}
+                        />
 
-                          {(() => {
-                            const phoneNumber = parsePhoneNumberFromString(form.phone);
-                            const isValidPhone = phoneNumber?.isValid?.();
+                        {(() => {
+                          const phoneNumber = parsePhoneNumberFromString(
+                            form.phone
+                          );
+                          const isValidPhone = phoneNumber?.isValid?.();
 
-                            return (
-                              <FieldSuccess
-                                show={!!(touched.phone && !fieldErrors.phone && isValidPhone)}
-                                message={intl.formatMessage({
-                                  id: "registerExpat.success.fieldValid",
-                                })}
-                              />
-                            );
-                          })()}
-                        </div>
+                          return (
+                            <FieldSuccess
+                              show={
+                                !!(
+                                  touched.phone &&
+                                  !fieldErrors.phone &&
+                                  isValidPhone
+                                )
+                              }
+                              message={intl.formatMessage({
+                                id: "registerExpat.success.fieldValid",
+                              })}
+                            />
+                          );
+                        })()}
+                      </div>
 
                       {/* WhatsApp Number */}
                       <div>
@@ -3221,80 +3579,92 @@ const RegisterLawyer: React.FC = () => {
                           <FormattedMessage id="registerLawyer.fields.whatsapp" />
                         </label>
 
-                         <PhoneInput
-                            value={form.whatsapp}
-                            onChange={(value) => {
-                              const whatsappValue = value || "";
-                              setForm((prev) => ({ ...prev, whatsapp: whatsappValue }));
+                        <PhoneInput
+                          value={form.whatsapp}
+                          onChange={(value) => {
+                            const whatsappValue = value || "";
+                            setForm((prev) => ({
+                              ...prev,
+                              whatsapp: whatsappValue,
+                            }));
 
-                              if (!touched.whatsapp) {
-                                markTouched("whatsapp");
-                              }
+                            if (!touched.whatsapp) {
+                              markTouched("whatsapp");
+                            }
 
-                              try {
-                                const parsed = parsePhoneNumberFromString(whatsappValue);
+                            try {
+                              const parsed =
+                                parsePhoneNumberFromString(whatsappValue);
 
-                                if (!whatsappValue) {
-                                  // Empty → clear error
-                                  setFieldErrors((prev) => {
-                                    const { whatsapp, ...rest } = prev;
-                                    return rest;
-                                  });
-                                } else if (!parsed || !parsed.isValid()) {
-                                  setFieldErrors((prev) => ({
-                                    ...prev,
-                                    whatsapp: intl.formatMessage({
-                                      id: "registerLawyer.errors.whatsappInvalid",
-                                    }),
-                                  }));
-                                } else {
-                                  setFieldErrors((prev) => {
-                                    const { whatsapp, ...rest } = prev;
-                                    return rest;
-                                  });
-                                }
-                              } catch {
+                              if (!whatsappValue) {
+                                // Empty → clear error
+                                setFieldErrors((prev) => {
+                                  const { whatsapp, ...rest } = prev;
+                                  return rest;
+                                });
+                              } else if (!parsed || !parsed.isValid()) {
                                 setFieldErrors((prev) => ({
                                   ...prev,
-                                  phone: intl.formatMessage({
+                                  whatsapp: intl.formatMessage({
                                     id: "registerLawyer.errors.whatsappInvalid",
                                   }),
                                 }));
+                              } else {
+                                setFieldErrors((prev) => {
+                                  const { whatsapp, ...rest } = prev;
+                                  return rest;
+                                });
                               }
-                            }}
-                            onBlur={() => markTouched("whatsapp")}
-                            defaultCountry="FR"
-                            international
-                            countryCallingCodeEditable={false}
-                            className={inputClass()}
-                            placeholder="+33 6 12 34 56 78"
-                          />
+                            } catch {
+                              setFieldErrors((prev) => ({
+                                ...prev,
+                                phone: intl.formatMessage({
+                                  id: "registerLawyer.errors.whatsappInvalid",
+                                }),
+                              }));
+                            }
+                          }}
+                          onBlur={() => markTouched("whatsapp")}
+                          defaultCountry="FR"
+                          international
+                          countryCallingCodeEditable={false}
+                          className={inputClass()}
+                          placeholder="+33 6 12 34 56 78"
+                        />
 
-                          {form.whatsapp && (
-                            <div className="mt-1 text-xs text-gray-500">
-                              Format: <span className="font-mono">{form.whatsapp}</span>
-                            </div>
-                          )}
+                        {form.whatsapp && (
+                          <div className="mt-1 text-xs text-gray-500">
+                            Format:{" "}
+                            <span className="font-mono">{form.whatsapp}</span>
+                          </div>
+                        )}
 
-                          <FieldError
-                            error={fieldErrors.whatsapp}
-                            show={!!(touched.whatsapp && fieldErrors.whatsapp)}
-                          />
+                        <FieldError
+                          error={fieldErrors.whatsapp}
+                          show={!!(touched.whatsapp && fieldErrors.whatsapp)}
+                        />
 
-                          {(() => {
-                            const whatsappNumber = parsePhoneNumberFromString(form.whatsapp);
-                            const whatsapp = whatsappNumber?.isValid?.();
+                        {(() => {
+                          const whatsappNumber = parsePhoneNumberFromString(
+                            form.whatsapp
+                          );
+                          const whatsapp = whatsappNumber?.isValid?.();
 
-                            return (
-                              <FieldSuccess
-                                show={!!(touched.whatsapp && !fieldErrors.whatsapp && whatsapp)}
-                                message={intl.formatMessage({
-                                  id: "registerExpat.success.fieldValid",
-                                })}
-                              />
-                            );
-                          })()}
-
+                          return (
+                            <FieldSuccess
+                              show={
+                                !!(
+                                  touched.whatsapp &&
+                                  !fieldErrors.whatsapp &&
+                                  whatsapp
+                                )
+                              }
+                              message={intl.formatMessage({
+                                id: "registerExpat.success.fieldValid",
+                              })}
+                            />
+                          );
+                        })()}
                       </div>
                     </div>
                   </section>
@@ -3326,17 +3696,17 @@ const RegisterLawyer: React.FC = () => {
                           className={getInputClassName("currentCountry")}
                         >
                           <option value="">
-                           {lang === "fr"
-  ? "Sélectionnez votre pays"
-  : lang === "es"
-  ? "Selecciona tu país"
-  : lang === "de"
-  ? "Wählen Sie Ihr Land"
-  : lang === "ru"
-  ? "Выберите свою страну"
-  : lang === "hi"
-  ? "अपना देश चुनें"
-  : "Select your country"}
+                            {lang === "fr"
+                              ? "Sélectionnez votre pays"
+                              : lang === "es"
+                                ? "Selecciona tu país"
+                                : lang === "de"
+                                  ? "Wählen Sie Ihr Land"
+                                  : lang === "ru"
+                                    ? "Выберите свою страну"
+                                    : lang === "hi"
+                                      ? "अपना देश चुनें"
+                                      : "Select your country"}
                           </option>
                           {countryOptions.map((c) => (
                             <option key={c} value={c}>
@@ -3403,17 +3773,17 @@ const RegisterLawyer: React.FC = () => {
                               ? "Select your presence country"
                               : "Sélectionnez votre pays de présence"} */}
 
-                              {lang === "fr"
-  ? "Sélectionnez votre pays de présence"
-  : lang === "es"
-  ? "Selecciona tu país de presencia"
-  : lang === "de"
-  ? "Wählen Sie Ihr Aufenthaltsland"
-  : lang === "ru"
-  ? "Выберите страну вашего пребывания"
-  : lang === "hi"
-  ? "अपनी उपस्थिति का देश चुनें"
-  : "Select your presence country"}
+                            {lang === "fr"
+                              ? "Sélectionnez votre pays de présence"
+                              : lang === "es"
+                                ? "Selecciona tu país de presencia"
+                                : lang === "de"
+                                  ? "Wählen Sie Ihr Aufenthaltsland"
+                                  : lang === "ru"
+                                    ? "Выберите страну вашего пребывания"
+                                    : lang === "hi"
+                                      ? "अपनी उपस्थिति का देश चुनें"
+                                      : "Select your presence country"}
                           </option>
                           {countryOptions.map((c) => (
                             <option key={c} value={c}>
@@ -3711,9 +4081,23 @@ const RegisterLawyer: React.FC = () => {
                       {(selectedLanguages as LanguageOption[]).length > 0 && (
                         <div className="mb-2 text-xs text-gray-700">
                           <span className="font-medium">
+                            {/* {lang === "en"
+                            
+                              ? "Selected languages"
+                              : "Langues sélectionnées"} */}
                             {lang === "en"
                               ? "Selected languages"
-                              : "Langues sélectionnées"}
+                              : lang === "es"
+                                ? "Idiomas seleccionados"
+                                : lang === "fr"
+                                  ? "Langues sélectionnées"
+                                  : lang === "de"
+                                    ? "Ausgewählte Sprachen"
+                                    : lang === "ru"
+                                      ? "Выбранные языки"
+                                      : lang === "hi"
+                                        ? "चयनित भाषाएं"
+                                        : "Selected languages"}
                             :
                           </span>{" "}
                           {(selectedLanguages as LanguageOption[])
@@ -3815,29 +4199,29 @@ const RegisterLawyer: React.FC = () => {
                                 ? "✓ Nice! Field validated."
                                 : "✓ Top ! Champ validé."} */}
 
-                                {form.bio.length < 50
-  ? lang === "fr"
-    ? `Encore ${50 - form.bio.length} caractères — vous y êtes presque ! 💪`
-    : lang === "es"
-    ? `Solo ${50 - form.bio.length} caracteres más — ¡puedes hacerlo! 💪`
-    : lang === "de"
-    ? `Nur noch ${50 - form.bio.length} Zeichen — Sie schaffen das! 💪`
-    : lang === "ru"
-    ? `Осталось ${50 - form.bio.length} символов — вы почти у цели! 💪`
-    : lang === "hi"
-    ? `बस ${50 - form.bio.length} अक्षर और — आप कर सकते हैं! 💪`
-    : `Just ${50 - form.bio.length} chars to go — you've got this! 💪`
-  : lang === "fr"
-    ? "✓ Top ! Champ validé."
-    : lang === "es"
-    ? "✓ ¡Perfecto! Campo validado."
-    : lang === "de"
-    ? "✓ Toll! Feld validiert."
-    : lang === "ru"
-    ? "✓ Отлично! Поле проверено."
-    : lang === "hi"
-    ? "✓ बढ़िया! फ़ील्ड सत्यापित।"
-    : "✓ Nice! Field validated."}
+                            {form.bio.length < 50
+                              ? lang === "fr"
+                                ? `Encore ${50 - form.bio.length} caractères — vous y êtes presque ! 💪`
+                                : lang === "es"
+                                  ? `Solo ${50 - form.bio.length} caracteres más — ¡puedes hacerlo! 💪`
+                                  : lang === "de"
+                                    ? `Nur noch ${50 - form.bio.length} Zeichen — Sie schaffen das! 💪`
+                                    : lang === "ru"
+                                      ? `Осталось ${50 - form.bio.length} символов — вы почти у цели! 💪`
+                                      : lang === "hi"
+                                        ? `बस ${50 - form.bio.length} अक्षर और — आप कर सकते हैं! 💪`
+                                        : `Just ${50 - form.bio.length} chars to go — you've got this! 💪`
+                              : lang === "fr"
+                                ? "✓ Top ! Champ validé."
+                                : lang === "es"
+                                  ? "✓ ¡Perfecto! Campo validado."
+                                  : lang === "de"
+                                    ? "✓ Toll! Feld validiert."
+                                    : lang === "ru"
+                                      ? "✓ Отлично! Поле проверено."
+                                      : lang === "hi"
+                                        ? "✓ बढ़िया! फ़ील्ड सत्यापित।"
+                                        : "✓ Nice! Field validated."}
                           </span>
                           <span
                             className={
@@ -3883,7 +4267,7 @@ const RegisterLawyer: React.FC = () => {
                         }
                       >
                         <ImageUploader
-                          locale={"fr"}
+                          locale={lang}
                           currentImage={form.profilePhoto}
                           onImageUploaded={(url: string) => {
                             setForm((prev) => ({ ...prev, profilePhoto: url }));
@@ -4013,7 +4397,20 @@ const RegisterLawyer: React.FC = () => {
                                   <XCircle className="w-4 h-4 mr-2 text-gray-400" />
                                 )}
                                 <span>
-                                  {lang === "en" ? m.labelEn : m.labelFr}
+                                  {/* {lang === "en" ? m.labelEn : m.labelFr} */}
+                                  {lang === "en"
+                                    ? m.label.en
+                                    : lang === "es"
+                                      ? m.label.es
+                                      : lang === "fr"
+                                        ? m.label.fr
+                                        : lang === "de"
+                                          ? m.label.de
+                                          : lang === "ru"
+                                            ? m.label.ru
+                                            : lang === "hi"
+                                              ? m.label.hi
+                                              : m.label.en}
                                 </span>
                               </div>
                             ))}
