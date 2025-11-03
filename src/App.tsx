@@ -19,6 +19,7 @@ import frMessages from "./helper/fr.json";
 import ruMessages from "./helper/ru.json";
 import deMessages from "./helper/de.json";
 import hiMessages from "./helper/hi.json";
+import ptMessages from "./helper/pt.json";
 import { useApp } from "./contexts/AppContext";
 
 // --------------------------------------------
@@ -93,6 +94,7 @@ const messages = {
   ru: ruMessages,
   de: deMessages,
   hi: hiMessages,
+  pt: ptMessages
 };
 
 // --------------------------------------------
@@ -246,7 +248,7 @@ const DefaultHelmet: React.FC<{ pathname: string }> = ({ pathname }) => {
   );
 };
 
-type Locale = "en" | "es" | "fr";
+type Locale = "en" | "es" | "fr" | "de" | "ru" | "pt" | "hi";
 // --------------------------------------------
 // App
 // --------------------------------------------

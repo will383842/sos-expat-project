@@ -1156,6 +1156,7 @@
     "dashboard.invalidPhone": "Please enter a valid phone number",
   "dashboard.invalidWhatsApp": "Please enter a valid WhatsApp number",
   "dashboard.phoneFormat": "International format",
+   "registerExpat.selectedLanguages": "Selected languages",
   
 
     "registerExpat.help.contactInfo": "We only use your phone to connect you with people who need help. No spam.",

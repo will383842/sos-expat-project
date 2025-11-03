@@ -10,7 +10,7 @@ import {
   StorageReference
 } from 'firebase/storage';
 
-type Locale = 'fr' | 'en' | 'es' | 'de' | 'ru' | 'hi';
+type Locale = 'fr' | 'en' | 'es' | 'de' | 'ru' | 'hi' | 'pt';
 
 /** ====== I18N types ====== */
 type I18nUI = {
@@ -271,7 +271,36 @@ const I18N: Record<Locale, I18n> = {
       chooseImage: 'छवि चुनें',
       cancel: 'रद्द करें',
     }
+  },
+  pt: {
+  errors: {
+    unsupportedFormat: 'Formato não suportado. Aceitos: JPG, PNG, WEBP, GIF, HEIC, BMP, TIFF, AVIF',
+    fileTooLarge: (sizeMB: number, maxSizeMB: number) => `Imagem deve ser menor que ${maxSizeMB}MB (atual: ${sizeMB.toFixed(1)}MB)`,
+    uploadFailed: (error: string) => `Erro no upload: ${error}`,
+    previewFailed: 'Erro ao criar visualização',
+    deleteFailed: 'Erro ao remover imagem',
+    imageLoadError: 'Erro ao carregar imagem',
+    cameraNotSupported: 'Câmera não é suportada neste dispositivo',
+    cameraAccessFailed: 'Não foi possível acessar a câmera',
+  },
+  ui: {
+    dropHere: 'Solte a imagem aqui',
+    clickOrDrag: 'Clique ou arraste uma imagem',
+    formatInfo: (maxSizeMB: number) => `JPG, PNG, WEBP, GIF, HEIC • Máximo ${maxSizeMB}MB`,
+    uploading: (p: number) => `Enviando... ${p}%`,
+    uploadSuccess: 'Imagem enviada com sucesso!',
+    replaceImage: 'Alterar imagem',
+    removeImage: 'Remover imagem',
+    profileImage: 'Foto de perfil',
+    converting: 'Convertendo imagem...',
+    takePhoto: 'Tirar foto',
+    chooseFromGallery: 'Galeria',
+    webcamInfo: 'Ou use a webcam pelo botão Alterar',
+    chooseImage: 'Escolher imagem',
+    cancel: 'Cancelar',
   }
+}
+
 };
 
 

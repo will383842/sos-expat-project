@@ -50,7 +50,7 @@ declare global {
 }
 
 interface Language {
-  code: "fr" | "en" | "es" | "ru" | "de" | "hi" ;
+  code: "fr" | "en" | "es" | "ru" | "de" | "hi" | "pt";
   name: string;
   nativeName: string;
   flag: React.ReactNode;
@@ -198,6 +198,24 @@ const IndianFlag = memo(() => (
 ));
 IndianFlag.displayName = "IndianFlag";
 
+
+const PortugueseFlag = memo(() => (
+  <div
+    className="relative p-1 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg ring-1 ring-white/20"
+    role="img"
+    aria-label="Bandeira portuguesa"
+  >
+    <div className="w-6 h-4 rounded-md overflow-hidden shadow-sm flex">
+      <div className="w-2/5 h-full bg-green-600" />
+      <div className="w-3/5 h-full bg-red-600 flex items-center justify-center">
+        <div className="w-2 h-2 bg-yellow-300 rounded-full" />
+      </div>
+    </div>
+    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-lg pointer-events-none" />
+  </div>
+));
+PortugueseFlag.displayName = "PortugueseFlag";
+
 /** ================================
  *  i18n Config
  *  ================================ */
@@ -208,6 +226,7 @@ const SUPPORTED_LANGUAGES: Language[] = [
   { code: "ru", name: "Russian", nativeName: "Русский", flag: <RussianFlag /> },
   { code: "de", name: "German", nativeName: "Deutsch", flag: <GermanFlag /> },
   { code: "hi", name: "Hindi", nativeName: "हिंदी", flag: <IndianFlag /> },
+  { code: "pt", name: "Portuguese", nativeName: "Português", flag: <PortugueseFlag /> },
 ];
 
 const LEFT_NAVIGATION_ITEMS: NavigationItem[] = [
@@ -584,7 +603,7 @@ const LanguageDropdown = memo<{
   }, []);
 
   const handleLanguageChange = useCallback(
-    (langCode: "fr" | "en" | "es" | "ru" | "de" | "hi") => {
+    (langCode: "fr" | "en" | "es" | "ru" | "de" | "hi" | "pt") => {
       setLanguage(langCode);
       setOpen(false);
       window.gtag?.("event", "language_change", {
@@ -872,10 +891,54 @@ const UserMenu = memo<{ isMobile?: boolean; scrolled?: boolean }>(
 // };
 
 
+// const t = {
+//   login:
+//     language === "fr" ? "Connexion"
+//     : language === "es" ? "Iniciar sesión"
+//     : language === "de" ? "Anmelden"
+//     : language === "ru" ? "Войти"
+//     : language === "hi" ? "लॉगिन"
+//     : "Login",
+    
+//   signup:
+//     language === "fr" ? "S'inscrire"
+//     : language === "es" ? "Registrarse"
+//     : language === "de" ? "Registrieren"
+//     : language === "ru" ? "Зарегистрироваться"
+//     : language === "hi" ? "साइन अप करें"
+//     : "Sign up",
+    
+//   dashboard:
+//     language === "fr" ? "Tableau de bord"
+//     : language === "es" ? "Panel de control"
+//     : language === "de" ? "Dashboard"
+//     : language === "ru" ? "Панель управления"
+//     : language === "hi" ? "डैशबोर्ड"
+//     : "Dashboard",
+    
+//   adminConsole:
+//     language === "fr" ? "Console Admin"
+//     : language === "es" ? "Consola de Administración"
+//     : language === "de" ? "Admin-Konsole"
+//     : language === "ru" ? "Консоль администратора"
+//     : language === "hi" ? "एडमिन कंसोल"
+//     : "Admin Console",
+    
+//   logout:
+//     language === "fr" ? "Déconnexion"
+//     : language === "es" ? "Cerrar sesión"
+//     : language === "de" ? "Abmelden"
+//     : language === "ru" ? "Выйти"
+//     : language === "hi" ? "लॉग आउट"
+//     : "Logout",
+// };
+
+
 const t = {
   login:
     language === "fr" ? "Connexion"
     : language === "es" ? "Iniciar sesión"
+    : language === "pt" ? "Entrar"
     : language === "de" ? "Anmelden"
     : language === "ru" ? "Войти"
     : language === "hi" ? "लॉगिन"
@@ -884,6 +947,7 @@ const t = {
   signup:
     language === "fr" ? "S'inscrire"
     : language === "es" ? "Registrarse"
+    : language === "pt" ? "Cadastrar-se"
     : language === "de" ? "Registrieren"
     : language === "ru" ? "Зарегистрироваться"
     : language === "hi" ? "साइन अप करें"
@@ -892,6 +956,7 @@ const t = {
   dashboard:
     language === "fr" ? "Tableau de bord"
     : language === "es" ? "Panel de control"
+    : language === "pt" ? "Painel de controle"
     : language === "de" ? "Dashboard"
     : language === "ru" ? "Панель управления"
     : language === "hi" ? "डैशबोर्ड"
@@ -900,6 +965,7 @@ const t = {
   adminConsole:
     language === "fr" ? "Console Admin"
     : language === "es" ? "Consola de Administración"
+    : language === "pt" ? "Console de Administração"
     : language === "de" ? "Admin-Konsole"
     : language === "ru" ? "Консоль администратора"
     : language === "hi" ? "एडमिन कंसोल"
@@ -908,11 +974,13 @@ const t = {
   logout:
     language === "fr" ? "Déconnexion"
     : language === "es" ? "Cerrar sesión"
+    : language === "pt" ? "Sair"
     : language === "de" ? "Abmelden"
     : language === "ru" ? "Выйти"
     : language === "hi" ? "लॉग आउट"
     : "Logout",
 };
+
 
 
 
@@ -1138,58 +1206,64 @@ const Header: React.FC = () => {
     setIsMenuOpen(false);
   }, [location.pathname]);
 
-  const getNavigationLabel = useCallback(
-    (labelKey: string): string => {
-      const translations: Record<
-        string,
-        Record<"fr" | "en" | "es" | "ru" | "de" | "hi", string>
-      > = {
-        "nav.home": {
-          fr: "Accueil",
-          en: "Home",
-          es: "Inicio",
-          ru: "Главная",
-          de: "Startseite",
-              hi: "होम",
-        },
-        "nav.viewProfiles": {
-          fr: "Profils aidants",
-          en: "Helper profiles",
-          es: "Perfiles de ayuda",
-          ru: "Профили помощников",
-          de: "Helferprofile",
-              hi: "सहायक प्रोफाइल",
-        },
-        "nav.testimonials": {
-          fr: "Avis",
-          en: "Reviews",
-          es: "Reseñas",
-          ru: "Отзывы",
-          de: "Bewertungen",
-                hi: "समीक्षाएं",
-        },
-        "nav.howItWorks": {
-          fr: "Comment ça marche",
-          en: "How it Works",
-          es: "Cómo funciona",
-          ru: "Как это работает",
-          de: "Wie es funktioniert",
-                 hi: "यह कैसे काम करता है",
-        },
-        "nav.pricing": {
-          fr: "Tarifs",
-          en: "Pricing",
-          es: "Precios",
-          ru: "Тарифы",
-          de: "Preise",
-                hi: "मूल्य निर्धारण",
-        },
-      };
+ const getNavigationLabel = useCallback(
+  (labelKey: string): string => {
+    const translations: Record<
+      string,
+      Record<"fr" | "en" | "es" | "pt" | "ru" | "de" | "hi", string>
+    > = {
+      "nav.home": {
+        fr: "Accueil",
+        en: "Home",
+        es: "Inicio",
+        pt: "Início",
+        ru: "Главная",
+        de: "Startseite",
+        hi: "होम",
+      },
+      "nav.viewProfiles": {
+        fr: "Profils aidants",
+        en: "Helper profiles",
+        es: "Perfiles de ayuda",
+        pt: "Perfis de ajudantes",
+        ru: "Профили помощников",
+        de: "Helferprofile",
+        hi: "सहायक प्रोफाइल",
+      },
+      "nav.testimonials": {
+        fr: "Avis",
+        en: "Reviews",
+        es: "Reseñas",
+        pt: "Avaliações",
+        ru: "Отзывы",
+        de: "Bewertungen",
+        hi: "समीक्षाएं",
+      },
+      "nav.howItWorks": {
+        fr: "Comment ça marche",
+        en: "How it Works",
+        es: "Cómo funciona",
+        pt: "Como funciona",
+        ru: "Как это работает",
+        de: "Wie es funktioniert",
+        hi: "यह कैसे काम करता है",
+      },
+      "nav.pricing": {
+        fr: "Tarifs",
+        en: "Pricing",
+        es: "Precios",
+        pt: "Preços",
+        ru: "Тарифы",
+        de: "Preise",
+        hi: "मूल्य निर्धारण",
+      },
+    };
 
-      return translations[labelKey]?.[language] || labelKey;
-    },
-    [language]
-  );
+    return translations[labelKey]?.[language] || labelKey;
+  },
+  [language]
+);
+
 
   const t = { sosCall: language === "fr" ? "SOS Appel" : "SOS Call" };
 

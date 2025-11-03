@@ -28,13 +28,15 @@ const Consumers: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [selectedLanguage, setSelectedLanguage] = useState<
-    "fr" | "en" | "es" | "de" | "ru" | "hi"
-  >((language as "fr" | "en" | "es" | "de" | "ru" | "hi") || "fr");
+    "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt"
+  >((language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt") || "fr");
 
   // Rester synchronisé avec la langue globale de l'app
   useEffect(() => {
     if (language)
-      setSelectedLanguage(language as "fr" | "en" | "es" | "de" | "ru" | "hi");
+      setSelectedLanguage(
+        language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt"
+      );
   }, [language]);
 
   // Logique métier Firestore conservée (type: 'legal')
@@ -91,15 +93,18 @@ const Consumers: React.FC = () => {
         support: "Service client",
         contact: "Contact",
       },
-       lawyerCall: "Appel Avocat",
-    expatHelperCall: "Appel Expatrié Aidant",
-    forMinutes20: "pour 20 min",
-    forMinutes30: "pour 30 min",
-    eurDisplay: "Affichage et paiement possibles en EUR ou USD selon votre choix.",
-    usdDisplay: "Montants affichés à titre indicatif ; le taux/frais de conversion du prestataire de paiement peuvent s'appliquer.",
-    serviceHours: "Horaires : 24/7 • Temps de réponse : sous 24h. Pour toute demande, utilisez notre formulaire.",
-    contactHeader: "Contact",
-        contactFormLabel: "Formulaire de contact",
+      lawyerCall: "Appel Avocat",
+      expatHelperCall: "Appel Expatrié Aidant",
+      forMinutes20: "pour 20 min",
+      forMinutes30: "pour 30 min",
+      eurDisplay:
+        "Affichage et paiement possibles en EUR ou USD selon votre choix.",
+      usdDisplay:
+        "Montants affichés à titre indicatif ; le taux/frais de conversion du prestataire de paiement peuvent s'appliquer.",
+      serviceHours:
+        "Horaires : 24/7 • Temps de réponse : sous 24h. Pour toute demande, utilisez notre formulaire.",
+      contactHeader: "Contact",
+      contactFormLabel: "Formulaire de contact",
     },
     en: {
       title: "Consumer Information",
@@ -124,14 +129,16 @@ const Consumers: React.FC = () => {
         contact: "Contact",
       },
       lawyerCall: "Lawyer Call",
-    expatHelperCall: "Expat Helper Call",
-    forMinutes20: "for 20 min",
-    forMinutes30: "for 30 min",
-    eurDisplay: "Display and payment available in EUR or USD at your choice.",
-    usdDisplay: "Amounts are indicative; payment processor FX rates/fees may apply.",
-    serviceHours: "Hours: 24/7 • Response time: within 24h. For any request, please use our contact form.",
-    contactHeader: "Contact",
-        contactFormLabel: "Contact form",
+      expatHelperCall: "Expat Helper Call",
+      forMinutes20: "for 20 min",
+      forMinutes30: "for 30 min",
+      eurDisplay: "Display and payment available in EUR or USD at your choice.",
+      usdDisplay:
+        "Amounts are indicative; payment processor FX rates/fees may apply.",
+      serviceHours:
+        "Hours: 24/7 • Response time: within 24h. For any request, please use our contact form.",
+      contactHeader: "Contact",
+      contactFormLabel: "Contact form",
     },
     es: {
       title: "Información del Consumidor",
@@ -156,14 +163,17 @@ const Consumers: React.FC = () => {
         contact: "Contacto",
       },
       lawyerCall: "Llamada con abogado",
-    expatHelperCall: "Llamada con ayudante expatriado",
-    forMinutes20: "por 20 min",
-    forMinutes30: "por 30 min",
-    eurDisplay: "Visualización y pago disponibles en EUR o USD según su elección.",
-    usdDisplay: "Los montos son indicativos; pueden aplicarse tarifas/tasas de cambio del procesador de pagos.",
-    serviceHours: "Horario: 24/7 • Tiempo de respuesta: dentro de 24 horas. Para cualquier solicitud, utilice nuestro formulario.",
-    contactHeader: "Contacto",
-       contactFormLabel: "Formulario de contacto",
+      expatHelperCall: "Llamada con ayudante expatriado",
+      forMinutes20: "por 20 min",
+      forMinutes30: "por 30 min",
+      eurDisplay:
+        "Visualización y pago disponibles en EUR o USD según su elección.",
+      usdDisplay:
+        "Los montos son indicativos; pueden aplicarse tarifas/tasas de cambio del procesador de pagos.",
+      serviceHours:
+        "Horario: 24/7 • Tiempo de respuesta: dentro de 24 horas. Para cualquier solicitud, utilice nuestro formulario.",
+      contactHeader: "Contacto",
+      contactFormLabel: "Formulario de contacto",
     },
     de: {
       title: "Verbraucherinformationen",
@@ -187,15 +197,17 @@ const Consumers: React.FC = () => {
         support: "Kundendienst",
         contact: "Kontakt",
       },
-        lawyerCall: "Anwaltsanruf",
-    expatHelperCall: "Expat-Helfer-Anruf",
-    forMinutes20: "für 20 Min",
-    forMinutes30: "für 30 Min",
-    eurDisplay: "Anzeige und Zahlung in EUR oder USD je nach Wahl verfügbar.",
-    usdDisplay: "Beträge sind indikativ; Wechselkurse/Gebühren des Zahlungsabwicklers können anfallen.",
-    serviceHours: "Öffnungszeiten: 24/7 • Antwortzeit: innerhalb von 24 Stunden. Für jede Anfrage nutzen Sie bitte unser Formular.",
-    contactHeader: "Kontakt",
-       contactFormLabel: "Kontaktformular",
+      lawyerCall: "Anwaltsanruf",
+      expatHelperCall: "Expat-Helfer-Anruf",
+      forMinutes20: "für 20 Min",
+      forMinutes30: "für 30 Min",
+      eurDisplay: "Anzeige und Zahlung in EUR oder USD je nach Wahl verfügbar.",
+      usdDisplay:
+        "Beträge sind indikativ; Wechselkurse/Gebühren des Zahlungsabwicklers können anfallen.",
+      serviceHours:
+        "Öffnungszeiten: 24/7 • Antwortzeit: innerhalb von 24 Stunden. Für jede Anfrage nutzen Sie bitte unser Formular.",
+      contactHeader: "Kontakt",
+      contactFormLabel: "Kontaktformular",
     },
     ru: {
       title: "Информация для потребителей",
@@ -220,47 +232,88 @@ const Consumers: React.FC = () => {
         contact: "Контакт",
       },
       lawyerCall: "Звонок юристу",
-    expatHelperCall: "Звонок помощнику-экспату",
-    forMinutes20: "на 20 мин",
-    forMinutes30: "на 30 мин",
-    eurDisplay: "Отображение и оплата доступны в EUR или USD по вашему выбору.",
-    usdDisplay: "Суммы являются ориентировочными; могут применяться курсы/сборы платежного процессора.",
-    serviceHours: "Часы работы: 24/7 • Время ответа: в течение 24 часов. По любым вопросам используйте нашу форму.",
-    contactHeader: "Контакт",
-    contactFormLabel: "Контактная форма",
+      expatHelperCall: "Звонок помощнику-экспату",
+      forMinutes20: "на 20 мин",
+      forMinutes30: "на 30 мин",
+      eurDisplay:
+        "Отображение и оплата доступны в EUR или USD по вашему выбору.",
+      usdDisplay:
+        "Суммы являются ориентировочными; могут применяться курсы/сборы платежного процессора.",
+      serviceHours:
+        "Часы работы: 24/7 • Время ответа: в течение 24 часов. По любым вопросам используйте нашу форму.",
+      contactHeader: "Контакт",
+      contactFormLabel: "Контактная форма",
     },
-     hi: {
-    title: "उपभोक्ता सूचना",
-    subtitle: "आपके अधिकार और सुरक्षा – अंतर्राष्ट्रीय प्लेटफ़ॉर्म",
-    lastUpdated: "संस्करण 2.2 – अंतिम अपडेट: 16 जून 2025",
-    loading: "लोड हो रहा है...",
-    features: [
-      "स्वचालित रिफंड",
-      "EUR और USD में कीमतें",
-      "उपभोक्ता अधिकार",
-      "24/7 सहायता",
-    ],
-    anchorTitle: "सारांश",
-    contactCta: "हमसे संपर्क करें",
-    editHint: "एडमिन कंसोल से संपादन योग्य दस्तावेज़",
-    sections: {
-      rights: "आपके उपभोक्ता अधिकार",
-      refunds: "रिफंड नीति",
-      prices: "मूल्य पारदर्शिता (EUR / USD)",
-      mediation: "मध्यस्थता और शिकायतें",
-      support: "ग्राहक सेवा",
-      contact: "संपर्क",
+    hi: {
+      title: "उपभोक्ता सूचना",
+      subtitle: "आपके अधिकार और सुरक्षा – अंतर्राष्ट्रीय प्लेटफ़ॉर्म",
+      lastUpdated: "संस्करण 2.2 – अंतिम अपडेट: 16 जून 2025",
+      loading: "लोड हो रहा है...",
+      features: [
+        "स्वचालित रिफंड",
+        "EUR और USD में कीमतें",
+        "उपभोक्ता अधिकार",
+        "24/7 सहायता",
+      ],
+      anchorTitle: "सारांश",
+      contactCta: "हमसे संपर्क करें",
+      editHint: "एडमिन कंसोल से संपादन योग्य दस्तावेज़",
+      sections: {
+        rights: "आपके उपभोक्ता अधिकार",
+        refunds: "रिफंड नीति",
+        prices: "मूल्य पारदर्शिता (EUR / USD)",
+        mediation: "मध्यस्थता और शिकायतें",
+        support: "ग्राहक सेवा",
+        contact: "संपर्क",
+      },
+      lawyerCall: "वकील कॉल",
+      expatHelperCall: "प्रवासी सहायक कॉल",
+      forMinutes20: "20 मिनट के लिए",
+      forMinutes30: "30 मिनट के लिए",
+      eurDisplay:
+        "आपकी पसंद के अनुसार EUR या USD में प्रदर्शन और भुगतान उपलब्ध है।",
+      usdDisplay:
+        "राशियां सांकेतिक हैं; भुगतान प्रोसेसर के विनिमय दर/शुल्क लागू हो सकते हैं।",
+      serviceHours:
+        "घंटे: 24/7 • प्रतिक्रिया समय: 24 घंटे के भीतर। किसी भी अनुरोध के लिए, कृपया हमारा फॉर्म उपयोग करें।",
+      contactHeader: "संपर्क",
+      contactFormLabel: "संपर्क फॉर्म",
     },
-    lawyerCall: "वकील कॉल",
-    expatHelperCall: "प्रवासी सहायक कॉल",
-    forMinutes20: "20 मिनट के लिए",
-    forMinutes30: "30 मिनट के लिए",
-    eurDisplay: "आपकी पसंद के अनुसार EUR या USD में प्रदर्शन और भुगतान उपलब्ध है।",
-    usdDisplay: "राशियां सांकेतिक हैं; भुगतान प्रोसेसर के विनिमय दर/शुल्क लागू हो सकते हैं।",
-    serviceHours: "घंटे: 24/7 • प्रतिक्रिया समय: 24 घंटे के भीतर। किसी भी अनुरोध के लिए, कृपया हमारा फॉर्म उपयोग करें।",
-       contactHeader: "संपर्क",
-        contactFormLabel: "संपर्क फॉर्म",
-  },
+    pt: {
+      title: "Informações do Consumidor",
+      subtitle: "Seus direitos e proteções — Plataforma internacional",
+      lastUpdated: "Versão 2.2 – Última atualização: 16 de junho de 2025",
+      loading: "Carregando...",
+      features: [
+        "Reembolso automático",
+        "Preços em EUR e USD",
+        "Direitos do consumidor",
+        "Suporte 24/7",
+      ],
+      anchorTitle: "Resumo",
+      contactCta: "Entre em contato conosco",
+      editHint: "Documento editável no console do administrador",
+      sections: {
+        rights: "Seus direitos como consumidor",
+        refunds: "Política de reembolso",
+        prices: "Transparência de preços (EUR / USD)",
+        mediation: "Mediação e reclamações",
+        support: "Atendimento ao cliente",
+        contact: "Contato",
+      },
+      lawyerCall: "Chamada com advogado",
+      expatHelperCall: "Chamada com assistente expatriado",
+      forMinutes20: "por 20 min",
+      forMinutes30: "por 30 min",
+      eurDisplay:
+        "Exibição e pagamento disponíveis em EUR ou USD conforme sua escolha.",
+      usdDisplay:
+        "Os valores são indicativos; as taxas de câmbio/taxas do processador de pagamento podem se aplicar.",
+      serviceHours:
+        "Horário: 24/7 • Tempo de resposta: dentro de 24 horas. Para qualquer solicitação, use nosso formulário de contato.",
+      contactHeader: "Contato",
+      contactFormLabel: "Formulário de contato",
+    },
   };
 
   const t = translations[selectedLanguage];
@@ -693,8 +746,7 @@ Kontaktformular (Support und rechtliche Anfragen): http://localhost:5174/contact
 Контактная форма (поддержка и юридические запросы): http://localhost:5174/contact
 `;
 
-
-const defaultHi = `
+  const defaultHi = `
 # उपभोक्ता सूचना (वैश्विक)
 
 **संस्करण 2.2 – अंतिम अपडेट: 16 जून 2025**
@@ -747,6 +799,78 @@ const defaultHi = `
 संपर्क फॉर्म (सहायता और कानूनी अनुरोध): http://localhost:5174/contact
 `;
 
+const defaultPt = `
+# Informações do Consumidor (Global)
+
+
+**Versão 2.2 – Última atualização: 16 de junho de 2025**
+
+
+---
+
+
+## 1. Seus direitos como consumidor
+
+
+1.1. **Informação clara** sobre os serviços, preços e condições.
+1.2. **Direito de retratação** quando a lei local obrigatória se aplica (consulte as condições de aplicação com o prestador e a plataforma).
+1.3. **Proteção** contra práticas comerciais desleais ou enganosas.
+1.4. **Acesso** a um atendimento ao cliente responsivo por meio do **formulário de contato**.
+
+
+---
+
+
+## 2. Política de reembolso
+
+
+2.1. **Reembolso automático**: Se o seu especialista não responder após **3 tentativas de chamada** dentro do prazo esperado, a reserva é **cancelada** e você recebe um **reembolso total**.
+2.2. **Outras situações**: Entre em contato com o suporte por meio do **formulário de contato** dentro de **24 horas** após a chamada para que possamos analisar sua solicitação.
+
+
+---
+
+
+## 3. Transparência de preços (EUR / USD)
+
+
+3.1. **Chamada com advogado**: **49€ (EUR)** / **$49 (USD)** por **20 minutos** (incluindo impostos).
+3.2. **Chamada com assistente expatriado**: **19€ (EUR)** / **$19 (USD)** por **30 minutos** (incluindo impostos).
+3.3. **Sem taxas ocultas**; o preço exibido inclui a taxa de conexão técnica, quando aplicável.
+3.4. Os valores em **USD** podem ser exibidos e cobrados no **checkout**; **taxas de câmbio/taxas** do processador de pagamento podem se aplicar.
+
+
+---
+
+
+## 4. Mediação e reclamações
+
+
+4.1. **Suporte por formulário de contato**: http://localhost:5174/contact
+4.2. **Mediação de consumo**: Você pode entrar em contato com o mediador competente em seu país.
+4.3. **Plataforma ODR da UE**: Você pode usar o mecanismo de resolução de litígios online.
+
+
+---
+
+
+## 5. Atendimento ao cliente (internacional)
+
+
+5.1. **Horário**: 24/7
+5.2. **Tempo de resposta**: Dentro de 24 horas
+5.3. **Contato**: Use o **formulário de contato**: http://localhost:5174/contact
+
+
+---
+
+
+## 6. Contato
+
+
+Formulário de contato (suporte e solicitações legais): http://localhost:5174/contact
+`;
+
 
   // const defaultContent = selectedLanguage === "fr" ? defaultFr : defaultEn;
   const defaultContent =
@@ -759,8 +883,10 @@ const defaultHi = `
           : selectedLanguage === "ru"
             ? defaultRu
             : selectedLanguage === "hi"
-              ? defaultHi
-            : defaultEn;
+              ? defaultHi 
+              : selectedLanguage === "pt"
+                ? defaultPt 
+              : defaultEn;
 
   // Sommaire
   const anchorMap = useMemo(
@@ -1004,56 +1130,51 @@ const defaultHi = `
                     </p>
                   </div>
                 </div> */}
-                  
-                  {/* Cartes prix (EUR / USD) visibles même si contenu provient d'admin, pour clarifier l'international */}
-<div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
-  <div className="p-6 rounded-2xl border border-gray-200 bg-white shadow-sm">
-    <h3 className="text-xl font-bold text-gray-900 mb-2">
-      {t.lawyerCall}
-    </h3>
-    <div className="flex items-baseline gap-3">
-      <span className="text-3xl font-extrabold text-gray-900">
-        49€
-      </span>
-      <span className="text-gray-500 font-medium">EUR</span>
-      <span className="text-gray-400">/</span>
-      <span className="text-3xl font-extrabold text-gray-900">
-        $49
-      </span>
-      <span className="text-gray-500 font-medium">USD</span>
-      <span className="ml-2 text-sm text-gray-500">
-        {t.forMinutes20}
-      </span>
-    </div>
-    <p className="mt-2 text-sm text-gray-600">
-      {t.eurDisplay}
-    </p>
-  </div>
 
-  <div className="p-6 rounded-2xl border border-gray-200 bg-white shadow-sm">
-    <h3 className="text-xl font-bold text-gray-900 mb-2">
-      {t.expatHelperCall}
-    </h3>
-    <div className="flex items-baseline gap-3">
-      <span className="text-3xl font-extrabold text-gray-900">
-        19€
-      </span>
-      <span className="text-gray-500 font-medium">EUR</span>
-      <span className="text-gray-400">/</span>
-      <span className="text-3xl font-extrabold text-gray-900">
-        $19
-      </span>
-      <span className="text-gray-500 font-medium">USD</span>
-      <span className="ml-2 text-sm text-gray-500">
-        {t.forMinutes30}
-      </span>
-    </div>
-    <p className="mt-2 text-sm text-gray-600">
-      {t.usdDisplay}
-    </p>
-  </div>
-</div>
+                {/* Cartes prix (EUR / USD) visibles même si contenu provient d'admin, pour clarifier l'international */}
+                <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="p-6 rounded-2xl border border-gray-200 bg-white shadow-sm">
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">
+                      {t.lawyerCall}
+                    </h3>
+                    <div className="flex items-baseline gap-3">
+                      <span className="text-3xl font-extrabold text-gray-900">
+                        49€
+                      </span>
+                      <span className="text-gray-500 font-medium">EUR</span>
+                      <span className="text-gray-400">/</span>
+                      <span className="text-3xl font-extrabold text-gray-900">
+                        $49
+                      </span>
+                      <span className="text-gray-500 font-medium">USD</span>
+                      <span className="ml-2 text-sm text-gray-500">
+                        {t.forMinutes20}
+                      </span>
+                    </div>
+                    <p className="mt-2 text-sm text-gray-600">{t.eurDisplay}</p>
+                  </div>
 
+                  <div className="p-6 rounded-2xl border border-gray-200 bg-white shadow-sm">
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">
+                      {t.expatHelperCall}
+                    </h3>
+                    <div className="flex items-baseline gap-3">
+                      <span className="text-3xl font-extrabold text-gray-900">
+                        19€
+                      </span>
+                      <span className="text-gray-500 font-medium">EUR</span>
+                      <span className="text-gray-400">/</span>
+                      <span className="text-3xl font-extrabold text-gray-900">
+                        $19
+                      </span>
+                      <span className="text-gray-500 font-medium">USD</span>
+                      <span className="ml-2 text-sm text-gray-500">
+                        {t.forMinutes30}
+                      </span>
+                    </div>
+                    <p className="mt-2 text-sm text-gray-600">{t.usdDisplay}</p>
+                  </div>
+                </div>
 
                 {/* Bloc service client sans email, bouton vers contact */}
                 {/* <div
@@ -1077,24 +1198,22 @@ const defaultHi = `
                   </a>
                 </div> */}
                 {/* Bloc service client sans email, bouton vers contact */}
-<div
-  id="section-5"
-  className="mt-12 rounded-3xl border border-gray-200 bg-white p-6 sm:p-10 shadow-sm"
->
-  <h2 className="text-2xl font-black text-gray-900 mb-4">
-    {t.sections.support}
-  </h2>
-  <p className="text-gray-700">
-    {t.serviceHours}
-  </p>
-  <a
-    href="http://localhost:5174/contact"
-    className="mt-6 inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-gradient-to-r from-purple-600 via-fuchsia-500 to-pink-500 text-white font-bold border-2 border-purple-400/50 hover:scale-105 transition-all"
-  >
-    <Globe className="w-5 h-5" />
-    {t.contactCta}
-  </a>
-</div>
+                <div
+                  id="section-5"
+                  className="mt-12 rounded-3xl border border-gray-200 bg-white p-6 sm:p-10 shadow-sm"
+                >
+                  <h2 className="text-2xl font-black text-gray-900 mb-4">
+                    {t.sections.support}
+                  </h2>
+                  <p className="text-gray-700">{t.serviceHours}</p>
+                  <a
+                    href="http://localhost:5174/contact"
+                    className="mt-6 inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-gradient-to-r from-purple-600 via-fuchsia-500 to-pink-500 text-white font-bold border-2 border-purple-400/50 hover:scale-105 transition-all"
+                  >
+                    <Globe className="w-5 h-5" />
+                    {t.contactCta}
+                  </a>
+                </div>
               </article>
             )}
           </div>

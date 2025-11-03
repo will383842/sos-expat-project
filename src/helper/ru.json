@@ -12,6 +12,7 @@
   "statsUrgentSupport": "Срочная поддержка",
   "expertsBadge": "Юристы и экспаты доступны 24/7",
   "no": "Наши",
+    "registerExpat.selectedLanguages": "Выбранные языки",
   "registerClient.errors.whatsappRequired": "Требуется номер WhatsApp",
   "dashboard.invalidPhone": "Пожалуйста, введите действительный номер телефона",
   "dashboard.invalidWhatsApp": "Пожалуйста, введите действительный номер WhatsApp",
