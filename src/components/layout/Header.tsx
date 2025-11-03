@@ -50,7 +50,7 @@ declare global {
 }
 
 interface Language {
-  code: "fr" | "en" | "es" | "ru" | "de" | "hi" | "pt";
+  code: "fr" | "en" | "es" | "ru" | "de" | "hi" | "pt" | "ch";
   name: string;
   nativeName: string;
   flag: React.ReactNode;
@@ -226,7 +226,6 @@ const ChineseFlag = memo(() => (
 ));
 
 ChineseFlag.displayName = "ChineseFlag";
-
 
 const PortugueseFlag = memo(() => (
   <div
@@ -633,7 +632,7 @@ const LanguageDropdown = memo<{
   }, []);
 
   const handleLanguageChange = useCallback(
-    (langCode: "fr" | "en" | "es" | "ru" | "de" | "hi" | "pt") => {
+    (langCode: "fr" | "en" | "es" | "ru" | "de" | "hi" | "pt" | "ch") => {
       setLanguage(langCode);
       setOpen(false);
       window.gtag?.("event", "language_change", {
@@ -972,6 +971,7 @@ const t = {
     : language === "de" ? "Anmelden"
     : language === "ru" ? "Войти"
     : language === "hi" ? "लॉगिन"
+    : language === "ch" ? "登录"
     : "Login",
     
   signup:
@@ -981,6 +981,7 @@ const t = {
     : language === "de" ? "Registrieren"
     : language === "ru" ? "Зарегистрироваться"
     : language === "hi" ? "साइन अप करें"
+    : language === "ch" ? "报名"
     : "Sign up",
     
   dashboard:
@@ -990,6 +991,7 @@ const t = {
     : language === "de" ? "Dashboard"
     : language === "ru" ? "Панель управления"
     : language === "hi" ? "डैशबोर्ड"
+    : language === "ch" ? "仪表板"
     : "Dashboard",
     
   adminConsole:
@@ -999,6 +1001,7 @@ const t = {
     : language === "de" ? "Admin-Konsole"
     : language === "ru" ? "Консоль администратора"
     : language === "hi" ? "एडमिन कंसोल"
+    : language === "ch" ? "管理控制台"
     : "Admin Console",
     
   logout:
@@ -1008,6 +1011,7 @@ const t = {
     : language === "de" ? "Abmelden"
     : language === "ru" ? "Выйти"
     : language === "hi" ? "लॉग आउट"
+    : language === "ch" ? "退出"
     : "Logout",
 };
 
@@ -1240,7 +1244,7 @@ const Header: React.FC = () => {
   (labelKey: string): string => {
     const translations: Record<
       string,
-      Record<"fr" | "en" | "es" | "pt" | "ru" | "de" | "hi", string>
+      Record<"fr" | "en" | "es" | "pt" | "ru" | "de" | "hi" | "ch", string>
     > = {
       "nav.home": {
         fr: "Accueil",
@@ -1250,6 +1254,7 @@ const Header: React.FC = () => {
         ru: "Главная",
         de: "Startseite",
         hi: "होम",
+        ch: "家",
       },
       "nav.viewProfiles": {
         fr: "Profils aidants",
@@ -1259,6 +1264,7 @@ const Header: React.FC = () => {
         ru: "Профили помощников",
         de: "Helferprofile",
         hi: "सहायक प्रोफाइल",
+        ch: "助手资料"
       },
       "nav.testimonials": {
         fr: "Avis",
@@ -1268,6 +1274,7 @@ const Header: React.FC = () => {
         ru: "Отзывы",
         de: "Bewertungen",
         hi: "समीक्षाएं",
+        ch: "评论"
       },
       "nav.howItWorks": {
         fr: "Comment ça marche",
@@ -1277,6 +1284,7 @@ const Header: React.FC = () => {
         ru: "Как это работает",
         de: "Wie es funktioniert",
         hi: "यह कैसे काम करता है",
+        ch: "它是如何运作的"
       },
       "nav.pricing": {
         fr: "Tarifs",
@@ -1286,6 +1294,7 @@ const Header: React.FC = () => {
         ru: "Тарифы",
         de: "Preise",
         hi: "मूल्य निर्धारण",
+        ch: "定价"
       },
     };
 
