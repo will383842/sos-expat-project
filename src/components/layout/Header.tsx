@@ -175,7 +175,6 @@ const GermanFlag = memo(() => (
 ));
 GermanFlag.displayName = "GermanFlag";
 
-
 const IndianFlag = memo(() => (
   <div
     className="relative p-1 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg ring-1 ring-white/20"
@@ -192,11 +191,41 @@ const IndianFlag = memo(() => (
         </div>
       </div>
       <div className="w-full h-1/3 bg-green-600" />
+       </div>
+    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-lg pointer-events-none" />
+  </div>
+));
+
+IndianFlag.displayName = "IndianFlag";
+
+const ChineseFlag = memo(() => (
+  <div
+    className="relative p-1 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg ring-1 ring-white/20"
+    role="img"
+    aria-label="中国国旗"
+  >
+    <div className="relative w-6 h-4 rounded-md overflow-hidden shadow-sm bg-red-600 flex items-start justify-start">
+      <div className="absolute top-0.5 left-0.5 text-yellow-400" style={{ fontSize: "0.5rem" }}>
+        ★
+      </div>
+      <div className="absolute top-[0.15rem] left-[1.2rem] text-yellow-400 rotate-[20deg]" style={{ fontSize: "0.3rem" }}>
+        ★
+      </div>
+      <div className="absolute top-[0.45rem] left-[1.45rem] text-yellow-400 rotate-[10deg]" style={{ fontSize: "0.3rem" }}>
+        ★
+      </div>
+      <div className="absolute top-[0.8rem] left-[1.4rem] text-yellow-400 rotate-[5deg]" style={{ fontSize: "0.3rem" }}>
+        ★
+      </div>
+      <div className="absolute top-[1.05rem] left-[1.1rem] text-yellow-400 rotate-[25deg]" style={{ fontSize: "0.3rem" }}>
+        ★
+      </div>
     </div>
     <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-lg pointer-events-none" />
   </div>
 ));
-IndianFlag.displayName = "IndianFlag";
+
+ChineseFlag.displayName = "ChineseFlag";
 
 
 const PortugueseFlag = memo(() => (
@@ -227,6 +256,7 @@ const SUPPORTED_LANGUAGES: Language[] = [
   { code: "de", name: "German", nativeName: "Deutsch", flag: <GermanFlag /> },
   { code: "hi", name: "Hindi", nativeName: "हिंदी", flag: <IndianFlag /> },
   { code: "pt", name: "Portuguese", nativeName: "Português", flag: <PortugueseFlag /> },
+  { code: "ch", name: "Chinese", nativeName: "中国人", flag: <ChineseFlag /> }
 ];
 
 const LEFT_NAVIGATION_ITEMS: NavigationItem[] = [
