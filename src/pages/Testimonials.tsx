@@ -2055,15 +2055,334 @@ const reviews_hi: ReviewType[] = [
   },
 ];
 
+const reviews_ch: ReviewType[] = [
+    {
+      id: "1",
+      callId: "call1",
+      clientId: "client1",
+      providerId: "provider1",
+      rating: 5,
+      comment:
+        "太棒了！短短三分钟，我就联系上了一位身在曼谷的法国侨民。他详细地给我讲解了整个泰国签证流程，包括需要避免的陷阱，甚至还给了我他房产经纪人的联系方式。这项服务简直改变了我的人生！",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+      clientName: "艾莎·M.",
+      clientCountry: "泰国",
+      serviceType: "expat_call",
+      status: "published",
+      helpfulVotes: 23,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1643842730000-db266bbc1b28?q=80&w=400&h=400&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      // clientAvatar:"https://images.unsplash.com/photo-1494790108755-2616b74193d4?auto=format&fit=crop&w=400&h=400&q=80",
+      verified: true,
+    },
+    {
+      id: "2",
+      callId: "call2",
+      clientId: "client2",
+      providerId: "provider2",
+      rating: 5,
+      comment:
+        "太棒了！这位外籍人士帮我安顿好了在温哥华的一切。银行、住房、医疗保险、交通……所有事情30分钟就搞定了！他知道所有内幕消息，帮我省去了几个月的行政麻烦。",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+      clientName: "陈L.",
+      clientCountry: "加拿大",
+      serviceType: "expat_call",
+      status: "published",
+      helpfulVotes: 31,
+      // clientAvatar:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
+      clientAvatar:
+        "https://images.unsplash.com/photo-1601455763557-db1bea8a9a5a?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXZhdGFyJTIwbWFsZXxlbnwwfHwwfHx8MA%3D%3D",
+      verified: true,
+    },
+    {
+      id: "3",
+      callId: "call3",
+      clientId: "client3",
+      providerId: "provider3",
+      rating: 4,
+      comment:
+        "非常棒的体验！我在墨尔本生活了8年，他为我的打工度假签证提供了所有建议。学校、社区、工作……简直是实用信息的宝库！",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000),
+      clientName: "艾玛·K.",
+      clientCountry: "澳大利亚",
+      serviceType: "expat_call",
+      status: "published",
+      helpfulVotes: 18,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1677537946831-4590ff82359c?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjB8fGF2YXRhciUyMGZlbWFsZXxlbnwwfHwwfHx8MA%3D%3D",
+      // clientAvatar:
+      // "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
+      verified: true,
+    },
+    {
+      id: "4",
+      callId: "call4",
+      clientId: "client4",
+      providerId: "provider4",
+      rating: 5,
+      comment:
+        "太棒了！这位在迪拜生活了五年的外籍人士给我讲解了一切：签证、银行账户、住房、当地文化等等。他甚至还帮我联系了他的法国外籍人士社群！",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000),
+      clientName: "夸梅·A.",
+      clientCountry: "阿拉伯联合酋长国",
+      serviceType: "expat_call",
+      status: "published",
+      helpfulVotes: 27,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
+      verified: true,
+    },
+    {
+      id: "5",
+      callId: "call5",
+      clientId: "client5",
+      providerId: "provider5",
+      rating: 5,
+      comment:
+        "太好了！我当时身在东京，情况紧急，两分钟之内就联系到了一位外籍人士。他帮我处理了复杂的日本文件，并指引我去了正确的部门。真是太让人放心了！",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000),
+      clientName: "由纪·T.",
+      clientCountry: "日本",
+      serviceType: "expat_call",
+      status: "published",
+      helpfulVotes: 22,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
+      verified: true,
+    },
+    {
+      id: "6",
+      callId: "call6",
+      clientId: "client6",
+      providerId: "provider6",
+      rating: 4,
+      comment:
+        "太有用了！那位在挪威的法国侨民给了我很多关于奥斯陆的建议：学生公寓、兼职工作、交通等等。他帮我节省了宝贵的学习时间！",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000),
+      clientName: "法蒂玛·R。",
+      clientCountry: "挪威",
+      serviceType: "expat_call",
+      status: "published",
+      helpfulVotes: 15,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
+      verified: true,
+    },
+    {
+      id: "7",
+      callId: "call7",
+      clientId: "client7",
+      providerId: "provider7",
+      rating: 5,
+      comment:
+        "太棒了！这位来自巴西的外国人详细地介绍了圣保罗的情况：安全的街区、交通卡、适合我孩子的好学校等等。真是帮了我大忙！",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 22 * 24 * 60 * 60 * 1000),
+      clientName: "卡洛斯·M.",
+      clientCountry: "巴西",
+      serviceType: "expat_call",
+      status: "published",
+      helpfulVotes: 29,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
+      verified: true,
+    },
+    {
+      id: "8",
+      callId: "call8",
+      clientId: "client8",
+      providerId: "provider8",
+      rating: 5,
+      comment:
+        "太棒了！这位在新加坡的外国人一步一步地指导我完成所有手续。工作许可、住房、当地银行……一切都清晰明了、讲解详尽。一流的服务！",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000),
+      clientName: "普里亚·S。",
+      clientCountry: "新加坡",
+      serviceType: "expat_call",
+      status: "published",
+      helpfulVotes: 33,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&h=400&q=80",
+      verified: true,
+    },
+    {
+      id: "9",
+      callId: "call9",
+      clientId: "client9",
+      providerId: "provider9",
+      rating: 4,
+      comment:
+        "非常专业！这位在韩国的法国侨民给了我很多关于首尔的建议：学生签证、大学住宿、韩国文化等等。对我的交换学习来说简直完美！",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 28 * 24 * 60 * 60 * 1000),
+      clientName: "金文",
+      clientCountry: "韩国",
+      serviceType: "expat_call",
+      status: "published",
+      helpfulVotes: 19,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80",
+      verified: true,
+    },
+
+    // Lawyers (7 testimonials - 45%)
+    {
+      id: "10",
+      callId: "call10",
+      clientId: "client10",
+      providerId: "provider10",
+      rating: 5,
+      comment:
+        "这位律师太棒了！我住在伦敦，和房东之间出了紧急纠纷。律师详细解释了我在英国法律下的权利，以及我应该采取的步骤，并推荐了一位当地的律师。他办事精准高效！",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+      clientName: "詹姆斯·P。",
+      clientCountry: "英国",
+      serviceType: "lawyer_call",
+      status: "published",
+      helpfulVotes: 41,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
+      verified: true,
+    },
+    {
+      id: "11",
+      callId: "call11",
+      clientId: "client11",
+      providerId: "provider11",
+      rating: 5,
+      comment:
+        "咨询效果极佳！我在德国出了车祸，这位精通国际法的律师详细解释了所有问题：保险、程序、我的权利。他帮我避免了代价高昂的错误！",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+      clientName: "安雅V.",
+      clientCountry: "德国",
+      serviceType: "lawyer_call",
+      status: "published",
+      helpfulVotes: 38,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1625262550495-1d3bfb5c1502?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTc2fHxhdmF0YXIlMjBtYWxlfGVufDB8fDB8fHww",
+      // clientAvatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
+      verified: true,
+    },
+    {
+      id: "12",
+      callId: "call12",
+      clientId: "client12",
+      providerId: "provider12",
+      rating: 4,
+      comment:
+        "非常专业！我遇到意大利的商业纠纷，这位律师清晰地分析了我的法律处境和可行的方案。对我的业务来说，这是非常宝贵的建议！",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
+      clientName: "朱塞佩·L.",
+      clientCountry: "意大利",
+      serviceType: "lawyer_call",
+      status: "published",
+      helpfulVotes: 26,
+      // clientAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80',
+      clientAvatar:
+        "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDB8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
+      verified: true,
+    },
+    {
+      id: "13",
+      callId: "call13",
+      clientId: "client13",
+      providerId: "provider13",
+      rating: 5,
+      comment:
+        "这位律师太棒了！我在美国遇到了签证问题，他详细解释了所有移民程序、风险和解决方案。多亏了他，我才避免了被遣返！",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
+      clientName: "玛丽亚·G。",
+      clientCountry: "美国",
+      serviceType: "lawyer_call",
+      status: "published",
+      helpfulVotes: 45,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
+      verified: true,
+    },
+    {
+      id: "14",
+      callId: "call14",
+      clientId: "client14",
+      providerId: "provider14",
+      rating: 5,
+      comment:
+        "卓越的法律服务！复杂的国际离婚案件，律师精通法国和西班牙法律。建议清晰明了，策略有效。强烈推荐！",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 17 * 24 * 60 * 60 * 1000),
+      clientName: "艾哈迈德·B.",
+      clientCountry: "西班牙",
+      serviceType: "lawyer_call",
+      status: "published",
+      helpfulVotes: 34,
+      // clientAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80',
+      clientAvatar:
+        "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
+      verified: true,
+    },
+    {
+      id: "15",
+      callId: "call15",
+      clientId: "client15",
+      providerId: "provider15",
+      rating: 4,
+      comment:
+        "非常专业！墨西哥的雇佣合同，律师详细解释了所有条款、我的权利和义务。他还帮我争取到了更好的待遇！",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000),
+      clientName: "索菲亚·R.",
+      clientCountry: "墨西哥",
+      serviceType: "lawyer_call",
+      status: "published",
+      helpfulVotes: 21,
+      // clientAvatar: 'https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80',
+      clientAvatar:
+        "https://images.unsplash.com/photo-1701615004837-40d8573b6652?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
+      verified: true,
+    },
+    {
+      id: "16",
+      callId: "call16",
+      clientId: "client16",
+      providerId: "provider16",
+      rating: 5,
+      comment:
+        "这位律师太棒了！我遇到了瑞士的税务问题，他详细解释了相关的法律规定和程序，并推荐了一位当地的税务专家。服务无可挑剔！",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 24 * 24 * 60 * 60 * 1000),
+      clientName: "拉尔斯·H.",
+      clientCountry: "瑞士",
+      serviceType: "lawyer_call",
+      status: "published",
+      helpfulVotes: 37,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YXZhdGFyfGVufDB8fDB8fHww",
+      // clientAvatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80',
+      verified: true,
+    },
+  ];
+
 
 
 
   // return language === "en" ? reviews_en : reviews_fr;
   return language === "en" ? reviews_en :
-       language === "es" ? reviews_es :
-       language === "de" ? reviews_de :
+        language === "es" ? reviews_es :
+        language === "de" ? reviews_de :
         language === "ru" ? reviews_ru :
-          language === "hi" ? reviews_hi : 
+        language === "hi" ? reviews_hi : 
+        language === "ch" ? reviews_ch : 
        reviews_fr;
 };
 
