@@ -20,6 +20,7 @@ import ruMessages from "./helper/ru.json";
 import deMessages from "./helper/de.json";
 import hiMessages from "./helper/hi.json";
 import ptMessages from "./helper/pt.json";
+import chMessages from "./helper/ch.json";
 import { useApp } from "./contexts/AppContext";
 
 // --------------------------------------------
@@ -94,7 +95,8 @@ const messages = {
   ru: ruMessages,
   de: deMessages,
   hi: hiMessages,
-  pt: ptMessages
+  pt: ptMessages,
+  ch: chMessages
 };
 
 // --------------------------------------------
