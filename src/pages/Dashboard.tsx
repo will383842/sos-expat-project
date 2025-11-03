@@ -1133,6 +1133,7 @@ const Dashboard: React.FC = () => {
                         de: "Mein Profil",
                         ru: "Мой профиль",
                         hi: "मेरी प्रोफ़ाइल",
+                        ch: "我的个人资料"
                       },
                       {
                         key: "settings",
@@ -1143,6 +1144,7 @@ const Dashboard: React.FC = () => {
                         de: "Einstellungen",
                         ru: "Настройки",
                         hi: "सेटिंग्स",
+                        ch: "设置"
                       },
                       {
                         key: "calls",
@@ -1153,6 +1155,7 @@ const Dashboard: React.FC = () => {
                         de: "Meine Anrufe",
                         ru: "Мои звонки",
                         hi: "मेरी कॉलें",
+                        ch: "我的来电"
                       },
                       {
                         key: "invoices",
@@ -1163,6 +1166,7 @@ const Dashboard: React.FC = () => {
                         de: "Meine Rechnungen",
                         ru: "Мои счета",
                         hi: "मेरे बिल",
+                        ch: "我的发票"
                       },
                       {
                         key: "reviews",
@@ -1173,6 +1177,7 @@ const Dashboard: React.FC = () => {
                         de: "Meine Bewertungen",
                         ru: "Мои отзывы",
                         hi: "मेरी समीक्षाएं",
+                        ch: "我的评论"
                       },
                       {
                         key: "notifications",
@@ -1183,6 +1188,7 @@ const Dashboard: React.FC = () => {
                         de: "Benachrichtigungen",
                         ru: "Уведомления",
                         hi: "सूचनाएं",
+                        ch: "通知"
                       },
                       {
                         key: "messages",
@@ -1193,6 +1199,7 @@ const Dashboard: React.FC = () => {
                         de: "Meine Nachrichten",
                         ru: "Мои сообщения",
                         hi: "मेरे संदेश",
+                        ch: "我的留言"
                       },
                       {
                         key: "favorites",
@@ -1203,6 +1210,7 @@ const Dashboard: React.FC = () => {
                         de: "Meine Favoriten",
                         ru: "Мои избранные",
                         hi: "मेरे पसंदीदा",
+                        ch: "我的最爱"
                       },
                     ].map((item) => (
                       <li key={item.key}>
@@ -1226,6 +1234,8 @@ const Dashboard: React.FC = () => {
                                     ? item.ru
                                     : language === "hi"
                                       ? item.hi
+                                      : language === "ch"
+                                      ? item.ch
                                       : item.en
                           }
                         >
@@ -1249,7 +1259,9 @@ const Dashboard: React.FC = () => {
                                   ? item.ru
                                   : language === "hi"
                                     ? item.hi
-                                    : item.en}
+                                      : language === "ch"
+                                        ? item.ch
+                                      : item.en}
 
                           {activeTab === (item.key as TabType) && (
                             <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded bg-red-100 text-red-700 dark:bg-white/10 dark:text-white">

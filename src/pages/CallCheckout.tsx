@@ -1738,6 +1738,8 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
                     return "Summary";
                   case "hi":
                     return "सारांश";
+                  case "ch":
+                    return "概括";
                   case "fr":
                   default:
                     return "Récapitulatif";
@@ -1759,6 +1761,8 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
                         return "Expert";
                       case "hi":
                         return "विशेषज्ञ";
+                      case "ch":
+                        return "专家";
                       case "fr":
                       default:
                         return "Expert";
@@ -1800,6 +1804,8 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
                         return "Service";
                       case "hi":
                         return "सेवा";
+                      case "ch":
+                        return "服务";
                       case "fr":
                       default:
                         return "Service";
@@ -1824,6 +1830,8 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
                         return "Duration";
                       case "hi":
                         return "अवधि";
+                      case "ch":
+                        return "期间";
                       case "fr":
                       default:
                         return "Durée";
@@ -1850,6 +1858,8 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
                           return "कुल";
                         case "en":
                           return "Total";
+                        case "ch":
+                          return "全部的";
                         case "fr":
                         default:
                           return "Total";
@@ -1908,6 +1918,8 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
                         return "भुगतान ";
                       case "en":
                         return "Pay ";
+                      case "en":
+                        return "支付 ";
                       case "fr":
 
                       default:
