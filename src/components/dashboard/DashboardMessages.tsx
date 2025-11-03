@@ -13,6 +13,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Loader } from "@/components/ui/loader";
+import { FormattedDate, FormattedMessage } from "react-intl";
 
 interface Message {
   id: string;
@@ -96,10 +97,10 @@ const DashboardMessages: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold">📩 Mes messages</h2>
+      <h2 className="text-2xl font-bold">📩 <FormattedMessage id="dashboard.messages"/></h2>
 
       {messages.length === 0 && (
-        <p className="text-gray-500">Aucun message pour l’instant.</p>
+        <p className="text-gray-500"><FormattedMessage id="dashboard.emptyMessages"/></p>
       )}
 
       {messages.map((msg) => (

@@ -1157,6 +1157,8 @@
   "dashboard.invalidWhatsApp": "Please enter a valid WhatsApp number",
   "dashboard.phoneFormat": "International format",
    "registerExpat.selectedLanguages": "Selected languages",
+   "dashboard.messages": "My Messages",
+   "dashboard.emptyMessages": "No messages at the moment",
   
 
     "registerExpat.help.contactInfo": "We only use your phone to connect you with people who need help. No spam.",

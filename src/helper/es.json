@@ -1522,6 +1522,8 @@
   "registerExpat.errors.ifscInvalid": "Formato de código IFSC inválido",
   "registerExpat.errors.phoneInvalid": "Número de teléfono inválido",
    "registerExpat.selectedLanguages": "Idiomas seleccionados",
+     "dashboard.messages": "Mis mensajes",
+       "dashboard.emptyMessages": "Sin mensajes por el momento",
 
   "registerExpat.ui.financialInfo": "Información financiera y de identidad",
     "validators.firstName": "El nombre es obligatorio",

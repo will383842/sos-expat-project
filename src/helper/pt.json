@@ -1481,5 +1481,7 @@
   "validators.langMismatch": "Por favor selecione um idioma válido",
   "validators.accept": "Você deve aceitar os termos",
   "bookingRequest.validators.selectCountry": "Por favor selecione um país",
-    "registerExpat.selectedLanguages": "Idiomas selecionados"
+    "registerExpat.selectedLanguages": "Idiomas selecionados",
+    "dashboard.messages": "Minhas mensagens",
+     "dashboard.emptyMessages": "Nenhuma mensagem no momento"
 }

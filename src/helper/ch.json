@@ -112,6 +112,8 @@
   "cta.findExpert": "寻找专家",
   "card.online": "在线中",
   "card.offline": "离线",
+   "dashboard.messages": "我的消息",
+     "dashboard.emptyMessages": "暂无消息",
   "card.languages": "语言",
   "card.years": "年",
   "card.reviews": "评价",
