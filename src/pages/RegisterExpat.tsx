@@ -141,6 +141,7 @@ type MultiLangDuo = {
   de: string;
   ru: string;
   hi: string;
+  pt: string;
 };
 
 const getCountryCode = (countryName: string, locale: string = "en"): string => {
@@ -389,304 +390,7 @@ const getCountryCode = (countryName: string, locale: string = "en"): string => {
   return countryMap[countryName] || "US";
 };
 
-// const COUNTRIES: MultiLangDuo[] = [
-//   {
-//     fr: "Afghanistan",
-//     es: "Afganistán",
-//     en: "Afghanistan",
-//     de: "Afghanistan",
-//     ru: "Афганистан",
-//   },
-//   {
-//     fr: "Afrique du Sud",
-//     es: "Sudáfrica",
-//     en: "South Africa",
-//     de: "Südafrika",
-//     ru: "Южная Африка",
-//   },
-//   {
-//     fr: "Albanie",
-//     es: "Albania",
-//     en: "Albania",
-//     de: "Albanien",
-//     ru: "Албания",
-//   },
-//   { fr: "Algérie", es: "Argelia", en: "Algeria", de: "Algerien", ru: "Алжир" },
-//   {
-//     fr: "Allemagne",
-//     es: "Alemania",
-//     en: "Germany",
-//     de: "Deutschland",
-//     ru: "Германия",
-//   },
-//   { fr: "Andorre", es: "Andorra", en: "Andorra", de: "Andorra", ru: "Андорра" },
-//   { fr: "Angola", es: "Angola", en: "Angola", de: "Angola", ru: "Ангола" },
-//   {
-//     fr: "Arabie Saoudite",
-//     es: "Arabia Saudita",
-//     en: "Saudi Arabia",
-//     de: "Saudi-Arabien",
-//     ru: "Саудовская Аравия",
-//   },
-//   {
-//     fr: "Argentine",
-//     es: "Argentina",
-//     en: "Argentina",
-//     de: "Argentinien",
-//     ru: "Аргентина",
-//   },
-//   {
-//     fr: "Arménie",
-//     es: "Armenia",
-//     en: "Armenia",
-//     de: "Armenien",
-//     ru: "Армения",
-//   },
-//   {
-//     fr: "Australie",
-//     es: "Australia",
-//     en: "Australia",
-//     de: "Australien",
-//     ru: "Австралия",
-//   },
-//   {
-//     fr: "Autriche",
-//     es: "Austria",
-//     en: "Austria",
-//     de: "Österreich",
-//     ru: "Австрия",
-//   },
-//   {
-//     fr: "Azerbaïdjan",
-//     es: "Azerbaiyán",
-//     en: "Azerbaijan",
-//     de: "Aserbaidschan",
-//     ru: "Азербайджан",
-//   },
-//   { fr: "Bahamas", es: "Bahamas", en: "Bahamas", de: "Bahamas", ru: "Багамы" },
-//   { fr: "Bahreïn", es: "Baréin", en: "Bahrain", de: "Bahrain", ru: "Бахрейн" },
-//   {
-//     fr: "Bangladesh",
-//     es: "Bangladés",
-//     en: "Bangladesh",
-//     de: "Bangladesch",
-//     ru: "Бангладеш",
-//   },
-//   {
-//     fr: "Barbade",
-//     es: "Barbados",
-//     en: "Barbados",
-//     de: "Barbados",
-//     ru: "Барбадос",
-//   },
-//   {
-//     fr: "Belgique",
-//     es: "Bélgica",
-//     en: "Belgium",
-//     de: "Belgien",
-//     ru: "Бельгия",
-//   },
-//   { fr: "Belize", es: "Belice", en: "Belize", de: "Belize", ru: "Белиз" },
-//   { fr: "Bénin", es: "Benín", en: "Benin", de: "Benin", ru: "Бенин" },
-//   { fr: "Bhoutan", es: "Bután", en: "Bhutan", de: "Bhutan", ru: "Бутан" },
-//   {
-//     fr: "Biélorussie",
-//     es: "Bielorrusia",
-//     en: "Belarus",
-//     de: "Belarus",
-//     ru: "Беларусь",
-//   },
-//   {
-//     fr: "Birmanie",
-//     es: "Birmania",
-//     en: "Myanmar",
-//     de: "Myanmar",
-//     ru: "Мьянма",
-//   },
-//   {
-//     fr: "Bolivie",
-//     es: "Bolivia",
-//     en: "Bolivia",
-//     de: "Bolivien",
-//     ru: "Боливия",
-//   },
-//   {
-//     fr: "Bosnie-Herzégovine",
-//     es: "Bosnia y Herzegovina",
-//     en: "Bosnia and Herzegovina",
-//     de: "Bosnien und Herzegowina",
-//     ru: "Босния и Герцеговина",
-//   },
-//   {
-//     fr: "Botswana",
-//     es: "Botsuana",
-//     en: "Botswana",
-//     de: "Botswana",
-//     ru: "Ботсвана",
-//   },
-//   { fr: "Brésil", es: "Brasil", en: "Brazil", de: "Brasilien", ru: "Бразилия" },
-//   { fr: "Brunei", es: "Brunéi", en: "Brunei", de: "Brunei", ru: "Бруней" },
-//   {
-//     fr: "Bulgarie",
-//     es: "Bulgaria",
-//     en: "Bulgaria",
-//     de: "Bulgarien",
-//     ru: "Болгария",
-//   },
-//   {
-//     fr: "Burkina Faso",
-//     es: "Burkina Faso",
-//     en: "Burkina Faso",
-//     de: "Burkina Faso",
-//     ru: "Буркина-Фасо",
-//   },
-//   { fr: "Burundi", es: "Burundi", en: "Burundi", de: "Burundi", ru: "Бурунди" },
-//   {
-//     fr: "Cambodge",
-//     es: "Camboya",
-//     en: "Cambodia",
-//     de: "Kambodscha",
-//     ru: "Камбоджа",
-//   },
-//   {
-//     fr: "Cameroun",
-//     es: "Camerún",
-//     en: "Cameroon",
-//     de: "Kamerun",
-//     ru: "Камерун",
-//   },
-//   { fr: "Canada", es: "Canadá", en: "Canada", de: "Kanada", ru: "Канада" },
-//   {
-//     fr: "Cap-Vert",
-//     es: "Cabo Verde",
-//     en: "Cape Verde",
-//     de: "Kap Verde",
-//     ru: "Кабо-Верде",
-//   },
-//   { fr: "Chili", es: "Chile", en: "Chile", de: "Chile", ru: "Чили" },
-//   { fr: "Chine", es: "China", en: "China", de: "China", ru: "Китай" },
-//   { fr: "Chypre", es: "Chipre", en: "Cyprus", de: "Zypern", ru: "Кипр" },
-//   {
-//     fr: "Colombie",
-//     es: "Colombia",
-//     en: "Colombia",
-//     de: "Kolumbien",
-//     ru: "Колумбия",
-//   },
-//   { fr: "Comores", es: "Comoras", en: "Comoros", de: "Komoren", ru: "Коморы" },
-//   { fr: "Congo", es: "Congo", en: "Congo", de: "Kongo", ru: "Конго" },
-//   {
-//     fr: "Corée du Nord",
-//     es: "Corea del Norte",
-//     en: "North Korea",
-//     de: "Nordkorea",
-//     ru: "Северная Корея",
-//   },
-//   {
-//     fr: "Corée du Sud",
-//     es: "Corea del Sur",
-//     en: "South Korea",
-//     de: "Südkorea",
-//     ru: "Южная Корея",
-//   },
-//   {
-//     fr: "Costa Rica",
-//     es: "Costa Rica",
-//     en: "Costa Rica",
-//     de: "Costa Rica",
-//     ru: "Коста-Рика",
-//   },
-//   {
-//     fr: "Côte d'Ivoire",
-//     es: "Costa de Marfil",
-//     en: "Ivory Coast",
-//     de: "Elfenbeinküste",
-//     ru: "Кот-д'Ивуар",
-//   },
-//   {
-//     fr: "Croatie",
-//     es: "Croacia",
-//     en: "Croatia",
-//     de: "Kroatien",
-//     ru: "Хорватия",
-//   },
-//   { fr: "Cuba", es: "Cuba", en: "Cuba", de: "Kuba", ru: "Куба" },
-//   {
-//     fr: "Danemark",
-//     es: "Dinamarca",
-//     en: "Denmark",
-//     de: "Dänemark",
-//     ru: "Дания",
-//   },
-//   {
-//     fr: "Djibouti",
-//     es: "Yibuti",
-//     en: "Djibouti",
-//     de: "Dschibuti",
-//     ru: "Джибути",
-//   },
-//   {
-//     fr: "Dominique",
-//     es: "Dominica",
-//     en: "Dominica",
-//     de: "Dominica",
-//     ru: "Доминика",
-//   },
-//   { fr: "Égypte", es: "Egipto", en: "Egypt", de: "Ägypten", ru: "Египет" },
-//   {
-//     fr: "Émirats arabes unis",
-//     es: "Emiratos Árabes Unidos",
-//     en: "United Arab Emirates",
-//     de: "Vereinigte Arabische Emirate",
-//     ru: "Объединённые Арабские Эмираты",
-//   },
-//   {
-//     fr: "Équateur",
-//     es: "Ecuador",
-//     en: "Ecuador",
-//     de: "Ecuador",
-//     ru: "Эквадор",
-//   },
-//   {
-//     fr: "Érythrée",
-//     es: "Eritrea",
-//     en: "Eritrea",
-//     de: "Eritrea",
-//     ru: "Эритрея",
-//   },
-//   { fr: "Espagne", es: "España", en: "Spain", de: "Spanien", ru: "Испания" },
-//   { fr: "Estonie", es: "Estonia", en: "Estonia", de: "Estland", ru: "Эстония" },
-//   {
-//     fr: "États-Unis",
-//     es: "Estados Unidos",
-//     en: "United States",
-//     de: "Vereinigte Staaten",
-//     ru: "Соединённые Штаты",
-//   },
-//   {
-//     fr: "Éthiopie",
-//     es: "Etiopía",
-//     en: "Ethiopia",
-//     de: "Äthiopien",
-//     ru: "Эфиопия",
-//   },
-//   { fr: "Fidji", es: "Fiyi", en: "Fiji", de: "Fidschi", ru: "Фиджи" },
-//   {
-//     fr: "Finlande",
-//     es: "Finlandia",
-//     en: "Finland",
-//     de: "Finnland",
-//     ru: "Финляндия",
-//   },
-//   {
-//     fr: "France",
-//     es: "Francia",
-//     en: "France",
-//     de: "Frankreich",
-//     ru: "Франция",
-//   },
-//   { fr: "Autre", es: "Otro", en: "Other", de: "Andere", ru: "Другое" },
-// ];
+
 const COUNTRIES: MultiLangDuo[] = [
   {
     fr: "Afghanistan",
@@ -695,6 +399,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Afghanistan",
     ru: "Афганистан",
     hi: "अफगानिस्तान",
+    pt: "Afeganistão",
   },
   {
     fr: "Afrique du Sud",
@@ -703,6 +408,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Südafrika",
     ru: "Южная Африка",
     hi: "दक्षिण अफ्रीका",
+    pt: "África do Sul",
   },
   {
     fr: "Albanie",
@@ -711,6 +417,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Albanien",
     ru: "Албания",
     hi: "अल्बानिया",
+    pt: "Albânia",
   },
   {
     fr: "Algérie",
@@ -719,6 +426,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Algerien",
     ru: "Алжир",
     hi: "अल्जीरिया",
+    pt: "Argélia",
   },
   {
     fr: "Allemagne",
@@ -727,6 +435,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Deutschland",
     ru: "Германия",
     hi: "जर्मनी",
+    pt: "Alemanha",
   },
   {
     fr: "Andorre",
@@ -735,6 +444,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Andorra",
     ru: "Андорра",
     hi: "अंडोरा",
+    pt: "Andorra",
   },
   {
     fr: "Angola",
@@ -743,6 +453,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Angola",
     ru: "Ангола",
     hi: "अंगोला",
+    pt: "Angola",
   },
   {
     fr: "Arabie Saoudite",
@@ -751,6 +462,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Saudi-Arabien",
     ru: "Саудовская Аравия",
     hi: "सऊदी अरब",
+    pt: "Arábia Saudita",
   },
   {
     fr: "Argentine",
@@ -759,6 +471,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Argentinien",
     ru: "Аргентина",
     hi: "अर्जेंटीना",
+    pt: "Argentina",
   },
   {
     fr: "Arménie",
@@ -767,6 +480,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Armenien",
     ru: "Армения",
     hi: "आर्मेनिया",
+    pt: "Armênia",
   },
   {
     fr: "Australie",
@@ -775,6 +489,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Australien",
     ru: "Австралия",
     hi: "ऑस्ट्रेलिया",
+    pt: "Austrália",
   },
   {
     fr: "Autriche",
@@ -783,6 +498,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Österreich",
     ru: "Австрия",
     hi: "ऑस्ट्रिया",
+    pt: "Áustria",
   },
   {
     fr: "Azerbaïdjan",
@@ -791,6 +507,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Aserbaidschan",
     ru: "Азербайджан",
     hi: "अजरबैजान",
+    pt: "Azerbaijão",
   },
   {
     fr: "Bahamas",
@@ -799,6 +516,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Bahamas",
     ru: "Багамы",
     hi: "बहामा",
+    pt: "Bahamas",
   },
   {
     fr: "Bahreïn",
@@ -807,6 +525,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Bahrain",
     ru: "Бахрейн",
     hi: "बहरीन",
+    pt: "Bahrein",
   },
   {
     fr: "Bangladesh",
@@ -815,6 +534,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Bangladesch",
     ru: "Бангладеш",
     hi: "बांग्लादेश",
+    pt: "Bangladesh",
   },
   {
     fr: "Barbade",
@@ -823,6 +543,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Barbados",
     ru: "Барбадос",
     hi: "बारबाडोस",
+    pt: "Barbados",
   },
   {
     fr: "Belgique",
@@ -831,6 +552,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Belgien",
     ru: "Бельгия",
     hi: "बेल्जियम",
+    pt: "Bélgica",
   },
   {
     fr: "Belize",
@@ -839,6 +561,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Belize",
     ru: "Белиз",
     hi: "बेलीज",
+    pt: "Belize",
   },
   {
     fr: "Bénin",
@@ -847,6 +570,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Benin",
     ru: "Бенин",
     hi: "बेनिन",
+    pt: "Benim",
   },
   {
     fr: "Bhoutan",
@@ -855,6 +579,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Bhutan",
     ru: "Бутан",
     hi: "भूटान",
+    pt: "Butão",
   },
   {
     fr: "Biélorussie",
@@ -863,6 +588,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Belarus",
     ru: "Беларусь",
     hi: "बेलारूस",
+    pt: "Bielorrússia",
   },
   {
     fr: "Birmanie",
@@ -871,6 +597,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Myanmar",
     ru: "Мьянма",
     hi: "म्यांमार",
+    pt: "Mianmar",
   },
   {
     fr: "Bolivie",
@@ -879,6 +606,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Bolivien",
     ru: "Боливия",
     hi: "बोलीविया",
+    pt: "Bolívia",
   },
   {
     fr: "Bosnie-Herzégovine",
@@ -887,6 +615,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Bosnien und Herzegowina",
     ru: "Босния и Герцеговина",
     hi: "बोस्निया और हर्जेगोविना",
+    pt: "Bósnia e Herzegovina",
   },
   {
     fr: "Botswana",
@@ -895,6 +624,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Botswana",
     ru: "Ботсвана",
     hi: "बोत्सवाना",
+    pt: "Botsuana",
   },
   {
     fr: "Brésil",
@@ -903,6 +633,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Brasilien",
     ru: "Бразилия",
     hi: "ब्राजील",
+    pt: "Brasil",
   },
   {
     fr: "Brunei",
@@ -911,6 +642,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Brunei",
     ru: "Бруней",
     hi: "ब्रुनेई",
+    pt: "Brunei",
   },
   {
     fr: "Bulgarie",
@@ -919,6 +651,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Bulgarien",
     ru: "Болгария",
     hi: "बुल्गारिया",
+    pt: "Bulgária",
   },
   {
     fr: "Burkina Faso",
@@ -927,6 +660,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Burkina Faso",
     ru: "Буркина-Фасо",
     hi: "बुर्किना फासो",
+    pt: "Burquina Faso",
   },
   {
     fr: "Burundi",
@@ -935,6 +669,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Burundi",
     ru: "Бурунди",
     hi: "बुरुंडी",
+    pt: "Burúndi",
   },
   {
     fr: "Cambodge",
@@ -943,6 +678,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Kambodscha",
     ru: "Камбоджа",
     hi: "कंबोडिया",
+    pt: "Camboja",
   },
   {
     fr: "Cameroun",
@@ -951,6 +687,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Kamerun",
     ru: "Камерун",
     hi: "कैमरून",
+    pt: "Camarões",
   },
   {
     fr: "Canada",
@@ -959,6 +696,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Kanada",
     ru: "Канада",
     hi: "कनाडा",
+    pt: "Canadá",
   },
   {
     fr: "Cap-Vert",
@@ -967,6 +705,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Kap Verde",
     ru: "Кабо-Верде",
     hi: "केप वर्डे",
+    pt: "Cabo Verde",
   },
   {
     fr: "Chili",
@@ -975,6 +714,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Chile",
     ru: "Чили",
     hi: "चिली",
+    pt: "Chile",
   },
   {
     fr: "Chine",
@@ -983,6 +723,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "China",
     ru: "Китай",
     hi: "चीन",
+    pt: "China",
   },
   {
     fr: "Chypre",
@@ -991,6 +732,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Zypern",
     ru: "Кипр",
     hi: "साइप्रस",
+    pt: "Chipre",
   },
   {
     fr: "Colombie",
@@ -999,6 +741,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Kolumbien",
     ru: "Колумбия",
     hi: "कोलंबिया",
+    pt: "Colômbia",
   },
   {
     fr: "Comores",
@@ -1007,6 +750,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Komoren",
     ru: "Коморы",
     hi: "कोमोरोस",
+    pt: "Comores",
   },
   {
     fr: "Congo",
@@ -1015,6 +759,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Kongo",
     ru: "Конго",
     hi: "कांगो",
+    pt: "Congo",
   },
   {
     fr: "Corée du Nord",
@@ -1023,6 +768,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Nordkorea",
     ru: "Северная Корея",
     hi: "उत्तर कोरिया",
+    pt: "Coreia do Norte",
   },
   {
     fr: "Corée du Sud",
@@ -1031,6 +777,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Südkorea",
     ru: "Южная Корея",
     hi: "दक्षिण कोरिया",
+    pt: "Coreia do Sul",
   },
   {
     fr: "Costa Rica",
@@ -1039,6 +786,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Costa Rica",
     ru: "Коста-Рика",
     hi: "कोस्टा रिका",
+    pt: "Costa Rica",
   },
   {
     fr: "Côte d'Ivoire",
@@ -1047,6 +795,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Elfenbeinküste",
     ru: "Кот-д'Ивуар",
     hi: "आइवरी कोस्ट",
+    pt: "Costa do Marfim",
   },
   {
     fr: "Croatie",
@@ -1055,8 +804,17 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Kroatien",
     ru: "Хорватия",
     hi: "क्रोएशिया",
+    pt: "Croácia",
   },
-  { fr: "Cuba", es: "Cuba", en: "Cuba", de: "Kuba", ru: "Куба", hi: "क्यूबा" },
+  {
+    fr: "Cuba",
+    es: "Cuba",
+    en: "Cuba",
+    de: "Kuba",
+    ru: "Куба",
+    hi: "क्यूबा",
+    pt: "Cuba",
+  },
   {
     fr: "Danemark",
     es: "Dinamarca",
@@ -1064,6 +822,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Dänemark",
     ru: "Дания",
     hi: "डेनमार्क",
+    pt: "Dinamarca",
   },
   {
     fr: "Djibouti",
@@ -1072,6 +831,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Dschibuti",
     ru: "Джибути",
     hi: "जिबूती",
+    pt: "Djibuti",
   },
   {
     fr: "Dominique",
@@ -1080,6 +840,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Dominica",
     ru: "Доминика",
     hi: "डोमिनिका",
+    pt: "Dominica",
   },
   {
     fr: "Égypte",
@@ -1088,6 +849,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Ägypten",
     ru: "Египет",
     hi: "मिस्र",
+    pt: "Egito",
   },
   {
     fr: "Émirats arabes unis",
@@ -1096,6 +858,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Vereinigte Arabische Emirate",
     ru: "Объединённые Арабские Эмираты",
     hi: "संयुक्त अरब अमीरात",
+    pt: "Emirados Árabes Unidos",
   },
   {
     fr: "Équateur",
@@ -1104,6 +867,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Ecuador",
     ru: "Эквадор",
     hi: "इक्वेडोर",
+    pt: "Equador",
   },
   {
     fr: "Érythrée",
@@ -1112,6 +876,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Eritrea",
     ru: "Эритрея",
     hi: "इरिट्रिया",
+    pt: "Eritreia",
   },
   {
     fr: "Espagne",
@@ -1120,6 +885,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Spanien",
     ru: "Испания",
     hi: "स्पेन",
+    pt: "Espanha",
   },
   {
     fr: "Estonie",
@@ -1128,6 +894,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Estland",
     ru: "Эстония",
     hi: "एस्टोनिया",
+    pt: "Estônia",
   },
   {
     fr: "États-Unis",
@@ -1136,6 +903,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Vereinigte Staaten",
     ru: "Соединённые Штаты",
     hi: "संयुक्त राज्य अमेरिका",
+    pt: "Estados Unidos",
   },
   {
     fr: "Éthiopie",
@@ -1144,6 +912,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Äthiopien",
     ru: "Эфиопия",
     hi: "इथियोपिया",
+    pt: "Etiópia",
   },
   {
     fr: "Fidji",
@@ -1152,6 +921,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Fidschi",
     ru: "Фиджи",
     hi: "फिजी",
+    pt: "Fiji",
   },
   {
     fr: "Finlande",
@@ -1160,6 +930,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Finnland",
     ru: "Финляндия",
     hi: "फिनलैंड",
+    pt: "Finlândia",
   },
   {
     fr: "France",
@@ -1168,6 +939,7 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Frankreich",
     ru: "Франция",
     hi: "फ्रांस",
+    pt: "França",
   },
   {
     fr: "Autre",
@@ -1176,166 +948,13 @@ const COUNTRIES: MultiLangDuo[] = [
     de: "Andere",
     ru: "Другое",
     hi: "अन्य",
+    pt: "Outro",
   },
 ];
 
-// const HELP_TYPES: Duo[] = [
-//   { fr: "Démarches administratives", en: "Administrative procedures" },
-//   { fr: "Recherche de logement", en: "Housing search" },
-//   { fr: "Ouverture de compte bancaire", en: "Bank account opening" },
-//   { fr: "Système de santé", en: "Healthcare system" },
-//   { fr: "Éducation et écoles", en: "Education & schools" },
-//   { fr: "Transport", en: "Transport" },
-//   { fr: "Recherche d'emploi", en: "Job search" },
-//   { fr: "Création d'entreprise", en: "Company creation" },
-//   { fr: "Fiscalité locale", en: "Local taxation" },
-//   { fr: "Culture et intégration", en: "Culture & integration" },
-//   { fr: "Visa et immigration", en: "Visa & immigration" },
-//   { fr: "Assurances", en: "Insurances" },
-//   { fr: "Téléphonie et internet", en: "Phone & internet" },
-//   { fr: "Alimentation et courses", en: "Groceries & food" },
-//   { fr: "Loisirs et sorties", en: "Leisure & going out" },
-//   { fr: "Sports et activités", en: "Sports & activities" },
-//   { fr: "Sécurité", en: "Safety" },
-//   { fr: "Urgences", en: "Emergencies" },
-//   { fr: "Autre", en: "Other" },
-// ];
 
-// const HELP_TYPES: MultiLangDuo[] = [
-//   {
-//     fr: "Démarches administratives",
-//     es: "Trámites administrativos",
-//     en: "Administrative procedures",
-//     de: "Verwaltungsverfahren",
-//     ru: "Административные процедуры",
-//   },
-//   {
-//     fr: "Recherche de logement",
-//     es: "Búsqueda de vivienda",
-//     en: "Housing search",
-//     de: "Wohnungssuche",
-//     ru: "Поиск жилья",
-//   },
-//   {
-//     fr: "Ouverture de compte bancaire",
-//     es: "Apertura de cuenta bancaria",
-//     en: "Bank account opening",
-//     de: "Kontoeröffnung",
-//     ru: "Открытие банковского счета",
-//   },
-//   {
-//     fr: "Système de santé",
-//     es: "Sistema de salud",
-//     en: "Healthcare system",
-//     de: "Gesundheitssystem",
-//     ru: "Система здравоохранения",
-//   },
-//   {
-//     fr: "Éducation et écoles",
-//     es: "Educación y escuelas",
-//     en: "Education & schools",
-//     de: "Bildung und Schulen",
-//     ru: "Образование и школы",
-//   },
-//   {
-//     fr: "Transport",
-//     es: "Transporte",
-//     en: "Transport",
-//     de: "Transport",
-//     ru: "Транспорт",
-//   },
-//   {
-//     fr: "Recherche d'emploi",
-//     es: "Búsqueda de empleo",
-//     en: "Job search",
-//     de: "Jobsuche",
-//     ru: "Поиск работы",
-//   },
-//   {
-//     fr: "Création d'entreprise",
-//     es: "Creación de empresa",
-//     en: "Company creation",
-//     de: "Unternehmensgründung",
-//     ru: "Создание компании",
-//   },
-//   {
-//     fr: "Fiscalité locale",
-//     es: "Fiscalidad local",
-//     en: "Local taxation",
-//     de: "Lokale Besteuerung",
-//     ru: "Местное налогообложение",
-//   },
-//   {
-//     fr: "Culture et intégration",
-//     es: "Cultura e integración",
-//     en: "Culture & integration",
-//     de: "Kultur und Integration",
-//     ru: "Культура и интеграция",
-//   },
-//   {
-//     fr: "Visa et immigration",
-//     es: "Visa e inmigración",
-//     en: "Visa & immigration",
-//     de: "Visum und Einwanderung",
-//     ru: "Виза и иммиграция",
-//   },
-//   {
-//     fr: "Assurances",
-//     es: "Seguros",
-//     en: "Insurances",
-//     de: "Versicherungen",
-//     ru: "Страхование",
-//   },
-//   {
-//     fr: "Téléphonie et internet",
-//     es: "Telefonía e internet",
-//     en: "Phone & internet",
-//     de: "Telefon und Internet",
-//     ru: "Телефон и интернет",
-//   },
-//   {
-//     fr: "Alimentation et courses",
-//     es: "Alimentación y compras",
-//     en: "Groceries & food",
-//     de: "Lebensmittel und Einkauf",
-//     ru: "Продукты и покупки",
-//   },
-//   {
-//     fr: "Loisirs et sorties",
-//     es: "Ocio y salidas",
-//     en: "Leisure & going out",
-//     de: "Freizeit und Ausgehen",
-//     ru: "Досуг и развлечения",
-//   },
-//   {
-//     fr: "Sports et activités",
-//     es: "Deportes y actividades",
-//     en: "Sports & activities",
-//     de: "Sport und Aktivitäten",
-//     ru: "Спорт и активности",
-//   },
-//   {
-//     fr: "Sécurité",
-//     es: "Seguridad",
-//     en: "Safety",
-//     de: "Sicherheit",
-//     ru: "Безопасность",
-//   },
-//   {
-//     fr: "Urgences",
-//     es: "Emergencias",
-//     en: "Emergencies",
-//     de: "Notfälle",
-//     ru: "Чрезвычайные ситуации",
-//   },
-//   {
-//     fr: "Autre",
-//     es: "Otro",
-//     en: "Other",
-//     de: "Andere",
-//     ru: "Другое",
-//   },
-// ];
+
+
 
 const HELP_TYPES: MultiLangDuo[] = [
   {
@@ -1345,6 +964,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     de: "Verwaltungsverfahren",
     ru: "Административные процедуры",
     hi: "प्रशासनिक प्रक्रियाएं",
+    pt: "Procedimentos administrativos",
   },
   {
     fr: "Recherche de logement",
@@ -1353,6 +973,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     de: "Wohnungssuche",
     ru: "Поиск жилья",
     hi: "आवास खोज",
+    pt: "Busca de habitação",
   },
   {
     fr: "Ouverture de compte bancaire",
@@ -1361,6 +982,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     de: "Kontoeröffnung",
     ru: "Открытие банковского счета",
     hi: "बैंक खाता खोलना",
+    pt: "Abertura de conta bancária",
   },
   {
     fr: "Système de santé",
@@ -1369,6 +991,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     de: "Gesundheitssystem",
     ru: "Система здравоохранения",
     hi: "स्वास्थ्य सेवा प्रणाली",
+    pt: "Sistema de saúde",
   },
   {
     fr: "Éducation et écoles",
@@ -1377,6 +1000,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     de: "Bildung und Schulen",
     ru: "Образование и школы",
     hi: "शिक्षा और स्कूल",
+    pt: "Educação e escolas",
   },
   {
     fr: "Transport",
@@ -1385,6 +1009,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     de: "Transport",
     ru: "Транспорт",
     hi: "परिवहन",
+    pt: "Transporte",
   },
   {
     fr: "Recherche d'emploi",
@@ -1393,6 +1018,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     de: "Jobsuche",
     ru: "Поиск работы",
     hi: "नौकरी खोज",
+    pt: "Busca de emprego",
   },
   {
     fr: "Création d'entreprise",
@@ -1401,6 +1027,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     de: "Unternehmensgründung",
     ru: "Создание компании",
     hi: "कंपनी निर्माण",
+    pt: "Criação de empresa",
   },
   {
     fr: "Fiscalité locale",
@@ -1409,6 +1036,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     de: "Lokale Besteuerung",
     ru: "Местное налогообложение",
     hi: "स्थानीय कराधान",
+    pt: "Tributação local",
   },
   {
     fr: "Culture et intégration",
@@ -1417,6 +1045,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     de: "Kultur und Integration",
     ru: "Культура и интеграция",
     hi: "संस्कृति और एकीकरण",
+    pt: "Cultura e integração",
   },
   {
     fr: "Visa et immigration",
@@ -1425,6 +1054,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     de: "Visum und Einwanderung",
     ru: "Виза и иммиграция",
     hi: "वीजा और आप्रवास",
+    pt: "Visto e imigração",
   },
   {
     fr: "Assurances",
@@ -1433,6 +1063,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     de: "Versicherungen",
     ru: "Страхование",
     hi: "बीमा",
+    pt: "Seguros",
   },
   {
     fr: "Téléphonie et internet",
@@ -1441,6 +1072,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     de: "Telefon und Internet",
     ru: "Телефон и интернет",
     hi: "फोन और इंटरनेट",
+    pt: "Telefone e internet",
   },
   {
     fr: "Alimentation et courses",
@@ -1449,6 +1081,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     de: "Lebensmittel und Einkauf",
     ru: "Продукты и покупки",
     hi: "किराने का सामान और खाना",
+    pt: "Alimentos e compras",
   },
   {
     fr: "Loisirs et sorties",
@@ -1457,6 +1090,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     de: "Freizeit und Ausgehen",
     ru: "Досуг и развлечения",
     hi: "अवकाश और बाहर जाना",
+    pt: "Lazer e saídas",
   },
   {
     fr: "Sports et activités",
@@ -1465,6 +1099,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     de: "Sport und Aktivitäten",
     ru: "Спорт и активности",
     hi: "खेल और गतिविधियां",
+    pt: "Esportes e atividades",
   },
   {
     fr: "Sécurité",
@@ -1473,6 +1108,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     de: "Sicherheit",
     ru: "Безопасность",
     hi: "सुरक्षा",
+    pt: "Segurança",
   },
   {
     fr: "Urgences",
@@ -1481,6 +1117,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     de: "Notfälle",
     ru: "Чрезвычайные ситуации",
     hi: "आपातकालीन स्थितियां",
+    pt: "Emergências",
   },
   {
     fr: "Autre",
@@ -1489,8 +1126,10 @@ const HELP_TYPES: MultiLangDuo[] = [
     de: "Andere",
     ru: "Другое",
     hi: "अन्य",
+    pt: "Outro",
   },
 ];
+
 
 // ===== Types =====
 interface LanguageOption {
@@ -1507,7 +1146,7 @@ interface ExpatFormData {
   currentCountry: string;
   currentPresenceCountry: string;
   interventionCountry: string;
-  preferredLanguage: "fr" | "en" | "es" | "de" | "ru" | "hi";
+  preferredLanguage: "fr" | "en" | "es" | "de" | "ru" | "hi"  | "pt" | "ch";
   helpTypes: string[];
   customHelpType: string;
   yearsAsExpat: number;
@@ -2092,7 +1731,7 @@ const BottomChecklist = ({
     ref?: React.MutableRefObject<HTMLElement | null>;
   }[];
   progress: number;
-  lang: "fr" | "en";
+  lang: "fr" | "en" | "es" | "de" | "ru" | "hi" | "ch";
   onJump: (r?: React.MutableRefObject<HTMLElement | null>) => void;
 }) => (
   <div className="mt-6">
@@ -2191,7 +1830,7 @@ const RegisterExpat: React.FC = () => {
 
   const { register, isLoading, error } = useAuth();
   const { language } = useApp(); // 'fr' | 'en'
-  const lang = (language as "fr" | "en" | "es" | "de" | "ru" | "hi") || "fr";
+  const lang = (language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "ch" ) || "fr";
   const t: AnyI18N = I18N[lang]; // <- annotation explicite
 
   // ---- SEO / OG meta ----
@@ -2291,12 +1930,7 @@ const RegisterExpat: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(true);
 
-  // // react-hook-form pour le téléphone uniquement (normalisation E.164 par PhoneField)
-  // const { control, getValues, watch } = useForm<{ phone: string }>({
-  //   defaultValues: { phone: "" },
-  //   mode: "onBlur",
-  // });
-  // const watchedPhone = watch("phone"); // e164 si valide
+
 
   // Refs pour scroll/jump
   const refFirstName = useRef<HTMLDivElement | null>(null);

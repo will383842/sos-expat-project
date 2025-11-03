@@ -10,7 +10,7 @@ import {
   StorageReference
 } from 'firebase/storage';
 
-type Locale = 'fr' | 'en' | 'es' | 'de' | 'ru' | 'hi' | 'pt';
+type Locale = 'fr' | 'en' | 'es' | 'de' | 'ru' | 'hi' | 'pt' ;
 
 /** ====== I18N types ====== */
 type I18nUI = {
