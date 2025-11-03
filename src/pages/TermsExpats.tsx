@@ -31,13 +31,13 @@ const TermsExpats: React.FC = () => {
 
   const [content, setContent] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [selectedLanguage, setSelectedLanguage] = useState<'fr' | 'en'>(
-    (language as 'fr' | 'en') || 'fr'
+  const [selectedLanguage, setSelectedLanguage] = useState<'fr' | 'en' | 'es' | 'de' | 'ru' | 'hi'>(
+    (language as 'fr' | 'en' | 'es' | 'de' | 'ru' | 'hi') || 'fr'
   );
 
   useEffect(() => {
     if (language) {
-      setSelectedLanguage(language as 'fr' | 'en');
+      setSelectedLanguage(language as 'fr' | 'en' | 'es' | 'de' | 'ru' | 'hi');
     }
   }, [language]);
 
@@ -71,92 +71,338 @@ const TermsExpats: React.FC = () => {
     fetchTerms();
   }, [selectedLanguage]);
 
-  const translations = {
-    fr: {
-      title: 'CGU Expatriés Aidants',
-      subtitle: "Conditions générales d'utilisation pour les expatriés aidants",
-      lastUpdated: 'Version 2.2 – Dernière mise à jour : 16 juin 2025',
-      loading: 'Chargement...',
-      joinNetwork: 'Rejoindre le réseau',
-      trustedByHelpers: 'Déjà 1K+ expatriés aidants nous font confiance',
-      keyFeatures: 'Points clés',
-      features: [
-        'Paiement garanti sous 7 jours',
-        'Support technique 24/7',
-        'Interface mobile optimisée',
-        'Utilisateurs vérifiés',
-      ],
-      languageToggle: 'Changer de langue',
-      sections: {
-        definitions: 'Définitions',
-        scope: 'Objet, champ et acceptation',
-        status: "Statut de l'Expatrié Aidant – Conformité et responsabilités",
-        account: 'Compte, vérifications et sécurité',
-        rules: 'Règles d’usage – Qualité, interdits, non-contournement',
-        relationship: 'Relation Aidant–Utilisateur (hors Plateforme)',
-        fees: 'Frais, paiement unique et taxes',
-        data: 'Données personnelles (cadre global)',
-        ip: 'Propriété intellectuelle',
-        liability: 'Garanties, responsabilité et indemnisation',
-        law: 'Droit applicable – Arbitrage – Juridiction estonienne',
-        misc: 'Divers',
-        contact: 'Contact',
-      },
-      readyToJoin: 'Prêt à rejoindre SOS Expat ?',
-      readySubtitle: 'Aidez des expatriés et développez votre activité de conseil.',
-      startNow: 'Commencer maintenant',
-      contactUs: 'Nous contacter',
-      anchorTitle: 'Sommaire',
-      editHint: 'Document éditable depuis la console admin',
-      ctaHero: 'Voir les experts',
-      heroBadge: 'Nouveau — Conditions mises à jour',
-      contactForm: 'Formulaire de contact',
+  // const translations = {
+  //   fr: {
+  //     title: 'CGU Expatriés Aidants',
+  //     subtitle: "Conditions générales d'utilisation pour les expatriés aidants",
+  //     lastUpdated: 'Version 2.2 – Dernière mise à jour : 16 juin 2025',
+  //     loading: 'Chargement...',
+  //     joinNetwork: 'Rejoindre le réseau',
+  //     trustedByHelpers: 'Déjà 1K+ expatriés aidants nous font confiance',
+  //     keyFeatures: 'Points clés',
+  //     features: [
+  //       'Paiement garanti sous 7 jours',
+  //       'Support technique 24/7',
+  //       'Interface mobile optimisée',
+  //       'Utilisateurs vérifiés',
+  //     ],
+  //     languageToggle: 'Changer de langue',
+  //     sections: {
+  //       definitions: 'Définitions',
+  //       scope: 'Objet, champ et acceptation',
+  //       status: "Statut de l'Expatrié Aidant – Conformité et responsabilités",
+  //       account: 'Compte, vérifications et sécurité',
+  //       rules: 'Règles d’usage – Qualité, interdits, non-contournement',
+  //       relationship: 'Relation Aidant–Utilisateur (hors Plateforme)',
+  //       fees: 'Frais, paiement unique et taxes',
+  //       data: 'Données personnelles (cadre global)',
+  //       ip: 'Propriété intellectuelle',
+  //       liability: 'Garanties, responsabilité et indemnisation',
+  //       law: 'Droit applicable – Arbitrage – Juridiction estonienne',
+  //       misc: 'Divers',
+  //       contact: 'Contact',
+  //     },
+  //     readyToJoin: 'Prêt à rejoindre SOS Expat ?',
+  //     readySubtitle: 'Aidez des expatriés et développez votre activité de conseil.',
+  //     startNow: 'Commencer maintenant',
+  //     contactUs: 'Nous contacter',
+  //     anchorTitle: 'Sommaire',
+  //     editHint: 'Document éditable depuis la console admin',
+  //     ctaHero: 'Voir les experts',
+  //     heroBadge: 'Nouveau — Conditions mises à jour',
+  //     contactForm: 'Formulaire de contact',
+  //   },
+  //   en: {
+  //     title: 'Expat Helper Terms',
+  //     subtitle: 'Terms of Use for expatriate helpers',
+  //     lastUpdated: 'Version 2.2 – Last updated: 16 June 2025',
+  //     loading: 'Loading...',
+  //     joinNetwork: 'Join the network',
+  //     trustedByHelpers: 'Already 1K+ expat helpers trust us',
+  //     keyFeatures: 'Key features',
+  //     features: [
+  //       'Guaranteed payment within 7 days',
+  //       '24/7 technical support',
+  //       'Mobile-optimized interface',
+  //       'Verified users',
+  //     ],
+  //     languageToggle: 'Switch language',
+  //     sections: {
+  //       definitions: 'Definitions',
+  //       scope: 'Purpose, Scope and Acceptance',
+  //       status: 'Helper Status – Compliance and Responsibilities',
+  //       account: 'Account, Checks and Security',
+  //       rules: 'Use Rules – Quality, Prohibited Conduct, No Circumvention',
+  //       relationship: 'Helper–User Relationship (Off-Platform)',
+  //       fees: 'Fees, Single Payment and Taxes',
+  //       data: 'Data Protection (Global Framework)',
+  //       ip: 'Intellectual Property',
+  //       liability: 'Warranties, Liability and Indemnity',
+  //       law: 'Governing Law – ICC Arbitration – Estonian Courts',
+  //       misc: 'Miscellaneous',
+  //       contact: 'Contact',
+  //     },
+  //     readyToJoin: 'Ready to join SOS Expat?',
+  //     readySubtitle: 'Help expats and develop your consulting activity.',
+  //     startNow: 'Start now',
+  //     contactUs: 'Contact us',
+  //     anchorTitle: 'Overview',
+  //     editHint: 'Document editable from the admin console',
+  //     ctaHero: 'See experts',
+  //     heroBadge: 'New — Terms updated',
+  //     contactForm: 'Contact Form',
+  //   },
+  // };
+
+
+const translations = {
+  fr: {
+    title: 'CGU Expatriés Aidants',
+    subtitle: "Conditions générales d'utilisation pour les expatriés aidants",
+    lastUpdated: 'Version 2.2 – Dernière mise à jour : 16 juin 2025',
+    loading: 'Chargement...',
+    joinNetwork: 'Rejoindre le réseau',
+    trustedByHelpers: 'Déjà 1K+ expatriés aidants nous font confiance',
+    keyFeatures: 'Points clés',
+    features: [
+      'Paiement garanti sous 7 jours',
+      'Support technique 24/7',
+      'Interface mobile optimisée',
+      'Utilisateurs vérifiés',
+    ],
+    languageToggle: 'Changer de langue',
+    sections: {
+      definitions: 'Définitions',
+      scope: 'Objet, champ et acceptation',
+      status: "Statut de l'Expatrié Aidant – Conformité et responsabilités",
+      account: 'Compte, vérifications et sécurité',
+      rules: "Règles d'usage – Qualité, interdits, non-contournement",
+      relationship: 'Relation Aidant–Utilisateur (hors Plateforme)',
+      fees: 'Frais, paiement unique et taxes',
+      data: 'Données personnelles (cadre global)',
+      ip: 'Propriété intellectuelle',
+      liability: 'Garanties, responsabilité et indemnisation',
+      law: 'Droit applicable – Arbitrage – Juridiction estonienne',
+      misc: 'Divers',
+      contact: 'Contact',
     },
-    en: {
-      title: 'Expat Helper Terms',
-      subtitle: 'Terms of Use for expatriate helpers',
-      lastUpdated: 'Version 2.2 – Last updated: 16 June 2025',
-      loading: 'Loading...',
-      joinNetwork: 'Join the network',
-      trustedByHelpers: 'Already 1K+ expat helpers trust us',
-      keyFeatures: 'Key features',
-      features: [
-        'Guaranteed payment within 7 days',
-        '24/7 technical support',
-        'Mobile-optimized interface',
-        'Verified users',
-      ],
-      languageToggle: 'Switch language',
-      sections: {
-        definitions: 'Definitions',
-        scope: 'Purpose, Scope and Acceptance',
-        status: 'Helper Status – Compliance and Responsibilities',
-        account: 'Account, Checks and Security',
-        rules: 'Use Rules – Quality, Prohibited Conduct, No Circumvention',
-        relationship: 'Helper–User Relationship (Off-Platform)',
-        fees: 'Fees, Single Payment and Taxes',
-        data: 'Data Protection (Global Framework)',
-        ip: 'Intellectual Property',
-        liability: 'Warranties, Liability and Indemnity',
-        law: 'Governing Law – ICC Arbitration – Estonian Courts',
-        misc: 'Miscellaneous',
-        contact: 'Contact',
-      },
-      readyToJoin: 'Ready to join SOS Expat?',
-      readySubtitle: 'Help expats and develop your consulting activity.',
-      startNow: 'Start now',
-      contactUs: 'Contact us',
-      anchorTitle: 'Overview',
-      editHint: 'Document editable from the admin console',
-      ctaHero: 'See experts',
-      heroBadge: 'New — Terms updated',
-      contactForm: 'Contact Form',
+    readyToJoin: 'Prêt à rejoindre SOS Expat ?',
+    readySubtitle: 'Aidez des expatriés et développez votre activité de conseil.',
+    startNow: 'Commencer maintenant',
+    contactUs: 'Nous contacter',
+    anchorTitle: 'Sommaire',
+    editHint: 'Document éditable depuis la console admin',
+    ctaHero: 'Voir les experts',
+    heroBadge: 'Nouveau — Conditions mises à jour',
+    contactForm: 'Formulaire de contact',
+  },
+  en: {
+    title: 'Expat Helper Terms',
+    subtitle: 'Terms of Use for expatriate helpers',
+    lastUpdated: 'Version 2.2 – Last updated: 16 June 2025',
+    loading: 'Loading...',
+    joinNetwork: 'Join the network',
+    trustedByHelpers: 'Already 1K+ expat helpers trust us',
+    keyFeatures: 'Key features',
+    features: [
+      'Guaranteed payment within 7 days',
+      '24/7 technical support',
+      'Mobile-optimized interface',
+      'Verified users',
+    ],
+    languageToggle: 'Switch language',
+    sections: {
+      definitions: 'Definitions',
+      scope: 'Purpose, Scope and Acceptance',
+      status: 'Helper Status – Compliance and Responsibilities',
+      account: 'Account, Checks and Security',
+      rules: 'Use Rules – Quality, Prohibited Conduct, No Circumvention',
+      relationship: 'Helper–User Relationship (Off-Platform)',
+      fees: 'Fees, Single Payment and Taxes',
+      data: 'Data Protection (Global Framework)',
+      ip: 'Intellectual Property',
+      liability: 'Warranties, Liability and Indemnity',
+      law: 'Governing Law – ICC Arbitration – Estonian Courts',
+      misc: 'Miscellaneous',
+      contact: 'Contact',
     },
-  };
+    readyToJoin: 'Ready to join SOS Expat?',
+    readySubtitle: 'Help expats and develop your consulting activity.',
+    startNow: 'Start now',
+    contactUs: 'Contact us',
+    anchorTitle: 'Overview',
+    editHint: 'Document editable from the admin console',
+    ctaHero: 'See experts',
+    heroBadge: 'New — Terms updated',
+    contactForm: 'Contact Form',
+  },
+  es: {
+    title: 'Términos para Ayudantes Expat',
+    subtitle: 'Términos de uso para ayudantes de expatriados',
+    lastUpdated: 'Versión 2.2 – Última actualización: 16 de junio de 2025',
+    loading: 'Cargando...',
+    joinNetwork: 'Únete a la red',
+    trustedByHelpers: 'Ya más de 1K+ ayudantes expat confían en nosotros',
+    keyFeatures: 'Características clave',
+    features: [
+      'Pago garantizado en 7 días',
+      'Soporte técnico 24/7',
+      'Interfaz optimizada para móvil',
+      'Usuarios verificados',
+    ],
+    languageToggle: 'Cambiar idioma',
+    sections: {
+      definitions: 'Definiciones',
+      scope: 'Objeto, alcance y aceptación',
+      status: 'Estado del Ayudante – Cumplimiento y responsabilidades',
+      account: 'Cuenta, verificaciones y seguridad',
+      rules: 'Reglas de uso – Calidad, prohibiciones, no evasión',
+      relationship: 'Relación Ayudante–Usuario (fuera de la plataforma)',
+      fees: 'Tarifas, pago único e impuestos',
+      data: 'Datos personales (marco global)',
+      ip: 'Propiedad intelectual',
+      liability: 'Garantías, responsabilidad e indemnización',
+      law: 'Ley aplicable – Arbitraje – Jurisdicción estonia',
+      misc: 'Varios',
+      contact: 'Contacto',
+    },
+    readyToJoin: '¿Listo para unirte a SOS Expat?',
+    readySubtitle: 'Ayuda a expatriados y desarrolla tu actividad de consultoría.',
+    startNow: 'Empezar ahora',
+    contactUs: 'Contáctanos',
+    anchorTitle: 'Resumen',
+    editHint: 'Documento editable desde la consola de administración',
+    ctaHero: 'Ver expertos',
+    heroBadge: 'Nuevo — Términos actualizados',
+    contactForm: 'Formulario de contacto',
+  },
+  de: {
+    title: 'Expat-Helfer Bedingungen',
+    subtitle: 'Nutzungsbedingungen für Expatriate-Helfer',
+    lastUpdated: 'Version 2.2 – Letzte Aktualisierung: 16. Juni 2025',
+    loading: 'Lädt...',
+    joinNetwork: 'Dem Netzwerk beitreten',
+    trustedByHelpers: 'Bereits über 1K+ Expat-Helfer vertrauen uns',
+    keyFeatures: 'Hauptmerkmale',
+    features: [
+      'Garantierte Zahlung innerhalb von 7 Tagen',
+      '24/7 technischer Support',
+      'Mobiloptimierte Oberfläche',
+      'Verifizierte Benutzer',
+    ],
+    languageToggle: 'Sprache wechseln',
+    sections: {
+      definitions: 'Definitionen',
+      scope: 'Gegenstand, Umfang und Annahme',
+      status: 'Helferstatus – Compliance und Verantwortlichkeiten',
+      account: 'Konto, Überprüfungen und Sicherheit',
+      rules: 'Nutzungsregeln – Qualität, Verbote, keine Umgehung',
+      relationship: 'Helfer–Benutzer-Beziehung (außerhalb der Plattform)',
+      fees: 'Gebühren, Einzelzahlung und Steuern',
+      data: 'Personenbezogene Daten (globaler Rahmen)',
+      ip: 'Geistiges Eigentum',
+      liability: 'Garantien, Haftung und Entschädigung',
+      law: 'Anwendbares Recht – Schiedsverfahren – Estnische Gerichtsbarkeit',
+      misc: 'Verschiedenes',
+      contact: 'Kontakt',
+    },
+    readyToJoin: 'Bereit, SOS Expat beizutreten?',
+    readySubtitle: 'Helfen Sie Expats und entwickeln Sie Ihre Beratungstätigkeit.',
+    startNow: 'Jetzt starten',
+    contactUs: 'Kontaktieren Sie uns',
+    anchorTitle: 'Übersicht',
+    editHint: 'Dokument über die Admin-Konsole bearbeitbar',
+    ctaHero: 'Experten ansehen',
+    heroBadge: 'Neu — Bedingungen aktualisiert',
+    contactForm: 'Kontaktformular',
+  },
+  ru: {
+    title: 'Условия для помощников эмигрантов',
+    subtitle: 'Условия использования для помощников эмигрантов',
+    lastUpdated: 'Версия 2.2 – Последнее обновление: 16 июня 2025 г.',
+    loading: 'Загрузка...',
+    joinNetwork: 'Присоединиться к сети',
+    trustedByHelpers: 'Уже более 1K+ помощников эмигрантов доверяют нам',
+    keyFeatures: 'Ключевые особенности',
+    features: [
+      'Гарантированная оплата в течение 7 дней',
+      'Техническая поддержка 24/7',
+      'Мобильно-оптимизированный интерфейс',
+      'Проверенные пользователи',
+    ],
+    languageToggle: 'Сменить язык',
+    sections: {
+      definitions: 'Определения',
+      scope: 'Предмет, сфера применения и принятие',
+      status: 'Статус помощника – Соответствие и обязанности',
+      account: 'Учётная запись, проверки и безопасность',
+      rules: 'Правила использования – Качество, запреты, отсутствие обхода',
+      relationship: 'Отношения помощник–пользователь (вне платформы)',
+      fees: 'Сборы, единый платёж и налоги',
+      data: 'Персональные данные (глобальная структура)',
+      ip: 'Интеллектуальная собственность',
+      liability: 'Гарантии, ответственность и возмещение ущерба',
+      law: 'Применимое право – Арбитраж – Эстонская юрисдикция',
+      misc: 'Разное',
+      contact: 'Контакт',
+    },
+    readyToJoin: 'Готовы присоединиться к SOS Expat?',
+    readySubtitle: 'Помогайте эмигрантам и развивайте свою консалтинговую деятельность.',
+    startNow: 'Начать сейчас',
+    contactUs: 'Свяжитесь с нами',
+    anchorTitle: 'Обзор',
+    editHint: 'Документ редактируется из консоли администратора',
+    ctaHero: 'Посмотреть экспертов',
+    heroBadge: 'Новое — Условия обновлены',
+    contactForm: 'Контактная форма',
+  },
+  hi: {
+    title: 'एक्सपैट हेल्पर शर्तें',
+    subtitle: 'प्रवासी सहायकों के लिए उपयोग की शर्तें',
+    lastUpdated: 'संस्करण 2.2 – अंतिम अपडेट: 16 जून 2025',
+    loading: 'लोड हो रहा है...',
+    joinNetwork: 'नेटवर्क में शामिल हों',
+    trustedByHelpers: 'पहले से ही 1K+ एक्सपैट हेल्पर्स हम पर भरोसा करते हैं',
+    keyFeatures: 'मुख्य विशेषताएं',
+    features: [
+      '7 दिनों के भीतर गारंटीकृत भुगतान',
+      '24/7 तकनीकी सहायता',
+      'मोबाइल-अनुकूलित इंटरफ़ेस',
+      'सत्यापित उपयोगकर्ता',
+    ],
+    languageToggle: 'भाषा बदलें',
+    sections: {
+      definitions: 'परिभाषाएँ',
+      scope: 'उद्देश्य, दायरा और स्वीकृति',
+      status: 'सहायक स्थिति – अनुपालन और जिम्मेदारियाँ',
+      account: 'खाता, सत्यापन और सुरक्षा',
+      rules: 'उपयोग नियम – गुणवत्ता, निषेध, कोई परिहार नहीं',
+      relationship: 'सहायक–उपयोगकर्ता संबंध (प्लेटफ़ॉर्म के बाहर)',
+      fees: 'शुल्क, एकल भुगतान और कर',
+      data: 'व्यक्तिगत डेटा (वैश्विक ढांचा)',
+      ip: 'बौद्धिक संपदा',
+      liability: 'वारंटी, दायित्व और क्षतिपूर्ति',
+      law: 'लागू कानून – मध्यस्थता – एस्टोनियाई अधिकार क्षेत्र',
+      misc: 'विविध',
+      contact: 'संपर्क',
+    },
+    readyToJoin: 'SOS Expat में शामिल होने के लिए तैयार हैं?',
+    readySubtitle: 'प्रवासियों की मदद करें और अपनी परामर्श गतिविधि विकसित करें।',
+    startNow: 'अभी शुरू करें',
+    contactUs: 'हमसे संपर्क करें',
+    anchorTitle: 'अवलोकन',
+    editHint: 'व्यवस्थापक कंसोल से संपादन योग्य दस्तावेज़',
+    ctaHero: 'विशेषज्ञ देखें',
+    heroBadge: 'नया — शर्तें अपडेट की गईं',
+    contactForm: 'संपर्क फ़ॉर्म',
+  },
+};
+
+
 
   const t = translations[selectedLanguage];
 
-  const handleLanguageChange = (newLang: 'fr' | 'en') => {
+  const handleLanguageChange = (newLang: 'fr' | 'en' | 'es' | 'de' | 'ru' | 'hi') => {
     setSelectedLanguage(newLang);
   };
 
@@ -659,8 +905,956 @@ No warranty for outcomes/quality/volume; Platform **"as is."**
 For any questions or legal requests, contact us:
 `;
 
+  const defaultRu = `
+# Условия использования – Помощники эмигрантов (глобально)
+
+
+**SOS Expat от Ulixai OÜ** (the "**Platform**", "**SOS**", "**we**")
+
+
+**Версия 2.2 – Последнее обновление: 16 июня 2025 г.**
+
+
+---
+
+
+## 1. Определения
+
+
+**Помощник** означает любое лицо, зарегистрированное на Платформе для предоставления самостоятельно услуг неправовой и немедицинской помощи пользователям (ориентация, практические поручения, неформальный перевод, местные представления и т. д.).
+
+
+**Пользователь** означает любое лицо, использующее Платформу для связи с Помощником.
+
+
+**Соединение** означает техническое/операционное введение, позволяющее контакт (обмен деталями и/или инициирование звонка/сообщения/видео и/или согласие Помощника).
+
+
+**Страна вмешательства** означает юрисдикцию, в основном целевую по запросу Пользователя на момент Соединения.
+
+
+**Сбор за соединение** означает **EUR 19** (если оплачено в EUR) или **USD 25** (если оплачено в USD), с учётом изменений и/или **местных расписаний** по странам/валютам с перспективным эффектом.
+
+
+**Процессоры платежей** – это сторонние услуги, обрабатывающие сборы и выплаты.
+
+
+---
+
+
+## 2. Назначение, сфера применения и принятие
+
+
+Ulixai действует **исключительно как технический посредник** и не является работодателем, агентом или партнёром Помощников; Ulixai не предоставляет юридические, медицинские, налоговые, бухгалтерские или иные регулируемые советы и не является стороной контрактов Помощник–Пользователь.
+
+
+**Принятие путём клика** составляет электронную подпись и согласие. SOS может обновлять эти Условия и/или расписания сборов с **перспективным эффектом** при публикации.
+
+
+**Профессиональная ёмкость (B2B)**: Помощник действует исключительно в профессиональных целях; режимы защиты потребителей не применяются к отношениям Ulixai–Помощник.
+
+
+---
+
+
+## 3. Статус помощника – Соответствие, авторизации и обязанности
+
+
+**Независимость.** Помощник действует как независимый профессионал.
+
+
+**Разрешение на работу и иммиграция.** Помощник **несет исключительную ответственность** за получение/поддержание **всех разрешений/виз и деловых регистраций**, требуемых в каждой Стране вмешательства. Ulixai **не проверяет** такие авторизации и **не принимает на себя ответственность** за них.
+
+
+**Регулируемые услуги.** Помощник **не должен** предоставлять регулируемые услуги (например, юридические, медицинские, финансовые, бухгалтерские, посредничество в сделках с недвижимостью и т. д.) **без надлежащей лицензии/авторизации** и полного соответствия местному законодательству; в противном случае Помощник должен воздержаться и перенаправить Пользователя надлежащему лицензированному профессионалу.
+
+
+**Общее соответствие.** Помощник соответствует действующему законодательству (защита потребителей, электронная коммерция, реклама/ходатайство, справедливая конкуренция, AML/KYC, где уместно, налоги, защита данных, санкции/экспорт, личная безопасность).
+
+
+**Страхование.** Помощник поддерживает надлежащее страхование.
+
+
+**Конфиденциальность.** Помощник защищает информацию Пользователя.
+
+
+---
+
+
+## 4. Учётная запись, проверки и безопасность
+
+
+Один аккаунт на Помощника; точный, полный и актуальный профиль. Ulixai может проводить разумные проверки (ID, соответствие профиля, проверки санкций/KYC через процессоры) и может отказать/приостановить/отозвать доступ по причинам безопасности, соответствия или качества. Держите учётные данные в безопасности; деятельность через аккаунт считается деятельностью Помощника.
+
+
+---
+
+
+## 5. Правила использования – Качество, запрещённое поведение, отсутствие обхода
+
+
+Точное описание; нет ложного профессионального статуса; нет обещаний результатов.
+
+
+**Запрещено:** незаконное/дискриминационное/обманчивое содержание; недобросовестная практика; неправомерное использование данных; обратная инженерия; сговор/бойкот; нарушение санкций/экспорта; любая незаконная деятельность.
+
+
+**Отсутствие обхода:** **каждое новое Соединение с новым Пользователем** через Платформу вызывает **Сбор за соединение**; избежание Платформы для уклонения от сборов на новое представление запрещено.
+
+
+**Доступность:** Платформа предоставляется **«как есть».**
+
+
+---
+
+
+## 6. Отношения помощник–пользователь (вне платформы)
+
+
+После Соединения стороны могут заключить контракт **вне Платформы**. Помощник предоставляет подтверждения/условия местного обслуживания, счета-фактуры и обрабатывает налоги. Ulixai **не несёт ответственности** за услуги или обязательства Помощника.
+
+
+---
+
+
+## 7. Сборы, единая оплата и налоги
+
+
+**Фиксированный сбор за соединение.** **EUR 19 / USD 25** за Соединение, исключая налоги и сборы процессоров; Ulixai может менять суммы и/или публиковать **местные расписания** по странам/валютам с перспективным эффектом.
+
+
+**Единая оплата и раздел.** Пользователь платит **одну сумму** через Платформу, покрывающую (i) вознаграждение Помощника (как согласовано) и (ii) Сбор Ulixai за соединение. Ulixai (или его процессор) собирает, **вычитает** свой Сбор, затем **отправляет** остаток Помощнику, который **авторизует** такие вычеты.
+
+
+**Причитается и невозвратно.** Сбор за соединение **заработан при** Соединении и **невозвратен** (при условии дискреционного доброго намерения Ulixai **в той мере, в какой это разрешено законом** в случае отказа только Платформы).
+
+
+**Возвраты пользователей.** Если предоставлены, возвраты **несут обязанности** доля Помощника: Ulixai может **удержать/компенсировать** против будущих выплат или потребовать возмещение, если ничего не задолжено.
+
+
+**FX** и **налоги**: курсы FX процессора/сборы могут применяться; Помощник несёт ответственность за все применимые налоги; Ulixai собирает/отправляет НДС или местный эквивалент на Сбор за соединение, где требуется.
+
+
+**Компенсация** авторизована.
+
+
+---
+
+
+## 8. Защита данных (глобальная структура)
+
+
+**Роли.** Для данных Пользователя, полученных для Соединения, **Ulixai и Помощник** каждый действуют как **независимый контролер** для своих собственных целей.
+
+
+**Правовые основания/цели:** исполнение контракта, законные интересы (безопасность/предотвращение мошенничества/совершенствование услуг), правовое соответствие (AML/санкции) и согласие, где применимо.
+
+
+**Международные переводы** могут происходить с надлежащими гарантиями, где требуется.
+
+
+**Права и контакт** через форму контакта Платформы.
+
+
+**Безопасность** применяются меры; нарушения уведомляются, как требуется. Помощник обрабатывает данные по закону Страны вмешательства.
+
+
+---
+
+
+## 9. Интеллектуальная собственность
+
+
+IP Платформы остаётся у Ulixai. Помощник получает **личное, неисключительное, непередаваемое** право доступа во время этих Условий. Содержание Помощника лицензируется на Ulixai на **мировой, неисключительной** основе для хостинга и отображения.
+
+
+---
+
+
+## 10. Гарантии, ответственность и возмещение ущерба
+
+
+Нет гарантий результатов/качества/объёма; Платформа **«как есть».**
+
+
+**Ограничение ответственности:** в той мере, в какой это разрешено законом, общая ответственность Ulixai перед Помощником ограничена **прямым ущербом** и **не должна превышать** общего **Сборов за соединение**, полученных Ulixai для **транзакции**, давшей основание претензии.
+
+
+**Никаких косвенных/косвенных/специальных/штрафных убытков.**
+
+
+**Возмещение ущерба:** Помощник **должен возместить и защитить** Ulixai (и филиалы, должностные лица, сотрудники, агенты) от претензий/убытков/затрат (включая разумные гонорары адвокатов), вытекающих из (i) нарушения этих Условий/законов, (ii) содержания Помощника, (iii) услуг/упущений Помощника, (iv) отсутствия разрешения на работу/иммиграции/лицензирования.
+
+
+---
+
+
+## 11. Применимое право – Арбитраж МКА – Эстонские суды – Коллективные иски
+
+
+**Материальное право:** для каждого Соединения законы **Страны вмешательства** регулируют отношения Ulixai–Помощник, с учётом обязательных местных норм и повелительных международных норм.
+
+
+**Обязательный арбитраж МКА** для любого спора Ulixai–Помощник. **Место: Таллинн (Эстония). Язык: французский.** Трибунал применяет **материальное право**, определённое выше. Разбирательства **конфиденциальны**.
+
+
+**Коллективные/коллективные иски отказываются** в той мере, в какой это разрешено законом.
+
+
+**Исключительная юрисдикция эстонских судов** (Таллинн) для **неарбитражных** претензий, принудительного исполнения постановлений и срочных мер; Помощник отказывается от возражений против места проведения/форума non conveniens.
+
+
+---
+
+
+## 12. Разное
+
+
+**Уступка**: Ulixai может передать эти Условия субъекту группы или преемнику; Помощник не может уступить без согласия Ulixai.
+
+
+**Полное соглашение**: эти Условия заменяют предыдущие взаимопонимания.
+
+
+**Уведомления**: путём публикации на Платформе, в приложении или через форму контакта.
+
+
+**Толкование**: заголовки предназначены для удобства; нет **contra proferentem**.
+
+
+**Языки**: переводы могут быть предоставлены; **французский преобладает** для толкования.
+
+
+**Разделимость**: недействительные условия заменены действительными с эквивалентным эффектом.
+
+
+**Никакого отказа**: невыполнение требований не является отказом.
+
+
+---
+
+
+## 13. Контакт
+
+
+По любым вопросам или юридическим запросам, свяжитесь с нами:
+`;
+const defaultHi = `
+# उपयोग की शर्तें – प्रवासी सहायक (वैश्विक)
+
+
+**SOS Expat द्वारा Ulixai OÜ** (the "**Platform**", "**SOS**", "**we**")
+
+
+**संस्करण 2.2 – अंतिम अपडेट: 16 जून 2025**
+
+
+---
+
+
+## 1. परिभाषाएँ
+
+
+**सहायक** का मतलब है कोई भी व्यक्ति जो प्लेटफॉर्म पर पंजीकृत है और उपयोगकर्ताओं को स्वतंत्र रूप से गैर-कानूनी और गैर-चिकित्सा सहायता सेवाएँ प्रदान करने के लिए (ओरिएंटेशन, व्यावहारिक काम, अनौपचारिक अनुवाद, स्थानीय परिचय, आदि)।
+
+
+**उपयोगकर्ता** का मतलब है कोई भी व्यक्ति जो सहायक से संपर्क करने के लिए प्लेटफॉर्म का उपयोग करता है।
+
+
+**कनेक्शन** का मतलब है तकनीकी/परिचालनात्मक परिचय जो संपर्क सक्षम करता है (विवरण साझा करना और/या कॉल/संदेश/वीडियो शुरू करना और/या सहायक द्वारा स्वीकृति)।
+
+
+**हस्तक्षेप देश** का मतलब है वह क्षेत्राधिकार जो मुख्य रूप से कनेक्शन के समय उपयोगकर्ता के अनुरोध द्वारा लक्षित है।
+
+
+**कनेक्शन शुल्क** का मतलब है **EUR 19** (यदि EUR में भुगतान किया गया) या **USD 25** (यदि USD में भुगतान किया गया), परिवर्तनों के अधीन और/या भविष्य के प्रभाव के साथ **स्थानीय सूचियाँ** देश/मुद्रा द्वारा।
+
+
+**भुगतान प्रोसेसर** तीसरे पक्ष की सेवाएँ हैं जो संग्रह और भुगतान को संभालते हैं।
+
+
+---
+
+
+## 2. उद्देश्य, दायरा और स्वीकृति
+
+
+Ulixai **केवल एक तकनीकी मध्यस्थ** के रूप में कार्य करता है और न तो नियोक्ता है, न एजेंट है और न ही सहायकों का साथी; Ulixai कोई कानूनी, चिकित्सा, कर, लेखा या अन्य विनियमित सलाह नहीं देता है और न ही सहायक–उपयोगकर्ता अनुबंधों का पक्ष है।
+
+
+**क्लिक-रैप स्वीकृति** इलेक्ट्रॉनिक हस्ताक्षर और सहमति का गठन करती है। SOS इन शर्तों और/या शुल्क सूचियों को **भविष्य के प्रभाव** के साथ अद्यतन कर सकता है।
+
+
+**व्यावसायिक क्षमता (B2B)**: सहायक विशेष रूप से व्यावसायिक उद्देश्यों के लिए कार्य करता है; उपभोक्ता संरक्षण नियम Ulixai–सहायक संबंध पर लागू नहीं होते हैं।
+
+
+---
+
+
+## 3. सहायक स्थिति – अनुपालन, अधिकार और जिम्मेदारियाँ
+
+
+**स्वतंत्रता।** सहायक एक स्वतंत्र पेशेवर के रूप में कार्य करता है।
+
+
+**कार्य अधिकार और आप्रवास।** सहायक **एकमात्र रूप से जिम्मेदार** है सभी **परमिट/वीजा और व्यावसायिक पंजीकरण** प्राप्त करने/बनाए रखने के लिए जो प्रत्येक हस्तक्षेप देश में आवश्यक हैं। Ulixai **ऐसे अधिकार को सत्यापित नहीं करता** है और **उनके लिए कोई दायित्व नहीं लेता है**।
+
+
+**विनियमित सेवाएँ।** सहायक **नहीं** देगा विनियमित सेवाएँ (उदाहरण के लिए, कानूनी, चिकित्सा, वित्तीय, लेखा, रियल-एस्टेट दलाली, आदि) **जब तक कि ठीक से लाइसेंस/अधिकृत न हो** और स्थानीय कानून के साथ पूरी तरह अनुपालन न हो; अन्यथा सहायक को संयम से काम लेना चाहिए और उपयोगकर्ता को उपयुक्त लाइसेंसप्राप्त पेशेवर के पास निर्देशित करना चाहिए।
+
+
+**सामान्य अनुपालन।** सहायक लागू कानूनों का पालन करता है (उपभोक्ता, ई-कॉमर्स, विज्ञापन/याचना, उचित प्रतिस्पर्धा, AML/KYC जहाँ प्रासंगिक, कर, डेटा सुरक्षा, प्रतिबंध/निर्यात, व्यक्तिगत सुरक्षा)।
+
+
+**बीमा।** सहायक उपयुक्त बीमा बनाए रखता है।
+
+
+**गोपनीयता।** सहायक उपयोगकर्ता की जानकारी की रक्षा करता है।
+
+
+---
+
+
+## 4. खाता, जाँच और सुरक्षा
+
+
+एक सहायक के लिए एक खाता; सटीक, संपूर्ण और वर्तमान प्रोफ़ाइल। Ulixai उचित जाँच (ID, प्रोफ़ाइल संगति, प्रतिबंध/KYC स्क्रीनिंग प्रोसेसर के माध्यम से) कर सकता है और सुरक्षा, अनुपालन या गुणवत्ता के कारणों के लिए पहुँच से इनकार/निलंबित/वापस ले सकता है। साख सुरक्षित रखें; खाते के माध्यम से गतिविधि सहायक की मानी जाती है।
+
+
+---
+
+
+## 5. उपयोग नियम – गुणवत्ता, निषिद्ध आचरण, कोई परिहार नहीं
+
+
+सटीक विवरण; कोई झूठी व्यावसायिक स्थिति नहीं; परिणाम की कोई गारंटी नहीं।
+
+
+**निषिद्ध:** अवैध/भेदभावपूर्ण/धोखाधड़ीपूर्ण सामग्री; अनुचित प्रथाएँ; डेटा का दुरुपयोग; रिवर्स इंजीनियरिंग; मिलीभगत/बहिष्कार; प्रतिबंध/निर्यात उल्लंघन; कोई भी अवैध गतिविधि।
+
+
+**कोई परिहार नहीं:** **नए उपयोगकर्ता के साथ प्रत्येक नया कनेक्शन** प्लेटफॉर्म के माध्यम से **कनेक्शन शुल्क** को ट्रिगर करता है; शुल्क से बचने के लिए नई परिचय पर प्लेटफॉर्म से बचना निषिद्ध है।
+
+
+**उपलब्धता:** प्लेटफॉर्म **"जैसा है"** प्रदान किया जाता है।
+
+
+---
+
+
+## 6. सहायक–उपयोगकर्ता संबंध (प्लेटफॉर्म के बाहर)
+
+
+कनेक्शन के बाद, पक्ष **प्लेटफॉर्म से बाहर** अनुबंध कर सकते हैं। सहायक स्थानीय सेवा पुष्टि/शर्तें, चालान और कर को संभालता है। Ulixai सहायक की सेवाओं या प्रतिबद्धताओं के लिए **जिम्मेदार नहीं है**।
+
+
+---
+
+
+## 7. शुल्क, एकल भुगतान और कर
+
+
+**फ्लैट कनेक्शन शुल्क।** **EUR 19 / USD 25** प्रति कनेक्शन, कर और प्रोसेसर शुल्क को छोड़कर; Ulixai राशि बदल सकता है और/या भविष्य के प्रभाव के साथ **स्थानीय सूचियाँ** देश/मुद्रा द्वारा प्रकाशित कर सकता है।
+
+
+**एकल भुगतान और विभाजन।** उपयोगकर्ता प्लेटफॉर्म के माध्यम से **एक राशि** का भुगतान करता है जो (i) सहायक का प्रतिफल (जैसा सहमत) और (ii) Ulixai का कनेक्शन शुल्क को कवर करता है। Ulixai (या इसका प्रोसेसर) एकत्र करता है, **कटौती करता है** इसका शुल्क, फिर **बाकी भेजता है** सहायक को, जो **अधिकृत करता है** ऐसी कटौतियों को।
+
+
+**देय और गैर-वापसी योग्य।** कनेक्शन शुल्क **कनेक्शन पर** अर्जित होता है और **गैर-वापसी योग्य** होता है (Ulixai की विवेकाधीन अच्छी इच्छा के अधीन **कानून द्वारा अनुमत सीमा तक** केवल-प्लेटफॉर्म विफलता की स्थिति में)।
+
+
+**उपयोगकर्ता रिफंड।** यदि प्रदान किया गया, तो रिफंड **सहायक के हिस्से को वहन करता है**: Ulixai भविष्य के भुगतान के विरुद्ध **रोक सकता है/ऑफसेट** कर सकता है या यदि कोई कारण नहीं है तो प्रतिपूर्ति का अनुरोध कर सकता है।
+
+
+**विदेशी मुद्रा** और **कर**: प्रोसेसर FX दर/शुल्क लागू हो सकते हैं; सहायक सभी लागू कर के लिए जिम्मेदार है; Ulixai एकत्र/भेजता है जहाँ आवश्यक हो वहाँ VAT या स्थानीय समकक्ष कनेक्शन शुल्क पर।
+
+
+**ऑफसेट** अधिकृत है।
+
+
+---
+
+
+## 8. डेटा सुरक्षा (वैश्विक संरचना)
+
+
+**भूमिकाएँ।** कनेक्शन के लिए प्राप्त उपयोगकर्ता डेटा के लिए, **Ulixai और सहायक** प्रत्येक **स्वतंत्र नियंत्रक** के रूप में कार्य करते हैं अपने अपने उद्देश्यों के लिए।
+
+
+**कानूनी आधार/उद्देश्य:** अनुबंध प्रदर्शन, वैध हित (सुरक्षा/धोखाधड़ी निवारण/सेवा सुधार), कानूनी अनुपालन (AML/प्रतिबंध) और जहाँ लागू हो वहाँ सहमति।
+
+
+**अंतर्राष्ट्रीय हस्तांतरण** उपयुक्त सुरक्षा के साथ हो सकते हैं जहाँ आवश्यक हो।
+
+
+**अधिकार और संपर्क** प्लेटफॉर्म संपर्क फॉर्म के माध्यम से।
+
+
+**सुरक्षा** उपाय लागू होते हैं; उल्लंघनों को आवश्यकतानुसार सूचित किया जाता है। सहायक हस्तक्षेप देश के कानून के तहत डेटा प्रक्रिया करता है।
+
+
+---
+
+
+## 9. बौद्धिक संपदा
+
+
+प्लेटफॉर्म IP Ulixai के साथ रहता है। सहायक इन शर्तों के दौरान पहुँच के लिए **व्यक्तिगत, गैर-एकमात्र, अहस्तांतरणीय** अधिकार प्राप्त करता है। सहायक की सामग्री **विश्वव्यापी, गैर-एकमात्र** आधार पर होस्टिंग और प्रदर्शन के लिए Ulixai को लाइसेंस दी जाती है।
+
+
+---
+
+
+## 10. गारंटियाँ, दायित्व और क्षतिपूर्ति
+
+
+परिणामों/गुणवत्ता/मात्रा के लिए कोई वारंटी नहीं; प्लेटफॉर्म **"जैसा है"।**
+
+
+**दायित्व सीमा:** कानून द्वारा अनुमत सीमा तक, Ulixai का सहायक को कुल दायित्व **प्रत्यक्ष नुकसान** तक सीमित है और **कुल से अधिक नहीं होगा** **कनेक्शन शुल्क** जो Ulixai को **लेनदेन** के लिए प्राप्त हुए हैं जो दावे को जन्म देते हैं।
+
+
+**कोई अप्रत्यक्ष/परिणामी/विशेष/दंडात्मक नुकसान नहीं।**
+
+
+**क्षतिपूर्ति:** सहायक **क्षतिपूर्ति और निर्दोष रखेगा** Ulixai (और संबद्ध, अधिकारी, कर्मचारी, एजेंट) दावों/नुकसान/लागतों (उचित वकीलों की फीस सहित) के विरुद्ध जो (i) इन शर्तों/कानूनों के उल्लंघन, (ii) सहायक की सामग्री, (iii) सहायक सेवाएँ/चूकें, (iv) कार्य अधिकार/आप्रवास/लाइसेंसिंग की कमी से उत्पन्न होते हैं।
+
+
+---
+
+
+## 11. लागू कानून – मध्यस्थता – एस्टोनियाई अदालतें – सामूहिक कार्यवाही
+
+
+**वास्तविक कानून:** प्रत्येक कनेक्शन के लिए, **हस्तक्षेप देश के कानून** Ulixai–सहायक संबंध को नियंत्रित करते हैं, अनिवार्य स्थानीय नियमों और आदेशात्मक अंतर्राष्ट्रीय नियमों के अधीन।
+
+
+**अनिवार्य मध्यस्थता** किसी भी Ulixai–सहायक विवाद के लिए। **स्थान: तालिन (एस्टोनिया)। भाषा: अंग्रेजी।** ट्रिब्यूनल ऊपर परिभाषित **वास्तविक कानून** लागू करता है। कार्यवाही **गोपनीय** हैं।
+
+
+**सामूहिक/सामूहिक कार्यवाही को कानून द्वारा अनुमत सीमा तक छोड़ दिया गया है।**
+
+
+**एस्टोनियाई अदालतों का एकमात्र क्षेत्राधिकार** (तालिन) **गैर-मध्यस्थ** दावों, पुरस्कारों के प्रवर्तन और तत्काल उपायों के लिए; सहायक स्थान/फोरम के आपत्तियों को वापस लेता है non conveniens.
+
+
+---
+
+
+## 12. विविध
+
+
+**असाइनमेंट**: Ulixai इन शर्तों को समूह संस्था या उत्तराधिकारी को असाइन कर सकता है; सहायक Ulixai की सहमति के बिना असाइन नहीं कर सकता है।
+
+
+**संपूर्ण समझौता**: ये शर्तें पूर्व समझ को प्रतिस्थापित करती हैं।
+
+
+**नोटिस**: प्लेटफॉर्म पर पोस्ट करके, ऐप में, या संपर्क फॉर्म के माध्यम से।
+
+
+**व्याख्या**: शीर्षक सुविधा के लिए हैं; कोई **प्रति proferentem** नहीं।
+
+
+**भाषाएँ**: अनुवाद प्रदान किए जा सकते हैं; व्याख्या के लिए **अंग्रेजी प्रबल** होती है।
+
+
+**वियोजनीयता**: अमान्य शर्तें समकक्ष प्रभाव के वैध लोगों द्वारा प्रतिस्थापित होती हैं।
+
+
+**कोई वापसी नहीं**: प्रवर्तन की विफलता वापसी नहीं है।
+
+
+---
+
+
+## 13. संपर्क
+
+
+किसी भी प्रश्न या कानूनी अनुरोधों के लिए, हमसे संपर्क करें:
+`;
+
+  
+  
+const defaultEs = `
+# Términos de Uso – Ayudantes de Expatriados (Global)
+
+
+**SOS Expat por Ulixai OÜ** (la "**Plataforma**", "**SOS**", "**nosotros**")
+
+
+**Versión 2.2 – Última actualización: 16 de junio de 2025**
+
+
+---
+
+
+## 1. Definiciones
+
+
+**Ayudante** significa cualquier persona registrada en la Plataforma para ofrecer, de forma independiente, servicios de asistencia no legal y no médica a los Usuarios (orientación, trámites prácticos, traducción informal, introducciones locales, etc.).
+
+
+**Usuario** significa cualquier persona que utiliza la Plataforma para contactar con un Ayudante.
+
+
+**Conexión** significa la introducción técnica/operacional que permite contacto (compartir detalles y/o iniciar llamada/mensaje/vídeo y/o aceptación por parte del Ayudante).
+
+
+**País de Intervención** significa la jurisdicción principalmente dirigida por la solicitud del Usuario en el momento de la Conexión.
+
+
+**Tarifa de Conexión** significa **EUR 19** (si se paga en EUR) o **USD 25** (si se paga en USD), sujeta a cambios y/o **horarios locales** por país/moneda con efecto prospectivo.
+
+
+**Procesadores de Pago** son servicios de terceros que manejan recaudaciones y pagos.
+
+
+---
+
+
+## 2. Propósito, Alcance y Aceptación
+
+
+Ulixai actúa **únicamente como intermediario técnico** y no es ni empleador ni agente ni socio de los Ayudantes; Ulixai no proporciona asesoramiento legal, médico, fiscal, contable u otro regulado y no es parte de contratos Ayudante–Usuario.
+
+
+**La aceptación por clic** constituye firma electrónica y consentimiento. SOS puede actualizar estos Términos y/o horarios de tarifas con **efecto prospectivo** al publicar.
+
+
+**Capacidad profesional (B2B)**: el Ayudante actúa exclusivamente para propósitos profesionales; los regímenes de protección del consumidor no se aplican a la relación Ulixai–Ayudante.
+
+
+---
+
+
+## 3. Estado del Ayudante – Cumplimiento, Autorizaciones y Responsabilidades
+
+
+**Independencia.** El Ayudante actúa como profesional independiente.
+
+
+**Autorización de trabajo e inmigración.** El Ayudante es **únicamente responsable** de obtener/mantener **todos los permisos/visas y registros comerciales** requeridos en cada País de Intervención. Ulixai **no verifica** tales autorizaciones y **no asume responsabilidad** por ellas.
+
+
+**Servicios regulados.** El Ayudante **no deberá** proporcionar servicios regulados (por ejemplo, legal, médico, financiero, contable, corretaje de bienes raíces, etc.) **a menos que esté debidamente licenciado/autorizado** y en cumplimiento total con la ley local; de lo contrario, el Ayudante debe abstenerse y redirigir al Usuario a un profesional apropiadamente licenciado.
+
+
+**Cumplimiento general.** El Ayudante cumple con las leyes aplicables (protección del consumidor, comercio electrónico, publicidad/solicitud, competencia leal, AML/KYC donde sea relevante, fiscalidad, protección de datos, sanciones/exportación, seguridad personal).
+
+
+**Seguro.** El Ayudante mantiene un seguro apropiado.
+
+
+**Confidencialidad.** El Ayudante salvaguarda la información del Usuario.
+
+
+---
+
+
+## 4. Cuenta, Verificaciones y Seguridad
+
+
+Una cuenta por Ayudante; perfil exacto, completo y actualizado. Ulixai puede realizar verificaciones razonables (ID, coherencia de perfil, verificaciones de sanciones/KYC a través de procesadores) y puede denegar/suspender/retirar acceso por razones de seguridad, cumplimiento o calidad. Mantenga las credenciales seguras; la actividad a través de la cuenta se considera actividad del Ayudante.
+
+
+---
+
+
+## 5. Reglas de Uso – Calidad, Conducta Prohibida, Sin Evasión
+
+
+Descripción exacta; sin estado profesional falso; sin promesas de resultados.
+
+
+**Prohibido:** contenido ilegal/discriminatorio/engañoso; prácticas injustas; uso indebido de datos; ingeniería inversa; colusión/boicot; infracciones de sanciones/exportación; cualquier actividad ilegal.
+
+
+**Sin evasión:** **cada nueva Conexión con un nuevo Usuario** a través de la Plataforma desencadena la **Tarifa de Conexión**; evitar la Plataforma para eludir tarifas en una nueva introducción está prohibido.
+
+
+**Disponibilidad:** la Plataforma se proporciona **"tal como está".**
+
+
+---
+
+
+## 6. Relación Ayudante–Usuario (Fuera de la Plataforma)
+
+
+Después de la Conexión, las partes pueden contratar **fuera de la Plataforma**. El Ayudante proporciona confirmaciones/términos de servicio local, facturas y maneja impuestos. Ulixai **no es responsable** por los servicios o compromisos del Ayudante.
+
+
+---
+
+
+## 7. Tarifas, Pago Único e Impuestos
+
+
+**Tarifa de Conexión Fija.** **EUR 19 / USD 25** por Conexión, exclusivos de impuestos y cargos del procesador; Ulixai puede cambiar montos y/o publicar **horarios locales** por país/moneda con efecto prospectivo.
+
+
+**Pago único y división.** El Usuario paga **una cantidad** a través de la Plataforma que cubre (i) la remuneración del Ayudante (como se acordó) y (ii) la Tarifa de Conexión de Ulixai. Ulixai (o su procesador) recauda, **deduce** su Tarifa, luego **remite** el resto al Ayudante, quien **autoriza** tales deducciones.
+
+
+**Debido y no reembolsable.** La Tarifa de Conexión se **gana en** la Conexión y es **no reembolsable** (sujeta a la voluntad discrecional de buena fe de Ulixai **en la medida permitida por la ley** en caso de falla solo de la Plataforma).
+
+
+**Reembolsos de Usuario.** Si se otorgan, los reembolsos los **cubre la parte del Ayudante**: Ulixai puede **retener/compensar** contra pagos futuros o solicitar reembolso si no hay ninguno.
+
+
+**Divisas** e **impuestos**: pueden aplicarse tasas/cargos de divisas del procesador; el Ayudante es responsable de todos los impuestos aplicables; Ulixai recauda/remite IVA o equivalente local en la Tarifa de Conexión donde sea requerido.
+
+
+**Compensación** autorizada.
+
+
+---
+
+
+## 8. Protección de Datos (Marco Global)
+
+
+**Funciones.** Para datos de Usuario recibidos para Conexión, **Ulixai y el Ayudante** actúan cada uno como **controlador independiente** para sus propios propósitos.
+
+
+**Bases legales/propósitos:** ejecución de contrato, intereses legítimos (seguridad/prevención de fraude/mejora de servicio), cumplimiento legal (AML/sanciones) y consentimiento donde sea aplicable.
+
+
+**Las transferencias internacionales** pueden ocurrir con salvaguardias apropiadas donde sea requerido.
+
+
+**Derechos y contacto** a través del formulario de contacto de la Plataforma.
+
+
+**Se aplican medidas de** seguridad; las infracciones se notifican según sea requerido. El Ayudante procesa datos bajo la ley del País de Intervención.
+
+
+---
+
+
+## 9. Propiedad Intelectual
+
+
+La IP de la Plataforma permanece con Ulixai. El Ayudante recibe un derecho **personal, no exclusivo, no transferible** para acceder durante estos Términos. El contenido del Ayudante se licencia a Ulixai en base **mundial, no exclusiva** para alojamiento y visualización.
+
+
+---
+
+
+## 10. Garantías, Responsabilidad e Indemnización
+
+
+Sin garantía de resultados/calidad/volumen; Plataforma **"tal como está".**
+
+
+**Límite de responsabilidad:** en la máxima medida permitida, la responsabilidad total de Ulixai ante el Ayudante se limita a **daños directos** y **no debe exceder** el total de **Tarifas de Conexión** recibidas por Ulixai para la **transacción** que da lugar al reclamo.
+
+
+**Sin daños indirectos/consecuentes/especiales/punitivos.**
+
+
+**Indemnización:** el Ayudante **indemnizará y dejará indemne** a Ulixai (y afiliadas, funcionarios, empleados, agentes) contra reclamos/pérdidas/costos (incluidos honorarios razonables de abogados) que surjan de (i) incumplimiento de estos Términos/leyes, (ii) contenido del Ayudante, (iii) servicios/omisiones del Ayudante, (iv) falta de autorización de trabajo/inmigración/licencia.
+
+
+---
+
+
+## 11. Ley Aplicable – Arbitraje – Tribunales Estonios – Acciones Colectivas
+
+
+**Ley sustantiva:** para cada Conexión, las **leyes del País de Intervención** rigen la relación Ulixai–Ayudante, sujetas a reglas locales obligatorias y normas internacionales perentorias.
+
+
+**Arbitraje ICC obligatorio** para cualquier disputa Ulixai–Ayudante. **Sede: Tallin (Estonia). Idioma: Francés.** El Tribunal aplica la **ley sustantiva** definida arriba. Los procedimientos son **confidenciales**.
+
+
+**Las acciones/colectivas de clase se renuncian** en la medida permitida por la ley.
+
+
+**Jurisdicción exclusiva de tribunales estonios** (Tallin) para reclamos **no arbitrables**, ejecución de laudos y medidas urgentes; el Ayudante renuncia a objeciones de jurisdicción/forum non conveniens.
+
+
+---
+
+
+## 12. Diverso
+
+
+**Asignación**: Ulixai puede asignar estos Términos a una entidad de grupo o sucesor; el Ayudante no puede asignar sin consentimiento de Ulixai.
+
+
+**Acuerdo Completo**: estos Términos reemplazan entendimientos previos.
+
+
+**Avisos**: mediante publicación en la Plataforma, en la aplicación o a través del formulario de contacto.
+
+
+**Interpretación**: los encabezados son por conveniencia; sin **contra proferentem**.
+
+
+**Idiomas**: se pueden proporcionar traducciones; **el francés prevalece** para la interpretación.
+
+
+**Separabilidad**: términos inválidos reemplazados por válidos de efecto equivalente.
+
+
+**Sin renuncia**: el incumplimiento de hacer cumplir no es una renuncia.
+
+
+---
+
+
+## 13. Contacto
+
+
+Para cualquier pregunta o solicitud legal, contáctenos:
+`;
+const defaultDe = `
+# Nutzungsbedingungen – Expatriate Helfer (Global)
+
+
+**SOS Expat von Ulixai OÜ** (die "**Plattform**", "**SOS**", "**wir**")
+
+
+**Version 2.2 – Letzte Aktualisierung: 16. Juni 2025**
+
+
+---
+
+
+## 1. Definitionen
+
+
+**Helfer** bedeutet jede Person, die auf der Plattform registriert ist, um Benutzern unabhängig nichtrechtliche und nichtmedizinische Hilfsdienste anzubieten (Orientierung, praktische Besorgungen, informelle Übersetzung, lokale Vorstellungen, usw.).
+
+
+**Benutzer** bedeutet jede Person, die die Plattform nutzt, um einen Helfer zu kontaktieren.
+
+
+**Verbindung** bedeutet die technische/operative Einführung, die Kontakt ermöglicht (Austausch von Details und/oder Einleitung eines Anrufs/einer Nachricht/eines Videos und/oder Annahme durch den Helfer).
+
+
+**Interventionsland** bedeutet die Jurisdiktion, die hauptsächlich vom Antrag des Benutzers zum Zeitpunkt der Verbindung angestrebt wird.
+
+
+**Verbindungsgebühr** bedeutet **EUR 19** (falls in EUR bezahlt) oder **USD 25** (falls in USD bezahlt), abhängig von Änderungen und/oder **lokalen Zeitplänen** nach Land/Währung mit prospektiver Wirkung.
+
+
+**Zahlungsprozessoren** sind Drittanbieter-Services, die Einzüge und Auszahlungen bearbeiten.
+
+
+---
+
+
+## 2. Zweck, Umfang und Annahme
+
+
+Ulixai handelt **ausschließlich als technischer Vermittler** und ist weder Arbeitgeber noch Agent noch Partner der Helfer; Ulixai leistet keine rechtliche, medizinische, steuerliche, buchhalterische oder sonstige regulierte Beratung und ist nicht Partei von Helfer–Benutzer-Verträgen.
+
+
+**Click-Wrap-Annahme** stellt eine elektronische Unterschrift und Zustimmung dar. SOS kann diese Bedingungen und/oder Gebührenpläne mit **prospektiver Wirkung** durch Veröffentlichung aktualisieren.
+
+
+**Berufliche Kapazität (B2B)**: Der Helfer handelt ausschließlich zu beruflichen Zwecken; Verbraucherschutzbestimmungen gelten nicht für die Ulixai–Helfer-Beziehung.
+
+
+---
+
+
+## 3. Helferstatus – Compliance, Genehmigungen und Verantwortlichkeiten
+
+
+**Unabhängigkeit.** Der Helfer handelt als unabhängiger Fachmann.
+
+
+**Arbeitserlaubnis und Einwanderung.** Der Helfer ist **allein verantwortlich** für das Erwerben/Beibehalten **aller erforderlichen Genehmigungen/Visa und Geschäftsregistrierungen** in jedem Interventionsland. Ulixai **prüft** solche Genehmigungen **nicht** und **übernimmt keine Haftung** dafür.
+
+
+**Regulierte Dienstleistungen.** Der Helfer **darf** regulierte Dienstleistungen (z.B. rechtliche, medizinische, finanzielle, buchhalterische, Immobilienmakler usw.) **nicht** erbringen **ohne angemessene Lizenz/Genehmigung** und vollständige Einhaltung lokaler Gesetze; andernfalls muss sich der Helfer enthalten und den Benutzer an einen angemessen lizenzierten Fachmann weiterleiten.
+
+
+**Allgemeine Compliance.** Der Helfer befolgt geltende Gesetze (Verbraucherschutz, E-Commerce, Werbung/Anwerbung, fairer Wettbewerb, AML/KYC, wo relevant, Steuern, Datenschutz, Sanktionen/Export, persönliche Sicherheit).
+
+
+**Versicherung.** Der Helfer hält angemessene Versicherungen aufrecht.
+
+
+**Vertraulichkeit.** Der Helfer schützt Benutzerinformationen.
+
+
+---
+
+
+## 4. Konto, Überprüfungen und Sicherheit
+
+
+Ein Konto pro Helfer; genaues, vollständiges und aktuelles Profil. Ulixai kann angemessene Überprüfungen durchführen (ID, Profilkonsistenz, Sanktions-/KYC-Screenings über Prozessoren) und kann den Zugriff aus Sicherheits-, Compliance- oder Qualitätsgründen verweigern/aussetzen/widerrufen. Halten Sie Anmeldedaten sicher; Aktivität über das Konto gilt als Aktivität des Helfers.
+
+
+---
+
+
+## 5. Nutzungsregeln – Qualität, verbotenes Verhalten, keine Umgehung
+
+
+Genaue Beschreibung; kein falscher beruflicher Status; keine Ergebnisgarantien.
+
+
+**Verboten:** rechtswidrige/diskriminierende/trügerische Inhalte; unlautere Praktiken; Missbrauch von Daten; Rückwärts-Ingenieurwesen; Absprachen/Boykott; Verstöße gegen Sanktionen/Export; jede rechtswidrige Aktivität.
+
+
+**Keine Umgehung:** **jede neue Verbindung mit einem neuen Benutzer** über die Plattform löst die **Verbindungsgebühr** aus; die Vermeidung der Plattform zur Umgehung von Gebühren bei einer neuen Vorstellung ist verboten.
+
+
+**Verfügbarkeit:** Plattform wird **"wie gehabt"** bereitgestellt.
+
+
+---
+
+
+## 6. Helfer–Benutzer-Beziehung (außerhalb der Plattform)
+
+
+Nach der Verbindung können Parteien **außerhalb der Plattform** einen Vertrag schließen. Der Helfer stellt lokale Dienstbestätigungen/Bedingungen, Rechnungen bereit und handhabt Steuern. Ulixai ist **nicht verantwortlich** für die Dienstleistungen oder Verpflichtungen des Helfers.
+
+
+---
+
+
+## 7. Gebühren, einmalige Zahlung und Steuern
+
+
+**Festverbindungsgebühr.** **EUR 19 / USD 25** pro Verbindung, ausschließlich Steuern und Prozessorgebühren; Ulixai kann Beträge ändern und/oder **lokale Zeitpläne** nach Land/Währung mit prospektiver Wirkung veröffentlichen.
+
+
+**Einmalige Zahlung und Aufteilung.** Der Benutzer zahlt **einen Betrag** über die Plattform, der (i) die Vergütung des Helfers (wie vereinbart) und (ii) die Verbindungsgebühr von Ulixai abdeckt. Ulixai (oder sein Prozessor) sammelt, **zieht** seine Gebühr ab, sendet dann den **Rest** an den Helfer, der solche **Abzüge autorisiert**.
+
+
+**Fällig und nicht rückerstattbar.** Die Verbindungsgebühr wird bei der **Verbindung verdient** und ist **nicht rückerstattbar** (vorbehaltlich des diskretionierten guten Willens von Ulixai **insoweit gesetzlich zulässig** im Fall von nur Plattformfehlern).
+
+
+**Benutzerrückerstattungen.** Falls gewährt, werden Rückerstattungen vom **Anteil des Helfers getragen**: Ulixai kann **gegen zukünftige Zahlungen zurückhalten/kompensieren** oder Rückerstattung fordern, falls keine ausstehend sind.
+
+
+**Devisen** und **Steuern**: Prozessor-Devisensätze/-gebühren können gelten; Helfer ist für alle geltenden Steuern verantwortlich; Ulixai kassiert/überweist Mehrwertsteuer oder Ortsäquivalent auf die Verbindungsgebühr, wo erforderlich.
+
+
+**Ausgleich** genehmigt.
+
+
+---
+
+
+## 8. Datenschutz (globales Rahmenwerk)
+
+
+**Rollen.** Für Benutzerdaten, die für die Verbindung empfangen werden, handeln **Ulixai und der Helfer** jeweils als **unabhängiger Kontroller** für ihre eigenen Zwecke.
+
+
+**Rechtsgrundlagen/Zwecke:** Vertragserfüllung, legitime Interessen (Sicherheit/Betrugsprävention/Serviceverbesserung), Rechtskonformität (AML/Sanktionen) und Zustimmung, wo zutreffend.
+
+
+**Internationale Übertragungen** können mit angemessenen Schutzmaßnahmen erfolgen, wo erforderlich.
+
+
+**Rechte und Kontakt** über das Kontaktformular der Plattform.
+
+
+**Sicherheitsmaßnahmen** gelten; Verstöße werden wie erforderlich gemeldet. Der Helfer verarbeitet Daten gemäß dem Recht des Interventionslandes.
+
+
+---
+
+
+## 9. Geistiges Eigentum
+
+
+Plattform-IP bleibt bei Ulixai. Der Helfer erhält ein **persönliches, nichtausschließliches, nichtübertragbares** Zugangsrecht während dieser Bedingungen. Der Helferinhalt wird unter **weltweiter, nichtausschließlicher** Basis an Ulixai lizenziert zum Hosten und Anzeigen.
+
+
+---
+
+
+## 10. Garantien, Haftung und Schadloshaltung
+
+
+Keine Garantie für Ergebnisse/Qualität/Volumen; Plattform **"wie gehabt."**
+
+
+**Haftungsbegrenzung:** insoweit gesetzlich zulässig ist Ulixais Gesamthaftung gegenüber dem Helfer auf **direkte Schäden** begrenzt und **darf nicht überschreiten** die Gesamtheit der **Verbindungsgebühren**, die Ulixai für die **Transaktion** erhielt, die zum Anspruch führte.
+
+
+**Keine indirekten/Folge-/besonderen/Strafschäden.**
+
+
+**Schadloshaltung:** Der Helfer wird Ulixai (und verbundene Unternehmen, Funktionäre, Mitarbeiter, Agenten) **schadlos halten und freistellen** gegen Ansprüche/Verluste/Kosten (einschließlich angemessene Anwaltsgebühren), die entstehen aus (i) Verstoß gegen diese Bedingungen/Gesetze, (ii) Helferinhalt, (iii) Helferdienste/Auslassungen, (iv) Fehlen von Arbeitserlaubnis/Einwanderung/Lizenzierung.
+
+
+---
+
+
+## 11. Anwendbares Recht – Schiedsverfahren – Estnische Gerichte – Klassenmaßnahmen
+
+
+**Materielles Recht:** für jede Verbindung regeln **Gesetze des Interventionslandes** die Ulixai–Helfer-Beziehung, vorbehaltlich verbindlicher lokaler Regeln und zwingender internationaler Normen.
+
+
+**Obligatorisches ICC-Schiedsverfahren** für jeden Ulixai–Helfer-Streit. **Sitz: Tallinn (Estland). Sprache: Französisch.** Tribunal wendet das oben definierte **materielle Recht** an. Verfahren sind **vertraulich**.
+
+
+**Sammel-/Klasse-Klagen werden ausgeschlossen** insoweit gesetzlich zulässig.
+
+
+**Ausschließliche Gerichtsbarkeit estnischer Gerichte** (Tallinn) für **nicht-schiedsrechtliche** Ansprüche, Durchsetzung von Schiedssprüchen und einstweilige Maßnahmen; Helfer verzichtet auf Einsprüche gegen Gerichtsstand/Forum non conveniens.
+
+
+---
+
+
+## 12. Sonstiges
+
+
+**Abtretung**: Ulixai kann diese Bedingungen an ein Konzernunternehmen oder einen Nachfolger abtreten; Helfer kann ohne Zustimmung von Ulixai nicht abtreten.
+
+
+**Gesamte Vereinbarung**: diese Bedingungen ersetzen frühere Abmachungen.
+
+
+**Mitteilungen**: durch Veröffentlichung auf der Plattform, in der App oder über das Kontaktformular.
+
+
+**Auslegung**: Überschriften sind zweckmäßig; kein **contra proferentem**.
+
+
+**Sprachen**: Übersetzungen können bereitgestellt werden; **Französisch überwiegt** für die Auslegung.
+
+
+**Salvatorische Klausel**: ungültige Bedingungen werden durch gültige mit gleichwertiger Wirkung ersetzt.
+
+
+**Keine Verzichtserklärung**: Nichtgeltendmachung ist keine Verzichtserklärung.
+
+
+---
+
+
+## 13. Kontakt
+
+
+Bei Fragen oder rechtlichen Anfragen kontaktieren Sie uns:
+`;
+
+
   // Fallback de contenu par langue
-  const defaultContent: string = selectedLanguage === 'fr' ? defaultFr : defaultEn;
+  // const defaultContent: string = selectedLanguage === 'fr' ? defaultFr : defaultEn;
+  const defaultContent: string = 
+  selectedLanguage === 'fr' ? defaultFr :
+  selectedLanguage === 'es' ? defaultEs :
+  selectedLanguage === 'de' ? defaultDe :
+  selectedLanguage === 'ru' ? defaultRu :
+  selectedLanguage === 'hi' ? defaultHi :
+  defaultEn;
 
   // Ancrage UI
   const anchorMap = useMemo(
@@ -706,7 +1900,7 @@ For any questions or legal requests, contact us:
                 <span className="text-sm text-white/90">{t.lastUpdated}</span>
               </div>
 
-              <div className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-sm p-1">
+              {/* <div className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-sm p-1">
                 <button
                   type="button"
                   onClick={() => handleLanguageChange('fr')}
@@ -729,7 +1923,7 @@ For any questions or legal requests, contact us:
                   <Languages className="w-4 h-4" />
                   EN
                 </button>
-              </div>
+              </div> */}
             </div>
 
             <header className="text-center">
