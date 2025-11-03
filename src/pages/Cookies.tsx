@@ -28,13 +28,13 @@ const Cookies: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [selectedLanguage, setSelectedLanguage] = useState<
-    "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt"
-  >((language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt") || "fr");
+    "fr" | "en" | "es" | "de" | "ru" | "hi" | "ch" | "pt"
+  >((language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "ch") || "fr");
 
   // Rester aligné avec la langue globale si elle change
   useEffect(() => {
     if (language)
-      setSelectedLanguage(language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt");
+      setSelectedLanguage(language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "ch" | "pt");
   }, [language]);
 
   // Récupération Firestore (même logique métier)
@@ -145,22 +145,37 @@ const Cookies: React.FC = () => {
       contactCta: "Свяжитесь с нами",
       editHint: "Документ редактируется через консоль администратора",
     },
-      hi: {
-    title: "कुकीज़ नीति",
-    subtitle: "हम अपनी साइट पर कुकीज़ का उपयोग कैसे करते हैं",
-    lastUpdated: "संस्करण 2.2 – अंतिम अपडेट: 16 जून 2025",
-    loading: "लोड हो रहा है...",
-    features: [
-      "सहमति बैनर",
-      "विस्तृत नियंत्रण",
-      "GDPR अनुपालन",
-      "पूर्ण पारदर्शिता",
-    ],
-    anchorTitle: "सारांश",
-    contactCta: "हमसे संपर्क करें",
-    editHint: "एडमिन कंसोल से संपादन योग्य दस्तावेज़",
-  },
-  pt: {
+    hi: {
+      title: "कुकीज़ नीति",
+      subtitle: "हम अपनी साइट पर कुकीज़ का उपयोग कैसे करते हैं",
+      lastUpdated: "संस्करण 2.2 – अंतिम अपडेट: 16 जून 2025",
+      loading: "लोड हो रहा है...",
+      features: [
+        "सहमति बैनर",
+        "विस्तृत नियंत्रण",
+        "GDPR अनुपालन",
+        "पूर्ण पारदर्शिता",
+      ],
+      anchorTitle: "सारांश",
+      contactCta: "हमसे संपर्क करें",
+      editHint: "एडमिन कंसोल से संपादन योग्य दस्तावेज़",
+    },
+    ch: {
+      title: "Cookie 政策",
+      subtitle: "我们在网站上如何使用 Cookie",
+      lastUpdated: "版本 2.2 – 最后更新：2025年6月16日",
+      loading: "加载中...",
+      features: [
+        "同意横幅",
+        "细化控制",
+        "符合 GDPR",
+        "完全透明",
+      ],
+      anchorTitle: "概览",
+      contactCta: "联系我们",
+      editHint: "可从管理控制台编辑文档",
+    }
+      pt: {
   title: "Política de Cookies",
   subtitle: "Como usamos cookies em nosso site",
   lastUpdated: "Versão 2.2 – Última atualização: 16 de junho de 2025",
@@ -876,6 +891,82 @@ Para qualquer pergunta relacionada a cookies ou proteção de dados, entre em co
 `;
 
 
+const defaultCh = `
+    # Cookie 政策
+
+    **版本 2.2 – 最后更新：2025年6月16日**
+
+    ---
+
+    ## 1. 什么是 Cookie？
+
+    **Cookie** 是您访问网站时存储在设备上的小型文本文件。它帮助网站**识别您的设备**、**记住您的偏好设置**并**提升您的体验**。
+
+    ---
+
+    ## 2. 我们为什么使用 Cookie？
+
+    2.1. **核心功能**：身份验证、安全、语言偏好、会话连续性。  
+    2.2. **分析**：了解网站的使用情况以便改进。  
+    2.3. **性能优化**：提高速度和稳定性。  
+    2.4. **通信**：启用电话/视频功能及技术通知。
+
+    ---
+
+    ## 3. Cookie 类型
+
+    3.1. **核心 Cookie**：严格必要，用于提供您请求的服务。  
+    3.2. **分析 Cookie**：聚合统计数据，尽可能匿名处理。  
+    3.3. **性能 Cookie**：缓存/CDN 和渲染优化。
+
+    ---
+
+    ## 4. 法律依据及存储时长
+
+    4.1. **核心 Cookie**：合法利益（用于提供服务）。  
+    4.2. **分析/性能 Cookie**：通过横幅获得**您的同意**。  
+    4.3. **存储时长**：会话型或持久型（从几小时到 13 个月不等，取决于用途）。
+
+    ---
+
+    ## 5. 管理您的同意
+
+    5.1. 您可以通过我们的**同意横幅**选择**接受/拒绝**非核心类别。  
+    5.2. 您可以随时通过页脚的**Cookie 偏好设置**链接**撤回同意**。  
+    5.3. 您也可以使用**浏览器设置**来阻止或删除 Cookie。
+
+    ---
+
+    ## 6. 第三方 Cookie
+
+    我们可能依赖能够设置自身 Cookie 的供应商：**Stripe**（支付）、**Twilio**（电话）、**Firebase**（认证/数据库/托管）以及（如启用）**分析工具**。这些供应商可能在**您所在国家以外**运营；如法律要求，我们将采取**适当的保障措施**。
+
+    ---
+
+    ## 7. 国际传输
+
+    当数据传输发生在您所在国家以外时，我们会依赖**公认的保障措施**（例如标准合同条款或适足性决定），以符合法律要求。
+
+    ---
+
+    ## 8. 您的权利
+
+    根据适用法律（如 GDPR），您可能拥有**访问**、**更正**、**删除**、**反对**、**限制处理**和**数据可携带**的权利。您可以通过我们的**联系表单**行使这些权利：http://localhost:5174/contact
+
+    ---
+
+    ## 9. 政策更新
+
+    我们可能会更新本政策以反映监管或技术变化。更新后的版本将发布在本页，并标明**最后更新**日期。
+
+    ---
+
+    ## 10. 联系方式
+
+    如对 Cookie 或数据保护有任何疑问，请联系我们：**http://localhost:5174/contact**
+`;
+
+
   // const defaultContent = selectedLanguage === "fr" ? defaultFr : defaultEn;
   const defaultContent =
     selectedLanguage === "fr"
@@ -890,6 +981,8 @@ Para qualquer pergunta relacionada a cookies ou proteção de dados, entre em co
               ? defaultHi
               : selectedLanguage === "pt"
                 ? defaultPt
+              : selectedLanguage === "ch"
+              ? defaultCh
             : defaultEn;
 
   // Sommaire UI
@@ -1261,7 +1354,10 @@ const anchorMap = useMemo(
                 ? "Что такое файл cookie?"
                 : selectedLanguage === "hi"
                   ? "कुकी क्या है?"
-                  : "What is a cookie?",
+            
+                : selectedLanguage === "ch"
+                ? "什么是cookie？?"
+                : "What is a cookie?",
     },
     {
       num: 2,
@@ -1272,30 +1368,35 @@ const anchorMap = useMemo(
           ? "Por qué los utilizamos"
           : selectedLanguage === "pt"
             ? "Por que os usamos"
-            : selectedLanguage === "de"
-              ? "Warum wir sie verwenden"
-              : selectedLanguage === "ru"
-                ? "Почему мы их используем"
-                : selectedLanguage === "hi"
-                  ? "हम इनका उपयोग क्यों करते हैं"
-                  : "Why we use them",
+        
+          : selectedLanguage === "de"
+            ? "Warum wir sie verwenden"
+            : selectedLanguage === "ru"
+              ? "Почему мы их используем"
+              : selectedLanguage === "hi"
+                ? "हम इनका उपयोग क्यों करते हैं"
+                : selectedLanguage === "ch"
+                ? "我们为什么使用它们"
+                : "Why we use them",
     },
     {
       num: 3,
       label:
         selectedLanguage === "fr"
           ? "Types de cookies"
-          : selectedLanguage === "es"
-          ? "Tipos de cookies"
+       
           : selectedLanguage === "pt"
             ? "Tipos de cookies"
-            : selectedLanguage === "de"
-              ? "Cookie-Typen"
-              : selectedLanguage === "ru"
-                ? "Типы файлов cookie"
-                : selectedLanguage === "hi"
-                  ? "कुकीज़ के प्रकार"
-                  : "Types of cookies",
+         
+          : selectedLanguage === "de"
+            ? "Cookie-Typen"
+            : selectedLanguage === "ru"
+              ? "Типы файлов cookie"
+              : selectedLanguage === "hi"
+                ? "कुकीज़ के प्रकार"
+                : selectedLanguage === "ch"
+                ? "cookie 的类型"
+                : "Types of cookies",
     },
     {
       num: 4,
@@ -1306,13 +1407,16 @@ const anchorMap = useMemo(
           ? "Base legal y duración"
           : selectedLanguage === "pt"
             ? "Base legal e duração"
-            : selectedLanguage === "de"
-              ? "Rechtsgrundlage & Dauer"
-              : selectedLanguage === "ru"
-                ? "Правовая основа и продолжительность"
-                : selectedLanguage === "hi"
-                  ? "कानूनी आधार और अवधि"
-                  : "Legal basis & duration",
+      
+          : selectedLanguage === "de"
+            ? "Rechtsgrundlage & Dauer"
+            : selectedLanguage === "ru"
+              ? "Правовая основа и продолжительность"
+              : selectedLanguage === "hi"
+                ? "कानूनी आधार और अवधि"
+                : selectedLanguage === "ch"
+                ? "法律依据和期限"
+                : "Legal basis & duration",
     },
     {
       num: 5,
@@ -1323,13 +1427,15 @@ const anchorMap = useMemo(
           ? "Gestión del consentimiento"
           : selectedLanguage === "pt"
             ? "Gestão do consentimento"
-            : selectedLanguage === "de"
-              ? "Verwaltung der Zustimmung"
-              : selectedLanguage === "ru"
-                ? "Управление согласием"
-                : selectedLanguage === "hi"
-                  ? "सहमति प्रबंधन"
-                  : "Managing consent",
+          : selectedLanguage === "de"
+            ? "Verwaltung der Zustimmung"
+            : selectedLanguage === "ru"
+              ? "Управление согласием"
+              : selectedLanguage === "hi"
+                ? "सहमति प्रबंधन"
+                : selectedLanguage === "ch"
+                ? "管理同意"
+                : "Managing consent",
     },
     {
       num: 6,
@@ -1338,15 +1444,19 @@ const anchorMap = useMemo(
           ? "Cookies tiers"
           : selectedLanguage === "es"
           ? "Cookies de terceros"
+<<<<<<< HEAD
           : selectedLanguage === "pt"
             ? "Cookies de terceiros"
-            : selectedLanguage === "de"
-              ? "Drittanbieter-Cookies"
-              : selectedLanguage === "ru"
-                ? "Файлы cookie третьих лиц"
-                : selectedLanguage === "hi"
-                  ? "तृतीय पक्ष कुकीज़"
-                  : "Third-party cookies",
+          : selectedLanguage === "de"
+            ? "Drittanbieter-Cookies"
+            : selectedLanguage === "ru"
+              ? "Файлы cookie третьих лиц"
+              : selectedLanguage === "hi"
+                ? "तृतीय पक्ष कुकीज़"
+                : selectedLanguage === "ch"
+                ? "第三方 cookieज़"
+                : "Third-party cookies",
+>>>>>>> 5d539c770cf5e3d6dad570756c5e82a5fb79096c
     },
     {
       num: 7,
@@ -1357,13 +1467,16 @@ const anchorMap = useMemo(
           ? "Transferencias internacionales"
           : selectedLanguage === "pt"
             ? "Transferências internacionais"
-            : selectedLanguage === "de"
-              ? "Internationale Übermittlungen"
-              : selectedLanguage === "ru"
-                ? "Международные передачи"
-                : selectedLanguage === "hi"
-                  ? "अंतर्राष्ट्रीय स्थानांतरण"
-                  : "International transfers",
+      
+          : selectedLanguage === "de"
+            ? "Internationale Übermittlungen"
+            : selectedLanguage === "ru"
+              ? "Международные передачи"
+              : selectedLanguage === "hi"
+                ? "अंतर्राष्ट्रीय स्थानांतरण"
+                : selectedLanguage === "ch"
+                ? "国际转账"
+                : "International transfers",
     },
     {
       num: 8,
@@ -1374,13 +1487,16 @@ const anchorMap = useMemo(
           ? "Sus derechos"
           : selectedLanguage === "pt"
             ? "Seus direitos"
-            : selectedLanguage === "de"
-              ? "Ihre Rechte"
-              : selectedLanguage === "ru"
-                ? "Ваши права"
-                : selectedLanguage === "hi"
-                  ? "आपके अधिकार"
-                  : "Your rights",
+        
+          : selectedLanguage === "de"
+            ? "Ihre Rechte"
+            : selectedLanguage === "ru"
+              ? "Ваши права"
+              : selectedLanguage === "hi"
+                ? "आपके अधिकार"
+                : selectedLanguage === "ch"
+                ? "您的权利र"
+                : "Your rights",
     },
     {
       num: 9,
@@ -1391,13 +1507,15 @@ const anchorMap = useMemo(
           ? "Actualizaciones"
           : selectedLanguage === "pt"
             ? "Atualizações"
-            : selectedLanguage === "de"
-              ? "Aktualisierungen"
-              : selectedLanguage === "ru"
-                ? "Обновления"
-                : selectedLanguage === "hi"
-                  ? "अपडेट"
-                  : "Updates",
+          : selectedLanguage === "de"
+            ? "Aktualisierungen"
+            : selectedLanguage === "ru"
+              ? "Обновления"
+              : selectedLanguage === "hi"
+                ? "अपडेट"
+                : selectedLanguage === "ch"
+                ? "更新"
+                : "Updates",
     },
     {
       num: 10,
@@ -1406,15 +1524,15 @@ const anchorMap = useMemo(
           ? "Contact"
           : selectedLanguage === "es"
           ? "Contacto"
-          : selectedLanguage === "pt"
-            ? "Contato"
-            : selectedLanguage === "de"
-              ? "Kontakt"
-              : selectedLanguage === "ru"
-                ? "Контакт"
-                : selectedLanguage === "hi"
-                  ? "संपर्क"
-                  : "Contact",
+          : selectedLanguage === "de"
+            ? "Kontakt"
+            : selectedLanguage === "ru"
+              ? "Контакт"
+              : selectedLanguage === "hi"
+                ? "संपर्क"
+                : selectedLanguage === "ch"
+                ? "接触"
+                : "Contact",
     },
   ],
   [selectedLanguage]

@@ -62,7 +62,7 @@ const stripePromise = getStripePromise();
 /* --------------------------------- Types --------------------------------- */
 type Currency = "eur" | "usd";
 type ServiceKind = "lawyer" | "expat";
-type Lang = "fr" | "en" | "es" | "ru" | "de" | "hi";
+type Lang = "fr" | "en" | "es" | "ru" | "de" | "hi" | "ch";
 
 interface ServiceData {
   providerId: string;
@@ -183,7 +183,7 @@ const useTranslation = () => {
   const { language: ctxLang } = useApp();
   // const language: Lang = ctxLang === "en" ? "en" : "fr";
   const language: Lang = (
-    ["es", "de", "ru", "en", "fr", "hi"].includes(ctxLang) ? ctxLang : "fr"
+    ["es", "de", "ru", "en", "fr", "hi", "ch"].includes(ctxLang) ? ctxLang : "fr"
   ) as Lang;
 
   const dict: Record<string, Record<Lang, string>> = {
@@ -194,6 +194,7 @@ const useTranslation = () => {
       de: "Zahlung und Verbindung - SOS Expats",
       ru: "Оплата и подключение - SOS Expats",
       hi: "भुगतान और कनेक्शन - SOS Expats",
+      ch: "结帐和连接 - 求救 外籍人士"
     },
     "meta.description": {
       fr: "Réglez en toute sécurité et lancez votre consultation avec l'expert sélectionné.",
@@ -202,6 +203,7 @@ const useTranslation = () => {
       de: "Zahlen Sie sicher und starten Sie Ihre Beratung mit dem ausgewählten Experten.",
       ru: "Платите безопасно и начните консультацию с выбранным экспертом.",
       hi: "सुरक्षित रूप से भुगतान करें और चयनित विशेषज्ञ के साथ अपना परामर्श शुरू करें।",
+      ch: "安全支付后，即可开始与您选择的专家进行咨询。"
     },
     "meta.keywords": {
       fr: "paiement, consultation, avocat, expatriés, SOS Expats, appel",
@@ -210,6 +212,7 @@ const useTranslation = () => {
       de: "zahlung, beratung, anwalt, expats, anruf",
       ru: "платеж, консультация, адвокат, экспаты, звонок",
       hi: "भुगतान, परामर्श, वकील, प्रवासी, कॉल",
+      ch: "付款、咨询、律师、外籍人士、电话"
     },
     "meta.og_title": {
       fr: "Paiement sécurisé - SOS Expats",
@@ -218,6 +221,7 @@ const useTranslation = () => {
       de: "Sichere Zahlung - SOS Expats",
       ru: "Безопасная оплата - SOS Expats",
       hi: "सुरक्षित भुगतान - SOS Expats",
+      ch: "安全结账 - 求救 外籍人士"
     },
     "meta.og_description": {
       fr: "Paiement SSL, mise en relation automatique avec votre expert.",
@@ -226,6 +230,7 @@ const useTranslation = () => {
       de: "SSL-Zahlung, automatische Verbindung mit Ihrem Experten.",
       ru: "SSL-платеж, автоматическое подключение к вашему эксперту.",
       hi: "SSL भुगतान, आपके विशेषज्ञ के साथ स्वचालित कनेक्शन।",
+      ch: "SSL支付，自动连接您的专家。"
     },
     "meta.og_image_alt": {
       fr: "Paiement SOS Expats",
@@ -234,6 +239,7 @@ const useTranslation = () => {
       de: "SOS Expats Zahlung",
       ru: "Платеж SOS Expats",
       hi: "SOS Expats भुगतान",
+      ch: "SOS 外籍人士结账"
     },
     "meta.twitter_image_alt": {
       fr: "Interface de paiement SOS Expats",
@@ -242,6 +248,7 @@ const useTranslation = () => {
       de: "SOS Expats-Zahlungsschnittstelle",
       ru: "Интерфейс оплаты SOS Expats",
       hi: "SOS Expats भुगतान इंटरफ़ेस",
+      ch: "SOS 外籍人士 结账界面"
     },
     "ui.back": {
       fr: "Retour",
@@ -250,6 +257,7 @@ const useTranslation = () => {
       de: "Zurück",
       ru: "Назад",
       hi: "वापस",
+      ch: "后退"
     },
     "ui.securePayment": {
       fr: "Paiement sécurisé",
@@ -258,6 +266,7 @@ const useTranslation = () => {
       de: "Sichere Zahlung",
       ru: "Безопасный платеж",
       hi: "सुरक्षित भुगतान",
+      ch: "安全支付"
     },
     "ui.connecting": {
       fr: "Mise en relation",
@@ -266,6 +275,7 @@ const useTranslation = () => {
       de: "Verbindung wird hergestellt",
       ru: "Подключение",
       hi: "कनेक्ट हो रहा है",
+      ch: "正在连接"
     },
     "ui.completed": {
       fr: "Consultation terminée",
@@ -274,6 +284,7 @@ const useTranslation = () => {
       de: "Beratung abgeschlossen",
       ru: "Консультация завершена",
       hi: "परामर्श पूर्ण हुआ",
+      ch: "咨询完成"
     },
     "ui.payToStart": {
       fr: "Validez pour lancer la consultation",
@@ -282,6 +293,7 @@ const useTranslation = () => {
       de: "Bestätigen Sie, um die Beratung zu starten",
       ru: "Подтвердите для начала консультации",
       hi: "परामर्श शुरू करने के लिए पुष्टि करें",
+      ch: "确认开始咨询"
     },
     "ui.connectingExpert": {
       fr: "Connexion avec votre expert",
@@ -290,6 +302,7 @@ const useTranslation = () => {
       de: "Verbindung mit Ihrem Experten",
       ru: "Подключение к вашему эксперту",
       hi: "आपके विशेषज्ञ से कनेक्ट हो रहे हैं",
+      ch: "联系您的专家"
     },
     "ui.thanks": {
       fr: "Merci d'avoir utilisé nos services",
@@ -298,6 +311,7 @@ const useTranslation = () => {
       de: "Danke, dass Sie unsere Dienste nutzen",
       ru: "Спасибо за использование наших услуг",
       hi: "हमारी सेवाओं का उपयोग करने के लिए धन्यवाद",
+      ch: "感谢您使用我们的服务"
     },
     "card.title": {
       fr: "Paiement",
@@ -306,6 +320,7 @@ const useTranslation = () => {
       de: "Zahlung",
       ru: "Платеж",
       hi: "भुगतान",
+      ch: "支付"
     },
     "card.number": {
       fr: "Numéro de carte",
@@ -314,6 +329,7 @@ const useTranslation = () => {
       de: "Kartennummer",
       ru: "Номер карты",
       hi: "कार्ड नंबर",
+      ch: "卡号"
     },
     "card.expiry": {
       fr: "Expiration",
@@ -322,6 +338,7 @@ const useTranslation = () => {
       de: "Ablaufdatum",
       ru: "Срок действия",
       hi: "समाप्ति तिथि",
+      ch: "到期日"
     },
     "card.cvc": {
       fr: "CVC",
@@ -330,6 +347,7 @@ const useTranslation = () => {
       de: "CVC",
       ru: "CVC",
       hi: "CVC",
+      ch: "中央VC"
     },
     "summary.title": {
       fr: "Récapitulatif",
@@ -338,6 +356,7 @@ const useTranslation = () => {
       de: "Zusammenfassung",
       ru: "Сводка",
       hi: "सारांश",
+      ch: "概括"
     },
     "summary.expert": {
       fr: "Expert",
@@ -346,6 +365,7 @@ const useTranslation = () => {
       de: "Experte",
       ru: "Эксперт",
       hi: "विशेषज्ञ",
+      ch: "专家"
     },
     "summary.service": {
       fr: "Service",
@@ -354,6 +374,7 @@ const useTranslation = () => {
       de: "Dienstleistung",
       ru: "Услуга",
       hi: "सेवा",
+      ch: "服务"
     },
     "summary.duration": {
       fr: "Durée",
@@ -362,6 +383,7 @@ const useTranslation = () => {
       de: "Dauer",
       ru: "Продолжительность",
       hi: "अवधि",
+      ch: "期间"
     },
     "summary.total": {
       fr: "Total",
@@ -370,6 +392,7 @@ const useTranslation = () => {
       de: "Gesamt",
       ru: "Всего",
       hi: "कुल",
+      ch: "全部的"
     },
     "btn.pay": {
       fr: "Payer",
@@ -378,6 +401,7 @@ const useTranslation = () => {
       de: "Zahlen",
       ru: "Оплатить",
       hi: "भुगतान करें",
+      ch: "支付"
     },
     "btn.evaluate": {
       fr: "Évaluer",
@@ -386,6 +410,7 @@ const useTranslation = () => {
       de: "Bewertung",
       ru: "Отзыв",
       hi: "समीक्षा करें",
+      ch: "审查"
     },
     "btn.receipt": {
       fr: "Télécharger le reçu",
@@ -394,6 +419,7 @@ const useTranslation = () => {
       de: "Quittung herunterladen",
       ru: "Загрузить квитанцию",
       hi: "रसीद डाउनलोड करें",
+      ch: "下载收据"
     },
     "btn.home": {
       fr: "Retour à l'accueil",
@@ -402,6 +428,7 @@ const useTranslation = () => {
       de: "Zurück zur Startseite",
       ru: "Вернуться на главную",
       hi: "होम पर वापस जाएं",
+      ch: "回到家"
     },
     "status.paid": {
       fr: "Paiement confirmé",
@@ -410,6 +437,7 @@ const useTranslation = () => {
       de: "Zahlung bestätigt",
       ru: "Платеж подтвержден",
       hi: "भुगतान की पुष्टि हुई",
+      ch: "付款已确认"
     },
     "status.expertContacted": {
       fr: "Expert contacté(e)",
@@ -418,6 +446,7 @@ const useTranslation = () => {
       de: "Experte kontaktiert",
       ru: "Эксперт связан",
       hi: "विशेषज्ञ से संपर्क किया गया",
+      ch: "已联系专家"
     },
     "status.callStarted": {
       fr: "Consultation démarrée",
@@ -426,6 +455,7 @@ const useTranslation = () => {
       de: "Beratung gestartet",
       ru: "Консультация начата",
       hi: "परामर्श शुरू हुआ",
+      ch: "咨询开始"
     },
     "alert.missingDataTitle": {
       fr: "Données manquantes",
@@ -434,6 +464,7 @@ const useTranslation = () => {
       de: "Fehlende Daten",
       ru: "Отсутствующие данные",
       hi: "डेटा गायब है",
+      ch: "缺失数据"
     },
     "alert.missingDataText": {
       fr: "Veuillez sélectionner à nouveau un expert.",
@@ -442,6 +473,7 @@ const useTranslation = () => {
       de: "Bitte wählen Sie einen Experten erneut aus.",
       ru: "Пожалуйста, выберите эксперта снова.",
       hi: "कृपया फिर से एक विशेषज्ञ चुनें।",
+      ch: "请再次选择专家。"
     },
     "alert.loginRequiredTitle": {
       fr: "Connexion requise",
@@ -450,6 +482,7 @@ const useTranslation = () => {
       de: "Anmeldung erforderlich",
       ru: "Требуется вход",
       hi: "लॉगिन आवश्यक है",
+      ch: "需要登录"
     },
     "alert.loginRequiredText": {
       fr: "Connectez-vous pour lancer une consultation.",
@@ -458,6 +491,7 @@ const useTranslation = () => {
       de: "Melden Sie sich an, um eine Beratung zu starten.",
       ru: "Войдите для начала консультации.",
       hi: "परामर्श शुरू करने के लिए साइन इन करें।",
+      ch: "登录即可开始咨询。"
     },
     "banner.secure": {
       fr: "Paiement sécurisé",
@@ -466,6 +500,7 @@ const useTranslation = () => {
       de: "Sichere Zahlung",
       ru: "Безопасный платеж",
       hi: "सुरक्षित भुगतान",
+      ch: "安全支付"
     },
     "banner.ssl": {
       fr: "Données protégées par SSL. Appel lancé automatiquement après paiement.",
@@ -474,6 +509,7 @@ const useTranslation = () => {
       de: "Daten durch SSL geschützt. Anruf startet automatisch nach Zahlung.",
       ru: "Данные защищены SSL. Звонок начинается автоматически после оплаты.",
       hi: "SSL द्वारा सुरक्षित डेटा। भुगतान के बाद स्वचालित रूप से कॉल शुरू होती है।",
+      ch: "数据受 SSL 加密保护。付款后自动发起通话。"
     },
     "err.invalidConfig": {
       fr: "Configuration de paiement invalide",
@@ -482,6 +518,7 @@ const useTranslation = () => {
       de: "Ungültige Zahlungskonfiguration",
       ru: "Неверная конфигурация платежа",
       hi: "अमान्य भुगतान कॉन्फ़िगरेशन",
+      ch: "支付配置无效"
     },
     "err.unauth": {
       fr: "Utilisateur non authentifié",
@@ -490,6 +527,7 @@ const useTranslation = () => {
       de: "Nicht authentifizierter Benutzer",
       ru: "Неаутентифицированный пользователь",
       hi: "अप्रमाणित उपयोगकर्ता",
+      ch: "未经身份验证的用户"
     },
     "err.sameUser": {
       fr: "Vous ne pouvez pas réserver avec vous-même",
@@ -498,6 +536,7 @@ const useTranslation = () => {
       de: "Du kannst dich nicht selbst buchen",
       ru: "Вы не можете забронировать себя",
       hi: "आप स्वयं को बुक नहीं कर सकते",
+      ch: "你不能自己预订。"
     },
     "err.minAmount": {
       fr: "Montant minimum 5€",
@@ -506,6 +545,7 @@ const useTranslation = () => {
       de: "Mindestbetrag 5€",
       ru: "Минимальная сумма 5€",
       hi: "न्यूनतम राशि €5",
+      ch: "最低金额 €5"
     },
     "err.maxAmount": {
       fr: "Montant maximum 500€",
@@ -514,6 +554,7 @@ const useTranslation = () => {
       de: "Höchstbetrag 500€",
       ru: "Максимальная сумма 500€",
       hi: "अधिकतम राशि €500",
+      ch: "最高金额 500 欧元"
     },
     "err.amountMismatch": {
       fr: "Montant invalide. Merci de réessayer.",
@@ -522,6 +563,7 @@ const useTranslation = () => {
       de: "Ungültiger Betrag. Bitte versuchen Sie es erneut.",
       ru: "Неверная сумма. Пожалуйста, попробуйте снова.",
       hi: "अमान्य राशि। कृपया पुनः प्रयास करें।",
+      ch: "金额无效，请重试。"
     },
     "err.noClientSecret": {
       fr: "ClientSecret manquant",
@@ -530,6 +572,7 @@ const useTranslation = () => {
       de: "ClientSecret fehlt",
       ru: "ClientSecret отсутствует",
       hi: "ClientSecret गायब है",
+      ch: "缺少客户端密钥"
     },
     "err.noCardElement": {
       fr: "Champ carte introuvable",
@@ -538,6 +581,7 @@ const useTranslation = () => {
       de: "Kartenfeld nicht gefunden",
       ru: "Поле карты не найдено",
       hi: "कार्ड फ़ील्ड नहीं मिला",
+      ch: "未找到卡字段"
     },
     "err.stripe": {
       fr: "Erreur de paiement Stripe",
@@ -546,6 +590,7 @@ const useTranslation = () => {
       de: "Stripe-Zahlungsfehler",
       ru: "Ошибка платежа Stripe",
       hi: "Stripe भुगतान त्रुटि",
+      ch: "条纹支付错误"
     },
     "err.paymentFailed": {
       fr: "Le paiement a échoué",
@@ -554,6 +599,7 @@ const useTranslation = () => {
       de: "Zahlung fehlgeschlagen",
       ru: "Платеж не прошел",
       hi: "भुगतान विफल रहा",
+      ch: "付款失败"
     },
     "err.actionRequired": {
       fr: "Authentification supplémentaire requise",
@@ -562,6 +608,7 @@ const useTranslation = () => {
       de: "Zusätzliche Authentifizierung erforderlich",
       ru: "Требуется дополнительная аутентификация",
       hi: "अतिरिक्त प्रमाणीकरण आवश्यक है",
+      ch: "需要额外的身份验证"
     },
     "err.invalidMethod": {
       fr: "Méthode de paiement invalide",
@@ -570,6 +617,7 @@ const useTranslation = () => {
       de: "Ungültige Zahlungsmethode",
       ru: "Неверный способ оплаты",
       hi: "अमान्य भुगतान विधि",
+      ch: "付款方式无效"
     },
     "err.canceled": {
       fr: "Le paiement a été annulé",
@@ -578,6 +626,7 @@ const useTranslation = () => {
       de: "Zahlung wurde storniert",
       ru: "Платеж отменен",
       hi: "भुगतान रद्द किया गया",
+      ch: "付款已取消"
     },
     "err.unexpectedStatus": {
       fr: "Statut de paiement inattendu",
@@ -586,6 +635,7 @@ const useTranslation = () => {
       de: "Unerwarteter Zahlungsstatus",
       ru: "Неожиданный статус платежа",
       hi: "अप्रत्याशित भुगतान स्थिति",
+      ch: "意外的付款状态"
     },
     "err.genericPayment": {
       fr: "Une erreur est survenue lors du paiement",
@@ -594,6 +644,7 @@ const useTranslation = () => {
       de: "Während der Zahlung ist ein Fehler aufgetreten",
       ru: "При оплате произошла ошибка",
       hi: "भुगतान के दौरान एक त्रुटि हुई",
+      ch: "付款过程中发生错误"
     },
     "err.invalidPhone": {
       fr: "Numéro de téléphone invalide",
@@ -602,6 +653,7 @@ const useTranslation = () => {
       de: "Ungültige Telefonnummer",
       ru: "Неверный номер телефона",
       hi: "अमान्य फ़ोन नंबर",
+      ch: "电话号码无效"
     },
   };
 
