@@ -28,13 +28,13 @@ const Cookies: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [selectedLanguage, setSelectedLanguage] = useState<
-    "fr" | "en" | "es" | "de" | "ru" | "hi"
-  >((language as "fr" | "en" | "es" | "de" | "ru" | "hi") || "fr");
+    "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt"
+  >((language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt") || "fr");
 
   // Rester aligné avec la langue globale si elle change
   useEffect(() => {
     if (language)
-      setSelectedLanguage(language as "fr" | "en" | "es" | "de" | "ru" | "hi");
+      setSelectedLanguage(language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt");
   }, [language]);
 
   // Récupération Firestore (même logique métier)
@@ -160,6 +160,21 @@ const Cookies: React.FC = () => {
     contactCta: "हमसे संपर्क करें",
     editHint: "एडमिन कंसोल से संपादन योग्य दस्तावेज़",
   },
+  pt: {
+  title: "Política de Cookies",
+  subtitle: "Como usamos cookies em nosso site",
+  lastUpdated: "Versão 2.2 – Última atualização: 16 de junho de 2025",
+  loading: "Carregando...",
+  features: [
+    "Banner de consentimento",
+    "Controle granular",
+    "Conformidade com GDPR",
+    "Transparência total",
+  ],
+  anchorTitle: "Resumo",
+  contactCta: "Entre em contato conosco",
+  editHint: "Documento editável no console do administrador",
+}
   };
 
   const t = translations[selectedLanguage];
@@ -783,6 +798,83 @@ Bei Fragen zu Cookies oder Datenschutz kontaktieren Sie uns bitte: [**http://loc
 
 По любым вопросам, связанным с файлами cookie или защитой данных, свяжитесь с нами: [**http://localhost:5174/contact**](http://localhost:5174/contact)
 `;
+  
+
+const defaultPt = `
+# Política de Cookies
+
+**Versão 2.2 – Última atualização: 16 de junho de 2025**
+
+---
+
+## 1. O que é um cookie?
+
+Um **cookie** é um pequeno arquivo de texto armazenado no seu dispositivo (computador, celular, tablet) quando você visita um site. Ele permite que o site **reconheça seu dispositivo**, **lembre** suas preferências e **melhore** sua experiência.
+
+---
+
+## 2. Por que usamos cookies?
+
+2.1. **Funcionamento essencial**: garantir autenticação, segurança, seleção de idioma e manutenção da sua sessão.
+2.2. **Medição de audiência**: compreender o uso do site para melhorá-lo (páginas visitadas, tempo gasto, eventos).
+2.3. **Desempenho**: otimizar a velocidade de carregamento e estabilidade.
+2.4. **Comunicação**: permitir telefonia/vídeo e notificações técnicas.
+
+---
+
+## 3. Tipos de cookies
+
+3.1. **Cookies essenciais**: estritamente necessários para o funcionamento do site.
+3.2. **Cookies analíticos**: estatísticas de uso agregadas e anonimizadas quando possível.
+3.3. **Cookies de desempenho**: melhoria de exibição, cache e distribuição de conteúdo.
+
+---
+
+## 4. Base legal e duração
+
+4.1. **Essenciais**: interesse legítimo (fornecer o serviço solicitado).
+4.2. **Analíticos/Desempenho**: **seu consentimento** através do banner.
+4.3. **Durações**: sessão (apagados ao fechar) ou persistentes (algumas horas até 13 meses no máximo, dependendo da finalidade).
+
+---
+
+## 5. Gestão do seu consentimento
+
+5.1. Você pode **aceitar/recusar** categorias não essenciais através do nosso **banner de consentimento**.
+5.2. Você pode a qualquer momento **retirar seu consentimento** através do link "Preferências de cookies" no rodapé da página.
+5.3. Configure também seu **navegador** para bloquear/excluir cookies.
+
+---
+
+## 6. Cookies emitidos por terceiros
+
+Podemos usar provedores que podem depositar seus próprios cookies: **Stripe** (pagamento), **Twilio** (telefonia), **Firebase** (autenticação/BD/hospedagem) e, conforme ativação, uma ferramenta de **análise de audiência**. Esses terceiros podem operar **fora da UE**; **garantias apropriadas** são estabelecidas quando necessário.
+
+---
+
+## 7. Transferências internacionais
+
+Quando ocorrem transferências de dados fora do seu país, garantimos que elas se baseiem em **mecanismos de proteção** reconhecidos (cláusulas contratuais padrão, decisão de adequação, etc.) quando a lei exige.
+
+---
+
+## 8. Seus direitos
+
+De acordo com a lei aplicável (ex. GDPR), você tem direitos de **acesso**, **retificação**, **exclusão**, **oposição**, **limitação** e **portabilidade** nas condições previstas pela lei. Você pode exercer seus direitos através do nosso **formulário de contato**: http://localhost:5174/contact
+
+---
+
+## 9. Atualização desta política
+
+Podemos modificar esta política para refletir evoluções regulatórias ou técnicas. A versão atualizada é publicada nesta página com a **data de atualização**.
+
+---
+
+## 10. Contato
+
+Para qualquer pergunta relacionada a cookies ou proteção de dados, entre em contato conosco: [[**http://localhost:5174/contact**](http://localhost:5174/contact)](http://localhost:5174/contact)
+`;
+
 
   // const defaultContent = selectedLanguage === "fr" ? defaultFr : defaultEn;
   const defaultContent =
@@ -796,6 +888,8 @@ Bei Fragen zu Cookies oder Datenschutz kontaktieren Sie uns bitte: [**http://loc
             ? defaultRu
             : selectedLanguage === "hi"
               ? defaultHi
+              : selectedLanguage === "pt"
+                ? defaultPt
             : defaultEn;
 
   // Sommaire UI
@@ -993,7 +1087,164 @@ Bei Fragen zu Cookies oder Datenschutz kontaktieren Sie uns bitte: [**http://loc
   // );
 
 
-  const anchorMap = useMemo(
+//   const anchorMap = useMemo(
+//   () => [
+//     {
+//       num: 1,
+//       label:
+//         selectedLanguage === "fr"
+//           ? "Qu'est-ce qu'un cookie ?"
+//           : selectedLanguage === "es"
+//           ? "¿Qué es una cookie?"
+//           : selectedLanguage === "de"
+//             ? "Was ist ein Cookie?"
+//             : selectedLanguage === "ru"
+//               ? "Что такое файл cookie?"
+//               : selectedLanguage === "hi"
+//                 ? "कुकी क्या है?"
+//                 : "What is a cookie?",
+//     },
+//     {
+//       num: 2,
+//       label:
+//         selectedLanguage === "fr"
+//           ? "Pourquoi nous les utilisons"
+//           : selectedLanguage === "es"
+//           ? "Por qué los utilizamos"
+//           : selectedLanguage === "de"
+//             ? "Warum wir sie verwenden"
+//             : selectedLanguage === "ru"
+//               ? "Почему мы их используем"
+//               : selectedLanguage === "hi"
+//                 ? "हम इनका उपयोग क्यों करते हैं"
+//                 : "Why we use them",
+//     },
+//     {
+//       num: 3,
+//       label:
+//         selectedLanguage === "fr"
+//           ? "Types de cookies"
+//           : selectedLanguage === "es"
+//           ? "Tipos de cookies"
+//           : selectedLanguage === "de"
+//             ? "Cookie-Typen"
+//             : selectedLanguage === "ru"
+//               ? "Типы файлов cookie"
+//               : selectedLanguage === "hi"
+//                 ? "कुकीज़ के प्रकार"
+//                 : "Types of cookies",
+//     },
+//     {
+//       num: 4,
+//       label:
+//         selectedLanguage === "fr"
+//           ? "Base légale & durée"
+//           : selectedLanguage === "es"
+//           ? "Base legal y duración"
+//           : selectedLanguage === "de"
+//             ? "Rechtsgrundlage & Dauer"
+//             : selectedLanguage === "ru"
+//               ? "Правовая основа и продолжительность"
+//               : selectedLanguage === "hi"
+//                 ? "कानूनी आधार और अवधि"
+//                 : "Legal basis & duration",
+//     },
+//     {
+//       num: 5,
+//       label:
+//         selectedLanguage === "fr"
+//           ? "Gestion du consentement"
+//           : selectedLanguage === "es"
+//           ? "Gestión del consentimiento"
+//           : selectedLanguage === "de"
+//             ? "Verwaltung der Zustimmung"
+//             : selectedLanguage === "ru"
+//               ? "Управление согласием"
+//               : selectedLanguage === "hi"
+//                 ? "सहमति प्रबंधन"
+//                 : "Managing consent",
+//     },
+//     {
+//       num: 6,
+//       label:
+//         selectedLanguage === "fr"
+//           ? "Cookies tiers"
+//           : selectedLanguage === "es"
+//           ? "Cookies de terceros"
+//           : selectedLanguage === "de"
+//             ? "Drittanbieter-Cookies"
+//             : selectedLanguage === "ru"
+//               ? "Файлы cookie третьих лиц"
+//               : selectedLanguage === "hi"
+//                 ? "तृतीय पक्ष कुकीज़"
+//                 : "Third-party cookies",
+//     },
+//     {
+//       num: 7,
+//       label:
+//         selectedLanguage === "fr"
+//           ? "Transferts internationaux"
+//           : selectedLanguage === "es"
+//           ? "Transferencias internacionales"
+//           : selectedLanguage === "de"
+//             ? "Internationale Übermittlungen"
+//             : selectedLanguage === "ru"
+//               ? "Международные передачи"
+//               : selectedLanguage === "hi"
+//                 ? "अंतर्राष्ट्रीय स्थानांतरण"
+//                 : "International transfers",
+//     },
+//     {
+//       num: 8,
+//       label:
+//         selectedLanguage === "fr"
+//           ? "Vos droits"
+//           : selectedLanguage === "es"
+//           ? "Sus derechos"
+//           : selectedLanguage === "de"
+//             ? "Ihre Rechte"
+//             : selectedLanguage === "ru"
+//               ? "Ваши права"
+//               : selectedLanguage === "hi"
+//                 ? "आपके अधिकार"
+//                 : "Your rights",
+//     },
+//     {
+//       num: 9,
+//       label:
+//         selectedLanguage === "fr"
+//           ? "Mises à jour"
+//           : selectedLanguage === "es"
+//           ? "Actualizaciones"
+//           : selectedLanguage === "de"
+//             ? "Aktualisierungen"
+//             : selectedLanguage === "ru"
+//               ? "Обновления"
+//               : selectedLanguage === "hi"
+//                 ? "अपडेट"
+//                 : "Updates",
+//     },
+//     {
+//       num: 10,
+//       label:
+//         selectedLanguage === "fr"
+//           ? "Contact"
+//           : selectedLanguage === "es"
+//           ? "Contacto"
+//           : selectedLanguage === "de"
+//             ? "Kontakt"
+//             : selectedLanguage === "ru"
+//               ? "Контакт"
+//               : selectedLanguage === "hi"
+//                 ? "संपर्क"
+//                 : "Contact",
+//     },
+//   ],
+//   [selectedLanguage]
+// );
+
+
+const anchorMap = useMemo(
   () => [
     {
       num: 1,
@@ -1002,13 +1253,15 @@ Bei Fragen zu Cookies oder Datenschutz kontaktieren Sie uns bitte: [**http://loc
           ? "Qu'est-ce qu'un cookie ?"
           : selectedLanguage === "es"
           ? "¿Qué es una cookie?"
-          : selectedLanguage === "de"
-            ? "Was ist ein Cookie?"
-            : selectedLanguage === "ru"
-              ? "Что такое файл cookie?"
-              : selectedLanguage === "hi"
-                ? "कुकी क्या है?"
-                : "What is a cookie?",
+          : selectedLanguage === "pt"
+            ? "O que é um cookie?"
+            : selectedLanguage === "de"
+              ? "Was ist ein Cookie?"
+              : selectedLanguage === "ru"
+                ? "Что такое файл cookie?"
+                : selectedLanguage === "hi"
+                  ? "कुकी क्या है?"
+                  : "What is a cookie?",
     },
     {
       num: 2,
@@ -1017,13 +1270,15 @@ Bei Fragen zu Cookies oder Datenschutz kontaktieren Sie uns bitte: [**http://loc
           ? "Pourquoi nous les utilisons"
           : selectedLanguage === "es"
           ? "Por qué los utilizamos"
-          : selectedLanguage === "de"
-            ? "Warum wir sie verwenden"
-            : selectedLanguage === "ru"
-              ? "Почему мы их используем"
-              : selectedLanguage === "hi"
-                ? "हम इनका उपयोग क्यों करते हैं"
-                : "Why we use them",
+          : selectedLanguage === "pt"
+            ? "Por que os usamos"
+            : selectedLanguage === "de"
+              ? "Warum wir sie verwenden"
+              : selectedLanguage === "ru"
+                ? "Почему мы их используем"
+                : selectedLanguage === "hi"
+                  ? "हम इनका उपयोग क्यों करते हैं"
+                  : "Why we use them",
     },
     {
       num: 3,
@@ -1032,13 +1287,15 @@ Bei Fragen zu Cookies oder Datenschutz kontaktieren Sie uns bitte: [**http://loc
           ? "Types de cookies"
           : selectedLanguage === "es"
           ? "Tipos de cookies"
-          : selectedLanguage === "de"
-            ? "Cookie-Typen"
-            : selectedLanguage === "ru"
-              ? "Типы файлов cookie"
-              : selectedLanguage === "hi"
-                ? "कुकीज़ के प्रकार"
-                : "Types of cookies",
+          : selectedLanguage === "pt"
+            ? "Tipos de cookies"
+            : selectedLanguage === "de"
+              ? "Cookie-Typen"
+              : selectedLanguage === "ru"
+                ? "Типы файлов cookie"
+                : selectedLanguage === "hi"
+                  ? "कुकीज़ के प्रकार"
+                  : "Types of cookies",
     },
     {
       num: 4,
@@ -1047,13 +1304,15 @@ Bei Fragen zu Cookies oder Datenschutz kontaktieren Sie uns bitte: [**http://loc
           ? "Base légale & durée"
           : selectedLanguage === "es"
           ? "Base legal y duración"
-          : selectedLanguage === "de"
-            ? "Rechtsgrundlage & Dauer"
-            : selectedLanguage === "ru"
-              ? "Правовая основа и продолжительность"
-              : selectedLanguage === "hi"
-                ? "कानूनी आधार और अवधि"
-                : "Legal basis & duration",
+          : selectedLanguage === "pt"
+            ? "Base legal e duração"
+            : selectedLanguage === "de"
+              ? "Rechtsgrundlage & Dauer"
+              : selectedLanguage === "ru"
+                ? "Правовая основа и продолжительность"
+                : selectedLanguage === "hi"
+                  ? "कानूनी आधार और अवधि"
+                  : "Legal basis & duration",
     },
     {
       num: 5,
@@ -1062,13 +1321,15 @@ Bei Fragen zu Cookies oder Datenschutz kontaktieren Sie uns bitte: [**http://loc
           ? "Gestion du consentement"
           : selectedLanguage === "es"
           ? "Gestión del consentimiento"
-          : selectedLanguage === "de"
-            ? "Verwaltung der Zustimmung"
-            : selectedLanguage === "ru"
-              ? "Управление согласием"
-              : selectedLanguage === "hi"
-                ? "सहमति प्रबंधन"
-                : "Managing consent",
+          : selectedLanguage === "pt"
+            ? "Gestão do consentimento"
+            : selectedLanguage === "de"
+              ? "Verwaltung der Zustimmung"
+              : selectedLanguage === "ru"
+                ? "Управление согласием"
+                : selectedLanguage === "hi"
+                  ? "सहमति प्रबंधन"
+                  : "Managing consent",
     },
     {
       num: 6,
@@ -1077,13 +1338,15 @@ Bei Fragen zu Cookies oder Datenschutz kontaktieren Sie uns bitte: [**http://loc
           ? "Cookies tiers"
           : selectedLanguage === "es"
           ? "Cookies de terceros"
-          : selectedLanguage === "de"
-            ? "Drittanbieter-Cookies"
-            : selectedLanguage === "ru"
-              ? "Файлы cookie третьих лиц"
-              : selectedLanguage === "hi"
-                ? "तृतीय पक्ष कुकीज़"
-                : "Third-party cookies",
+          : selectedLanguage === "pt"
+            ? "Cookies de terceiros"
+            : selectedLanguage === "de"
+              ? "Drittanbieter-Cookies"
+              : selectedLanguage === "ru"
+                ? "Файлы cookie третьих лиц"
+                : selectedLanguage === "hi"
+                  ? "तृतीय पक्ष कुकीज़"
+                  : "Third-party cookies",
     },
     {
       num: 7,
@@ -1092,13 +1355,15 @@ Bei Fragen zu Cookies oder Datenschutz kontaktieren Sie uns bitte: [**http://loc
           ? "Transferts internationaux"
           : selectedLanguage === "es"
           ? "Transferencias internacionales"
-          : selectedLanguage === "de"
-            ? "Internationale Übermittlungen"
-            : selectedLanguage === "ru"
-              ? "Международные передачи"
-              : selectedLanguage === "hi"
-                ? "अंतर्राष्ट्रीय स्थानांतरण"
-                : "International transfers",
+          : selectedLanguage === "pt"
+            ? "Transferências internacionais"
+            : selectedLanguage === "de"
+              ? "Internationale Übermittlungen"
+              : selectedLanguage === "ru"
+                ? "Международные передачи"
+                : selectedLanguage === "hi"
+                  ? "अंतर्राष्ट्रीय स्थानांतरण"
+                  : "International transfers",
     },
     {
       num: 8,
@@ -1107,13 +1372,15 @@ Bei Fragen zu Cookies oder Datenschutz kontaktieren Sie uns bitte: [**http://loc
           ? "Vos droits"
           : selectedLanguage === "es"
           ? "Sus derechos"
-          : selectedLanguage === "de"
-            ? "Ihre Rechte"
-            : selectedLanguage === "ru"
-              ? "Ваши права"
-              : selectedLanguage === "hi"
-                ? "आपके अधिकार"
-                : "Your rights",
+          : selectedLanguage === "pt"
+            ? "Seus direitos"
+            : selectedLanguage === "de"
+              ? "Ihre Rechte"
+              : selectedLanguage === "ru"
+                ? "Ваши права"
+                : selectedLanguage === "hi"
+                  ? "आपके अधिकार"
+                  : "Your rights",
     },
     {
       num: 9,
@@ -1122,13 +1389,15 @@ Bei Fragen zu Cookies oder Datenschutz kontaktieren Sie uns bitte: [**http://loc
           ? "Mises à jour"
           : selectedLanguage === "es"
           ? "Actualizaciones"
-          : selectedLanguage === "de"
-            ? "Aktualisierungen"
-            : selectedLanguage === "ru"
-              ? "Обновления"
-              : selectedLanguage === "hi"
-                ? "अपडेट"
-                : "Updates",
+          : selectedLanguage === "pt"
+            ? "Atualizações"
+            : selectedLanguage === "de"
+              ? "Aktualisierungen"
+              : selectedLanguage === "ru"
+                ? "Обновления"
+                : selectedLanguage === "hi"
+                  ? "अपडेट"
+                  : "Updates",
     },
     {
       num: 10,
@@ -1137,17 +1406,20 @@ Bei Fragen zu Cookies oder Datenschutz kontaktieren Sie uns bitte: [**http://loc
           ? "Contact"
           : selectedLanguage === "es"
           ? "Contacto"
-          : selectedLanguage === "de"
-            ? "Kontakt"
-            : selectedLanguage === "ru"
-              ? "Контакт"
-              : selectedLanguage === "hi"
-                ? "संपर्क"
-                : "Contact",
+          : selectedLanguage === "pt"
+            ? "Contato"
+            : selectedLanguage === "de"
+              ? "Kontakt"
+              : selectedLanguage === "ru"
+                ? "Контакт"
+                : selectedLanguage === "hi"
+                  ? "संपर्क"
+                  : "Contact",
     },
   ],
   [selectedLanguage]
 );
+
 
 
   const body = content || defaultContent;

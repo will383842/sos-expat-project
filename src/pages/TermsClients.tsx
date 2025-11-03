@@ -31,13 +31,13 @@ const TermsClients: React.FC = () => {
   const [content, setContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedLanguage, setSelectedLanguage] = useState<
-    "fr" | "en" | "es" | "de" | "ru" | "hi"
-  >((language as "fr" | "en" | "es" | "de" | "ru" | "hi")  || "fr");
+    "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt"
+  >((language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt")  || "fr");
 
   // Reste aligné avec la langue globale si elle change
   useEffect(() => {
     if (language)
-      setSelectedLanguage(language as "fr" | "en" | "es" | "de" | "ru" | "hi");
+      setSelectedLanguage(language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt");
   }, [language]);
 
   // Récupération du dernier document actif depuis Firestore (type: "terms")
@@ -211,6 +211,29 @@ const TermsClients: React.FC = () => {
       "दुनिया में कहीं भी, मिनटों में एक वकील या सहायक के साथ कॉल बुक करें।",
     seeHowItWorks: "यह कैसे काम करता है देखें",
   },
+  pt: {
+  title: "Termos do Cliente",
+  subtitle: "Condições gerais de uso para clientes",
+  lastUpdated: "Versão 2.2 – Última atualização: 16 de junho de 2025",
+  loading: "Carregando...",
+  languageToggle: "Mudar idioma",
+  keyFeatures: "Características principais",
+  features: [
+    "Pagamento seguro",
+    "Reembolso se não houver conexão",
+    "3 tentativas de chamada",
+    "Provedores verificados",
+  ],
+  anchorTitle: "Resumo",
+  editHint: "Documento editável no console do administrador",
+  heroBadge: "Novo — Termos atualizados",
+  contactUs: "Entre em contato conosco",
+  contactForm: "Formulário de contato",
+  readyToUse: "Pronto para usar o SOS Expat?",
+  readySubtitle:
+    "Reserve uma chamada com um advogado ou assistente em minutos, em qualquer lugar do mundo.",
+  seeHowItWorks: "Veja como funciona",
+}
   };
 
   const t = translations[selectedLanguage];
@@ -1084,6 +1107,272 @@ Wir können Konten wegen Betrug, Nichteinhaltung, Missbrauch oder rechtlichem Ri
 **Контактная форма (поддержка и юридические запросы):** [**http://localhost:5174/contact**](http://localhost:5174/contact)
 `;
 
+
+
+const defaultPt = `
+# Condições Gerais – Clientes (Global)
+
+
+**SOS Expat da Ulixai OÜ** (a "Plataforma", "SOS", "nós")
+
+
+**Versão 2.2 – Última atualização: 16 de junho de 2025**
+
+
+---
+
+
+## 1. Objeto e escopo
+
+
+1.1. As presentes condições gerais ("CGV") regem o uso da Plataforma por qualquer pessoa física ou jurídica que crie uma conta de cliente e reserve um serviço através da Plataforma (o "Cliente").
+
+
+1.2. **Papel da Ulixai.** SOS Expat é uma plataforma de conexão: (i) com advogados independentes ("Advogados"), e/ou (ii) com expatriados assistentes independentes ("Assistentes"). Ulixai não é um escritório de advocacia, não fornece nenhum conselho jurídico, médico, fiscal ou regulamentado, e não é parte do contrato de prestação celebrado entre o Cliente e o prestador (Advogado/Assistente).
+
+
+1.3. **Aceitação eletrônica (click-wrap).** Ao marcar a caixa de aceitação e/ou usar a Plataforma, o Cliente aceita as presentes CGV (assinatura eletrônica). SOS pode reter evidências técnicas (timestamp, identificadores).
+
+
+1.4. **Modificações.** Podemos atualizar as CGV e/ou as tarifas/taxas com efeito prospectivo por publicação na Plataforma. A continuação do uso constitui aceitação.
+
+
+---
+
+
+## 2. Contas, elegibilidade e uso
+
+
+2.1. **Idade e capacidade.** O Cliente declara ter 18 anos completos e capacidade legal. Para pessoas jurídicas, o usuário declara estar autorizado a vincular a empresa.
+
+
+2.2. **Exatidão das informações.** As informações fornecidas (identidade, meios de contato, país, objeto da solicitação) devem ser exatas e atualizadas.
+
+
+2.3. **Uso conforme.** O Cliente se proíbe de qualquer uso ilícito ou abusivo (fraude, conteúdo ilegal, assédio, violação de direitos de terceiros, desvio de fluxos de pagamento, etc.). Nenhum uso para situações médicas ou vitais de emergência; SOS não é um serviço de emergência.
+
+
+2.4. **Disponibilidade.** A Plataforma é fornecida "no estado em que se encontra": nenhuma disponibilidade ininterrupta é garantida (manutenção, incidentes, força maior).
+
+
+---
+
+
+## 3. Natureza dos serviços reserváveis
+
+
+3.1. **Chamadas com Advogados.** Consultas breves de orientação (ex. 20 minutos). O Advogado permanece exclusivamente responsável por seus conselhos e conformidade com sua deontologia/leis locais.
+
+
+3.2. **Chamadas com Assistentes.** Ajuda não regulamentada (orientação prática, tradução informal, contatos locais...). Nenhum conselho jurídico/médico/regulamentado sem licença local adequada.
+
+
+3.3. **Sem garantias.** Não garantimos nem o resultado, nem a qualidade, nem a adequação a uma necessidade particular, nem a disponibilidade dos prestadores.
+
+
+---
+
+
+## 4. Preços, moedas e taxas de conexão
+
+
+4.1. **Exibição de preços.** O preço total exibido no momento da reserva inclui: (i) a remuneração do prestador (Advogado/Assistente) definida de acordo com a oferta apresentada, e (ii) as taxas de conexão devidas à SOS (taxa fixa).
+
+
+4.2. **Taxas de conexão (taxa fixa).** 19€ (EUR) ou 25$ (USD) por conexão (excluindo impostos), integradas no preço total. SOS pode modificar esta taxa e/ou publicar tabelas locais por país/moeda com efeito prospectivo.
+
+
+4.3. **Moedas e conversão.** Os preços podem ser oferecidos em várias moedas. Taxas/taxas de câmbio do processador de pagamento podem se aplicar.
+
+
+4.4. **Impostos.** Os preços exibidos incluem, quando aplicável, IVA ou impostos aplicáveis nas taxas de conexão. Os Prestadores permanecem responsáveis por suas próprias obrigações fiscais.
+
+
+---
+
+
+## 5. Reserva, chamada e tentativas de contato
+
+
+5.1. **Definição de "conexão".** É considerada realizada: (a) a transmissão dos detalhes Cliente-Prestador, e/ou (b) a abertura pela Plataforma de um canal de chamada/mensagem/vídeo, e/ou (c) a aceitação pelo Prestador de uma solicitação do Cliente.
+
+
+5.2. **Tentativas de chamada.** Em caso de chamada imediata: a Plataforma realiza até três (3) tentativas em uma janela de aproximadamente 15 minutos (exceto indicação diferente no app).
+
+
+5.3. **Indisponibilidade do prestador.** Se nenhuma conexão pôde ser realizada após as tentativas, a reserva é cancelada e o Cliente é reembolsado integralmente do preço total pago.
+
+
+5.4. **Não-resposta do Cliente.** Se a conexão ocorreu (conforme 5.1) mas o Cliente não conseguiu um intercâmbio efetivo (não-resposta, linha ocupada, recusa, parada prematura), o pagamento permanece devido e não reembolsável.
+
+
+5.5. **Qualidade da comunicação.** O Cliente deve estar em uma zona de cobertura suficiente e usar equipamento compatível. SOS não é responsável por interrupções/redes de terceiros.
+
+
+---
+
+
+## 6. Direito de arrependimento (consumidores) & execução imediata
+
+
+6.1. **Informação.** Se o Cliente é consumidor e a lei local imperativa prevê um direito de arrependimento, este pode ser exercido nos prazos legais, exceto se o Cliente solicitar a execução imediata do serviço.
+
+
+6.2. **Renúncia.** Ao reservar uma chamada imediata ou programada antes da expiração do prazo legal, o Cliente solicita execução imediata e reconhece que, uma vez o serviço totalmente executado, ele perde seu direito de arrependimento. Em caso de execução parcial antes de arrependimento, o Cliente deve pagar a parte já fornecida e as taxas de conexão, não reembolsáveis.
+
+
+6.3. **Formalismo.** A Plataforma coleta a aceitação explícita destes pontos durante a reserva, quando necessário.
+
+
+---
+
+
+## 7. Pagamento, segurança, contestações
+
+
+7.1. **Pagamento único & divisão.** O Cliente efetua um pagamento único via Plataforma cobrindo (i) a parte do Prestador e (ii) as taxas de conexão. SOS (ou seu processador de pagamento) coleta, deduz suas taxas, depois remete o saldo ao Prestador.
+
+
+7.2. **Segurança.** Os pagamentos transitam por processadores de pagamento de terceiros. Controles KYC/AML podem se aplicar.
+
+
+7.3. **Contestações/disputa.** Em caso de disputa de pagamento, SOS pode transmitir ao processador de pagamento os dados estritamente necessários e suspender serviços/pagamentos relacionados.
+
+
+7.4. **Compensação.** Se um reembolso for concedido ao Cliente, a parte correspondente é deduzida do prestador envolvido; SOS pode compensar sobre seus pagamentos futuros.
+
+
+---
+
+
+## 8. Cancelamentos e reembolsos
+
+
+8.1. **Geral.** Exceto disposições legais imperativas:
+- as taxas de conexão são não reembolsáveis uma vez realizada a conexão (5.1);
+- a parte do Prestador é não reembolsável uma vez iniciada a prestação, exceto por gesto comercial do Prestador.
+
+
+8.2. **Cancelamento pelo Cliente antes da conexão.** Reembolso integral.
+
+
+8.3. **Cancelamento pelo Prestador.** Reembolso integral. SOS pode oferecer redirecionamento para outro prestador disponível.
+
+
+8.4. **Casos técnicos imputáveis à SOS.** Reembolso ou recredenciamento a critério de SOS, na medida permitida por lei.
+
+
+---
+
+
+## 9. Comportamentos, segurança e conteúdos
+
+
+9.1. **Respeito.** O Cliente se compromete a um comportamento respeitoso, não gravar nem difundir o intercâmbio sem consentimento legalmente exigido, e não solicitar atos ilegais.
+
+
+9.2. **Conteúdos fornecidos.** As informações transmitidas devem ser leais, exatas e lícitas. O Cliente garante à SOS e ao Prestador contra qualquer reclamação relacionada a conteúdos ilegais que fornecesse.
+
+
+9.3. **Denúncia.** Qualquer abuso pode ser denunciado via formulário de contato.
+
+
+---
+
+
+## 10. Dados pessoais
+
+
+10.1. **Funções.** Para dados estritamente necessários para a conexão, SOS e o Prestador atuam cada um como responsável pelo tratamento para seus próprios fins.
+
+
+10.2. **Bases & fins.** Execução do contrato (reserva), interesses legítimos (segurança, prevenção de fraude, melhoria), conformidade (AML/sanções) e consentimento se exigido.
+
+
+10.3. **Transferências internacionais** possíveis com garantias apropriadas.
+
+
+10.4. **Direitos & contato.** Exercício via formulário de contato da Plataforma.
+
+
+10.5. **Segurança.** Medidas técnicas/organizacionais razoáveis; notificação de violações conforme exigido por lei.
+
+
+---
+
+
+## 11. Propriedade intelectual
+
+
+A Plataforma, suas marcas, logos, bases de dados e conteúdos são protegidos. Nenhum direito é cedido ao Cliente. O uso é estritamente limitado a um acesso pessoal conforme as CGV.
+
+
+---
+
+
+## 12. Responsabilidade
+
+
+12.1. **Prestadores independentes.** O Cliente reconhece que Advogados e Assistentes são independentes. SOS não é responsável pelos conselhos/serviços fornecidos nem por seu resultado.
+
+
+12.2. **Limitações.** Na medida permitida por lei, a responsabilidade de SOS por dano direto comprovado é limitada ao preço total pago pelo Cliente pela reserva em questão. SOS não é responsável por danos indiretos/especiais/consequentes (perda de oportunidade, lucros, reputação, etc.), na medida permitida.
+
+
+12.3. **Sem garantias.** SOS não garante disponibilidade contínua da Plataforma nem ausência de erros.
+
+
+---
+
+
+## 13. Lei aplicável, resolução de litígios e tribunais competentes
+
+
+13.1. **Lei material.** Para cada serviço abrangendo um país dado, a relação SOS-Cliente é regida pelas leis do país de intervenção sem privar o Cliente consumidor de seus direitos imperativos de residência. Subsidiariamente, a lei estoniana rege a interpretação/validade das CGV e qualquer questão não regida por esta lei local.
+
+
+13.2. **Arbitragem ICC (opção consumidor) / obrigatória não-consumidor.**
+- **Cliente não-consumidor (B2B)**: arbitragem ICC obrigatória, sede: Tallinn (Estônia), idioma: português, lei material conforme 13.1, procedimento confidencial.
+- **Cliente consumidor**: opção de recorrer à arbitragem ICC (mesmas modalidades) ou aos tribunais competentes sob as leis imperativas aplicáveis.
+
+
+13.3. **Competência dos tribunais estonios (Tallinn).** Para qualquer demanda não arbitrável, execução de sentenças ou medidas urgentes, competência exclusiva dos tribunais da Estônia (Tallinn), sem prejuízo dos direitos imperativos do consumidor.
+
+
+13.4. **Renúncia a ações coletivas (na medida permitida).** Qualquer ação coletiva/de grupo/representativa é excluída, exceto se a lei imperativa do local de residência do consumidor dispuser de outra forma.
+
+
+---
+
+
+## 14. Rescisão/suspensão e diversos
+
+
+14.1. **Suspensão.** SOS pode suspender/fechar a conta em caso de fraude, não-conformidade, abuso ou risco legal.
+
+
+14.2. **Integralidade.** As CGV constituem o acordo completo entre SOS e o Cliente para o uso da Plataforma.
+
+
+14.3. **Idiomas.** Traduções podem ser fornecidas; o português prevalece para interpretação.
+
+
+14.4. **Nulidade parcial.** Se uma estipulação for nula/inaplicável, o restante permanece em vigor; pode ser substituída por uma cláusula válida de efeito equivalente.
+
+
+14.5. **Não-renúncia.** O fato de não exercer um direito não implica renúncia.
+
+
+---
+
+
+## 15. Contato
+
+
+**Formulário de contato (suporte & solicitações legais)**: [**http://localhost:5174/contact**](http://localhost:5174/contact)
+`;
+
+
   // const defaultContent = selectedLanguage === 'fr' ? defaultFr : defaultEn;
   // ✅ NEW (5 languages):
 const defaultContent =
@@ -1096,7 +1385,9 @@ const defaultContent =
       : selectedLanguage === "ru"
         ? defaultRu
         : selectedLanguage === "hi"
-          ? defaultHi
+            ? defaultHi
+            : selectedLanguage === "pt"
+              ? defaultPt
           : defaultEn;
 
   // Sommaire (UI)
@@ -1193,206 +1484,469 @@ const defaultContent =
   //   [selectedLanguage]
   // );
 
+  // const anchorMap = useMemo(
+  //   () => [
+  //     {
+  //       num: 1,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Objet et champ d'application"
+  //           : selectedLanguage === "es"
+  //             ? "Propósito y alcance"
+  //             : selectedLanguage === "de"
+  //               ? "Zweck und Geltungsbereich"
+  //               : selectedLanguage === "ru"
+  //                 ? "Цель и область применения"
+  //                 : "Purpose and Scope",
+  //     },
+  //     {
+  //       num: 2,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Comptes & usage"
+  //           : selectedLanguage === "es"
+  //             ? "Cuentas y uso"
+  //             : selectedLanguage === "de"
+  //               ? "Konten & Nutzung"
+  //               : selectedLanguage === "ru"
+  //                 ? "Аккаунты и использование"
+  //                 : "Accounts & Use",
+  //     },
+  //     {
+  //       num: 3,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Services réservables"
+  //           : selectedLanguage === "es"
+  //             ? "Servicios reservables"
+  //             : selectedLanguage === "de"
+  //               ? "Buchbare Dienste"
+  //               : selectedLanguage === "ru"
+  //                 ? "Бронируемые услуги"
+  //                 : "Bookable Services",
+  //     },
+  //     {
+  //       num: 4,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Prix & frais"
+  //           : selectedLanguage === "es"
+  //             ? "Precios y tarifas"
+  //             : selectedLanguage === "de"
+  //               ? "Preise & Gebühren"
+  //               : selectedLanguage === "ru"
+  //                 ? "Цены и сборы"
+  //                 : "Prices & Fees",
+  //     },
+  //     {
+  //       num: 5,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Réservation & appels"
+  //           : selectedLanguage === "es"
+  //             ? "Reserva y llamadas"
+  //             : selectedLanguage === "de"
+  //               ? "Buchung & Anrufe"
+  //               : selectedLanguage === "ru"
+  //                 ? "Бронирование и звонки"
+  //                 : "Booking & Calls",
+  //     },
+  //     {
+  //       num: 6,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Rétractation"
+  //           : selectedLanguage === "es"
+  //             ? "Derecho de desistimiento"
+  //             : selectedLanguage === "de"
+  //               ? "Widerrufsrecht"
+  //               : selectedLanguage === "ru"
+  //                 ? "Право на отказ"
+  //                 : "Withdrawal Right",
+  //     },
+  //     {
+  //       num: 7,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Paiement & sécurité"
+  //           : selectedLanguage === "es"
+  //             ? "Pago y seguridad"
+  //             : selectedLanguage === "de"
+  //               ? "Zahlung & Sicherheit"
+  //               : selectedLanguage === "ru"
+  //                 ? "Оплата и безопасность"
+  //                 : "Payment & Security",
+  //     },
+  //     {
+  //       num: 8,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Annulations & remboursements"
+  //           : selectedLanguage === "es"
+  //             ? "Cancelaciones y reembolsos"
+  //             : selectedLanguage === "de"
+  //               ? "Stornierungen & Rückerstattungen"
+  //               : selectedLanguage === "ru"
+  //                 ? "Отмены и возвраты"
+  //                 : "Cancellations & Refunds",
+  //     },
+  //     {
+  //       num: 9,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Comportements & contenus"
+  //           : selectedLanguage === "es"
+  //             ? "Conducta y contenido"
+  //             : selectedLanguage === "de"
+  //               ? "Verhalten & Inhalte"
+  //               : selectedLanguage === "ru"
+  //                 ? "Поведение и контент"
+  //                 : "Conduct & Content",
+  //     },
+  //     {
+  //       num: 10,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Données personnelles"
+  //           : selectedLanguage === "es"
+  //             ? "Protección de datos"
+  //             : selectedLanguage === "de"
+  //               ? "Datenschutz"
+  //               : selectedLanguage === "ru"
+  //                 ? "Защита данных"
+  //                 : "Data Protection",
+  //     },
+  //     {
+  //       num: 11,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Propriété intellectuelle"
+  //           : selectedLanguage === "es"
+  //             ? "Propiedad intelectual"
+  //             : selectedLanguage === "de"
+  //               ? "Geistiges Eigentum"
+  //               : selectedLanguage === "ru"
+  //                 ? "Интеллектуальная собственность"
+  //                 : "Intellectual Property",
+  //     },
+  //     {
+  //       num: 12,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Responsabilité"
+  //           : selectedLanguage === "es"
+  //             ? "Responsabilidad"
+  //             : selectedLanguage === "de"
+  //               ? "Haftung"
+  //               : selectedLanguage === "ru"
+  //                 ? "Ответственность"
+  //                 : "Liability",
+  //     },
+  //     {
+  //       num: 13,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Droit applicable & litiges"
+  //           : selectedLanguage === "es"
+  //             ? "Ley aplicable y disputas"
+  //             : selectedLanguage === "de"
+  //               ? "Anwendbares Recht & Streitigkeiten"
+  //               : selectedLanguage === "ru"
+  //                 ? "Применимое право и споры"
+  //                 : "Governing Law & Disputes",
+  //     },
+  //     {
+  //       num: 14,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Résiliation & divers"
+  //           : selectedLanguage === "es"
+  //             ? "Terminación y varios"
+  //             : selectedLanguage === "de"
+  //               ? "Kündigung & Sonstiges"
+  //               : selectedLanguage === "ru"
+  //                 ? "Прекращение и прочее"
+  //                 : "Termination & Misc.",
+  //     },
+  //     {
+  //       num: 15,
+  //       label:
+  //         selectedLanguage === "fr"
+  //           ? "Contact"
+  //           : selectedLanguage === "es"
+  //             ? "Contacto"
+  //             : selectedLanguage === "de"
+  //               ? "Kontakt"
+  //               : selectedLanguage === "ru"
+  //                 ? "Контакт"
+  //                 : "Contact",
+  //     },
+  //   ],
+  //   [selectedLanguage]
+  // );
+
+
   const anchorMap = useMemo(
-    () => [
-      {
-        num: 1,
-        label:
-          selectedLanguage === "fr"
-            ? "Objet et champ d'application"
-            : selectedLanguage === "es"
-              ? "Propósito y alcance"
+  () => [
+    {
+      num: 1,
+      label:
+        selectedLanguage === "fr"
+          ? "Objet et champ d'application"
+          : selectedLanguage === "es"
+            ? "Propósito y alcance"
+            : selectedLanguage === "pt"
+              ? "Objeto e escopo"
               : selectedLanguage === "de"
                 ? "Zweck und Geltungsbereich"
                 : selectedLanguage === "ru"
                   ? "Цель и область применения"
-                  : "Purpose and Scope",
-      },
-      {
-        num: 2,
-        label:
-          selectedLanguage === "fr"
-            ? "Comptes & usage"
-            : selectedLanguage === "es"
-              ? "Cuentas y uso"
+                  : selectedLanguage === "hi"
+                    ? "उद्देश्य और दायरा"
+                    : "Purpose and Scope",
+    },
+    {
+      num: 2,
+      label:
+        selectedLanguage === "fr"
+          ? "Comptes & usage"
+          : selectedLanguage === "es"
+            ? "Cuentas y uso"
+            : selectedLanguage === "pt"
+              ? "Contas e uso"
               : selectedLanguage === "de"
                 ? "Konten & Nutzung"
                 : selectedLanguage === "ru"
                   ? "Аккаунты и использование"
-                  : "Accounts & Use",
-      },
-      {
-        num: 3,
-        label:
-          selectedLanguage === "fr"
-            ? "Services réservables"
-            : selectedLanguage === "es"
-              ? "Servicios reservables"
+                  : selectedLanguage === "hi"
+                    ? "खाते और उपयोग"
+                    : "Accounts & Use",
+    },
+    {
+      num: 3,
+      label:
+        selectedLanguage === "fr"
+          ? "Services réservables"
+          : selectedLanguage === "es"
+            ? "Servicios reservables"
+            : selectedLanguage === "pt"
+              ? "Serviços reserváveis"
               : selectedLanguage === "de"
                 ? "Buchbare Dienste"
                 : selectedLanguage === "ru"
                   ? "Бронируемые услуги"
-                  : "Bookable Services",
-      },
-      {
-        num: 4,
-        label:
-          selectedLanguage === "fr"
-            ? "Prix & frais"
-            : selectedLanguage === "es"
-              ? "Precios y tarifas"
+                  : selectedLanguage === "hi"
+                    ? "बुक करने योग्य सेवाएं"
+                    : "Bookable Services",
+    },
+    {
+      num: 4,
+      label:
+        selectedLanguage === "fr"
+          ? "Prix & frais"
+          : selectedLanguage === "es"
+            ? "Precios y tarifas"
+            : selectedLanguage === "pt"
+              ? "Preços e taxas"
               : selectedLanguage === "de"
                 ? "Preise & Gebühren"
                 : selectedLanguage === "ru"
                   ? "Цены и сборы"
-                  : "Prices & Fees",
-      },
-      {
-        num: 5,
-        label:
-          selectedLanguage === "fr"
-            ? "Réservation & appels"
-            : selectedLanguage === "es"
-              ? "Reserva y llamadas"
+                  : selectedLanguage === "hi"
+                    ? "मूल्य और शुल्क"
+                    : "Prices & Fees",
+    },
+    {
+      num: 5,
+      label:
+        selectedLanguage === "fr"
+          ? "Réservation & appels"
+          : selectedLanguage === "es"
+            ? "Reserva y llamadas"
+            : selectedLanguage === "pt"
+              ? "Reserva e chamadas"
               : selectedLanguage === "de"
                 ? "Buchung & Anrufe"
                 : selectedLanguage === "ru"
                   ? "Бронирование и звонки"
-                  : "Booking & Calls",
-      },
-      {
-        num: 6,
-        label:
-          selectedLanguage === "fr"
-            ? "Rétractation"
-            : selectedLanguage === "es"
-              ? "Derecho de desistimiento"
+                  : selectedLanguage === "hi"
+                    ? "बुकिंग और कॉल"
+                    : "Booking & Calls",
+    },
+    {
+      num: 6,
+      label:
+        selectedLanguage === "fr"
+          ? "Rétractation"
+          : selectedLanguage === "es"
+            ? "Derecho de desistimiento"
+            : selectedLanguage === "pt"
+              ? "Direito de arrependimento"
               : selectedLanguage === "de"
                 ? "Widerrufsrecht"
                 : selectedLanguage === "ru"
                   ? "Право на отказ"
-                  : "Withdrawal Right",
-      },
-      {
-        num: 7,
-        label:
-          selectedLanguage === "fr"
-            ? "Paiement & sécurité"
-            : selectedLanguage === "es"
-              ? "Pago y seguridad"
+                  : selectedLanguage === "hi"
+                    ? "वापसी का अधिकार"
+                    : "Withdrawal Right",
+    },
+    {
+      num: 7,
+      label:
+        selectedLanguage === "fr"
+          ? "Paiement & sécurité"
+          : selectedLanguage === "es"
+            ? "Pago y seguridad"
+            : selectedLanguage === "pt"
+              ? "Pagamento e segurança"
               : selectedLanguage === "de"
                 ? "Zahlung & Sicherheit"
                 : selectedLanguage === "ru"
                   ? "Оплата и безопасность"
-                  : "Payment & Security",
-      },
-      {
-        num: 8,
-        label:
-          selectedLanguage === "fr"
-            ? "Annulations & remboursements"
-            : selectedLanguage === "es"
-              ? "Cancelaciones y reembolsos"
+                  : selectedLanguage === "hi"
+                    ? "भुगतान और सुरक्षा"
+                    : "Payment & Security",
+    },
+    {
+      num: 8,
+      label:
+        selectedLanguage === "fr"
+          ? "Annulations & remboursements"
+          : selectedLanguage === "es"
+            ? "Cancelaciones y reembolsos"
+            : selectedLanguage === "pt"
+              ? "Cancelamentos e reembolsos"
               : selectedLanguage === "de"
                 ? "Stornierungen & Rückerstattungen"
                 : selectedLanguage === "ru"
                   ? "Отмены и возвраты"
-                  : "Cancellations & Refunds",
-      },
-      {
-        num: 9,
-        label:
-          selectedLanguage === "fr"
-            ? "Comportements & contenus"
-            : selectedLanguage === "es"
-              ? "Conducta y contenido"
+                  : selectedLanguage === "hi"
+                    ? "रद्दीकरण और रिफंड"
+                    : "Cancellations & Refunds",
+    },
+    {
+      num: 9,
+      label:
+        selectedLanguage === "fr"
+          ? "Comportements & contenus"
+          : selectedLanguage === "es"
+            ? "Conducta y contenido"
+            : selectedLanguage === "pt"
+              ? "Comportamentos e conteúdos"
               : selectedLanguage === "de"
                 ? "Verhalten & Inhalte"
                 : selectedLanguage === "ru"
                   ? "Поведение и контент"
-                  : "Conduct & Content",
-      },
-      {
-        num: 10,
-        label:
-          selectedLanguage === "fr"
-            ? "Données personnelles"
-            : selectedLanguage === "es"
-              ? "Protección de datos"
+                  : selectedLanguage === "hi"
+                    ? "आचरण और सामग्री"
+                    : "Conduct & Content",
+    },
+    {
+      num: 10,
+      label:
+        selectedLanguage === "fr"
+          ? "Données personnelles"
+          : selectedLanguage === "es"
+            ? "Protección de datos"
+            : selectedLanguage === "pt"
+              ? "Dados pessoais"
               : selectedLanguage === "de"
                 ? "Datenschutz"
                 : selectedLanguage === "ru"
                   ? "Защита данных"
-                  : "Data Protection",
-      },
-      {
-        num: 11,
-        label:
-          selectedLanguage === "fr"
-            ? "Propriété intellectuelle"
-            : selectedLanguage === "es"
-              ? "Propiedad intelectual"
+                  : selectedLanguage === "hi"
+                    ? "डेटा सुरक्षा"
+                    : "Data Protection",
+    },
+    {
+      num: 11,
+      label:
+        selectedLanguage === "fr"
+          ? "Propriété intellectuelle"
+          : selectedLanguage === "es"
+            ? "Propiedad intelectual"
+            : selectedLanguage === "pt"
+              ? "Propriedade intelectual"
               : selectedLanguage === "de"
                 ? "Geistiges Eigentum"
                 : selectedLanguage === "ru"
                   ? "Интеллектуальная собственность"
-                  : "Intellectual Property",
-      },
-      {
-        num: 12,
-        label:
-          selectedLanguage === "fr"
-            ? "Responsabilité"
-            : selectedLanguage === "es"
-              ? "Responsabilidad"
+                  : selectedLanguage === "hi"
+                    ? "बौद्धिक संपदा"
+                    : "Intellectual Property",
+    },
+    {
+      num: 12,
+      label:
+        selectedLanguage === "fr"
+          ? "Responsabilité"
+          : selectedLanguage === "es"
+            ? "Responsabilidad"
+            : selectedLanguage === "pt"
+              ? "Responsabilidade"
               : selectedLanguage === "de"
                 ? "Haftung"
                 : selectedLanguage === "ru"
                   ? "Ответственность"
-                  : "Liability",
-      },
-      {
-        num: 13,
-        label:
-          selectedLanguage === "fr"
-            ? "Droit applicable & litiges"
-            : selectedLanguage === "es"
-              ? "Ley aplicable y disputas"
+                  : selectedLanguage === "hi"
+                    ? "जिम्मेदारी"
+                    : "Liability",
+    },
+    {
+      num: 13,
+      label:
+        selectedLanguage === "fr"
+          ? "Droit applicable & litiges"
+          : selectedLanguage === "es"
+            ? "Ley aplicable y disputas"
+            : selectedLanguage === "pt"
+              ? "Lei aplicável e litígios"
               : selectedLanguage === "de"
                 ? "Anwendbares Recht & Streitigkeiten"
                 : selectedLanguage === "ru"
                   ? "Применимое право и споры"
-                  : "Governing Law & Disputes",
-      },
-      {
-        num: 14,
-        label:
-          selectedLanguage === "fr"
-            ? "Résiliation & divers"
-            : selectedLanguage === "es"
-              ? "Terminación y varios"
+                  : selectedLanguage === "hi"
+                    ? "लागू कानून और विवाद"
+                    : "Governing Law & Disputes",
+    },
+    {
+      num: 14,
+      label:
+        selectedLanguage === "fr"
+          ? "Résiliation & divers"
+          : selectedLanguage === "es"
+            ? "Terminación y varios"
+            : selectedLanguage === "pt"
+              ? "Rescisão e diversos"
               : selectedLanguage === "de"
                 ? "Kündigung & Sonstiges"
                 : selectedLanguage === "ru"
                   ? "Прекращение и прочее"
-                  : "Termination & Misc.",
-      },
-      {
-        num: 15,
-        label:
-          selectedLanguage === "fr"
-            ? "Contact"
-            : selectedLanguage === "es"
-              ? "Contacto"
+                  : selectedLanguage === "hi"
+                    ? "समाप्ति और अन्य"
+                    : "Termination & Misc.",
+    },
+    {
+      num: 15,
+      label:
+        selectedLanguage === "fr"
+          ? "Contact"
+          : selectedLanguage === "es"
+            ? "Contacto"
+            : selectedLanguage === "pt"
+              ? "Contato"
               : selectedLanguage === "de"
                 ? "Kontakt"
                 : selectedLanguage === "ru"
                   ? "Контакт"
-                  : "Contact",
-      },
-    ],
-    [selectedLanguage]
-  );
+                  : selectedLanguage === "hi"
+                    ? "संपर्क"
+                    : "Contact",
+    },
+  ],
+  [selectedLanguage]
+);
+
 
   const body = content || defaultContent;
 

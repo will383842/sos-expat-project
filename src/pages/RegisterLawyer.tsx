@@ -76,7 +76,7 @@ type MultiLangDuo = {
   de: string;
   ru: string;
   hi: string;
-    pt: string;
+  pt: string;
 };
 // const COUNTRIES: MultiLangDuo[] = [
 //   { fr: "Afghanistan", en: "Afghanistan" },
@@ -634,7 +634,6 @@ type MultiLangDuo = {
 //     hi: "अन्य",
 //   },
 // ];
-
 
 const COUNTRIES: MultiLangDuo[] = [
   {
@@ -1197,7 +1196,6 @@ const COUNTRIES: MultiLangDuo[] = [
   },
 ];
 
-
 const inputClass = (hasErr?: boolean) =>
   `w-full px-3 py-3 border-2 rounded-xl bg-white text-gray-900 placeholder-gray-500 focus:outline-none transition-all duration-200 text-base 
   
@@ -1625,6 +1623,169 @@ const getCountryCode = (countryName: string, locale: string = "en"): string => {
 //   },
 // ];
 
+// const SPECIALTIES: MultiLangDuo[] = [
+//   {
+//     fr: "Droit de l'immigration",
+//     es: "Derecho de inmigración",
+//     en: "Immigration Law",
+//     de: "Einwanderungsrecht",
+//     ru: "Иммиграционное право",
+//     hi: "आप्रवासन कानून",
+//   },
+//   {
+//     fr: "Droit du travail",
+//     es: "Derecho laboral",
+//     en: "Labor Law",
+//     de: "Arbeitsrecht",
+//     ru: "Трудовое право",
+//     hi: "श्रम कानून",
+//   },
+//   {
+//     fr: "Droit immobilier",
+//     es: "Derecho inmobiliario",
+//     en: "Real Estate Law",
+//     de: "Immobilienrecht",
+//     ru: "Недвижимость",
+//     hi: "रियल एस्टेट कानून",
+//   },
+//   {
+//     fr: "Droit des affaires",
+//     es: "Derecho empresarial",
+//     en: "Business Law",
+//     de: "Wirtschaftsrecht",
+//     ru: "Коммерческое право",
+//     hi: "व्यावसायिक कानून",
+//   },
+//   {
+//     fr: "Droit de la famille",
+//     es: "Derecho de familia",
+//     en: "Family Law",
+//     de: "Familienrecht",
+//     ru: "Семейное право",
+//     hi: "पारिवारिक कानून",
+//   },
+//   {
+//     fr: "Droit pénal",
+//     es: "Derecho penal",
+//     en: "Criminal Law",
+//     de: "Strafrecht",
+//     ru: "Уголовное право",
+//     hi: "आपराधिक कानून",
+//   },
+//   {
+//     fr: "Droit fiscal",
+//     es: "Derecho fiscal",
+//     en: "Tax Law",
+//     de: "Steuerrecht",
+//     ru: "Налоговое право",
+//     hi: "कर कानून",
+//   },
+//   {
+//     fr: "Droit international",
+//     es: "Derecho internacional",
+//     en: "International Law",
+//     de: "Internationales Recht",
+//     ru: "Международное право",
+//     hi: "अंतर्राष्ट्रीय कानून",
+//   },
+//   {
+//     fr: "Droit des contrats",
+//     es: "Derecho de contratos",
+//     en: "Contract Law",
+//     de: "Vertragsrecht",
+//     ru: "Договорное право",
+//     hi: "संविदा कानून",
+//   },
+//   {
+//     fr: "Propriété intellectuelle",
+//     es: "Propiedad intelectual",
+//     en: "Intellectual Property",
+//     de: "Geistiges Eigentum",
+//     ru: "Интеллектуальная собственность",
+//     hi: "बौद्धिक संपदा",
+//   },
+//   {
+//     fr: "Droit de la consommation",
+//     es: "Derecho del consumidor",
+//     en: "Consumer Law",
+//     de: "Verbraucherschutzrecht",
+//     ru: "Защита прав потребителей",
+//     hi: "उपभोक्ता कानून",
+//   },
+//   {
+//     fr: "Droit bancaire",
+//     es: "Derecho bancario",
+//     en: "Banking Law",
+//     de: "Bankrecht",
+//     ru: "Банковское право",
+//     hi: "बैंकिंग कानून",
+//   },
+//   {
+//     fr: "Droit de l'environnement",
+//     es: "Derecho ambiental",
+//     en: "Environmental Law",
+//     de: "Umweltrecht",
+//     ru: "Экологическое право",
+//     hi: "पर्यावरण कानून",
+//   },
+//   {
+//     fr: "Droit médical",
+//     es: "Derecho médico",
+//     en: "Medical Law",
+//     de: "Medizinrecht",
+//     ru: "Медицинское право",
+//     hi: "चिकित्सा कानून",
+//   },
+//   {
+//     fr: "Droit des sociétés",
+//     es: "Derecho corporativo",
+//     en: "Corporate Law",
+//     de: "Gesellschaftsrecht",
+//     ru: "Корпоративное право",
+//     hi: "कॉर्पोरेट कानून",
+//   },
+//   {
+//     fr: "Droit des successions",
+//     es: "Derecho de sucesiones",
+//     en: "Estate Law",
+//     de: "Erbrecht",
+//     ru: "Наследственное право",
+//     hi: "संपत्ति कानून",
+//   },
+//   {
+//     fr: "Droit administratif",
+//     es: "Derecho administrativo",
+//     en: "Administrative Law",
+//     de: "Verwaltungsrecht",
+//     ru: "Административное право",
+//     hi: "प्रशासनिक कानून",
+//   },
+//   {
+//     fr: "Droit européen",
+//     es: "Derecho europeo",
+//     en: "European Law",
+//     de: "Europarecht",
+//     ru: "Европейское право",
+//     hi: "यूरोपीय कानून",
+//   },
+//   {
+//     fr: "Droit des étrangers",
+//     es: "Derecho de extranjería",
+//     en: "Immigrant Rights",
+//     de: "Ausländerrecht",
+//     ru: "Право иностранцев",
+//     hi: "विदेशी अधिकार",
+//   },
+//   {
+//     fr: "Autre",
+//     es: "Otro",
+//     en: "Other",
+//     de: "Andere",
+//     ru: "Другое",
+//     hi: "अन्य",
+//   },
+// ];
+
 const SPECIALTIES: MultiLangDuo[] = [
   {
     fr: "Droit de l'immigration",
@@ -1633,6 +1794,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     de: "Einwanderungsrecht",
     ru: "Иммиграционное право",
     hi: "आप्रवासन कानून",
+    pt: "Direito de Imigração",
   },
   {
     fr: "Droit du travail",
@@ -1641,6 +1803,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     de: "Arbeitsrecht",
     ru: "Трудовое право",
     hi: "श्रम कानून",
+    pt: "Direito do Trabalho",
   },
   {
     fr: "Droit immobilier",
@@ -1649,6 +1812,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     de: "Immobilienrecht",
     ru: "Недвижимость",
     hi: "रियल एस्टेट कानून",
+    pt: "Direito Imobiliário",
   },
   {
     fr: "Droit des affaires",
@@ -1657,6 +1821,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     de: "Wirtschaftsrecht",
     ru: "Коммерческое право",
     hi: "व्यावसायिक कानून",
+    pt: "Direito Comercial",
   },
   {
     fr: "Droit de la famille",
@@ -1665,6 +1830,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     de: "Familienrecht",
     ru: "Семейное право",
     hi: "पारिवारिक कानून",
+    pt: "Direito de Família",
   },
   {
     fr: "Droit pénal",
@@ -1673,6 +1839,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     de: "Strafrecht",
     ru: "Уголовное право",
     hi: "आपराधिक कानून",
+    pt: "Direito Penal",
   },
   {
     fr: "Droit fiscal",
@@ -1681,6 +1848,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     de: "Steuerrecht",
     ru: "Налоговое право",
     hi: "कर कानून",
+    pt: "Direito Tributário",
   },
   {
     fr: "Droit international",
@@ -1689,6 +1857,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     de: "Internationales Recht",
     ru: "Международное право",
     hi: "अंतर्राष्ट्रीय कानून",
+    pt: "Direito Internacional",
   },
   {
     fr: "Droit des contrats",
@@ -1697,6 +1866,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     de: "Vertragsrecht",
     ru: "Договорное право",
     hi: "संविदा कानून",
+    pt: "Direito de Contratos",
   },
   {
     fr: "Propriété intellectuelle",
@@ -1705,6 +1875,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     de: "Geistiges Eigentum",
     ru: "Интеллектуальная собственность",
     hi: "बौद्धिक संपदा",
+    pt: "Propriedade Intelectual",
   },
   {
     fr: "Droit de la consommation",
@@ -1713,6 +1884,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     de: "Verbraucherschutzrecht",
     ru: "Защита прав потребителей",
     hi: "उपभोक्ता कानून",
+    pt: "Direito do Consumidor",
   },
   {
     fr: "Droit bancaire",
@@ -1721,6 +1893,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     de: "Bankrecht",
     ru: "Банковское право",
     hi: "बैंकिंग कानून",
+    pt: "Direito Bancário",
   },
   {
     fr: "Droit de l'environnement",
@@ -1729,6 +1902,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     de: "Umweltrecht",
     ru: "Экологическое право",
     hi: "पर्यावरण कानून",
+    pt: "Direito Ambiental",
   },
   {
     fr: "Droit médical",
@@ -1737,6 +1911,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     de: "Medizinrecht",
     ru: "Медицинское право",
     hi: "चिकित्सा कानून",
+    pt: "Direito Médico",
   },
   {
     fr: "Droit des sociétés",
@@ -1745,6 +1920,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     de: "Gesellschaftsrecht",
     ru: "Корпоративное право",
     hi: "कॉर्पोरेट कानून",
+    pt: "Direito Corporativo",
   },
   {
     fr: "Droit des successions",
@@ -1753,6 +1929,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     de: "Erbrecht",
     ru: "Наследственное право",
     hi: "संपत्ति कानून",
+    pt: "Direito Sucessório",
   },
   {
     fr: "Droit administratif",
@@ -1761,6 +1938,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     de: "Verwaltungsrecht",
     ru: "Административное право",
     hi: "प्रशासनिक कानून",
+    pt: "Direito Administrativo",
   },
   {
     fr: "Droit européen",
@@ -1769,6 +1947,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     de: "Europarecht",
     ru: "Европейское право",
     hi: "यूरोपीय कानून",
+    pt: "Direito Europeu",
   },
   {
     fr: "Droit des étrangers",
@@ -1777,6 +1956,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     de: "Ausländerrecht",
     ru: "Право иностранцев",
     hi: "विदेशी अधिकार",
+    pt: "Direito de Estrangeiros",
   },
   {
     fr: "Autre",
@@ -1785,6 +1965,7 @@ const SPECIALTIES: MultiLangDuo[] = [
     de: "Andere",
     ru: "Другое",
     hi: "अन्य",
+    pt: "Outro",
   },
 ];
 
@@ -2621,7 +2802,14 @@ const RegisterLawyer: React.FC = () => {
   const { register, isLoading, error } = useAuth();
   const { language } = useApp(); // 'fr' | 'en'
   const lang =
-    (language as I18nKey) || "fr" || "en" || "es" || "de" || "ru" || "hi" || "pt";
+    (language as I18nKey) ||
+    "fr" ||
+    "en" ||
+    "es" ||
+    "de" ||
+    "ru" ||
+    "hi" ||
+    "pt";
   const t = I18N[lang];
 
   // ---- SEO / OG meta ----
@@ -3173,6 +3361,203 @@ const RegisterLawyer: React.FC = () => {
   //   ];
   // }, [form, selectedLanguages]);
 
+  // const missing = useMemo(() => {
+  //   const langs = (selectedLanguages as LanguageOption[]).length > 0;
+
+  //   return [
+  //     {
+  //       key: "firstName",
+  //       ok: !!form.firstName,
+  //       label: {
+  //         en: "First name",
+  //         es: "Nombre",
+  //         fr: "Prénom",
+  //         de: "Vorname",
+  //         ru: "Имя",
+  //         hi: "पहला नाम",
+  //       },
+  //     },
+  //     {
+  //       key: "lastName",
+  //       ok: !!form.lastName,
+  //       label: {
+  //         en: "Last name",
+  //         es: "Apellido",
+  //         fr: "Nom",
+  //         de: "Nachname",
+  //         ru: "Фамилия",
+  //         hi: "उपनाम",
+  //       },
+  //     },
+  //     {
+  //       key: "email",
+  //       ok: EMAIL_REGEX.test(form.email),
+  //       label: {
+  //         en: "Valid email",
+  //         es: "Email válido",
+  //         fr: "Email valide",
+  //         de: "Gültige E-Mail",
+  //         ru: "Действительный email",
+  //         hi: "मान्य ईमेल",
+  //       },
+  //     },
+  //     {
+  //       key: "password",
+  //       ok: form.password.length >= 6,
+  //       label: {
+  //         en: "Password (≥ 6 chars)",
+  //         es: "Contraseña (≥ 6 caracteres)",
+  //         fr: "Mot de passe (≥ 6 caractères)",
+  //         de: "Passwort (≥ 6 Zeichen)",
+  //         ru: "Пароль (≥ 6 символов)",
+  //         hi: "पासवर्ड (≥ 6 अक्षर)",
+  //       },
+  //     },
+  //     {
+  //       key: "phone",
+  //       ok:
+  //         !!form.phone &&
+  //         !!(
+  //           parsePhoneNumberFromString(form.phone) &&
+  //           parsePhoneNumberFromString(form.phone).isValid()
+  //         ),
+  //       label: {
+  //         en: "Phone",
+  //         es: "Teléfono",
+  //         fr: "Téléphone",
+  //         de: "Telefon",
+  //         ru: "Телефон",
+  //         hi: "फ़ोन",
+  //       },
+  //     },
+  //     {
+  //       key: "whatsapp",
+  //       ok:
+  //         !!form.whatsapp &&
+  //         !!(
+  //           parsePhoneNumberFromString(form.whatsapp) &&
+  //           parsePhoneNumberFromString(form.whatsapp).isValid()
+  //         ),
+  //       label: {
+  //         en: "WhatsApp",
+  //         es: "WhatsApp",
+  //         fr: "WhatsApp",
+  //         de: "WhatsApp",
+  //         ru: "WhatsApp",
+  //         hi: "WhatsApp",
+  //       },
+  //     },
+  //     {
+  //       key: "currentCountry",
+  //       ok: !!form.currentCountry,
+  //       label: {
+  //         en: "Residence country",
+  //         es: "País de residencia",
+  //         fr: "Pays de résidence",
+  //         de: "Wohnsitzland",
+  //         ru: "Страна проживания",
+  //         hi: "निवास देश",
+  //       },
+  //     },
+  //     {
+  //       key: "currentPresenceCountry",
+  //       ok: !!form.currentPresenceCountry,
+  //       label: {
+  //         en: "Presence country",
+  //         es: "País de presencia",
+  //         fr: "Pays de présence",
+  //         de: "Anwesenheitsland",
+  //         ru: "Страна присутствия",
+  //         hi: "उपस्थिति देश",
+  //       },
+  //     },
+  //     {
+  //       key: "practiceCountries",
+  //       ok: form.practiceCountries.length > 0,
+  //       label: {
+  //         en: "At least one practice country",
+  //         es: "Al menos un país de práctica",
+  //         fr: "Au moins un pays d'intervention",
+  //         de: "Mindestens ein Praxisland",
+  //         ru: "Хотя бы одна страна практики",
+  //         hi: "कम से कम एक अभ्यास देश",
+  //       },
+  //     },
+  //     {
+  //       key: "languages",
+  //       ok: langs,
+  //       label: {
+  //         en: "At least one language",
+  //         es: "Al menos un idioma",
+  //         fr: "Au moins une langue",
+  //         de: "Mindestens eine Sprache",
+  //         ru: "Хотя бы один язык",
+  //         hi: "कम से कम एक भाषा",
+  //       },
+  //     },
+  //     {
+  //       key: "specialties",
+  //       ok: form.specialties.length > 0,
+  //       label: {
+  //         en: "At least one specialty",
+  //         es: "Al menos una especialidad",
+  //         fr: "Au moins une spécialité",
+  //         de: "Mindestens eine Spezialität",
+  //         ru: "Хотя бы одна специальность",
+  //         hi: "कम से कम एक विशेषता",
+  //       },
+  //     },
+  //     {
+  //       key: "bio",
+  //       ok: form.bio.trim().length >= 50,
+  //       label: {
+  //         en: "Bio (≥ 50 chars)",
+  //         es: "Biografía (≥ 50 caracteres)",
+  //         fr: "Bio (≥ 50 caractères)",
+  //         de: "Bio (≥ 50 Zeichen)",
+  //         ru: "Биография (≥ 50 символов)",
+  //         hi: "बायो (≥ 50 अक्षर)",
+  //       },
+  //     },
+  //     {
+  //       key: "profilePhoto",
+  //       ok: !!form.profilePhoto,
+  //       label: {
+  //         en: "Profile photo",
+  //         es: "Foto de perfil",
+  //         fr: "Photo de profil",
+  //         de: "Profilbild",
+  //         ru: "Фото профиля",
+  //         hi: "प्रोफ़ाइल फ़ोटो",
+  //       },
+  //     },
+  //     {
+  //       key: "educations",
+  //       ok: form.educations.some((v) => v.trim().length > 0),
+  //       label: {
+  //         en: "At least one education",
+  //         es: "Al menos una formación",
+  //         fr: "Au moins une formation",
+  //         de: "Mindestens eine Ausbildung",
+  //         ru: "Хотя бы одно образование",
+  //         hi: "कम से कम एक शिक्षा",
+  //       },
+  //     },
+  //     {
+  //       key: "acceptTerms",
+  //       ok: !!form.acceptTerms,
+  //       label: {
+  //         en: "Accept T&Cs",
+  //         es: "Aceptar T&C",
+  //         fr: "Accepter les CGU",
+  //         de: "AGB akzeptieren",
+  //         ru: "Принять условия",
+  //         hi: "नियम स्वीकार करें",
+  //       },
+  //     },
+  //   ];
+  // }, [form, selectedLanguages]);
+
   const missing = useMemo(() => {
     const langs = (selectedLanguages as LanguageOption[]).length > 0;
 
@@ -3187,6 +3572,7 @@ const RegisterLawyer: React.FC = () => {
           de: "Vorname",
           ru: "Имя",
           hi: "पहला नाम",
+          pt: "Nome",
         },
       },
       {
@@ -3199,6 +3585,7 @@ const RegisterLawyer: React.FC = () => {
           de: "Nachname",
           ru: "Фамилия",
           hi: "उपनाम",
+          pt: "Sobrenome",
         },
       },
       {
@@ -3211,6 +3598,7 @@ const RegisterLawyer: React.FC = () => {
           de: "Gültige E-Mail",
           ru: "Действительный email",
           hi: "मान्य ईमेल",
+          pt: "Email válido",
         },
       },
       {
@@ -3223,6 +3611,7 @@ const RegisterLawyer: React.FC = () => {
           de: "Passwort (≥ 6 Zeichen)",
           ru: "Пароль (≥ 6 символов)",
           hi: "पासवर्ड (≥ 6 अक्षर)",
+          pt: "Senha (≥ 6 caracteres)",
         },
       },
       {
@@ -3240,6 +3629,7 @@ const RegisterLawyer: React.FC = () => {
           de: "Telefon",
           ru: "Телефон",
           hi: "फ़ोन",
+          pt: "Telefone",
         },
       },
       {
@@ -3257,6 +3647,7 @@ const RegisterLawyer: React.FC = () => {
           de: "WhatsApp",
           ru: "WhatsApp",
           hi: "WhatsApp",
+          pt: "WhatsApp",
         },
       },
       {
@@ -3269,6 +3660,7 @@ const RegisterLawyer: React.FC = () => {
           de: "Wohnsitzland",
           ru: "Страна проживания",
           hi: "निवास देश",
+          pt: "País de residência",
         },
       },
       {
@@ -3281,6 +3673,7 @@ const RegisterLawyer: React.FC = () => {
           de: "Anwesenheitsland",
           ru: "Страна присутствия",
           hi: "उपस्थिति देश",
+          pt: "País de presença",
         },
       },
       {
@@ -3293,6 +3686,7 @@ const RegisterLawyer: React.FC = () => {
           de: "Mindestens ein Praxisland",
           ru: "Хотя бы одна страна практики",
           hi: "कम से कम एक अभ्यास देश",
+          pt: "Pelo menos um país de prática",
         },
       },
       {
@@ -3305,6 +3699,7 @@ const RegisterLawyer: React.FC = () => {
           de: "Mindestens eine Sprache",
           ru: "Хотя бы один язык",
           hi: "कम से कम एक भाषा",
+          pt: "Pelo menos um idioma",
         },
       },
       {
@@ -3317,6 +3712,7 @@ const RegisterLawyer: React.FC = () => {
           de: "Mindestens eine Spezialität",
           ru: "Хотя бы одна специальность",
           hi: "कम से कम एक विशेषता",
+          pt: "Pelo menos uma especialidade",
         },
       },
       {
@@ -3329,6 +3725,7 @@ const RegisterLawyer: React.FC = () => {
           de: "Bio (≥ 50 Zeichen)",
           ru: "Биография (≥ 50 символов)",
           hi: "बायो (≥ 50 अक्षर)",
+          pt: "Biografia (≥ 50 caracteres)",
         },
       },
       {
@@ -3341,6 +3738,7 @@ const RegisterLawyer: React.FC = () => {
           de: "Profilbild",
           ru: "Фото профиля",
           hi: "प्रोफ़ाइल फ़ोटो",
+          pt: "Foto de perfil",
         },
       },
       {
@@ -3353,6 +3751,7 @@ const RegisterLawyer: React.FC = () => {
           de: "Mindestens eine Ausbildung",
           ru: "Хотя бы одно образование",
           hi: "कम से कम एक शिक्षा",
+          pt: "Pelo menos uma formação",
         },
       },
       {
@@ -3365,6 +3764,7 @@ const RegisterLawyer: React.FC = () => {
           de: "AGB akzeptieren",
           ru: "Принять условия",
           hi: "नियम स्वीकार करें",
+          pt: "Aceitar T&C",
         },
       },
     ];
@@ -4645,8 +5045,7 @@ const RegisterLawyer: React.FC = () => {
                       {(selectedLanguages as LanguageOption[]).length > 0 && (
                         <div className="mb-2 text-xs text-gray-700">
                           <span className="font-medium">
-                       
-                           <FormattedMessage id="registerExpat.selectedLanguages" />
+                            <FormattedMessage id="registerExpat.selectedLanguages" />
                             :
                           </span>{" "}
                           {(selectedLanguages as LanguageOption[])
@@ -4946,7 +5345,6 @@ const RegisterLawyer: React.FC = () => {
                                   <XCircle className="w-4 h-4 mr-2 text-gray-400" />
                                 )}
                                 <span>
-                                  {/* {lang === "en" ? m.labelEn : m.labelFr} */}
                                   {lang === "en"
                                     ? m.label.en
                                     : lang === "es"
@@ -4959,7 +5357,9 @@ const RegisterLawyer: React.FC = () => {
                                             ? m.label.ru
                                             : lang === "hi"
                                               ? m.label.hi
-                                              : m.label.en}
+                                              : lang === "pt"
+                                                ? m.label.pt
+                                                : m.label.en}
                                 </span>
                               </div>
                             ))}

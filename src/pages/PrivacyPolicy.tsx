@@ -67,12 +67,12 @@ const PrivacyPolicy: React.FC = () => {
 
   // Local toggle without changing global app language
   const [selectedLanguage, setSelectedLanguage] = useState<
-    "fr" | "en" | "es" | "de" | "ru" | "hi"
-  >((language as "fr" | "en" | "es" | "de" | "ru" | "hi") || "fr");
+    "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt"
+  >((language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt") || "fr");
 
   useEffect(() => {
     if (language)
-      setSelectedLanguage(language as "fr" | "en" | "es" | "de" | "ru" | "hi");
+      setSelectedLanguage(language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt");
   }, [language]);
 
   // --- Static texts / i18n ---
@@ -243,6 +243,41 @@ const PrivacyPolicy: React.FC = () => {
         contactCta: "Контактная форма",
         editHint: "Документ редактируется через консоль администратора (RU)",
       },
+
+      pt: {
+  title: "Política de Privacidade",
+  subtitle: "Sua privacidade é nossa prioridade",
+  lastUpdated: "Versão 2.2 – Última atualização: 16 de junho de 2025",
+  dataCollection: "Coleta de dados",
+  dataProtection: "Proteção de dados",
+  dataSharing: "Compartilhamento de dados",
+  yourRights: "Seus direitos",
+  contact: "Contato",
+  dataCollectionContent:
+    "Coletamos apenas as informações necessárias para fornecer nossos serviços. Isso inclui seus dados de contato, metadados técnicos (chamadas, mensagens) e detalhes necessários para sua solicitação.",
+  dataProtectionContent:
+    "Seus dados são criptografados em trânsito e armazenamento e protegidos com segurança. Aplicamos medidas técnicas e organizacionais para evitar acesso não autorizado.",
+  dataSharingContent:
+    "Nunca vendemos seus dados pessoais. Compartilhamos apenas as informações necessárias com fornecedores verificados (pagamentos, telefonia, hospedagem) para fornecer o serviço solicitado.",
+  rights: [
+    "Direito de acesso",
+    "Direito de retificação",
+    "Direito de exclusão (dentro das limitações legais)",
+    "Direito de portabilidade de dados",
+    "Direito de oposição e limitação",
+  ],
+  contactContent:
+    "Para perguntas ou para exercer seus direitos, use o formulário abaixo.",
+  features: [
+    "Criptografia",
+    "Transparência",
+    "Controle do usuário",
+    "Sem revenda de dados",
+  ],
+  contactCta: "Formulário de contato",
+  editHint: "Documento editável no console do administrador (PT)",
+}
+,
 
       hi: {
         title: "गोपनीयता नीति",
