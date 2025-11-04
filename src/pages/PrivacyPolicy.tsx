@@ -54,6 +54,7 @@ type Translations = {
   de: TranslationUnit;
   ru: TranslationUnit;
   hi: TranslationUnit;
+  pt: TranslationUnit;
 };
 
 const PrivacyPolicy: React.FC = () => {
@@ -67,12 +68,12 @@ const PrivacyPolicy: React.FC = () => {
 
   // Local toggle without changing global app language
   const [selectedLanguage, setSelectedLanguage] = useState<
-    "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt"
-  >((language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt") || "fr");
+    "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt" | "ch" | "ar"
+  >((language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt" | "ch" | "ar") || "fr");
 
   useEffect(() => {
     if (language)
-      setSelectedLanguage(language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt");
+      setSelectedLanguage(language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt" | "ch" | "ar");
   }, [language]);
 
   // --- Static texts / i18n ---

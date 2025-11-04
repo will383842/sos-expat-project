@@ -594,6 +594,8 @@ const UserAvatar = memo<{ user: User | null; size?: "sm" | "md" }>(
     const displayName = u?.firstName || u?.displayName || u?.email || "User";
     const onError = useCallback(() => setImageError(true), []);
 
+    
+
     if (!photoUrl || imageError) {
       return (
         <div
@@ -604,6 +606,8 @@ const UserAvatar = memo<{ user: User | null; size?: "sm" | "md" }>(
         </div>
       );
     }
+
+
     return (
       <div className="relative">
         <img
@@ -890,93 +894,6 @@ const UserMenu = memo<{ isMobile?: boolean; scrolled?: boolean }>(
       }
     }, [logout, navigate]);
 
-    // const t = {
-    //   login: language === "fr" ? "Connexion" : "Login",
-    //   signup: language === "fr" ? "S'inscrire" : "Sign up",
-    //   dashboard: language === "fr" ? "Tableau de bord" : "Dashboard",
-    //   adminConsole: language === "fr" ? "Console Admin" : "Admin Console",
-    //   logout: language === "fr" ? "Déconnexion" : "Logout",
-    // };
-
-//   const t = {
-//   login:
-//     language === "fr" ? "Connexion"
-//     : language === "es" ? "Iniciar sesión"
-//     : language === "de" ? "Anmelden"
-//     : language === "ru" ? "Войти"
-//     : "Login",
-    
-//   signup:
-//     language === "fr" ? "S'inscrire"
-//     : language === "es" ? "Registrarse"
-//     : language === "de" ? "Registrieren"
-//     : language === "ru" ? "Зарегистрироваться"
-//     : "Sign up",
-    
-//   dashboard:
-//     language === "fr" ? "Tableau de bord"
-//     : language === "es" ? "Panel de control"
-//     : language === "de" ? "Dashboard"
-//     : language === "ru" ? "Панель управления"
-//     : "Dashboard",
-    
-//   adminConsole:
-//     language === "fr" ? "Console Admin"
-//     : language === "es" ? "Consola de Administración"
-//     : language === "de" ? "Admin-Konsole"
-//     : language === "ru" ? "Консоль администратора"
-//     : "Admin Console",
-    
-//   logout:
-//     language === "fr" ? "Déconnexion"
-//     : language === "es" ? "Cerrar sesión"
-//     : language === "de" ? "Abmelden"
-//     : language === "ru" ? "Выйти"
-//     : "Logout",
-// };
-
-
-// const t = {
-//   login:
-//     language === "fr" ? "Connexion"
-//     : language === "es" ? "Iniciar sesión"
-//     : language === "de" ? "Anmelden"
-//     : language === "ru" ? "Войти"
-//     : language === "hi" ? "लॉगिन"
-//     : "Login",
-    
-//   signup:
-//     language === "fr" ? "S'inscrire"
-//     : language === "es" ? "Registrarse"
-//     : language === "de" ? "Registrieren"
-//     : language === "ru" ? "Зарегистрироваться"
-//     : language === "hi" ? "साइन अप करें"
-//     : "Sign up",
-    
-//   dashboard:
-//     language === "fr" ? "Tableau de bord"
-//     : language === "es" ? "Panel de control"
-//     : language === "de" ? "Dashboard"
-//     : language === "ru" ? "Панель управления"
-//     : language === "hi" ? "डैशबोर्ड"
-//     : "Dashboard",
-    
-//   adminConsole:
-//     language === "fr" ? "Console Admin"
-//     : language === "es" ? "Consola de Administración"
-//     : language === "de" ? "Admin-Konsole"
-//     : language === "ru" ? "Консоль администратора"
-//     : language === "hi" ? "एडमिन कंसोल"
-//     : "Admin Console",
-    
-//   logout:
-//     language === "fr" ? "Déconnexion"
-//     : language === "es" ? "Cerrar sesión"
-//     : language === "de" ? "Abmelden"
-//     : language === "ru" ? "Выйти"
-//     : language === "hi" ? "लॉग आउट"
-//     : "Logout",
-// };
 
 
 const t = {

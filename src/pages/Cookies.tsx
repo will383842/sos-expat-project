@@ -28,13 +28,13 @@ const Cookies: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [selectedLanguage, setSelectedLanguage] = useState<
-    "fr" | "en" | "es" | "de" | "ru" | "hi" | "ch" | "pt"
-  >((language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "ch") || "fr");
+    "fr" | "en" | "es" | "de" | "ru" | "hi" | "ch" | "pt" | "ar"
+  >((language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "ch" | "pt" | "ar") || "fr");
 
   // Rester aligné avec la langue globale si elle change
   useEffect(() => {
     if (language)
-      setSelectedLanguage(language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "ch" | "pt");
+      setSelectedLanguage(language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "ch" | "pt" | "ar");
   }, [language]);
 
   // Récupération Firestore (même logique métier)
@@ -174,7 +174,7 @@ const Cookies: React.FC = () => {
       anchorTitle: "概览",
       contactCta: "联系我们",
       editHint: "可从管理控制台编辑文档",
-    }
+    },
       pt: {
   title: "Política de Cookies",
   subtitle: "Como usamos cookies em nosso site",
@@ -189,6 +189,21 @@ const Cookies: React.FC = () => {
   anchorTitle: "Resumo",
   contactCta: "Entre em contato conosco",
   editHint: "Documento editável no console do administrador",
+    },
+      ar: {
+  title: "سياسة ملفات تعريف الارتباط",
+  subtitle: "كيف نستخدم ملفات تعريف الارتباط على موقعنا",
+  lastUpdated: "الإصدار 2.2 – آخر تحديث: 16 يونيو 2025",
+  loading: "جارٍ التحميل...",
+  features: [
+    "لافتة الموافقة",
+    "تحكم دقيق",
+    "متوافق مع اللائحة العامة لحماية البيانات",
+    "شفافية كاملة",
+  ],
+  anchorTitle: "نظرة عامة",
+  contactCta: "اتصل بنا",
+  editHint: "مستند قابل للتحرير من وحدة التحكم الإدارية",
 }
   };
 
@@ -966,6 +981,85 @@ const defaultCh = `
     如对 Cookie 或数据保护有任何疑问，请联系我们：**http://localhost:5174/contact**
 `;
 
+  
+
+
+const defaultAr = `
+# سياسة ملفات تعريف الارتباط
+
+**الإصدار 2.2 – آخر تحديث: 16 يونيو 2025**
+
+---
+
+## 1. ما هو ملف تعريف الارتباط؟
+
+**ملف تعريف الارتباط** هو ملف نصي صغير يتم تخزينه على جهازك (كمبيوتر، هاتف محمول، جهاز لوحي) عند زيارة موقع ويب. يساعد الموقع على **التعرف على جهازك**، **تذكر** تفضيلاتك و**تحسين** تجربتك.
+
+---
+
+## 2. لماذا نستخدم ملفات تعريف الارتباط؟
+
+2.1. **التشغيل الأساسي**: ضمان المصادقة والأمان واختيار اللغة والحفاظ على جلستك.  
+2.2. **قياس الجمهور**: فهم استخدام الموقع لتحسينه (الصفحات المعروضة، الوقت المستغرق، الأحداث).  
+2.3. **الأداء**: تحسين سرعة التحميل والاستقرار.  
+2.4. **الاتصال**: تمكين الهاتف/الفيديو والإشعارات التقنية.
+
+---
+
+## 3. أنواع ملفات تعريف الارتباط
+
+3.1. **ملفات تعريف الارتباط الأساسية**: ضرورية بشكل صارم لعمل الموقع.  
+3.2. **ملفات تعريف الارتباط التحليلية**: إحصائيات الاستخدام المجمعة والمجهولة المصدر عندما يكون ذلك ممكناً.  
+3.3. **ملفات تعريف الارتباط للأداء**: تحسين العرض والتخزين المؤقت وتوزيع المحتوى.
+
+---
+
+## 4. الأساس القانوني والمدة
+
+4.1. **الأساسية**: المصلحة المشروعة (تقديم الخدمة المطلوبة).  
+4.2. **التحليلية/الأداء**: **موافقتك** عبر اللافتة.  
+4.3. **المدد**: جلسة (تُحذف عند الإغلاق) أو دائمة (من بضع ساعات إلى 13 شهراً كحد أقصى حسب الغرض).
+
+---
+
+## 5. إدارة موافقتك
+
+5.1. يمكنك **قبول/رفض** الفئات غير الأساسية عبر **لافتة الموافقة** الخاصة بنا.  
+5.2. يمكنك في أي وقت **سحب موافقتك** من خلال رابط "تفضيلات ملفات تعريف الارتباط" في أسفل الصفحة.  
+5.3. قم أيضاً بإعداد **متصفحك** لحظر/حذف ملفات تعريف الارتباط.
+
+---
+
+## 6. ملفات تعريف الارتباط الصادرة من أطراف ثالثة
+
+قد نستخدم مزودي خدمات قد يقومون بوضع ملفات تعريف الارتباط الخاصة بهم: **Stripe** (الدفع)، **Twilio** (الهاتف)، **Firebase** (المصادقة/قاعدة البيانات/الاستضافة) وعند التفعيل، أداة **تحليل الجمهور**. قد يعمل هؤلاء الأطراف الثالثة **خارج الاتحاد الأوروبي**؛ يتم وضع **ضمانات مناسبة** عند الحاجة.
+
+---
+
+## 7. التحويلات الدولية
+
+عندما تتم عمليات نقل البيانات خارج بلدك، نتأكد من أنها تستند إلى **آليات حماية** معترف بها (بنود تعاقدية نموذجية، قرار الكفاية، إلخ) عندما يتطلب القانون ذلك.
+
+---
+
+## 8. حقوقك
+
+وفقاً للقانون المعمول به (مثل اللائحة العامة لحماية البيانات)، لديك حقوق **الوصول**، **التصحيح**، **المحو**، **الاعتراض**، **التقييد** و**النقل** في الشروط المنصوص عليها في القانون. يمكنك ممارسة حقوقك عبر **نموذج الاتصال** الخاص بنا: http://localhost:5174/contact
+
+---
+
+## 9. تحديث هذه السياسة
+
+قد نقوم بتعديل هذه السياسة لتعكس التطورات التنظيمية أو التقنية. يتم نشر النسخة المحدثة على هذه الصفحة مع **تاريخ التحديث**.
+
+---
+
+## 10. اتصل
+
+لأي سؤال يتعلق بملفات تعريف الارتباط أو حماية البيانات، اتصل بنا: [**http://localhost:5174/contact**](http://localhost:5174/contact)
+`;
+
+
 
   // const defaultContent = selectedLanguage === "fr" ? defaultFr : defaultEn;
   const defaultContent =
@@ -982,7 +1076,9 @@ const defaultCh = `
               : selectedLanguage === "pt"
                 ? defaultPt
               : selectedLanguage === "ch"
-              ? defaultCh
+                  ? defaultCh
+                  : selectedLanguage === "ar"
+                    ? defaultAr
             : defaultEn;
 
   // Sommaire UI
@@ -1004,10 +1100,11 @@ const anchorMap = useMemo(
                 ? "Что такое файл cookie?"
                 : selectedLanguage === "hi"
                   ? "कुकी क्या है?"
-            
-                : selectedLanguage === "ch"
-                ? "什么是cookie？?"
-                : "What is a cookie?",
+                  : selectedLanguage === "ch"
+                    ? "什么是cookie？"
+                    : selectedLanguage === "ar"
+                      ? "ما هو ملف تعريف الارتباط؟"
+                      : "What is a cookie?",
     },
     {
       num: 2,
@@ -1018,35 +1115,38 @@ const anchorMap = useMemo(
           ? "Por qué los utilizamos"
           : selectedLanguage === "pt"
             ? "Por que os usamos"
-        
-          : selectedLanguage === "de"
-            ? "Warum wir sie verwenden"
-            : selectedLanguage === "ru"
-              ? "Почему мы их используем"
-              : selectedLanguage === "hi"
-                ? "हम इनका उपयोग क्यों करते हैं"
-                : selectedLanguage === "ch"
-                ? "我们为什么使用它们"
-                : "Why we use them",
+            : selectedLanguage === "de"
+              ? "Warum wir sie verwenden"
+              : selectedLanguage === "ru"
+                ? "Почему мы их используем"
+                : selectedLanguage === "hi"
+                  ? "हम इनका उपयोग क्यों करते हैं"
+                  : selectedLanguage === "ch"
+                    ? "我们为什么使用它们"
+                    : selectedLanguage === "ar"
+                      ? "لماذا نستخدمها"
+                      : "Why we use them",
     },
     {
       num: 3,
       label:
         selectedLanguage === "fr"
           ? "Types de cookies"
-       
+          : selectedLanguage === "es"
+          ? "Tipos de cookies"
           : selectedLanguage === "pt"
             ? "Tipos de cookies"
-         
-          : selectedLanguage === "de"
-            ? "Cookie-Typen"
-            : selectedLanguage === "ru"
-              ? "Типы файлов cookie"
-              : selectedLanguage === "hi"
-                ? "कुकीज़ के प्रकार"
-                : selectedLanguage === "ch"
-                ? "cookie 的类型"
-                : "Types of cookies",
+            : selectedLanguage === "de"
+              ? "Cookie-Typen"
+              : selectedLanguage === "ru"
+                ? "Типы файлов cookie"
+                : selectedLanguage === "hi"
+                  ? "कुकीज़ के प्रकार"
+                  : selectedLanguage === "ch"
+                    ? "cookie 的类型"
+                    : selectedLanguage === "ar"
+                      ? "أنواع ملفات تعريف الارتباط"
+                      : "Types of cookies",
     },
     {
       num: 4,
@@ -1057,16 +1157,17 @@ const anchorMap = useMemo(
           ? "Base legal y duración"
           : selectedLanguage === "pt"
             ? "Base legal e duração"
-      
-          : selectedLanguage === "de"
-            ? "Rechtsgrundlage & Dauer"
-            : selectedLanguage === "ru"
-              ? "Правовая основа и продолжительность"
-              : selectedLanguage === "hi"
-                ? "कानूनी आधार और अवधि"
-                : selectedLanguage === "ch"
-                ? "法律依据和期限"
-                : "Legal basis & duration",
+            : selectedLanguage === "de"
+              ? "Rechtsgrundlage & Dauer"
+              : selectedLanguage === "ru"
+                ? "Правовая основа и продолжительность"
+                : selectedLanguage === "hi"
+                  ? "कानूनी आधार और अवधि"
+                  : selectedLanguage === "ch"
+                    ? "法律依据和期限"
+                    : selectedLanguage === "ar"
+                      ? "الأساس القانوني والمدة"
+                      : "Legal basis & duration",
     },
     {
       num: 5,
@@ -1077,15 +1178,17 @@ const anchorMap = useMemo(
           ? "Gestión del consentimiento"
           : selectedLanguage === "pt"
             ? "Gestão do consentimento"
-          : selectedLanguage === "de"
-            ? "Verwaltung der Zustimmung"
-            : selectedLanguage === "ru"
-              ? "Управление согласием"
-              : selectedLanguage === "hi"
-                ? "सहमति प्रबंधन"
-                : selectedLanguage === "ch"
-                ? "管理同意"
-                : "Managing consent",
+            : selectedLanguage === "de"
+              ? "Verwaltung der Zustimmung"
+              : selectedLanguage === "ru"
+                ? "Управление согласием"
+                : selectedLanguage === "hi"
+                  ? "सहमति प्रबंधन"
+                  : selectedLanguage === "ch"
+                    ? "管理同意"
+                    : selectedLanguage === "ar"
+                      ? "إدارة الموافقة"
+                      : "Managing consent",
     },
     {
       num: 6,
@@ -1094,19 +1197,19 @@ const anchorMap = useMemo(
           ? "Cookies tiers"
           : selectedLanguage === "es"
           ? "Cookies de terceros"
-
           : selectedLanguage === "pt"
             ? "Cookies de terceiros"
-          : selectedLanguage === "de"
-            ? "Drittanbieter-Cookies"
-            : selectedLanguage === "ru"
-              ? "Файлы cookie третьих лиц"
-              : selectedLanguage === "hi"
-                ? "तृतीय पक्ष कुकीज़"
-                : selectedLanguage === "ch"
-                ? "第三方 cookieज़"
-                : "Third-party cookies",
-
+            : selectedLanguage === "de"
+              ? "Drittanbieter-Cookies"
+              : selectedLanguage === "ru"
+                ? "Файлы cookie третьих лиц"
+                : selectedLanguage === "hi"
+                  ? "तृतीय पक्ष कुकीज़"
+                  : selectedLanguage === "ch"
+                    ? "第三方 cookie"
+                    : selectedLanguage === "ar"
+                      ? "ملفات تعريف الارتباط من طرف ثالث"
+                      : "Third-party cookies",
     },
     {
       num: 7,
@@ -1117,16 +1220,17 @@ const anchorMap = useMemo(
           ? "Transferencias internacionales"
           : selectedLanguage === "pt"
             ? "Transferências internacionais"
-      
-          : selectedLanguage === "de"
-            ? "Internationale Übermittlungen"
-            : selectedLanguage === "ru"
-              ? "Международные передачи"
-              : selectedLanguage === "hi"
-                ? "अंतर्राष्ट्रीय स्थानांतरण"
-                : selectedLanguage === "ch"
-                ? "国际转账"
-                : "International transfers",
+            : selectedLanguage === "de"
+              ? "Internationale Übermittlungen"
+              : selectedLanguage === "ru"
+                ? "Международные передачи"
+                : selectedLanguage === "hi"
+                  ? "अंतर्राष्ट्रीय स्थानांतरण"
+                  : selectedLanguage === "ch"
+                    ? "国际转账"
+                    : selectedLanguage === "ar"
+                      ? "التحويلات الدولية"
+                      : "International transfers",
     },
     {
       num: 8,
@@ -1137,16 +1241,17 @@ const anchorMap = useMemo(
           ? "Sus derechos"
           : selectedLanguage === "pt"
             ? "Seus direitos"
-        
-          : selectedLanguage === "de"
-            ? "Ihre Rechte"
-            : selectedLanguage === "ru"
-              ? "Ваши права"
-              : selectedLanguage === "hi"
-                ? "आपके अधिकार"
-                : selectedLanguage === "ch"
-                ? "您的权利र"
-                : "Your rights",
+            : selectedLanguage === "de"
+              ? "Ihre Rechte"
+              : selectedLanguage === "ru"
+                ? "Ваши права"
+                : selectedLanguage === "hi"
+                  ? "आपके अधिकार"
+                  : selectedLanguage === "ch"
+                    ? "您的权利"
+                    : selectedLanguage === "ar"
+                      ? "حقوقك"
+                      : "Your rights",
     },
     {
       num: 9,
@@ -1157,15 +1262,17 @@ const anchorMap = useMemo(
           ? "Actualizaciones"
           : selectedLanguage === "pt"
             ? "Atualizações"
-          : selectedLanguage === "de"
-            ? "Aktualisierungen"
-            : selectedLanguage === "ru"
-              ? "Обновления"
-              : selectedLanguage === "hi"
-                ? "अपडेट"
-                : selectedLanguage === "ch"
-                ? "更新"
-                : "Updates",
+            : selectedLanguage === "de"
+              ? "Aktualisierungen"
+              : selectedLanguage === "ru"
+                ? "Обновления"
+                : selectedLanguage === "hi"
+                  ? "अपडेट"
+                  : selectedLanguage === "ch"
+                    ? "更新"
+                    : selectedLanguage === "ar"
+                      ? "التحديثات"
+                      : "Updates",
     },
     {
       num: 10,
@@ -1174,19 +1281,24 @@ const anchorMap = useMemo(
           ? "Contact"
           : selectedLanguage === "es"
           ? "Contacto"
-          : selectedLanguage === "de"
-            ? "Kontakt"
-            : selectedLanguage === "ru"
-              ? "Контакт"
-              : selectedLanguage === "hi"
-                ? "संपर्क"
-                : selectedLanguage === "ch"
-                ? "接触"
-                : "Contact",
+          : selectedLanguage === "pt"
+            ? "Contato"
+            : selectedLanguage === "de"
+              ? "Kontakt"
+              : selectedLanguage === "ru"
+                ? "Контакт"
+                : selectedLanguage === "hi"
+                  ? "संपर्क"
+                  : selectedLanguage === "ch"
+                    ? "接触"
+                    : selectedLanguage === "ar"
+                      ? "اتصل"
+                      : "Contact",
     },
   ],
   [selectedLanguage]
 );
+
 
 
 
