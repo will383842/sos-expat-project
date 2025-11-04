@@ -10,7 +10,7 @@ import { X, Check, ZoomIn, AlertCircle, RotateCw } from "lucide-react";
 // ===========================
 // ImageCropModal
 // ===========================
-type Locale = "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt";
+type Locale = "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt" | "ch";
 
 // const I18N = {
 //   fr: {
