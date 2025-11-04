@@ -36,6 +36,7 @@ interface TestimonialData {
     ru: string;
     hi: string;
     ch: string;
+    pt: string;
   };
   fullContent: {
     fr: string;
@@ -45,6 +46,7 @@ interface TestimonialData {
     ru: string;
     hi: string;
     ch: string;
+    pt: string;
   };
   avatar: string;
   verified: boolean;
@@ -56,6 +58,7 @@ interface TestimonialData {
     ru: string;
     hi: string;
     ch: string;
+    pt: string;
   };
   duration: string;
   helpType: {
@@ -66,6 +69,7 @@ interface TestimonialData {
     ru: string[];
     hi: string[];
     ch: string[];
+    pt: string[];
   };
   year: number;
 }
@@ -622,6 +626,1014 @@ interface TestimonialData {
 //   }
 // };
 
+// const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
+//   "1": {
+//     id: "1",
+//     name: "Aisha M.",
+//     type: "expat",
+//     country: "Thaïlande",
+//     language: "francophone",
+//     rating: 5,
+//     date: "2025-10-05",
+//     year: 2025,
+//     title: {
+//       fr: "Service exceptionnel en Thaïlande",
+//       en: "Exceptional Service in Thailand",
+//       es: "Servicio excepcional en Tailandia",
+//       de: "Außergewöhnlicher Service in Thailand",
+//       ru: "Исключительный сервис в Таиланде",
+//       hi: "थाईलैंड में असाधारण सेवा",
+//       ch: "泰国卓越服务"
+//     },
+//     fullContent: {
+//       fr: "Incroyable ! En 3 minutes j'avais un expatrié français au bout du fil depuis Bangkok. Il m'a expliqué toute la procédure visa Thaïlandais, les pièges à éviter et m'a même donné les contacts de son agent immobilier. Service qui change la vie !",
+//       en: "Incredible! In 3 minutes I had a French expat on the phone from Bangkok. He explained the entire Thai visa procedure, pitfalls to avoid, and even gave me his real estate agent's contacts. Life-changing service!",
+//       es: "¡Increíble! En 3 minutos tenía un expatriado francés al teléfono desde Bangkok. Me explicó todo el procedimiento de visa tailandesa, las trampas a evitar e incluso me dio los contactos de su agente inmobiliario. ¡Servicio que cambia la vida!",
+//       de: "Unglaublich! In 3 Minuten hatte ich einen französischen Expat am Telefon aus Bangkok. Er erklärte mir das gesamte thailändische Visumverfahren, Fallstricke, die es zu vermeiden gilt, und gab mir sogar die Kontakte seines Immobilienmaklers. Lebensverändernder Service!",
+//       ru: "Невероятно! За 3 минуты я связался с французским экспатом по телефону из Бангкока. Он объяснил всю процедуру получения тайской визы, подводные камни, которых следует избегать, и даже дал контакты своего агента по недвижимости. Сервис, меняющий жизнь!",
+//       hi: "अविश्वसनीय! 3 मिनट में मेरे पास बैंकॉक से फोन पर एक फ्रांसीसी प्रवासी था। उन्होंने थाई वीजा प्रक्रिया, बचने योग्य नुकसान की पूरी व्याख्या की और यहां तक कि अपने रियल एस्टेट एजेंट के संपर्क भी दिए। जीवन बदलने वाली सेवा!",
+//       ch: "太棒了！短短三分钟，我就联系上了一位身在曼谷的法国侨民。他详细地给我讲解了整个泰国签证流程，包括需要避免的陷阱，甚至还给了我他房产经纪人的联系方式。这项服务简直改变了我的人生！"
+//     },
+//     avatar:
+//       "https://images.unsplash.com/photo-1643842730000-db266bbc1b28?q=80&w=400&h=400&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+//     verified: true,
+//     serviceUsed: {
+//       fr: "Consultation Expatrié",
+//       en: "Expat Consultation",
+//       es: "Consulta de Expatriado",
+//       de: "Expat-Beratung",
+//       ru: "Консультация эмигранта",
+//       hi: "प्रवासी परामर्श",
+//       ch: "外籍人士咨询"
+//     },
+//     duration: "30 min",
+//     helpType: {
+//       fr: ["Visa", "Immobilier", "Installation"],
+//       en: ["Visa", "Real Estate", "Relocation"],
+//       es: ["Visa", "Inmobiliaria", "Reubicación"],
+//       de: ["Visum", "Immobilien", "Umzug"],
+//       ru: ["Виза", "Недвижимость", "Переезд"],
+//       hi: ["वीजा", "रियल एस्टेट", "स्थानांतरण"],
+//       ch: ["签证", "房地产", "搬迁"]
+//     },
+//   },
+//   "2": {
+//     id: "2",
+//     name: "Chen L.",
+//     type: "expat",
+//     country: "Canada",
+//     language: "francophone",
+//     rating: 5,
+//     date: "2025-10-02",
+//     year: 2025,
+//     title: {
+//       fr: "Installation à Vancouver facilitée",
+//       en: "Vancouver Setup Made Easy",
+//       es: "Instalación en Vancouver simplificada",
+//       de: "Vancouver-Setup leicht gemacht",
+//       ru: "Установка в Ванкувере упрощена",
+//       hi: "वैंकूवर सेटअप आसान बनाया गया",
+//       ch: "温哥华设置变得简单"
+//     },
+//     fullContent: {
+//       fr: "Génial ! L'expatrié m'a aidé avec mon installation à Vancouver. Banque, logement, assurance santé, transport... tout en 30 minutes ! Il connaissait tous les bons plans et m'a évité des mois de galère administrative.",
+//       en: "Brilliant! The expat helped me with my Vancouver setup. Banking, housing, health insurance, transport... everything in 30 minutes! He knew all the insider tips and saved me months of administrative hassle.",
+//       es: "¡Brillante! El expatriado me ayudó con mi instalación en Vancouver. Banco, vivienda, seguro de salud, transporte... ¡todo en 30 minutos! Conocía todos los trucos internos y me ahorró meses de problemas administrativos.",
+//       de: "Großartig! Der Expat half mir bei meiner Vancouver-Einrichtung. Banking, Wohnung, Krankenversicherung, Transport... alles in 30 Minuten! Er kannte alle Insider-Tipps und sparte mir Monate administrativer Probleme.",
+//       ru: "Блестяще! Эмигрант помог мне с установкой в Ванкувере. Банк, жилье, медицинское страхование, транспорт... все за 30 минут! Он знал все инсайдерские советы и спасил меня от месяцев административных хлопот.",
+//       hi: "शानदार! प्रवासी ने मुझे वैंकूवर सेटअप में मदद की। बैंकिंग, आवास, स्वास्थ्य बीमा, परिवहन... सब कुछ 30 मिनट में! उन्हें सभी अंदरूनी सुझाव पता थे और मुझे महीनों की प्रशासनिक परेशानी से बचाया।",
+//       ch: "太棒了！这位外籍人士帮我安顿好了在温哥华的一切。银行、住房、医疗保险、交通……所有事情30分钟就搞定了！他知道所有内幕消息，帮我省去了几个月的行政麻烦。"
+//     },
+//     avatar:
+//       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
+//     verified: true,
+//     serviceUsed: {
+//       fr: "Consultation Expatrié",
+//       en: "Expat Consultation",
+//       es: "Consulta de Expatriado",
+//       de: "Expat-Beratung",
+//       ru: "Консультация эмигранта",
+//       hi: "प्रवासी परामर्श",
+//       ch: "外籍人士咨询"
+//     },
+//     duration: "30 min",
+//     helpType: {
+//       fr: ["Banque", "Logement", "Assurance"],
+//       en: ["Banking", "Housing", "Insurance"],
+//       es: ["Banco", "Vivienda", "Seguro"],
+//       de: ["Banking", "Wohnung", "Versicherung"],
+//       ru: ["Банк", "Жилье", "Страхование"],
+//       hi: ["बैंकिंग", "आवास", "बीमा"],
+//       ch: ["银行业", "住房", "保险"]
+//     },
+//   },
+//   "3": {
+//     id: "3",
+//     name: "Emma K.",
+//     type: "expat",
+//     country: "Australie",
+//     language: "francophone",
+//     rating: 4,
+//     date: "2025-09-29",
+//     year: 2025,
+//     title: {
+//       fr: "Conseils précieux pour Melbourne",
+//       en: "Valuable Advice for Melbourne",
+//       es: "Consejos valiosos para Melbourne",
+//       de: "Wertvolle Tipps für Melbourne",
+//       ru: "Ценные советы для Мельбурна",
+//       hi: "मेलबर्न के लिए मूल्यवान सुझाव",
+//       ch: "对墨尔本的宝贵建议"
+//     },
+//     fullContent: {
+//       fr: "Super expérience ! Expatrié à Melbourne depuis 8 ans, il m'a donné tous les conseils pour mon working holiday visa. Écoles, quartiers, jobs... Une mine d'or d'informations pratiques !",
+//       en: "Great experience! Expat in Melbourne for 8 years, he gave me all the advice for my working holiday visa. Schools, neighborhoods, jobs... A goldmine of practical information!",
+//       es: "¡Gran experiencia! Expatriado en Melbourne durante 8 años, me dio todos los consejos para mi visa de vacaciones de trabajo. Escuelas, barrios, trabajos... ¡Una mina de información práctica!",
+//       de: "Großartige Erfahrung! Expat in Melbourne seit 8 Jahren gab mir alle Tipps für mein Working-Holiday-Visum. Schulen, Viertel, Jobs... Eine Goldgrube praktischer Informationen!",
+//       ru: "Отличный опыт! Эмигрант в Мельбурне уже 8 лет дал мне все советы для моей рабочей визы отпуска. Школы, районы, работа... Кладезь практической информации!",
+//       hi: "शानदार अनुभव! मेलबर्न में 8 साल से प्रवासी, उन्होंने मुझे अपने वर्किंग होलिडे वीजा के लिए सभी सुझाव दिए। स्कूल, पड़ोस, नौकरियां... व्यावहारिक जानकारी का खजाना!",
+//       ch: "非常棒的体验！我在墨尔本生活了8年，他为我的打工度假签证提供了所有建议。学校、社区、工作……简直是实用信息的宝库！"
+//     },
+//     avatar:
+//       "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
+//     verified: true,
+//     serviceUsed: {
+//       fr: "Consultation Expatrié",
+//       en: "Expat Consultation",
+//       es: "Consulta de Expatriado",
+//       de: "Expat-Beratung",
+//       ru: "Консультация эмигранта",
+//       hi: "प्रवासी परामर्श",
+//       ch: "外籍人士咨询"
+//     },
+//     duration: "25 min",
+//     helpType: {
+//       fr: ["Visa", "Emploi", "Quartiers"],
+//       en: ["Visa", "Employment", "Neighborhoods"],
+//       es: ["Visa", "Empleo", "Barrios"],
+//       de: ["Visum", "Beschäftigung", "Viertel"],
+//       ru: ["Виза", "Занятость", "Районы"],
+//       hi: ["वीजा", "रोजगार", "पड़ोस"],
+//       ch: ["签证","就业","社区"]
+//     },
+//   },
+//   "4": {
+//     id: "4",
+//     name: "Kwame A.",
+//     type: "expat",
+//     country: "Émirats Arabes Unis",
+//     language: "francophone",
+//     rating: 5,
+//     date: "2025-09-25",
+//     year: 2025,
+//     title: {
+//       fr: "Guide complet pour Dubaï",
+//       en: "Complete Guide for Dubai",
+//       es: "Guía completa para Dubái",
+//       de: "Kompletter Leitfaden für Dubai",
+//       ru: "Полное руководство для Дубая",
+//       hi: "दुबई के लिए संपूर्ण गाइड",
+//       ch: "迪拜完整指南"
+//     },
+//     fullContent: {
+//       fr: "Excellent ! L'expatrié vivant à Dubaï depuis 5 ans m'a tout expliqué : visa, compte bancaire, logement, culture locale. Il m'a même mis en contact avec sa communauté d'expats français !",
+//       en: "Excellent! The expat living in Dubai for 5 years explained everything: visa, bank account, housing, local culture. He even connected me with his French expat community!",
+//       es: "¡Excelente! El expatriado que vive en Dubái desde hace 5 años me lo explicó todo: visa, cuenta bancaria, vivienda, cultura local. ¡Incluso me conectó con su comunidad de expatriados franceses!",
+//       de: "Ausgezeichnet! Der Expat, der seit 5 Jahren in Dubai lebt, erklärte mir alles: Visum, Bankkonto, Wohnung, lokale Kultur. Er verband mich sogar mit seiner französischen Expat-Gemeinde!",
+//       ru: "Отлично! Эмигрант, живущий в Дубае 5 лет, объяснил мне все: виза, банковский счет, жилье, местная культура. Он даже связал меня со своей французской общиной эмигрантов!",
+//       hi: "उत्कृष्ट! दुबई में 5 साल से रहने वाले प्रवासी ने मुझे सब कुछ समझाया: वीजा, बैंक खाता, आवास, स्थानीय संस्कृति। वह मुझे अपने फ्रांसीसी प्रवासी समुदाय से भी जोड़ते हैं!",
+//       ch: "太棒了！这位在迪拜生活了五年的外籍人士给我讲解了一切：签证、银行账户、住房、当地文化等等。他甚至还帮我联系了他的法国外籍人士社群！"
+//     },
+//     avatar:
+//       "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
+
+//     verified: true,
+//     serviceUsed: {
+//       fr: "Consultation Expatrié",
+//       en: "Expat Consultation",
+//       es: "Consulta de Expatriado",
+//       de: "Expat-Beratung",
+//       ru: "Консультация эмигранта",
+//       hi: "प्रवासी परामर्श",
+//       ch: "外籍人士咨询"
+//     },
+//     duration: "40 min",
+//     helpType: {
+//       fr: ["Visa", "Banque", "Réseau"],
+//       en: ["Visa", "Banking", "Network"],
+//       es: ["Visa", "Banco", "Red"],
+//       de: ["Visum", "Banking", "Netzwerk"],
+//       ru: ["Виза", "Банк", "Сеть"],
+//       hi: ["वीजा", "बैंकिंग", "नेटवर्क"],
+//       ch: ["签证", "银行业", "网络"]
+//     },
+//   },
+//   "5": {
+//     id: "5",
+//     name: "Yuki T.",
+//     type: "expat",
+//     country: "Japon",
+//     language: "francophone",
+//     rating: 5,
+//     date: "2025-09-22",
+//     year: 2025,
+//     title: {
+//       fr: "Aide rapide depuis Tokyo",
+//       en: "Quick Help from Tokyo",
+//       es: "Ayuda rápida desde Tokio",
+//       de: "Schnelle Hilfe aus Tokio",
+//       ru: "Быстрая помощь из Токио",
+//       hi: "टोक्यो से तेजी से मदद",
+//       ch: "来自东京的快速帮助"
+//     },
+//     fullContent: {
+//       fr: "Parfait ! En urgence depuis Tokyo, j'ai eu un expatrié en 2 minutes. Il m'a aidé avec la paperasse japonaise complexe et m'a orienté vers les bonnes administrations. Très rassurant !",
+//       en: "Perfect! In urgent situation from Tokyo, I got an expat in 2 minutes. He helped me with complex Japanese paperwork and directed me to the right administrations. Very reassuring!",
+//       es: "¡Perfecto! En situación urgente desde Tokio, obtuve un expatriado en 2 minutos. Me ayudó con trámites complejos de Japón y me dirigió a las administraciones correctas. ¡Muy tranquilizador!",
+//       de: "Perfekt! In dringender Situation aus Tokio bekam ich in 2 Minuten einen Expat. Er half mir mit komplexen japanischen Unterlagen und wies mich auf die richtigen Behörden hin. Sehr beruhigend!",
+//       ru: "Идеально! В срочной ситуации из Токио я получил эмигранта за 2 минуты. Он помог мне со сложной японской документацией и направил меня в правильные администрации. Очень обнадеживает!",
+//       hi: "बिल्कुल सही! टोक्यो से जरूरी स्थिति में, मुझे 2 मिनट में एक प्रवासी मिला। उन्होंने मुझे जटिल जापानी कागजी कार्रवाई में मदद की और सही प्रशासन की ओर निर्देशित किया। बहुत आश्वस्त करने वाला!",
+//       ch: "太好了！我当时身在东京，情况紧急，两分钟之内就联系到了一位外籍人士。他帮我处理了复杂的日本文件，并指引我去了正确的部门。真是太让人放心了！"
+//     },
+//     avatar:
+//       "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
+
+//     verified: true,
+//     serviceUsed: {
+//       fr: "Consultation Expatrié",
+//       en: "Expat Consultation",
+//       es: "Consulta de Expatriado",
+//       de: "Expat-Beratung",
+//       ru: "Консультация эмигранта",
+//       hi: "प्रवासी परामर्श",
+//       ch: "外籍人士咨询"
+//     },
+//     duration: "20 min",
+//     helpType: {
+//       fr: ["Administration", "Documents", "Urgence"],
+//       en: ["Administration", "Documents", "Emergency"],
+//       es: ["Administración", "Documentos", "Emergencia"],
+//       de: ["Verwaltung", "Dokumente", "Notfall"],
+//       ru: ["Администрация", "Документы", "Чрезвычайная ситуация"],
+//       hi: ["प्रशासन", "दस्तावेज़", "आपातकाल"],
+//       ch: ["行政", "文件", "Emergency"]
+//     },
+//   },
+//   "6": {
+//     id: "6",
+//     name: "Fatima R.",
+//     type: "expat",
+//     country: "Norvège",
+//     language: "francophone",
+//     rating: 4,
+//     date: "2025-09-19",
+//     year: 2025,
+//     title: {
+//       fr: "Conseils étudiants à Oslo",
+//       en: "Student Tips in Oslo",
+//       es: "Consejos para estudiantes en Oslo",
+//       de: "Studentenratschläge in Oslo",
+//       ru: "Студенческие советы в Осло",
+//       hi: "ओस्लो में छात्र सुझाव",
+//       ch: "奥斯陆学生小贴士"
+//     },
+//     fullContent: {
+//       fr: "Très utile ! L'expatrié français en Norvège m'a donné tous les tips pour Oslo : logement étudiant, jobs d'appoint, transports. Il m'a fait gagner un temps précieux pour mes études !",
+//       en: "Very useful! The French expat in Norway gave me all the tips for Oslo: student housing, part-time jobs, transport. He saved me precious time for my studies!",
+//       es: "¡Muy útil! El expatriado francés en Noruega me dio todos los consejos para Oslo: vivienda estudiantil, trabajos a tiempo parcial, transporte. ¡Me ahorró tiempo valioso para mis estudios!",
+//       de: "Sehr nützlich! Der französische Expat in Norwegen gab mir alle Tipps für Oslo: Studentenwohnheim, Teilzeitarbeit, Transport. Er sparte mir kostbare Zeit für mein Studium!",
+//       ru: "Очень полезно! Французский эмигрант в Норвегии дал мне все советы для Осло: студенческое жилье, подработки, транспорт. Он сэкономил мне драгоценное время на учебу!",
+//       hi: "बहुत उपयोगी! नॉर्वे में फ्रांसीसी प्रवासी ने मुझे ओस्लो के लिए सभी सुझाव दिए: छात्र आवास, अंशकालिक नौकरियां, परिवहन। उन्होंने मुझे मेरी पढ़ाई के लिए कीमती समय बचाया!",
+//       ch: "太有用了！那位在挪威的法国侨民给了我很多关于奥斯陆的建议：学生公寓、兼职工作、交通等等。他帮我节省了宝贵的学习时间！"
+//     },
+//     avatar:
+//       "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
+
+//     verified: true,
+//     serviceUsed: {
+//       fr: "Consultation Expatrié",
+//       en: "Expat Consultation",
+//       es: "Consulta de Expatriado",
+//       de: "Expat-Beratung",
+//       ru: "Консультация эмигранта",
+//       hi: "प्रवासी परामर्श",
+//       ch: "外籍人士咨询"
+//     },
+//     duration: "25 min",
+//     helpType: {
+//       fr: ["Logement", "Études", "Emploi"],
+//       en: ["Housing", "Studies", "Employment"],
+//       es: ["Vivienda", "Estudios", "Empleo"],
+//       de: ["Wohnung", "Studium", "Beschäftigung"],
+//       ru: ["Жилье", "Учеба", "Занятость"],
+//       hi: ["आवास", "अध्ययन", "रोजगार"],
+//       ch: ["住房", "研究", "就业"]
+//     },
+//   },
+//   "7": {
+//     id: "7",
+//     name: "Carlos M.",
+//     type: "expat",
+//     country: "Brésil",
+//     language: "francophone",
+//     rating: 5,
+//     date: "2025-09-15",
+//     year: 2025,
+//     title: {
+//       fr: "Installation familiale à São Paulo",
+//       en: "Family Relocation to São Paulo",
+//       es: "Reubicación familiar a São Paulo",
+//       de: "Familienumsiedlung nach São Paulo",
+//       ru: "Семейный переезд в Сан-Паулу",
+//       hi: "सांव पाउलो में पारिवारिक पुनर्स्थापन",
+//       ch: "家庭搬迁到圣保罗"
+//     },
+//     fullContent: {
+//       fr: "Formidable ! Depuis le Brésil, l'expatrié m'a tout expliqué sur São Paulo : quartiers sûrs, carte de transports, meilleures écoles pour mes enfants. Une aide inestimable !",
+//       en: "Wonderful! From Brazil, the expat explained everything about São Paulo: safe neighborhoods, transport cards, best schools for my children. Invaluable help!",
+//       es: "¡Maravilloso! Desde Brasil, el expatriado me explicó todo sobre São Paulo: vecindarios seguros, tarjetas de transporte, mejores escuelas para mis hijos. ¡Ayuda invaluable!",
+//       de: "Wunderbar! Aus Brasilien erklärte mir der Expat alles über São Paulo: sichere Viertel, Fahrkarten, beste Schulen für meine Kinder. Unschätzbare Hilfe!",
+//       ru: "Чудесно! Из Бразилии эмигрант объяснил мне все о Сан-Паулу: безопасные районы, проездные билеты, лучшие школы для моих детей. Бесценная помощь!",
+//       hi: "शानदार! ब्राजील से, प्रवासी ने मुझे सांव पाउलो के बारे में सब कुछ समझाया: सुरक्षित पड़ोस, परिवहन कार्ड, मेरे बच्चों के लिए सर्वोत्तम स्कूल। अमूल्य सहायता!",
+//       ch: "太棒了！这位来自巴西的外国人详细地介绍了圣保罗的情况：安全的街区、交通卡、适合我孩子的好学校等等。真是帮了我大忙！"
+//     },
+//     avatar:
+//       "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
+
+//     verified: true,
+//     serviceUsed: {
+//       fr: "Consultation Expatrié",
+//       en: "Expat Consultation",
+//       es: "Consulta de Expatriado",
+//       de: "Expat-Beratung",
+//       ru: "Консультация эмигранта",
+//       hi: "प्रवासी परामर्श",
+//       ch: "外籍人士咨询"
+//     },
+//     duration: "35 min",
+//     helpType: {
+//       fr: ["Famille", "Écoles", "Quartiers"],
+//       en: ["Family", "Schools", "Neighborhoods"],
+//       es: ["Familia", "Escuelas", "Barrios"],
+//       de: ["Familie", "Schulen", "Viertel"],
+//       ru: ["Семья", "Школы", "Районы"],
+//       hi: ["परिवार", "स्कूल", "पड़ोस"],
+//       ch: ["家庭", "学校", "社区"]
+//     },
+//   },
+//   "8": {
+//     id: "8",
+//     name: "Priya S.",
+//     type: "expat",
+//     country: "Singapour",
+//     language: "francophone",
+//     rating: 5,
+//     date: "2025-09-12",
+//     year: 2025,
+//     title: {
+//       fr: "Guide complet Singapour",
+//       en: "Complete Singapore Guide",
+//       es: "Guía completa de Singapur",
+//       de: "Kompletter Singapore-Leitfaden",
+//       ru: "Полное руководство по Сингапуру",
+//       hi: "सिंगापुर पूर्ण गाइड",
+//       ch: "完整的新加坡指南"
+//     },
+//     fullContent: {
+//       fr: "Extraordinaire ! L'expatrié à Singapour m'a guidé pas à pas pour mon installation. Permis de travail, logement, banque locale... Tout était clair et détaillé. Service top !",
+//       en: "Extraordinary! The expat in Singapore guided me step by step for my installation. Work permit, housing, local bank... Everything was clear and detailed. Top service!",
+//       es: "¡Extraordinario! El expatriado en Singapur me guió paso a paso para mi instalación. Permiso de trabajo, vivienda, banco local... Todo fue claro y detallado. ¡Servicio de primera!",
+//       de: "Außergewöhnlich! Der Expat in Singapur führte mich Schritt für Schritt durch meine Installation. Arbeitserlaubnis, Wohnung, lokale Bank... Alles war klar und detailliert. Spitzenservice!",
+//       ru: "Необычайно! Эмигрант в Сингапуре шаг за шагом провел меня через установку. Рабочий статус, жилье, местный банк... Все было ясно и подробно. Отличный сервис!",
+//       hi: "असाधारण! सिंगापुर में प्रवासी ने मुझे मेरी स्थापना के लिए चरण दर चरण मार्गदर्शन दिया। कार्य अनुमति, आवास, स्थानीय बैंक... सब कुछ स्पष्ट और विस्तृत था। शीर्ष सेवा!",
+//       ch: "太棒了！这位在新加坡的外国人一步一步地指导我完成所有手续。工作许可、住房、当地银行……一切都清晰明了、讲解详尽。一流的服务！"
+//     },
+//     avatar:
+//       "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&h=400&q=80",
+
+//     verified: true,
+//     serviceUsed: {
+//       fr: "Consultation Expatrié",
+//       en: "Expat Consultation",
+//       es: "Consulta de Expatriado",
+//       de: "Expat-Beratung",
+//       ru: "Консультация эмигранта",
+//       hi: "प्रवासी परामर्श",
+//       ch: "外籍人士咨询"
+//     },
+//     duration: "45 min",
+//     helpType: {
+//       fr: ["Permis", "Logement", "Banque"],
+//       en: ["Permit", "Housing", "Banking"],
+//       es: ["Permiso", "Vivienda", "Banco"],
+//       de: ["Erlaubnis", "Wohnung", "Banking"],
+//       ru: ["Разрешение", "Жилье", "Банк"],
+//       hi: ["अनुमति", "आवास", "बैंकिंग"],
+//       ch: ["允许", "住房", "银行业"],
+//     },
+//   },
+//   "9": {
+//     id: "9",
+//     name: "Jin W.",
+//     type: "expat",
+//     country: "Corée du Sud",
+//     language: "francophone",
+//     rating: 4,
+//     date: "2025-09-09",
+//     year: 2025,
+//     title: {
+//       fr: "Échange universitaire à Séoul",
+//       en: "University Exchange in Seoul",
+//       es: "Intercambio universitario en Seúl",
+//       de: "Universitätsaustausch in Seoul",
+//       ru: "Студенческий обмен в Сеуле",
+//       hi: "सियोल में विश्वविद्यालय विनिमय",
+//       ch: "首尔大学交流"
+//     },
+//     fullContent: {
+//       fr: "Très professionnel ! L'expatrié français en Corée du Sud m'a donné tous les conseils pour Séoul : visa étudiant, logement universitaire, culture coréenne. Parfait pour mon échange !",
+//       en: "Very professional! The French expat in South Korea gave me all the advice for Seoul: student visa, university housing, Korean culture. Perfect for my exchange!",
+//       es: "¡Muy profesional! El expatriado francés en Corea del Sur me dio todos los consejos para Seúl: visa de estudiante, alojamiento universitario, cultura coreana. ¡Perfecto para mi intercambio!",
+//       de: "Sehr professionell! Der französische Expat in Südkorea gab mir alle Tipps für Seoul: Studentenvisum, Studentenwohnheim, koreanische Kultur. Perfekt für meinen Austausch!",
+//       ru: "Очень профессионально! Французский эмигрант в Южной Корее дал мне все советы для Сеула: студенческая виза, студенческое жилье, корейская культура. Идеально для моего обмена!",
+//       hi: "बहुत पेशेवर! दक्षिण कोरिया में फ्रांसीसी प्रवासी ने मुझे सियोल के लिए सभी सुझाव दिए: छात्र वीजा, विश्वविद्यालय आवास, कोरियाई संस्कृति। मेरे विनिमय के लिए बिल्कुल सही!",
+//       ch: "非常专业！这位在韩国的法国侨民给了我很多关于首尔的建议：学生签证、大学住宿、韩国文化等等。对我的交换学习来说简直完美！"
+//     },
+//     avatar:
+//       "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80",
+
+//     verified: true,
+//     serviceUsed: {
+//       fr: "Consultation Expatrié",
+//       en: "Expat Consultation",
+//       es: "Consulta de Expatriado",
+//       de: "Expat-Beratung",
+//       ru: "Консультация эмигранта",
+//       hi: "प्रवासी परामर्श",
+//       ch: "外籍人士咨询"
+//     },
+//     duration: "30 min",
+//     helpType: {
+//       fr: ["Visa", "Université", "Culture"],
+//       en: ["Visa", "University", "Culture"],
+//       es: ["Visa", "Universidad", "Cultura"],
+//       de: ["Visum", "Universität", "Kultur"],
+//       ru: ["Виза", "Университет", "Культура"],
+//       hi: ["वीजा", "विश्वविद्यालय", "संस्कृति"],
+//       ch: ["签证", "大学", "文化"],
+//     },
+//   },
+//   "10": {
+//     id: "10",
+//     name: "James P.",
+//     type: "lawyer",
+//     country: "Royaume-Uni",
+//     language: "francophone",
+//     rating: 5,
+//     date: "2025-10-04",
+//     year: 2025,
+//     title: {
+//       fr: "Expertise juridique à Londres",
+//       en: "Legal Expertise in London",
+//       es: "Experiencia jurídica en Londres",
+//       de: "Rechtsfachkompetenz in London",
+//       ru: "Юридическая экспертиза в Лондоне",
+//       hi: "लंदन में कानूनी विशेषज्ञता",
+//       ch: "伦敦的法律专业知识"
+//     },
+//     fullContent: {
+//       fr: `Avocat exceptionnel ! Depuis Londres, problème urgent avec mon propriétaire. L'avocat m'a expliqué mes droits en droit anglais, les démarches à suivre et m'a orienté vers un solicitor local. Précis et efficace !
+
+// // L'avocat connaissait parfaitement le droit immobilier britannique et m'a donné des conseils précis pour résoudre mon conflit avec le propriétaire. Il m'a expliqué toutes mes options légales de manière claire et professionnelle.
+
+// // Le service de prise de rendez-vous est très flexible, j'ai pu avoir ma consultation le jour même. La qualité de l'appel était excellente, sans problèmes techniques.
+
+// // Je recommande vivement ce service pour tous les expatriés qui ont besoin d'aide juridique urgente au Royaume-Uni. Un gain de temps et d'argent considérable !
+
+// // La qualité du conseil était au niveau d'un cabinet d'avocat traditionnel, mais avec la rapidité et la praticité d'un service en ligne moderne. Parfait pour les urgences juridiques !`,
+//       en: `Exceptional lawyer! From London, urgent problem with my landlord. The lawyer explained my rights in English law, the steps to follow and directed me to a local solicitor. Precise and efficient!
+
+// // The lawyer knew British property law perfectly and gave me precise advice to resolve my conflict with the landlord. He explained all my legal options clearly and professionally.
+
+// // The appointment booking service is very flexible, I was able to have my consultation the same day. The call quality was excellent, without technical problems.
+
+// // I highly recommend this service for all expats who need urgent legal help in the UK. Considerable time and money savings!
+
+// // The quality of advice was at the level of a traditional law firm, but with the speed and practicality of a modern online service. Perfect for legal emergencies!`,
+//       es: "¡Abogado excepcional! Desde Londres, problema urgente con mi casero. El abogado me explicó mis derechos según la ley inglesa, los pasos a seguir y me dirigió a un abogado local. ¡Preciso y eficiente!",
+//       de: "Außergewöhnlicher Anwalt! Aus London, dringendes Problem mit meinem Vermieter. Der Anwalt erklärte mir meine Rechte nach englischem Recht, die zu befolgenden Schritte und wies mich auf einen lokalen Anwalt hin. Präzise und effizient!",
+//       ru: "Исключительный адвокат! Из Лондона срочная проблема с моим арендодателем. Адвокат объяснил мои права по английскому праву, шаги, которые нужно предпринять, и направил меня к местному адвокату. Точно и эффективно!",
+//       hi: "असाधारण वकील! लंदन से, मेरे मकान मालिक के साथ जरूरी समस्या। वकील ने मुझे अंग्रेजी कानून में मेरे अधिकारों की व्याख्या की, अनुसरण करने के कदम और मुझे एक स्थानीय वकील की ओर निर्देशित किया। सटीक और कुशल!",
+//       ch: `这位律师太棒了！我住在伦敦，遇到了房东的紧急纠纷。律师详细解释了我在英国法律下的权利、需要采取的步骤，并推荐了一位当地的律师。他办事精准高效！
+//         // 这位律师精通英国房产法，为我提供了解决与房东纠纷的精准建议。他清晰专业地解释了我的所有法律选择。
+
+//         // 预约服务非常灵活，我当天就进行了咨询。通话质量极佳，没有任何技术问题。
+
+//         // 我强烈推荐这项服务给所有在英国需要紧急法律援助的外籍人士。它能节省大量时间和金钱！
+
+//         // 咨询质量堪比传统律师事务所，但速度和便捷性却堪比现代在线服务。是应对法律紧急情况的理想之选！`
+//     },
+//     avatar:
+//       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
+//     verified: true,
+//     serviceUsed: {
+//       fr: "Appel Avocat",
+//       en: "Lawyer Call",
+//       es: "Consulta de Abogado",
+//       de: "Rechtsberatung",
+//       ru: "Консультация адвоката",
+//       hi: "वकील परामर्श",
+//       ch: "律师电话"
+//     },
+//     duration: "25 minutes",
+//     helpType: {
+//       fr: [
+//         "Droit immobilier",
+//         "Droit des baux",
+//         "Conseil juridique",
+//         "Contentieux",
+//       ],
+//       en: ["Property law", "Tenancy law", "Legal advice", "Litigation"],
+//       es: ["Derecho de propiedad", "Disputa", "Asesoramiento"],
+//       de: ["Immobilienrecht", "Streit", "Beratung"],
+//       ru: ["Имущественное право", "Спор", "Совет"],
+//       hi: ["संपत्ति कानून", "विवाद", "सलाह"],
+//       ch: ["物权法", "租赁法", "法律咨询", "诉讼"]
+//     },
+//   },
+//   "13": {
+//     id: "13",
+//     name: "Maria G.",
+//     type: "lawyer",
+//     country: "etats-unis",
+//     language: "francophone",
+//     rating: 5,
+//     date: "2024-12-01",
+//     year: 2024,
+//     title: {
+//       fr: "Problème visa résolu aux États-Unis",
+//       en: "Visa problem solved in the United States",
+//       es: "Problema de visa en EE. UU.",
+//       de: "Visumproblem in den USA",
+//       ru: "Проблема с визой в США",
+//       hi: "यूएसए में वीजा समस्या",
+//       ch: "美国签证问题已解决"
+//     },
+//     fullContent: {
+//       fr: `Avocat brillant ! Problème de visa aux États-Unis, il m'a expliqué toutes les procédures d'immigration, les risques et solutions. Grâce à lui, j'ai évité l'expulsion !
+
+// // L'avocat spécialisé en droit de l'immigration américaine m'a donné des conseils précis et m'a orienté vers les bonnes démarches. Il connaissait parfaitement la législation américaine et française.
+
+// // Le service client est réactif et la plateforme très intuitive. J'ai reçu un suivi détaillé après l'appel avec tous les documents nécessaires.
+
+// // Je recommande vivement SOS Expat & Travelers pour tous les expatriés qui ont des problèmes juridiques urgents. C'est un service qui peut vraiment vous sauver dans des situations critiques.
+
+// // La qualité du conseil était exceptionnelle, avec une expertise pointue en droit de l'immigration. Service indispensable pour les expatriés !`,
+//       en: `Brilliant lawyer! Visa problem in the United States, he explained all immigration procedures, risks and solutions. Thanks to him, I avoided deportation!
+
+// // The lawyer specialized in American immigration law gave me precise advice and directed me to the right procedures. He knew American and French legislation perfectly.
+
+// // Customer service is responsive and the platform very intuitive. I received detailed follow-up after the call with all necessary documents.
+
+// // I highly recommend SOS Expat & Travelers for all expats who have urgent legal problems. It's a service that can really save you in critical situations.
+
+// // The quality of advice was exceptional, with sharp expertise in immigration law. Indispensable service for expats!`,
+//       es: "¡Abogado brillante! Problema de visa en Estados Unidos, me explicó todos los procedimientos de inmigración, riesgos y soluciones. ¡Gracias a él, evité la deportación!",
+//       de: "Glänzender Anwalt! Visumproblem in den USA erklärte mir alle Einwanderungsverfahren, Risiken und Lösungen. Dank ihm habe ich Abschiebung vermieden!",
+//       ru: "Блестящий адвокат! Проблема с визой в США, он объяснил мне все процедуры иммиграции, риски и решения. Благодаря ему я избежал депортации!",
+//       hi: "शानदार वकील! यूएसए में वीजा समस्या, उन्होंने मुझे सभी आप्रवासन प्रक्रियाएं, जोखिम और समाधान समझाए। उनके कारण मुझे निष्कासन से बचना पड़ा!",
+//       ch: `这位律师太棒了！我在美国遇到了签证问题，他详细解释了所有移民流程、风险和解决方案。多亏了他，我才避免了被遣返！
+
+//           // 这位专精美国移民法的律师给了我精准的建议，并指导我走正确的流程。他对美国和法国的法律法规都非常了解。
+
+//           // 客服响应迅速，平台也非常直观易用。通话结束后，我收到了详细的后续信息，包括所有必要的文件。
+
+//           // 我强烈推荐SOS Expat & Travelers给所有遇到紧急法律问题的外籍人士。这项服务真的能在危急时刻帮到你。
+
+//           // 律师提供的咨询质量非常高，在移民法方面展现了精湛的专业知识。对于外籍人士来说，这项服务必不可少！`
+//     },
+//     avatar:
+//       "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
+//     verified: true,
+//     serviceUsed: {
+//       fr: "Appel Avocat",
+//       en: "Lawyer Call",
+//       es: "Consulta de Abogado",
+//       de: "Rechtsberatung",
+//       ru: "Консультация адвоката",
+//       hi: "वकील परामर्श",
+//       ch: "律师电话"
+//     },
+//     duration: "35 minutes",
+//     helpType: {
+//       fr: [
+//         "Droit de l'immigration",
+//         "Visa",
+//         "Procédures administratives",
+//         "Droit américain",
+//       ],
+//       en: [
+//         "Immigration law",
+//         "Visa",
+//         "Administrative procedures",
+//         "American law",
+//       ],
+//       es: ["Inmigración", "Visa", "Emergencia"],
+//       de: ["Einwanderung", "Visum", "Notfall"],
+//       ru: ["Иммиграция", "Виза", "Чрезвычайная ситуация"],
+//       hi: ["आप्रवासन", "वीजा", "आपातकाल"],
+//       ch: [
+//         "移民法",
+//         "签证",
+//         "行政程序",
+//         "美国法律",
+//       ]
+//     },
+//   },
+//   "10": {
+//     id: "10",
+//     name: "James P.",
+//     type: "lawyer",
+//     country: "Royaume-Uni",
+//     language: "francophone",
+//     rating: 5,
+//     date: "2025-10-04",
+//     year: 2025,
+//     title: {
+//       fr: "Expertise juridique à Londres",
+//       en: "Legal Expertise in London",
+//       es: "Experiencia jurídica en Londres",
+//       de: "Rechtsfachkompetenz in London",
+//       ru: "Юридическая экспертиза в Лондоне",
+//       hi: "लंदन में कानूनी विशेषज्ञता",
+//       ch: "伦敦的法律专业知识"
+//     },
+//     fullContent: {
+//       fr: `Avocat exceptionnel ! Depuis Londres, problème urgent avec mon propriétaire. L'avocat m'a expliqué mes droits en droit anglais, les démarches à suivre et m'a orienté vers un solicitor local. Précis et efficace !
+
+// // L'avocat connaissait parfaitement le droit immobilier britannique et m'a donné des conseils précis pour résoudre mon conflit avec le propriétaire. Il m'a expliqué toutes mes options légales de manière claire et professionnelle.
+
+// // Le service de prise de rendez-vous est très flexible, j'ai pu avoir ma consultation le jour même. La qualité de l'appel était excellente, sans problèmes techniques.
+
+// // Je recommande vivement ce service pour tous les expatriés qui ont besoin d'aide juridique urgente au Royaume-Uni. Un gain de temps et d'argent considérable !
+
+// // La qualité du conseil était au niveau d'un cabinet d'avocat traditionnel, mais avec la rapidité et la praticité d'un service en ligne moderne. Parfait pour les urgences juridiques !`,
+//       en: `Exceptional lawyer! From London, urgent problem with my landlord. The lawyer explained my rights in English law, the steps to follow and directed me to a local solicitor. Precise and efficient!
+
+// // The lawyer knew British property law perfectly and gave me precise advice to resolve my conflict with the landlord. He explained all my legal options clearly and professionally.
+
+// // The appointment booking service is very flexible, I was able to have my consultation the same day. The call quality was excellent, without technical problems.
+
+// // I highly recommend this service for all expats who need urgent legal help in the UK. Considerable time and money savings!
+
+// // The quality of advice was at the level of a traditional law firm, but with the speed and practicality of a modern online service. Perfect for legal emergencies!`,
+//       es: "¡Abogado excepcional! Desde Londres, problema urgente con mi casero. El abogado me explicó mis derechos según la ley inglesa, los pasos a seguir y me dirigió a un abogado local. ¡Preciso y eficiente!",
+//       de: "Außergewöhnlicher Anwalt! Aus London, dringendes Problem mit meinem Vermieter. Der Anwalt erklärte mir meine Rechte nach englischem Recht, die zu befolgenden Schritte und wies mich auf einen lokalen Anwalt hin. Präzise und effizient!",
+//       ru: "Исключительный адвокат! Из Лондона срочная проблема с моим арендодателем. Адвокат объяснил мои права по английскому праву, шаги, которые нужно предпринять, и направил меня к местному адвокату. Точно и эффективно!",
+//       hi: "असाधारण वकील! लंदन से, मेरे मकान मालिक के साथ जरूरी समस्या। वकील ने मुझे अंग्रेजी कानून में मेरे अधिकारों की व्याख्या की, अनुसरण करने के कदम और मुझे एक स्थानीय वकील की ओर निर्देशित किया। सटीक और कुशल!",
+//       ch: `这位律师太棒了！我住在伦敦，遇到了房东的紧急纠纷。律师详细解释了我在英国法律下的权利、需要采取的步骤，并推荐了一位当地的律师。他办事精准高效！
+
+//         // 这位律师精通英国房产法，为我提供了解决与房东纠纷的精准建议。他清晰专业地解释了我的所有法律选择。
+
+//         // 预约服务非常灵活，我当天就进行了咨询。通话质量极佳，没有任何技术问题。
+
+//         // 我强烈推荐这项服务给所有在英国需要紧急法律援助的外籍人士。它能节省大量时间和金钱！
+
+//         // 咨询质量堪比传统律师事务所，但速度和便捷性却堪比现代在线服务。是应对法律紧急情况的理想之选！`
+//     },
+//     avatar:
+//       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
+//     verified: true,
+//     serviceUsed: {
+//       fr: "Appel Avocat",
+//       en: "Lawyer Call",
+//       es: "Consulta de Abogado",
+//       de: "Rechtsberatung",
+//       ru: "Консультация адвоката",
+//       hi: "वकील परामर्श",
+//       ch: "律师电话"
+//     },
+//     duration: "35 min",
+//     helpType: {
+//       fr: ["Droit immobilier", "Litige", "Conseil"],
+//       en: ["Property Law", "Dispute", "Advice"],
+//       es: ["Derecho de propiedad", "Disputa", "Asesoramiento"],
+//       de: ["Immobilienrecht", "Streit", "Beratung"],
+//       ru: ["Имущественное право", "Спор", "Совет"],
+//       hi: ["संपत्ति कानून", "विवाद", "सलाह"],
+//       ch: ["物权法", "争议", "建议"],
+//     },
+//   },
+//   "11": {
+//     id: "11",
+//     name: "Anya V.",
+//     type: "lawyer",
+//     country: "Allemagne",
+//     language: "francophone",
+//     rating: 5,
+//     date: "2025-09-30",
+//     year: 2025,
+//     title: {
+//       fr: "Accident en Allemagne",
+//       en: "Accident in Germany",
+//       es: "Accidente en Alemania",
+//       de: "Unfall in Deutschland",
+//       ru: "Авария в Германии",
+//       hi: "जर्मनी में दुर्घटना",
+//       ch: "德国发生事故"
+//     },
+//     fullContent: {
+//       fr: "Consultation remarquable ! Accident de voiture en Allemagne, l'avocat spécialisé en droit international m'a tout expliqué : assurances, procédures, droits. Il m'a évité des erreurs coûteuses !",
+//       en: "Remarkable consultation! Car accident in Germany, the lawyer specialized in international law explained everything: insurance, procedures, rights. He saved me from costly mistakes!",
+//       es: "¡Consulta notable! Accidente de coche en Alemania, el abogado especializado en derecho internacional me explicó todo: seguros, procedimientos, derechos. ¡Me ahorró cometer errores costosos!",
+//       de: "Bemerkenswerte Beratung! Autounfall in Deutschland, der auf Internationales Recht spezialisierte Anwalt erklärte mir alles: Versicherung, Verfahren, Rechte. Er sparte mich vor kostspieligen Fehlern!",
+//       ru: "Примечательная консультация! Автомобильная авария в Германии, адвокат, специализирующийся на международном праве, объяснил мне все: страховка, процедуры, права. Он спасил меня от дорогостоящих ошибок!",
+//       hi: "उल्लेखनीय परामर्श! जर्मनी में कार दुर्घटना, अंतर्राष्ट्रीय कानून में विशेषज्ञ वकील ने मुझे सब कुछ समझाया: बीमा, प्रक्रियाएं, अधिकार। उन्होंने मुझे महंगी गलतियों से बचाया!",
+//       ch: "咨询效果极佳！我在德国出了车祸，这位精通国际法的律师详细解释了所有问题：保险、程序、我的权利。他帮我避免了代价高昂的错误！"
+//     },
+//     avatar:
+//       "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
+
+//     verified: true,
+//     serviceUsed: {
+//       fr: "Consultation Avocat",
+//       en: "Lawyer Consultation",
+//       es: "Consulta de Abogado",
+//       de: "Rechtsberatung",
+//       ru: "Консультация адвоката",
+//       hi: "वकील परामर्श",
+//       ch: "律师咨询"
+//     },
+//     duration: "40 min",
+//     helpType: {
+//       fr: ["Accident", "Assurance", "Droit international"],
+//       en: ["Accident", "Insurance", "International Law"],
+//       es: ["Accidente", "Seguros", "Derecho internacional"],
+//       de: ["Unfall", "Versicherung", "Internationales Recht"],
+//       ru: ["Авария", "Страховка", "Международное право"],
+//       hi: ["दुर्घटना", "बीमा", "अंतर्राष्ट्रीय कानून"],
+//       ch: ["事故", "保险", "国际法"]
+//     },
+//   },
+//   "12": {
+//     id: "12",
+//     name: "Giuseppe L.",
+//     type: "lawyer",
+//     country: "Italie",
+//     language: "francophone",
+//     rating: 4,
+//     date: "2025-09-27",
+//     year: 2025,
+//     title: {
+//       fr: "Litige commercial en Italie",
+//       en: "Commercial Dispute in Italy",
+//       es: "Disputa comercial en Italia",
+//       de: "Handelsstreit in Italien",
+//       ru: "Коммерческий спор в Италии",
+//       hi: "इटली में व्यावसायिक विवाद",
+//       ch: "意大利商业纠纷"
+//     },
+//     fullContent: {
+//       fr: "Très compétent ! Litige commercial en Italie, l'avocat m'a donné une analyse claire de ma situation juridique et les options disponibles. Conseil précieux pour mon business !",
+//       en: "Very competent! Commercial dispute in Italy, the lawyer gave me a clear analysis of my legal situation and available options. Valuable advice for my business!",
+//       es: "¡Muy competente! Disputa comercial en Italia, el abogado me dio un análisis claro de mi situación legal y opciones disponibles. ¡Asesoramiento valioso para mi negocio!",
+//       de: "Sehr kompetent! Handelsstreit in Italien gab mir der Anwalt eine klare Analyse meiner Rechtslage und der verfügbaren Optionen. Wertvoller Rat für mein Geschäft!",
+//       ru: "Очень компетентно! Коммерческий спор в Италии адвокат дал мне четкий анализ моей правовой ситуации и доступных вариантов. Ценный совет для моего бизнеса!",
+//       hi: "बहुत सक्षम! इटली में व्यावसायिक विवाद, वकील ने मुझे मेरी कानूनी स्थिति का स्पष्ट विश्लेषण और उपलब्ध विकल्प दिए। मेरे व्यवसाय के लिए मूल्यवान सलाह!",
+//       ch: "非常专业！我遇到意大利的商业纠纷，这位律师清晰地分析了我的法律处境和可行的方案。对我的业务来说，这是非常宝贵的建议！"
+//     },
+//     avatar:
+//       "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
+
+//     verified: true,
+//     serviceUsed: {
+//       fr: "Consultation Avocat",
+//       en: "Lawyer Consultation",
+//       es: "Consulta de Abogado",
+//       de: "Rechtsberatung",
+//       ru: "Консультация адвоката",
+//       hi: "वकील परामर्श",
+//       ch: "律师咨询"
+//     },
+//     duration: "30 min",
+//     helpType: {
+//       fr: ["Droit commercial", "Litige", "Business"],
+//       en: ["Commercial Law", "Dispute", "Business"],
+//       es: ["Derecho comercial", "Disputa", "Negocios"],
+//       de: ["Handelsrecht", "Streit", "Geschäft"],
+//       ru: ["Коммерческое право", "Спор", "Бизнес"],
+//       hi: ["व्यावसायिक कानून", "विवाद", "व्यापार"],
+//       ch: ["商法", "争议", "商业"],
+//     },
+//   },
+//   "13": {
+//     id: "13",
+//     name: "Maria G.",
+//     type: "lawyer",
+//     country: "États-Unis",
+//     language: "francophone",
+//     rating: 5,
+//     date: "2025-09-23",
+//     year: 2025,
+//     title: {
+//       fr: "Problème de visa aux USA",
+//       en: "Visa Issue in USA",
+//       es: "Problema de visa en EE. UU.",
+//       de: "Visumproblem in den USA",
+//       ru: "Проблема с визой в США",
+//       hi: "यूएसए में वीजा समस्या",
+//       ch: "美国签证问题"
+//     },
+//     fullContent: {
+//       fr: "Avocat brillant ! Problème de visa aux États-Unis, il m'a expliqué toutes les procédures d'immigration, les risques et solutions. Grâce à lui, j'ai évité l'expulsion !",
+//       en: "Brilliant lawyer! Visa problem in the United States, he explained all immigration procedures, risks and solutions. Thanks to him, I avoided deportation!",
+//       es: "¡Abogado brillante! Problema de visa en Estados Unidos, me explicó todos los procedimientos de inmigración, riesgos y soluciones. ¡Gracias a él, evité la deportación!",
+//       de: "Glänzender Anwalt! Visumproblem in den USA erklärte mir alle Einwanderungsverfahren, Risiken und Lösungen. Dank ihm habe ich Abschiebung vermieden!",
+//       ru: "Блестящий адвокат! Проблема с визой в США, он объяснил мне все процедуры иммиграции, риски и решения. Благодаря ему я избежал депортации!",
+//       hi: "शानदार वकील! यूएसए में वीजा समस्या, उन्होंने मुझे सभी आप्रवासन प्रक्रियाएं, जोखिम और समाधान समझाए। उनके कारण मुझे निष्कासन से बचना पड़ा!",
+//       ch: "这位律师太棒了！我在美国遇到了签证问题，他详细解释了所有移民程序、风险和解决方案。多亏了他，我才避免了被遣返！"
+//     },
+//     avatar:
+//       "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
+//     verified: true,
+//     serviceUsed: {
+//       fr: "Appel Avocat",
+//       en: "Lawyer Call",
+//       es: "Consulta de Abogado",
+//       de: "Rechtsberatung",
+//       ru: "Консультация адвоката",
+//       hi: "वकील परामर्श",
+//       ch: "律师电话"
+//     },
+//     duration: "50 min",
+//     helpType: {
+//       fr: ["Immigration", "Visa", "Urgence"],
+//       en: ["Immigration", "Visa", "Emergency"],
+//       es: ["Inmigración", "Visa", "Emergencia"],
+//       de: ["Einwanderung", "Visum", "Notfall"],
+//       ru: ["Иммиграция", "Виза", "Чрезвычайная ситуация"],
+//       hi: ["आप्रवासन", "वीजा", "आपातकाल"],
+//       ch: ["移民", "签证", "紧急情况"],
+//     },
+//   },
+//   "14": {
+//     id: "14",
+//     name: "Ahmed B.",
+//     type: "lawyer",
+//     country: "Espagne",
+//     language: "francophone",
+//     rating: 5,
+//     date: "2025-09-20",
+//     year: 2025,
+//     title: {
+//       fr: "Divorce international",
+//       en: "International Divorce",
+//       es: "Divorcio internacional",
+//       de: "Internationale Ehescheidung",
+//       ru: "Международный развод",
+//       hi: "अंतर्राष्ट्रीय तलाक",
+//       ch: "国际离婚"
+//     },
+//     fullContent: {
+//       fr: "Service juridique excellent ! Divorce international complexe, l'avocat a su naviguer entre droit français et espagnol. Conseil clair, stratégie efficace. Je recommande vivement !",
+//       en: "Excellent legal service! Complex international divorce, the lawyer navigated between French and Spanish law. Clear advice, effective strategy. Highly recommend!",
+//       es: "¡Excelente servicio legal! Divorcio internacional complejo, el abogado navegó entre derecho francés y español. Consejo claro, estrategia efectiva. ¡Altamente recomendado!",
+//       de: "Ausgezeichneter Rechtsdienst! Komplexe internationale Ehescheidung, der Anwalt navigierte zwischen französischem und spanischem Recht. Klarer Rat, wirksame Strategie. Sehr empfohlen!",
+//       ru: "Отличное юридическое обслуживание! Сложный международный развод, адвокат сориентировался между французским и испанским правом. Четкий совет, эффективная стратегия. Настоятельно рекомендую!",
+//       hi: "उत्कृष्ट कानूनी सेवा! जटिल अंतर्राष्ट्रीय तलाक, वकील फ्रांसीसी और स्पेनिश कानून के बीच नेविगेट करते हैं। स्पष्ट सलाह, प्रभावी रणनीति। अत्यधिक अनुशंसित!",
+//       ch: "卓越的法律服务！复杂的国际离婚案件，律师精通法国和西班牙法律。建议清晰明了，策略有效。强烈推荐！"
+//     },
+//     avatar:
+//       "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
+
+//     verified: true,
+//     serviceUsed: {
+//       fr: "Consultation Avocat",
+//       en: "Lawyer Consultation",
+//       es: "Consulta de Abogado",
+//       de: "Rechtsberatung",
+//       ru: "Консультация адвоката",
+//       hi: "वकील परामर्श",
+//       ch: "律师咨询"
+//     },
+//     duration: "60 min",
+//     helpType: {
+//       fr: ["Divorce", "Droit international", "Famille"],
+//       en: ["Divorce", "International Law", "Family"],
+//       es: ["Divorcio", "Derecho internacional", "Familia"],
+//       de: ["Ehescheidung", "Internationales Recht", "Familie"],
+//       ru: ["Развод", "Международное право", "Семья"],
+//       hi: ["तलाक", "अंतर्राष्ट्रीय कानून", "परिवार"],
+//       ch: ["离婚", "国际法", "家庭"],
+//     },
+//   },
+//   "15": {
+//     id: "15",
+//     name: "Sofia R.",
+//     type: "lawyer",
+//     country: "Mexique",
+//     language: "francophone",
+//     rating: 4,
+//     date: "2025-09-17",
+//     year: 2025,
+//     title: {
+//       fr: "Contrat de travail au Mexique",
+//       en: "Employment Contract in Mexico",
+//       es: "Contrato de empleo en México",
+//       de: "Arbeitsvertrag in Mexiko",
+//       ru: "Трудовой договор в Мексике",
+//       hi: "मेक्सिको में रोजगार अनुबंध",
+//       ch: "墨西哥的雇佣合同"
+//     },
+//     fullContent: {
+//       fr: "Très professionnel ! Contrat de travail au Mexique, l'avocat m'a expliqué toutes les clauses, mes droits et obligations. Il m'a aidé à négocier de meilleures conditions !",
+//       en: "Very professional! Employment contract in Mexico, the lawyer explained all clauses, my rights and obligations. He helped me negotiate better conditions!",
+//       es: "¡Muy profesional! Contrato de empleo en México, el abogado me explicó todas las cláusulas, mis derechos y obligaciones. ¡Me ayudó a negociar mejores condiciones!",
+//       de: "Sehr professionell! Arbeitsvertrag in Mexiko, der Anwalt erklärte mir alle Klauseln, meine Rechte und Pflichten. Er half mir, bessere Bedingungen auszuhandeln!",
+//       ru: "Очень профессионально! Трудовой договор в Мексике адвокат объяснил мне все пункты, мои права и обязанности. Он помог мне договориться о лучших условиях!",
+//       hi: "बहुत पेशेवर! मेक्सिको में रोजगार अनुबंध, वकील ने मुझे सभी खंड, मेरे अधिकार और कर्तव्य समझाए। उन्होंने मुझे बेहतर शर्तों पर सहमति प्राप्त करने में मदद की!",
+//       ch: "非常专业！墨西哥的雇佣合同，律师详细解释了所有条款、我的权利和义务。他还帮我争取到了更好的待遇！"
+//     },
+//     avatar:
+//       "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
+
+//     verified: true,
+//     serviceUsed: {
+//       fr: "Consultation Avocat",
+//       en: "Lawyer Consultation",
+//       es: "Consulta de Abogado",
+//       de: "Rechtsberatung",
+//       ru: "Консультация адвоката",
+//       hi: "वकील परामर्श",
+//       ch: "律师咨询"
+//     },
+//     duration: "35 min",
+//     helpType: {
+//       fr: ["Droit du travail", "Contrat", "Négociation"],
+//       en: ["Labor Law", "Contract", "Negotiation"],
+//       es: ["Derecho laboral", "Contrato", "Negociación"],
+//       de: ["Arbeitsrecht", "Vertrag", "Verhandlung"],
+//       ru: ["Трудовое право", "Контракт", "Переговоры"],
+//       hi: ["श्रम कानून", "अनुबंध", "वार्तालाप"],
+//       ch: ["劳动法", "合同", "谈判"],
+//     },
+//   },
+//   "16": {
+//     id: "16",
+//     name: "Lars H.",
+//     type: "lawyer",
+//     country: "Suisse",
+//     language: "francophone",
+//     rating: 5,
+//     date: "2025-09-13",
+//     year: 2025,
+//     title: {
+//       fr: "Problème fiscal en Suisse",
+//       en: "Tax Issue in Switzerland",
+//       es: "Problema fiscal en Suiza",
+//       de: "Steuerproblem in der Schweiz",
+//       ru: "Налоговая проблема в Швейцарии",
+//       hi: "स्विटजरलैंड में कर समस्या",
+//       ch: "瑞士的税务问题"
+//     },
+//     fullContent: {
+//       fr: "Avocat remarquable ! Problème fiscal en Suisse, il m'a expliqué les implications légales, les démarches et m'a orienté vers un fiscaliste local. Service impeccable !",
+//       en: "Remarkable lawyer! Tax issue in Switzerland, he explained legal implications, procedures and directed me to a local tax specialist. Impeccable service!",
+//       es: "¡Abogado notable! Problema fiscal en Suiza, me explicó las implicaciones legales, procedimientos y me dirigió a un especialista fiscal local. ¡Servicio impecable!",
+//       de: "Bemerkenswerter Anwalt! Steuerproblem in der Schweiz erklärte mir die Rechtsfolgen, Verfahren und leitete mich an einen lokalen Steuerspezialisten weiter. Tadelloses Service!",
+//       ru: "Замечательный адвокат! Налоговая проблема в Швейцарии, он объяснил мне правовые последствия, процедуры и направил меня к местному налоговому специалисту. Безупречный сервис!",
+//       hi: "उल्लेखनीय वकील! स्विटजरलैंड में कर समस्या, उन्होंने मुझे कानूनी निहितार्थ, प्रक्रियाएं समझाईं और मुझे स्थानीय कर विशेषज्ञ की ओर निर्देशित किया। निर्दोष सेवा!",
+//       ch: "这位律师太棒了！我遇到了瑞士的税务问题，他详细解释了相关的法律规定和程序，并推荐了一位当地的税务专家。服务无可挑剔！"
+//     },
+//     avatar:
+//       "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YXZhdGFyfGVufDB8fDB8fHww",
+//     verified: true,
+//     serviceUsed: {
+//       fr: "Consultation Avocat",
+//       en: "Lawyer Consultation",
+//       es: "Consulta de Abogado",
+//       de: "Rechtsberatung",
+//       ru: "Консультация адвоката",
+//       hi: "वकील परामर्श",
+//       ch: "律师咨询"
+//     },
+//     duration: "45 min",
+//     helpType: {
+//       fr: ["Fiscal", "Droit", "Conseil"],
+//       en: ["Tax", "Law", "Advice"],
+//       es: ["Fiscal", "Ley", "Asesoramiento"],
+//       de: ["Steuern", "Recht", "Beratung"],
+//       ru: ["Налог", "Закон", "Совет"],
+//       hi: ["कर", "कानून", "सलाह"],
+//       ch: ["税", "法律", "建议"]
+//     },
+//   },
+// };
+
+
+
+
+
 const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
   "1": {
     id: "1",
@@ -639,7 +1651,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Außergewöhnlicher Service in Thailand",
       ru: "Исключительный сервис в Таиланде",
       hi: "थाईलैंड में असाधारण सेवा",
-      ch: "泰国卓越服务"
+      ch: "泰国卓越服务",
+      pt: "Serviço excepcional na Tailândia"
     },
     fullContent: {
       fr: "Incroyable ! En 3 minutes j'avais un expatrié français au bout du fil depuis Bangkok. Il m'a expliqué toute la procédure visa Thaïlandais, les pièges à éviter et m'a même donné les contacts de son agent immobilier. Service qui change la vie !",
@@ -648,10 +1661,10 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Unglaublich! In 3 Minuten hatte ich einen französischen Expat am Telefon aus Bangkok. Er erklärte mir das gesamte thailändische Visumverfahren, Fallstricke, die es zu vermeiden gilt, und gab mir sogar die Kontakte seines Immobilienmaklers. Lebensverändernder Service!",
       ru: "Невероятно! За 3 минуты я связался с французским экспатом по телефону из Бангкока. Он объяснил всю процедуру получения тайской визы, подводные камни, которых следует избегать, и даже дал контакты своего агента по недвижимости. Сервис, меняющий жизнь!",
       hi: "अविश्वसनीय! 3 मिनट में मेरे पास बैंकॉक से फोन पर एक फ्रांसीसी प्रवासी था। उन्होंने थाई वीजा प्रक्रिया, बचने योग्य नुकसान की पूरी व्याख्या की और यहां तक कि अपने रियल एस्टेट एजेंट के संपर्क भी दिए। जीवन बदलने वाली सेवा!",
-      ch: "太棒了！短短三分钟，我就联系上了一位身在曼谷的法国侨民。他详细地给我讲解了整个泰国签证流程，包括需要避免的陷阱，甚至还给了我他房产经纪人的联系方式。这项服务简直改变了我的人生！"
+      ch: "太棒了！短短三分钟，我就联系上了一位身在曼谷的法国侨民。他详细地给我讲解了整个泰国签证流程，包括需要避免的陷阱，甚至还给了我他房产经纪人的联系方式。这项服务简直改变了我的人生！",
+      pt: "Incrível! Em 3 minutos eu tinha um expatriado francês ao telefone desde Bangkok. Ele me explicou todo o procedimento de visto tailandês, as armadilhas a evitar e até me deu os contatos de seu corretor de imóveis. Serviço que muda vidas!"
     },
-    avatar:
-      "https://images.unsplash.com/photo-1643842730000-db266bbc1b28?q=80&w=400&h=400&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    avatar: "https://images.unsplash.com/photo-1643842730000-db266bbc1b28?q=80&w=400&h=400&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     verified: true,
     serviceUsed: {
       fr: "Consultation Expatrié",
@@ -660,7 +1673,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Expat-Beratung",
       ru: "Консультация эмигранта",
       hi: "प्रवासी परामर्श",
-      ch: "外籍人士咨询"
+      ch: "外籍人士咨询",
+      pt: "Consulta de Expatriado"
     },
     duration: "30 min",
     helpType: {
@@ -670,7 +1684,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Visum", "Immobilien", "Umzug"],
       ru: ["Виза", "Недвижимость", "Переезд"],
       hi: ["वीजा", "रियल एस्टेट", "स्थानांतरण"],
-      ch: ["签证", "房地产", "搬迁"]
+      ch: ["签证", "房地产", "搬迁"],
+      pt: ["Visto", "Imobiliário", "Mudança"]
     },
   },
   "2": {
@@ -689,7 +1704,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Vancouver-Setup leicht gemacht",
       ru: "Установка в Ванкувере упрощена",
       hi: "वैंकूवर सेटअप आसान बनाया गया",
-      ch: "温哥华设置变得简单"
+      ch: "温哥华设置变得简单",
+      pt: "Instalação em Vancouver facilitada"
     },
     fullContent: {
       fr: "Génial ! L'expatrié m'a aidé avec mon installation à Vancouver. Banque, logement, assurance santé, transport... tout en 30 minutes ! Il connaissait tous les bons plans et m'a évité des mois de galère administrative.",
@@ -698,10 +1714,10 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Großartig! Der Expat half mir bei meiner Vancouver-Einrichtung. Banking, Wohnung, Krankenversicherung, Transport... alles in 30 Minuten! Er kannte alle Insider-Tipps und sparte mir Monate administrativer Probleme.",
       ru: "Блестяще! Эмигрант помог мне с установкой в Ванкувере. Банк, жилье, медицинское страхование, транспорт... все за 30 минут! Он знал все инсайдерские советы и спасил меня от месяцев административных хлопот.",
       hi: "शानदार! प्रवासी ने मुझे वैंकूवर सेटअप में मदद की। बैंकिंग, आवास, स्वास्थ्य बीमा, परिवहन... सब कुछ 30 मिनट में! उन्हें सभी अंदरूनी सुझाव पता थे और मुझे महीनों की प्रशासनिक परेशानी से बचाया।",
-      ch: "太棒了！这位外籍人士帮我安顿好了在温哥华的一切。银行、住房、医疗保险、交通……所有事情30分钟就搞定了！他知道所有内幕消息，帮我省去了几个月的行政麻烦。"
+      ch: "太棒了！这位外籍人士帮我安顿好了在温哥华的一切。银行、住房、医疗保险、交通……所有事情30分钟就搞定了！他知道所有内幕消息，帮我省去了几个月的行政麻烦。",
+      pt: "Fantástico! O expatriado me ajudou com minha instalação em Vancouver. Banco, moradia, seguro de saúde, transporte... tudo em 30 minutos! Ele conhecia todas as dicas e me poupou meses de problemas administrativos."
     },
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
     verified: true,
     serviceUsed: {
       fr: "Consultation Expatrié",
@@ -710,7 +1726,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Expat-Beratung",
       ru: "Консультация эмигранта",
       hi: "प्रवासी परामर्श",
-      ch: "外籍人士咨询"
+      ch: "外籍人士咨询",
+      pt: "Consulta de Expatriado"
     },
     duration: "30 min",
     helpType: {
@@ -720,7 +1737,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Banking", "Wohnung", "Versicherung"],
       ru: ["Банк", "Жилье", "Страхование"],
       hi: ["बैंकिंग", "आवास", "बीमा"],
-      ch: ["银行业", "住房", "保险"]
+      ch: ["银行业", "住房", "保险"],
+      pt: ["Banco", "Moradia", "Seguro"]
     },
   },
   "3": {
@@ -739,7 +1757,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Wertvolle Tipps für Melbourne",
       ru: "Ценные советы для Мельбурна",
       hi: "मेलबर्न के लिए मूल्यवान सुझाव",
-      ch: "对墨尔本的宝贵建议"
+      ch: "对墨尔本的宝贵建议",
+      pt: "Conselhos valiosos para Melbourne"
     },
     fullContent: {
       fr: "Super expérience ! Expatrié à Melbourne depuis 8 ans, il m'a donné tous les conseils pour mon working holiday visa. Écoles, quartiers, jobs... Une mine d'or d'informations pratiques !",
@@ -748,10 +1767,10 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Großartige Erfahrung! Expat in Melbourne seit 8 Jahren gab mir alle Tipps für mein Working-Holiday-Visum. Schulen, Viertel, Jobs... Eine Goldgrube praktischer Informationen!",
       ru: "Отличный опыт! Эмигрант в Мельбурне уже 8 лет дал мне все советы для моей рабочей визы отпуска. Школы, районы, работа... Кладезь практической информации!",
       hi: "शानदार अनुभव! मेलबर्न में 8 साल से प्रवासी, उन्होंने मुझे अपने वर्किंग होलिडे वीजा के लिए सभी सुझाव दिए। स्कूल, पड़ोस, नौकरियां... व्यावहारिक जानकारी का खजाना!",
-      ch: "非常棒的体验！我在墨尔本生活了8年，他为我的打工度假签证提供了所有建议。学校、社区、工作……简直是实用信息的宝库！"
+      ch: "非常棒的体验！我在墨尔本生活了8年，他为我的打工度假签证提供了所有建议。学校、社区、工作……简直是实用信息的宝库！",
+      pt: "Ótima experiência! Expatriado em Melbourne há 8 anos, ele me deu todos os conselhos para meu visto de trabalho e férias. Escolas, bairros, empregos... Uma mina de ouro de informações práticas!"
     },
-    avatar:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
+    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
     verified: true,
     serviceUsed: {
       fr: "Consultation Expatrié",
@@ -760,7 +1779,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Expat-Beratung",
       ru: "Консультация эмигранта",
       hi: "प्रवासी परामर्श",
-      ch: "外籍人士咨询"
+      ch: "外籍人士咨询",
+      pt: "Consulta de Expatriado"
     },
     duration: "25 min",
     helpType: {
@@ -770,7 +1790,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Visum", "Beschäftigung", "Viertel"],
       ru: ["Виза", "Занятость", "Районы"],
       hi: ["वीजा", "रोजगार", "पड़ोस"],
-      ch: ["签证","就业","社区"]
+      ch: ["签证","就业","社区"],
+      pt: ["Visto", "Emprego", "Bairros"]
     },
   },
   "4": {
@@ -789,7 +1810,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Kompletter Leitfaden für Dubai",
       ru: "Полное руководство для Дубая",
       hi: "दुबई के लिए संपूर्ण गाइड",
-      ch: "迪拜完整指南"
+      ch: "迪拜完整指南",
+      pt: "Guia completo para Dubai"
     },
     fullContent: {
       fr: "Excellent ! L'expatrié vivant à Dubaï depuis 5 ans m'a tout expliqué : visa, compte bancaire, logement, culture locale. Il m'a même mis en contact avec sa communauté d'expats français !",
@@ -798,11 +1820,10 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Ausgezeichnet! Der Expat, der seit 5 Jahren in Dubai lebt, erklärte mir alles: Visum, Bankkonto, Wohnung, lokale Kultur. Er verband mich sogar mit seiner französischen Expat-Gemeinde!",
       ru: "Отлично! Эмигрант, живущий в Дубае 5 лет, объяснил мне все: виза, банковский счет, жилье, местная культура. Он даже связал меня со своей французской общиной эмигрантов!",
       hi: "उत्कृष्ट! दुबई में 5 साल से रहने वाले प्रवासी ने मुझे सब कुछ समझाया: वीजा, बैंक खाता, आवास, स्थानीय संस्कृति। वह मुझे अपने फ्रांसीसी प्रवासी समुदाय से भी जोड़ते हैं!",
-      ch: "太棒了！这位在迪拜生活了五年的外籍人士给我讲解了一切：签证、银行账户、住房、当地文化等等。他甚至还帮我联系了他的法国外籍人士社群！"
+      ch: "太棒了！这位在迪拜生活了五年的外籍人士给我讲解了一切：签证、银行账户、住房、当地文化等等。他甚至还帮我联系了他的法国外籍人士社群！",
+      pt: "Excelente! O expatriado que vive em Dubai há 5 anos me explicou tudo: visto, conta bancária, moradia, cultura local. Ele até me conectou com sua comunidade de expatriados franceses!"
     },
-    avatar:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
-
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
     verified: true,
     serviceUsed: {
       fr: "Consultation Expatrié",
@@ -811,7 +1832,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Expat-Beratung",
       ru: "Консультация эмигранта",
       hi: "प्रवासी परामर्श",
-      ch: "外籍人士咨询"
+      ch: "外籍人士咨询",
+      pt: "Consulta de Expatriado"
     },
     duration: "40 min",
     helpType: {
@@ -821,7 +1843,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Visum", "Banking", "Netzwerk"],
       ru: ["Виза", "Банк", "Сеть"],
       hi: ["वीजा", "बैंकिंग", "नेटवर्क"],
-      ch: ["签证", "银行业", "网络"]
+      ch: ["签证", "银行业", "网络"],
+      pt: ["Visto", "Banco", "Rede"]
     },
   },
   "5": {
@@ -840,7 +1863,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Schnelle Hilfe aus Tokio",
       ru: "Быстрая помощь из Токио",
       hi: "टोक्यो से तेजी से मदद",
-      ch: "来自东京的快速帮助"
+      ch: "来自东京的快速帮助",
+      pt: "Ajuda rápida de Tóquio"
     },
     fullContent: {
       fr: "Parfait ! En urgence depuis Tokyo, j'ai eu un expatrié en 2 minutes. Il m'a aidé avec la paperasse japonaise complexe et m'a orienté vers les bonnes administrations. Très rassurant !",
@@ -849,11 +1873,10 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Perfekt! In dringender Situation aus Tokio bekam ich in 2 Minuten einen Expat. Er half mir mit komplexen japanischen Unterlagen und wies mich auf die richtigen Behörden hin. Sehr beruhigend!",
       ru: "Идеально! В срочной ситуации из Токио я получил эмигранта за 2 минуты. Он помог мне со сложной японской документацией и направил меня в правильные администрации. Очень обнадеживает!",
       hi: "बिल्कुल सही! टोक्यो से जरूरी स्थिति में, मुझे 2 मिनट में एक प्रवासी मिला। उन्होंने मुझे जटिल जापानी कागजी कार्रवाई में मदद की और सही प्रशासन की ओर निर्देशित किया। बहुत आश्वस्त करने वाला!",
-      ch: "太好了！我当时身在东京，情况紧急，两分钟之内就联系到了一位外籍人士。他帮我处理了复杂的日本文件，并指引我去了正确的部门。真是太让人放心了！"
+      ch: "太好了！我当时身在东京，情况紧急，两分钟之内就联系到了一位外籍人士。他帮我处理了复杂的日本文件，并指引我去了正确的部门。真是太让人放心了！",
+      pt: "Perfeito! Em situação urgente de Tóquio, consegui um expatriado em 2 minutos. Ele me ajudou com a papelada japonesa complexa e me direcionou às administrações certas. Muito tranquilizador!"
     },
-    avatar:
-      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
-
+    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
     verified: true,
     serviceUsed: {
       fr: "Consultation Expatrié",
@@ -862,7 +1885,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Expat-Beratung",
       ru: "Консультация эмигранта",
       hi: "प्रवासी परामर्श",
-      ch: "外籍人士咨询"
+      ch: "外籍人士咨询",
+      pt: "Consulta de Expatriado"
     },
     duration: "20 min",
     helpType: {
@@ -872,7 +1896,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Verwaltung", "Dokumente", "Notfall"],
       ru: ["Администрация", "Документы", "Чрезвычайная ситуация"],
       hi: ["प्रशासन", "दस्तावेज़", "आपातकाल"],
-      ch: ["行政", "文件", "Emergency"]
+      ch: ["行政", "文件", "Emergency"],
+      pt: ["Administração", "Documentos", "Emergência"]
     },
   },
   "6": {
@@ -891,7 +1916,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Studentenratschläge in Oslo",
       ru: "Студенческие советы в Осло",
       hi: "ओस्लो में छात्र सुझाव",
-      ch: "奥斯陆学生小贴士"
+      ch: "奥斯陆学生小贴士",
+      pt: "Dicas para estudantes em Oslo"
     },
     fullContent: {
       fr: "Très utile ! L'expatrié français en Norvège m'a donné tous les tips pour Oslo : logement étudiant, jobs d'appoint, transports. Il m'a fait gagner un temps précieux pour mes études !",
@@ -900,11 +1926,10 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Sehr nützlich! Der französische Expat in Norwegen gab mir alle Tipps für Oslo: Studentenwohnheim, Teilzeitarbeit, Transport. Er sparte mir kostbare Zeit für mein Studium!",
       ru: "Очень полезно! Французский эмигрант в Норвегии дал мне все советы для Осло: студенческое жилье, подработки, транспорт. Он сэкономил мне драгоценное время на учебу!",
       hi: "बहुत उपयोगी! नॉर्वे में फ्रांसीसी प्रवासी ने मुझे ओस्लो के लिए सभी सुझाव दिए: छात्र आवास, अंशकालिक नौकरियां, परिवहन। उन्होंने मुझे मेरी पढ़ाई के लिए कीमती समय बचाया!",
-      ch: "太有用了！那位在挪威的法国侨民给了我很多关于奥斯陆的建议：学生公寓、兼职工作、交通等等。他帮我节省了宝贵的学习时间！"
+      ch: "太有用了！那位在挪威的法国侨民给了我很多关于奥斯陆的建议：学生公寓、兼职工作、交通等等。他帮我节省了宝贵的学习时间！",
+      pt: "Muito útil! O expatriado francês na Noruega me deu todas as dicas para Oslo: moradia estudantil, trabalhos de meio período, transporte. Ele me economizou tempo precioso para meus estudos!"
     },
-    avatar:
-      "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
-
+    avatar: "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
     verified: true,
     serviceUsed: {
       fr: "Consultation Expatrié",
@@ -913,7 +1938,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Expat-Beratung",
       ru: "Консультация эмигранта",
       hi: "प्रवासी परामर्श",
-      ch: "外籍人士咨询"
+      ch: "外籍人士咨询",
+      pt: "Consulta de Expatriado"
     },
     duration: "25 min",
     helpType: {
@@ -923,7 +1949,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Wohnung", "Studium", "Beschäftigung"],
       ru: ["Жилье", "Учеба", "Занятость"],
       hi: ["आवास", "अध्ययन", "रोजगार"],
-      ch: ["住房", "研究", "就业"]
+      ch: ["住房", "研究", "就业"],
+      pt: ["Moradia", "Estudos", "Emprego"]
     },
   },
   "7": {
@@ -942,7 +1969,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Familienumsiedlung nach São Paulo",
       ru: "Семейный переезд в Сан-Паулу",
       hi: "सांव पाउलो में पारिवारिक पुनर्स्थापन",
-      ch: "家庭搬迁到圣保罗"
+      ch: "家庭搬迁到圣保罗",
+      pt: "Mudança familiar para São Paulo"
     },
     fullContent: {
       fr: "Formidable ! Depuis le Brésil, l'expatrié m'a tout expliqué sur São Paulo : quartiers sûrs, carte de transports, meilleures écoles pour mes enfants. Une aide inestimable !",
@@ -951,11 +1979,10 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Wunderbar! Aus Brasilien erklärte mir der Expat alles über São Paulo: sichere Viertel, Fahrkarten, beste Schulen für meine Kinder. Unschätzbare Hilfe!",
       ru: "Чудесно! Из Бразилии эмигрант объяснил мне все о Сан-Паулу: безопасные районы, проездные билеты, лучшие школы для моих детей. Бесценная помощь!",
       hi: "शानदार! ब्राजील से, प्रवासी ने मुझे सांव पाउलो के बारे में सब कुछ समझाया: सुरक्षित पड़ोस, परिवहन कार्ड, मेरे बच्चों के लिए सर्वोत्तम स्कूल। अमूल्य सहायता!",
-      ch: "太棒了！这位来自巴西的外国人详细地介绍了圣保罗的情况：安全的街区、交通卡、适合我孩子的好学校等等。真是帮了我大忙！"
+      ch: "太棒了！这位来自巴西的外国人详细地介绍了圣保罗的情况：安全的街区、交通卡、适合我孩子的好学校等等。真是帮了我大忙！",
+      pt: "Formidável! Do Brasil, o expatriado me explicou tudo sobre São Paulo: bairros seguros, cartão de transporte, melhores escolas para meus filhos. Ajuda inestimável!"
     },
-    avatar:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
-
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
     verified: true,
     serviceUsed: {
       fr: "Consultation Expatrié",
@@ -964,7 +1991,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Expat-Beratung",
       ru: "Консультация эмигранта",
       hi: "प्रवासी परामर्श",
-      ch: "外籍人士咨询"
+      ch: "外籍人士咨询",
+      pt: "Consulta de Expatriado"
     },
     duration: "35 min",
     helpType: {
@@ -974,7 +2002,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Familie", "Schulen", "Viertel"],
       ru: ["Семья", "Школы", "Районы"],
       hi: ["परिवार", "स्कूल", "पड़ोस"],
-      ch: ["家庭", "学校", "社区"]
+      ch: ["家庭", "学校", "社区"],
+      pt: ["Família", "Escolas", "Bairros"]
     },
   },
   "8": {
@@ -993,7 +2022,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Kompletter Singapore-Leitfaden",
       ru: "Полное руководство по Сингапуру",
       hi: "सिंगापुर पूर्ण गाइड",
-      ch: "完整的新加坡指南"
+      ch: "完整的新加坡指南",
+      pt: "Guia completo de Singapura"
     },
     fullContent: {
       fr: "Extraordinaire ! L'expatrié à Singapour m'a guidé pas à pas pour mon installation. Permis de travail, logement, banque locale... Tout était clair et détaillé. Service top !",
@@ -1002,11 +2032,10 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Außergewöhnlich! Der Expat in Singapur führte mich Schritt für Schritt durch meine Installation. Arbeitserlaubnis, Wohnung, lokale Bank... Alles war klar und detailliert. Spitzenservice!",
       ru: "Необычайно! Эмигрант в Сингапуре шаг за шагом провел меня через установку. Рабочий статус, жилье, местный банк... Все было ясно и подробно. Отличный сервис!",
       hi: "असाधारण! सिंगापुर में प्रवासी ने मुझे मेरी स्थापना के लिए चरण दर चरण मार्गदर्शन दिया। कार्य अनुमति, आवास, स्थानीय बैंक... सब कुछ स्पष्ट और विस्तृत था। शीर्ष सेवा!",
-      ch: "太棒了！这位在新加坡的外国人一步一步地指导我完成所有手续。工作许可、住房、当地银行……一切都清晰明了、讲解详尽。一流的服务！"
+      ch: "太棒了！这位在新加坡的外国人一步一步地指导我完成所有手续。工作许可、住房、当地银行……一切都清晰明了、讲解详尽。一流的服务！",
+      pt: "Extraordinário! O expatriado em Singapura me guiou passo a passo para minha instalação. Permissão de trabalho, moradia, banco local... Tudo estava claro e detalhado. Serviço de primeira!"
     },
-    avatar:
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&h=400&q=80",
-
+    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&h=400&q=80",
     verified: true,
     serviceUsed: {
       fr: "Consultation Expatrié",
@@ -1015,7 +2044,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Expat-Beratung",
       ru: "Консультация эмигранта",
       hi: "प्रवासी परामर्श",
-      ch: "外籍人士咨询"
+      ch: "外籍人士咨询",
+      pt: "Consulta de Expatriado"
     },
     duration: "45 min",
     helpType: {
@@ -1026,6 +2056,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       ru: ["Разрешение", "Жилье", "Банк"],
       hi: ["अनुमति", "आवास", "बैंकिंग"],
       ch: ["允许", "住房", "银行业"],
+      pt: ["Permissão", "Moradia", "Banco"]
     },
   },
   "9": {
@@ -1044,7 +2075,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Universitätsaustausch in Seoul",
       ru: "Студенческий обмен в Сеуле",
       hi: "सियोल में विश्वविद्यालय विनिमय",
-      ch: "首尔大学交流"
+      ch: "首尔大学交流",
+      pt: "Intercâmbio universitário em Seul"
     },
     fullContent: {
       fr: "Très professionnel ! L'expatrié français en Corée du Sud m'a donné tous les conseils pour Séoul : visa étudiant, logement universitaire, culture coréenne. Parfait pour mon échange !",
@@ -1053,11 +2085,10 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Sehr professionell! Der französische Expat in Südkorea gab mir alle Tipps für Seoul: Studentenvisum, Studentenwohnheim, koreanische Kultur. Perfekt für meinen Austausch!",
       ru: "Очень профессионально! Французский эмигрант в Южной Корее дал мне все советы для Сеула: студенческая виза, студенческое жилье, корейская культура. Идеально для моего обмена!",
       hi: "बहुत पेशेवर! दक्षिण कोरिया में फ्रांसीसी प्रवासी ने मुझे सियोल के लिए सभी सुझाव दिए: छात्र वीजा, विश्वविद्यालय आवास, कोरियाई संस्कृति। मेरे विनिमय के लिए बिल्कुल सही!",
-      ch: "非常专业！这位在韩国的法国侨民给了我很多关于首尔的建议：学生签证、大学住宿、韩国文化等等。对我的交换学习来说简直完美！"
+      ch: "非常专业！这位在韩国的法国侨民给了我很多关于首尔的建议：学生签证、大学住宿、韩国文化等等。对我的交换学习来说简直完美！",
+      pt: "Muito profissional! O expatriado francês na Coreia do Sul me deu todos os conselhos para Seul: visto de estudante, moradia universitária, cultura coreana. Perfeito para meu intercâmbio!"
     },
-    avatar:
-      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80",
-
+    avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80",
     verified: true,
     serviceUsed: {
       fr: "Consultation Expatrié",
@@ -1066,7 +2097,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Expat-Beratung",
       ru: "Консультация эмигранта",
       hi: "प्रवासी परामर्श",
-      ch: "外籍人士咨询"
+      ch: "外籍人士咨询",
+      pt: "Consulta de Expatriado"
     },
     duration: "30 min",
     helpType: {
@@ -1077,8 +2109,11 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       ru: ["Виза", "Университет", "Культура"],
       hi: ["वीजा", "विश्वविद्यालय", "संस्कृति"],
       ch: ["签证", "大学", "文化"],
+      pt: ["Visto", "Universidade", "Cultura"]
     },
   },
+
+  // LAWYER TESTIMONIALS
   "10": {
     id: "10",
     name: "James P.",
@@ -1095,7 +2130,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Rechtsfachkompetenz in London",
       ru: "Юридическая экспертиза в Лондоне",
       hi: "लंदन में कानूनी विशेषज्ञता",
-      ch: "伦敦的法律专业知识"
+      ch: "伦敦的法律专业知识",
+      pt: "Expertise jurídica em Londres"
     },
     fullContent: {
       fr: `Avocat exceptionnel ! Depuis Londres, problème urgent avec mon propriétaire. L'avocat m'a expliqué mes droits en droit anglais, les démarches à suivre et m'a orienté vers un solicitor local. Précis et efficace !
@@ -1121,16 +2157,25 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       ru: "Исключительный адвокат! Из Лондона срочная проблема с моим арендодателем. Адвокат объяснил мои права по английскому праву, шаги, которые нужно предпринять, и направил меня к местному адвокату. Точно и эффективно!",
       hi: "असाधारण वकील! लंदन से, मेरे मकान मालिक के साथ जरूरी समस्या। वकील ने मुझे अंग्रेजी कानून में मेरे अधिकारों की व्याख्या की, अनुसरण करने के कदम और मुझे एक स्थानीय वकील की ओर निर्देशित किया। सटीक और कुशल!",
       ch: `这位律师太棒了！我住在伦敦，遇到了房东的紧急纠纷。律师详细解释了我在英国法律下的权利、需要采取的步骤，并推荐了一位当地的律师。他办事精准高效！
-        // 这位律师精通英国房产法，为我提供了解决与房东纠纷的精准建议。他清晰专业地解释了我的所有法律选择。
 
-        // 预约服务非常灵活，我当天就进行了咨询。通话质量极佳，没有任何技术问题。
+// 这位律师精通英国房产法，为我提供了解决与房东纠纷的精准建议。他清晰专业地解释了我的所有法律选择。
 
-        // 我强烈推荐这项服务给所有在英国需要紧急法律援助的外籍人士。它能节省大量时间和金钱！
+// 预约服务非常灵活，我当天就进行了咨询。通话质量极佳，没有任何技术问题。
 
-        // 咨询质量堪比传统律师事务所，但速度和便捷性却堪比现代在线服务。是应对法律紧急情况的理想之选！`
+// 我强烈推荐这项服务给所有在英国需要紧急法律援助的外籍人士。它能节省大量时间和金钱！
+
+// 咨询质量堪比传统律师事务所，但速度和便捷性却堪比现代在线服务。是应对法律紧急情况的理想之选！`,
+      pt: `Advogado excepcional! De Londres, problema urgente com meu senhorio. O advogado me explicou meus direitos sob a lei inglesa, os passos a seguir e me direcionou a um solicitor local. Preciso e eficiente!
+
+// O advogado conhecia perfeitamente a lei imobiliária britânica e me deu conselhos precisos para resolver meu conflito com o senhorio. Ele explicou todas as minhas opções legais de forma clara e profissional.
+
+// O serviço de agendamento é muito flexível, consegui ter minha consulta no mesmo dia. A qualidade da chamada foi excelente, sem problemas técnicos.
+
+// Recomendo fortemente este serviço para todos os expatriados que precisam de ajuda jurídica urgente no Reino Unido. Uma economia considerável de tempo e dinheiro!
+
+// A qualidade do aconselhamento estava ao nível de um escritório de advocacia tradicional, mas com a rapidez e praticidade de um serviço online moderno. Perfeito para emergências jurídicas!`
     },
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
     verified: true,
     serviceUsed: {
       fr: "Appel Avocat",
@@ -1139,185 +2184,19 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Rechtsberatung",
       ru: "Консультация адвоката",
       hi: "वकील परामर्श",
-      ch: "律师电话"
+      ch: "律师电话",
+      pt: "Chamada de Advogado"
     },
     duration: "25 minutes",
     helpType: {
-      fr: [
-        "Droit immobilier",
-        "Droit des baux",
-        "Conseil juridique",
-        "Contentieux",
-      ],
+      fr: ["Droit immobilier", "Droit des baux", "Conseil juridique", "Contentieux"],
       en: ["Property law", "Tenancy law", "Legal advice", "Litigation"],
       es: ["Derecho de propiedad", "Disputa", "Asesoramiento"],
       de: ["Immobilienrecht", "Streit", "Beratung"],
       ru: ["Имущественное право", "Спор", "Совет"],
       hi: ["संपत्ति कानून", "विवाद", "सलाह"],
-      ch: ["物权法", "租赁法", "法律咨询", "诉讼"]
-    },
-  },
-  "13": {
-    id: "13",
-    name: "Maria G.",
-    type: "lawyer",
-    country: "etats-unis",
-    language: "francophone",
-    rating: 5,
-    date: "2024-12-01",
-    year: 2024,
-    title: {
-      fr: "Problème visa résolu aux États-Unis",
-      en: "Visa problem solved in the United States",
-      es: "Problema de visa en EE. UU.",
-      de: "Visumproblem in den USA",
-      ru: "Проблема с визой в США",
-      hi: "यूएसए में वीजा समस्या",
-      ch: "美国签证问题已解决"
-    },
-    fullContent: {
-      fr: `Avocat brillant ! Problème de visa aux États-Unis, il m'a expliqué toutes les procédures d'immigration, les risques et solutions. Grâce à lui, j'ai évité l'expulsion !
-
-// L'avocat spécialisé en droit de l'immigration américaine m'a donné des conseils précis et m'a orienté vers les bonnes démarches. Il connaissait parfaitement la législation américaine et française.
-
-// Le service client est réactif et la plateforme très intuitive. J'ai reçu un suivi détaillé après l'appel avec tous les documents nécessaires.
-
-// Je recommande vivement SOS Expat & Travelers pour tous les expatriés qui ont des problèmes juridiques urgents. C'est un service qui peut vraiment vous sauver dans des situations critiques.
-
-// La qualité du conseil était exceptionnelle, avec une expertise pointue en droit de l'immigration. Service indispensable pour les expatriés !`,
-      en: `Brilliant lawyer! Visa problem in the United States, he explained all immigration procedures, risks and solutions. Thanks to him, I avoided deportation!
-
-// The lawyer specialized in American immigration law gave me precise advice and directed me to the right procedures. He knew American and French legislation perfectly.
-
-// Customer service is responsive and the platform very intuitive. I received detailed follow-up after the call with all necessary documents.
-
-// I highly recommend SOS Expat & Travelers for all expats who have urgent legal problems. It's a service that can really save you in critical situations.
-
-// The quality of advice was exceptional, with sharp expertise in immigration law. Indispensable service for expats!`,
-      es: "¡Abogado brillante! Problema de visa en Estados Unidos, me explicó todos los procedimientos de inmigración, riesgos y soluciones. ¡Gracias a él, evité la deportación!",
-      de: "Glänzender Anwalt! Visumproblem in den USA erklärte mir alle Einwanderungsverfahren, Risiken und Lösungen. Dank ihm habe ich Abschiebung vermieden!",
-      ru: "Блестящий адвокат! Проблема с визой в США, он объяснил мне все процедуры иммиграции, риски и решения. Благодаря ему я избежал депортации!",
-      hi: "शानदार वकील! यूएसए में वीजा समस्या, उन्होंने मुझे सभी आप्रवासन प्रक्रियाएं, जोखिम और समाधान समझाए। उनके कारण मुझे निष्कासन से बचना पड़ा!",
-      ch: `这位律师太棒了！我在美国遇到了签证问题，他详细解释了所有移民流程、风险和解决方案。多亏了他，我才避免了被遣返！
-
-          // 这位专精美国移民法的律师给了我精准的建议，并指导我走正确的流程。他对美国和法国的法律法规都非常了解。
-
-          // 客服响应迅速，平台也非常直观易用。通话结束后，我收到了详细的后续信息，包括所有必要的文件。
-
-          // 我强烈推荐SOS Expat & Travelers给所有遇到紧急法律问题的外籍人士。这项服务真的能在危急时刻帮到你。
-
-          // 律师提供的咨询质量非常高，在移民法方面展现了精湛的专业知识。对于外籍人士来说，这项服务必不可少！`
-    },
-    avatar:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
-    verified: true,
-    serviceUsed: {
-      fr: "Appel Avocat",
-      en: "Lawyer Call",
-      es: "Consulta de Abogado",
-      de: "Rechtsberatung",
-      ru: "Консультация адвоката",
-      hi: "वकील परामर्श",
-      ch: "律师电话"
-    },
-    duration: "35 minutes",
-    helpType: {
-      fr: [
-        "Droit de l'immigration",
-        "Visa",
-        "Procédures administratives",
-        "Droit américain",
-      ],
-      en: [
-        "Immigration law",
-        "Visa",
-        "Administrative procedures",
-        "American law",
-      ],
-      es: ["Inmigración", "Visa", "Emergencia"],
-      de: ["Einwanderung", "Visum", "Notfall"],
-      ru: ["Иммиграция", "Виза", "Чрезвычайная ситуация"],
-      hi: ["आप्रवासन", "वीजा", "आपातकाल"],
-      ch: [
-        "移民法",
-        "签证",
-        "行政程序",
-        "美国法律",
-      ]
-    },
-  },
-  "10": {
-    id: "10",
-    name: "James P.",
-    type: "lawyer",
-    country: "Royaume-Uni",
-    language: "francophone",
-    rating: 5,
-    date: "2025-10-04",
-    year: 2025,
-    title: {
-      fr: "Expertise juridique à Londres",
-      en: "Legal Expertise in London",
-      es: "Experiencia jurídica en Londres",
-      de: "Rechtsfachkompetenz in London",
-      ru: "Юридическая экспертиза в Лондоне",
-      hi: "लंदन में कानूनी विशेषज्ञता",
-      ch: "伦敦的法律专业知识"
-    },
-    fullContent: {
-      fr: `Avocat exceptionnel ! Depuis Londres, problème urgent avec mon propriétaire. L'avocat m'a expliqué mes droits en droit anglais, les démarches à suivre et m'a orienté vers un solicitor local. Précis et efficace !
-
-// L'avocat connaissait parfaitement le droit immobilier britannique et m'a donné des conseils précis pour résoudre mon conflit avec le propriétaire. Il m'a expliqué toutes mes options légales de manière claire et professionnelle.
-
-// Le service de prise de rendez-vous est très flexible, j'ai pu avoir ma consultation le jour même. La qualité de l'appel était excellente, sans problèmes techniques.
-
-// Je recommande vivement ce service pour tous les expatriés qui ont besoin d'aide juridique urgente au Royaume-Uni. Un gain de temps et d'argent considérable !
-
-// La qualité du conseil était au niveau d'un cabinet d'avocat traditionnel, mais avec la rapidité et la praticité d'un service en ligne moderne. Parfait pour les urgences juridiques !`,
-      en: `Exceptional lawyer! From London, urgent problem with my landlord. The lawyer explained my rights in English law, the steps to follow and directed me to a local solicitor. Precise and efficient!
-
-// The lawyer knew British property law perfectly and gave me precise advice to resolve my conflict with the landlord. He explained all my legal options clearly and professionally.
-
-// The appointment booking service is very flexible, I was able to have my consultation the same day. The call quality was excellent, without technical problems.
-
-// I highly recommend this service for all expats who need urgent legal help in the UK. Considerable time and money savings!
-
-// The quality of advice was at the level of a traditional law firm, but with the speed and practicality of a modern online service. Perfect for legal emergencies!`,
-      es: "¡Abogado excepcional! Desde Londres, problema urgente con mi casero. El abogado me explicó mis derechos según la ley inglesa, los pasos a seguir y me dirigió a un abogado local. ¡Preciso y eficiente!",
-      de: "Außergewöhnlicher Anwalt! Aus London, dringendes Problem mit meinem Vermieter. Der Anwalt erklärte mir meine Rechte nach englischem Recht, die zu befolgenden Schritte und wies mich auf einen lokalen Anwalt hin. Präzise und effizient!",
-      ru: "Исключительный адвокат! Из Лондона срочная проблема с моим арендодателем. Адвокат объяснил мои права по английскому праву, шаги, которые нужно предпринять, и направил меня к местному адвокату. Точно и эффективно!",
-      hi: "असाधारण वकील! लंदन से, मेरे मकान मालिक के साथ जरूरी समस्या। वकील ने मुझे अंग्रेजी कानून में मेरे अधिकारों की व्याख्या की, अनुसरण करने के कदम और मुझे एक स्थानीय वकील की ओर निर्देशित किया। सटीक और कुशल!",
-      ch: `这位律师太棒了！我住在伦敦，遇到了房东的紧急纠纷。律师详细解释了我在英国法律下的权利、需要采取的步骤，并推荐了一位当地的律师。他办事精准高效！
-
-        // 这位律师精通英国房产法，为我提供了解决与房东纠纷的精准建议。他清晰专业地解释了我的所有法律选择。
-
-        // 预约服务非常灵活，我当天就进行了咨询。通话质量极佳，没有任何技术问题。
-
-        // 我强烈推荐这项服务给所有在英国需要紧急法律援助的外籍人士。它能节省大量时间和金钱！
-
-        // 咨询质量堪比传统律师事务所，但速度和便捷性却堪比现代在线服务。是应对法律紧急情况的理想之选！`
-    },
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
-    verified: true,
-    serviceUsed: {
-      fr: "Appel Avocat",
-      en: "Lawyer Call",
-      es: "Consulta de Abogado",
-      de: "Rechtsberatung",
-      ru: "Консультация адвоката",
-      hi: "वकील परामर्श",
-      ch: "律师电话"
-    },
-    duration: "35 min",
-    helpType: {
-      fr: ["Droit immobilier", "Litige", "Conseil"],
-      en: ["Property Law", "Dispute", "Advice"],
-      es: ["Derecho de propiedad", "Disputa", "Asesoramiento"],
-      de: ["Immobilienrecht", "Streit", "Beratung"],
-      ru: ["Имущественное право", "Спор", "Совет"],
-      hi: ["संपत्ति कानून", "विवाद", "सलाह"],
-      ch: ["物权法", "争议", "建议"],
+      ch: ["物权法", "租赁法", "法律咨询", "诉讼"],
+      pt: ["Direito imobiliário", "Lei de arrendamento", "Aconselhamento jurídico", "Litígio"]
     },
   },
   "11": {
@@ -1336,20 +2215,20 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Unfall in Deutschland",
       ru: "Авария в Германии",
       hi: "जर्मनी में दुर्घटना",
-      ch: "德国发生事故"
+      ch: "德国发生事故",
+      pt: "Acidente na Alemanha"
     },
     fullContent: {
       fr: "Consultation remarquable ! Accident de voiture en Allemagne, l'avocat spécialisé en droit international m'a tout expliqué : assurances, procédures, droits. Il m'a évité des erreurs coûteuses !",
       en: "Remarkable consultation! Car accident in Germany, the lawyer specialized in international law explained everything: insurance, procedures, rights. He saved me from costly mistakes!",
       es: "¡Consulta notable! Accidente de coche en Alemania, el abogado especializado en derecho internacional me explicó todo: seguros, procedimientos, derechos. ¡Me ahorró cometer errores costosos!",
       de: "Bemerkenswerte Beratung! Autounfall in Deutschland, der auf Internationales Recht spezialisierte Anwalt erklärte mir alles: Versicherung, Verfahren, Rechte. Er sparte mich vor kostspieligen Fehlern!",
-      ru: "Примечательная консультация! Автомобильная авария в Германии, адвокат, специализирующийся на международном праве, объяснил мне все: страховка, процедуры, права. Он спасил меня от дорогостоящих ошибок!",
+      ru: "Примечательная консультация! Автомобильная авария в Германии, адвокат, специализирующийся на международном праве, объяснил мне все: страховка, процедуры, права. Он спасл меня от дорогостоящих ошибок!",
       hi: "उल्लेखनीय परामर्श! जर्मनी में कार दुर्घटना, अंतर्राष्ट्रीय कानून में विशेषज्ञ वकील ने मुझे सब कुछ समझाया: बीमा, प्रक्रियाएं, अधिकार। उन्होंने मुझे महंगी गलतियों से बचाया!",
-      ch: "咨询效果极佳！我在德国出了车祸，这位精通国际法的律师详细解释了所有问题：保险、程序、我的权利。他帮我避免了代价高昂的错误！"
+      ch: "咨询效果极佳！我在德国出了车祸，这位精通国际法的律师详细解释了所有问题：保险、程序、我的权利。他帮我避免了代价高昂的错误！",
+      pt: "Consulta notável! Acidente de carro na Alemanha, o advogado especializado em direito internacional me explicou tudo: seguro, procedimentos, direitos. Ele me poupou de erros custosos!"
     },
-    avatar:
-      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
-
+    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
     verified: true,
     serviceUsed: {
       fr: "Consultation Avocat",
@@ -1358,7 +2237,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Rechtsberatung",
       ru: "Консультация адвоката",
       hi: "वकील परामर्श",
-      ch: "律师咨询"
+      ch: "律师咨询",
+      pt: "Consulta de Advogado"
     },
     duration: "40 min",
     helpType: {
@@ -1368,7 +2248,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Unfall", "Versicherung", "Internationales Recht"],
       ru: ["Авария", "Страховка", "Международное право"],
       hi: ["दुर्घटना", "बीमा", "अंतर्राष्ट्रीय कानून"],
-      ch: ["事故", "保险", "国际法"]
+      ch: ["事故", "保险", "国际法"],
+      pt: ["Acidente", "Seguro", "Direito internacional"]
     },
   },
   "12": {
@@ -1387,7 +2268,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Handelsstreit in Italien",
       ru: "Коммерческий спор в Италии",
       hi: "इटली में व्यावसायिक विवाद",
-      ch: "意大利商业纠纷"
+      ch: "意大利商业纠纷",
+      pt: "Disputa comercial na Itália"
     },
     fullContent: {
       fr: "Très compétent ! Litige commercial en Italie, l'avocat m'a donné une analyse claire de ma situation juridique et les options disponibles. Conseil précieux pour mon business !",
@@ -1396,11 +2278,10 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Sehr kompetent! Handelsstreit in Italien gab mir der Anwalt eine klare Analyse meiner Rechtslage und der verfügbaren Optionen. Wertvoller Rat für mein Geschäft!",
       ru: "Очень компетентно! Коммерческий спор в Италии адвокат дал мне четкий анализ моей правовой ситуации и доступных вариантов. Ценный совет для моего бизнеса!",
       hi: "बहुत सक्षम! इटली में व्यावसायिक विवाद, वकील ने मुझे मेरी कानूनी स्थिति का स्पष्ट विश्लेषण और उपलब्ध विकल्प दिए। मेरे व्यवसाय के लिए मूल्यवान सलाह!",
-      ch: "非常专业！我遇到意大利的商业纠纷，这位律师清晰地分析了我的法律处境和可行的方案。对我的业务来说，这是非常宝贵的建议！"
+      ch: "非常专业！我遇到意大利的商业纠纷，这位律师清晰地分析了我的法律处境和可行的方案。对我的业务来说，这是非常宝贵的建议！",
+      pt: "Muito competente! Disputa comercial na Itália, o advogado me deu uma análise clara da minha situação jurídica e opções disponíveis. Conselho valioso para meu negócio!"
     },
-    avatar:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
-
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
     verified: true,
     serviceUsed: {
       fr: "Consultation Avocat",
@@ -1409,7 +2290,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Rechtsberatung",
       ru: "Консультация адвоката",
       hi: "वकील परामर्श",
-      ch: "律师咨询"
+      ch: "律师咨询",
+      pt: "Consulta de Advogado"
     },
     duration: "30 min",
     helpType: {
@@ -1420,6 +2302,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       ru: ["Коммерческое право", "Спор", "Бизнес"],
       hi: ["व्यावसायिक कानून", "विवाद", "व्यापार"],
       ch: ["商法", "争议", "商业"],
+      pt: ["Direito comercial", "Disputa", "Negócios"]
     },
   },
   "13": {
@@ -1438,7 +2321,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Visumproblem in den USA",
       ru: "Проблема с визой в США",
       hi: "यूएसए में वीजा समस्या",
-      ch: "美国签证问题"
+      ch: "美国签证问题",
+      pt: "Problema de visto nos EUA"
     },
     fullContent: {
       fr: "Avocat brillant ! Problème de visa aux États-Unis, il m'a expliqué toutes les procédures d'immigration, les risques et solutions. Grâce à lui, j'ai évité l'expulsion !",
@@ -1447,10 +2331,10 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Glänzender Anwalt! Visumproblem in den USA erklärte mir alle Einwanderungsverfahren, Risiken und Lösungen. Dank ihm habe ich Abschiebung vermieden!",
       ru: "Блестящий адвокат! Проблема с визой в США, он объяснил мне все процедуры иммиграции, риски и решения. Благодаря ему я избежал депортации!",
       hi: "शानदार वकील! यूएसए में वीजा समस्या, उन्होंने मुझे सभी आप्रवासन प्रक्रियाएं, जोखिम और समाधान समझाए। उनके कारण मुझे निष्कासन से बचना पड़ा!",
-      ch: "这位律师太棒了！我在美国遇到了签证问题，他详细解释了所有移民程序、风险和解决方案。多亏了他，我才避免了被遣返！"
+      ch: "这位律师太棒了！我在美国遇到了签证问题，他详细解释了所有移民程序、风险和解决方案。多亏了他，我才避免了被遣返！",
+      pt: "Advogado brilhante! Problema de visto nos Estados Unidos, ele me explicou todos os procedimentos de imigração, riscos e soluções. Graças a ele, evitei a deportação!"
     },
-    avatar:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
+    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
     verified: true,
     serviceUsed: {
       fr: "Appel Avocat",
@@ -1459,7 +2343,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Rechtsberatung",
       ru: "Консультация адвоката",
       hi: "वकील परामर्श",
-      ch: "律师电话"
+      ch: "律师电话",
+      pt: "Chamada de Advogado"
     },
     duration: "50 min",
     helpType: {
@@ -1470,6 +2355,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       ru: ["Иммиграция", "Виза", "Чрезвычайная ситуация"],
       hi: ["आप्रवासन", "वीजा", "आपातकाल"],
       ch: ["移民", "签证", "紧急情况"],
+      pt: ["Imigração", "Visto", "Emergência"]
     },
   },
   "14": {
@@ -1488,7 +2374,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Internationale Ehescheidung",
       ru: "Международный развод",
       hi: "अंतर्राष्ट्रीय तलाक",
-      ch: "国际离婚"
+      ch: "国际离婚",
+      pt: "Divórcio internacional"
     },
     fullContent: {
       fr: "Service juridique excellent ! Divorce international complexe, l'avocat a su naviguer entre droit français et espagnol. Conseil clair, stratégie efficace. Je recommande vivement !",
@@ -1497,11 +2384,10 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Ausgezeichneter Rechtsdienst! Komplexe internationale Ehescheidung, der Anwalt navigierte zwischen französischem und spanischem Recht. Klarer Rat, wirksame Strategie. Sehr empfohlen!",
       ru: "Отличное юридическое обслуживание! Сложный международный развод, адвокат сориентировался между французским и испанским правом. Четкий совет, эффективная стратегия. Настоятельно рекомендую!",
       hi: "उत्कृष्ट कानूनी सेवा! जटिल अंतर्राष्ट्रीय तलाक, वकील फ्रांसीसी और स्पेनिश कानून के बीच नेविगेट करते हैं। स्पष्ट सलाह, प्रभावी रणनीति। अत्यधिक अनुशंसित!",
-      ch: "卓越的法律服务！复杂的国际离婚案件，律师精通法国和西班牙法律。建议清晰明了，策略有效。强烈推荐！"
+      ch: "卓越的法律服务！复杂的国际离婚案件，律师精通法国和西班牙法律。建议清晰明了，策略有效。强烈推荐！",
+      pt: "Excelente serviço jurídico! Divórcio internacional complexo, o advogado navegou entre a lei francesa e espanhola. Conselho claro, estratégia eficaz. Recomendo fortemente!"
     },
-    avatar:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
-
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
     verified: true,
     serviceUsed: {
       fr: "Consultation Avocat",
@@ -1510,7 +2396,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Rechtsberatung",
       ru: "Консультация адвоката",
       hi: "वकील परामर्श",
-      ch: "律师咨询"
+      ch: "律师咨询",
+      pt: "Consulta de Advogado"
     },
     duration: "60 min",
     helpType: {
@@ -1521,6 +2408,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       ru: ["Развод", "Международное право", "Семья"],
       hi: ["तलाक", "अंतर्राष्ट्रीय कानून", "परिवार"],
       ch: ["离婚", "国际法", "家庭"],
+      pt: ["Divórcio", "Direito internacional", "Família"]
     },
   },
   "15": {
@@ -1539,7 +2427,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Arbeitsvertrag in Mexiko",
       ru: "Трудовой договор в Мексике",
       hi: "मेक्सिको में रोजगार अनुबंध",
-      ch: "墨西哥的雇佣合同"
+      ch: "墨西哥的雇佣合同",
+      pt: "Contrato de trabalho no México"
     },
     fullContent: {
       fr: "Très professionnel ! Contrat de travail au Mexique, l'avocat m'a expliqué toutes les clauses, mes droits et obligations. Il m'a aidé à négocier de meilleures conditions !",
@@ -1548,11 +2437,10 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Sehr professionell! Arbeitsvertrag in Mexiko, der Anwalt erklärte mir alle Klauseln, meine Rechte und Pflichten. Er half mir, bessere Bedingungen auszuhandeln!",
       ru: "Очень профессионально! Трудовой договор в Мексике адвокат объяснил мне все пункты, мои права и обязанности. Он помог мне договориться о лучших условиях!",
       hi: "बहुत पेशेवर! मेक्सिको में रोजगार अनुबंध, वकील ने मुझे सभी खंड, मेरे अधिकार और कर्तव्य समझाए। उन्होंने मुझे बेहतर शर्तों पर सहमति प्राप्त करने में मदद की!",
-      ch: "非常专业！墨西哥的雇佣合同，律师详细解释了所有条款、我的权利和义务。他还帮我争取到了更好的待遇！"
+      ch: "非常专业！墨西哥的雇佣合同，律师详细解释了所有条款、我的权利和义务。他还帮我争取到了更好的待遇！",
+      pt: "Muito profissional! Contrato de trabalho no México, o advogado me explicou todas as cláusulas, meus direitos e obrigações. Ele me ajudou a negociar melhores condições!"
     },
-    avatar:
-      "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
-
+    avatar: "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
     verified: true,
     serviceUsed: {
       fr: "Consultation Avocat",
@@ -1561,7 +2449,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Rechtsberatung",
       ru: "Консультация адвоката",
       hi: "वकील परामर्श",
-      ch: "律师咨询"
+      ch: "律师咨询",
+      pt: "Consulta de Advogado"
     },
     duration: "35 min",
     helpType: {
@@ -1572,6 +2461,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       ru: ["Трудовое право", "Контракт", "Переговоры"],
       hi: ["श्रम कानून", "अनुबंध", "वार्तालाप"],
       ch: ["劳动法", "合同", "谈判"],
+      pt: ["Direito do trabalho", "Contrato", "Negociação"]
     },
   },
   "16": {
@@ -1590,7 +2480,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Steuerproblem in der Schweiz",
       ru: "Налоговая проблема в Швейцарии",
       hi: "स्विटजरलैंड में कर समस्या",
-      ch: "瑞士的税务问题"
+      ch: "瑞士的税务问题",
+      pt: "Problema fiscal na Suíça"
     },
     fullContent: {
       fr: "Avocat remarquable ! Problème fiscal en Suisse, il m'a expliqué les implications légales, les démarches et m'a orienté vers un fiscaliste local. Service impeccable !",
@@ -1599,10 +2490,10 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Bemerkenswerter Anwalt! Steuerproblem in der Schweiz erklärte mir die Rechtsfolgen, Verfahren und leitete mich an einen lokalen Steuerspezialisten weiter. Tadelloses Service!",
       ru: "Замечательный адвокат! Налоговая проблема в Швейцарии, он объяснил мне правовые последствия, процедуры и направил меня к местному налоговому специалисту. Безупречный сервис!",
       hi: "उल्लेखनीय वकील! स्विटजरलैंड में कर समस्या, उन्होंने मुझे कानूनी निहितार्थ, प्रक्रियाएं समझाईं और मुझे स्थानीय कर विशेषज्ञ की ओर निर्देशित किया। निर्दोष सेवा!",
-      ch: "这位律师太棒了！我遇到了瑞士的税务问题，他详细解释了相关的法律规定和程序，并推荐了一位当地的税务专家。服务无可挑剔！"
+      ch: "这位律师太棒了！我遇到了瑞士的税务问题，他详细解释了相关的法律规定和程序，并推荐了一位当地的税务专家。服务无可挑剔！",
+      pt: "Advogado notável! Problema fiscal na Suíça, ele me explicou as implicações legais, os procedimentos e me direcionou a um especialista fiscal local. Serviço impecável!"
     },
-    avatar:
-      "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YXZhdGFyfGVufDB8fDB8fHww",
+    avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YXZhdGFyfGVufDB8fDB8fHww",
     verified: true,
     serviceUsed: {
       fr: "Consultation Avocat",
@@ -1611,7 +2502,8 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Rechtsberatung",
       ru: "Консультация адвоката",
       hi: "वकील परामर्श",
-      ch: "律师咨询"
+      ch: "律师咨询",
+      pt: "Consulta de Advogado"
     },
     duration: "45 min",
     helpType: {
@@ -1621,10 +2513,12 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Steuern", "Recht", "Beratung"],
       ru: ["Налог", "Закон", "Совет"],
       hi: ["कर", "कानून", "सलाह"],
-      ch: ["税", "法律", "建议"]
+      ch: ["税", "法律", "建议"],
+      pt: ["Fiscal", "Direito", "Aconselhamento"]
     },
   },
 };
+
 
 // Country translations / Traductions des pays
 const COUNTRY_TRANSLATIONS: Record<string, { fr: string; en: string }> = {
