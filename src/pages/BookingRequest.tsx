@@ -177,6 +177,144 @@ const I18N = {
       needShared: "Sélectionnez au moins une langue commune pour continuer.",
     },
   },
+  ar: {
+    "metaTitle": "طلب استشارة • SOS Expats",
+    "metaDesc": "نموذج حجز ممتع، سلس، وواضح للغاية 🚀",
+    "heroTitle": "صف طلبك",
+    "heroSubtitle": "بعض التفاصيل وسنتولى الباقي — بسيط، ودي، ورائع ✨",
+    "progress": "التقدم",
+    "personal": "لنتعرف عليك",
+    "request": "طلبك",
+    "languages": "اللغات",
+    "contact": "الاتصال",
+    "cgu": "شروط وأحكام العملاء",
+    "checklistTitle": "لإكمال العملية:",
+    "callTiming": "سنتصل بك خلال 5 دقائق بعد الدفع",
+    "securePay": "دفع آمن بنسبة 100%",
+    "satisfied": "💯 ضمان الرضا: إذا كان الخبير غير متاح، سيتم رد المبلغ تلقائيًا.",
+    "continuePay": "المتابعة إلى الدفع",
+    "errorsTitle": "بعض التعديلات الصغيرة وسنكون جاهزين ✨",
+    "hints": {
+      "title": "كلما كان العنوان أوضح، كان أفضل!",
+      "desc": "أضف السياق، الهدف، والجداول الزمنية… أعطنا تفاصيل 🔎",
+      "phone": "لن نرسل أي رسائل مزعجة — فقط للاتصال بالخبير. 📵",
+      "whatsapp": "اختياري ولكنه مفيد لتحديثات فورية. 💬"
+    },
+    "fields": {
+      "firstName": "الاسم الأول",
+      "lastName": "اسم العائلة",
+      "nationality": "الجنسية",
+      "currentCountry": "بلد التدخل",
+      "otherCountry": "حدد بلدك",
+      "title": "عنوان الطلب",
+      "description": "الوصف التفصيلي",
+      "phone": "رقم الهاتف",
+      "whatsapp": "رقم واتساب (اختياري)",
+      "accept": "أوافق على ",
+      "andConfirm": " وأؤكد أن المعلومات صحيحة."
+    },
+    "placeholders": {
+      "firstName": "اسمك الأول",
+      "lastName": "اسم العائلة",
+      "nationality": "مثلاً: فرنسي، أمريكي…",
+      "title": "مثلاً: تأشيرة عمل كندا — ما هي الوثائق المطلوبة؟",
+      "description": "اشرح وضعك: السياق، الأسئلة المحددة، الأهداف، الجدول الزمني… (50 حرفًا على الأقل)",
+      "phone": "612 345 678",
+      "otherCountry": "مثلاً: باراغواي"
+    },
+    "validators": {
+      "firstName": "الاسم الأول مطلوب",
+      "lastName": "اسم العائلة مطلوب",
+      "title": "يجب أن يكون العنوان مكونًا من 10 أحرف على الأقل",
+      "description": "يجب أن يحتوي الوصف على 50 حرفًا على الأقل",
+      "nationality": "الجنسية مطلوبة",
+      "currentCountry": "بلد التدخل مطلوب",
+      "otherCountry": "يرجى تحديد بلدك",
+      "languages": "اختر لغة واحدة على الأقل",
+      "phone": "رقم الهاتف غير صالح",
+      "accept": "يجب أن توافق على الشروط",
+      "langMismatch": "لا توجد لغة مشتركة مع مقدم الخدمة"
+    },
+    "preview": {
+      "title": "معاينة سريعة",
+      "hint": "هذا ما سيراه الخبير لمساعدتك بشكل أفضل."
+    },
+    "labels": {
+      "compatible": "اللغات المتوافقة",
+      "incompatible": "اللغات غير المتوافقة",
+      "communicationImpossible": "الاتصال غير ممكن",
+      "needShared": "اختر لغة مشتركة واحدة على الأقل للمتابعة."
+    }
+  },
+  ch: {
+    "metaTitle": "咨询请求 • SOS Expats",
+    "metaDesc": "一个有趣、流畅、超清晰的预约表单 🚀",
+    "heroTitle": "描述您的请求",
+    "heroSubtitle": "提供一些细节，我们会处理剩下的一切 — 简单、友好、酷 ✨",
+    "progress": "进度",
+    "personal": "让我们了解您",
+    "request": "您的请求",
+    "languages": "语言",
+    "contact": "联系方式",
+    "cgu": "客户条款与条件",
+    "checklistTitle": "待完成事项：",
+    "callTiming": "付款后 5 分钟内来电",
+    "securePay": "100% 安全支付",
+    "satisfied": "💯 满意保证：如果专家无法提供服务，系统将自动退款。",
+    "continuePay": "继续付款",
+    "errorsTitle": "只需一点小调整，我们就准备好了 ✨",
+    "hints": {
+      "title": "标题越清晰越好！",
+      "desc": "请提供背景、目标、时间线……让我们更好地了解您的情况 🔎",
+      "phone": "绝不会发送垃圾信息 — 仅用于联系专家。📵",
+      "whatsapp": "可选，但有助于实时更新。💬"
+    },
+    "fields": {
+      "firstName": "名字",
+      "lastName": "姓氏",
+      "nationality": "国籍",
+      "currentCountry": "服务国家",
+      "otherCountry": "请注明您的国家",
+      "title": "请求标题",
+      "description": "详细描述",
+      "phone": "电话",
+      "whatsapp": "WhatsApp 号码（可选）",
+      "accept": "我接受 ",
+      "andConfirm": " 并确认所填写的信息准确无误。"
+    },
+    "placeholders": {
+      "firstName": "您的名字",
+      "lastName": "您的姓氏",
+      "nationality": "例如：法国人、美国人…",
+      "title": "例如：加拿大工作签证 — 需要哪些文件？",
+      "description": "请说明您的情况：背景、具体问题、目标、时间线…（至少 50 个字符）",
+      "phone": "612 345 678",
+      "otherCountry": "例如：巴拉圭"
+    },
+    "validators": {
+      "firstName": "名字为必填项",
+      "lastName": "姓氏为必填项",
+      "title": "标题至少需要 10 个字符",
+      "description": "描述至少需要 50 个字符",
+      "nationality": "国籍为必填项",
+      "currentCountry": "服务国家为必填项",
+      "otherCountry": "请注明您的国家",
+      "languages": "请至少选择一种语言",
+      "phone": "电话号码无效",
+      "accept": "您必须同意条款",
+      "langMismatch": "与服务提供者没有共同语言"
+    },
+    "preview": {
+      "title": "快速预览",
+      "hint": "专家将看到这些信息，以便更好地为您提供帮助。"
+    },
+    "labels": {
+      "compatible": "兼容语言",
+      "incompatible": "不兼容语言",
+      "communicationImpossible": "无法沟通",
+      "needShared": "请至少选择一种共同语言以继续。"
+    }
+  },
   en: {
     metaTitle: "Consultation Request • SOS Expats",
     metaDesc: "A fun, fluid, ultra-clear booking form 🚀",
