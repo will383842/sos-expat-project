@@ -31,13 +31,13 @@ const TermsExpats: React.FC = () => {
 
   const [content, setContent] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [selectedLanguage, setSelectedLanguage] = useState<'fr' | 'en' | 'es' | 'de' | 'ru' | 'hi'>(
-    (language as 'fr' | 'en' | 'es' | 'de' | 'ru' | 'hi') || 'fr'
+  const [selectedLanguage, setSelectedLanguage] = useState<'fr' | 'en' | 'es' | 'de' | 'ru' | 'hi' | 'ch'>(
+    (language as 'fr' | 'en' | 'es' | 'de' | 'ru' | 'hi' | 'ch') || 'fr'
   );
 
   useEffect(() => {
     if (language) {
-      setSelectedLanguage(language as 'fr' | 'en' | 'es' | 'de' | 'ru' | 'hi');
+      setSelectedLanguage(language as 'fr' | 'en' | 'es' | 'de' | 'ru' | 'hi' | 'ch');
     }
   }, [language]);
 
@@ -396,13 +396,54 @@ const translations = {
     heroBadge: 'नया — शर्तें अपडेट की गईं',
     contactForm: 'संपर्क फ़ॉर्म',
   },
+  ch: {
+  title: '外籍助手服务条款',
+  subtitle: '外籍助手使用条款',
+  lastUpdated: '版本 2.2 – 最后更新：2025年6月16日',
+  loading: '加载中...',
+  joinNetwork: '加入网络',
+  trustedByHelpers: '已有超过 1,000 名外籍助手信任我们',
+  keyFeatures: '主要功能',
+  features: [
+    '7 天内保证付款',
+    '全天候（24/7）技术支持',
+    '移动端优化界面',
+    '已验证用户',
+  ],
+  languageToggle: '切换语言',
+  sections: {
+    definitions: '定义',
+    scope: '目的、适用范围与接受',
+    status: '助手身份 – 合规与责任',
+    account: '账户、审核与安全',
+    rules: '使用规则 – 质量、禁止行为与禁止规避',
+    relationship: '助手与用户关系（平台外）',
+    fees: '费用、单次付款与税务',
+    data: '数据保护（全球框架）',
+    ip: '知识产权',
+    liability: '保证、责任与赔偿',
+    law: '适用法律 – ICC 仲裁 – 爱沙尼亚法院',
+    misc: '其他条款',
+    contact: '联系方式',
+  },
+  readyToJoin: '准备加入 SOS Expat 吗？',
+  readySubtitle: '帮助外籍人士并发展您的咨询业务。',
+  startNow: '立即开始',
+  contactUs: '联系我们',
+  anchorTitle: '概览',
+  editHint: '可从管理控制台编辑文档',
+  ctaHero: '查看专家',
+  heroBadge: '新内容 — 条款已更新',
+  contactForm: '联系表单',
+}
+ 
 };
 
 
 
   const t = translations[selectedLanguage];
 
-  const handleLanguageChange = (newLang: 'fr' | 'en' | 'es' | 'de' | 'ru' | 'hi') => {
+  const handleLanguageChange = (newLang: 'fr' | 'en' | 'es' | 'de' | 'ru' | 'hi' | 'ch') => {
     setSelectedLanguage(newLang);
   };
 
@@ -1844,6 +1885,137 @@ Keine Garantie für Ergebnisse/Qualität/Volumen; Plattform **"wie gehabt."**
 
 Bei Fragen oder rechtlichen Anfragen kontaktieren Sie uns:
 `;
+const defaultCh = `
+  使用条款 – 外籍协助者（全球）
+
+SOS Expat by Ulixai OÜ（下称“平台”、“SOS”、“我们”）
+
+版本 2.2 – 最后更新：2025年6月16日
+
+1. 定义
+
+协助者（Helper） 指在平台上注册，以独立身份向用户提供非法律、非医疗协助服务的人士（如方向指导、日常事务协助、非正式翻译、当地介绍等）。
+
+用户（User） 指使用平台联系协助者的任何人。
+
+连接（Connection） 指实现联系的技术或操作环节（包括共享联系方式、发起通话/消息/视频、以及协助者接受请求等）。
+
+介入国家（Country of Intervention） 指用户在连接时主要提出请求的司法管辖区。
+
+连接费用（Connection Fee） 指 19 欧元（EUR）（若以欧元支付）或 25 美元（USD）（若以美元支付），该金额可变，并可根据不同国家/货币的本地收费表进行前瞻性调整。
+
+支付处理方（Payment Processors） 指负责收款和付款的第三方服务。
+
+2. 目的、适用范围与接受
+
+Ulixai 仅作为技术中介，并非协助者的雇主、代理人或合作伙伴；Ulixai 不提供任何法律、医疗、税务、会计或其他受监管的建议，也不参与协助者与用户之间的合同关系。
+
+点击同意（Click-wrap acceptance） 构成电子签名与同意。SOS 可在发布后以前瞻性方式更新本条款和/或费用表。
+
+专业身份（B2B）：协助者仅以专业身份行事；消费者保护法规不适用于 Ulixai 与协助者之间的关系。
+
+3. 协助者身份 – 合规、许可与责任
+
+独立性。 协助者以独立专业人士身份行事。
+
+工作许可与移民。 协助者全权负责在每个介入国家获取/保持所需的许可证、签证及商业注册。Ulixai 不核实此类授权，也不承担任何责任。
+
+受监管的服务。 协助者不得提供受监管的服务（如法律、医疗、金融、会计、不动产中介等），除非持有合法执照/授权并完全遵守当地法律；否则应停止并引导用户联系持证专业人士。
+
+一般合规。 协助者遵守适用法律（消费者、电商、广告/招揽、公平竞争、反洗钱/客户识别、税务、数据保护、制裁/出口、个人安全等）。
+
+保险。 协助者应保持适当的保险保障。
+
+保密。 协助者应保护用户信息的机密性。
+
+4. 账户、审查与安全
+
+每位协助者仅限一个账户；资料应准确、完整并保持最新。Ulixai 可进行合理核查（身份证件、资料一致性、制裁/客户识别筛查等），并可因安全、合规或质量原因拒绝、暂停或撤销访问权限。协助者应妥善保管凭证；账户内的活动视为协助者本人行为。
+
+5. 使用规则 – 质量、禁止行为、禁止规避
+
+需准确描述，不得虚假宣称专业身份，不得保证结果。
+
+**禁止行为：**违法、歧视、欺骗性内容；不公平行为；滥用数据；逆向工程；串通或抵制；违反制裁/出口规定；任何非法活动。
+
+禁止规避： 通过平台与新用户建立的每次新连接均会触发连接费用；规避平台以逃避新引介费用的行为被禁止。
+
+可用性： 平台按“原样提供”。
+
+6. 协助者–用户关系（平台外）
+
+连接完成后，双方可在平台外签订合同。协助者负责提供服务确认/条款、开具发票及处理税务。Ulixai 对协助者的服务或承诺不承担责任。
+
+7. 费用、单次付款与税务
+
+固定连接费。 每次连接 19 欧元 / 25 美元，不含税及支付处理费；Ulixai 可调整金额及/或按国家/货币公布本地收费表，并以前瞻性方式生效。
+
+单次付款与分配。 用户通过平台支付一个总金额，涵盖：(i) 协助者的报酬（经双方约定），以及 (ii) Ulixai 的连接费。Ulixai（或其处理方）收款后扣除自身费用，再汇款余额给协助者；协助者授权此类扣除。
+
+应得且不可退还。 连接费用自连接时即应计入并不可退还（若因平台自身原因失败，Ulixai 可在法律允许范围内酌情退款）。
+
+用户退款。 若发生退款，将从协助者分成中承担：Ulixai 可抵扣未来付款或在无应付款项时要求返还。
+
+汇率与税务： 支付处理方可能收取汇率/手续费；协助者负责所有适用税费；Ulixai 在需要时对连接费征收并缴纳增值税或本地等价税。
+
+抵销权已获授权。
+
+8. 数据保护（全球框架）
+
+角色。 对于为实现连接而获得的用户数据，Ulixai 与协助者各自作为独立数据控制者并为各自目的处理。
+
+法律依据与目的： 合同履行、合法利益（安全/防欺诈/服务改进）、法律合规（反洗钱/制裁）及在适用时的同意。
+
+国际传输可能发生，并在需要时采取适当保障措施。
+
+权利与联系方式：可通过平台联系表单行使。
+
+安全措施适用；若发生数据泄露，将按要求通知。协助者根据介入国家法律处理数据。
+
+9. 知识产权
+
+平台知识产权归 Ulixai 所有。协助者在条款有效期内获得个人的、非独占、不可转让的访问权。协助者内容授予 Ulixai 全球范围内的非独占许可，用于托管与展示。
+
+10. 免责声明、责任与赔偿
+
+不对结果、质量或数量作任何保证；平台按“原样”提供。
+
+责任上限： 在法律允许的最大范围内，Ulixai 对协助者的总责任限于直接损失，且不超过Ulixai 就引起索赔的交易所收取的连接费用总额。
+
+不承担间接、后果性、特殊或惩罚性损害赔偿。
+
+赔偿： 协助者应赔偿并使 Ulixai（及其关联方、管理人员、员工、代理人）免受损害，包括因 (i) 违反本条款或法律，(ii) 协助者内容，(iii) 协助者的服务或疏漏，(iv) 缺乏工作许可/移民/执照而引起的索赔、损失或费用（包括合理的律师费）。
+
+11. 适用法律 – 国际商会仲裁 – 爱沙尼亚法院 – 集体诉讼放弃
+
+实体法： 对每次连接，介入国家法律适用于 Ulixai 与协助者关系，但须受强制性当地法律及国际强行规范约束。
+
+强制性 ICC 仲裁： 所有 Ulixai–协助者争议均提交国际商会仲裁。仲裁地：爱沙尼亚塔林。语言：法语。 仲裁庭适用上述实体法，程序保密。
+
+放弃集体诉讼：在法律允许范围内放弃集体/联合诉讼权利。
+
+非仲裁事项、执行与紧急措施由爱沙尼亚法院（塔林）专属管辖；协助者放弃有关管辖地/不便法院的异议。
+
+12. 其他条款
+
+转让： Ulixai 可将本条款转让给集团实体或继任者；协助者未经同意不得转让。
+
+完整协议： 本条款取代此前所有理解与约定。
+
+通知： 通过平台发布、应用内通知或联系表单发送。
+
+解释： 标题仅为便利；不适用不利解释原则（contra proferentem）。
+
+语言： 可提供翻译版本；如有歧义，以法语版本为准。
+
+可分割性： 无效条款将由具有等效效果的有效条款替代。
+
+不放弃： 未执行权利不构成放弃。
+
+13. 联系方式
+
+如有任何问题或法律请求，请联系我们：
+`
 
 
   // Fallback de contenu par langue
@@ -1854,6 +2026,7 @@ Bei Fragen oder rechtlichen Anfragen kontaktieren Sie uns:
   selectedLanguage === 'de' ? defaultDe :
   selectedLanguage === 'ru' ? defaultRu :
   selectedLanguage === 'hi' ? defaultHi :
+  selectedLanguage === 'ch' ? defaultCh
   defaultEn;
 
   // Ancrage UI
