@@ -35,6 +35,7 @@ interface TestimonialData {
     de: string;
     ru: string;
     hi: string;
+    ch: string;
   };
   fullContent: {
     fr: string;
@@ -43,6 +44,7 @@ interface TestimonialData {
     de: string;
     ru: string;
     hi: string;
+    ch: string;
   };
   avatar: string;
   verified: boolean;
@@ -53,6 +55,7 @@ interface TestimonialData {
     de: string;
     ru: string;
     hi: string;
+    ch: string;
   };
   duration: string;
   helpType: {
@@ -62,6 +65,7 @@ interface TestimonialData {
     de: string[];
     ru: string[];
     hi: string[];
+    ch: string[];
   };
   year: number;
 }
@@ -635,6 +639,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Außergewöhnlicher Service in Thailand",
       ru: "Исключительный сервис в Таиланде",
       hi: "थाईलैंड में असाधारण सेवा",
+      ch: "泰国卓越服务"
     },
     fullContent: {
       fr: "Incroyable ! En 3 minutes j'avais un expatrié français au bout du fil depuis Bangkok. Il m'a expliqué toute la procédure visa Thaïlandais, les pièges à éviter et m'a même donné les contacts de son agent immobilier. Service qui change la vie !",
@@ -643,6 +648,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Unglaublich! In 3 Minuten hatte ich einen französischen Expat am Telefon aus Bangkok. Er erklärte mir das gesamte thailändische Visumverfahren, Fallstricke, die es zu vermeiden gilt, und gab mir sogar die Kontakte seines Immobilienmaklers. Lebensverändernder Service!",
       ru: "Невероятно! За 3 минуты я связался с французским экспатом по телефону из Бангкока. Он объяснил всю процедуру получения тайской визы, подводные камни, которых следует избегать, и даже дал контакты своего агента по недвижимости. Сервис, меняющий жизнь!",
       hi: "अविश्वसनीय! 3 मिनट में मेरे पास बैंकॉक से फोन पर एक फ्रांसीसी प्रवासी था। उन्होंने थाई वीजा प्रक्रिया, बचने योग्य नुकसान की पूरी व्याख्या की और यहां तक कि अपने रियल एस्टेट एजेंट के संपर्क भी दिए। जीवन बदलने वाली सेवा!",
+      ch: "太棒了！短短三分钟，我就联系上了一位身在曼谷的法国侨民。他详细地给我讲解了整个泰国签证流程，包括需要避免的陷阱，甚至还给了我他房产经纪人的联系方式。这项服务简直改变了我的人生！"
     },
     avatar:
       "https://images.unsplash.com/photo-1643842730000-db266bbc1b28?q=80&w=400&h=400&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -654,6 +660,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Expat-Beratung",
       ru: "Консультация эмигранта",
       hi: "प्रवासी परामर्श",
+      ch: "外籍人士咨询"
     },
     duration: "30 min",
     helpType: {
@@ -663,6 +670,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Visum", "Immobilien", "Umzug"],
       ru: ["Виза", "Недвижимость", "Переезд"],
       hi: ["वीजा", "रियल एस्टेट", "स्थानांतरण"],
+      ch: ["签证", "房地产", "搬迁"]
     },
   },
   "2": {
@@ -681,6 +689,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Vancouver-Setup leicht gemacht",
       ru: "Установка в Ванкувере упрощена",
       hi: "वैंकूवर सेटअप आसान बनाया गया",
+      ch: "温哥华设置变得简单"
     },
     fullContent: {
       fr: "Génial ! L'expatrié m'a aidé avec mon installation à Vancouver. Banque, logement, assurance santé, transport... tout en 30 minutes ! Il connaissait tous les bons plans et m'a évité des mois de galère administrative.",
@@ -689,6 +698,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Großartig! Der Expat half mir bei meiner Vancouver-Einrichtung. Banking, Wohnung, Krankenversicherung, Transport... alles in 30 Minuten! Er kannte alle Insider-Tipps und sparte mir Monate administrativer Probleme.",
       ru: "Блестяще! Эмигрант помог мне с установкой в Ванкувере. Банк, жилье, медицинское страхование, транспорт... все за 30 минут! Он знал все инсайдерские советы и спасил меня от месяцев административных хлопот.",
       hi: "शानदार! प्रवासी ने मुझे वैंकूवर सेटअप में मदद की। बैंकिंग, आवास, स्वास्थ्य बीमा, परिवहन... सब कुछ 30 मिनट में! उन्हें सभी अंदरूनी सुझाव पता थे और मुझे महीनों की प्रशासनिक परेशानी से बचाया।",
+      ch: "太棒了！这位外籍人士帮我安顿好了在温哥华的一切。银行、住房、医疗保险、交通……所有事情30分钟就搞定了！他知道所有内幕消息，帮我省去了几个月的行政麻烦。"
     },
     avatar:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
@@ -700,6 +710,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Expat-Beratung",
       ru: "Консультация эмигранта",
       hi: "प्रवासी परामर्श",
+      ch: "外籍人士咨询"
     },
     duration: "30 min",
     helpType: {
@@ -709,6 +720,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Banking", "Wohnung", "Versicherung"],
       ru: ["Банк", "Жилье", "Страхование"],
       hi: ["बैंकिंग", "आवास", "बीमा"],
+      ch: ["银行业", "住房", "保险"]
     },
   },
   "3": {
@@ -727,6 +739,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Wertvolle Tipps für Melbourne",
       ru: "Ценные советы для Мельбурна",
       hi: "मेलबर्न के लिए मूल्यवान सुझाव",
+      ch: "对墨尔本的宝贵建议"
     },
     fullContent: {
       fr: "Super expérience ! Expatrié à Melbourne depuis 8 ans, il m'a donné tous les conseils pour mon working holiday visa. Écoles, quartiers, jobs... Une mine d'or d'informations pratiques !",
@@ -735,6 +748,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Großartige Erfahrung! Expat in Melbourne seit 8 Jahren gab mir alle Tipps für mein Working-Holiday-Visum. Schulen, Viertel, Jobs... Eine Goldgrube praktischer Informationen!",
       ru: "Отличный опыт! Эмигрант в Мельбурне уже 8 лет дал мне все советы для моей рабочей визы отпуска. Школы, районы, работа... Кладезь практической информации!",
       hi: "शानदार अनुभव! मेलबर्न में 8 साल से प्रवासी, उन्होंने मुझे अपने वर्किंग होलिडे वीजा के लिए सभी सुझाव दिए। स्कूल, पड़ोस, नौकरियां... व्यावहारिक जानकारी का खजाना!",
+      ch: "非常棒的体验！我在墨尔本生活了8年，他为我的打工度假签证提供了所有建议。学校、社区、工作……简直是实用信息的宝库！"
     },
     avatar:
       "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
@@ -746,6 +760,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Expat-Beratung",
       ru: "Консультация эмигранта",
       hi: "प्रवासी परामर्श",
+      ch: "外籍人士咨询"
     },
     duration: "25 min",
     helpType: {
@@ -755,6 +770,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Visum", "Beschäftigung", "Viertel"],
       ru: ["Виза", "Занятость", "Районы"],
       hi: ["वीजा", "रोजगार", "पड़ोस"],
+      ch: ["签证","就业","社区"]
     },
   },
   "4": {
@@ -773,6 +789,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Kompletter Leitfaden für Dubai",
       ru: "Полное руководство для Дубая",
       hi: "दुबई के लिए संपूर्ण गाइड",
+      ch: "迪拜完整指南"
     },
     fullContent: {
       fr: "Excellent ! L'expatrié vivant à Dubaï depuis 5 ans m'a tout expliqué : visa, compte bancaire, logement, culture locale. Il m'a même mis en contact avec sa communauté d'expats français !",
@@ -781,6 +798,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Ausgezeichnet! Der Expat, der seit 5 Jahren in Dubai lebt, erklärte mir alles: Visum, Bankkonto, Wohnung, lokale Kultur. Er verband mich sogar mit seiner französischen Expat-Gemeinde!",
       ru: "Отлично! Эмигрант, живущий в Дубае 5 лет, объяснил мне все: виза, банковский счет, жилье, местная культура. Он даже связал меня со своей французской общиной эмигрантов!",
       hi: "उत्कृष्ट! दुबई में 5 साल से रहने वाले प्रवासी ने मुझे सब कुछ समझाया: वीजा, बैंक खाता, आवास, स्थानीय संस्कृति। वह मुझे अपने फ्रांसीसी प्रवासी समुदाय से भी जोड़ते हैं!",
+      ch: "太棒了！这位在迪拜生活了五年的外籍人士给我讲解了一切：签证、银行账户、住房、当地文化等等。他甚至还帮我联系了他的法国外籍人士社群！"
     },
     avatar:
       "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
@@ -793,6 +811,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Expat-Beratung",
       ru: "Консультация эмигранта",
       hi: "प्रवासी परामर्श",
+      ch: "外籍人士咨询"
     },
     duration: "40 min",
     helpType: {
@@ -802,6 +821,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Visum", "Banking", "Netzwerk"],
       ru: ["Виза", "Банк", "Сеть"],
       hi: ["वीजा", "बैंकिंग", "नेटवर्क"],
+      ch: ["签证", "银行业", "网络"]
     },
   },
   "5": {
@@ -820,6 +840,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Schnelle Hilfe aus Tokio",
       ru: "Быстрая помощь из Токио",
       hi: "टोक्यो से तेजी से मदद",
+      ch: "来自东京的快速帮助"
     },
     fullContent: {
       fr: "Parfait ! En urgence depuis Tokyo, j'ai eu un expatrié en 2 minutes. Il m'a aidé avec la paperasse japonaise complexe et m'a orienté vers les bonnes administrations. Très rassurant !",
@@ -828,6 +849,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Perfekt! In dringender Situation aus Tokio bekam ich in 2 Minuten einen Expat. Er half mir mit komplexen japanischen Unterlagen und wies mich auf die richtigen Behörden hin. Sehr beruhigend!",
       ru: "Идеально! В срочной ситуации из Токио я получил эмигранта за 2 минуты. Он помог мне со сложной японской документацией и направил меня в правильные администрации. Очень обнадеживает!",
       hi: "बिल्कुल सही! टोक्यो से जरूरी स्थिति में, मुझे 2 मिनट में एक प्रवासी मिला। उन्होंने मुझे जटिल जापानी कागजी कार्रवाई में मदद की और सही प्रशासन की ओर निर्देशित किया। बहुत आश्वस्त करने वाला!",
+      ch: "太好了！我当时身在东京，情况紧急，两分钟之内就联系到了一位外籍人士。他帮我处理了复杂的日本文件，并指引我去了正确的部门。真是太让人放心了！"
     },
     avatar:
       "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
@@ -840,6 +862,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Expat-Beratung",
       ru: "Консультация эмигранта",
       hi: "प्रवासी परामर्श",
+      ch: "外籍人士咨询"
     },
     duration: "20 min",
     helpType: {
@@ -849,6 +872,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Verwaltung", "Dokumente", "Notfall"],
       ru: ["Администрация", "Документы", "Чрезвычайная ситуация"],
       hi: ["प्रशासन", "दस्तावेज़", "आपातकाल"],
+      ch: ["行政", "文件", "Emergency"]
     },
   },
   "6": {
@@ -867,6 +891,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Studentenratschläge in Oslo",
       ru: "Студенческие советы в Осло",
       hi: "ओस्लो में छात्र सुझाव",
+      ch: "奥斯陆学生小贴士"
     },
     fullContent: {
       fr: "Très utile ! L'expatrié français en Norvège m'a donné tous les tips pour Oslo : logement étudiant, jobs d'appoint, transports. Il m'a fait gagner un temps précieux pour mes études !",
@@ -875,6 +900,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Sehr nützlich! Der französische Expat in Norwegen gab mir alle Tipps für Oslo: Studentenwohnheim, Teilzeitarbeit, Transport. Er sparte mir kostbare Zeit für mein Studium!",
       ru: "Очень полезно! Французский эмигрант в Норвегии дал мне все советы для Осло: студенческое жилье, подработки, транспорт. Он сэкономил мне драгоценное время на учебу!",
       hi: "बहुत उपयोगी! नॉर्वे में फ्रांसीसी प्रवासी ने मुझे ओस्लो के लिए सभी सुझाव दिए: छात्र आवास, अंशकालिक नौकरियां, परिवहन। उन्होंने मुझे मेरी पढ़ाई के लिए कीमती समय बचाया!",
+      ch: "太有用了！那位在挪威的法国侨民给了我很多关于奥斯陆的建议：学生公寓、兼职工作、交通等等。他帮我节省了宝贵的学习时间！"
     },
     avatar:
       "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
@@ -887,6 +913,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Expat-Beratung",
       ru: "Консультация эмигранта",
       hi: "प्रवासी परामर्श",
+      ch: "外籍人士咨询"
     },
     duration: "25 min",
     helpType: {
@@ -896,6 +923,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Wohnung", "Studium", "Beschäftigung"],
       ru: ["Жилье", "Учеба", "Занятость"],
       hi: ["आवास", "अध्ययन", "रोजगार"],
+      ch: ["住房", "研究", "就业"]
     },
   },
   "7": {
@@ -914,6 +942,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Familienumsiedlung nach São Paulo",
       ru: "Семейный переезд в Сан-Паулу",
       hi: "सांव पाउलो में पारिवारिक पुनर्स्थापन",
+      ch: "家庭搬迁到圣保罗"
     },
     fullContent: {
       fr: "Formidable ! Depuis le Brésil, l'expatrié m'a tout expliqué sur São Paulo : quartiers sûrs, carte de transports, meilleures écoles pour mes enfants. Une aide inestimable !",
@@ -922,6 +951,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Wunderbar! Aus Brasilien erklärte mir der Expat alles über São Paulo: sichere Viertel, Fahrkarten, beste Schulen für meine Kinder. Unschätzbare Hilfe!",
       ru: "Чудесно! Из Бразилии эмигрант объяснил мне все о Сан-Паулу: безопасные районы, проездные билеты, лучшие школы для моих детей. Бесценная помощь!",
       hi: "शानदार! ब्राजील से, प्रवासी ने मुझे सांव पाउलो के बारे में सब कुछ समझाया: सुरक्षित पड़ोस, परिवहन कार्ड, मेरे बच्चों के लिए सर्वोत्तम स्कूल। अमूल्य सहायता!",
+      ch: "太棒了！这位来自巴西的外国人详细地介绍了圣保罗的情况：安全的街区、交通卡、适合我孩子的好学校等等。真是帮了我大忙！"
     },
     avatar:
       "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
@@ -934,6 +964,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Expat-Beratung",
       ru: "Консультация эмигранта",
       hi: "प्रवासी परामर्श",
+      ch: "外籍人士咨询"
     },
     duration: "35 min",
     helpType: {
@@ -943,6 +974,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Familie", "Schulen", "Viertel"],
       ru: ["Семья", "Школы", "Районы"],
       hi: ["परिवार", "स्कूल", "पड़ोस"],
+      ch: ["家庭", "学校", "社区"]
     },
   },
   "8": {
@@ -961,6 +993,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Kompletter Singapore-Leitfaden",
       ru: "Полное руководство по Сингапуру",
       hi: "सिंगापुर पूर्ण गाइड",
+      ch: "完整的新加坡指南"
     },
     fullContent: {
       fr: "Extraordinaire ! L'expatrié à Singapour m'a guidé pas à pas pour mon installation. Permis de travail, logement, banque locale... Tout était clair et détaillé. Service top !",
@@ -969,6 +1002,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Außergewöhnlich! Der Expat in Singapur führte mich Schritt für Schritt durch meine Installation. Arbeitserlaubnis, Wohnung, lokale Bank... Alles war klar und detailliert. Spitzenservice!",
       ru: "Необычайно! Эмигрант в Сингапуре шаг за шагом провел меня через установку. Рабочий статус, жилье, местный банк... Все было ясно и подробно. Отличный сервис!",
       hi: "असाधारण! सिंगापुर में प्रवासी ने मुझे मेरी स्थापना के लिए चरण दर चरण मार्गदर्शन दिया। कार्य अनुमति, आवास, स्थानीय बैंक... सब कुछ स्पष्ट और विस्तृत था। शीर्ष सेवा!",
+      ch: "太棒了！这位在新加坡的外国人一步一步地指导我完成所有手续。工作许可、住房、当地银行……一切都清晰明了、讲解详尽。一流的服务！"
     },
     avatar:
       "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&h=400&q=80",
@@ -981,6 +1015,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Expat-Beratung",
       ru: "Консультация эмигранта",
       hi: "प्रवासी परामर्श",
+      ch: "外籍人士咨询"
     },
     duration: "45 min",
     helpType: {
@@ -990,6 +1025,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Erlaubnis", "Wohnung", "Banking"],
       ru: ["Разрешение", "Жилье", "Банк"],
       hi: ["अनुमति", "आवास", "बैंकिंग"],
+      ch: ["允许", "住房", "银行业"],
     },
   },
   "9": {
@@ -1008,6 +1044,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Universitätsaustausch in Seoul",
       ru: "Студенческий обмен в Сеуле",
       hi: "सियोल में विश्वविद्यालय विनिमय",
+      ch: "首尔大学交流"
     },
     fullContent: {
       fr: "Très professionnel ! L'expatrié français en Corée du Sud m'a donné tous les conseils pour Séoul : visa étudiant, logement universitaire, culture coréenne. Parfait pour mon échange !",
@@ -1016,6 +1053,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Sehr professionell! Der französische Expat in Südkorea gab mir alle Tipps für Seoul: Studentenvisum, Studentenwohnheim, koreanische Kultur. Perfekt für meinen Austausch!",
       ru: "Очень профессионально! Французский эмигрант в Южной Корее дал мне все советы для Сеула: студенческая виза, студенческое жилье, корейская культура. Идеально для моего обмена!",
       hi: "बहुत पेशेवर! दक्षिण कोरिया में फ्रांसीसी प्रवासी ने मुझे सियोल के लिए सभी सुझाव दिए: छात्र वीजा, विश्वविद्यालय आवास, कोरियाई संस्कृति। मेरे विनिमय के लिए बिल्कुल सही!",
+      ch: "非常专业！这位在韩国的法国侨民给了我很多关于首尔的建议：学生签证、大学住宿、韩国文化等等。对我的交换学习来说简直完美！"
     },
     avatar:
       "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80",
@@ -1028,6 +1066,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Expat-Beratung",
       ru: "Консультация эмигранта",
       hi: "प्रवासी परामर्श",
+      ch: "外籍人士咨询"
     },
     duration: "30 min",
     helpType: {
@@ -1037,6 +1076,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Visum", "Universität", "Kultur"],
       ru: ["Виза", "Университет", "Культура"],
       hi: ["वीजा", "विश्वविद्यालय", "संस्कृति"],
+      ch: ["签证", "大学", "文化"],
     },
   },
   "10": {
@@ -1055,6 +1095,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Rechtsfachkompetenz in London",
       ru: "Юридическая экспертиза в Лондоне",
       hi: "लंदन में कानूनी विशेषज्ञता",
+      ch: "伦敦的法律专业知识"
     },
     fullContent: {
       fr: `Avocat exceptionnel ! Depuis Londres, problème urgent avec mon propriétaire. L'avocat m'a expliqué mes droits en droit anglais, les démarches à suivre et m'a orienté vers un solicitor local. Précis et efficace !
@@ -1079,6 +1120,14 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Außergewöhnlicher Anwalt! Aus London, dringendes Problem mit meinem Vermieter. Der Anwalt erklärte mir meine Rechte nach englischem Recht, die zu befolgenden Schritte und wies mich auf einen lokalen Anwalt hin. Präzise und effizient!",
       ru: "Исключительный адвокат! Из Лондона срочная проблема с моим арендодателем. Адвокат объяснил мои права по английскому праву, шаги, которые нужно предпринять, и направил меня к местному адвокату. Точно и эффективно!",
       hi: "असाधारण वकील! लंदन से, मेरे मकान मालिक के साथ जरूरी समस्या। वकील ने मुझे अंग्रेजी कानून में मेरे अधिकारों की व्याख्या की, अनुसरण करने के कदम और मुझे एक स्थानीय वकील की ओर निर्देशित किया। सटीक और कुशल!",
+      ch: `这位律师太棒了！我住在伦敦，遇到了房东的紧急纠纷。律师详细解释了我在英国法律下的权利、需要采取的步骤，并推荐了一位当地的律师。他办事精准高效！
+        // 这位律师精通英国房产法，为我提供了解决与房东纠纷的精准建议。他清晰专业地解释了我的所有法律选择。
+
+        // 预约服务非常灵活，我当天就进行了咨询。通话质量极佳，没有任何技术问题。
+
+        // 我强烈推荐这项服务给所有在英国需要紧急法律援助的外籍人士。它能节省大量时间和金钱！
+
+        // 咨询质量堪比传统律师事务所，但速度和便捷性却堪比现代在线服务。是应对法律紧急情况的理想之选！`
     },
     avatar:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
@@ -1090,6 +1139,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Rechtsberatung",
       ru: "Консультация адвоката",
       hi: "वकील परामर्श",
+      ch: "律师电话"
     },
     duration: "25 minutes",
     helpType: {
@@ -1104,6 +1154,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Immobilienrecht", "Streit", "Beratung"],
       ru: ["Имущественное право", "Спор", "Совет"],
       hi: ["संपत्ति कानून", "विवाद", "सलाह"],
+      ch: ["物权法", "租赁法", "法律咨询", "诉讼"]
     },
   },
   "13": {
@@ -1122,6 +1173,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Visumproblem in den USA",
       ru: "Проблема с визой в США",
       hi: "यूएसए में वीजा समस्या",
+      ch: "美国签证问题已解决"
     },
     fullContent: {
       fr: `Avocat brillant ! Problème de visa aux États-Unis, il m'a expliqué toutes les procédures d'immigration, les risques et solutions. Grâce à lui, j'ai évité l'expulsion !
@@ -1146,6 +1198,15 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Glänzender Anwalt! Visumproblem in den USA erklärte mir alle Einwanderungsverfahren, Risiken und Lösungen. Dank ihm habe ich Abschiebung vermieden!",
       ru: "Блестящий адвокат! Проблема с визой в США, он объяснил мне все процедуры иммиграции, риски и решения. Благодаря ему я избежал депортации!",
       hi: "शानदार वकील! यूएसए में वीजा समस्या, उन्होंने मुझे सभी आप्रवासन प्रक्रियाएं, जोखिम और समाधान समझाए। उनके कारण मुझे निष्कासन से बचना पड़ा!",
+      ch: `这位律师太棒了！我在美国遇到了签证问题，他详细解释了所有移民流程、风险和解决方案。多亏了他，我才避免了被遣返！
+
+          // 这位专精美国移民法的律师给了我精准的建议，并指导我走正确的流程。他对美国和法国的法律法规都非常了解。
+
+          // 客服响应迅速，平台也非常直观易用。通话结束后，我收到了详细的后续信息，包括所有必要的文件。
+
+          // 我强烈推荐SOS Expat & Travelers给所有遇到紧急法律问题的外籍人士。这项服务真的能在危急时刻帮到你。
+
+          // 律师提供的咨询质量非常高，在移民法方面展现了精湛的专业知识。对于外籍人士来说，这项服务必不可少！`
     },
     avatar:
       "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
@@ -1157,6 +1218,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Rechtsberatung",
       ru: "Консультация адвоката",
       hi: "वकील परामर्श",
+      ch: "律师电话"
     },
     duration: "35 minutes",
     helpType: {
@@ -1176,6 +1238,12 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Einwanderung", "Visum", "Notfall"],
       ru: ["Иммиграция", "Виза", "Чрезвычайная ситуация"],
       hi: ["आप्रवासन", "वीजा", "आपातकाल"],
+      ch: [
+        "移民法",
+        "签证",
+        "行政程序",
+        "美国法律",
+      ]
     },
   },
   "10": {
@@ -1194,6 +1262,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Rechtsfachkompetenz in London",
       ru: "Юридическая экспертиза в Лондоне",
       hi: "लंदन में कानूनी विशेषज्ञता",
+      ch: "伦敦的法律专业知识"
     },
     fullContent: {
       fr: `Avocat exceptionnel ! Depuis Londres, problème urgent avec mon propriétaire. L'avocat m'a expliqué mes droits en droit anglais, les démarches à suivre et m'a orienté vers un solicitor local. Précis et efficace !
@@ -1218,6 +1287,15 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Außergewöhnlicher Anwalt! Aus London, dringendes Problem mit meinem Vermieter. Der Anwalt erklärte mir meine Rechte nach englischem Recht, die zu befolgenden Schritte und wies mich auf einen lokalen Anwalt hin. Präzise und effizient!",
       ru: "Исключительный адвокат! Из Лондона срочная проблема с моим арендодателем. Адвокат объяснил мои права по английскому праву, шаги, которые нужно предпринять, и направил меня к местному адвокату. Точно и эффективно!",
       hi: "असाधारण वकील! लंदन से, मेरे मकान मालिक के साथ जरूरी समस्या। वकील ने मुझे अंग्रेजी कानून में मेरे अधिकारों की व्याख्या की, अनुसरण करने के कदम और मुझे एक स्थानीय वकील की ओर निर्देशित किया। सटीक और कुशल!",
+      ch: `这位律师太棒了！我住在伦敦，遇到了房东的紧急纠纷。律师详细解释了我在英国法律下的权利、需要采取的步骤，并推荐了一位当地的律师。他办事精准高效！
+
+        // 这位律师精通英国房产法，为我提供了解决与房东纠纷的精准建议。他清晰专业地解释了我的所有法律选择。
+
+        // 预约服务非常灵活，我当天就进行了咨询。通话质量极佳，没有任何技术问题。
+
+        // 我强烈推荐这项服务给所有在英国需要紧急法律援助的外籍人士。它能节省大量时间和金钱！
+
+        // 咨询质量堪比传统律师事务所，但速度和便捷性却堪比现代在线服务。是应对法律紧急情况的理想之选！`
     },
     avatar:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
@@ -1229,6 +1307,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Rechtsberatung",
       ru: "Консультация адвоката",
       hi: "वकील परामर्श",
+      ch: "律师电话"
     },
     duration: "35 min",
     helpType: {
@@ -1238,6 +1317,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Immobilienrecht", "Streit", "Beratung"],
       ru: ["Имущественное право", "Спор", "Совет"],
       hi: ["संपत्ति कानून", "विवाद", "सलाह"],
+      ch: ["物权法", "争议", "建议"],
     },
   },
   "11": {
@@ -1256,6 +1336,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Unfall in Deutschland",
       ru: "Авария в Германии",
       hi: "जर्मनी में दुर्घटना",
+      ch: "德国发生事故"
     },
     fullContent: {
       fr: "Consultation remarquable ! Accident de voiture en Allemagne, l'avocat spécialisé en droit international m'a tout expliqué : assurances, procédures, droits. Il m'a évité des erreurs coûteuses !",
@@ -1264,6 +1345,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Bemerkenswerte Beratung! Autounfall in Deutschland, der auf Internationales Recht spezialisierte Anwalt erklärte mir alles: Versicherung, Verfahren, Rechte. Er sparte mich vor kostspieligen Fehlern!",
       ru: "Примечательная консультация! Автомобильная авария в Германии, адвокат, специализирующийся на международном праве, объяснил мне все: страховка, процедуры, права. Он спасил меня от дорогостоящих ошибок!",
       hi: "उल्लेखनीय परामर्श! जर्मनी में कार दुर्घटना, अंतर्राष्ट्रीय कानून में विशेषज्ञ वकील ने मुझे सब कुछ समझाया: बीमा, प्रक्रियाएं, अधिकार। उन्होंने मुझे महंगी गलतियों से बचाया!",
+      ch: "咨询效果极佳！我在德国出了车祸，这位精通国际法的律师详细解释了所有问题：保险、程序、我的权利。他帮我避免了代价高昂的错误！"
     },
     avatar:
       "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
@@ -1276,6 +1358,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Rechtsberatung",
       ru: "Консультация адвоката",
       hi: "वकील परामर्श",
+      ch: "律师咨询"
     },
     duration: "40 min",
     helpType: {
@@ -1285,6 +1368,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Unfall", "Versicherung", "Internationales Recht"],
       ru: ["Авария", "Страховка", "Международное право"],
       hi: ["दुर्घटना", "बीमा", "अंतर्राष्ट्रीय कानून"],
+      ch: ["事故", "保险", "国际法"]
     },
   },
   "12": {
@@ -1303,6 +1387,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Handelsstreit in Italien",
       ru: "Коммерческий спор в Италии",
       hi: "इटली में व्यावसायिक विवाद",
+      ch: "意大利商业纠纷"
     },
     fullContent: {
       fr: "Très compétent ! Litige commercial en Italie, l'avocat m'a donné une analyse claire de ma situation juridique et les options disponibles. Conseil précieux pour mon business !",
@@ -1311,6 +1396,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Sehr kompetent! Handelsstreit in Italien gab mir der Anwalt eine klare Analyse meiner Rechtslage und der verfügbaren Optionen. Wertvoller Rat für mein Geschäft!",
       ru: "Очень компетентно! Коммерческий спор в Италии адвокат дал мне четкий анализ моей правовой ситуации и доступных вариантов. Ценный совет для моего бизнеса!",
       hi: "बहुत सक्षम! इटली में व्यावसायिक विवाद, वकील ने मुझे मेरी कानूनी स्थिति का स्पष्ट विश्लेषण और उपलब्ध विकल्प दिए। मेरे व्यवसाय के लिए मूल्यवान सलाह!",
+      ch: "非常专业！我遇到意大利的商业纠纷，这位律师清晰地分析了我的法律处境和可行的方案。对我的业务来说，这是非常宝贵的建议！"
     },
     avatar:
       "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
@@ -1323,6 +1409,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Rechtsberatung",
       ru: "Консультация адвоката",
       hi: "वकील परामर्श",
+      ch: "律师咨询"
     },
     duration: "30 min",
     helpType: {
@@ -1332,6 +1419,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Handelsrecht", "Streit", "Geschäft"],
       ru: ["Коммерческое право", "Спор", "Бизнес"],
       hi: ["व्यावसायिक कानून", "विवाद", "व्यापार"],
+      ch: ["商法", "争议", "商业"],
     },
   },
   "13": {
@@ -1350,6 +1438,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Visumproblem in den USA",
       ru: "Проблема с визой в США",
       hi: "यूएसए में वीजा समस्या",
+      ch: "美国签证问题"
     },
     fullContent: {
       fr: "Avocat brillant ! Problème de visa aux États-Unis, il m'a expliqué toutes les procédures d'immigration, les risques et solutions. Grâce à lui, j'ai évité l'expulsion !",
@@ -1358,6 +1447,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Glänzender Anwalt! Visumproblem in den USA erklärte mir alle Einwanderungsverfahren, Risiken und Lösungen. Dank ihm habe ich Abschiebung vermieden!",
       ru: "Блестящий адвокат! Проблема с визой в США, он объяснил мне все процедуры иммиграции, риски и решения. Благодаря ему я избежал депортации!",
       hi: "शानदार वकील! यूएसए में वीजा समस्या, उन्होंने मुझे सभी आप्रवासन प्रक्रियाएं, जोखिम और समाधान समझाए। उनके कारण मुझे निष्कासन से बचना पड़ा!",
+      ch: "这位律师太棒了！我在美国遇到了签证问题，他详细解释了所有移民程序、风险和解决方案。多亏了他，我才避免了被遣返！"
     },
     avatar:
       "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
@@ -1369,6 +1459,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Rechtsberatung",
       ru: "Консультация адвоката",
       hi: "वकील परामर्श",
+      ch: "律师电话"
     },
     duration: "50 min",
     helpType: {
@@ -1378,6 +1469,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Einwanderung", "Visum", "Notfall"],
       ru: ["Иммиграция", "Виза", "Чрезвычайная ситуация"],
       hi: ["आप्रवासन", "वीजा", "आपातकाल"],
+      ch: ["移民", "签证", "紧急情况"],
     },
   },
   "14": {
@@ -1396,6 +1488,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Internationale Ehescheidung",
       ru: "Международный развод",
       hi: "अंतर्राष्ट्रीय तलाक",
+      ch: "国际离婚"
     },
     fullContent: {
       fr: "Service juridique excellent ! Divorce international complexe, l'avocat a su naviguer entre droit français et espagnol. Conseil clair, stratégie efficace. Je recommande vivement !",
@@ -1404,6 +1497,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Ausgezeichneter Rechtsdienst! Komplexe internationale Ehescheidung, der Anwalt navigierte zwischen französischem und spanischem Recht. Klarer Rat, wirksame Strategie. Sehr empfohlen!",
       ru: "Отличное юридическое обслуживание! Сложный международный развод, адвокат сориентировался между французским и испанским правом. Четкий совет, эффективная стратегия. Настоятельно рекомендую!",
       hi: "उत्कृष्ट कानूनी सेवा! जटिल अंतर्राष्ट्रीय तलाक, वकील फ्रांसीसी और स्पेनिश कानून के बीच नेविगेट करते हैं। स्पष्ट सलाह, प्रभावी रणनीति। अत्यधिक अनुशंसित!",
+      ch: "卓越的法律服务！复杂的国际离婚案件，律师精通法国和西班牙法律。建议清晰明了，策略有效。强烈推荐！"
     },
     avatar:
       "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
@@ -1416,6 +1510,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Rechtsberatung",
       ru: "Консультация адвоката",
       hi: "वकील परामर्श",
+      ch: "律师咨询"
     },
     duration: "60 min",
     helpType: {
@@ -1425,6 +1520,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Ehescheidung", "Internationales Recht", "Familie"],
       ru: ["Развод", "Международное право", "Семья"],
       hi: ["तलाक", "अंतर्राष्ट्रीय कानून", "परिवार"],
+      ch: ["离婚", "国际法", "家庭"],
     },
   },
   "15": {
@@ -1443,6 +1539,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Arbeitsvertrag in Mexiko",
       ru: "Трудовой договор в Мексике",
       hi: "मेक्सिको में रोजगार अनुबंध",
+      ch: "墨西哥的雇佣合同"
     },
     fullContent: {
       fr: "Très professionnel ! Contrat de travail au Mexique, l'avocat m'a expliqué toutes les clauses, mes droits et obligations. Il m'a aidé à négocier de meilleures conditions !",
@@ -1451,6 +1548,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Sehr professionell! Arbeitsvertrag in Mexiko, der Anwalt erklärte mir alle Klauseln, meine Rechte und Pflichten. Er half mir, bessere Bedingungen auszuhandeln!",
       ru: "Очень профессионально! Трудовой договор в Мексике адвокат объяснил мне все пункты, мои права и обязанности. Он помог мне договориться о лучших условиях!",
       hi: "बहुत पेशेवर! मेक्सिको में रोजगार अनुबंध, वकील ने मुझे सभी खंड, मेरे अधिकार और कर्तव्य समझाए। उन्होंने मुझे बेहतर शर्तों पर सहमति प्राप्त करने में मदद की!",
+      ch: "非常专业！墨西哥的雇佣合同，律师详细解释了所有条款、我的权利和义务。他还帮我争取到了更好的待遇！"
     },
     avatar:
       "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
@@ -1463,6 +1561,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Rechtsberatung",
       ru: "Консультация адвоката",
       hi: "वकील परामर्श",
+      ch: "律师咨询"
     },
     duration: "35 min",
     helpType: {
@@ -1472,6 +1571,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Arbeitsrecht", "Vertrag", "Verhandlung"],
       ru: ["Трудовое право", "Контракт", "Переговоры"],
       hi: ["श्रम कानून", "अनुबंध", "वार्तालाप"],
+      ch: ["劳动法", "合同", "谈判"],
     },
   },
   "16": {
@@ -1490,6 +1590,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Steuerproblem in der Schweiz",
       ru: "Налоговая проблема в Швейцарии",
       hi: "स्विटजरलैंड में कर समस्या",
+      ch: "瑞士的税务问题"
     },
     fullContent: {
       fr: "Avocat remarquable ! Problème fiscal en Suisse, il m'a expliqué les implications légales, les démarches et m'a orienté vers un fiscaliste local. Service impeccable !",
@@ -1498,6 +1599,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Bemerkenswerter Anwalt! Steuerproblem in der Schweiz erklärte mir die Rechtsfolgen, Verfahren und leitete mich an einen lokalen Steuerspezialisten weiter. Tadelloses Service!",
       ru: "Замечательный адвокат! Налоговая проблема в Швейцарии, он объяснил мне правовые последствия, процедуры и направил меня к местному налоговому специалисту. Безупречный сервис!",
       hi: "उल्लेखनीय वकील! स्विटजरलैंड में कर समस्या, उन्होंने मुझे कानूनी निहितार्थ, प्रक्रियाएं समझाईं और मुझे स्थानीय कर विशेषज्ञ की ओर निर्देशित किया। निर्दोष सेवा!",
+      ch: "这位律师太棒了！我遇到了瑞士的税务问题，他详细解释了相关的法律规定和程序，并推荐了一位当地的税务专家。服务无可挑剔！"
     },
     avatar:
       "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YXZhdGFyfGVufDB8fDB8fHww",
@@ -1509,6 +1611,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: "Rechtsberatung",
       ru: "Консультация адвоката",
       hi: "वकील परामर्श",
+      ch: "律师咨询"
     },
     duration: "45 min",
     helpType: {
@@ -1518,6 +1621,7 @@ const TESTIMONIALS_DATA: Record<string, TestimonialData> = {
       de: ["Steuern", "Recht", "Beratung"],
       ru: ["Налог", "Закон", "Совет"],
       hi: ["कर", "कानून", "सलाह"],
+      ch: ["税", "法律", "建议"]
     },
   },
 };
