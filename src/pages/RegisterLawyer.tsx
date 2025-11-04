@@ -2064,7 +2064,7 @@ interface LawyerFormData {
   currentCountry: string;
   currentPresenceCountry: string;
   customCountry: string;
-  preferredLanguage: "fr" | "en";
+  preferredLanguage: "fr" | "en" | "es" | "de" | "ru" | "hi"  | "pt" | "ch";
   practiceCountries: string[];
   customPracticeCountry: string;
   yearsOfExperience: number;

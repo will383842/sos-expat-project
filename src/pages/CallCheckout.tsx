@@ -62,7 +62,7 @@ const stripePromise = getStripePromise();
 /* --------------------------------- Types --------------------------------- */
 type Currency = "eur" | "usd";
 type ServiceKind = "lawyer" | "expat";
-type Lang = "fr" | "en" | "es" | "ru" | "de" | "hi" | "ch";
+type Lang = "fr" | "en" | "es" | "ru" | "de" | "hi" | "ch" | "pt";
 
 interface ServiceData {
   providerId: string;
@@ -183,10 +183,10 @@ const useTranslation = () => {
   const { language: ctxLang } = useApp();
   // const language: Lang = ctxLang === "en" ? "en" : "fr";
   const language: Lang = (
-    ["es", "de", "ru", "en", "fr", "hi", "ch"].includes(ctxLang) ? ctxLang : "fr"
+    ["es", "de", "ru", "en", "fr", "hi", "ch", "pt"].includes(ctxLang) ? ctxLang : "fr"
   ) as Lang;
 
-  const dict: Record<string, Record<Lang, string>> = {
+ const dict: Record<string, Record<Lang, string>> = {
     "meta.title": {
       fr: "Paiement & Mise en relation - SOS Expats",
       en: "Checkout & Connection - SOS Expats",
@@ -194,7 +194,8 @@ const useTranslation = () => {
       de: "Zahlung und Verbindung - SOS Expats",
       ru: "Оплата и подключение - SOS Expats",
       hi: "भुगतान और कनेक्शन - SOS Expats",
-      ch: "结帐和连接 - 求救 外籍人士"
+      ch: "结帐和连接 - 求救 外籍人士",
+      pt: "Pagamento e Conexão - SOS Expats"
     },
     "meta.description": {
       fr: "Réglez en toute sécurité et lancez votre consultation avec l'expert sélectionné.",
@@ -203,7 +204,8 @@ const useTranslation = () => {
       de: "Zahlen Sie sicher und starten Sie Ihre Beratung mit dem ausgewählten Experten.",
       ru: "Платите безопасно и начните консультацию с выбранным экспертом.",
       hi: "सुरक्षित रूप से भुगतान करें और चयनित विशेषज्ञ के साथ अपना परामर्श शुरू करें।",
-      ch: "安全支付后，即可开始与您选择的专家进行咨询。"
+      ch: "安全支付后，即可开始与您选择的专家进行咨询。",
+      pt: "Pague com segurança e inicie sua consulta com o especialista selecionado."
     },
     "meta.keywords": {
       fr: "paiement, consultation, avocat, expatriés, SOS Expats, appel",
@@ -212,7 +214,8 @@ const useTranslation = () => {
       de: "zahlung, beratung, anwalt, expats, anruf",
       ru: "платеж, консультация, адвокат, экспаты, звонок",
       hi: "भुगतान, परामर्श, वकील, प्रवासी, कॉल",
-      ch: "付款、咨询、律师、外籍人士、电话"
+      ch: "付款、咨询、律师、外籍人士、电话",
+      pt: "pagamento, consulta, advogado, expatriados, SOS Expats, chamada"
     },
     "meta.og_title": {
       fr: "Paiement sécurisé - SOS Expats",
@@ -221,7 +224,8 @@ const useTranslation = () => {
       de: "Sichere Zahlung - SOS Expats",
       ru: "Безопасная оплата - SOS Expats",
       hi: "सुरक्षित भुगतान - SOS Expats",
-      ch: "安全结账 - 求救 外籍人士"
+      ch: "安全结账 - 求救 外籍人士",
+      pt: "Pagamento Seguro - SOS Expats"
     },
     "meta.og_description": {
       fr: "Paiement SSL, mise en relation automatique avec votre expert.",
@@ -230,7 +234,8 @@ const useTranslation = () => {
       de: "SSL-Zahlung, automatische Verbindung mit Ihrem Experten.",
       ru: "SSL-платеж, автоматическое подключение к вашему эксперту.",
       hi: "SSL भुगतान, आपके विशेषज्ञ के साथ स्वचालित कनेक्शन।",
-      ch: "SSL支付，自动连接您的专家。"
+      ch: "SSL支付，自动连接您的专家。",
+      pt: "Pagamento SSL, conexão automática com seu especialista."
     },
     "meta.og_image_alt": {
       fr: "Paiement SOS Expats",
@@ -239,7 +244,8 @@ const useTranslation = () => {
       de: "SOS Expats Zahlung",
       ru: "Платеж SOS Expats",
       hi: "SOS Expats भुगतान",
-      ch: "SOS 外籍人士结账"
+      ch: "SOS 外籍人士结账",
+      pt: "Pagamento SOS Expats"
     },
     "meta.twitter_image_alt": {
       fr: "Interface de paiement SOS Expats",
@@ -248,7 +254,8 @@ const useTranslation = () => {
       de: "SOS Expats-Zahlungsschnittstelle",
       ru: "Интерфейс оплаты SOS Expats",
       hi: "SOS Expats भुगतान इंटरफ़ेस",
-      ch: "SOS 外籍人士 结账界面"
+      ch: "SOS 外籍人士 结账界面",
+      pt: "Interface de pagamento SOS Expats"
     },
     "ui.back": {
       fr: "Retour",
@@ -257,7 +264,8 @@ const useTranslation = () => {
       de: "Zurück",
       ru: "Назад",
       hi: "वापस",
-      ch: "后退"
+      ch: "后退",
+      pt: "Voltar"
     },
     "ui.securePayment": {
       fr: "Paiement sécurisé",
@@ -266,7 +274,8 @@ const useTranslation = () => {
       de: "Sichere Zahlung",
       ru: "Безопасный платеж",
       hi: "सुरक्षित भुगतान",
-      ch: "安全支付"
+      ch: "安全支付",
+      pt: "Pagamento seguro"
     },
     "ui.connecting": {
       fr: "Mise en relation",
@@ -275,7 +284,8 @@ const useTranslation = () => {
       de: "Verbindung wird hergestellt",
       ru: "Подключение",
       hi: "कनेक्ट हो रहा है",
-      ch: "正在连接"
+      ch: "正在连接",
+      pt: "Conectando"
     },
     "ui.completed": {
       fr: "Consultation terminée",
@@ -284,7 +294,8 @@ const useTranslation = () => {
       de: "Beratung abgeschlossen",
       ru: "Консультация завершена",
       hi: "परामर्श पूर्ण हुआ",
-      ch: "咨询完成"
+      ch: "咨询完成",
+      pt: "Consulta concluída"
     },
     "ui.payToStart": {
       fr: "Validez pour lancer la consultation",
@@ -293,7 +304,8 @@ const useTranslation = () => {
       de: "Bestätigen Sie, um die Beratung zu starten",
       ru: "Подтвердите для начала консультации",
       hi: "परामर्श शुरू करने के लिए पुष्टि करें",
-      ch: "确认开始咨询"
+      ch: "确认开始咨询",
+      pt: "Confirme para iniciar a consulta"
     },
     "ui.connectingExpert": {
       fr: "Connexion avec votre expert",
@@ -302,7 +314,8 @@ const useTranslation = () => {
       de: "Verbindung mit Ihrem Experten",
       ru: "Подключение к вашему эксперту",
       hi: "आपके विशेषज्ञ से कनेक्ट हो रहे हैं",
-      ch: "联系您的专家"
+      ch: "联系您的专家",
+      pt: "Conectando ao seu especialista"
     },
     "ui.thanks": {
       fr: "Merci d'avoir utilisé nos services",
@@ -311,7 +324,8 @@ const useTranslation = () => {
       de: "Danke, dass Sie unsere Dienste nutzen",
       ru: "Спасибо за использование наших услуг",
       hi: "हमारी सेवाओं का उपयोग करने के लिए धन्यवाद",
-      ch: "感谢您使用我们的服务"
+      ch: "感谢您使用我们的服务",
+      pt: "Obrigado por usar nossos serviços"
     },
     "card.title": {
       fr: "Paiement",
@@ -320,7 +334,8 @@ const useTranslation = () => {
       de: "Zahlung",
       ru: "Платеж",
       hi: "भुगतान",
-      ch: "支付"
+      ch: "支付",
+      pt: "Pagamento"
     },
     "card.number": {
       fr: "Numéro de carte",
@@ -329,7 +344,8 @@ const useTranslation = () => {
       de: "Kartennummer",
       ru: "Номер карты",
       hi: "कार्ड नंबर",
-      ch: "卡号"
+      ch: "卡号",
+      pt: "Número do cartão"
     },
     "card.expiry": {
       fr: "Expiration",
@@ -338,7 +354,8 @@ const useTranslation = () => {
       de: "Ablaufdatum",
       ru: "Срок действия",
       hi: "समाप्ति तिथि",
-      ch: "到期日"
+      ch: "到期日",
+      pt: "Validade"
     },
     "card.cvc": {
       fr: "CVC",
@@ -347,7 +364,8 @@ const useTranslation = () => {
       de: "CVC",
       ru: "CVC",
       hi: "CVC",
-      ch: "中央VC"
+      ch: "中央VC",
+      pt: "CVC"
     },
     "summary.title": {
       fr: "Récapitulatif",
@@ -356,7 +374,8 @@ const useTranslation = () => {
       de: "Zusammenfassung",
       ru: "Сводка",
       hi: "सारांश",
-      ch: "概括"
+      ch: "概括",
+      pt: "Resumo"
     },
     "summary.expert": {
       fr: "Expert",
@@ -365,7 +384,8 @@ const useTranslation = () => {
       de: "Experte",
       ru: "Эксперт",
       hi: "विशेषज्ञ",
-      ch: "专家"
+      ch: "专家",
+      pt: "Especialista"
     },
     "summary.service": {
       fr: "Service",
@@ -374,7 +394,8 @@ const useTranslation = () => {
       de: "Dienstleistung",
       ru: "Услуга",
       hi: "सेवा",
-      ch: "服务"
+      ch: "服务",
+      pt: "Serviço"
     },
     "summary.duration": {
       fr: "Durée",
@@ -383,7 +404,8 @@ const useTranslation = () => {
       de: "Dauer",
       ru: "Продолжительность",
       hi: "अवधि",
-      ch: "期间"
+      ch: "期间",
+      pt: "Duração"
     },
     "summary.total": {
       fr: "Total",
@@ -392,7 +414,8 @@ const useTranslation = () => {
       de: "Gesamt",
       ru: "Всего",
       hi: "कुल",
-      ch: "全部的"
+      ch: "全部的",
+      pt: "Total"
     },
     "btn.pay": {
       fr: "Payer",
@@ -401,7 +424,8 @@ const useTranslation = () => {
       de: "Zahlen",
       ru: "Оплатить",
       hi: "भुगतान करें",
-      ch: "支付"
+      ch: "支付",
+      pt: "Pagar"
     },
     "btn.evaluate": {
       fr: "Évaluer",
@@ -410,7 +434,8 @@ const useTranslation = () => {
       de: "Bewertung",
       ru: "Отзыв",
       hi: "समीक्षा करें",
-      ch: "审查"
+      ch: "审查",
+      pt: "Avaliar"
     },
     "btn.receipt": {
       fr: "Télécharger le reçu",
@@ -419,7 +444,8 @@ const useTranslation = () => {
       de: "Quittung herunterladen",
       ru: "Загрузить квитанцию",
       hi: "रसीद डाउनलोड करें",
-      ch: "下载收据"
+      ch: "下载收据",
+      pt: "Baixar recibo"
     },
     "btn.home": {
       fr: "Retour à l'accueil",
@@ -428,7 +454,8 @@ const useTranslation = () => {
       de: "Zurück zur Startseite",
       ru: "Вернуться на главную",
       hi: "होम पर वापस जाएं",
-      ch: "回到家"
+      ch: "回到家",
+      pt: "Voltar ao início"
     },
     "status.paid": {
       fr: "Paiement confirmé",
@@ -437,7 +464,8 @@ const useTranslation = () => {
       de: "Zahlung bestätigt",
       ru: "Платеж подтвержден",
       hi: "भुगतान की पुष्टि हुई",
-      ch: "付款已确认"
+      ch: "付款已确认",
+      pt: "Pagamento confirmado"
     },
     "status.expertContacted": {
       fr: "Expert contacté(e)",
@@ -446,7 +474,8 @@ const useTranslation = () => {
       de: "Experte kontaktiert",
       ru: "Эксперт связан",
       hi: "विशेषज्ञ से संपर्क किया गया",
-      ch: "已联系专家"
+      ch: "已联系专家",
+      pt: "Especialista contatado"
     },
     "status.callStarted": {
       fr: "Consultation démarrée",
@@ -455,7 +484,8 @@ const useTranslation = () => {
       de: "Beratung gestartet",
       ru: "Консультация начата",
       hi: "परामर्श शुरू हुआ",
-      ch: "咨询开始"
+      ch: "咨询开始",
+      pt: "Consulta iniciada"
     },
     "alert.missingDataTitle": {
       fr: "Données manquantes",
@@ -464,7 +494,8 @@ const useTranslation = () => {
       de: "Fehlende Daten",
       ru: "Отсутствующие данные",
       hi: "डेटा गायब है",
-      ch: "缺失数据"
+      ch: "缺失数据",
+      pt: "Dados ausentes"
     },
     "alert.missingDataText": {
       fr: "Veuillez sélectionner à nouveau un expert.",
@@ -473,7 +504,8 @@ const useTranslation = () => {
       de: "Bitte wählen Sie einen Experten erneut aus.",
       ru: "Пожалуйста, выберите эксперта снова.",
       hi: "कृपया फिर से एक विशेषज्ञ चुनें।",
-      ch: "请再次选择专家。"
+      ch: "请再次选择专家。",
+      pt: "Por favor, selecione um especialista novamente."
     },
     "alert.loginRequiredTitle": {
       fr: "Connexion requise",
@@ -482,7 +514,8 @@ const useTranslation = () => {
       de: "Anmeldung erforderlich",
       ru: "Требуется вход",
       hi: "लॉगिन आवश्यक है",
-      ch: "需要登录"
+      ch: "需要登录",
+      pt: "Login necessário"
     },
     "alert.loginRequiredText": {
       fr: "Connectez-vous pour lancer une consultation.",
@@ -491,7 +524,8 @@ const useTranslation = () => {
       de: "Melden Sie sich an, um eine Beratung zu starten.",
       ru: "Войдите для начала консультации.",
       hi: "परामर्श शुरू करने के लिए साइन इन करें।",
-      ch: "登录即可开始咨询。"
+      ch: "登录即可开始咨询。",
+      pt: "Faça login para iniciar uma consulta."
     },
     "banner.secure": {
       fr: "Paiement sécurisé",
@@ -500,7 +534,8 @@ const useTranslation = () => {
       de: "Sichere Zahlung",
       ru: "Безопасный платеж",
       hi: "सुरक्षित भुगतान",
-      ch: "安全支付"
+      ch: "安全支付",
+      pt: "Pagamento seguro"
     },
     "banner.ssl": {
       fr: "Données protégées par SSL. Appel lancé automatiquement après paiement.",
@@ -509,7 +544,8 @@ const useTranslation = () => {
       de: "Daten durch SSL geschützt. Anruf startet automatisch nach Zahlung.",
       ru: "Данные защищены SSL. Звонок начинается автоматически после оплаты.",
       hi: "SSL द्वारा सुरक्षित डेटा। भुगतान के बाद स्वचालित रूप से कॉल शुरू होती है।",
-      ch: "数据受 SSL 加密保护。付款后自动发起通话。"
+      ch: "数据受 SSL 加密保护。付款后自动发起通话。",
+      pt: "Dados protegidos por SSL. Chamada iniciada automaticamente após o pagamento."
     },
     "err.invalidConfig": {
       fr: "Configuration de paiement invalide",
@@ -518,7 +554,8 @@ const useTranslation = () => {
       de: "Ungültige Zahlungskonfiguration",
       ru: "Неверная конфигурация платежа",
       hi: "अमान्य भुगतान कॉन्फ़िगरेशन",
-      ch: "支付配置无效"
+      ch: "支付配置无效",
+      pt: "Configuração de pagamento inválida"
     },
     "err.unauth": {
       fr: "Utilisateur non authentifié",
@@ -527,7 +564,8 @@ const useTranslation = () => {
       de: "Nicht authentifizierter Benutzer",
       ru: "Неаутентифицированный пользователь",
       hi: "अप्रमाणित उपयोगकर्ता",
-      ch: "未经身份验证的用户"
+      ch: "未经身份验证的用户",
+      pt: "Usuário não autenticado"
     },
     "err.sameUser": {
       fr: "Vous ne pouvez pas réserver avec vous-même",
@@ -536,7 +574,8 @@ const useTranslation = () => {
       de: "Du kannst dich nicht selbst buchen",
       ru: "Вы не можете забронировать себя",
       hi: "आप स्वयं को बुक नहीं कर सकते",
-      ch: "你不能自己预订。"
+      ch: "你不能自己预订。",
+      pt: "Você não pode reservar a si mesmo"
     },
     "err.minAmount": {
       fr: "Montant minimum 5€",
@@ -545,7 +584,8 @@ const useTranslation = () => {
       de: "Mindestbetrag 5€",
       ru: "Минимальная сумма 5€",
       hi: "न्यूनतम राशि €5",
-      ch: "最低金额 €5"
+      ch: "最低金额 €5",
+      pt: "Valor mínimo €5"
     },
     "err.maxAmount": {
       fr: "Montant maximum 500€",
@@ -554,7 +594,8 @@ const useTranslation = () => {
       de: "Höchstbetrag 500€",
       ru: "Максимальная сумма 500€",
       hi: "अधिकतम राशि €500",
-      ch: "最高金额 500 欧元"
+      ch: "最高金额 500 欧元",
+      pt: "Valor máximo €500"
     },
     "err.amountMismatch": {
       fr: "Montant invalide. Merci de réessayer.",
@@ -563,7 +604,8 @@ const useTranslation = () => {
       de: "Ungültiger Betrag. Bitte versuchen Sie es erneut.",
       ru: "Неверная сумма. Пожалуйста, попробуйте снова.",
       hi: "अमान्य राशि। कृपया पुनः प्रयास करें।",
-      ch: "金额无效，请重试。"
+      ch: "金额无效，请重试。",
+      pt: "Valor inválido. Por favor, tente novamente."
     },
     "err.noClientSecret": {
       fr: "ClientSecret manquant",
@@ -572,7 +614,8 @@ const useTranslation = () => {
       de: "ClientSecret fehlt",
       ru: "ClientSecret отсутствует",
       hi: "ClientSecret गायब है",
-      ch: "缺少客户端密钥"
+      ch: "缺少客户端密钥",
+      pt: "ClientSecret ausente"
     },
     "err.noCardElement": {
       fr: "Champ carte introuvable",
@@ -581,7 +624,8 @@ const useTranslation = () => {
       de: "Kartenfeld nicht gefunden",
       ru: "Поле карты не найдено",
       hi: "कार्ड फ़ील्ड नहीं मिला",
-      ch: "未找到卡字段"
+      ch: "未找到卡字段",
+      pt: "Campo de cartão não encontrado"
     },
     "err.stripe": {
       fr: "Erreur de paiement Stripe",
@@ -590,7 +634,8 @@ const useTranslation = () => {
       de: "Stripe-Zahlungsfehler",
       ru: "Ошибка платежа Stripe",
       hi: "Stripe भुगतान त्रुटि",
-      ch: "条纹支付错误"
+      ch: "条纹支付错误",
+      pt: "Erro de pagamento Stripe"
     },
     "err.paymentFailed": {
       fr: "Le paiement a échoué",
@@ -599,7 +644,8 @@ const useTranslation = () => {
       de: "Zahlung fehlgeschlagen",
       ru: "Платеж не прошел",
       hi: "भुगतान विफल रहा",
-      ch: "付款失败"
+      ch: "付款失败",
+      pt: "Pagamento falhou"
     },
     "err.actionRequired": {
       fr: "Authentification supplémentaire requise",
@@ -608,7 +654,8 @@ const useTranslation = () => {
       de: "Zusätzliche Authentifizierung erforderlich",
       ru: "Требуется дополнительная аутентификация",
       hi: "अतिरिक्त प्रमाणीकरण आवश्यक है",
-      ch: "需要额外的身份验证"
+      ch: "需要额外的身份验证",
+      pt: "Autenticação adicional necessária"
     },
     "err.invalidMethod": {
       fr: "Méthode de paiement invalide",
@@ -617,7 +664,8 @@ const useTranslation = () => {
       de: "Ungültige Zahlungsmethode",
       ru: "Неверный способ оплаты",
       hi: "अमान्य भुगतान विधि",
-      ch: "付款方式无效"
+      ch: "付款方式无效",
+      pt: "Método de pagamento inválido"
     },
     "err.canceled": {
       fr: "Le paiement a été annulé",
@@ -626,7 +674,8 @@ const useTranslation = () => {
       de: "Zahlung wurde storniert",
       ru: "Платеж отменен",
       hi: "भुगतान रद्द किया गया",
-      ch: "付款已取消"
+      ch: "付款已取消",
+      pt: "O pagamento foi cancelado"
     },
     "err.unexpectedStatus": {
       fr: "Statut de paiement inattendu",
@@ -635,7 +684,8 @@ const useTranslation = () => {
       de: "Unerwarteter Zahlungsstatus",
       ru: "Неожиданный статус платежа",
       hi: "अप्रत्याशित भुगतान स्थिति",
-      ch: "意外的付款状态"
+      ch: "意外的付款状态",
+      pt: "Status de pagamento inesperado"
     },
     "err.genericPayment": {
       fr: "Une erreur est survenue lors du paiement",
@@ -644,7 +694,8 @@ const useTranslation = () => {
       de: "Während der Zahlung ist ein Fehler aufgetreten",
       ru: "При оплате произошла ошибка",
       hi: "भुगतान के दौरान एक त्रुटि हुई",
-      ch: "付款过程中发生错误"
+      ch: "付款过程中发生错误",
+      pt: "Ocorreu um erro durante o pagamento"
     },
     "err.invalidPhone": {
       fr: "Numéro de téléphone invalide",
@@ -653,9 +704,11 @@ const useTranslation = () => {
       de: "Ungültige Telefonnummer",
       ru: "Неверный номер телефона",
       hi: "अमान्य फ़ोन नंबर",
-      ch: "电话号码无效"
+      ch: "电话号码无效",
+      pt: "Número de telefone inválido"
     },
   };
+
 
   const t = (key: keyof typeof dict, fallback?: string) =>
     dict[key]?.[language] ?? fallback ?? String(key);
@@ -1792,25 +1845,28 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-600">
-                  {(() => {
-                    switch (language) {
-                      case "es":
-                        return "Servicio";
-                      case "de":
-                        return "Dienstleistung";
-                      case "ru":
-                        return "Услуга";
-                      case "en":
-                        return "Service";
-                      case "hi":
-                        return "सेवा";
-                      case "ch":
-                        return "服务";
-                      case "fr":
-                      default:
-                        return "Service";
-                    }
-                  })()}
+                {(() => {
+  switch (language) {
+    case "es":
+      return "Servicio";
+    case "de":
+      return "Dienstleistung";
+    case "ru":
+      return "Услуга";
+    case "en":
+      return "Service";
+    case "hi":
+      return "सेवा";
+    case "ch":
+      return "服务";
+    case "pt":
+      return "Serviço";
+    case "fr":
+    default:
+      return "Service";
+  }
+})()}
+
                 </span>
                 <span className="font-medium text-gray-800 text-xs">
                   {serviceTypeDisplay}
@@ -1818,25 +1874,27 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-600">
-                  {(() => {
-                    switch (language) {
-                      case "es":
-                        return "Duración";
-                      case "de":
-                        return "Dauer";
-                      case "ru":
-                        return "Продолжительность";
-                      case "en":
-                        return "Duration";
-                      case "hi":
-                        return "अवधि";
-                      case "ch":
-                        return "期间";
-                      case "fr":
-                      default:
-                        return "Durée";
-                    }
-                  })()}
+                {(() => {
+  switch (language) {
+    case "es":
+      return "Duración";
+    case "de":
+      return "Dauer";
+    case "ru":
+      return "Продолжительность";
+    case "en":
+      return "Duration";
+    case "hi":
+      return "अवधि";
+    case "ch":
+      return "期间";
+    case "pt":
+      return "Duração";
+    case "fr":
+    default:
+      return "Durée";
+  }
+})()}
                 </span>
                 <span className="font-medium text-gray-800 text-xs">
                   {adminPricing.duration} min
@@ -1846,25 +1904,27 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
               <div className="border-t-2 border-gray-400 pt-2 mt-2">
                 <div className="flex justify-between items-center">
                   <span className="font-bold text-gray-900">
-                    {(() => {
-                      switch (language) {
-                        case "es":
-                          return "Total";
-                        case "de":
-                          return "Gesamt";
-                        case "ru":
-                          return "Итого";
-                        case "hi":
-                          return "कुल";
-                        case "en":
-                          return "Total";
-                        case "ch":
-                          return "全部的";
-                        case "fr":
-                        default:
-                          return "Total";
-                      }
-                    })()}
+                 {(() => {
+  switch (language) {
+    case "es":
+      return "Total";
+    case "de":
+      return "Gesamt";
+    case "ru":
+      return "Итого";
+    case "hi":
+      return "कुल";
+    case "en":
+      return "Total";
+    case "ch":
+      return "全部的";
+    case "pt":
+      return "Total";
+    case "fr":
+    default:
+      return "Total";
+  }
+})()}
                   </span>
                   <span
                     className="text-lg font-black bg-gradient-to-r from-red-500 to-pink-600 bg-clip-text text-transparent"
@@ -1906,26 +1966,27 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
                 <Lock className="w-5 h-5" aria-hidden="true" />
                 <span>
                   {/* {language === "fr" ? "Payer " : "Pay "} */}
-                  {(() => {
-                    switch (language) {
-                      case "es":
-                        return "Pagar ";
-                      case "de":
-                        return "Zahlen ";
-                      case "ru":
-                        return "Оплатить ";
-                      case "hi":
-                        return "भुगतान ";
-                      case "en":
-                        return "Pay ";
-                      case "en":
-                        return "支付 ";
-                      case "fr":
-
-                      default:
-                        return "Payer ";
-                    }
-                  })()}
+               {(() => {
+  switch (language) {
+    case "es":
+      return "Pagar ";
+    case "de":
+      return "Zahlen ";
+    case "ru":
+      return "Оплатить ";
+    case "hi":
+      return "भुगतान ";
+    case "en":
+      return "Pay ";
+    case "ch":
+      return "支付 ";
+    case "pt":
+      return "Pagar ";
+    case "fr":
+    default:
+      return "Payer ";
+  }
+})()}
                   {new Intl.NumberFormat(
                     language === "fr" ? "fr-FR" : "en-US",
                     {
@@ -2516,23 +2577,27 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({
                   <span>{adminPricing.duration} min</span>
                   <span>•</span>
                   <span className="text-green-600 font-medium">
-                    {(() => {
-                      switch (language) {
-                        case "es":
-                          return "Disponible";
-                        case "de":
-                          return "Verfügbar";
-                        case "ru":
-                          return "Доступно";
-                        case "en":
-                          return "Available";
-                        case "hi":
-                          return "उपलब्ध";
-                        case "fr":
-                        default:
-                          return "Disponible";
-                      }
-                    })()}
+               {(() => {
+  switch (language) {
+    case "es":
+      return "Disponible";
+    case "de":
+      return "Verfügbar";
+    case "ru":
+      return "Доступно";
+    case "en":
+      return "Available";
+    case "hi":
+      return "उपलब्ध";
+    case "ch":
+      return "可用";
+    case "pt":
+      return "Disponível";
+    case "fr":
+    default:
+      return "Disponible";
+  }
+})()}
                   </span>
                 </div>
               </div>
