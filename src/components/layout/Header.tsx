@@ -50,7 +50,7 @@ declare global {
 }
 
 interface Language {
-  code: "fr" | "en" | "es" | "ru" | "de" | "hi" | "pt" | "ch";
+  code: "fr" | "en" | "es" | "ru" | "de" | "hi" | "pt" | "ch" | "ar";
   name: string;
   nativeName: string;
   flag: React.ReactNode;
@@ -244,6 +244,21 @@ const PortugueseFlag = memo(() => (
 ));
 PortugueseFlag.displayName = "PortugueseFlag";
 
+const ArabicFlag = memo(() => (
+  <div className="relative p-1 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg ring-1 ring-white/20" role="img" aria-label="العلم العربي">
+    <div className="w-6 h-4 rounded-md overflow-hidden shadow-sm flex flex-col">
+      <div className="w-full h-1/3 bg-black"></div>
+      <div className="w-full h-1/3 bg-white"></div>
+      <div className="w-full h-1/3 bg-green-600"></div>
+      <div className="absolute inset-0 flex items-center">
+        <div className="w-1/4 h-full bg-red-600"></div>
+      </div>
+    </div>
+    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-lg pointer-events-none"></div>
+  </div>
+));
+ArabicFlag.displayName = "ArabicFlag";
+
 /** ================================
  *  i18n Config
  *  ================================ */
@@ -255,7 +270,8 @@ const SUPPORTED_LANGUAGES: Language[] = [
   { code: "de", name: "German", nativeName: "Deutsch", flag: <GermanFlag /> },
   { code: "hi", name: "Hindi", nativeName: "हिंदी", flag: <IndianFlag /> },
   { code: "pt", name: "Portuguese", nativeName: "Português", flag: <PortugueseFlag /> },
-  { code: "ch", name: "Chinese", nativeName: "中国人", flag: <ChineseFlag /> }
+  { code: "ch", name: "Chinese", nativeName: "中国人", flag: <ChineseFlag /> },
+  { code: "ar", name: "Arabic", nativeName: "العربية", flag: <ArabicFlag /> }
 ];
 
 const LEFT_NAVIGATION_ITEMS: NavigationItem[] = [
@@ -632,7 +648,7 @@ const LanguageDropdown = memo<{
   }, []);
 
   const handleLanguageChange = useCallback(
-    (langCode: "fr" | "en" | "es" | "ru" | "de" | "hi" | "pt" | "ch") => {
+    (langCode: "fr" | "en" | "es" | "ru" | "de" | "hi" | "pt" | "ch" | "ar") => {
       setLanguage(langCode);
       setOpen(false);
       window.gtag?.("event", "language_change", {
@@ -972,6 +988,7 @@ const t = {
     : language === "ru" ? "Войти"
     : language === "hi" ? "लॉगिन"
     : language === "ch" ? "登录"
+    : language === "ar" ? "تسجيل الدخول"
     : "Login",
     
   signup:
@@ -982,6 +999,7 @@ const t = {
     : language === "ru" ? "Зарегистрироваться"
     : language === "hi" ? "साइन अप करें"
     : language === "ch" ? "报名"
+    : language === "ar" ? "التسجيل"
     : "Sign up",
     
   dashboard:
@@ -992,6 +1010,7 @@ const t = {
     : language === "ru" ? "Панель управления"
     : language === "hi" ? "डैशबोर्ड"
     : language === "ch" ? "仪表板"
+    : language === "ar" ? "لوحة التحكم"
     : "Dashboard",
     
   adminConsole:
@@ -1002,6 +1021,7 @@ const t = {
     : language === "ru" ? "Консоль администратора"
     : language === "hi" ? "एडमिन कंसोल"
     : language === "ch" ? "管理控制台"
+    : language === "ar" ? "وحدة التحكم الإدارية"
     : "Admin Console",
     
   logout:
@@ -1012,8 +1032,10 @@ const t = {
     : language === "ru" ? "Выйти"
     : language === "hi" ? "लॉग आउट"
     : language === "ch" ? "退出"
+    : language === "ar" ? "تسجيل الخروج"
     : "Logout",
 };
+
 
 
 
@@ -1240,11 +1262,11 @@ const Header: React.FC = () => {
     setIsMenuOpen(false);
   }, [location.pathname]);
 
- const getNavigationLabel = useCallback(
+const getNavigationLabel = useCallback(
   (labelKey: string): string => {
     const translations: Record<
       string,
-      Record<"fr" | "en" | "es" | "pt" | "ru" | "de" | "hi" | "ch", string>
+      Record<"fr" | "en" | "es" | "pt" | "ru" | "de" | "hi" | "ch" | "ar", string>
     > = {
       "nav.home": {
         fr: "Accueil",
@@ -1255,6 +1277,7 @@ const Header: React.FC = () => {
         de: "Startseite",
         hi: "होम",
         ch: "家",
+        ar: "الرئيسية"
       },
       "nav.viewProfiles": {
         fr: "Profils aidants",
@@ -1264,7 +1287,8 @@ const Header: React.FC = () => {
         ru: "Профили помощников",
         de: "Helferprofile",
         hi: "सहायक प्रोफाइल",
-        ch: "助手资料"
+        ch: "助手资料",
+        ar: "ملفات المساعدين"
       },
       "nav.testimonials": {
         fr: "Avis",
@@ -1274,7 +1298,8 @@ const Header: React.FC = () => {
         ru: "Отзывы",
         de: "Bewertungen",
         hi: "समीक्षाएं",
-        ch: "评论"
+        ch: "评论",
+        ar: "التقييمات"
       },
       "nav.howItWorks": {
         fr: "Comment ça marche",
@@ -1284,7 +1309,8 @@ const Header: React.FC = () => {
         ru: "Как это работает",
         de: "Wie es funktioniert",
         hi: "यह कैसे काम करता है",
-        ch: "它是如何运作的"
+        ch: "它是如何运作的",
+        ar: "كيف يعمل"
       },
       "nav.pricing": {
         fr: "Tarifs",
@@ -1294,7 +1320,8 @@ const Header: React.FC = () => {
         ru: "Тарифы",
         de: "Preise",
         hi: "मूल्य निर्धारण",
-        ch: "定价"
+        ch: "定价",
+        ar: "التسعير"
       },
     };
 
@@ -1302,6 +1329,7 @@ const Header: React.FC = () => {
   },
   [language]
 );
+
 
 
   const t = { sosCall: language === "fr" ? "SOS Appel" : "SOS Call" };

@@ -21,6 +21,7 @@ import deMessages from "./helper/de.json";
 import hiMessages from "./helper/hi.json";
 import ptMessages from "./helper/pt.json";
 import chMessages from "./helper/ch.json";
+import arMessages from './helper/ar.json';
 import { useApp } from "./contexts/AppContext";
 
 // --------------------------------------------
@@ -96,7 +97,8 @@ const messages = {
   de: deMessages,
   hi: hiMessages,
   pt: ptMessages,
-  ch: chMessages
+  ch: chMessages,
+  ar: arMessages,
 };
 
 // --------------------------------------------
@@ -250,8 +252,7 @@ const DefaultHelmet: React.FC<{ pathname: string }> = ({ pathname }) => {
   );
 };
 
-type Locale = "en" | "es" | "fr" | "de" | "ru" | "pt" | "hi";
-// --------------------------------------------
+type Locale = "en" | "es" | "fr" | "de" | "ru" | "pt" | "hi" | "ch" | "ar"; // --------------------------------------------
 // App
 // --------------------------------------------
 const App: React.FC = () => {
