@@ -69,11 +69,24 @@ const PrivacyPolicy: React.FC = () => {
   // Local toggle without changing global app language
   const [selectedLanguage, setSelectedLanguage] = useState<
     "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt" | "ch" | "ar"
-  >((language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt" | "ch" | "ar") || "fr");
+  >(
+    (language as
+      | "fr"
+      | "en"
+      | "es"
+      | "de"
+      | "ru"
+      | "hi"
+      | "pt"
+      | "ch"
+      | "ar") || "fr"
+  );
 
   useEffect(() => {
     if (language)
-      setSelectedLanguage(language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt" | "ch" | "ar");
+      setSelectedLanguage(
+        language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt" | "ch" | "ar"
+      );
   }, [language]);
 
   // --- Static texts / i18n ---
@@ -246,40 +259,38 @@ const PrivacyPolicy: React.FC = () => {
       },
 
       pt: {
-  title: "Política de Privacidade",
-  subtitle: "Sua privacidade é nossa prioridade",
-  lastUpdated: "Versão 2.2 – Última atualização: 16 de junho de 2025",
-  dataCollection: "Coleta de dados",
-  dataProtection: "Proteção de dados",
-  dataSharing: "Compartilhamento de dados",
-  yourRights: "Seus direitos",
-  contact: "Contato",
-  dataCollectionContent:
-    "Coletamos apenas as informações necessárias para fornecer nossos serviços. Isso inclui seus dados de contato, metadados técnicos (chamadas, mensagens) e detalhes necessários para sua solicitação.",
-  dataProtectionContent:
-    "Seus dados são criptografados em trânsito e armazenamento e protegidos com segurança. Aplicamos medidas técnicas e organizacionais para evitar acesso não autorizado.",
-  dataSharingContent:
-    "Nunca vendemos seus dados pessoais. Compartilhamos apenas as informações necessárias com fornecedores verificados (pagamentos, telefonia, hospedagem) para fornecer o serviço solicitado.",
-  rights: [
-    "Direito de acesso",
-    "Direito de retificação",
-    "Direito de exclusão (dentro das limitações legais)",
-    "Direito de portabilidade de dados",
-    "Direito de oposição e limitação",
-  ],
-  contactContent:
-    "Para perguntas ou para exercer seus direitos, use o formulário abaixo.",
-  features: [
-    "Criptografia",
-    "Transparência",
-    "Controle do usuário",
-    "Sem revenda de dados",
-  ],
-  contactCta: "Formulário de contato",
-  editHint: "Documento editável no console do administrador (PT)",
-}
-,
-
+        title: "Política de Privacidade",
+        subtitle: "Sua privacidade é nossa prioridade",
+        lastUpdated: "Versão 2.2 – Última atualização: 16 de junho de 2025",
+        dataCollection: "Coleta de dados",
+        dataProtection: "Proteção de dados",
+        dataSharing: "Compartilhamento de dados",
+        yourRights: "Seus direitos",
+        contact: "Contato",
+        dataCollectionContent:
+          "Coletamos apenas as informações necessárias para fornecer nossos serviços. Isso inclui seus dados de contato, metadados técnicos (chamadas, mensagens) e detalhes necessários para sua solicitação.",
+        dataProtectionContent:
+          "Seus dados são criptografados em trânsito e armazenamento e protegidos com segurança. Aplicamos medidas técnicas e organizacionais para evitar acesso não autorizado.",
+        dataSharingContent:
+          "Nunca vendemos seus dados pessoais. Compartilhamos apenas as informações necessárias com fornecedores verificados (pagamentos, telefonia, hospedagem) para fornecer o serviço solicitado.",
+        rights: [
+          "Direito de acesso",
+          "Direito de retificação",
+          "Direito de exclusão (dentro das limitações legais)",
+          "Direito de portabilidade de dados",
+          "Direito de oposição e limitação",
+        ],
+        contactContent:
+          "Para perguntas ou para exercer seus direitos, use o formulário abaixo.",
+        features: [
+          "Criptografia",
+          "Transparência",
+          "Controle do usuário",
+          "Sem revenda de dados",
+        ],
+        contactCta: "Formulário de contato",
+        editHint: "Documento editável no console do administrador (PT)",
+      },
       hi: {
         title: "गोपनीयता नीति",
         subtitle: "आपकी गोपनीयता हमारी प्राथमिकता है",
@@ -313,7 +324,70 @@ const PrivacyPolicy: React.FC = () => {
         contactCta: "संपर्क फॉर्म",
         editHint: "एडमिन कंसोल से संपादन योग्य दस्तावेज़ (HI)",
       },
+
+      ar: {
+        title: "سياسة الخصوصية",
+        subtitle: "خصوصيتك هي أولويتنا",
+        lastUpdated: "الإصدار 2.2 – آخر تحديث: 16 يونيو 2025",
+        dataCollection: "جمع البيانات",
+        dataProtection: "حماية البيانات",
+        dataSharing: "مشاركة البيانات",
+        yourRights: "حقوقك",
+        contact: "اتصل",
+        dataCollectionContent:
+          "نجمع فقط المعلومات الضرورية لتقديم خدمات المساعدة لدينا. يتضمن ذلك معلومات الاتصال الخاصة بك، البيانات الوصفية التقنية (المكالمات، الرسائل) والتفاصيل الضرورية لطلبك.",
+        dataProtectionContent:
+          "يتم تشفير بياناتك أثناء النقل والتخزين عند الإمكان ويتم تخزينها بشكل آمن. يتم تنفيذ تدابير تقنية وتنظيمية لمنع أي وصول غير مصرح به.",
+        dataSharingContent:
+          "لا نبيع بياناتك الشخصية أبداً. نشارك فقط المعلومات الضرورية مع مقدمي خدمات معروفين (المدفوعات، الهاتف، الاستضافة) لتقديم الخدمة المطلوبة.",
+        rights: [
+          "الحق في الوصول إلى بياناتك",
+          "الحق في التصحيح",
+          "الحق في الحذف (ضمن الحدود القانونية)",
+          "حق نقل البيانات",
+          "الحق في الاعتراض والحد",
+        ],
+        contactContent:
+          "لأي استفسارات أو لممارسة حقوقك، استخدم النموذج المخصص أدناه.",
+        features: [
+          "التشفير",
+          "الشفافية",
+          "التحكم من قبل المستخدم",
+          "عدم إعادة بيع البيانات",
+        ],
+        contactCta: "نموذج الاتصال",
+        editHint: "مستند قابل للتحرير من وحدة التحكم الإدارية (FR/EN/AR)",
+      },
+
+      ch: {
+        title: "隐私政策",
+        subtitle: "您的隐私是我们的优先事项",
+        lastUpdated: "版本 2.2 – 最后更新：2025年6月16日",
+        dataCollection: "数据收集",
+        dataProtection: "数据保护",
+        dataSharing: "数据共享",
+        yourRights: "您的权利",
+        contact: "联系",
+        dataCollectionContent:
+          "我们仅收集提供协助服务所需的信息。这包括您的联系信息、技术元数据（通话、消息传递）和对您请求至关重要的详细信息。",
+        dataProtectionContent:
+          "您的数据在传输和存储时进行加密（如果可能）并以安全的方式存储。我们实施技术和组织措施以防止任何未经授权的访问。",
+        dataSharingContent:
+          "我们从不出售您的个人数据。我们仅与经过验证的服务提供商（支付、电话、托管）共享必要的信息以提供请求的服务。",
+        rights: [
+          "访问您数据的权利",
+          "更正权",
+          "删除权（在法律限制内）",
+          "数据可携带权",
+          "异议和限制权",
+        ],
+        contactContent: "如有任何问题或要行使您的权利，请使用下面的专用表格。",
+        features: ["加密", "透明性", "用户控制", "不转售数据"],
+        contactCta: "联系表单",
+        editHint: "可从管理控制台编辑文档 (FR/EN/CH)",
+      },
     }),
+
     []
   );
 
@@ -631,18 +705,18 @@ http://localhost:5174/contact
 `;
 
   // const defaultContent = selectedLanguage === "fr" ? defaultFr : defaultEn;
-  const defaultContent = 
-  selectedLanguage === "fr" 
-    ? defaultFr 
-    : selectedLanguage === "es"
-    ? texts.es.title // Use Spanish default if you have it
-    : selectedLanguage === "de"
-    ? texts.de.title // Use German default if you have it
-    : selectedLanguage === "ru"
-    ? texts.ru.title // Use Russian default if you have it
-    : selectedLanguage === "hi"
-    ? defaultHi
-    : defaultEn;
+  const defaultContent =
+    selectedLanguage === "fr"
+      ? defaultFr
+      : selectedLanguage === "es"
+        ? texts.es.title // Use Spanish default if you have it
+        : selectedLanguage === "de"
+          ? texts.de.title // Use German default if you have it
+          : selectedLanguage === "ru"
+            ? texts.ru.title // Use Russian default if you have it
+            : selectedLanguage === "hi"
+              ? defaultHi
+              : defaultEn;
 
   return (
     <Layout>
