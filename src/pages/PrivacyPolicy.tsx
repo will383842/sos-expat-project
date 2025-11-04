@@ -55,6 +55,7 @@ type Translations = {
   ru: TranslationUnit;
   hi: TranslationUnit;
   pt: TranslationUnit;
+  ch: TranslationUnit;
 };
 
 const PrivacyPolicy: React.FC = () => {
@@ -68,6 +69,7 @@ const PrivacyPolicy: React.FC = () => {
 
   // Local toggle without changing global app language
   const [selectedLanguage, setSelectedLanguage] = useState<
+
     "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt" | "ch" | "ar"
   >(
     (language as
@@ -367,25 +369,31 @@ const PrivacyPolicy: React.FC = () => {
         dataProtection: "数据保护",
         dataSharing: "数据共享",
         yourRights: "您的权利",
-        contact: "联系",
+        contact: "联系方式",
         dataCollectionContent:
-          "我们仅收集提供协助服务所需的信息。这包括您的联系信息、技术元数据（通话、消息传递）和对您请求至关重要的详细信息。",
+          "我们仅收集提供协助服务所需的信息。这包括您的联系方式、技术元数据（通话、消息）以及处理您的请求所必需的详细信息。",
         dataProtectionContent:
-          "您的数据在传输和存储时进行加密（如果可能）并以安全的方式存储。我们实施技术和组织措施以防止任何未经授权的访问。",
+          "您的数据在传输和存储时（在可能的情况下）均经过加密并安全保存。我们采取技术和组织措施以防止未经授权的访问。",
         dataSharingContent:
-          "我们从不出售您的个人数据。我们仅与经过验证的服务提供商（支付、电话、托管）共享必要的信息以提供请求的服务。",
+          "我们绝不会出售您的个人数据。我们仅与经过审核的服务提供商（支付、通信、托管）共享提供所请求服务所必需的信息。",
         rights: [
-          "访问您数据的权利",
+          "访问权",
           "更正权",
-          "删除权（在法律限制内）",
-          "数据可携带权",
-          "异议和限制权",
+          "删除权（在法律允许范围内）",
+          "数据可携权",
+          "反对与限制处理权",
         ],
-        contactContent: "如有任何问题或要行使您的权利，请使用下面的专用表格。",
-        features: ["加密", "透明性", "用户控制", "不转售数据"],
+        contactContent:
+          "如有疑问或希望行使您的权利，请使用下方的表单。",
+        features: [
+          "数据加密",
+          "透明性",
+          "用户控制",
+          "不转售数据",
+        ],
         contactCta: "联系表单",
-        editHint: "可从管理控制台编辑文档 (FR/EN/CH)",
-      },
+        editHint: "可从管理控制台编辑文档（英文/法文）",
+      }
     }),
 
     []
@@ -453,7 +461,7 @@ const PrivacyPolicy: React.FC = () => {
   }, [selectedLanguage]);
 
   const handleLanguageChange = (
-    newLang: "fr" | "en" | "es" | "de" | "ru" | "hi"
+    newLang: "fr" | "en" | "es" | "de" | "ru" | "hi" | "ch"
   ) => {
     setSelectedLanguage(newLang);
   };
@@ -704,19 +712,56 @@ No **data resale**. Limited sharing with **vetted** processors to provide the se
 http://localhost:5174/contact
 `;
 
+const defaultCh = `
+  ${t.title}
+
+  ${t.lastUpdated}
+
+  1. ${t.dataCollection}
+
+  我们仅收集为提供服务所严格必要的数据（联系方式、技术元数据、请求详情）。
+
+  2. ${t.dataProtection}
+
+  在可能的情况下，对数据进行传输中和静态存储时的加密。采用严格的技术和组织安全措施。
+
+  3. ${t.dataSharing}
+
+  不进行数据转售。仅与经过审查的处理方有限共享，以提供服务。
+
+  4. ${t.yourRights}
+
+  ${t.rights[0]}
+
+  ${t.rights[1]}
+
+  ${t.rights[2]}
+
+  ${t.rights[3]}
+
+  ${t.rights[4]}
+
+  5. ${t.contact}
+
+  http://localhost:5174/contact
+`
+
   // const defaultContent = selectedLanguage === "fr" ? defaultFr : defaultEn;
-  const defaultContent =
-    selectedLanguage === "fr"
-      ? defaultFr
-      : selectedLanguage === "es"
-        ? texts.es.title // Use Spanish default if you have it
-        : selectedLanguage === "de"
-          ? texts.de.title // Use German default if you have it
-          : selectedLanguage === "ru"
-            ? texts.ru.title // Use Russian default if you have it
-            : selectedLanguage === "hi"
-              ? defaultHi
-              : defaultEn;
+
+  const defaultContent = 
+  selectedLanguage === "fr" 
+    ? defaultFr 
+    : selectedLanguage === "es"
+    ? texts.es.title // Use Spanish default if you have it
+    : selectedLanguage === "de"
+    ? texts.de.title // Use German default if you have it
+    : selectedLanguage === "ru"
+    ? texts.ru.title // Use Russian default if you have it
+    : selectedLanguage === "hi"
+    ? defaultHi
+    : selectedLanguage === "ch"
+    ? defaultCh
+    : defaultEn;
 
   return (
     <Layout>
