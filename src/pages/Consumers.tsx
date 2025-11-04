@@ -28,14 +28,14 @@ const Consumers: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [selectedLanguage, setSelectedLanguage] = useState<
-    "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt"
-  >((language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt") || "fr");
+    "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt" | "ch"
+  >((language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt" | "ch") || "fr");
 
   // Rester synchronisé avec la langue globale de l'app
   useEffect(() => {
     if (language)
       setSelectedLanguage(
-        language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt"
+        language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt" | "ch"
       );
   }, [language]);
 
@@ -314,6 +314,39 @@ const Consumers: React.FC = () => {
       contactHeader: "Contato",
       contactFormLabel: "Formulário de contato",
     },
+    ch:{
+        title: "消费者信息",
+        subtitle: "您的权利与保护 — 国际平台",
+        lastUpdated: "版本 2.2 – 最后更新：2025年6月16日",
+        loading: "加载中...",
+        features: [
+          "自动退款",
+          "以欧元和美元定价",
+          "消费者权利",
+          "24/7 全天候支持",
+        ],
+        anchorTitle: "概览",
+        contactCta: "联系我们",
+        editHint: "此文档可在管理控制台中编辑",
+        sections: {
+          rights: "您的消费者权利",
+          refunds: "退款政策",
+          prices: "价格透明度（欧元 / 美元）",
+          mediation: "调解与投诉",
+          support: "客户服务",
+          contact: "联系",
+        },
+        lawyerCall: "律师咨询",
+        expatHelperCall: "外籍人士协助通话",
+        forMinutes20: "20 分钟",
+        forMinutes30: "30 分钟",
+        eurDisplay: "可选择以欧元或美元显示和支付。",
+        usdDisplay: "金额为参考值；可能适用支付处理方的汇率/手续费。",
+        serviceHours:
+          "服务时间：全天候（24/7）• 回复时间：24小时内。任何请求请使用我们的联系表单。",
+        contactHeader: "联系",
+        contactFormLabel: "联系表单",
+      }
   };
 
   const t = translations[selectedLanguage];
@@ -871,6 +904,48 @@ const defaultPt = `
 Formulário de contato (suporte e solicitações legais): http://localhost:5174/contact
 `;
 
+const defaultCh = `
+    消费者信息（全球）
+
+    版本 2.2 – 最后更新：2025年6月16日
+
+    1. 您的消费者权利
+
+    1.1. 有关服务、价格和条件的清晰信息。
+    1.2. 在适用的强制性当地法律规定下享有撤销权（请参阅与服务提供方及平台的实施条件）。
+    1.3. 享有防止不公平或误导性商业行为的保护。
+    1.4. 通过联系表单获得响应迅速的客户服务访问权。
+
+    2. 退款政策
+
+    2.1. 自动退款：如果您的专家在预期时间内 3 次通话尝试后仍未接听，预订将被取消，您将获得全额退款。
+    2.2. 其他情况：请在通话后 24 小时内 通过联系表单联系支持团队，以便我们审核您的请求。
+
+    3. 价格透明度（欧元 / 美元）
+
+    3.1. 律师咨询电话：€49（欧元） / $49（美元），20 分钟（含税）。
+    3.2. 外籍人士协助通话：€19（欧元） / $19（美元），30 分钟（含税）。
+    3.3. 无隐藏费用；显示的价格在适用情况下包含技术连接费用。
+    3.4. 可在结账时选择以 美元（USD） 显示和支付；支付处理方的汇率/手续费可能适用。
+
+    4. 调解与投诉
+
+    4.1. 通过联系表单获取支持：http://localhost:5174/contact
+
+    4.2. 消费者调解：您可以联系所在国家的主管调解机构。
+    4.3. 欧盟ODR平台：您可以使用在线争议解决机制。
+
+    5. 客户服务（国际）
+
+    5.1. 服务时间：全天候（24/7）
+    5.2. 回复时间：24小时内
+    5.3. 联系方式：请使用联系表单：http://localhost:5174/contact
+
+    6. 联系方式
+
+    联系表单（支持与法律请求）：http://localhost:5174/contact
+`
+
 
   // const defaultContent = selectedLanguage === "fr" ? defaultFr : defaultEn;
   const defaultContent =
@@ -886,6 +961,8 @@ Formulário de contato (suporte e solicitações legais): http://localhost:5174/
               ? defaultHi 
               : selectedLanguage === "pt"
                 ? defaultPt 
+                : selectedLanguage === "ch"
+                ? defaultCh
               : defaultEn;
 
   // Sommaire

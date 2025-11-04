@@ -1252,6 +1252,7 @@
   "registerClient.success.emailValid": "邮箱正确！👌",
   "registerClient.success.passwordValid": "密码已确认！🔒",
   "registerClient.success.allFieldsValid": "一切就绪！准备起飞 🚀",
+  "registerExpat.selectedLanguages": "选定的语言",
 
   "registerExpat.meta.title": "注册海外助理 • SOS Expats",
   "registerExpat.meta.description": "分享您的经验，提供帮助，让海外生活更轻松 ✨",
