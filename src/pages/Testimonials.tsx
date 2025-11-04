@@ -2954,34 +2954,7 @@ const Testimonials: React.FC = () => {
           </div>
 
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center">
-            {/* Language Selector */}
-            {/* <div className="flex justify-end mb-8"> */}
-            {/* <div className="relative"> */}
-            {/* <label htmlFor="language-selector" className="sr-only"> */}
-            {/* {t.aria.languageSelector} */}
-            {/* <FormattedMessage id="testimonials.aria.languageSelector" /> */}
-            {/* </label> */}
-            {/* <select
-                  id="language-selector"
-                  value={currentLanguage}
-                  onChange={(e) => handleLanguageChange(e.target.value)}
-                  className={`bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-white/40 transition-all duration-300 ${
-                    isLoading ? "opacity-50 cursor-wait" : "hover:bg-white/20"
-                  }`}
-                  aria-label={t.aria.languageSelector}
-                  disabled={isLoading}
-                >
-                  <option value="fr">🇫🇷 Français</option>
-                  <option value="en">🇺🇸 English</option>
-                  <option value="es">🇪🇸 Español</option>
-                </select> */}
-            {/* {isLoading && (
-                  <div className="absolute inset-y-0 right-2 flex items-center">
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  </div>
-                )} */}
-            {/* </div> */}
-            {/* </div> */}
+
 
             {/* Badge */}
             <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-full px-4 sm:px-6 py-2 sm:py-3 border border-white/20 mb-6 sm:mb-8">
@@ -3137,35 +3110,25 @@ const Testimonials: React.FC = () => {
                   <div className="text-2xl font-black text-gray-900">
                     {filteredTestimonials.length}
                   </div>
-                  {/* <div className="text-gray-600">
-                    {filter === "all"
-                      ?  t.filters.all.toLowerCase()
-                      : filter === "avocat"
-                        ? t.filters.lawyers.toLowerCase()
-                        : t.filters.expats.toLowerCase()}
-                  </div> */}
-
                   <div className="text-gray-600">
                     {filter === "all" ? (
                       <FormattedMessage id="testy.filters.all" />
-                    ) : // t.filters.all.toLowerCase()
+                    ) : 
                     filter === "avocat" ? (
                       <FormattedMessage id="testy.filters.lawyers" />
                     ) : (
-                      // t.filters.lawyers.toLowerCase()
                       <FormattedMessage id="testy.filters.expats" />
 
-                      // t.filters.expats.toLowerCase()
                     )}
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2 text-sm text-gray-500">
                   <span>
-                    {/* {t.stats.showing} */}
+                  
                     <FormattedMessage id="testy.stats.showing" />
                     {STATS_TOTAL_TESTIMONIALS}
-                    {/* {t.stats.total} */}
+                
                     <FormattedMessage id="testy.stats.total" />
                   </span>
                   <div className="w-1 h-1 bg-gray-400 rounded-full" />
@@ -3484,15 +3447,6 @@ const Testimonials: React.FC = () => {
           </div>
         </section>
 
-        {/* Floating Back to Top Button */}
-        {/* <button
-          onClick={smoothScrollToTop}
-          className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 w-14 h-14 flex items-center justify-center touch-manipulation"
-          style={{ display: "block" }}
-          aria-label={intl.formatMessage({ id: "testy.aria.backToTop" })}
-        >
-          <ChevronRight className="w-5 h-5 rotate-[-90deg]" />
-        </button> */}
       </div>
     </Layout>
   );

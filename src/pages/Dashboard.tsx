@@ -1123,96 +1123,107 @@ const Dashboard: React.FC = () => {
 
                 <nav className="p-4">
                   <ul className="space-y-2">
-                    {[
-                      {
-                        key: "profile",
-                        icon: <User className="mr-3 h-5 w-5" />,
-                        fr: "Mon profil",
-                        en: "My profile",
-                        es: "Mi perfil",
-                        de: "Mein Profil",
-                        ru: "Мой профиль",
-                        hi: "मेरी प्रोफ़ाइल",
-                        ch: "我的个人资料"
-                      },
-                      {
-                        key: "settings",
-                        icon: <Settings className="mr-3 h-5 w-5" />,
-                        fr: "Paramètres",
-                        en: "Settings",
-                        es: "Configuración",
-                        de: "Einstellungen",
-                        ru: "Настройки",
-                        hi: "सेटिंग्स",
-                        ch: "设置"
-                      },
-                      {
-                        key: "calls",
-                        icon: <Phone className="mr-3 h-5 w-5" />,
-                        fr: "Mes appels",
-                        en: "My calls",
-                        es: "Mis llamadas",
-                        de: "Meine Anrufe",
-                        ru: "Мои звонки",
-                        hi: "मेरी कॉलें",
-                        ch: "我的来电"
-                      },
-                      {
-                        key: "invoices",
-                        icon: <FileText className="mr-3 h-5 w-5" />,
-                        fr: "Mes factures",
-                        en: "My invoices",
-                        es: "Mis facturas",
-                        de: "Meine Rechnungen",
-                        ru: "Мои счета",
-                        hi: "मेरे बिल",
-                        ch: "我的发票"
-                      },
-                      {
-                        key: "reviews",
-                        icon: <Star className="mr-3 h-5 w-5" />,
-                        fr: "Mes avis",
-                        en: "My reviews",
-                        es: "Mis reseñas",
-                        de: "Meine Bewertungen",
-                        ru: "Мои отзывы",
-                        hi: "मेरी समीक्षाएं",
-                        ch: "我的评论"
-                      },
-                      {
-                        key: "notifications",
-                        icon: <Bell className="mr-3 h-5 w-5" />,
-                        fr: "Notifications",
-                        en: "Notifications",
-                        es: "Notificaciones",
-                        de: "Benachrichtigungen",
-                        ru: "Уведомления",
-                        hi: "सूचनाएं",
-                        ch: "通知"
-                      },
-                      {
-                        key: "messages",
-                        icon: <MessageSquare className="mr-3 h-5 w-5" />,
-                        fr: "Mes messages",
-                        en: "My messages",
-                        es: "Mis mensajes",
-                        de: "Meine Nachrichten",
-                        ru: "Мои сообщения",
-                        hi: "मेरे संदेश",
-                        ch: "我的留言"
-                      },
-                      {
-                        key: "favorites",
-                        icon: <Bookmark className="mr-3 h-5 w-5" />,
-                        fr: "Mes favoris",
-                        en: "My favorites",
-                        es: "Mis favoritos",
-                        de: "Meine Favoriten",
-                        ru: "Мои избранные",
-                        hi: "मेरे पसंदीदा",
-                        ch: "我的最爱"
-                      },
-                    ].map((item) => (
+                    {
+                      [
+  {
+    key: "profile",
+    icon: <User className="mr-3 h-5 w-5" />,
+    fr: "Mon profil",
+    en: "My profile",
+    es: "Mi perfil",
+    de: "Mein Profil",
+    ru: "Мой профиль",
+    hi: "मेरी प्रोफ़ाइल",
+    ch: "我的个人资料",
+    pt: "Meu perfil"
+  },
+  {
+    key: "settings",
+    icon: <Settings className="mr-3 h-5 w-5" />,
+    fr: "Paramètres",
+    en: "Settings",
+    es: "Configuración",
+    de: "Einstellungen",
+    ru: "Настройки",
+    hi: "सेटिंग्स",
+    ch: "设置",
+    pt: "Configurações"
+  },
+  {
+    key: "calls",
+    icon: <Phone className="mr-3 h-5 w-5" />,
+    fr: "Mes appels",
+    en: "My calls",
+    es: "Mis llamadas",
+    de: "Meine Anrufe",
+    ru: "Мои звонки",
+    hi: "मेरी कॉलें",
+    ch: "我的来电",
+    pt: "Minhas chamadas"
+  },
+  {
+    key: "invoices",
+    icon: <FileText className="mr-3 h-5 w-5" />,
+    fr: "Mes factures",
+    en: "My invoices",
+    es: "Mis facturas",
+    de: "Meine Rechnungen",
+    ru: "Мои счета",
+    hi: "मेरे बिल",
+    ch: "我的发票",
+    pt: "Minhas faturas"
+  },
+  {
+    key: "reviews",
+    icon: <Star className="mr-3 h-5 w-5" />,
+    fr: "Mes avis",
+    en: "My reviews",
+    es: "Mis reseñas",
+    de: "Meine Bewertungen",
+    ru: "Мои отзывы",
+    hi: "मेरी समीक्षाएं",
+    ch: "我的评论",
+    pt: "Minhas avaliações"
+  },
+  {
+    key: "notifications",
+    icon: <Bell className="mr-3 h-5 w-5" />,
+    fr: "Notifications",
+    en: "Notifications",
+    es: "Notificaciones",
+    de: "Benachrichtigungen",
+    ru: "Уведомления",
+    hi: "सूचनाएं",
+    ch: "通知",
+    pt: "Notificações"
+  },
+  {
+    key: "messages",
+    icon: <MessageSquare className="mr-3 h-5 w-5" />,
+    fr: "Mes messages",
+    en: "My messages",
+    es: "Mis mensajes",
+    de: "Meine Nachrichten",
+    ru: "Мои сообщения",
+    hi: "मेरे संदेश",
+    ch: "我的留言",
+    pt: "Minhas mensagens"
+  },
+  {
+    key: "favorites",
+    icon: <Bookmark className="mr-3 h-5 w-5" />,
+    fr: "Mes favoris",
+    en: "My favorites",
+    es: "Mis favoritos",
+    de: "Meine Favoriten",
+    ru: "Мои избранные",
+    hi: "मेरे पसंदीदा",
+    ch: "我的最爱",
+    pt: "Meus favoritos"
+  },
+]
+
+                        .map((item) => (
                       <li key={item.key}>
                         <button
                           onClick={() => setActiveTab(item.key as TabType)}
@@ -1235,7 +1246,9 @@ const Dashboard: React.FC = () => {
                                     : language === "hi"
                                       ? item.hi
                                       : language === "ch"
-                                      ? item.ch
+                                        ? item.ch
+                                            : language === "pt"
+                                              ? item.pt 
                                       : item.en
                           }
                         >
@@ -1260,7 +1273,9 @@ const Dashboard: React.FC = () => {
                                   : language === "hi"
                                     ? item.hi
                                       : language === "ch"
-                                        ? item.ch
+                                          ? item.ch
+                                           : language === "pt"
+                                              ? item.pt 
                                       : item.en}
 
                           {activeTab === (item.key as TabType) && (
