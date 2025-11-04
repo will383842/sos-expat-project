@@ -142,6 +142,7 @@ type MultiLangDuo = {
   ru: string;
   hi: string;
   pt: string;
+  ch: string;
 };
 
 const getCountryCode = (countryName: string, locale: string = "en"): string => {
@@ -400,6 +401,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Афганистан",
     hi: "अफगानिस्तान",
     pt: "Afeganistão",
+    ch: "阿富汗"
   },
   {
     fr: "Afrique du Sud",
@@ -409,6 +411,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Южная Африка",
     hi: "दक्षिण अफ्रीका",
     pt: "África do Sul",
+    ch: "南非"
   },
   {
     fr: "Albanie",
@@ -418,6 +421,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Албания",
     hi: "अल्बानिया",
     pt: "Albânia",
+    ch: "阿尔巴尼亚"
   },
   {
     fr: "Algérie",
@@ -427,6 +431,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Алжир",
     hi: "अल्जीरिया",
     pt: "Argélia",
+    ch: "阿尔及利亚"
   },
   {
     fr: "Allemagne",
@@ -436,6 +441,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Германия",
     hi: "जर्मनी",
     pt: "Alemanha",
+    ch: "德国"
   },
   {
     fr: "Andorre",
@@ -445,6 +451,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Андорра",
     hi: "अंडोरा",
     pt: "Andorra",
+    ch: "安道尔"
   },
   {
     fr: "Angola",
@@ -454,6 +461,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Ангола",
     hi: "अंगोला",
     pt: "Angola",
+    ch: "安哥拉"
   },
   {
     fr: "Arabie Saoudite",
@@ -463,6 +471,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Саудовская Аравия",
     hi: "सऊदी अरब",
     pt: "Arábia Saudita",
+    ch: "沙特阿拉伯"
   },
   {
     fr: "Argentine",
@@ -472,6 +481,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Аргентина",
     hi: "अर्जेंटीना",
     pt: "Argentina",
+    ch: "阿根廷"
   },
   {
     fr: "Arménie",
@@ -481,6 +491,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Армения",
     hi: "आर्मेनिया",
     pt: "Armênia",
+    ch: "亚美尼亚"
   },
   {
     fr: "Australie",
@@ -490,6 +501,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Австралия",
     hi: "ऑस्ट्रेलिया",
     pt: "Austrália",
+    ch: "澳大利亚"
   },
   {
     fr: "Autriche",
@@ -499,6 +511,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Австрия",
     hi: "ऑस्ट्रिया",
     pt: "Áustria",
+    ch: "奥地利"
   },
   {
     fr: "Azerbaïdjan",
@@ -508,6 +521,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Азербайджан",
     hi: "अजरबैजान",
     pt: "Azerbaijão",
+    ch: "阿塞拜疆"
   },
   {
     fr: "Bahamas",
@@ -517,6 +531,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Багамы",
     hi: "बहामा",
     pt: "Bahamas",
+    ch: "巴哈马"
   },
   {
     fr: "Bahreïn",
@@ -526,6 +541,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Бахрейн",
     hi: "बहरीन",
     pt: "Bahrein",
+    ch: "巴林"
   },
   {
     fr: "Bangladesh",
@@ -535,6 +551,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Бангладеш",
     hi: "बांग्लादेश",
     pt: "Bangladesh",
+    ch: "孟加拉国"
   },
   {
     fr: "Barbade",
@@ -544,6 +561,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Барбадос",
     hi: "बारबाडोस",
     pt: "Barbados",
+    ch: "巴巴多斯"
   },
   {
     fr: "Belgique",
@@ -553,6 +571,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Бельгия",
     hi: "बेल्जियम",
     pt: "Bélgica",
+    ch: "比利时"
   },
   {
     fr: "Belize",
@@ -562,6 +581,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Белиз",
     hi: "बेलीज",
     pt: "Belize",
+    ch: "伯利兹"
   },
   {
     fr: "Bénin",
@@ -571,6 +591,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Бенин",
     hi: "बेनिन",
     pt: "Benim",
+    ch: "贝宁"
   },
   {
     fr: "Bhoutan",
@@ -580,6 +601,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Бутан",
     hi: "भूटान",
     pt: "Butão",
+    ch: "不丹"
   },
   {
     fr: "Biélorussie",
@@ -589,6 +611,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Беларусь",
     hi: "बेलारूस",
     pt: "Bielorrússia",
+    ch: "白俄罗斯"
   },
   {
     fr: "Birmanie",
@@ -598,6 +621,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Мьянма",
     hi: "म्यांमार",
     pt: "Mianmar",
+    ch: "缅甸"
   },
   {
     fr: "Bolivie",
@@ -607,6 +631,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Боливия",
     hi: "बोलीविया",
     pt: "Bolívia",
+    ch: "玻利维亚"
   },
   {
     fr: "Bosnie-Herzégovine",
@@ -616,6 +641,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Босния и Герцеговина",
     hi: "बोस्निया और हर्जेगोविना",
     pt: "Bósnia e Herzegovina",
+    ch: "波斯尼亚和黑塞哥维那"
   },
   {
     fr: "Botswana",
@@ -625,6 +651,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Ботсвана",
     hi: "बोत्सवाना",
     pt: "Botsuana",
+    ch: "博茨瓦纳"
   },
   {
     fr: "Brésil",
@@ -634,6 +661,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Бразилия",
     hi: "ब्राजील",
     pt: "Brasil",
+    ch: "巴西"
   },
   {
     fr: "Brunei",
@@ -643,6 +671,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Бруней",
     hi: "ब्रुनेई",
     pt: "Brunei",
+    ch: "文莱"
   },
   {
     fr: "Bulgarie",
@@ -652,6 +681,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Болгария",
     hi: "बुल्गारिया",
     pt: "Bulgária",
+    ch: "保加利亚"
   },
   {
     fr: "Burkina Faso",
@@ -661,6 +691,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Буркина-Фасо",
     hi: "बुर्किना फासो",
     pt: "Burquina Faso",
+    ch: "布基纳法索"
   },
   {
     fr: "Burundi",
@@ -670,6 +701,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Бурунди",
     hi: "बुरुंडी",
     pt: "Burúndi",
+    ch: "布隆迪"
   },
   {
     fr: "Cambodge",
@@ -679,6 +711,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Камбоджа",
     hi: "कंबोडिया",
     pt: "Camboja",
+    ch: "柬埔寨"
   },
   {
     fr: "Cameroun",
@@ -688,6 +721,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Камерун",
     hi: "कैमरून",
     pt: "Camarões",
+    ch: "喀麦隆"
   },
   {
     fr: "Canada",
@@ -697,6 +731,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Канада",
     hi: "कनाडा",
     pt: "Canadá",
+    ch: "加拿大"
   },
   {
     fr: "Cap-Vert",
@@ -706,6 +741,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Кабо-Верде",
     hi: "केप वर्डे",
     pt: "Cabo Verde",
+    ch: "佛得角"
   },
   {
     fr: "Chili",
@@ -715,6 +751,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Чили",
     hi: "चिली",
     pt: "Chile",
+    ch: "智利"
   },
   {
     fr: "Chine",
@@ -724,6 +761,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Китай",
     hi: "चीन",
     pt: "China",
+    ch: "中国"
   },
   {
     fr: "Chypre",
@@ -733,6 +771,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Кипр",
     hi: "साइप्रस",
     pt: "Chipre",
+    ch: "塞浦路斯"
   },
   {
     fr: "Colombie",
@@ -742,6 +781,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Колумбия",
     hi: "कोलंबिया",
     pt: "Colômbia",
+    ch: "哥伦比亚"
   },
   {
     fr: "Comores",
@@ -751,6 +791,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Коморы",
     hi: "कोमोरोस",
     pt: "Comores",
+    ch: "科摩罗"
   },
   {
     fr: "Congo",
@@ -760,6 +801,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Конго",
     hi: "कांगो",
     pt: "Congo",
+    ch: "刚果"
   },
   {
     fr: "Corée du Nord",
@@ -769,6 +811,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Северная Корея",
     hi: "उत्तर कोरिया",
     pt: "Coreia do Norte",
+    ch: "北朝鲜"
   },
   {
     fr: "Corée du Sud",
@@ -778,6 +821,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Южная Корея",
     hi: "दक्षिण कोरिया",
     pt: "Coreia do Sul",
+    ch: "韩国"
   },
   {
     fr: "Costa Rica",
@@ -787,6 +831,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Коста-Рика",
     hi: "कोस्टा रिका",
     pt: "Costa Rica",
+    ch: "哥斯达黎加"
   },
   {
     fr: "Côte d'Ivoire",
@@ -796,6 +841,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Кот-д'Ивуар",
     hi: "आइवरी कोस्ट",
     pt: "Costa do Marfim",
+    ch: "科特迪瓦"
   },
   {
     fr: "Croatie",
@@ -805,6 +851,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Хорватия",
     hi: "क्रोएशिया",
     pt: "Croácia",
+    ch: "克罗地亚"
   },
   {
     fr: "Cuba",
@@ -814,6 +861,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Куба",
     hi: "क्यूबा",
     pt: "Cuba",
+    ch: "古巴"
   },
   {
     fr: "Danemark",
@@ -823,6 +871,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Дания",
     hi: "डेनमार्क",
     pt: "Dinamarca",
+    ch: "丹麦"
   },
   {
     fr: "Djibouti",
@@ -832,6 +881,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Джибути",
     hi: "जिबूती",
     pt: "Djibuti",
+    ch: "吉布提"
   },
   {
     fr: "Dominique",
@@ -841,6 +891,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Доминика",
     hi: "डोमिनिका",
     pt: "Dominica",
+    ch: "多米尼加"
   },
   {
     fr: "Égypte",
@@ -850,6 +901,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Египет",
     hi: "मिस्र",
     pt: "Egito",
+    ch: "埃及"
   },
   {
     fr: "Émirats arabes unis",
@@ -859,6 +911,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Объединённые Арабские Эмираты",
     hi: "संयुक्त अरब अमीरात",
     pt: "Emirados Árabes Unidos",
+    ch: "阿拉伯联合酋长国"
   },
   {
     fr: "Équateur",
@@ -868,6 +921,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Эквадор",
     hi: "इक्वेडोर",
     pt: "Equador",
+    ch: "厄瓜多尔"
   },
   {
     fr: "Érythrée",
@@ -877,6 +931,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Эритрея",
     hi: "इरिट्रिया",
     pt: "Eritreia",
+    ch: "厄立特里亚"
   },
   {
     fr: "Espagne",
@@ -886,6 +941,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Испания",
     hi: "स्पेन",
     pt: "Espanha",
+    ch: "西班牙"
   },
   {
     fr: "Estonie",
@@ -895,6 +951,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Эстония",
     hi: "एस्टोनिया",
     pt: "Estônia",
+    ch: "爱沙尼亚"
   },
   {
     fr: "États-Unis",
@@ -904,6 +961,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Соединённые Штаты",
     hi: "संयुक्त राज्य अमेरिका",
     pt: "Estados Unidos",
+    ch: "美国"
   },
   {
     fr: "Éthiopie",
@@ -913,6 +971,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Эфиопия",
     hi: "इथियोपिया",
     pt: "Etiópia",
+    ch: "埃塞俄比亚"
   },
   {
     fr: "Fidji",
@@ -922,6 +981,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Фиджи",
     hi: "फिजी",
     pt: "Fiji",
+    ch: "斐济"
   },
   {
     fr: "Finlande",
@@ -931,6 +991,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Финляндия",
     hi: "फिनलैंड",
     pt: "Finlândia",
+    ch: "芬兰"
   },
   {
     fr: "France",
@@ -940,6 +1001,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Франция",
     hi: "फ्रांस",
     pt: "França",
+    ch: "France"
   },
   {
     fr: "Autre",
@@ -949,6 +1011,7 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Другое",
     hi: "अन्य",
     pt: "Outro",
+    ch: "其他"
   },
 ];
 
@@ -965,6 +1028,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Административные процедуры",
     hi: "प्रशासनिक प्रक्रियाएं",
     pt: "Procedimentos administrativos",
+    ch: "行政程序"
   },
   {
     fr: "Recherche de logement",
@@ -974,6 +1038,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Поиск жилья",
     hi: "आवास खोज",
     pt: "Busca de habitação",
+    ch: "房屋搜寻"
   },
   {
     fr: "Ouverture de compte bancaire",
@@ -983,6 +1048,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Открытие банковского счета",
     hi: "बैंक खाता खोलना",
     pt: "Abertura de conta bancária",
+    ch: "银行开户"
   },
   {
     fr: "Système de santé",
@@ -992,6 +1058,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Система здравоохранения",
     hi: "स्वास्थ्य सेवा प्रणाली",
     pt: "Sistema de saúde",
+    ch: "医疗保健系统"
   },
   {
     fr: "Éducation et écoles",
@@ -1001,6 +1068,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Образование и школы",
     hi: "शिक्षा और स्कूल",
     pt: "Educação e escolas",
+    ch: "教育与学校"
   },
   {
     fr: "Transport",
@@ -1010,6 +1078,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Транспорт",
     hi: "परिवहन",
     pt: "Transporte",
+    ch: "运输"
   },
   {
     fr: "Recherche d'emploi",
@@ -1019,6 +1088,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Поиск работы",
     hi: "नौकरी खोज",
     pt: "Busca de emprego",
+    ch: "求职"
   },
   {
     fr: "Création d'entreprise",
@@ -1028,6 +1098,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Создание компании",
     hi: "कंपनी निर्माण",
     pt: "Criação de empresa",
+    ch: "公司创建"
   },
   {
     fr: "Fiscalité locale",
@@ -1037,6 +1108,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Местное налогообложение",
     hi: "स्थानीय कराधान",
     pt: "Tributação local",
+    ch: "地方税"
   },
   {
     fr: "Culture et intégration",
@@ -1046,6 +1118,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Культура и интеграция",
     hi: "संस्कृति और एकीकरण",
     pt: "Cultura e integração",
+    ch: "文化与融合"
   },
   {
     fr: "Visa et immigration",
@@ -1055,6 +1128,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Виза и иммиграция",
     hi: "वीजा और आप्रवास",
     pt: "Visto e imigração",
+    ch: "签证与移民"
   },
   {
     fr: "Assurances",
@@ -1064,6 +1138,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Страхование",
     hi: "बीमा",
     pt: "Seguros",
+    ch: "保险"
   },
   {
     fr: "Téléphonie et internet",
@@ -1073,6 +1148,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Телефон и интернет",
     hi: "फोन और इंटरनेट",
     pt: "Telefone e internet",
+    ch: "电话和互联网"
   },
   {
     fr: "Alimentation et courses",
@@ -1082,6 +1158,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Продукты и покупки",
     hi: "किराने का सामान और खाना",
     pt: "Alimentos e compras",
+    ch: "杂货和食品"
   },
   {
     fr: "Loisirs et sorties",
@@ -1091,6 +1168,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Досуг и развлечения",
     hi: "अवकाश और बाहर जाना",
     pt: "Lazer e saídas",
+    ch: "休闲与外出"
   },
   {
     fr: "Sports et activités",
@@ -1100,6 +1178,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Спорт и активности",
     hi: "खेल और गतिविधियां",
     pt: "Esportes e atividades",
+    ch: "体育与活动"
   },
   {
     fr: "Sécurité",
@@ -1109,6 +1188,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Безопасность",
     hi: "सुरक्षा",
     pt: "Segurança",
+    ch: "安全"
   },
   {
     fr: "Urgences",
@@ -1118,6 +1198,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Чрезвычайные ситуации",
     hi: "आपातकालीन स्थितियां",
     pt: "Emergências",
+    ch: "紧急情况"
   },
   {
     fr: "Autre",
@@ -1127,6 +1208,7 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Другое",
     hi: "अन्य",
     pt: "Outro",
+    ch: "其他"
   },
 ];
 
@@ -1306,7 +1388,7 @@ type I18NMap = typeof I18N;
 type AnyI18N = I18NMap[keyof I18NMap];
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const mapDuo = (list: MultiLangDuo[], lang: "fr" | "en" | "es" | "de" | "ru") =>
+const mapDuo = (list: MultiLangDuo[], lang: "fr" | "en" | "es" | "de" | "ru" | "ch") =>
   list.map((item) => item[lang]);
 
 // Petit composant succès
@@ -1443,7 +1525,8 @@ const computePasswordStrength = (pw: string) => {
       labelRu: "Пусто",
       labelDe: "Leer",
       labelHi: "खाली",
-      color: "bg-gray-300",
+      labelCh: "空的",
+      color: "bg-gray-300"
     };
 
   let score = 0;
@@ -1492,6 +1575,7 @@ const computePasswordStrength = (pw: string) => {
     "Sehr stark",
   ] as const;
   const hiMap = ["बहुत कमजोर", "कमजोर", "ठीक", "अच्छा", "बहुत मजबूत"] as const;
+  const chMap = ["很弱", "虚弱的", "好的", "好的", "很强"] as const;
 
   return {
     percent: percentMap[clamp],
@@ -1501,6 +1585,7 @@ const computePasswordStrength = (pw: string) => {
     labelRu: ruMap[clamp],
     labelDe: deMap[clamp],
     labelHi: hiMap[clamp],
+    labelCh: chMap[clamp],
     color: colorMap[clamp],
   };
 };
@@ -1541,7 +1626,7 @@ const PreviewCard = ({
   languages,
   helpTypes,
 }: {
-  lang: "fr" | "en" | "hi" | "es" | "de" | "ru";
+  lang: "fr" | "en" | "hi" | "es" | "de" | "ru"| "ch";
   t: AnyI18N; // <- générique (fix 21)
   progress: number;
   fullName: string;
@@ -1606,6 +1691,8 @@ const PreviewCard = ({
   ? "Wohnsitz"
   : lang === "hi"
   ? "निवास स्थान"
+  : lang === "ch"
+  ? "住宅"
   : "Residence")}
             </span>
             {presenceCountry && (
@@ -1632,6 +1719,8 @@ const PreviewCard = ({
   ? "Haupthilfe in"
   : lang === "hi"
   ? "मुख्य सहायता में"
+  : lang === "ch"
+  ? "主要帮助于"
   : "Main help in"}:
             </span>
             <span className="ml-auto rounded-full px-2 py-0.5 text-xs bg-emerald-50 border border-emerald-200">
@@ -1654,6 +1743,8 @@ const PreviewCard = ({
   ? "Jahre im Ausland:"
   : lang === "hi"
   ? "विदेश में वर्ष:"
+  : lang === "ch"
+  ? "国外生活年限:"
   : "Years abroad:"}{" "}
             <strong>{yearsAsExpat}</strong>
           </div>
@@ -1676,6 +1767,8 @@ const PreviewCard = ({
   ? "Ausgewählte Sprachen"
   : lang === "hi"
   ? "चयनित भाषाएं"
+  : lang === "ch"
+  ? "选定的语言"
   : "Selected Languages")}
           </p>
           <div className="flex flex-wrap gap-2">
@@ -1782,6 +1875,8 @@ const BottomChecklist = ({
   ? `Fortschritt: ${progress}%`
   : lang === "hi"
   ? `पूर्णता: ${progress}%`
+  : lang === "ch"
+  ? `完成: ${progress}%`
   : `Completion: ${progress}%`}
             {/* <FormattedMessage
               id="registerExpat.checklist.completion"
@@ -2997,6 +3092,8 @@ const RegisterExpat: React.FC = () => {
                                   ? "Wir senden E-Mails nur für Ihr Konto und Verbindungen. 🤝"
                                   : lang === "hi"
                                     ? "हम केवल आपके खाते और कनेक्शन के लिए ईमेल भेजते हैं। 🤝"
+                                    : lang === "ch"
+                                    ? "我们仅通过电子邮件与您联系和建立联系. 🤝"
                                     : "We only email for your account & connections. 🤝"}
                       </p>
                       {fieldErrors.email && (
@@ -3074,6 +3171,8 @@ const RegisterExpat: React.FC = () => {
                                       ? "Stärke:"
                                       : lang === "hi"
                                         ? "मजबूती:"
+                                        : lang === "ch"
+                                        ? "力量:"
                                         : "Strength:"}{" "}
                             <strong>
                               {lang === "en"
@@ -3104,6 +3203,8 @@ const RegisterExpat: React.FC = () => {
                                       ? "Tipp: A-z, 0-9 & Symbole mischen"
                                       : lang === "hi"
                                         ? "सुझाव: A-z, 0-9 और चिह्न मिलाएं"
+                                        : lang === "ch"
+                                        ? "提示：混合使用 A-z、0-9 和符号"
                                         : "Tip: mix A-z, 0-9 & symbols"}
                           </span>
                         </div>
@@ -3122,6 +3223,8 @@ const RegisterExpat: React.FC = () => {
                                       ? "Feststelltaste ist AN"
                                       : lang === "hi"
                                         ? "Caps Lock चालू है"
+                                        : lang === "ch"
+                                        ? "大写锁定键已开启"
                                         : "Caps Lock is ON"}
                           </p>
                         )}
@@ -3294,6 +3397,8 @@ const RegisterExpat: React.FC = () => {
                                       ? "Wählen Sie Ihr Präsenzland"
                                       : lang === "hi"
                                         ? "अपने उपस्थिति देश का चयन करें"
+                                        : lang === "ch"
+                                        ? "选择您所在的国家/地区"
                                         : "Select your presence country"}
                           </option>
                           {countryOptions.map((c) => (
@@ -3334,6 +3439,8 @@ const RegisterExpat: React.FC = () => {
                                       ? "Wählen Sie Ihr Interventionsland"
                                       : lang === "hi"
                                         ? "अपने हस्तक्षेप देश का चयन करें"
+                                        : lang === "ch"
+                                        ? "选择您的干预国家"
                                         : "Select your intervention country"}
                           </option>
                           {countryOptions.map((c) => (
@@ -3430,6 +3537,8 @@ const RegisterExpat: React.FC = () => {
                                       ? "Sprachen suchen und auswählen..."
                                       : lang === "hi"
                                         ? "भाषाओं को खोजें और चुनें..."
+                                        : lang === "ch"
+                                        ? "搜索并选择语言……"
                                         : "Search and select languages..."
                           }
                         />
@@ -3478,6 +3587,8 @@ const RegisterExpat: React.FC = () => {
                                     ? "Erzählen Sie in wenigen Zeilen Ihre Geschichte + wie Sie helfen (freundlich & konkret)."
                                     : lang === "hi"
                                       ? "कुछ पंक्तियों में, अपनी यात्रा साझा करें + आप कैसे मदद करते हैं (मित्रवत + विशिष्ट)।"
+                                      : lang === "ch"
+                                      ? "请用几句话分享您的经历以及您如何提供帮助（友好且具体）。"
                                       : "In a few lines, share your journey + how you help (friendly + specific)."
                         }
                       />
@@ -3582,6 +3693,8 @@ const RegisterExpat: React.FC = () => {
                                   ? "Professionelles Foto (JPG/PNG) erforderlich"
                                   : lang === "hi"
                                     ? "पेशेवर फोटो (JPG/PNG) आवश्यक है"
+                                    : lang === "ch"
+                                    ? "需要专业照片（JPG/PNG格式）。"
                                     : "Professional photo (JPG/PNG) required"}
                       </p>
                       <FieldSuccess show={valid.profilePhoto}>
@@ -3716,6 +3829,8 @@ const RegisterExpat: React.FC = () => {
                                     ? "Ich akzeptiere die"
                                     : lang === "hi"
                                       ? "मैं स्वीकार करता हूँ"
+                                      : lang === "ch"
+                                      ? "我接受"
                                       : "I accept the"}{" "}
                           <Link
                             to="/cgu-expatries"
@@ -3737,6 +3852,8 @@ const RegisterExpat: React.FC = () => {
                                       ? "Expat AGB"
                                       : lang === "hi"
                                         ? "एक्सपैट नियम और शर्तें"
+                                        : lang === "ch"
+                                        ? "外籍人士条款及细则"
                                         : "Expat T&Cs"}
                           </Link>{" "}
                           <span className="text-red-500">*</span>

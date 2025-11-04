@@ -10,7 +10,7 @@ import {
   StorageReference
 } from 'firebase/storage';
 
-type Locale = 'fr' | 'en' | 'es' | 'de' | 'ru' | 'hi' | 'pt' ;
+type Locale = 'fr' | 'en' | 'es' | 'de' | 'ru' | 'hi' | 'pt' | 'ch' ;
 
 /** ====== I18N types ====== */
 type I18nUI = {
@@ -299,8 +299,35 @@ const I18N: Record<Locale, I18n> = {
     chooseImage: 'Escolher imagem',
     cancel: 'Cancelar',
   }
-}
-
+},
+  ch: {
+    errors: {
+      unsupportedFormat: '不支持的格式。可接受格式：JPG、PNG、WEBP、GIF、HEIC、BMP、TIFF、AVIF',
+      fileTooLarge: (sizeMB: number, maxSizeMB: number) => `图片大小必须 ≤ ${maxSizeMB}MB（当前：${sizeMB.toFixed(1)}MB）`,
+      uploadFailed: (error: string) => `上传错误：${error}`,
+      previewFailed: '创建预览时出错',
+      deleteFailed: '删除图片时出错',
+      imageLoadError: '图片加载错误',
+      cameraNotSupported: '此设备不支持相机功能',
+      cameraAccessFailed: '无法访问相机',
+    },
+    ui: {
+      dropHere: '将图片拖到此处',
+      clickOrDrag: '点击或拖拽上传图片',
+      formatInfo: (maxSizeMB: number) => `JPG、PNG、WEBP、GIF、HEIC • 最大 ${maxSizeMB}MB`,
+      uploading: (p: number) => `正在上传... ${p}%`,
+      uploadSuccess: '图片上传成功！',
+      replaceImage: '更换图片',
+      removeImage: '删除图片',
+      profileImage: '头像照片',
+      converting: '正在转换图片...',
+      takePhoto: '拍摄照片',
+      chooseFromGallery: '相册',
+      webcamInfo: '或使用“更换图片”按钮通过摄像头拍摄',
+      chooseImage: '选择图片',
+      cancel: '取消',
+    }
+  },
 };
 
 

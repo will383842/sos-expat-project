@@ -1295,6 +1295,7 @@
   "registerExpat.help.phoneInfo": "您的号码仅用于匹配，无垃圾信息。",
   "registerExpat.help.emailInfo": "我们仅用于账户和匹配联系 🤝",
   "registerExpat.help.photoInfo": "请上传专业头像 (JPG/PNG)",
+  "registerExpat.help.contactInfo": "我们仅使用您的手机号码为您联系需要帮助的人。绝不发送垃圾信息。",
 
   "registerExpat.errors.title": "小调整，准备起航 ✨",
   "registerExpat.errors.firstNameRequired": "我们想称呼您…但怎么称呼？😄",
