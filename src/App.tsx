@@ -126,8 +126,12 @@ const routeConfigs: RouteConfig[] = [
 
   // Témoignages
   { path: "/testimonials", component: Testimonials, alias: "/temoignages" },
-  {
-    path: "/testimonials/:serviceType/:country/:year/:language/:id",
+  // {
+  //   path: "/testimonials/:serviceType/:country/:year/:language/:id",
+  //   component: TestimonialDetail,
+  // },
+    {
+    path: "/testimonials/:id",
     component: TestimonialDetail,
   },
   {

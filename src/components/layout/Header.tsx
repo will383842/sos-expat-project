@@ -1092,7 +1092,7 @@ const t = {
       <div className="relative" ref={ref}>
         <button
           onClick={() => setOpen(!open)}
-          className="group flex items-center space-x-3 text-white transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/50 rounded-full p-2 min-h-[44px] touch-manipulation"
+          className={`${scrolled ? "text-white focus:outline-none focus:ring-2 focus:ring-white/50" : "text-black border-black focus:outline-none focus:ring-2 focus:ring-black/50"} group flex items-center space-x-3  transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/50 rounded-full p-2 min-h-[44px] touch-manipulation`}
           aria-expanded={open}
           aria-haspopup="true"
           aria-label="Menu utilisateur"
@@ -1284,14 +1284,14 @@ const getNavigationLabel = useCallback(
                     >
                       {item.desktopIcon && (
                         <span
-                          className={`text-[14px] ${scrolled ? "text-gray-200" : "text-gray-700"}`}
+                          className={`text-[15px] ${scrolled ? "text-gray-200" : "text-gray-700"}`}
                           aria-hidden="true"
                         >
                           {item.desktopIcon}
                         </span>
                       )}
                       <span
-                        className={`font-semibold ${scrolled ? "text-gray-200" : "text-gray-700"} text-[14px] tracking-wide`}
+                        className={`font-semibold ${scrolled ? "text-gray-200" : "text-gray-700"} text-[15px] tracking-wide`}
                       >
                         {getNavigationLabel(item.labelKey)}
                       </span>
@@ -1325,14 +1325,14 @@ const getNavigationLabel = useCallback(
                     >
                       {item.desktopIcon && (
                         <span
-                          className={`text-[14px] ${scrolled ? "text-gray-200" : "text-gray-700"}`}
+                          className={`text-[15px] ${scrolled ? "text-gray-200" : "text-gray-700"}`}
                           aria-hidden="true"
                         >
                           {item.desktopIcon}
                         </span>
                       )}
                       <span
-                        className={`font-semibold ${scrolled ? "text-gray-200" : "text-gray-700"} text-[14px] tracking-wide`}
+                        className={`font-semibold ${scrolled ? "text-gray-200" : "text-gray-700"} text-[15px] tracking-wide`}
                       >
                         {getNavigationLabel(item.labelKey)}
                       </span>

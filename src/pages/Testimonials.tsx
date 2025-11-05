@@ -67,6 +67,7 @@ const smoothScrollToTop = () => {
 
 // ✅ FONCTION DE MAPPING DES PAYS POUR URL SEO
 const createCountrySlug = (country: string): string => {
+
   const slugMap: Record<string, string> = {
     // Pays avec caractères spéciaux
     Thaïlande: "thailande",
@@ -3167,6 +3168,8 @@ const Testimonials: React.FC = () => {
       // Déterminer le type de service pour l'URL (lawyer ou expat)
       const serviceType =
         testimonial.serviceType === "lawyer_call" ? "lawyer" : "expat";
+      
+      console.log("client country : ", testimonial.clientCountry);
 
       // Créer le slug du pays pour l'URL SEO
       const countrySlug = createCountrySlug(testimonial.clientCountry);
@@ -3176,7 +3179,10 @@ const Testimonials: React.FC = () => {
 
       // Construire l'URL SEO-friendly parfaite pour Google
       // Format: /testimonials/:serviceType/:country/:year/:language/:id
-      const path = `/testimonials/${serviceType}/${countrySlug}/${year}/${currentLanguage}/${testimonial.id}`;
+      console.log("country slug : ", countrySlug);
+
+      // const path = `/testimonials/${serviceType}/${countrySlug}/${year}/${currentLanguage}/${testimonial.id}`;
+      const path = `/testimonials/${testimonial.id}`;
 
       console.log("🚀 Navigation vers:", path); // Pour débugger
       navigate(path);
@@ -3600,7 +3606,7 @@ const Testimonials: React.FC = () => {
                           </div>
                           <button className="group/btn inline-flex items-center text-red-600 hover:text-red-700 text-sm font-semibold transition-colors min-h-[44px] px-2 touch-manipulation">
                             <span>
-                              {/* {t.card.readMore} */}
+                          
                               <FormattedMessage id="testy.card.readMore" />
                             </span>
                             <ArrowRight
