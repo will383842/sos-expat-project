@@ -18,6 +18,15 @@ export interface Review {
 
 type ReviewType = Review;
 
+// TODO: 
+// what we need to add in each testimonial
+// 1. title 
+// 2. fullcontent 
+// 3.service_used 
+// 4.duration 
+// 5. help_type
+
+
 
 const createMockReviews = (language: string): ReviewType[] => {
   const reviews_fr: ReviewType[] = [
@@ -41,7 +50,8 @@ const createMockReviews = (language: string): ReviewType[] => {
         "https://images.unsplash.com/photo-1643842730000-db266bbc1b28?q=80&w=400&h=400&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 
       
-      verified: true,
+          verified: true,
+      
     },
     {
       id: "2",
