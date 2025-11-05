@@ -10,7 +10,7 @@ import {
   StorageReference
 } from 'firebase/storage';
 
-type Locale = 'fr' | 'en' | 'es' | 'de' | 'ru' | 'hi' | 'pt' | 'ch' ;
+type Locale = 'fr' | 'en' | 'es' | 'de' | 'ru' | 'hi' | 'pt' | 'ch' | 'ar';
 
 /** ====== I18N types ====== */
 type I18nUI = {
@@ -328,6 +328,35 @@ const I18N: Record<Locale, I18n> = {
       cancel: '取消',
     }
   },
+  ar: {
+  errors: {
+    unsupportedFormat: 'صيغة غير مدعومة. الصيغ المقبولة: JPG, PNG, WEBP, GIF, HEIC, BMP, TIFF, AVIF',
+    fileTooLarge: (sizeMB: number, maxSizeMB: number) => `يجب أن تكون الصورة ≤ ${maxSizeMB}MB (الحالية: ${sizeMB.toFixed(1)}MB)`,
+    uploadFailed: (error: string) => `خطأ في الرفع: ${error}`,
+    previewFailed: 'خطأ في إنشاء المعاينة',
+    deleteFailed: 'خطأ في حذف الصورة',
+    imageLoadError: 'خطأ في تحميل الصورة',
+    cameraNotSupported: 'الكاميرا غير مدعومة على هذا الجهاز',
+    cameraAccessFailed: 'لا يمكن الوصول إلى الكاميرا',
+  },
+  ui: {
+    dropHere: 'أفلت الصورة هنا',
+    clickOrDrag: 'انقر أو اسحب صورة',
+    formatInfo: (maxSizeMB: number) => `JPG, PNG, WEBP, GIF, HEIC • الحد الأقصى ${maxSizeMB}MB`,
+    uploading: (p: number) => `جاري الرفع... ${p}%`,
+    uploadSuccess: 'تم رفع الصورة بنجاح!',
+    replaceImage: 'استبدال الصورة',
+    removeImage: 'حذف الصورة',
+    profileImage: 'صورة الملف الشخصي',
+    converting: 'جاري تحويل الصورة...',
+    takePhoto: 'التقط صورة',
+    chooseFromGallery: 'المعرض',
+    webcamInfo: 'أو استخدم كاميرا الويب من خلال أزرار الاستبدال',
+    chooseImage: 'اختر صورة',
+    cancel: 'إلغاء',
+  }
+}
+
 };
 
 

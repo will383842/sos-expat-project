@@ -78,6 +78,7 @@ type MultiLangDuo = {
   hi: string;
   pt: string;
   ch: string;
+  ar: string;
 };
 // const COUNTRIES: MultiLangDuo[] = [
 //   { fr: "Afghanistan", en: "Afghanistan" },
@@ -636,6 +637,629 @@ type MultiLangDuo = {
 //   },
 // ];
 
+// const COUNTRIES: MultiLangDuo[] = [
+//   {
+//     fr: "Afghanistan",
+//     es: "Afganistán",
+//     en: "Afghanistan",
+//     de: "Afghanistan",
+//     ru: "Афганистан",
+//     hi: "अफ़गानिस्तान",
+//     pt: "Afeganistão",
+//     ch: "阿富汗"
+//   },
+//   {
+//     fr: "Afrique du Sud",
+//     es: "Sudáfrica",
+//     en: "South Africa",
+//     de: "Südafrika",
+//     ru: "Южная Африка",
+//     hi: "दक्षिण अफ्रीका",
+//     pt: "África do Sul",
+//     ch: "南非"
+//   },
+//   {
+//     fr: "Albanie",
+//     es: "Albania",
+//     en: "Albania",
+//     de: "Albanien",
+//     ru: "Албания",
+//     hi: "अल्बानिया",
+//     pt: "Albânia",
+//     ch: "阿尔巴尼亚"
+//   },
+//   {
+//     fr: "Algérie",
+//     es: "Argelia",
+//     en: "Algeria",
+//     de: "Algerien",
+//     ru: "Алжир",
+//     hi: "अल्जीरिया",
+//     pt: "Argélia",
+//     ch: "阿尔及利亚"
+//   },
+//   {
+//     fr: "Allemagne",
+//     es: "Alemania",
+//     en: "Germany",
+//     de: "Deutschland",
+//     ru: "Германия",
+//     hi: "जर्मनी",
+//     pt: "Alemanha",
+//     ch: "德国"
+//   },
+//   {
+//     fr: "Andorre",
+//     es: "Andorra",
+//     en: "Andorra",
+//     de: "Andorra",
+//     ru: "Андорра",
+//     hi: "अंडोरा",
+//     pt: "Andorra",
+//     ch: "安道尔"
+//   },
+//   {
+//     fr: "Angola",
+//     es: "Angola",
+//     en: "Angola",
+//     de: "Angola",
+//     ru: "Ангола",
+//     hi: "अंगोला",
+//     pt: "Angola",
+//     ch: "安哥拉"
+//   },
+//   {
+//     fr: "Arabie Saoudite",
+//     es: "Arabia Saudita",
+//     en: "Saudi Arabia",
+//     de: "Saudi-Arabien",
+//     ru: "Саудовская Аравия",
+//     hi: "सऊदी अरब",
+//     pt: "Arábia Saudita",
+//     ch: "沙特阿拉伯"
+//   },
+//   {
+//     fr: "Argentine",
+//     es: "Argentina",
+//     en: "Argentina",
+//     de: "Argentinien",
+//     ru: "Аргентина",
+//     hi: "अर्जेंटीना",
+//     pt: "Argentina",
+//     ch: "阿根廷"
+//   },
+//   {
+//     fr: "Arménie",
+//     es: "Armenia",
+//     en: "Armenia",
+//     de: "Armenien",
+//     ru: "Армения",
+//     hi: "आर्मेनिया",
+//     pt: "Armênia",
+//     ch: "亚美尼亚"
+//   },
+//   {
+//     fr: "Australie",
+//     es: "Australia",
+//     en: "Australia",
+//     de: "Australien",
+//     ru: "Австралия",
+//     hi: "ऑस्ट्रेलिया",
+//     pt: "Austrália",
+//     ch: "澳大利亚"
+//   },
+//   {
+//     fr: "Autriche",
+//     es: "Austria",
+//     en: "Austria",
+//     de: "Österreich",
+//     ru: "Австрия",
+//     hi: "ऑस्ट्रिया",
+//     pt: "Áustria",
+//     ch: "奥地利"
+//   },
+//   {
+//     fr: "Azerbaïdjan",
+//     es: "Azerbaiyán",
+//     en: "Azerbaijan",
+//     de: "Aserbaidschan",
+//     ru: "Азербайджан",
+//     hi: "अज़रबैजान",
+//     pt: "Azerbaijão",
+//     ch: "阿塞拜疆"
+//   },
+//   {
+//     fr: "Bahamas",
+//     es: "Bahamas",
+//     en: "Bahamas",
+//     de: "Bahamas",
+//     ru: "Багамы",
+//     hi: "बहामास",
+//     pt: "Bahamas",
+//     ch: "巴哈马"
+//   },
+//   {
+//     fr: "Bahreïn",
+//     es: "Baréin",
+//     en: "Bahrain",
+//     de: "Bahrain",
+//     ru: "Бахрейн",
+//     hi: "बहरीन",
+//     pt: "Bahrein",
+//     ch: "巴林"
+//   },
+//   {
+//     fr: "Bangladesh",
+//     es: "Bangladés",
+//     en: "Bangladesh",
+//     de: "Bangladesch",
+//     ru: "Бангладеш",
+//     hi: "बांग्लादेश",
+//     pt: "Bangladesh",
+//     ch: "孟加拉国"
+//   },
+//   {
+//     fr: "Barbade",
+//     es: "Barbados",
+//     en: "Barbados",
+//     de: "Barbados",
+//     ru: "Барбадос",
+//     hi: "बारबाडोस",
+//     pt: "Barbados",
+//     ch: "巴巴多斯"
+//   },
+//   {
+//     fr: "Belgique",
+//     es: "Bélgica",
+//     en: "Belgium",
+//     de: "Belgien",
+//     ru: "Бельгия",
+//     hi: "बेल्जियम",
+//     pt: "Bélgica",
+//     ch: "比利时"
+//   },
+//   {
+//     fr: "Belize",
+//     es: "Belice",
+//     en: "Belize",
+//     de: "Belize",
+//     ru: "Белиз",
+//     hi: "बेलीज़",
+//     pt: "Belize",
+//     ch: "伯利兹"
+//   },
+//   {
+//     fr: "Bénin",
+//     es: "Benín",
+//     en: "Benin",
+//     de: "Benin",
+//     ru: "Бенин",
+//     hi: "बेनिन",
+//     pt: "Benin",
+//     ch: "贝宁"
+//   },
+//   {
+//     fr: "Bhoutan",
+//     es: "Bután",
+//     en: "Bhutan",
+//     de: "Bhutan",
+//     ru: "Бутан",
+//     hi: "भूटान",
+//     pt: "Butão",
+//     ch: "不丹"
+//   },
+//   {
+//     fr: "Biélorussie",
+//     es: "Bielorrusia",
+//     en: "Belarus",
+//     de: "Belarus",
+//     ru: "Беларусь",
+//     hi: "बेलारूस",
+//     pt: "Bielorrússia",
+//     ch: "白俄罗斯"
+//   },
+//   {
+//     fr: "Birmanie",
+//     es: "Birmania",
+//     en: "Myanmar",
+//     de: "Myanmar",
+//     ru: "Мьянма",
+//     hi: "म्यांमार",
+//     pt: "Mianmar",
+//     ch: "缅甸"
+//   },
+//   {
+//     fr: "Bolivie",
+//     es: "Bolivia",
+//     en: "Bolivia",
+//     de: "Bolivien",
+//     ru: "Боливия",
+//     hi: "बोलीविया",
+//     pt: "Bolívia",
+//     ch: "玻利维亚"
+//   },
+//   {
+//     fr: "Bosnie-Herzégovine",
+//     es: "Bosnia y Herzegovina",
+//     en: "Bosnia and Herzegovina",
+//     de: "Bosnien und Herzegowina",
+//     ru: "Босния и Герцеговина",
+//     hi: "बोस्निया और हर्जेगोविना",
+//     pt: "Bósnia e Herzegovina",
+//     ch: "波斯尼亚和黑塞哥维那"
+//   },
+//   {
+//     fr: "Botswana",
+//     es: "Botsuana",
+//     en: "Botswana",
+//     de: "Botswana",
+//     ru: "Ботсвана",
+//     hi: "बोत्सवाना",
+//     pt: "Botsuana",
+//     ch: "博茨瓦纳"
+//   },
+//   {
+//     fr: "Brésil",
+//     es: "Brasil",
+//     en: "Brazil",
+//     de: "Brasilien",
+//     ru: "Бразилия",
+//     hi: "ब्राज़ील",
+//     pt: "Brasil",
+//     ch: "巴西"
+//   },
+//   {
+//     fr: "Brunei",
+//     es: "Brunéi",
+//     en: "Brunei",
+//     de: "Brunei",
+//     ru: "Бруней",
+//     hi: "ब्रुनेई",
+//     pt: "Brunei",
+//     ch: "文莱"
+//   },
+//   {
+//     fr: "Bulgarie",
+//     es: "Bulgaria",
+//     en: "Bulgaria",
+//     de: "Bulgarien",
+//     ru: "Болгария",
+//     hi: "बुल्गारिया",
+//     pt: "Bulgária",
+//     ch: "保加利亚"
+//   },
+//   {
+//     fr: "Burkina Faso",
+//     es: "Burkina Faso",
+//     en: "Burkina Faso",
+//     de: "Burkina Faso",
+//     ru: "Буркина-Фасо",
+//     hi: "बुर्किना फासो",
+//     pt: "Burkina Faso",
+//     ch: "布基纳法索"
+//   },
+//   {
+//     fr: "Burundi",
+//     es: "Burundi",
+//     en: "Burundi",
+//     de: "Burundi",
+//     ru: "Бурунди",
+//     hi: "बुरुंडी",
+//     pt: "Burundi",
+//     ch: "布隆迪"
+//   },
+//   {
+//     fr: "Cambodge",
+//     es: "Camboya",
+//     en: "Cambodia",
+//     de: "Kambodscha",
+//     ru: "Камбоджа",
+//     hi: "कंबोडिया",
+//     pt: "Camboja",
+//     ch: "柬埔寨"
+//   },
+//   {
+//     fr: "Cameroun",
+//     es: "Camerún",
+//     en: "Cameroon",
+//     de: "Kamerun",
+//     ru: "Камерун",
+//     hi: "कैमरून",
+//     pt: "Camarões",
+//     ch: "喀麦隆"
+//   },
+//   {
+//     fr: "Canada",
+//     es: "Canadá",
+//     en: "Canada",
+//     de: "Kanada",
+//     ru: "Канада",
+//     hi: "कनाडा",
+//     pt: "Canadá",
+//     ch: "加拿大"
+//   },
+//   {
+//     fr: "Cap-Vert",
+//     es: "Cabo Verde",
+//     en: "Cape Verde",
+//     de: "Kap Verde",
+//     ru: "Кабо-Верде",
+//     hi: "केप वेर्डे",
+//     pt: "Cabo Verde",
+//     ch: "佛得角"
+//   },
+//   {
+//     fr: "Chili",
+//     es: "Chile",
+//     en: "Chile",
+//     de: "Chile",
+//     ru: "Чили",
+//     hi: "चिली",
+//     pt: "Chile",
+//     ch: "智利"
+//   },
+//   {
+//     fr: "Chine",
+//     es: "China",
+//     en: "China",
+//     de: "China",
+//     ru: "Китай",
+//     hi: "चीन",
+//     pt: "China",
+//     ch: "中国"
+//   },
+//   {
+//     fr: "Chypre",
+//     es: "Chipre",
+//     en: "Cyprus",
+//     de: "Zypern",
+//     ru: "Кипр",
+//     hi: "साइप्रस",
+//     pt: "Chipre",
+//     ch: "塞浦路斯"
+//   },
+//   {
+//     fr: "Colombie",
+//     es: "Colombia",
+//     en: "Colombia",
+//     de: "Kolumbien",
+//     ru: "Колумбия",
+//     hi: "कोलंबिया",
+//     pt: "Colômbia",
+//     ch: "哥伦比亚"
+//   },
+//   {
+//     fr: "Comores",
+//     es: "Comoras",
+//     en: "Comoros",
+//     de: "Komoren",
+//     ru: "Коморы",
+//     hi: "कोमोरोस",
+//     pt: "Comores",
+//     ch: "科摩罗"
+//   },
+//   {
+//     fr: "Congo",
+//     es: "Congo",
+//     en: "Congo",
+//     de: "Kongo",
+//     ru: "Конго",
+//     hi: "कांगो",
+//     pt: "Congo",
+//     ch: "刚果"
+//   },
+//   {
+//     fr: "Corée du Nord",
+//     es: "Corea del Norte",
+//     en: "North Korea",
+//     de: "Nordkorea",
+//     ru: "Северная Корея",
+//     hi: "उत्तर कोरिया",
+//     pt: "Coreia do Norte",
+//     ch: "北朝鲜"
+//   },
+//   {
+//     fr: "Corée du Sud",
+//     es: "Corea del Sur",
+//     en: "South Korea",
+//     de: "Südkorea",
+//     ru: "Южная Корея",
+//     hi: "दक्षिण कोरिया",
+//     pt: "Coreia do Sul",
+//     ch: "韩国"
+//   },
+//   {
+//     fr: "Costa Rica",
+//     es: "Costa Rica",
+//     en: "Costa Rica",
+//     de: "Costa Rica",
+//     ru: "Коста-Рика",
+//     hi: "कोस्टा रिका",
+//     pt: "Costa Rica",
+//     ch: "哥斯达黎加"
+//   },
+//   {
+//     fr: "Côte d'Ivoire",
+//     es: "Costa de Marfil",
+//     en: "Ivory Coast",
+//     de: "Elfenbeinküste",
+//     ru: "Кот-д'Ивуар",
+//     hi: "आइवरी कोस्ट",
+//     pt: "Costa do Marfim",
+//     ch: "科特迪瓦"
+//   },
+//   {
+//     fr: "Croatie",
+//     es: "Croacia",
+//     en: "Croatia",
+//     de: "Kroatien",
+//     ru: "Хорватия",
+//     hi: "क्रोएशिया",
+//     pt: "Croácia",
+//     ch: "克罗地亚"
+//   },
+//   {
+//     fr: "Cuba",
+//     es: "Cuba",
+//     en: "Cuba",
+//     de: "Kuba",
+//     ru: "Куба",
+//     hi: "क्यूबा",
+//     pt: "Cuba",
+//     ch: "古巴"
+//   },
+//   {
+//     fr: "Danemark",
+//     es: "Dinamarca",
+//     en: "Denmark",
+//     de: "Dänemark",
+//     ru: "Дания",
+//     hi: "डेनमार्क",
+//     pt: "Dinamarca",
+//     ch: "丹麦"
+//   },
+//   {
+//     fr: "Djibouti",
+//     es: "Yibuti",
+//     en: "Djibouti",
+//     de: "Dschibuti",
+//     ru: "Джибути",
+//     hi: "जिबूती",
+//     pt: "Djibuti",
+//     ch: "吉布提"
+//   },
+//   {
+//     fr: "Dominique",
+//     es: "Dominica",
+//     en: "Dominica",
+//     de: "Dominica",
+//     ru: "Доминика",
+//     hi: "डोमिनिका",
+//     pt: "Dominica",
+//     ch: "多米尼加"
+//   },
+//   {
+//     fr: "Égypte",
+//     es: "Egipto",
+//     en: "Egypt",
+//     de: "Ägypten",
+//     ru: "Египет",
+//     hi: "मिस्र",
+//     pt: "Egito",
+//     ch: "埃及"
+//   },
+//   {
+//     fr: "Émirats arabes unis",
+//     es: "Emiratos Árabes Unidos",
+//     en: "United Arab Emirates",
+//     de: "Vereinigte Arabische Emirate",
+//     ru: "Объединённые Арабские Эмираты",
+//     hi: "संयुक्त अरब अमीरात",
+//     pt: "Emirados Árabes Unidos",
+//     ch: "阿拉伯联合酋长国"
+//   },
+//   {
+//     fr: "Équateur",
+//     es: "Ecuador",
+//     en: "Ecuador",
+//     de: "Ecuador",
+//     ru: "Эквадор",
+//     hi: "इक्वाडोर",
+//     pt: "Equador",
+//     ch: "厄瓜多尔"
+//   },
+//   {
+//     fr: "Érythrée",
+//     es: "Eritrea",
+//     en: "Eritrea",
+//     de: "Eritrea",
+//     ru: "Эритрея",
+//     hi: "इरिट्रिया",
+//     pt: "Eritreia",
+//     ch: "厄立特里亚"
+//   },
+//   {
+//     fr: "Espagne",
+//     es: "España",
+//     en: "Spain",
+//     de: "Spanien",
+//     ru: "Испания",
+//     hi: "स्पेन",
+//     pt: "Espanha",
+//     ch: "西班牙"
+//   },
+//   {
+//     fr: "Estonie",
+//     es: "Estonia",
+//     en: "Estonia",
+//     de: "Estland",
+//     ru: "Эстония",
+//     hi: "एस्टोनिया",
+//     pt: "Estônia",
+//     ch: "爱沙尼亚"
+//   },
+//   {
+//     fr: "États-Unis",
+//     es: "Estados Unidos",
+//     en: "United States",
+//     de: "Vereinigte Staaten",
+//     ru: "Соединённые Штаты",
+//     hi: "संयुक्त राज्य अमेरिका",
+//     pt: "Estados Unidos",
+//     ch: "美国"
+//   },
+//   {
+//     fr: "Éthiopie",
+//     es: "Etiopía",
+//     en: "Ethiopia",
+//     de: "Äthiopien",
+//     ru: "Эфиопия",
+//     hi: "इथियोपिया",
+//     pt: "Etiópia",
+//     ch: "埃塞俄比亚"
+//   },
+//   {
+//     fr: "Fidji",
+//     es: "Fiyi",
+//     en: "Fiji",
+//     de: "Fidschi",
+//     ru: "Фиджи",
+//     hi: "फिजी",
+//     pt: "Fiji",
+//     ch: "斐济"
+//   },
+//   {
+//     fr: "Finlande",
+//     es: "Finlandia",
+//     en: "Finland",
+//     de: "Finnland",
+//     ru: "Финляндия",
+//     hi: "फिनलैंड",
+//     pt: "Finlândia",
+//     ch: "芬兰"
+//   },
+//   {
+//     fr: "France",
+//     es: "Francia",
+//     en: "France",
+//     de: "Frankreich",
+//     ru: "Франция",
+//     hi: "फ्रांस",
+//     pt: "França",
+//     ch: "法国"
+//   },
+//   {
+//     fr: "Autre",
+//     es: "Otro",
+//     en: "Other",
+//     de: "Andere",
+//     ru: "Другое",
+//     hi: "अन्य",
+//     pt: "Outro",
+//     ch: "其他"
+//   },
+// ];
+
 const COUNTRIES: MultiLangDuo[] = [
   {
     fr: "Afghanistan",
@@ -645,7 +1269,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Афганистан",
     hi: "अफ़गानिस्तान",
     pt: "Afeganistão",
-    ch: "阿富汗"
+    ch: "阿富汗",
+    ar: "أفغانستان",
   },
   {
     fr: "Afrique du Sud",
@@ -655,7 +1280,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Южная Африка",
     hi: "दक्षिण अफ्रीका",
     pt: "África do Sul",
-    ch: "南非"
+    ch: "南非",
+    ar: "جنوب أفريقيا",
   },
   {
     fr: "Albanie",
@@ -665,7 +1291,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Албания",
     hi: "अल्बानिया",
     pt: "Albânia",
-    ch: "阿尔巴尼亚"
+    ch: "阿尔巴尼亚",
+    ar: "ألبانيا",
   },
   {
     fr: "Algérie",
@@ -675,7 +1302,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Алжир",
     hi: "अल्जीरिया",
     pt: "Argélia",
-    ch: "阿尔及利亚"
+    ch: "阿尔及利亚",
+    ar: "الجزائر",
   },
   {
     fr: "Allemagne",
@@ -685,7 +1313,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Германия",
     hi: "जर्मनी",
     pt: "Alemanha",
-    ch: "德国"
+    ch: "德国",
+    ar: "ألمانيا",
   },
   {
     fr: "Andorre",
@@ -695,7 +1324,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Андорра",
     hi: "अंडोरा",
     pt: "Andorra",
-    ch: "安道尔"
+    ch: "安道尔",
+    ar: "أندورا",
   },
   {
     fr: "Angola",
@@ -705,7 +1335,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Ангола",
     hi: "अंगोला",
     pt: "Angola",
-    ch: "安哥拉"
+    ch: "安哥拉",
+    ar: "أنغولا",
   },
   {
     fr: "Arabie Saoudite",
@@ -715,7 +1346,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Саудовская Аравия",
     hi: "सऊदी अरब",
     pt: "Arábia Saudita",
-    ch: "沙特阿拉伯"
+    ch: "沙特阿拉伯",
+    ar: "المملكة العربية السعودية",
   },
   {
     fr: "Argentine",
@@ -725,7 +1357,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Аргентина",
     hi: "अर्जेंटीना",
     pt: "Argentina",
-    ch: "阿根廷"
+    ch: "阿根廷",
+    ar: "الأرجنتين",
   },
   {
     fr: "Arménie",
@@ -735,7 +1368,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Армения",
     hi: "आर्मेनिया",
     pt: "Armênia",
-    ch: "亚美尼亚"
+    ch: "亚美尼亚",
+    ar: "أرمينيا",
   },
   {
     fr: "Australie",
@@ -745,7 +1379,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Австралия",
     hi: "ऑस्ट्रेलिया",
     pt: "Austrália",
-    ch: "澳大利亚"
+    ch: "澳大利亚",
+    ar: "أستراليا",
   },
   {
     fr: "Autriche",
@@ -755,7 +1390,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Австрия",
     hi: "ऑस्ट्रिया",
     pt: "Áustria",
-    ch: "奥地利"
+    ch: "奥地利",
+    ar: "النمسا",
   },
   {
     fr: "Azerbaïdjan",
@@ -765,7 +1401,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Азербайджан",
     hi: "अज़रबैजान",
     pt: "Azerbaijão",
-    ch: "阿塞拜疆"
+    ch: "阿塞拜疆",
+    ar: "أذربيجان",
   },
   {
     fr: "Bahamas",
@@ -775,7 +1412,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Багамы",
     hi: "बहामास",
     pt: "Bahamas",
-    ch: "巴哈马"
+    ch: "巴哈马",
+    ar: "جزر البهاما",
   },
   {
     fr: "Bahreïn",
@@ -785,7 +1423,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Бахрейн",
     hi: "बहरीन",
     pt: "Bahrein",
-    ch: "巴林"
+    ch: "巴林",
+    ar: "البحرين",
   },
   {
     fr: "Bangladesh",
@@ -795,7 +1434,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Бангладеш",
     hi: "बांग्लादेश",
     pt: "Bangladesh",
-    ch: "孟加拉国"
+    ch: "孟加拉国",
+    ar: "بنغلاديش",
   },
   {
     fr: "Barbade",
@@ -805,7 +1445,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Барбадос",
     hi: "बारबाडोस",
     pt: "Barbados",
-    ch: "巴巴多斯"
+    ch: "巴巴多斯",
+    ar: "بربادوس",
   },
   {
     fr: "Belgique",
@@ -815,7 +1456,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Бельгия",
     hi: "बेल्जियम",
     pt: "Bélgica",
-    ch: "比利时"
+    ch: "比利时",
+    ar: "بلجيكا",
   },
   {
     fr: "Belize",
@@ -825,7 +1467,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Белиз",
     hi: "बेलीज़",
     pt: "Belize",
-    ch: "伯利兹"
+    ch: "伯利兹",
+    ar: "بليز",
   },
   {
     fr: "Bénin",
@@ -835,7 +1478,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Бенин",
     hi: "बेनिन",
     pt: "Benin",
-    ch: "贝宁"
+    ch: "贝宁",
+    ar: "بنين",
   },
   {
     fr: "Bhoutan",
@@ -845,7 +1489,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Бутан",
     hi: "भूटान",
     pt: "Butão",
-    ch: "不丹"
+    ch: "不丹",
+    ar: "بوتان",
   },
   {
     fr: "Biélorussie",
@@ -855,7 +1500,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Беларусь",
     hi: "बेलारूस",
     pt: "Bielorrússia",
-    ch: "白俄罗斯"
+    ch: "白俄罗斯",
+    ar: "بيلاروسيا",
   },
   {
     fr: "Birmanie",
@@ -865,7 +1511,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Мьянма",
     hi: "म्यांमार",
     pt: "Mianmar",
-    ch: "缅甸"
+    ch: "缅甸",
+    ar: "ميانمار",
   },
   {
     fr: "Bolivie",
@@ -875,7 +1522,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Боливия",
     hi: "बोलीविया",
     pt: "Bolívia",
-    ch: "玻利维亚"
+    ch: "玻利维亚",
+    ar: "بوليفيا",
   },
   {
     fr: "Bosnie-Herzégovine",
@@ -885,7 +1533,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Босния и Герцеговина",
     hi: "बोस्निया और हर्जेगोविना",
     pt: "Bósnia e Herzegovina",
-    ch: "波斯尼亚和黑塞哥维那"
+    ch: "波斯尼亚和黑塞哥维那",
+    ar: "البوسنة والهرسك",
   },
   {
     fr: "Botswana",
@@ -895,7 +1544,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Ботсвана",
     hi: "बोत्सवाना",
     pt: "Botsuana",
-    ch: "博茨瓦纳"
+    ch: "博茨瓦纳",
+    ar: "بوتسوانا",
   },
   {
     fr: "Brésil",
@@ -905,7 +1555,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Бразилия",
     hi: "ब्राज़ील",
     pt: "Brasil",
-    ch: "巴西"
+    ch: "巴西",
+    ar: "البرازيل",
   },
   {
     fr: "Brunei",
@@ -915,7 +1566,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Бруней",
     hi: "ब्रुनेई",
     pt: "Brunei",
-    ch: "文莱"
+    ch: "文莱",
+    ar: "بروناي",
   },
   {
     fr: "Bulgarie",
@@ -925,7 +1577,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Болгария",
     hi: "बुल्गारिया",
     pt: "Bulgária",
-    ch: "保加利亚"
+    ch: "保加利亚",
+    ar: "بلغاريا",
   },
   {
     fr: "Burkina Faso",
@@ -935,7 +1588,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Буркина-Фасо",
     hi: "बुर्किना फासो",
     pt: "Burkina Faso",
-    ch: "布基纳法索"
+    ch: "布基纳法索",
+    ar: "بوركينا فاسو",
   },
   {
     fr: "Burundi",
@@ -945,7 +1599,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Бурунди",
     hi: "बुरुंडी",
     pt: "Burundi",
-    ch: "布隆迪"
+    ch: "布隆迪",
+    ar: "بوروندي",
   },
   {
     fr: "Cambodge",
@@ -955,7 +1610,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Камбоджа",
     hi: "कंबोडिया",
     pt: "Camboja",
-    ch: "柬埔寨"
+    ch: "柬埔寨",
+    ar: "كمبوديا",
   },
   {
     fr: "Cameroun",
@@ -965,7 +1621,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Камерун",
     hi: "कैमरून",
     pt: "Camarões",
-    ch: "喀麦隆"
+    ch: "喀麦隆",
+    ar: "الكاميرون",
   },
   {
     fr: "Canada",
@@ -975,7 +1632,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Канада",
     hi: "कनाडा",
     pt: "Canadá",
-    ch: "加拿大"
+    ch: "加拿大",
+    ar: "كندا",
   },
   {
     fr: "Cap-Vert",
@@ -985,7 +1643,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Кабо-Верде",
     hi: "केप वेर्डे",
     pt: "Cabo Verde",
-    ch: "佛得角"
+    ch: "佛得角",
+    ar: "الرأس الأخضر",
   },
   {
     fr: "Chili",
@@ -995,7 +1654,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Чили",
     hi: "चिली",
     pt: "Chile",
-    ch: "智利"
+    ch: "智利",
+    ar: "تشيلي",
   },
   {
     fr: "Chine",
@@ -1005,7 +1665,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Китай",
     hi: "चीन",
     pt: "China",
-    ch: "中国"
+    ch: "中国",
+    ar: "الصين",
   },
   {
     fr: "Chypre",
@@ -1015,7 +1676,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Кипр",
     hi: "साइप्रस",
     pt: "Chipre",
-    ch: "塞浦路斯"
+    ch: "塞浦路斯",
+    ar: "قبرص",
   },
   {
     fr: "Colombie",
@@ -1025,7 +1687,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Колумбия",
     hi: "कोलंबिया",
     pt: "Colômbia",
-    ch: "哥伦比亚"
+    ch: "哥伦比亚",
+    ar: "كولومبيا",
   },
   {
     fr: "Comores",
@@ -1035,7 +1698,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Коморы",
     hi: "कोमोरोस",
     pt: "Comores",
-    ch: "科摩罗"
+    ch: "科摩罗",
+    ar: "جزر القمر",
   },
   {
     fr: "Congo",
@@ -1045,7 +1709,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Конго",
     hi: "कांगो",
     pt: "Congo",
-    ch: "刚果"
+    ch: "刚果",
+    ar: "الكونغو",
   },
   {
     fr: "Corée du Nord",
@@ -1055,7 +1720,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Северная Корея",
     hi: "उत्तर कोरिया",
     pt: "Coreia do Norte",
-    ch: "北朝鲜"
+    ch: "北朝鲜",
+    ar: "كوريا الشمالية",
   },
   {
     fr: "Corée du Sud",
@@ -1065,7 +1731,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Южная Корея",
     hi: "दक्षिण कोरिया",
     pt: "Coreia do Sul",
-    ch: "韩国"
+    ch: "韩国",
+    ar: "كوريا الجنوبية",
   },
   {
     fr: "Costa Rica",
@@ -1075,7 +1742,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Коста-Рика",
     hi: "कोस्टा रिका",
     pt: "Costa Rica",
-    ch: "哥斯达黎加"
+    ch: "哥斯达黎加",
+    ar: "كوستاريكا",
   },
   {
     fr: "Côte d'Ivoire",
@@ -1085,7 +1753,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Кот-д'Ивуар",
     hi: "आइवरी कोस्ट",
     pt: "Costa do Marfim",
-    ch: "科特迪瓦"
+    ch: "科特迪瓦",
+    ar: "ساحل العاج",
   },
   {
     fr: "Croatie",
@@ -1095,7 +1764,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Хорватия",
     hi: "क्रोएशिया",
     pt: "Croácia",
-    ch: "克罗地亚"
+    ch: "克罗地亚",
+    ar: "كرواتيا",
   },
   {
     fr: "Cuba",
@@ -1105,7 +1775,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Куба",
     hi: "क्यूबा",
     pt: "Cuba",
-    ch: "古巴"
+    ch: "古巴",
+    ar: "كوبا",
   },
   {
     fr: "Danemark",
@@ -1115,7 +1786,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Дания",
     hi: "डेनमार्क",
     pt: "Dinamarca",
-    ch: "丹麦"
+    ch: "丹麦",
+    ar: "الدنمارك",
   },
   {
     fr: "Djibouti",
@@ -1125,7 +1797,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Джибути",
     hi: "जिबूती",
     pt: "Djibuti",
-    ch: "吉布提"
+    ch: "吉布提",
+    ar: "جيبوتي",
   },
   {
     fr: "Dominique",
@@ -1135,7 +1808,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Доминика",
     hi: "डोमिनिका",
     pt: "Dominica",
-    ch: "多米尼加"
+    ch: "多米尼加",
+    ar: "دومينيكا",
   },
   {
     fr: "Égypte",
@@ -1145,7 +1819,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Египет",
     hi: "मिस्र",
     pt: "Egito",
-    ch: "埃及"
+    ch: "埃及",
+    ar: "مصر",
   },
   {
     fr: "Émirats arabes unis",
@@ -1155,7 +1830,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Объединённые Арабские Эмираты",
     hi: "संयुक्त अरब अमीरात",
     pt: "Emirados Árabes Unidos",
-    ch: "阿拉伯联合酋长国"
+    ch: "阿拉伯联合酋长国",
+    ar: "الإمارات العربية المتحدة",
   },
   {
     fr: "Équateur",
@@ -1165,7 +1841,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Эквадор",
     hi: "इक्वाडोर",
     pt: "Equador",
-    ch: "厄瓜多尔"
+    ch: "厄瓜多尔",
+    ar: "الإكوادور",
   },
   {
     fr: "Érythrée",
@@ -1175,7 +1852,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Эритрея",
     hi: "इरिट्रिया",
     pt: "Eritreia",
-    ch: "厄立特里亚"
+    ch: "厄立特里亚",
+    ar: "إريتريا",
   },
   {
     fr: "Espagne",
@@ -1185,7 +1863,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Испания",
     hi: "स्पेन",
     pt: "Espanha",
-    ch: "西班牙"
+    ch: "西班牙",
+    ar: "إسبانيا",
   },
   {
     fr: "Estonie",
@@ -1195,7 +1874,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Эстония",
     hi: "एस्टोनिया",
     pt: "Estônia",
-    ch: "爱沙尼亚"
+    ch: "爱沙尼亚",
+    ar: "إستونيا",
   },
   {
     fr: "États-Unis",
@@ -1205,7 +1885,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Соединённые Штаты",
     hi: "संयुक्त राज्य अमेरिका",
     pt: "Estados Unidos",
-    ch: "美国"
+    ch: "美国",
+    ar: "الولايات المتحدة",
   },
   {
     fr: "Éthiopie",
@@ -1215,7 +1896,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Эфиопия",
     hi: "इथियोपिया",
     pt: "Etiópia",
-    ch: "埃塞俄比亚"
+    ch: "埃塞俄比亚",
+    ar: "إثيوبيا",
   },
   {
     fr: "Fidji",
@@ -1225,7 +1907,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Фиджи",
     hi: "फिजी",
     pt: "Fiji",
-    ch: "斐济"
+    ch: "斐济",
+    ar: "فيجي",
   },
   {
     fr: "Finlande",
@@ -1235,7 +1918,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Финляндия",
     hi: "फिनलैंड",
     pt: "Finlândia",
-    ch: "芬兰"
+    ch: "芬兰",
+    ar: "فنلندا",
   },
   {
     fr: "France",
@@ -1245,7 +1929,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Франция",
     hi: "फ्रांस",
     pt: "França",
-    ch: "法国"
+    ch: "法国",
+    ar: "فرنسا",
   },
   {
     fr: "Autre",
@@ -1255,7 +1940,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Другое",
     hi: "अन्य",
     pt: "Outro",
-    ch: "其他"
+    ch: "其他",
+    ar: "آخر",
   },
 ];
 
@@ -1849,6 +2535,209 @@ const getCountryCode = (countryName: string, locale: string = "en"): string => {
 //   },
 // ];
 
+// const SPECIALTIES: MultiLangDuo[] = [
+//   {
+//     fr: "Droit de l'immigration",
+//     es: "Derecho de inmigración",
+//     en: "Immigration Law",
+//     de: "Einwanderungsrecht",
+//     ru: "Иммиграционное право",
+//     hi: "आप्रवासन कानून",
+//     pt: "Direito de Imigração",
+//     ch: "移民法"
+//   },
+//   {
+//     fr: "Droit du travail",
+//     es: "Derecho laboral",
+//     en: "Labor Law",
+//     de: "Arbeitsrecht",
+//     ru: "Трудовое право",
+//     hi: "श्रम कानून",
+//     pt: "Direito do Trabalho",
+//     ch: "劳动法"
+//   },
+//   {
+//     fr: "Droit immobilier",
+//     es: "Derecho inmobiliario",
+//     en: "Real Estate Law",
+//     de: "Immobilienrecht",
+//     ru: "Недвижимость",
+//     hi: "रियल एस्टेट कानून",
+//     pt: "Direito Imobiliário",
+//     ch: "房地产法"
+//   },
+//   {
+//     fr: "Droit des affaires",
+//     es: "Derecho empresarial",
+//     en: "Business Law",
+//     de: "Wirtschaftsrecht",
+//     ru: "Коммерческое право",
+//     hi: "व्यावसायिक कानून",
+//     pt: "Direito Comercial",
+//     ch: "商业法"
+//   },
+//   {
+//     fr: "Droit de la famille",
+//     es: "Derecho de familia",
+//     en: "Family Law",
+//     de: "Familienrecht",
+//     ru: "Семейное право",
+//     hi: "पारिवारिक कानून",
+//     pt: "Direito de Família",
+//     ch: "家庭法"
+//   },
+//   {
+//     fr: "Droit pénal",
+//     es: "Derecho penal",
+//     en: "Criminal Law",
+//     de: "Strafrecht",
+//     ru: "Уголовное право",
+//     hi: "आपराधिक कानून",
+//     pt: "Direito Penal",
+//     ch: "刑法"
+//   },
+//   {
+//     fr: "Droit fiscal",
+//     es: "Derecho fiscal",
+//     en: "Tax Law",
+//     de: "Steuerrecht",
+//     ru: "Налоговое право",
+//     hi: "कर कानून",
+//     pt: "Direito Tributário",
+//     ch: "税法"
+//   },
+//   {
+//     fr: "Droit international",
+//     es: "Derecho internacional",
+//     en: "International Law",
+//     de: "Internationales Recht",
+//     ru: "Международное право",
+//     hi: "अंतर्राष्ट्रीय कानून",
+//     pt: "Direito Internacional",
+//     ch: "国际法"
+//   },
+//   {
+//     fr: "Droit des contrats",
+//     es: "Derecho de contratos",
+//     en: "Contract Law",
+//     de: "Vertragsrecht",
+//     ru: "Договорное право",
+//     hi: "संविदा कानून",
+//     pt: "Direito de Contratos",
+//     ch: "合同法"
+//   },
+//   {
+//     fr: "Propriété intellectuelle",
+//     es: "Propiedad intelectual",
+//     en: "Intellectual Property",
+//     de: "Geistiges Eigentum",
+//     ru: "Интеллектуальная собственность",
+//     hi: "बौद्धिक संपदा",
+//     pt: "Propriedade Intelectual",
+//     ch: "知识产权"
+//   },
+//   {
+//     fr: "Droit de la consommation",
+//     es: "Derecho del consumidor",
+//     en: "Consumer Law",
+//     de: "Verbraucherschutzrecht",
+//     ru: "Защита прав потребителей",
+//     hi: "उपभोक्ता कानून",
+//     pt: "Direito do Consumidor",
+//     ch: "消费者法"
+//   },
+//   {
+//     fr: "Droit bancaire",
+//     es: "Derecho bancario",
+//     en: "Banking Law",
+//     de: "Bankrecht",
+//     ru: "Банковское право",
+//     hi: "बैंकिंग कानून",
+//     pt: "Direito Bancário",
+//     ch: "银行法"
+//   },
+//   {
+//     fr: "Droit de l'environnement",
+//     es: "Derecho ambiental",
+//     en: "Environmental Law",
+//     de: "Umweltrecht",
+//     ru: "Экологическое право",
+//     hi: "पर्यावरण कानून",
+//     pt: "Direito Ambiental",
+//     ch: "环境法"
+//   },
+//   {
+//     fr: "Droit médical",
+//     es: "Derecho médico",
+//     en: "Medical Law",
+//     de: "Medizinrecht",
+//     ru: "Медицинское право",
+//     hi: "चिकित्सा कानून",
+//     pt: "Direito Médico",
+//     ch: "医疗法"
+//   },
+//   {
+//     fr: "Droit des sociétés",
+//     es: "Derecho corporativo",
+//     en: "Corporate Law",
+//     de: "Gesellschaftsrecht",
+//     ru: "Корпоративное право",
+//     hi: "कॉर्पोरेट कानून",
+//     pt: "Direito Corporativo",
+//     ch: "公司法"
+//   },
+//   {
+//     fr: "Droit des successions",
+//     es: "Derecho de sucesiones",
+//     en: "Estate Law",
+//     de: "Erbrecht",
+//     ru: "Наследственное право",
+//     hi: "संपत्ति कानून",
+//     pt: "Direito Sucessório",
+//     ch: "遗产法"
+//   },
+//   {
+//     fr: "Droit administratif",
+//     es: "Derecho administrativo",
+//     en: "Administrative Law",
+//     de: "Verwaltungsrecht",
+//     ru: "Административное право",
+//     hi: "प्रशासनिक कानून",
+//     pt: "Direito Administrativo",
+//     ch: "行政法"
+//   },
+//   {
+//     fr: "Droit européen",
+//     es: "Derecho europeo",
+//     en: "European Law",
+//     de: "Europarecht",
+//     ru: "Европейское право",
+//     hi: "यूरोपीय कानून",
+//     pt: "Direito Europeu",
+//     ch: "欧洲法"
+//   },
+//   {
+//     fr: "Droit des étrangers",
+//     es: "Derecho de extranjería",
+//     en: "Immigrant Rights",
+//     de: "Ausländerrecht",
+//     ru: "Право иностранцев",
+//     hi: "विदेशी अधिकार",
+//     pt: "Direito de Estrangeiros",
+//     ch: "移民权利"
+//   },
+//   {
+//     fr: "Autre",
+//     es: "Otro",
+//     en: "Other",
+//     de: "Andere",
+//     ru: "Другое",
+//     hi: "अन्य",
+//     pt: "Outro",
+//     ch: "其他"
+//   },
+// ];
+
 const SPECIALTIES: MultiLangDuo[] = [
   {
     fr: "Droit de l'immigration",
@@ -1858,7 +2747,8 @@ const SPECIALTIES: MultiLangDuo[] = [
     ru: "Иммиграционное право",
     hi: "आप्रवासन कानून",
     pt: "Direito de Imigração",
-    ch: "移民法"
+    ch: "移民法",
+    ar: "قانون الهجرة",
   },
   {
     fr: "Droit du travail",
@@ -1868,7 +2758,8 @@ const SPECIALTIES: MultiLangDuo[] = [
     ru: "Трудовое право",
     hi: "श्रम कानून",
     pt: "Direito do Trabalho",
-    ch: "劳动法"
+    ch: "劳动法",
+    ar: "قانون العمل",
   },
   {
     fr: "Droit immobilier",
@@ -1878,7 +2769,8 @@ const SPECIALTIES: MultiLangDuo[] = [
     ru: "Недвижимость",
     hi: "रियल एस्टेट कानून",
     pt: "Direito Imobiliário",
-    ch: "房地产法"
+    ch: "房地产法",
+    ar: "قانون العقارات",
   },
   {
     fr: "Droit des affaires",
@@ -1888,7 +2780,8 @@ const SPECIALTIES: MultiLangDuo[] = [
     ru: "Коммерческое право",
     hi: "व्यावसायिक कानून",
     pt: "Direito Comercial",
-    ch: "商业法"
+    ch: "商业法",
+    ar: "قانون الأعمال",
   },
   {
     fr: "Droit de la famille",
@@ -1898,7 +2791,8 @@ const SPECIALTIES: MultiLangDuo[] = [
     ru: "Семейное право",
     hi: "पारिवारिक कानून",
     pt: "Direito de Família",
-    ch: "家庭法"
+    ch: "家庭法",
+    ar: "قانون الأسرة",
   },
   {
     fr: "Droit pénal",
@@ -1908,7 +2802,8 @@ const SPECIALTIES: MultiLangDuo[] = [
     ru: "Уголовное право",
     hi: "आपराधिक कानून",
     pt: "Direito Penal",
-    ch: "刑法"
+    ch: "刑法",
+    ar: "القانون الجنائي",
   },
   {
     fr: "Droit fiscal",
@@ -1918,7 +2813,8 @@ const SPECIALTIES: MultiLangDuo[] = [
     ru: "Налоговое право",
     hi: "कर कानून",
     pt: "Direito Tributário",
-    ch: "税法"
+    ch: "税法",
+    ar: "القانون الضريبي",
   },
   {
     fr: "Droit international",
@@ -1928,7 +2824,8 @@ const SPECIALTIES: MultiLangDuo[] = [
     ru: "Международное право",
     hi: "अंतर्राष्ट्रीय कानून",
     pt: "Direito Internacional",
-    ch: "国际法"
+    ch: "国际法",
+    ar: "القانون الدولي",
   },
   {
     fr: "Droit des contrats",
@@ -1938,7 +2835,8 @@ const SPECIALTIES: MultiLangDuo[] = [
     ru: "Договорное право",
     hi: "संविदा कानून",
     pt: "Direito de Contratos",
-    ch: "合同法"
+    ch: "合同法",
+    ar: "قانون العقود",
   },
   {
     fr: "Propriété intellectuelle",
@@ -1948,7 +2846,8 @@ const SPECIALTIES: MultiLangDuo[] = [
     ru: "Интеллектуальная собственность",
     hi: "बौद्धिक संपदा",
     pt: "Propriedade Intelectual",
-    ch: "知识产权"
+    ch: "知识产权",
+    ar: "الملكية الفكرية",
   },
   {
     fr: "Droit de la consommation",
@@ -1958,7 +2857,8 @@ const SPECIALTIES: MultiLangDuo[] = [
     ru: "Защита прав потребителей",
     hi: "उपभोक्ता कानून",
     pt: "Direito do Consumidor",
-    ch: "消费者法"
+    ch: "消费者法",
+    ar: "قانون حماية المستهلك",
   },
   {
     fr: "Droit bancaire",
@@ -1968,7 +2868,8 @@ const SPECIALTIES: MultiLangDuo[] = [
     ru: "Банковское право",
     hi: "बैंकिंग कानून",
     pt: "Direito Bancário",
-    ch: "银行法"
+    ch: "银行法",
+    ar: "القانون المصرفي",
   },
   {
     fr: "Droit de l'environnement",
@@ -1978,7 +2879,8 @@ const SPECIALTIES: MultiLangDuo[] = [
     ru: "Экологическое право",
     hi: "पर्यावरण कानून",
     pt: "Direito Ambiental",
-    ch: "环境法"
+    ch: "环境法",
+    ar: "قانون البيئة",
   },
   {
     fr: "Droit médical",
@@ -1988,7 +2890,8 @@ const SPECIALTIES: MultiLangDuo[] = [
     ru: "Медицинское право",
     hi: "चिकित्सा कानून",
     pt: "Direito Médico",
-    ch: "医疗法"
+    ch: "医疗法",
+    ar: "القانون الطبي",
   },
   {
     fr: "Droit des sociétés",
@@ -1998,7 +2901,8 @@ const SPECIALTIES: MultiLangDuo[] = [
     ru: "Корпоративное право",
     hi: "कॉर्पोरेट कानून",
     pt: "Direito Corporativo",
-    ch: "公司法"
+    ch: "公司法",
+    ar: "قانون الشركات",
   },
   {
     fr: "Droit des successions",
@@ -2008,7 +2912,8 @@ const SPECIALTIES: MultiLangDuo[] = [
     ru: "Наследственное право",
     hi: "संपत्ति कानून",
     pt: "Direito Sucessório",
-    ch: "遗产法"
+    ch: "遗产法",
+    ar: "قانون المواريث",
   },
   {
     fr: "Droit administratif",
@@ -2018,7 +2923,8 @@ const SPECIALTIES: MultiLangDuo[] = [
     ru: "Административное право",
     hi: "प्रशासनिक कानून",
     pt: "Direito Administrativo",
-    ch: "行政法"
+    ch: "行政法",
+    ar: "القانون الإداري",
   },
   {
     fr: "Droit européen",
@@ -2028,7 +2934,8 @@ const SPECIALTIES: MultiLangDuo[] = [
     ru: "Европейское право",
     hi: "यूरोपीय कानून",
     pt: "Direito Europeu",
-    ch: "欧洲法"
+    ch: "欧洲法",
+    ar: "القانون الأوروبي",
   },
   {
     fr: "Droit des étrangers",
@@ -2038,7 +2945,8 @@ const SPECIALTIES: MultiLangDuo[] = [
     ru: "Право иностранцев",
     hi: "विदेशी अधिकार",
     pt: "Direito de Estrangeiros",
-    ch: "移民权利"
+    ch: "移民权利",
+    ar: "حقوق الأجانب",
   },
   {
     fr: "Autre",
@@ -2048,7 +2956,8 @@ const SPECIALTIES: MultiLangDuo[] = [
     ru: "Другое",
     hi: "अन्य",
     pt: "Outro",
-    ch: "其他"
+    ch: "其他",
+    ar: "آخر",
   },
 ];
 
@@ -2064,7 +2973,16 @@ interface LawyerFormData {
   currentCountry: string;
   currentPresenceCountry: string;
   customCountry: string;
-  preferredLanguage: "fr" | "en" | "es" | "de" | "ru" | "hi"  | "pt" | "ch";
+  preferredLanguage:
+    | "fr"
+    | "en"
+    | "es"
+    | "de"
+    | "ru"
+    | "hi"
+    | "pt"
+    | "ch"
+    | "ar";
   practiceCountries: string[];
   customPracticeCountry: string;
   yearsOfExperience: number;
@@ -2325,6 +3243,87 @@ const I18N: Record<I18nKey, I18nShape> = {
     previewToggleOpen: "Hide preview",
     previewToggleClose: "Show preview",
   },
+  ar: {
+    metaTitle: "تسجيل المحامي • SOS Expats",
+    metaDesc:
+      "انضم إلى شبكة SOS Expats: عملاء في كل مكان، قضايا ذكية، وأنت المسؤول 🚀.",
+    heroTitle: "تسجيل المحامي",
+    heroSubtitle:
+      "شارك خبرتك مع المغتربين من جميع أنحاء العالم. نحن نتولى الباقي 😉",
+    already: "مسجل بالفعل؟",
+    login: "تسجيل الدخول",
+    personalInfo: "المعلومات الشخصية",
+    geoInfo: "أين تعمل",
+    proInfo: "ممارستك المهنية",
+    acceptTerms: "أوافق على",
+    termsLink: "شروط وأحكام المحامين",
+    create: "إنشاء حساب المحامي",
+    loading: "نحن نجهز كل شيء لك... ⏳",
+    firstName: "الاسم الأول",
+    lastName: "اسم العائلة",
+    email: "البريد الإلكتروني",
+    password: "كلمة المرور",
+    phone: "الهاتف",
+    whatsapp: "رقم الواتساب",
+    countryCode: "رمز البلد",
+    residenceCountry: "بلد الإقامة",
+    presenceCountry: "أين أنت الآن",
+    yoe: "سنوات الخبرة",
+    gradYear: "سنة التخرج",
+    bio: "الوصف المهني",
+    profilePhoto: "صورة الملف الشخصي",
+    specialties: "التخصصات",
+    practiceCountries: "بلدان الممارسة",
+    languages: "اللغات المنطوقة",
+    formations: "التعليم",
+    addFormation: "إضافة تكوين",
+    addPractice: "إضافة بلد ممارسة",
+    addSpecialty: "إضافة تخصص",
+    specifyCountry: "حدد بلدك",
+    specifyPractice: "حدد البلد",
+    specifySpecialty: "حدد التخصص",
+    help: {
+      minPassword: "6 أحرف وأنت جاهز (بدون قيود) 💃",
+      emailPlaceholder: "you@example.com",
+      firstNamePlaceholder: "ما اسمك؟ 😊",
+      bioHint: "اشرح في 2-3 جمل كيف تساعد المغتربين (50 حرفًا كحد أدنى).",
+    },
+    errors: {
+      title: "لمسات صغيرة قبل الانطلاق ✨",
+      firstNameRequired: "نريد أن نناديك... ولكن بماذا؟ 😄",
+      lastNameRequired: "اسم عائلة صغير ليبدو احترافيًا؟ 👔",
+      emailInvalid:
+        "هذا العنوان يبدو مريبًا... جرب [name@example.com](mailto:name@example.com) 🧐",
+      emailTaken:
+        "عفوًا، هذا البريد الإلكتروني مستخدم بالفعل. ربما لديك حساب بالفعل؟ 🔑",
+      passwordTooShort: "6 أحرف كحد أدنى فقط — سهل! 💪",
+      phoneRequired: "أين نتصل بك؟ 📞",
+      whatsappRequired: "هل نتحدث أيضًا على الواتساب؟ 💬",
+      needCountry: "بلد إقامتك، من فضلك 🌍",
+      needPresence: "أين أنت حاليًا؟ ✈️",
+      needPractice: "أضف بلد ممارسة واحدًا على الأقل 🗺️",
+      needLang: "اختر لغة واحدة على الأقل 🗣️",
+      needSpec: "تخصص واحد، وأنت تتألق ✨",
+      needBio: "جهد صغير آخر: 50 حرفًا كحد أدنى 📝",
+      needPhoto: "صورة احترافية، وتكون أكثر ثقة بنسبة 100% 📸",
+      needEducation: "أضف تكوينًا واحدًا على الأقل 🎓",
+      acceptTermsRequired: "نقرة صغيرة على الشروط وننطلق ✅",
+      emailRequired: "نحتاج إلى بريدك الإلكتروني لإبقائك على اطلاع 📬",
+    },
+    success: {
+      fieldValid: "مثالي! ✨",
+      emailValid: "بريد إلكتروني رائع! 👌",
+      pwdOk: "كلمة المرور مؤكدة 🔒",
+      allGood: "كل شيء جيد، جاهز للتألق 🌟",
+    },
+    secureNote: "بيانات محمية • التحقق خلال 24 ساعة • دعم قانوني",
+    footerTitle: "⚖️ انضم إلى مجتمع SOS Expats",
+    footerText: "محامون موثوقون، عملاء ملتزمون — هيا بنا!",
+    langPlaceholder: "اختر اللغات",
+    previewTitle: "معاينة مباشرة للملف الشخصي",
+    previewToggleOpen: "إخفاء المعاينة",
+    previewToggleClose: "عرض المعاينة",
+  },
 };
 
 const mapDuo = (list: Duo[], lang: I18nKey) => list.map((item) => item[lang]);
@@ -2567,7 +3566,8 @@ const LawyerPreviewCard = ({
         de: "Ihr Name",
         ru: "Ваше имя",
         hi: "आपका नाम",
-        ch: "你的名字"
+        ch: "你的名字",
+        ar: "اسمك",
       },
       lawyer: {
         en: "Lawyer",
@@ -2576,7 +3576,8 @@ const LawyerPreviewCard = ({
         de: "Anwalt",
         ru: "Юрист",
         hi: "वकील",
-        ch: "律师"
+        ch: "律师",
+        ar: "محامي",
       },
       complete: {
         en: "complete",
@@ -2585,7 +3586,8 @@ const LawyerPreviewCard = ({
         de: "vollständig",
         ru: "завершено",
         hi: "पूर्ण",
-        ch: "完全的"
+        ch: "完全的",
+        ar: "مكتمل",
       },
       residence: {
         en: "Residence",
@@ -2594,7 +3596,8 @@ const LawyerPreviewCard = ({
         de: "Wohnsitz",
         ru: "Резиденция",
         hi: "निवास",
-        ch: "住宅"
+        ch: "住宅",
+        ar: "الإقامة",
       },
       experience: {
         en: "Experience:",
@@ -2603,7 +3606,8 @@ const LawyerPreviewCard = ({
         de: "Erfahrung:",
         ru: "Опыт:",
         hi: "अनुभव:",
-        ch: "经验:"
+        ch: "经验:",
+        ar: "الخبرة:",
       },
       years: {
         en: "years",
@@ -2612,7 +3616,8 @@ const LawyerPreviewCard = ({
         de: "Jahre",
         ru: "лет",
         hi: "वर्ष",
-        ch: "年"
+        ch: "年",
+        ar: "سنوات",
       },
       languages: {
         en: "Languages",
@@ -2621,7 +3626,8 @@ const LawyerPreviewCard = ({
         de: "Sprachen",
         ru: "Языки",
         hi: "भाषाएं",
-        ch: "语言"
+        ch: "语言",
+        ar: "اللغات",
       },
       clientPreview: {
         en: "This is what clients will see. Make it shine ✨",
@@ -2630,7 +3636,8 @@ const LawyerPreviewCard = ({
         de: "Das sehen Kunden. Lassen Sie es glänzen ✨",
         ru: "Это увидят клиенты. Сделайте его ярким ✨",
         hi: "ग्राहक यह देखेंगे। इसे चमकाएं ✨",
-        ch: "这就是客户将看到的。让它熠熠生辉✨"
+        ch: "这就是客户将看到的。让它熠熠生辉✨",
+        ar: "هذا ما سيراه العملاء. اجعله يتألق ✨",
       },
     };
 
@@ -2893,7 +3900,16 @@ const RegisterLawyer: React.FC = () => {
   const { register, isLoading, error } = useAuth();
   const { language } = useApp(); // 'fr' | 'en'
   const lang =
-    (language as I18nKey) || "fr" || "en" || "es" || "de" || "ru" || "hi" || "pt" || "ch";
+    (language as I18nKey) ||
+    "fr" ||
+    "en" ||
+    "es" ||
+    "de" ||
+    "ru" ||
+    "hi" ||
+    "pt" ||
+    "ch" ||
+    "ar";
   const t = I18N[lang];
 
   // ---- SEO / OG meta ----
@@ -3642,8 +4658,9 @@ const RegisterLawyer: React.FC = () => {
   //   ];
   // }, [form, selectedLanguages]);
 
-  const missing = useMemo(() => {
+const missing = useMemo(() => {
     const langs = (selectedLanguages as LanguageOption[]).length > 0;
+
 
     return [
       {
@@ -3657,7 +4674,8 @@ const RegisterLawyer: React.FC = () => {
           ru: "Имя",
           hi: "पहला नाम",
           pt: "Nome",
-          ch: "名"
+          ch: "名",
+          ar: "الاسم الأول"
         },
       },
       {
@@ -3671,7 +4689,8 @@ const RegisterLawyer: React.FC = () => {
           ru: "Фамилия",
           hi: "उपनाम",
           pt: "Sobrenome",
-          ch: "姓"
+          ch: "姓",
+          ar: "اسم العائلة"
         },
       },
       {
@@ -3685,7 +4704,8 @@ const RegisterLawyer: React.FC = () => {
           ru: "Действительный email",
           hi: "मान्य ईमेल",
           pt: "Email válido",
-          ch: "有效电子邮件"
+          ch: "有效电子邮件",
+          ar: "بريد إلكتروني صالح"
         },
       },
       {
@@ -3699,7 +4719,8 @@ const RegisterLawyer: React.FC = () => {
           ru: "Пароль (≥ 6 символов)",
           hi: "पासवर्ड (≥ 6 अक्षर)",
           pt: "Senha (≥ 6 caracteres)",
-          ch: "密码（≥ 6 个字符）"
+          ch: "密码（≥ 6 个字符）",
+          ar: "كلمة المرور (≥ 6 أحرف)"
         },
       },
       {
@@ -3718,7 +4739,8 @@ const RegisterLawyer: React.FC = () => {
           ru: "Телефон",
           hi: "फ़ोन",
           pt: "Telefone",
-          ch: "电话"
+          ch: "电话",
+          ar: "الهاتف"
         },
       },
       {
@@ -3737,7 +4759,8 @@ const RegisterLawyer: React.FC = () => {
           ru: "WhatsApp",
           hi: "WhatsApp",
           pt: "WhatsApp",
-          ch: "WhatsApp"
+          ch: "WhatsApp",
+          ar: "واتساب"
         },
       },
       {
@@ -3751,7 +4774,8 @@ const RegisterLawyer: React.FC = () => {
           ru: "Страна проживания",
           hi: "निवास देश",
           pt: "País de residência",
-          ch: "居住国家"
+          ch: "居住国家",
+          ar: "بلد الإقامة"
         },
       },
       {
@@ -3765,7 +4789,8 @@ const RegisterLawyer: React.FC = () => {
           ru: "Страна присутствия",
           hi: "उपस्थिति देश",
           pt: "País de presença",
-          ch: "存在国家"
+          ch: "存在国家",
+          ar: "بلد التواجد"
         },
       },
       {
@@ -3779,7 +4804,8 @@ const RegisterLawyer: React.FC = () => {
           ru: "Хотя бы одна страна практики",
           hi: "कम से कम एक अभ्यास देश",
           pt: "Pelo menos um país de prática",
-          ch: "至少有一个实践国家"
+          ch: "至少有一个实践国家",
+          ar: "بلد ممارسة واحد على الأقل"
         },
       },
       {
@@ -3793,7 +4819,8 @@ const RegisterLawyer: React.FC = () => {
           ru: "Хотя бы один язык",
           hi: "कम से कम एक भाषा",
           pt: "Pelo menos um idioma",
-          ch: "至少一种语言"
+          ch: "至少一种语言",
+          ar: "لغة واحدة على الأقل"
         },
       },
       {
@@ -3807,7 +4834,8 @@ const RegisterLawyer: React.FC = () => {
           ru: "Хотя бы одна специальность",
           hi: "कम से कम एक विशेषता",
           pt: "Pelo menos uma especialidade",
-          ch: "至少一门专业"
+          ch: "至少一门专业",
+          ar: "تخصص واحد على الأقل"
         },
       },
       {
@@ -3821,7 +4849,8 @@ const RegisterLawyer: React.FC = () => {
           ru: "Биография (≥ 50 символов)",
           hi: "बायो (≥ 50 अक्षर)",
           pt: "Biografia (≥ 50 caracteres)",
-          ch: "个人简介（≥ 50 个字符）"
+          ch: "个人简介（≥ 50 个字符）",
+          ar: "السيرة الذاتية (≥ 50 حرفًا)"
         },
       },
       {
@@ -3835,7 +4864,8 @@ const RegisterLawyer: React.FC = () => {
           ru: "Фото профиля",
           hi: "प्रोफ़ाइल फ़ोटो",
           pt: "Foto de perfil",
-          ch: "个人资料照片"
+          ch: "个人资料照片",
+          ar: "صورة الملف الشخصي"
         },
       },
       {
@@ -3849,7 +4879,8 @@ const RegisterLawyer: React.FC = () => {
           ru: "Хотя бы одно образование",
           hi: "कम से कम एक शिक्षा",
           pt: "Pelo menos uma formação",
-          ch: "至少接受过一次教育"
+          ch: "至少接受过一次教育",
+          ar: "تعليم واحد على الأقل"
         },
       },
       {
@@ -3863,11 +4894,13 @@ const RegisterLawyer: React.FC = () => {
           ru: "Принять условия",
           hi: "नियम स्वीकार करें",
           pt: "Aceitar T&C",
-          ch: "接受条款和条件"
+          ch: "接受条款和条件",
+          ar: "قبول الشروط والأحكام"
         },
       },
     ];
   }, [form, selectedLanguages]);
+
 
   const focusFirstMissingField = useCallback(() => {
     const first = missing.find((m) => !m.ok);
@@ -4750,19 +5783,21 @@ const RegisterLawyer: React.FC = () => {
                           className={getInputClassName("currentCountry")}
                         >
                           <option value="">
-                            {lang === "fr"
-                              ? "Sélectionnez votre pays"
-                              : lang === "es"
-                                ? "Selecciona tu país"
-                                : lang === "de"
-                                  ? "Wählen Sie Ihr Land"
-                                  : lang === "ru"
-                                    ? "Выберите свою страну"
-                                    : lang === "hi"
-                                      ? "अपना देश चुनें"
-                                      : lang === "ch" 
-                                      ? "选择您所在的国家/地区"
-                                      : "Select your country"}
+                           {lang === "fr"
+  ? "Sélectionnez votre pays"
+  : lang === "es"
+    ? "Selecciona tu país"
+    : lang === "de"
+      ? "Wählen Sie Ihr Land"
+      : lang === "ru"
+        ? "Выберите свою страну"
+        : lang === "hi"
+          ? "अपना देश चुनें"
+          : lang === "ch"
+            ? "选择您所在的国家/地区"
+            : lang === "ar"
+              ? "اختر بلدك"
+              : "Select your country"}
                           </option>
                           {countryOptions.map((c) => (
                             <option key={c} value={c}>
@@ -4829,19 +5864,22 @@ const RegisterLawyer: React.FC = () => {
                               ? "Select your presence country"
                               : "Sélectionnez votre pays de présence"} */}
 
-                            {lang === "fr"
-                              ? "Sélectionnez votre pays de présence"
-                              : lang === "es"
-                                ? "Selecciona tu país de presencia"
-                                : lang === "de"
-                                  ? "Wählen Sie Ihr Aufenthaltsland"
-                                  : lang === "ru"
-                                    ? "Выберите страну вашего пребывания"
-                                    : lang === "hi"
-                                      ? "अपनी उपस्थिति का देश चुनें"
-                                      : lang === "ch"
-                                      ? "选择您所在的国家/地区"
-                                      : "Select your presence country"}
+                           {lang === "fr"
+  ? "Sélectionnez votre pays de présence"
+  : lang === "es"
+    ? "Selecciona tu país de presencia"
+    : lang === "de"
+      ? "Wählen Sie Ihr Aufenthaltsland"
+      : lang === "ru"
+        ? "Выберите страну вашего пребывания"
+        : lang === "hi"
+          ? "अपनी उपस्थिति का देश चुनें"
+          : lang === "ch"
+            ? "选择您所在的国家/地区"
+            : lang === "ar"
+              ? "اختر بلد تواجدك"
+              : "Select your presence country"}
+
                           </option>
                           {countryOptions.map((c) => (
                             <option key={c} value={c}>
@@ -5120,7 +6158,6 @@ const RegisterLawyer: React.FC = () => {
                       />
                       <FieldSuccess
                         show={form.educations.some((e) => e.trim().length > 0)}
-                        // message={t.success.fieldValid}
                         message={intl.formatMessage({
                           id: "registerLawyer.success.fieldValid",
                         })}
@@ -5241,33 +6278,38 @@ const RegisterLawyer: React.FC = () => {
                                 ? "✓ Nice! Field validated."
                                 : "✓ Top ! Champ validé."} */}
 
-                            {form.bio.length < 50
-                              ? lang === "fr"
-                                ? `Encore ${50 - form.bio.length} caractères — vous y êtes presque ! 💪`
-                                : lang === "es"
-                                  ? `Solo ${50 - form.bio.length} caracteres más — ¡puedes hacerlo! 💪`
-                                  : lang === "de"
-                                    ? `Nur noch ${50 - form.bio.length} Zeichen — Sie schaffen das! 💪`
-                                    : lang === "ru"
-                                      ? `Осталось ${50 - form.bio.length} символов — вы почти у цели! 💪`
-                                      : lang === "hi"
-                                        ? `बस ${50 - form.bio.length} अक्षर और — आप कर सकते हैं! 💪`
-                                        : lang === "ch"
-                                        ? `还剩 ${50 - form.bio.length} 个字符——你一定能行！💪`
-                                        : `Just ${50 - form.bio.length} chars to go — you've got this! 💪`
-                              : lang === "fr"
-                                ? "✓ Top ! Champ validé."
-                                : lang === "es"
-                                  ? "✓ ¡Perfecto! Campo validado."
-                                  : lang === "de"
-                                    ? "✓ Toll! Feld validiert."
-                                    : lang === "ru"
-                                      ? "✓ Отлично! Поле проверено."
-                                      : lang === "hi"
-                                        ? "✓ बढ़िया! फ़ील्ड सत्यापित।"
-                                        : lang === "ch"
-                                        ? "✓ 好！字段已验证。"
-                                        : "✓ Nice! Field validated."}
+                           {form.bio.length < 50
+  ? lang === "fr"
+    ? `Encore ${50 - form.bio.length} caractères — vous y êtes presque ! 💪`
+    : lang === "es"
+      ? `Solo ${50 - form.bio.length} caracteres más — ¡puedes hacerlo! 💪`
+      : lang === "de"
+        ? `Nur noch ${50 - form.bio.length} Zeichen — Sie schaffen das! 💪`
+        : lang === "ru"
+          ? `Осталось ${50 - form.bio.length} символов — вы почти у цели! 💪`
+          : lang === "hi"
+            ? `बस ${50 - form.bio.length} अक्षर और — आप कर सकते हैं! 💪`
+            : lang === "ch"
+              ? `还剩 ${50 - form.bio.length} 个字符——你一定能行！💪`
+              : lang === "ar"
+                ? `فقط ${50 - form.bio.length} حرفًا متبقيًا — يمكنك فعلها! 💪`
+                : `Just ${50 - form.bio.length} chars to go — you've got this! 💪`
+  : lang === "fr"
+    ? "✓ Top ! Champ validé."
+    : lang === "es"
+      ? "✓ ¡Perfecto! Campo validado."
+      : lang === "de"
+        ? "✓ Toll! Feld validiert."
+        : lang === "ru"
+          ? "✓ Отлично! Поле проверено."
+          : lang === "hi"
+            ? "✓ बढ़िया! फ़ील्ड सत्यापित।"
+            : lang === "ch"
+              ? "✓ 好！字段已验证。"
+              : lang === "ar"
+                ? "✓ رائع! تم التحقق من الحقل."
+                : "✓ Nice! Field validated."}
+
                           </span>
                           <span
                             className={
@@ -5457,9 +6499,11 @@ const RegisterLawyer: React.FC = () => {
                                               ? m.label.hi
                                               : lang === "pt"
                                                 ? m.label.pt
-                                              : lang === "ch"
-                                              ? m.label.ch
-                                              : m.label.en}
+                                                : lang === "ch"
+                                                  ? m.label.ch
+                                                  : lang === "ar"
+                                                    ? m.label.ar
+                                                    : m.label.en}
                                 </span>
                               </div>
                             ))}

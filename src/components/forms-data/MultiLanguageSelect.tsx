@@ -23,7 +23,7 @@ interface MultiLanguageSelectProps {
   onChange: (selectedOptions: MultiValue<LanguageOption>) => void;
   providerLanguages?: string[];
   highlightShared?: boolean;
-  locale?: 'fr' | 'en' | 'es' | 'de' | 'ru' | 'hi' | 'ch';
+  locale?: 'fr' | 'en' | 'es' | 'de' | 'ru' | 'hi' | 'ch' | 'pt' | 'ar';
   placeholder?: string;
   className?: string;
   disabled?: boolean;
@@ -42,7 +42,7 @@ const MultiLanguageSelect: React.FC<MultiLanguageSelectProps> = React.memo(({
   const [inputValue, setInputValue] = useState('');
   
   // 🎯 PRIORITÉ : locale prop > détection automatique
-  const currentLocale = useMemo<'fr' | 'en' | 'es' | 'de' | 'ru' | 'hi' | 'ch'>(() => {
+  const currentLocale = useMemo<'fr' | 'en' | 'es' | 'de' | 'ru' | 'hi' | 'ch' | 'pt' | 'ar'>(() => {
     // Si une locale est explicitement passée, l'utiliser
     if (locale) {
       return locale;

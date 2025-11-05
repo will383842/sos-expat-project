@@ -143,6 +143,7 @@ type MultiLangDuo = {
   hi: string;
   pt: string;
   ch: string;
+  ar: string;
 };
 
 const getCountryCode = (countryName: string, locale: string = "en"): string => {
@@ -401,7 +402,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Афганистан",
     hi: "अफगानिस्तान",
     pt: "Afeganistão",
-    ch: "阿富汗"
+    ch: "阿富汗",
+    ar: "أفغانستان"
   },
   {
     fr: "Afrique du Sud",
@@ -411,7 +413,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Южная Африка",
     hi: "दक्षिण अफ्रीका",
     pt: "África do Sul",
-    ch: "南非"
+    ch: "南非",
+    ar: "جنوب أفريقيا"
   },
   {
     fr: "Albanie",
@@ -421,7 +424,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Албания",
     hi: "अल्बानिया",
     pt: "Albânia",
-    ch: "阿尔巴尼亚"
+    ch: "阿尔巴尼亚",
+    ar: "ألبانيا"
   },
   {
     fr: "Algérie",
@@ -431,7 +435,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Алжир",
     hi: "अल्जीरिया",
     pt: "Argélia",
-    ch: "阿尔及利亚"
+    ch: "阿尔及利亚",
+    ar: "الجزائر"
   },
   {
     fr: "Allemagne",
@@ -441,7 +446,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Германия",
     hi: "जर्मनी",
     pt: "Alemanha",
-    ch: "德国"
+    ch: "德国",
+    ar: "ألمانيا"
   },
   {
     fr: "Andorre",
@@ -451,7 +457,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Андорра",
     hi: "अंडोरा",
     pt: "Andorra",
-    ch: "安道尔"
+    ch: "安道尔",
+    ar: "أندورا"
   },
   {
     fr: "Angola",
@@ -461,7 +468,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Ангола",
     hi: "अंगोला",
     pt: "Angola",
-    ch: "安哥拉"
+    ch: "安哥拉",
+    ar: "أنغولا"
   },
   {
     fr: "Arabie Saoudite",
@@ -471,7 +479,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Саудовская Аравия",
     hi: "सऊदी अरब",
     pt: "Arábia Saudita",
-    ch: "沙特阿拉伯"
+    ch: "沙特阿拉伯",
+    ar: "المملكة العربية السعودية"
   },
   {
     fr: "Argentine",
@@ -481,7 +490,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Аргентина",
     hi: "अर्जेंटीना",
     pt: "Argentina",
-    ch: "阿根廷"
+    ch: "阿根廷",
+    ar: "الأرجنتين"
   },
   {
     fr: "Arménie",
@@ -491,7 +501,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Армения",
     hi: "आर्मेनिया",
     pt: "Armênia",
-    ch: "亚美尼亚"
+    ch: "亚美尼亚",
+    ar: "أرمينيا"
   },
   {
     fr: "Australie",
@@ -501,7 +512,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Австралия",
     hi: "ऑस्ट्रेलिया",
     pt: "Austrália",
-    ch: "澳大利亚"
+    ch: "澳大利亚",
+    ar: "أستراليا"
   },
   {
     fr: "Autriche",
@@ -511,7 +523,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Австрия",
     hi: "ऑस्ट्रिया",
     pt: "Áustria",
-    ch: "奥地利"
+    ch: "奥地利",
+    ar: "النمسا"
   },
   {
     fr: "Azerbaïdjan",
@@ -521,7 +534,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Азербайджан",
     hi: "अजरबैजान",
     pt: "Azerbaijão",
-    ch: "阿塞拜疆"
+    ch: "阿塞拜疆",
+    ar: "أذربيجان"
   },
   {
     fr: "Bahamas",
@@ -531,7 +545,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Багамы",
     hi: "बहामा",
     pt: "Bahamas",
-    ch: "巴哈马"
+    ch: "巴哈马",
+    ar: "جزر البهاما"
   },
   {
     fr: "Bahreïn",
@@ -541,7 +556,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Бахрейн",
     hi: "बहरीन",
     pt: "Bahrein",
-    ch: "巴林"
+    ch: "巴林",
+    ar: "البحرين"
   },
   {
     fr: "Bangladesh",
@@ -551,7 +567,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Бангладеш",
     hi: "बांग्लादेश",
     pt: "Bangladesh",
-    ch: "孟加拉国"
+    ch: "孟加拉国",
+    ar: "بنغلاديش"
   },
   {
     fr: "Barbade",
@@ -561,7 +578,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Барбадос",
     hi: "बारबाडोस",
     pt: "Barbados",
-    ch: "巴巴多斯"
+    ch: "巴巴多斯",
+    ar: "بربادوس"
   },
   {
     fr: "Belgique",
@@ -571,7 +589,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Бельгия",
     hi: "बेल्जियम",
     pt: "Bélgica",
-    ch: "比利时"
+    ch: "比利时",
+    ar: "بلجيكا"
   },
   {
     fr: "Belize",
@@ -581,7 +600,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Белиз",
     hi: "बेलीज",
     pt: "Belize",
-    ch: "伯利兹"
+    ch: "伯利兹",
+    ar: "بليز"
   },
   {
     fr: "Bénin",
@@ -591,7 +611,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Бенин",
     hi: "बेनिन",
     pt: "Benim",
-    ch: "贝宁"
+    ch: "贝宁",
+    ar: "بنين"
   },
   {
     fr: "Bhoutan",
@@ -601,7 +622,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Бутан",
     hi: "भूटान",
     pt: "Butão",
-    ch: "不丹"
+    ch: "不丹",
+    ar: "بوتان"
   },
   {
     fr: "Biélorussie",
@@ -611,7 +633,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Беларусь",
     hi: "बेलारूस",
     pt: "Bielorrússia",
-    ch: "白俄罗斯"
+    ch: "白俄罗斯",
+    ar: "بيلاروسيا"
   },
   {
     fr: "Birmanie",
@@ -621,7 +644,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Мьянма",
     hi: "म्यांमार",
     pt: "Mianmar",
-    ch: "缅甸"
+    ch: "缅甸",
+    ar: "ميانمار"
   },
   {
     fr: "Bolivie",
@@ -631,7 +655,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Боливия",
     hi: "बोलीविया",
     pt: "Bolívia",
-    ch: "玻利维亚"
+    ch: "玻利维亚",
+    ar: "بوليفيا"
   },
   {
     fr: "Bosnie-Herzégovine",
@@ -641,7 +666,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Босния и Герцеговина",
     hi: "बोस्निया और हर्जेगोविना",
     pt: "Bósnia e Herzegovina",
-    ch: "波斯尼亚和黑塞哥维那"
+    ch: "波斯尼亚和黑塞哥维那",
+    ar: "البوسنة والهرسك"
   },
   {
     fr: "Botswana",
@@ -651,7 +677,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Ботсвана",
     hi: "बोत्सवाना",
     pt: "Botsuana",
-    ch: "博茨瓦纳"
+    ch: "博茨瓦纳",
+    ar: "بوتسوانا"
   },
   {
     fr: "Brésil",
@@ -661,7 +688,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Бразилия",
     hi: "ब्राजील",
     pt: "Brasil",
-    ch: "巴西"
+    ch: "巴西",
+    ar: "البرازيل"
   },
   {
     fr: "Brunei",
@@ -671,7 +699,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Бруней",
     hi: "ब्रुनेई",
     pt: "Brunei",
-    ch: "文莱"
+    ch: "文莱",
+    ar: "بروناي"
   },
   {
     fr: "Bulgarie",
@@ -681,7 +710,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Болгария",
     hi: "बुल्गारिया",
     pt: "Bulgária",
-    ch: "保加利亚"
+    ch: "保加利亚",
+    ar: "بلغاريا"
   },
   {
     fr: "Burkina Faso",
@@ -691,7 +721,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Буркина-Фасо",
     hi: "बुर्किना फासो",
     pt: "Burquina Faso",
-    ch: "布基纳法索"
+    ch: "布基纳法索",
+    ar: "بوركينا فاسو"
   },
   {
     fr: "Burundi",
@@ -701,7 +732,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Бурунди",
     hi: "बुरुंडी",
     pt: "Burúndi",
-    ch: "布隆迪"
+    ch: "布隆迪",
+    ar: "بوروندي"
   },
   {
     fr: "Cambodge",
@@ -711,7 +743,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Камбоджа",
     hi: "कंबोडिया",
     pt: "Camboja",
-    ch: "柬埔寨"
+    ch: "柬埔寨",
+    ar: "كمبوديا"
   },
   {
     fr: "Cameroun",
@@ -721,7 +754,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Камерун",
     hi: "कैमरून",
     pt: "Camarões",
-    ch: "喀麦隆"
+    ch: "喀麦隆",
+    ar: "الكاميرون"
   },
   {
     fr: "Canada",
@@ -731,7 +765,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Канада",
     hi: "कनाडा",
     pt: "Canadá",
-    ch: "加拿大"
+    ch: "加拿大",
+    ar: "كندا"
   },
   {
     fr: "Cap-Vert",
@@ -741,7 +776,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Кабо-Верде",
     hi: "केप वर्डे",
     pt: "Cabo Verde",
-    ch: "佛得角"
+    ch: "佛得角",
+    ar: "الرأس الأخضر"
   },
   {
     fr: "Chili",
@@ -751,7 +787,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Чили",
     hi: "चिली",
     pt: "Chile",
-    ch: "智利"
+    ch: "智利",
+    ar: "تشيلي"
   },
   {
     fr: "Chine",
@@ -761,7 +798,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Китай",
     hi: "चीन",
     pt: "China",
-    ch: "中国"
+    ch: "中国",
+    ar: "الصين"
   },
   {
     fr: "Chypre",
@@ -771,7 +809,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Кипр",
     hi: "साइप्रस",
     pt: "Chipre",
-    ch: "塞浦路斯"
+    ch: "塞浦路斯",
+    ar: "قبرص"
   },
   {
     fr: "Colombie",
@@ -781,7 +820,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Колумбия",
     hi: "कोलंबिया",
     pt: "Colômbia",
-    ch: "哥伦比亚"
+    ch: "哥伦比亚",
+    ar: "كولومبيا"
   },
   {
     fr: "Comores",
@@ -791,7 +831,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Коморы",
     hi: "कोमोरोस",
     pt: "Comores",
-    ch: "科摩罗"
+    ch: "科摩罗",
+    ar: "جزر القمر"
   },
   {
     fr: "Congo",
@@ -801,7 +842,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Конго",
     hi: "कांगो",
     pt: "Congo",
-    ch: "刚果"
+    ch: "刚果",
+    ar: "الكونغو"
   },
   {
     fr: "Corée du Nord",
@@ -811,7 +853,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Северная Корея",
     hi: "उत्तर कोरिया",
     pt: "Coreia do Norte",
-    ch: "北朝鲜"
+    ch: "北朝鲜",
+    ar: "كوريا الشمالية"
   },
   {
     fr: "Corée du Sud",
@@ -821,7 +864,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Южная Корея",
     hi: "दक्षिण कोरिया",
     pt: "Coreia do Sul",
-    ch: "韩国"
+    ch: "韩国",
+    ar: "كوريا الجنوبية"
   },
   {
     fr: "Costa Rica",
@@ -831,7 +875,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Коста-Рика",
     hi: "कोस्टा रिका",
     pt: "Costa Rica",
-    ch: "哥斯达黎加"
+    ch: "哥斯达黎加",
+    ar: "كوستاريكا"
   },
   {
     fr: "Côte d'Ivoire",
@@ -841,7 +886,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Кот-д'Ивуар",
     hi: "आइवरी कोस्ट",
     pt: "Costa do Marfim",
-    ch: "科特迪瓦"
+    ch: "科特迪瓦",
+    ar: "ساحل العاج"
   },
   {
     fr: "Croatie",
@@ -851,7 +897,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Хорватия",
     hi: "क्रोएशिया",
     pt: "Croácia",
-    ch: "克罗地亚"
+    ch: "克罗地亚",
+    ar: "كرواتيا"
   },
   {
     fr: "Cuba",
@@ -861,7 +908,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Куба",
     hi: "क्यूबा",
     pt: "Cuba",
-    ch: "古巴"
+    ch: "古巴",
+    ar: "كوبا"
   },
   {
     fr: "Danemark",
@@ -871,7 +919,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Дания",
     hi: "डेनमार्क",
     pt: "Dinamarca",
-    ch: "丹麦"
+    ch: "丹麦",
+    ar: "الدنمارك"
   },
   {
     fr: "Djibouti",
@@ -881,7 +930,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Джибути",
     hi: "जिबूती",
     pt: "Djibuti",
-    ch: "吉布提"
+    ch: "吉布提",
+    ar: "جيبوتي"
   },
   {
     fr: "Dominique",
@@ -891,7 +941,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Доминика",
     hi: "डोमिनिका",
     pt: "Dominica",
-    ch: "多米尼加"
+    ch: "多米尼加",
+    ar: "دومينيكا"
   },
   {
     fr: "Égypte",
@@ -901,7 +952,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Египет",
     hi: "मिस्र",
     pt: "Egito",
-    ch: "埃及"
+    ch: "埃及",
+    ar: "مصر"
   },
   {
     fr: "Émirats arabes unis",
@@ -911,7 +963,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Объединённые Арабские Эмираты",
     hi: "संयुक्त अरब अमीरात",
     pt: "Emirados Árabes Unidos",
-    ch: "阿拉伯联合酋长国"
+    ch: "阿拉伯联合酋长国",
+    ar: "الإمارات العربية المتحدة"
   },
   {
     fr: "Équateur",
@@ -921,7 +974,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Эквадор",
     hi: "इक्वेडोर",
     pt: "Equador",
-    ch: "厄瓜多尔"
+    ch: "厄瓜多尔",
+    ar: "الإكوادور"
   },
   {
     fr: "Érythrée",
@@ -931,7 +985,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Эритрея",
     hi: "इरिट्रिया",
     pt: "Eritreia",
-    ch: "厄立特里亚"
+    ch: "厄立特里亚",
+    ar: "إريتريا"
   },
   {
     fr: "Espagne",
@@ -941,7 +996,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Испания",
     hi: "स्पेन",
     pt: "Espanha",
-    ch: "西班牙"
+    ch: "西班牙",
+    ar: "إسبانيا"
   },
   {
     fr: "Estonie",
@@ -951,7 +1007,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Эстония",
     hi: "एस्टोनिया",
     pt: "Estônia",
-    ch: "爱沙尼亚"
+    ch: "爱沙尼亚",
+    ar: "إستونيا"
   },
   {
     fr: "États-Unis",
@@ -961,7 +1018,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Соединённые Штаты",
     hi: "संयुक्त राज्य अमेरिका",
     pt: "Estados Unidos",
-    ch: "美国"
+    ch: "美国",
+    ar: "الولايات المتحدة"
   },
   {
     fr: "Éthiopie",
@@ -971,7 +1029,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Эфиопия",
     hi: "इथियोपिया",
     pt: "Etiópia",
-    ch: "埃塞俄比亚"
+    ch: "埃塞俄比亚",
+    ar: "إثيوبيا"
   },
   {
     fr: "Fidji",
@@ -981,7 +1040,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Фиджи",
     hi: "फिजी",
     pt: "Fiji",
-    ch: "斐济"
+    ch: "斐济",
+    ar: "فيجي"
   },
   {
     fr: "Finlande",
@@ -991,7 +1051,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Финляндия",
     hi: "फिनलैंड",
     pt: "Finlândia",
-    ch: "芬兰"
+    ch: "芬兰",
+    ar: "فنلندا"
   },
   {
     fr: "France",
@@ -1001,7 +1062,8 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Франция",
     hi: "फ्रांस",
     pt: "França",
-    ch: "France"
+    ch: "France",
+    ar: "فرنسا"
   },
   {
     fr: "Autre",
@@ -1011,9 +1073,11 @@ const COUNTRIES: MultiLangDuo[] = [
     ru: "Другое",
     hi: "अन्य",
     pt: "Outro",
-    ch: "其他"
+    ch: "其他",
+    ar: "آخر"
   },
 ];
+
 
 
 
@@ -1028,7 +1092,8 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Административные процедуры",
     hi: "प्रशासनिक प्रक्रियाएं",
     pt: "Procedimentos administrativos",
-    ch: "行政程序"
+    ch: "行政程序",
+    ar: "الإجراءات الإدارية"
   },
   {
     fr: "Recherche de logement",
@@ -1038,7 +1103,8 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Поиск жилья",
     hi: "आवास खोज",
     pt: "Busca de habitação",
-    ch: "房屋搜寻"
+    ch: "房屋搜寻",
+    ar: "البحث عن السكن"
   },
   {
     fr: "Ouverture de compte bancaire",
@@ -1048,7 +1114,8 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Открытие банковского счета",
     hi: "बैंक खाता खोलना",
     pt: "Abertura de conta bancária",
-    ch: "银行开户"
+    ch: "银行开户",
+    ar: "فتح حساب بنكي"
   },
   {
     fr: "Système de santé",
@@ -1058,7 +1125,8 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Система здравоохранения",
     hi: "स्वास्थ्य सेवा प्रणाली",
     pt: "Sistema de saúde",
-    ch: "医疗保健系统"
+    ch: "医疗保健系统",
+    ar: "نظام الرعاية الصحية"
   },
   {
     fr: "Éducation et écoles",
@@ -1068,7 +1136,8 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Образование и школы",
     hi: "शिक्षा और स्कूल",
     pt: "Educação e escolas",
-    ch: "教育与学校"
+    ch: "教育与学校",
+    ar: "التعليم والمدارس"
   },
   {
     fr: "Transport",
@@ -1078,7 +1147,8 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Транспорт",
     hi: "परिवहन",
     pt: "Transporte",
-    ch: "运输"
+    ch: "运输",
+    ar: "النقل"
   },
   {
     fr: "Recherche d'emploi",
@@ -1088,7 +1158,8 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Поиск работы",
     hi: "नौकरी खोज",
     pt: "Busca de emprego",
-    ch: "求职"
+    ch: "求职",
+    ar: "البحث عن عمل"
   },
   {
     fr: "Création d'entreprise",
@@ -1098,7 +1169,8 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Создание компании",
     hi: "कंपनी निर्माण",
     pt: "Criação de empresa",
-    ch: "公司创建"
+    ch: "公司创建",
+    ar: "إنشاء شركة"
   },
   {
     fr: "Fiscalité locale",
@@ -1108,7 +1180,8 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Местное налогообложение",
     hi: "स्थानीय कराधान",
     pt: "Tributação local",
-    ch: "地方税"
+    ch: "地方税",
+    ar: "الضرائب المحلية"
   },
   {
     fr: "Culture et intégration",
@@ -1118,7 +1191,8 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Культура и интеграция",
     hi: "संस्कृति और एकीकरण",
     pt: "Cultura e integração",
-    ch: "文化与融合"
+    ch: "文化与融合",
+    ar: "الثقافة والتكامل"
   },
   {
     fr: "Visa et immigration",
@@ -1128,7 +1202,8 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Виза и иммиграция",
     hi: "वीजा और आप्रवास",
     pt: "Visto e imigração",
-    ch: "签证与移民"
+    ch: "签证与移民",
+    ar: "التأشيرة والهجرة"
   },
   {
     fr: "Assurances",
@@ -1138,7 +1213,8 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Страхование",
     hi: "बीमा",
     pt: "Seguros",
-    ch: "保险"
+    ch: "保险",
+    ar: "التأمين"
   },
   {
     fr: "Téléphonie et internet",
@@ -1148,7 +1224,8 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Телефон и интернет",
     hi: "फोन और इंटरनेट",
     pt: "Telefone e internet",
-    ch: "电话和互联网"
+    ch: "电话和互联网",
+    ar: "الهاتف والإنترنت"
   },
   {
     fr: "Alimentation et courses",
@@ -1158,7 +1235,8 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Продукты и покупки",
     hi: "किराने का सामान और खाना",
     pt: "Alimentos e compras",
-    ch: "杂货和食品"
+    ch: "杂货和食品",
+    ar: "البقالة والطعام"
   },
   {
     fr: "Loisirs et sorties",
@@ -1168,7 +1246,8 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Досуг и развлечения",
     hi: "अवकाश और बाहर जाना",
     pt: "Lazer e saídas",
-    ch: "休闲与外出"
+    ch: "休闲与外出",
+    ar: "الترفيه والخروج"
   },
   {
     fr: "Sports et activités",
@@ -1178,7 +1257,8 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Спорт и активности",
     hi: "खेल और गतिविधियां",
     pt: "Esportes e atividades",
-    ch: "体育与活动"
+    ch: "体育与活动",
+    ar: "الرياضة والأنشطة"
   },
   {
     fr: "Sécurité",
@@ -1188,7 +1268,8 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Безопасность",
     hi: "सुरक्षा",
     pt: "Segurança",
-    ch: "安全"
+    ch: "安全",
+    ar: "الأمان"
   },
   {
     fr: "Urgences",
@@ -1198,7 +1279,8 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Чрезвычайные ситуации",
     hi: "आपातकालीन स्थितियां",
     pt: "Emergências",
-    ch: "紧急情况"
+    ch: "紧急情况",
+    ar: "حالات الطوارئ"
   },
   {
     fr: "Autre",
@@ -1208,9 +1290,11 @@ const HELP_TYPES: MultiLangDuo[] = [
     ru: "Другое",
     hi: "अन्य",
     pt: "Outro",
-    ch: "其他"
+    ch: "其他",
+    ar: "آخر"
   },
 ];
+
 
 
 // ===== Types =====
@@ -1228,7 +1312,7 @@ interface ExpatFormData {
   currentCountry: string;
   currentPresenceCountry: string;
   interventionCountry: string;
-  preferredLanguage: "fr" | "en" | "es" | "de" | "ru" | "hi"  | "pt" | "ch";
+  preferredLanguage: "fr" | "en" | "es" | "de" | "ru" | "hi"  | "pt" | "ch" | "ar";
   helpTypes: string[];
   customHelpType: string;
   yearsAsExpat: number;
@@ -1388,7 +1472,7 @@ type I18NMap = typeof I18N;
 type AnyI18N = I18NMap[keyof I18NMap];
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const mapDuo = (list: MultiLangDuo[], lang: "fr" | "en" | "es" | "de" | "ru" | "ch") =>
+const mapDuo = (list: MultiLangDuo[], lang: "fr" | "en" | "es" | "de" | "ru" | "ch" | "hi" | "pt" | "ar") =>
   list.map((item) => item[lang]);
 
 // Petit composant succès
@@ -1526,6 +1610,8 @@ const computePasswordStrength = (pw: string) => {
       labelDe: "Leer",
       labelHi: "खाली",
       labelCh: "空的",
+      labelAr: "فارغ",
+      labelPt: "Vazio",
       color: "bg-gray-300"
     };
 
@@ -1576,6 +1662,7 @@ const computePasswordStrength = (pw: string) => {
   ] as const;
   const hiMap = ["बहुत कमजोर", "कमजोर", "ठीक", "अच्छा", "बहुत मजबूत"] as const;
   const chMap = ["很弱", "虚弱的", "好的", "好的", "很强"] as const;
+  const arMap = ["ضعيف جدًا", "ضعيف", "مقبول", "جيد", "قوي جدًا"] as const;
 
   return {
     percent: percentMap[clamp],
@@ -1586,9 +1673,11 @@ const computePasswordStrength = (pw: string) => {
     labelDe: deMap[clamp],
     labelHi: hiMap[clamp],
     labelCh: chMap[clamp],
+    labelAr: arMap[clamp],
     color: colorMap[clamp],
   };
 };
+
 
 const Avatar = ({ src, name }: { src?: string; name: string }) => {
   if (src) {
@@ -1626,7 +1715,7 @@ const PreviewCard = ({
   languages,
   helpTypes,
 }: {
-  lang: "fr" | "en" | "hi" | "es" | "de" | "ru"| "ch";
+  lang: "fr" | "en" | "hi" | "es" | "de" | "ru"| "ch" | "pt" | "ar";
   t: AnyI18N; // <- générique (fix 21)
   progress: number;
   fullName: string;
@@ -1679,7 +1768,7 @@ const PreviewCard = ({
             <MapPin className="w-4 h-4 text-emerald-600" />
             <span className="font-medium">
               {/* {currentCountry || (lang === "en" ? "Residence" : "Résidence")} */}
-              {currentCountry || (lang === "en"
+   {currentCountry || (lang === "en"
   ? "Residence"
   : lang === "es"
   ? "Residencia"
@@ -1693,6 +1782,10 @@ const PreviewCard = ({
   ? "निवास स्थान"
   : lang === "ch"
   ? "住宅"
+  : lang === "pt"
+  ? "Residência"
+  : lang === "ar"
+  ? "الإقامة"
   : "Residence")}
             </span>
             {presenceCountry && (
@@ -1707,7 +1800,7 @@ const PreviewCard = ({
             <Globe className="w-4 h-4 text-emerald-600" />
             <span className="font-medium">
               {/* {lang === "en" ? "Main help in" : "Intervention"}: */}
-              {lang === "en"
+           {lang === "en"
   ? "Main help in"
   : lang === "es"
   ? "Ayuda principal en"
@@ -1721,6 +1814,8 @@ const PreviewCard = ({
   ? "मुख्य सहायता में"
   : lang === "ch"
   ? "主要帮助于"
+  : lang === "ar"
+  ? "المساعدة الرئيسية في"
   : "Main help in"}:
             </span>
             <span className="ml-auto rounded-full px-2 py-0.5 text-xs bg-emerald-50 border border-emerald-200">
@@ -1745,6 +1840,8 @@ const PreviewCard = ({
   ? "विदेश में वर्ष:"
   : lang === "ch"
   ? "国外生活年限:"
+  : lang === "ar"
+  ? "سنوات في الخارج:"
   : "Years abroad:"}{" "}
             <strong>{yearsAsExpat}</strong>
           </div>
@@ -1755,7 +1852,7 @@ const PreviewCard = ({
         <div className="mt-4">
           <p className="text-xs font-semibold text-gray-700 mb-1">
             {/* {t.selectedLanguages} */}
-             {t?.selectedLanguages || (lang === "en"
+          {t?.selectedLanguages || (lang === "en"
   ? "Selected Languages"
   : lang === "es"
   ? "Idiomas seleccionados"
@@ -1769,6 +1866,8 @@ const PreviewCard = ({
   ? "चयनित भाषाएं"
   : lang === "ch"
   ? "选定的语言"
+  : lang === "ar"
+  ? "اللغات المختارة"
   : "Selected Languages")}
           </p>
           <div className="flex flex-wrap gap-2">
@@ -1824,7 +1923,7 @@ const BottomChecklist = ({
     ref?: React.MutableRefObject<HTMLElement | null>;
   }[];
   progress: number;
-  lang: "fr" | "en" | "es" | "de" | "ru" | "hi" | "ch";
+  lang: "fr" | "en" | "es" | "de" | "ru" | "hi" | "ch" | "pt" | "ar";
   onJump: (r?: React.MutableRefObject<HTMLElement | null>) => void;
 }) => (
   <div className="mt-6">
@@ -1863,7 +1962,7 @@ const BottomChecklist = ({
               ? `Completion: ${progress}%`
               : `Complétion : ${progress}%`} */}
 
-              {lang === "en"
+           {lang === "en"
   ? `Completion: ${progress}%`
   : lang === "es"
   ? `Completado: ${progress}%`
@@ -1877,6 +1976,8 @@ const BottomChecklist = ({
   ? `पूर्णता: ${progress}%`
   : lang === "ch"
   ? `完成: ${progress}%`
+  : lang === "ar"
+  ? `الإنجاز: ${progress}%`
   : `Completion: ${progress}%`}
             {/* <FormattedMessage
               id="registerExpat.checklist.completion"
@@ -1925,7 +2026,7 @@ const RegisterExpat: React.FC = () => {
 
   const { register, isLoading, error } = useAuth();
   const { language } = useApp(); // 'fr' | 'en'
-  const lang = (language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "ch" ) || "fr";
+  const lang = (language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "ch"  | "pt" | "ar") || "fr";
   const t: AnyI18N = I18N[lang]; // <- annotation explicite
 
   // ---- SEO / OG meta ----
@@ -3038,7 +3139,28 @@ const RegisterExpat: React.FC = () => {
                           value={form.lastName}
                           onChange={onChange}
                           className={`w-full px-4 py-3 border-2 rounded-xl bg-gray-50 hover:bg-white ${THEME.ring} focus:bg-white transition ${fieldErrors.lastName ? "border-red-500 bg-red-50" : valid.lastName ? "border-green-300 bg-green-50" : "border-gray-200"}`}
-                          placeholder={lang === "en" ? "Doe" : "Dupont"}
+                        placeholder={
+  lang === "en"
+    ? "Doe"
+    : lang === "es"
+    ? "García"
+    : lang === "fr"
+    ? "Dupont"
+    : lang === "de"
+    ? "Müller"
+    : lang === "ru"
+    ? "Смирнов"
+    : lang === "hi"
+    ? "शर्मा"
+    : lang === "ch"
+    ? "王"
+    : lang === "ar"
+    ? "محمد"
+    : lang === "pt"
+    ? "Silva"
+    : "Doe"
+}
+
                         />
                         <FieldSuccess show={valid.lastName}>
                           {/* {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"} */}
@@ -3070,31 +3192,33 @@ const RegisterExpat: React.FC = () => {
                           aria-describedby="email-help"
                           className={`w-full block z-[1] pl-11 pr-4 py-3 rounded-xl border-2 ${THEME.ring} focus:bg-white transition
                                       ${fieldErrors.email ? "!border-red-500 bg-red-50" : valid.email ? "!border-green-300 bg-green-50" : "!border-gray-300"}`}
-                          // placeholder={t.help.emailPlaceholder}
+                        
                           placeholder={intl.formatMessage({
                             id: "registerExpat.help.emailPlaceholder",
                           })}
                         />
                       </div>
                       <p id="email-help" className="mt-1 text-xs text-gray-500">
-                        {/* {lang === "en"
-                          ? "We only email for your account & connections. 🤝"
-                          : "On vous écrit seulement pour le compte & les mises en relation. 🤝"} */}
-                        {lang === "en"
-                          ? "We only email for your account & connections. 🤝"
-                          : lang === "es"
-                            ? "Solo enviamos correos para tu cuenta y conexiones. 🤝"
-                            : lang === "fr"
-                              ? "On vous écrit seulement pour le compte & les mises en relation. 🤝"
-                              : lang === "ru"
-                                ? "Мы отправляем письма только для вашего аккаунта и связей. 🤝"
-                                : lang === "de"
-                                  ? "Wir senden E-Mails nur für Ihr Konto und Verbindungen. 🤝"
-                                  : lang === "hi"
-                                    ? "हम केवल आपके खाते और कनेक्शन के लिए ईमेल भेजते हैं। 🤝"
-                                    : lang === "ch"
-                                    ? "我们仅通过电子邮件与您联系和建立联系. 🤝"
-                                    : "We only email for your account & connections. 🤝"}
+                      
+                 {lang === "en"
+  ? "We only email for your account & connections. 🤝"
+  : lang === "es"
+    ? "Solo enviamos correos para tu cuenta y conexiones. 🤝"
+    : lang === "fr"
+      ? "On vous écrit seulement pour le compte & les mises en relation. 🤝"
+      : lang === "ru"
+        ? "Мы отправляем письма только для вашего аккаунта и связей. 🤝"
+        : lang === "de"
+          ? "Wir senden E-Mails nur für Ihr Konto und Verbindungen. 🤝"
+          : lang === "hi"
+            ? "हम केवल आपके खाते और कनेक्शन के लिए ईमेल भेजते हैं। 🤝"
+            : lang === "ch"
+              ? "我们仅通过电子邮件与您联系和建立联系. 🤝"
+              : lang === "pt"
+                ? "Enviamos e-mails apenas para sua conta e conexões. 🤝"
+                : lang === "ar"
+                  ? "نرسل رسائل بريد إلكتروني فقط لحسابك واتصالاتك. 🤝"
+                  : "We only email for your account & connections. 🤝"}
                       </p>
                       {fieldErrors.email && (
                         <p className="mt-1 text-sm text-red-600">
@@ -3102,7 +3226,7 @@ const RegisterExpat: React.FC = () => {
                         </p>
                       )}
                       <FieldSuccess show={valid.email}>
-                        {/* {lang === "en" ? "Looks good! 👌" : "Email au top ! 👌"} */}
+                        
                         <FormattedMessage id="registerExpat.success.emailValid" />
                       </FieldSuccess>
                     </div>
@@ -3128,7 +3252,7 @@ const RegisterExpat: React.FC = () => {
                           autoComplete="new-password"
                           aria-describedby="pwd-meter"
                           className={`w-full pl-10 pr-12 py-3 border-2 rounded-xl bg-gray-50 hover:bg-white ${THEME.ring} focus:bg-white transition ${fieldErrors.password ? "border-red-500 bg-red-50" : valid.password ? "border-green-300 bg-green-50" : "border-gray-200"}`}
-                          // placeholder={t.help.minPassword}
+                    
                           placeholder={intl.formatMessage({
                             id: "registerExpat.help.minPassword",
                           })}
@@ -3158,22 +3282,26 @@ const RegisterExpat: React.FC = () => {
                         </div>
                         <div className="mt-1 text-xs flex items-center justify-between">
                           <span className="text-gray-600">
-                            {/* {lang === "en" ? "Strength:" : "Qualité :"}{" "} */}
-                            {lang === "en"
-                              ? "Strength:"
-                              : lang === "es"
-                                ? "Calidad:"
-                                : lang === "fr"
-                                  ? "Qualité :"
-                                  : lang === "ru"
-                                    ? "Надёжность:"
-                                    : lang === "de"
-                                      ? "Stärke:"
-                                      : lang === "hi"
-                                        ? "मजबूती:"
-                                        : lang === "ch"
-                                        ? "力量:"
-                                        : "Strength:"}{" "}
+                         
+                          {lang === "en"
+  ? "Strength:"
+  : lang === "es"
+    ? "Calidad:"
+    : lang === "fr"
+      ? "Qualité :"
+      : lang === "ru"
+        ? "Надёжность:"
+        : lang === "de"
+          ? "Stärke:"
+          : lang === "hi"
+            ? "मजबूती:"
+            : lang === "ch"
+              ? "力量:"
+              : lang === "pt"
+                ? "Força:"
+                : lang === "ar"
+                  ? "القوة:"
+                  : "Strength:"}{" "}
                             <strong>
                               {lang === "en"
                                 ? pwdStrength.labelEn
@@ -3187,45 +3315,60 @@ const RegisterExpat: React.FC = () => {
                                         ? pwdStrength.labelDe
                                         : lang === "hi"
                                           ? pwdStrength.labelHi
+                                          : lang === "ch"
+                                            ? pwdStrength.labelCh
+                                            : lang === "pt"
+                                              ? pwdStrength.labelPt
+                                              : lang === "ar"
+                                                ? pwdStrength.labelAr
+
                                           : pwdStrength.labelEn}
                             </strong>
                           </span>
                           <span className="text-gray-500">
                             {lang === "en"
-                              ? "Tip: mix A-z, 0-9 & symbols"
-                              : lang === "es"
-                                ? "Consejo: mezcla A-z, 0-9 y símbolos"
-                                : lang === "fr"
-                                  ? "Astuce : mixez A-z, 0-9 & symboles"
-                                  : lang === "ru"
-                                    ? "Совет: смешайте A-z, 0-9 и символы"
-                                    : lang === "de"
-                                      ? "Tipp: A-z, 0-9 & Symbole mischen"
-                                      : lang === "hi"
-                                        ? "सुझाव: A-z, 0-9 और चिह्न मिलाएं"
-                                        : lang === "ch"
-                                        ? "提示：混合使用 A-z、0-9 和符号"
-                                        : "Tip: mix A-z, 0-9 & symbols"}
+  ? "Tip: mix A-z, 0-9 & symbols"
+  : lang === "es"
+    ? "Consejo: mezcla A-z, 0-9 y símbolos"
+    : lang === "fr"
+      ? "Astuce : mixez A-z, 0-9 & symboles"
+      : lang === "ru"
+        ? "Совет: смешайте A-z, 0-9 и символы"
+        : lang === "de"
+          ? "Tipp: A-z, 0-9 & Symbole mischen"
+          : lang === "hi"
+            ? "सुझाव: A-z, 0-9 और चिह्न मिलाएं"
+            : lang === "ch"
+              ? "提示：混合使用 A-z、0-9 和符号"
+              : lang === "pt"
+                ? "Dica: misture A-z, 0-9 & símbolos"
+                : lang === "ar"
+                  ? "نصيحة: امزج A-z و 0-9 والرموز"
+                  : "Tip: mix A-z, 0-9 & symbols"}
                           </span>
                         </div>
                         {capsPassword && (
                           <p className="text-xs text-orange-600 mt-1">
                             ↥{" "}
                             {lang === "en"
-                              ? "Caps Lock is ON"
-                              : lang === "es"
-                                ? "Bloq Mayús activado"
-                                : lang === "fr"
-                                  ? "Verr. Maj activée"
-                                  : lang === "ru"
-                                    ? "Caps Lock включён"
-                                    : lang === "de"
-                                      ? "Feststelltaste ist AN"
-                                      : lang === "hi"
-                                        ? "Caps Lock चालू है"
-                                        : lang === "ch"
-                                        ? "大写锁定键已开启"
-                                        : "Caps Lock is ON"}
+  ? "Caps Lock is ON"
+  : lang === "es"
+    ? "Bloq Mayús activado"
+    : lang === "fr"
+      ? "Verr. Maj activée"
+      : lang === "ru"
+        ? "Caps Lock включён"
+        : lang === "de"
+          ? "Feststelltaste ist AN"
+          : lang === "hi"
+            ? "Caps Lock चालू है"
+            : lang === "ch"
+              ? "大写锁定键已开启"
+              : lang === "pt"
+                ? "Caps Lock ATIVADO"
+                : lang === "ar"
+                  ? "مفتاح Caps Lock مُفعّل"
+                  : "Caps Lock is ON"}
                           </p>
                         )}
                       </div>
@@ -3385,21 +3528,25 @@ const RegisterExpat: React.FC = () => {
                           className={`w-full px-4 py-3 border-2 rounded-xl bg-white ${THEME.ring} ${fieldErrors.currentPresenceCountry ? "border-red-500" : valid.currentPresenceCountry ? "border-green-300 bg-green-50" : "border-gray-200"}`}
                         >
                           <option value="">
-                            {lang === "en"
-                              ? "Select your presence country"
-                              : lang === "es"
-                                ? "Selecciona tu país de presencia"
-                                : lang === "fr"
-                                  ? "Sélectionnez votre pays de présence"
-                                  : lang === "ru"
-                                    ? "Выберите страну вашего присутствия"
-                                    : lang === "de"
-                                      ? "Wählen Sie Ihr Präsenzland"
-                                      : lang === "hi"
-                                        ? "अपने उपस्थिति देश का चयन करें"
-                                        : lang === "ch"
-                                        ? "选择您所在的国家/地区"
-                                        : "Select your presence country"}
+                          {lang === "en"
+  ? "Select your presence country"
+  : lang === "es"
+    ? "Selecciona tu país de presencia"
+    : lang === "fr"
+      ? "Sélectionnez votre pays de présence"
+      : lang === "ru"
+        ? "Выберите страну вашего присутствия"
+        : lang === "de"
+          ? "Wählen Sie Ihr Präsenzland"
+          : lang === "hi"
+            ? "अपने उपस्थिति देश का चयन करें"
+            : lang === "ch"
+              ? "选择您所在的国家/地区"
+              : lang === "pt"
+                ? "Selecione seu país de presença"
+                : lang === "ar"
+                  ? "اختر بلد تواجدك"
+                  : "Select your presence country"}
                           </option>
                           {countryOptions.map((c) => (
                             <option key={c} value={c}>
@@ -3427,21 +3574,25 @@ const RegisterExpat: React.FC = () => {
                           className={`w-full px-4 py-3 border-2 rounded-xl bg-white ${THEME.ring} ${fieldErrors.interventionCountry ? "border-red-500" : valid.interventionCountry ? "border-green-300 bg-green-50" : "border-gray-200"}`}
                         >
                           <option value="">
-                            {lang === "en"
-                              ? "Select your intervention country"
-                              : lang === "es"
-                                ? "Selecciona tu país de intervención"
-                                : lang === "fr"
-                                  ? "Sélectionnez votre pays d'intervention"
-                                  : lang === "ru"
-                                    ? "Выберите страну вашего вмешательства"
-                                    : lang === "de"
-                                      ? "Wählen Sie Ihr Interventionsland"
-                                      : lang === "hi"
-                                        ? "अपने हस्तक्षेप देश का चयन करें"
-                                        : lang === "ch"
-                                        ? "选择您的干预国家"
-                                        : "Select your intervention country"}
+                          {lang === "en"
+  ? "Select your intervention country"
+  : lang === "es"
+    ? "Selecciona tu país de intervención"
+    : lang === "fr"
+      ? "Sélectionnez votre pays d'intervention"
+      : lang === "ru"
+        ? "Выберите страну вашего вмешательства"
+        : lang === "de"
+          ? "Wählen Sie Ihr Interventionsland"
+          : lang === "hi"
+            ? "अपने हस्तक्षेप देश का चयन करें"
+            : lang === "ch"
+              ? "选择您的干预国家"
+              : lang === "pt"
+                ? "Selecione seu país de intervenção"
+                : lang === "ar"
+                  ? "اختر بلد تدخلك"
+                  : "Select your intervention country"}
                           </option>
                           {countryOptions.map((c) => (
                             <option key={c} value={c}>
@@ -3450,14 +3601,14 @@ const RegisterExpat: React.FC = () => {
                           ))}
                         </select>
                         <FieldSuccess show={valid.interventionCountry}>
-                          {/* {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"} */}
+                         
                           <FormattedMessage id="registerExpat.success.fieldValid" />
                         </FieldSuccess>
                       </div>
 
                       <div ref={refYears}>
                         <label className="block text-sm font-semibold text-gray-800 mb-1">
-                          {/* {t.yearsAsExpat}{" "} */}
+                      
                           <FormattedMessage id="registerExpat.fields.yearsAsExpat" />
                           <span className="text-red-500">*</span>
                         </label>
@@ -3472,7 +3623,7 @@ const RegisterExpat: React.FC = () => {
                           placeholder="5"
                         />
                         <FieldSuccess show={valid.yearsAsExpat}>
-                          {/* {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"} */}
+                        
                           <FormattedMessage id="registerExpat.success.fieldValid" />
                         </FieldSuccess>
                       </div>
@@ -3518,28 +3669,28 @@ const RegisterExpat: React.FC = () => {
                             }
                           }}
                           locale={lang}
-                          // placeholder={
-                          //   lang === "fr"
-                          //     ? "Rechercher et sélectionner les langues..."
-                          //     : "Search and select languages..."
-                          // }
+                      
 
                           placeholder={
-                            lang === "en"
-                              ? "Search and select languages..."
-                              : lang === "es"
-                                ? "Buscar y seleccionar idiomas..."
-                                : lang === "fr"
-                                  ? "Rechercher et sélectionner les langues..."
-                                  : lang === "ru"
-                                    ? "Поиск и выбор языков..."
-                                    : lang === "de"
-                                      ? "Sprachen suchen und auswählen..."
-                                      : lang === "hi"
-                                        ? "भाषाओं को खोजें और चुनें..."
-                                        : lang === "ch"
-                                        ? "搜索并选择语言……"
-                                        : "Search and select languages..."
+                           lang === "en"
+  ? "Search and select languages..."
+  : lang === "es"
+    ? "Buscar y seleccionar idiomas..."
+    : lang === "fr"
+      ? "Rechercher et sélectionner les langues..."
+      : lang === "ru"
+        ? "Поиск и выбор языков..."
+        : lang === "de"
+          ? "Sprachen suchen und auswählen..."
+          : lang === "hi"
+            ? "भाषाओं को खोजें और चुनें..."
+            : lang === "ch"
+              ? "搜索并选择语言……"
+              : lang === "pt"
+                ? "Pesquisar e selecionar idiomas..."
+                : lang === "ar"
+                  ? "البحث واختيار اللغات..."
+                  : "Search and select languages..."
                           }
                         />
                       </Suspense>
@@ -3575,21 +3726,26 @@ const RegisterExpat: React.FC = () => {
                         // }
 
                         placeholder={
-                          lang === "en"
-                            ? "In a few lines, share your journey + how you help (friendly + specific)."
-                            : lang === "es"
-                              ? "En pocas líneas, comparte tu trayecto + cómo ayudas (amigable y específico)."
-                              : lang === "fr"
-                                ? "En quelques lignes, racontez votre parcours + comment vous aidez (sympa & concret)."
-                                : lang === "ru"
-                                  ? "В несколько строк расскажите о вашем пути + как вы помогаете (дружелюбно и конкретно)."
-                                  : lang === "de"
-                                    ? "Erzählen Sie in wenigen Zeilen Ihre Geschichte + wie Sie helfen (freundlich & konkret)."
-                                    : lang === "hi"
-                                      ? "कुछ पंक्तियों में, अपनी यात्रा साझा करें + आप कैसे मदद करते हैं (मित्रवत + विशिष्ट)।"
-                                      : lang === "ch"
-                                      ? "请用几句话分享您的经历以及您如何提供帮助（友好且具体）。"
-                                      : "In a few lines, share your journey + how you help (friendly + specific)."
+                         lang === "en"
+  ? "In a few lines, share your journey + how you help (friendly + specific)."
+  : lang === "es"
+    ? "En pocas líneas, comparte tu trayecto + cómo ayudas (amigable y específico)."
+    : lang === "fr"
+      ? "En quelques lignes, racontez votre parcours + comment vous aidez (sympa & concret)."
+      : lang === "ru"
+        ? "В несколько строк расскажите о вашем пути + как вы помогаете (дружелюбно и конкретно)."
+        : lang === "de"
+          ? "Erzählen Sie in wenigen Zeilen Ihre Geschichte + wie Sie helfen (freundlich & konkret)."
+          : lang === "hi"
+            ? "कुछ पंक्तियों में, अपनी यात्रा साझा करें + आप कैसे मदद करते हैं (मित्रवत + विशिष्ट)।"
+            : lang === "ch"
+              ? "请用几句话分享您的经历以及您如何提供帮助（友好且具体）。"
+              : lang === "pt"
+                ? "Em poucas linhas, compartilhe sua jornada + como você ajuda (amigável + específico)."
+                : lang === "ar"
+                  ? "في عدة أسطر، شارك رحلتك + كيف تساعد (ودود + محدد)."
+                  : "In a few lines, share your journey + how you help (friendly + specific)."
+
                         }
                       />
                       <div className="mt-2">
@@ -3611,11 +3767,7 @@ const RegisterExpat: React.FC = () => {
                             }
                           >
                             {form.bio.length < 50 ? (
-                              // lang === "en" ? (
-                              //   `Just ${50 - form.bio.length} chars to go — you’ve got this! 💪`
-                              // ) : (
-                              //   `Encore ${50 - form.bio.length} caractères — vous y êtes presque ! 💪`
-                              // )
+                           
                               <FormattedMessage
                                 id="registerExpat.bio.charsToGo"
                                 values={{ count: 50 - form.bio.length }}
@@ -3635,7 +3787,7 @@ const RegisterExpat: React.FC = () => {
                           </span>
                         </div>
                         <p className="mt-1 text-xs text-gray-500">
-                          {/* {t.help.bioHint} */}
+                      
                           <FormattedMessage id="registerExpat.help.bioHint" />
                         </p>
                       </div>
@@ -3648,7 +3800,7 @@ const RegisterExpat: React.FC = () => {
                     >
                       <label className="text-sm font-semibold text-gray-900 mb-2 flex items-center">
                         <Camera className={`w-4 h-4 mr-2 ${THEME.icon}`} />{" "}
-                        {/* {t.profilePhoto} */}
+                     
                         <FormattedMessage id="registerExpat.fields.profilePhoto" />{" "}
                         <span className="text-red-500 ml-1">*</span>
                       </label>
@@ -3681,21 +3833,26 @@ const RegisterExpat: React.FC = () => {
                         </p>
                       )}
                       <p className="text-xs text-gray-500 mt-1">
-                        {lang === "en"
-                          ? "Professional photo (JPG/PNG) required"
-                          : lang === "es"
-                            ? "Foto profesional (JPG/PNG) requerida"
-                            : lang === "fr"
-                              ? "Photo professionnelle (JPG/PNG) obligatoire"
-                              : lang === "ru"
-                                ? "Требуется профессиональное фото (JPG/PNG)"
-                                : lang === "de"
-                                  ? "Professionelles Foto (JPG/PNG) erforderlich"
-                                  : lang === "hi"
-                                    ? "पेशेवर फोटो (JPG/PNG) आवश्यक है"
-                                    : lang === "ch"
-                                    ? "需要专业照片（JPG/PNG格式）。"
-                                    : "Professional photo (JPG/PNG) required"}
+                      {lang === "en"
+  ? "Professional photo (JPG/PNG) required"
+  : lang === "es"
+    ? "Foto profesional (JPG/PNG) requerida"
+    : lang === "fr"
+      ? "Photo professionnelle (JPG/PNG) obligatoire"
+      : lang === "ru"
+        ? "Требуется профессиональное фото (JPG/PNG)"
+        : lang === "de"
+          ? "Professionelles Foto (JPG/PNG) erforderlich"
+          : lang === "hi"
+            ? "पेशेवर फोटो (JPG/PNG) आवश्यक है"
+            : lang === "ch"
+              ? "需要专业照片（JPG/PNG格式）。"
+              : lang === "pt"
+                ? "Foto profissional (JPG/PNG) obrigatória"
+                : lang === "ar"
+                  ? "صورة احترافية (JPG/PNG) مطلوبة"
+                  : "Professional photo (JPG/PNG) required"}
+
                       </p>
                       <FieldSuccess show={valid.profilePhoto}>
                         {/* {lang === "en" ? "Nice photo! 📸" : "Belle photo ! 📸"} */}
@@ -3711,7 +3868,7 @@ const RegisterExpat: React.FC = () => {
                   >
                     <SectionHeader
                       icon={<CheckCircle className="w-5 h-5" />}
-                      // title={t.helpInfo}
+                   
                       title={intl.formatMessage({
                         id: "registerExpat.ui.helpInfo",
                       })}
@@ -3733,7 +3890,7 @@ const RegisterExpat: React.FC = () => {
                         className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl bg-white focus:outline-none focus:border-green-600"
                       >
                         <option value="">
-                          {/* {t.addHelp} */}
+                     
                           {intl.formatMessage({
                             id: "registerExpat.fields.addHelp",
                           })}
@@ -3761,7 +3918,7 @@ const RegisterExpat: React.FC = () => {
                               }))
                             }
                             className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl"
-                            // placeholder={t.specifyHelp}
+                       
                             placeholder={intl.formatMessage({
                               id: "registerExpat.fields.specifyHelp",
                             })}
@@ -3784,7 +3941,7 @@ const RegisterExpat: React.FC = () => {
                       )}
 
                       <FieldSuccess show={valid.helpTypes}>
-                        {/* {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"} */}
+                    
                         <FormattedMessage id="registerExpat.success.fieldValid" />
                       </FieldSuccess>
                     </div>
@@ -3816,45 +3973,52 @@ const RegisterExpat: React.FC = () => {
                           htmlFor="acceptTerms"
                           className="text-sm text-gray-800"
                         >
-                          {/* {lang === "en" ? "I accept the" : "J'accepte les"}{" "} */}
-                          {lang === "en"
-                            ? "I accept the"
-                            : lang === "es"
-                              ? "Acepto los"
-                              : lang === "fr"
-                                ? "J'accepte les"
-                                : lang === "ru"
-                                  ? "Я принимаю"
-                                  : lang === "de"
-                                    ? "Ich akzeptiere die"
-                                    : lang === "hi"
-                                      ? "मैं स्वीकार करता हूँ"
-                                      : lang === "ch"
-                                      ? "我接受"
-                                      : "I accept the"}{" "}
+                   
+                  {lang === "en"
+  ? "I accept the"
+  : lang === "es"
+    ? "Acepto los"
+    : lang === "fr"
+      ? "J'accepte les"
+      : lang === "ru"
+        ? "Я принимаю"
+        : lang === "de"
+          ? "Ich akzeptiere die"
+          : lang === "hi"
+            ? "मैं स्वीकार करता हूँ"
+            : lang === "ch"
+              ? "我接受"
+              : lang === "pt"
+                ? "Aceito os"
+                : lang === "ar"
+                  ? "أوافق على"
+                  : "I accept the"}{" "}
                           <Link
                             to="/cgu-expatries"
                             className="text-emerald-700 underline font-semibold"
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            {/* {lang === "en" ? "Expat T&Cs" : "CGU Expatriés"} */}
-                            {/* {lang === "en" ? "Expat T&Cs" : "CGU Expatriés"} */}
-                            {lang === "en"
-                              ? "Expat T&Cs"
-                              : lang === "es"
-                                ? "Términos y Condiciones de Expat"
-                                : lang === "fr"
-                                  ? "CGU Expatriés"
-                                  : lang === "ru"
-                                    ? "Условия использования для экспатов"
-                                    : lang === "de"
-                                      ? "Expat AGB"
-                                      : lang === "hi"
-                                        ? "एक्सपैट नियम और शर्तें"
-                                        : lang === "ch"
-                                        ? "外籍人士条款及细则"
-                                        : "Expat T&Cs"}
+                          
+                         {lang === "en"
+  ? "Expat T&Cs"
+  : lang === "es"
+    ? "Términos y Condiciones de Expat"
+    : lang === "fr"
+      ? "CGU Expatriés"
+      : lang === "ru"
+        ? "Условия использования для экспатов"
+        : lang === "de"
+          ? "Expat AGB"
+          : lang === "hi"
+            ? "एक्सपैट नियम और शर्तें"
+            : lang === "ch"
+              ? "外籍人士条款及细则"
+              : lang === "pt"
+                ? "T&C de Expats"
+                : lang === "ar"
+                  ? "شروط وأحكام المغتربين"
+                  : "Expat T&Cs"}
                           </Link>{" "}
                           <span className="text-red-500">*</span>
                         </label>
@@ -3865,7 +4029,7 @@ const RegisterExpat: React.FC = () => {
                         </p>
                       )}
                       <FieldSuccess show={valid.acceptTerms}>
-                        {/* {lang === "en" ? "Perfect! ✨" : "Parfait ! ✨"} */}
+                      
                         <FormattedMessage id="registerExpat.success.fieldValid" />
                       </FieldSuccess>
                     </div>
@@ -3881,18 +4045,18 @@ const RegisterExpat: React.FC = () => {
                         disabled={!canSubmit}
                       >
                         {isLoading || isSubmitting ? (
-                          // t.loading
+                
                           <FormattedMessage id="registerExpat.ui.loading" />
                         ) : (
                           <span className="inline-flex items-center justify-center">
                             <ArrowRight className="w-5 h-5 mr-2" />
-                            {/* {t.create} */}
+                        
                             <FormattedMessage id="registerExpat.ui.create" />
                           </span>
                         )}
                       </Button>
                       <p className="text-center text-xs text-white/90 mt-4">
-                        {/* {t.secureNote} */}
+                  
                         <FormattedMessage id="registerExpat.ui.secureNote" />
                       </p>
                     </div>
@@ -3916,11 +4080,11 @@ const RegisterExpat: React.FC = () => {
               <footer className="text-center mt-8">
                 <div className="bg-white rounded-xl p-5 shadow border">
                   <h3 className="text-lg sm:text-xl font-black text-gray-900 mb-1">
-                    {/* {t.footerTitle} */}
+                 
                     <FormattedMessage id="registerExpat.footer.title" />
                   </h3>
                   <p className="text-sm text-gray-700">
-                    {/* {t.footerText} */}
+               
 
                     <FormattedMessage id="registerExpat.footer.text" />
                   </p>
@@ -3930,28 +4094,28 @@ const RegisterExpat: React.FC = () => {
                     to="/politique-confidentialite"
                     className="hover:text-emerald-700 underline"
                   >
-                    {/* {t.privacy} */}
+               
                     <FormattedMessage id="registerExpat.footer.privacy" />
                   </Link>
                   <Link
                     to="/cgu-expatries"
                     className="hover:text-emerald-700 underline"
                   >
-                    {/* {t.cguLabel} */}
+                
                     <FormattedMessage id="registerExpat.footer.cguLabel" />
                   </Link>
                   <Link
                     to="/centre-aide"
                     className="hover:text-emerald-700 underline"
                   >
-                    {/* {t.helpLink} */}
+                
                     <FormattedMessage id="registerExpat.footer.helpLink" />
                   </Link>
                   <Link
                     to="/contact"
                     className="hover:text-emerald-700 underline"
                   >
-                    {/* {t.contact} */}
+               
                     <FormattedMessage id="registerExpat.footer.contact" />
                   </Link>
                 </div>
