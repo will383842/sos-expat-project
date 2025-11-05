@@ -312,7 +312,7 @@ const slugify = (s: string) =>
 /* =========================
    Options filtres
 ========================= */
-const countryOptions = [
+const countryOptions_fr = [
   "Afghanistan",
   "Afrique du Sud",
   "Albanie",
@@ -509,6 +509,212 @@ const countryOptions = [
   "Zambie",
   "Zimbabwe",
 ];
+
+const countryOptions= [
+  "Afghanistan",
+  "South Africa",
+  "Albania",
+  "Algeria",
+  "Germany",
+  "Andorra",
+  "Angola",
+  "Saudi Arabia",
+  "Argentina",
+  "Armenia",
+  "Australia",
+  "Austria",
+  "Azerbaijan",
+  "Bahamas",
+  "Bahrain",
+  "Bangladesh",
+  "Barbados",
+  "Belgium",
+  "Belize",
+  "Benin",
+  "Bhutan",
+  "Belarus",
+  "Myanmar",
+  "Bolivia",
+  "Bosnia and Herzegovina",
+  "Botswana",
+  "Brazil",
+  "Brunei",
+  "Bulgaria",
+  "Burkina Faso",
+  "Burundi",
+  "Cambodia",
+  "Cameroon",
+  "Canada",
+  "Cabo Verde",
+  "Chile",
+  "China",
+  "Cyprus",
+  "Colombia",
+  "Comoros",
+  "Congo",
+  "North Korea",
+  "South Korea",
+  "Costa Rica",
+  "Côte d'Ivoire",
+  "Croatia",
+  "Cuba",
+  "Denmark",
+  "Djibouti",
+  "Dominica",
+  "Egypt",
+  "United Arab Emirates",
+  "Ecuador",
+  "Eritrea",
+  "Spain",
+  "Estonia",
+  "United States",
+  "Ethiopia",
+  "Fiji",
+  "Finland",
+  "France",
+  "Gabon",
+  "Gambia",
+  "Georgia",
+  "Ghana",
+  "Greece",
+  "Grenada",
+  "Guatemala",
+  "Guinea",
+  "Guinea-Bissau",
+  "Equatorial Guinea",
+  "Guyana",
+  "Haiti",
+  "Honduras",
+  "Hungary",
+  "Cook Islands",
+  "Marshall Islands",
+  "Solomon Islands",
+  "India",
+  "Indonesia",
+  "Iraq",
+  "Iran",
+  "Ireland",
+  "Iceland",
+  "Israel",
+  "Italy",
+  "Jamaica",
+  "Japan",
+  "Jordan",
+  "Kazakhstan",
+  "Kenya",
+  "Kyrgyzstan",
+  "Kiribati",
+  "Kuwait",
+  "Laos",
+  "Lesotho",
+  "Latvia",
+  "Lebanon",
+  "Liberia",
+  "Libya",
+  "Liechtenstein",
+  "Lithuania",
+  "Luxembourg",
+  "North Macedonia",
+  "Madagascar",
+  "Malaysia",
+  "Malawi",
+  "Maldives",
+  "Mali",
+  "Malta",
+  "Morocco",
+  "Mauritius",
+  "Mauritania",
+  "Mexico",
+  "Micronesia",
+  "Moldova",
+  "Monaco",
+  "Mongolia",
+  "Montenegro",
+  "Mozambique",
+  "Namibia",
+  "Nauru",
+  "Nepal",
+  "Netherlands",
+  "New Zealand",
+  "Oman",
+  "Uganda",
+  "Uzbekistan",
+  "Pakistan",
+  "Palau",
+  "Palestine",
+  "Panama",
+  "Papua New Guinea",
+  "Paraguay",
+  "Peru",
+  "Philippines",
+  "Poland",
+  "Portugal",
+  "Qatar",
+  "Central African Republic",
+  "Democratic Republic of the Congo",
+  "Dominican Republic",
+  "Czech Republic",
+  "Romania",
+  "United Kingdom",
+  "Russia",
+  "Rwanda",
+  "Saint Kitts and Nevis",
+  "San Marino",
+  "Saint Vincent and the Grenadines",
+  "Saint Lucia",
+  "El Salvador",
+  "Samoa",
+  "São Tomé and Príncipe",
+  "Senegal",
+  "Serbia",
+  "Seychelles",
+  "Sierra Leone",
+  "Singapore",
+  "Slovakia",
+  "Slovenia",
+  "Somalia",
+  "Sudan",
+  "South Sudan",
+  "Sri Lanka",
+  "Sweden",
+  "Switzerland",
+  "Suriname",
+  "Syria",
+  "Tajikistan",
+  "Tanzania",
+  "Chad",
+  "Thailand",
+  "Timor-Leste",
+  "Togo",
+  "Tonga",
+  "Trinidad and Tobago",
+  "Tunisia",
+  "Turkmenistan",
+  "Turkey",
+  "Tuvalu",
+  "Ukraine",
+  "Uruguay",
+  "Vanuatu",
+  "Vatican City",
+  "Venezuela",
+  "Vietnam",
+  "Yemen",
+  "Zambia",
+  "Zimbabwe",
+];
+ 
+
+// const giveCountryNameAccordingToLang = (lang: string) => {
+//   const country_fr = countryOptions_fr;
+//   const country_en = countryOptions_en;
+//   const country_es= countryOptions_es;
+//   const country_ru = countryOptions_ru;
+//   const country_de = countryOptions_de;
+//   const country_pt = countryOptions_pt;
+//   const country_ch = countryOptions_ch;
+//   const country_ar = countryOptions_;
+//   const country_hi = countryOptions_en;
+// }
 
 const languageOptions = [
   "Français",
@@ -1733,7 +1939,26 @@ const SOSCall: React.FC = () => {
                 {/* Pagination (bas) */}
                 <div className="flex items-center justify-between mt-8">
                   <div className="text-sm text-gray-300">
-                    Page <strong>{page}</strong> / {totalPages} —{" "}
+                    {lang === "en"
+                      ? "Page"
+                      : lang === "es"
+                        ? "Página"
+                        : lang === "fr"
+                          ? "Page"
+                          : lang === "de"
+                            ? "Seite"
+                            : lang === "ru"
+                              ? "Страница"
+                              : lang === "hi"
+                                ? "पृष्ठ"
+                                : lang === "ch"
+                                  ? "页面"
+                                  : lang === "pt"
+                                    ? "Página"
+                                    : lang === "ar"
+                                      ? "صفحة"
+                                      : "Page"}{" "}
+                    <strong>{page}</strong> / {totalPages} —{" "}
                     {filteredProviders.length}
                     {/* résultats */}
                     <span className="ml-[2px]">

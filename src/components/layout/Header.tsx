@@ -794,7 +794,7 @@ const PWAInstallArea = memo(({ scrolled }: { scrolled: boolean }) => {
       <div className="ml-3">
         <div className="flex flex-col leading-tight text-center">
           <span
-            className={`font-extrabold text-xl ${scrolled ? "text-white" : "text-gray-900"}`}
+            className={`font-extrabold text-sm ${scrolled ? "text-white" : "text-gray-900"}`}
           >
             SOS Expat
           </span>
@@ -1272,26 +1272,26 @@ const getNavigationLabel = useCallback(
 
               {/* Center Navigation with SOS */}
               <div className="flex-1 flex items-center justify-center">
-                <nav className="flex items-center space-x-6">
+                <nav className="flex items-center space-x-2">
                   {LEFT_NAVIGATION_ITEMS.slice(0, 2).map((item) => (
                     <Link
                       key={item.path}
                       to={item.path}
-                      className={`flex items-center gap-2.5 px-4 py-3 rounded-lg transition-all duration-300 hover:scale-105 ${
+                      className={`flex items-center gap-2.5 px-2 py-2 rounded-lg transition-all duration-300 hover:scale-105 ${
                         scrolled ? "hover:bg-white/10" : "hover:bg-gray-100"
                       } ${isActive(item.path) ? (scrolled ? "bg-white/20" : "bg-gray-100") : ""}`}
                       aria-current={isActive(item.path) ? "page" : undefined}
                     >
                       {item.desktopIcon && (
                         <span
-                          className={`text-xl ${scrolled ? "text-gray-200" : "text-gray-700"}`}
+                          className={`text-[14px] ${scrolled ? "text-gray-200" : "text-gray-700"}`}
                           aria-hidden="true"
                         >
                           {item.desktopIcon}
                         </span>
                       )}
                       <span
-                        className={`font-semibold ${scrolled ? "text-gray-200" : "text-gray-700"} text-lg tracking-wide`}
+                        className={`font-semibold ${scrolled ? "text-gray-200" : "text-gray-700"} text-[14px] tracking-wide`}
                       >
                         {getNavigationLabel(item.labelKey)}
                       </span>
@@ -1302,11 +1302,11 @@ const getNavigationLabel = useCallback(
                   <div className="mx-6">
                     <Link
                       to="/sos-appel"
-                      className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-7 py-3 rounded-2xl font-bold transition-all duration-200 hover:scale-105 flex items-center space-x-2 shadow-lg border-2 border-white/20"
+                      className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-3 py-1 rounded-2xl font-bold transition-all duration-200 hover:scale-105 flex items-center space-x-2 shadow-lg border-2 border-white/20"
                       aria-label={t.sosCall}
                     >
-                      <Phone className="w-5 h-5 text-white" />
-                      <span className="tracking-wide">
+                      <Phone className="size-3 text-white" />
+                      <span className="tracking-wide ">
                         {t.sosCall.toUpperCase()}
                       </span>
                     </Link>
@@ -1318,21 +1318,21 @@ const getNavigationLabel = useCallback(
                     <Link
                       key={item.path}
                       to={item.path}
-                      className={`flex items-center gap-2.5 px-4 py-3 rounded-lg transition-all duration-300 hover:scale-105 ${
+                      className={`flex items-center gap-2.5 px-2 py-2 rounded-lg transition-all duration-300 hover:scale-105 ${
                         scrolled ? "hover:bg-white/10" : "hover:bg-gray-100"
                       } ${isActive(item.path) ? (scrolled ? "bg-white/20" : "bg-gray-100") : ""}`}
                       aria-current={isActive(item.path) ? "page" : undefined}
                     >
                       {item.desktopIcon && (
                         <span
-                          className={`text-xl ${scrolled ? "text-gray-200" : "text-gray-700"}`}
+                          className={`text-[14px] ${scrolled ? "text-gray-200" : "text-gray-700"}`}
                           aria-hidden="true"
                         >
                           {item.desktopIcon}
                         </span>
                       )}
                       <span
-                        className={`font-semibold ${scrolled ? "text-gray-200" : "text-gray-700"} text-lg tracking-wide`}
+                        className={`font-semibold ${scrolled ? "text-gray-200" : "text-gray-700"} text-[14px] tracking-wide`}
                       >
                         {getNavigationLabel(item.labelKey)}
                       </span>

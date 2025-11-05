@@ -5203,7 +5203,31 @@ const missing = useMemo(() => {
                 lang={lang}
                 t={t}
                 progress={progress}
-                fullName={`${form.firstName || (lang === "en" ? "First" : "Prénom")} ${form.lastName || (lang === "en" ? "Last" : "Nom")}`.trim()}
+
+                fullName={`${form.firstName || (
+  lang === "en" ? "First" 
+  : lang === "es" ? "Nombre" 
+  : lang === "fr" ? "Prénom" 
+  : lang === "de" ? "Vorname" 
+  : lang === "ru" ? "Имя" 
+  : lang === "hi" ? "पहला नाम" 
+  : lang === "ch" ? "名" 
+  : lang === "pt" ? "Primeiro" 
+  : lang === "ar" ? "الاسم الأول" 
+  : "First"
+)} ${form.lastName || (
+  lang === "en" ? "Last" 
+  : lang === "es" ? "Apellido" 
+  : lang === "fr" ? "Nom" 
+  : lang === "de" ? "Nachname" 
+  : lang === "ru" ? "Фамилия" 
+  : lang === "hi" ? "उपनाम" 
+  : lang === "ch" ? "姓" 
+  : lang === "pt" ? "Último" 
+  : lang === "ar" ? "اسم العائلة" 
+  : "Last"
+)}`.trim()}
+                // fullName={`${form.firstName || (lang === "en" ? "First" : "Prénom")} ${form.lastName || (lang === "en" ? "Last" : "Nom")}`.trim()}
                 photo={form.profilePhoto}
                 currentCountry={form.currentCountry}
                 presenceCountry={form.currentPresenceCountry}
