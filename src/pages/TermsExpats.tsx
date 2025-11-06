@@ -91,89 +91,6 @@ const TermsExpats: React.FC = () => {
     fetchTerms();
   }, [selectedLanguage]);
 
-  // const translations = {
-  //   fr: {
-  //     title: 'CGU Expatriés Aidants',
-  //     subtitle: "Conditions générales d'utilisation pour les expatriés aidants",
-  //     lastUpdated: 'Version 2.2 – Dernière mise à jour : 16 juin 2025',
-  //     loading: 'Chargement...',
-  //     joinNetwork: 'Rejoindre le réseau',
-  //     trustedByHelpers: 'Déjà 1K+ expatriés aidants nous font confiance',
-  //     keyFeatures: 'Points clés',
-  //     features: [
-  //       'Paiement garanti sous 7 jours',
-  //       'Support technique 24/7',
-  //       'Interface mobile optimisée',
-  //       'Utilisateurs vérifiés',
-  //     ],
-  //     languageToggle: 'Changer de langue',
-  //     sections: {
-  //       definitions: 'Définitions',
-  //       scope: 'Objet, champ et acceptation',
-  //       status: "Statut de l'Expatrié Aidant – Conformité et responsabilités",
-  //       account: 'Compte, vérifications et sécurité',
-  //       rules: 'Règles d’usage – Qualité, interdits, non-contournement',
-  //       relationship: 'Relation Aidant–Utilisateur (hors Plateforme)',
-  //       fees: 'Frais, paiement unique et taxes',
-  //       data: 'Données personnelles (cadre global)',
-  //       ip: 'Propriété intellectuelle',
-  //       liability: 'Garanties, responsabilité et indemnisation',
-  //       law: 'Droit applicable – Arbitrage – Juridiction estonienne',
-  //       misc: 'Divers',
-  //       contact: 'Contact',
-  //     },
-  //     readyToJoin: 'Prêt à rejoindre SOS Expat ?',
-  //     readySubtitle: 'Aidez des expatriés et développez votre activité de conseil.',
-  //     startNow: 'Commencer maintenant',
-  //     contactUs: 'Nous contacter',
-  //     anchorTitle: 'Sommaire',
-  //     editHint: 'Document éditable depuis la console admin',
-  //     ctaHero: 'Voir les experts',
-  //     heroBadge: 'Nouveau — Conditions mises à jour',
-  //     contactForm: 'Formulaire de contact',
-  //   },
-  //   en: {
-  //     title: 'Expat Helper Terms',
-  //     subtitle: 'Terms of Use for expatriate helpers',
-  //     lastUpdated: 'Version 2.2 – Last updated: 16 June 2025',
-  //     loading: 'Loading...',
-  //     joinNetwork: 'Join the network',
-  //     trustedByHelpers: 'Already 1K+ expat helpers trust us',
-  //     keyFeatures: 'Key features',
-  //     features: [
-  //       'Guaranteed payment within 7 days',
-  //       '24/7 technical support',
-  //       'Mobile-optimized interface',
-  //       'Verified users',
-  //     ],
-  //     languageToggle: 'Switch language',
-  //     sections: {
-  //       definitions: 'Definitions',
-  //       scope: 'Purpose, Scope and Acceptance',
-  //       status: 'Helper Status – Compliance and Responsibilities',
-  //       account: 'Account, Checks and Security',
-  //       rules: 'Use Rules – Quality, Prohibited Conduct, No Circumvention',
-  //       relationship: 'Helper–User Relationship (Off-Platform)',
-  //       fees: 'Fees, Single Payment and Taxes',
-  //       data: 'Data Protection (Global Framework)',
-  //       ip: 'Intellectual Property',
-  //       liability: 'Warranties, Liability and Indemnity',
-  //       law: 'Governing Law – ICC Arbitration – Estonian Courts',
-  //       misc: 'Miscellaneous',
-  //       contact: 'Contact',
-  //     },
-  //     readyToJoin: 'Ready to join SOS Expat?',
-  //     readySubtitle: 'Help expats and develop your consulting activity.',
-  //     startNow: 'Start now',
-  //     contactUs: 'Contact us',
-  //     anchorTitle: 'Overview',
-  //     editHint: 'Document editable from the admin console',
-  //     ctaHero: 'See experts',
-  //     heroBadge: 'New — Terms updated',
-  //     contactForm: 'Contact Form',
-  //   },
-  // };
-
   const translations = {
     fr: {
       title: "CGU Expatriés Aidants",
@@ -546,7 +463,7 @@ const TermsExpats: React.FC = () => {
   const t = translations[selectedLanguage];
 
   const handleLanguageChange = (
-    newLang: "fr" | "en" | "es" | "de" | "ru" | "hi" | "ch"
+    newLang: "fr" | "en" | "es" | "de" | "ru" | "hi" | "ch" | "pt" | "ar"
   ) => {
     setSelectedLanguage(newLang);
   };
@@ -925,151 +842,170 @@ Pour toute question ou demande légale, contactez-nous :
 
 ## 1. Definitions
 
-**Helper** means any person registered on the Platform to offer, independently, non-legal and non-medical assistance services to Users (orientation, practical errands, informal translation, local introductions, etc.).
+**Expatriate Helper (“Helper”):** any person registered on the Platform to offer, on an independent basis, non-legal and non-medical assistance services to Users (guidance, practical support, informal translation, local networking, etc.).
 
-**User** means any person using the Platform to contact a Helper.
+**User:** any person using the Platform to contact a Helper.
 
-**Connection** means the technical/operational introduction enabling contact (sharing details and/or initiating a call/message/video and/or acceptance by the Helper).
+**Connection:** the technical/operational introduction made by the Platform between a User and a Helper (transmission of contact details and/or opening of a communication channel and/or acceptance by the Helper of a request submitted through the Platform).
 
-**Country of Intervention** means the jurisdiction primarily targeted by the User's request at the time of Connection.
+**Country of Operation:** the jurisdiction primarily targeted by the User’s request at the time of Connection; failing that, the User’s country of residence at the date of the request.
 
-**Connection Fee** means **EUR 19** (if paid in EUR) or **USD 25** (if paid in USD), subject to change and/or **local schedules** by country/currency with prospective effect.
+**Connection Fee:** fixed fee payable to SOS per Connection (art. 7): **€19** if paid in EUR or **$25 USD** if paid in USD, subject to change and/or **local rate schedules** by country/currency, with prospective effect.
 
-**Payment Processors** are third-party services handling collections and payouts.
+**Payment Service Providers:** third-party services processing payments and fund distribution.
 
 ---
 
 ## 2. Purpose, Scope and Acceptance
 
-Ulixai acts **solely as a technical intermediary** and is neither an employer, agent nor partner of Helpers; Ulixai provides no legal, medical, tax, accounting or other regulated advice and is not a party to Helper–User contracts.
+2.1. These Terms of Use govern access to and use of the Platform by Helpers.
 
-**Click-wrap acceptance** constitutes electronic signature and consent. SOS may update these Terms and/or fee schedules with **prospective effect** upon posting.
+2.2. Ulixai acts solely as a technical intermediary for Connections. Ulixai is not the employer, agent, or partner of Helpers, provides no legal, medical, tax, accounting, or other regulated advice, and is not a party to contracts between Helpers and Users.
 
-**Professional capacity (B2B)**: the Helper acts exclusively for professional purposes; consumer protection regimes do not apply to the Ulixai–Helper relationship.
+2.3. **Electronic acceptance (click-wrap):** Registration and/or use of the Platform constitutes acceptance of these Terms, electronic signature, and contractual consent. SOS may retain technical evidence (timestamps, identifiers).
 
----
+2.4. **Modifications:** SOS may update the Terms and/or fee schedules (by country/currency) with prospective effect by publishing them on the Platform. Continued use constitutes acceptance.
 
-## 3. Helper Status – Compliance, Authorizations and Responsibilities
-
-**Independence.** The Helper acts as an independent professional.
-
-**Work authorization & immigration.** The Helper is **solely responsible** for obtaining/maintaining **all permits/visas and business registrations** required in each Country of Intervention. Ulixai **does not verify** such authorizations and **assumes no liability** for them.
-
-**Regulated services.** The Helper shall **not** provide regulated services (e.g., legal, medical, financial, accounting, real-estate brokerage, etc.) **unless duly licensed/authorized** and fully compliant with local law; otherwise the Helper must refrain and redirect the User to an appropriately licensed professional.
-
-**General compliance.** The Helper complies with applicable laws (consumer, e-commerce, advertising/solicitation, fair competition, AML/KYC where relevant, tax, data protection, sanctions/export, personal safety).
-
-**Insurance.** The Helper maintains appropriate insurance.
-
-**Confidentiality.** The Helper safeguards User information.
+2.5. **Professional capacity (B2B):** The Helper declares to act solely for professional purposes; consumer protection regimes do not apply to the Ulixai–Helper relationship.
 
 ---
 
-## 4. Account, Checks and Security
+## 3. Helper status – Compliance, authorizations, and responsibilities
 
-One account per Helper; accurate, complete and up-to-date profile. Ulixai may conduct reasonable checks (ID, profile consistency, sanctions/KYC screenings via processors) and may refuse/suspend/withdraw access for security, compliance or quality reasons. Keep credentials secure; activity via the account is deemed that of the Helper.
+3.1. **Independence:** The Helper acts as an independent professional; no employment, agency, partnership, or joint venture relationship is created with Ulixai.
+
+3.2. **Work authorization & immigration status:** The Helper is solely responsible for obtaining and maintaining all required authorizations in each Country of Operation (visa, work permit, business registration/self-employment, insurance, local licenses, etc.). Ulixai does not verify such authorizations and assumes no responsibility in this regard.
+
+3.3. **Unregulated services:** The Helper agrees not to provide regulated services (e.g. legal, medical, financial, accounting, or real estate advice, etc.) without holding the required authorizations/licenses and full compliance with local laws. Otherwise, the Helper must refrain from such services and refer the User to a duly licensed professional (e.g. a registered lawyer).
+
+3.4. **General compliance:** The Helper complies with applicable laws/regulations (consumer protection, e-commerce, advertising/solicitation, fair competition, AML/KYC where applicable, taxation, data protection, sanctions/export, and personal safety).
+
+3.5. **Insurance:** The Helper declares to hold necessary insurance (e.g., professional liability) covering their activities and territories of operation.
+
+3.6. **Confidentiality:** The Helper protects Users’ information and shall not disclose it except where legally required or with consent.
+
+---
+
+## 4. Account, verification, and security
+
+4.1. **Registration** One (1) account per Helper; information must be accurate, complete, and up to date (identity, contact details, service descriptions, operational areas, etc.).
+
+4.2. **Verification** Ulixai may perform reasonable checks (identity, profile consistency, sanctions/KYC screenings via Providers) and may refuse/suspend/remove access for reasons of security, compliance, or service quality.
+
+4.3. **Access security** The Helper protects their login credentials. Any activity under the account is deemed to have been performed by them.
 
 ---
 
 ## 5. Use Rules – Quality, Prohibited Conduct, No Circumvention
 
-Accurate description; no false professional status; no promises of outcome.
+5.1. **Quality & accurate description** The Helper must describe services accurately, without promising results. The Helper must not claim false professional status (e.g., regulated profession not held).
 
-**Prohibited:** unlawful/discriminatory/deceptive content; unfair practices; abusive data use; reverse-engineering; collusion/boycott; sanctions/export breaches; any unlawful activity.
+5.2. **Prohibitions** Illegal, discriminatory, or misleading content; unfair practices; abusive data collection or use; circumvention or reverse-engineering of the Platform; collusion/boycott intended to harm; sanctions/export violations; any unlawful activity.
 
-**No circumvention:** **each new Connection with a new User** via the Platform triggers the **Connection Fee**; avoiding the Platform to evade fees on a new introduction is prohibited.
+5.3. **Non-circumvention** Each new Connection with a new User through the Platform gives rise to Connection Fees (art. 7). It is forbidden to avoid such fees by bypassing the Platform for a new introduction.
 
-**Availability:** Platform is provided **"as is."**
+5.4. **Availability** The Platform is provided “as is”; uninterrupted availability is not guaranteed (maintenance, incidents, force majeure). Access may be restricted where required by law.
 
 ---
 
 ## 6. Helper–User Relationship (Off-Platform)
 
-After Connection, parties may contract **off-Platform**. The Helper provides local service confirmations/terms, invoices, and handles taxes. Ulixai is **not responsible** for the Helper's services or commitments.
+6.1. After the Connection, the Helper and User may enter into an agreement off-platform. Fees and terms are freely determined between them, in compliance with local laws.
+
+6.2. The Helper provides service confirmations/terms compliant with local law, manages their own billing and tax obligations.
+
+6.3. Ulixai is not responsible for the quality, accuracy, or outcome of the Helper’s services, nor for any commitments made between Helper and User.
 
 ---
 
 ## 7. Fees, Single Payment and Taxes
 
-**Flat Connection Fee.** **EUR 19 / USD 25** per Connection, exclusive of taxes and processor charges; Ulixai may change amounts and/or publish **local schedules** by country/currency with prospective effect.
+7.1. **Connection Fee (flat rate): €19 (EUR) or $25 (USD)** per Connection, excluding taxes and Payment Provider fees. Ulixai may modify these amounts and/or publish local rate schedules by country/currency, with prospective effect.
 
-**Single payment & split.** User pays **one amount** via the Platform covering (i) the Helper's remuneration (as agreed) and (ii) Ulixai's Connection Fee. Ulixai (or its processor) collects, **deducts** its Fee, then **remits** the remainder to the Helper, who **authorizes** such deductions.
+7.2. **Single payment & distribution:** The User makes a single payment via the Platform covering (i) the Helper’s remuneration (as agreed) and (ii) Ulixai’s Connection Fee. Ulixai (or its Provider) collects, deducts its fee, and transfers the remaining balance to the Helper. The Helper authorizes such deductions and allocations.
 
-**Due & non-refundable.** The Connection Fee is **earned upon** Connection and **non-refundable** (subject to Ulixai's discretionary goodwill **to the extent permitted by law** in case of Platform-only failure).
+7.3. **Due and non-refundable:** The Connection Fee is due as soon as the Connection is made and non-refundable (except at Ulixai’s discretionary goodwill in case of a failure solely attributable to the Platform and to the extent permitted by law).
 
-**User refunds.** If granted, refunds are **borne by the Helper's share**: Ulixai may **withhold/offset** against future payouts or request reimbursement if none are due.
+7.4. **User refunds:** If a refund is granted to a User, it is deducted from the Helper’s share: Ulixai may withhold/offset the corresponding amount from future payments to the Helper or request repayment if no payment is pending. No refund of Connection Fees is due, except at Ulixai’s discretion.
 
-**FX** and **taxes**: processor FX rates/fees may apply; Helper is responsible for all applicable taxes; Ulixai collects/remits VAT or local equivalent on the Connection Fee where required.
+7.5. **Currencies & conversion:** Multiple currencies may be offered; Provider exchange rates/fees may apply.
 
-**Set-off** authorized.
+7.6. **Taxes** The Helper remains responsible for all applicable taxes (VAT, income tax, social security, etc.). Ulixai collects/remits, where required, VAT/equivalent on Connection Fees.
+
+7.7. **Set-off** Ulixai may offset any amount owed by the Helper against any amount payable to the Helper.
 
 ---
 
 ## 8. Data Protection (Global Framework)
 
-**Roles.** For User data received for Connection, **Ulixai and the Helper** each act as an **independent controller** for their own purposes.
+8.1. **Roles** For User data received for Connection purposes, Ulixai and the Helper each act as independent data controllers for their own purposes.
 
-**Legal bases/purposes:** contract performance, legitimate interests (security/fraud prevention/service improvement), legal compliance (AML/sanctions), and consent where applicable.
+8.2. **Legal bases & purposes** Contract performance (Connection), legitimate interests (security, fraud prevention, improvement), legal compliance (AML, sanctions), and consent where required.
 
-**International transfers** may occur with appropriate safeguards where required.
+8.3. International transfers with appropriate safeguards where required.
 
-**Rights & contact** via the Platform contact form.
+8.4. **Rights & contact** Exercised via the Platform’s contact form.
 
-**Security** measures apply; breaches are notified as required. The Helper processes data under the Country of Intervention's law.
+8.5. **Security** Reasonable technical/organizational measures; breach notifications according to applicable law.
 
+8.6. The Helper processes data in accordance with the law of the Country of Operation.
 ---
 
 ## 9. Intellectual Property
 
-Platform IP remains with Ulixai. The Helper receives a **personal, non-exclusive, non-transferable** right to access during these Terms. Helper content is licensed to Ulixai on a **worldwide, non-exclusive** basis for hosting and display.
+The Platform, its trademarks, logos, databases, and content are protected. No rights are transferred to the Helper, except for a personal, non-exclusive, non-transferable right of access during the term of these Terms. Content provided by the Helper is subject to a worldwide, non-exclusive license in favor of Ulixai for hosting and display on the Platform.
 
 ---
 
 ## 10. Warranties, Liability and Indemnity
 
-No warranty for outcomes/quality/volume; Platform **"as is."**
+10.1. No guarantee regarding results/quality/business volume; the Platform is provided “as is”.
 
-**Liability cap:** to the fullest extent permitted, Ulixai's total liability to the Helper is limited to **direct damages** and **shall not exceed** the total **Connection Fees** received by Ulixai for the **transaction** giving rise to the claim.
+10.2. **Liability limitation:** to the extent permitted, Ulixai’s total liability to the Helper is limited to direct damages and shall not exceed the total Connection Fees received by Ulixai for the transaction giving rise to the claim.
 
-**No indirect/consequential/special/punitive damages.**
+10.3. **Exclusions:** no indirect/consequential/special/punitive damages (loss of profits, opportunities, clients, reputation, replacement costs, etc.).
 
-**Indemnity:** the Helper shall **indemnify and hold harmless** Ulixai (and affiliates, officers, employees, agents) against claims/losses/costs (including reasonable attorneys' fees) arising from (i) breach of these Terms/laws, (ii) Helper content, (iii) Helper services/omissions, (iv) lack of work authorization/immigration/licensing.
+10.4. **Indemnification:** the Helper indemnifies and holds harmless Ulixai (and its affiliates, officers, employees, agents) from any claim, loss, damage, penalty, and expense (including attorney fees) arising from (i) breach of these Terms/laws, (ii) their content, (iii) their services/omissions, (iv) lack of work/immigration/license authorization.
+
+10.5. No representation. Nothing herein creates agency, employment, partnership, or joint venture between Ulixai and the Helper.
+
+10.6. Survival. Articles 5, 7, 8, 9, 10, 11, and 12 survive termination.
 
 ---
 
-## 11. Governing Law – ICC Arbitration – Estonian Courts – Class Actions
+## 11. Governing law – Arbitration – Estonian jurisdiction – Class action waiver
 
-**Substantive law:** for each Connection, the **laws of the Country of Intervention** govern the Ulixai–Helper relationship, subject to mandatory local rules and peremptory international norms.
+11.1. **Substantive law:** for each Connection, the Ulixai–Helper relationship is governed by the **laws of the Country of Operation**, subject to local public policy and mandatory international norms. Supplementarily, and for interpretation/validity of these Terms as well as any issue not governed by the law of the Country of Operation, Estonian law applies.
 
-**Mandatory ICC arbitration** for any Ulixai–Helper dispute. **Seat: Tallinn (Estonia). Language: French.** Tribunal applies the **substantive law** defined above. Proceedings are **confidential**.
+11.2. **Mandatory ICC arbitration:** any dispute between Ulixai and the Helper shall be finally resolved under the ICC Arbitration Rules. Seat: Tallinn (Estonia). Language: French. The tribunal shall apply the substantive law defined in art. 11.1. Proceedings are confidential.
 
-**Class/collective actions are waived** to the extent permitted by law.
+11.3. **Class action waiver:** to the extent permitted, any collective/group/representative action is excluded; individual claims only are allowed.
 
-**Exclusive jurisdiction of Estonian courts** (Tallinn) for **non-arbitrable** claims, enforcement of awards and urgent measures; the Helper waives objections to venue/forum non conveniens.
+11.4. **Exclusive jurisdiction of Estonian courts:** for any non-arbitrable matters, enforcement of awards, or urgent measures, Estonian courts (competent in Tallinn) have exclusive jurisdiction. The Helper waives any objection of forum or non-convenience.
 
 ---
 
 ## 12. Miscellaneous
 
-**Assignment**: Ulixai may assign these Terms to a group entity or successor; the Helper may not assign without Ulixai's consent.
+12.1. **Assignment**: Ulixai may assign these Terms to an affiliate or successor; the Helper may not assign without Ulixai’s written consent.
 
-**Entire Agreement**: these Terms supersede prior understandings.
+12.2. **Entire Agreement**: These Terms constitute the entire agreement and supersede all prior agreements relating to the same subject matter.
 
-**Notices**: by posting on the Platform, in-app, or via the contact form.
+12.3. **Notices**: By publication on the Platform, in-app notification, or via the contact form.
 
-**Interpretation**: headings are for convenience; no **contra proferentem**.
+12.4. **Interpretation**: Headings are for convenience only. No **contra proferentem** rule applies.
 
-**Languages**: translations may be provided; **French prevails** for interpretation.
+12.5. **Languages**: Translations may be provided; French prevails for interpretation.
 
-**Severability**: invalid terms replaced by valid ones of equivalent effect.
+12.6. **Severability**: If any provision is invalid/unenforceable, the remainder remains effective; it may be replaced by a valid provision of equivalent effect where possible.
 
-**No waiver**: failure to enforce is not a waiver.
+12.7. **No waiver**: Failure to exercise a right does not constitute waiver thereof.
 
 ---
 
 ## 13. Contact
 
-For any questions or legal requests, contact us:
+For any question or legal request, please contact us:
 `;
 
   const defaultRu = `
@@ -2010,133 +1946,177 @@ Keine Garantie für Ergebnisse/Qualität/Volumen; Plattform **"wie gehabt."**
 Bei Fragen oder rechtlichen Anfragen kontaktieren Sie uns:
 `;
   const defaultCh = `
-  使用条款 – 外籍协助者（全球）
+# 使用条款 – 海外互助者（全球版）
 
-SOS Expat by Ulixai OÜ（下称“平台”、“SOS”、“我们”）
+**SOS Expat by Ulixai OÜ（“**平台**”、“**SOS**”、“**我们**”） 
 
-版本 2.2 – 最后更新：2025年6月16日
+**版本 2.2 – 最后更新：2025 年 6 月 16 日**
 
-1. 定义
+## 1. 定义
 
-协助者（Helper） 指在平台上注册，以独立身份向用户提供非法律、非医疗协助服务的人士（如方向指导、日常事务协助、非正式翻译、当地介绍等）。
+**海外互助者（“互助者”）：** 任何在平台上注册、以独立身份向用户提供非法律、非医疗的协助服务的个人（如指导、实际帮助、非正式翻译、当地联系等）。
 
-用户（User） 指使用平台联系协助者的任何人。
+**用户：** 使用平台联系互助者的任何人。
 
-连接（Connection） 指实现联系的技术或操作环节（包括共享联系方式、发起通话/消息/视频、以及协助者接受请求等）。
+**匹配（联系）：** 平台在用户与互助者之间进行的技术/操作层面的引介（包括联系方式传递、沟通渠道开启、或互助者通过平台接受请求）。
 
-介入国家（Country of Intervention） 指用户在连接时主要提出请求的司法管辖区。
+**服务国家：** 在匹配时用户需求主要涉及的司法辖区；若无明确，则以请求日期的用户居住国为准。
 
-连接费用（Connection Fee） 指 19 欧元（EUR）（若以欧元支付）或 25 美元（USD）（若以美元支付），该金额可变，并可根据不同国家/货币的本地收费表进行前瞻性调整。
+**匹配费用：** 每次匹配须向 SOS 支付的固定费用（见第 7 条）：以 欧元支付为 **€19**，以 美元支付为 **$25 USD**，金额可调整，或按国家/货币制定本地费率表，并具有前瞻性效力。
 
-支付处理方（Payment Processors） 指负责收款和付款的第三方服务。
+**支付服务提供商：** 处理收款及资金分配的第三方服务。
 
-2. 目的、适用范围与接受
+---
 
-Ulixai 仅作为技术中介，并非协助者的雇主、代理人或合作伙伴；Ulixai 不提供任何法律、医疗、税务、会计或其他受监管的建议，也不参与协助者与用户之间的合同关系。
+## 2. 目的、适用范围与接受
 
-点击同意（Click-wrap acceptance） 构成电子签名与同意。SOS 可在发布后以前瞻性方式更新本条款和/或费用表。
+2.1. 本使用条款规范互助者对平台的访问与使用。
 
-专业身份（B2B）：协助者仅以专业身份行事；消费者保护法规不适用于 Ulixai 与协助者之间的关系。
+2.2. Ulixai 仅作为技术性匹配中介。 Ulixai 不是互助者的雇主、代理或合作伙伴，不提供任何法律、医疗、税务、会计或其他受监管的建议，也不是互助者与用户之间合同的当事方。
 
-3. 协助者身份 – 合规、许可与责任
+2.3. **电子接受（点击同意):** 注册和/或使用平台即表示接受本条款，构成电子签署与合同同意。SOS 可保留技术性证据（时间戳、标识符等）。
 
-独立性。 协助者以独立专业人士身份行事。
+2.4. **修改:** SOS 可通过在平台上发布方式更新条款和/或费率表（按国家/货币），更新具有前瞻性效力。继续使用即视为接受。
 
-工作许可与移民。 协助者全权负责在每个介入国家获取/保持所需的许可证、签证及商业注册。Ulixai 不核实此类授权，也不承担任何责任。
+2.5. **专业身份（B2B):** 互助者声明其仅为职业目的行事；消费者保护法律不适用于 Ulixai–互助者关系。
 
-受监管的服务。 协助者不得提供受监管的服务（如法律、医疗、金融、会计、不动产中介等），除非持有合法执照/授权并完全遵守当地法律；否则应停止并引导用户联系持证专业人士。
+---
 
-一般合规。 协助者遵守适用法律（消费者、电商、广告/招揽、公平竞争、反洗钱/客户识别、税务、数据保护、制裁/出口、个人安全等）。
+## 3. 互助者身份 – 合规、许可与责任
 
-保险。 协助者应保持适当的保险保障。
+3.1. **独立性:** 互助者以独立专业人士身份行事；Ulixai 与互助者之间不构成雇佣、代理、合作或合资关系。
 
-保密。 协助者应保护用户信息的机密性。
+3.2. **工作许可与移民身份** 互助者全权负责在每个服务国家获得并保持所有必要许可（签证、工作许可证、商业登记/个体经营、保险、当地执照等）。Ulixai 不核实这些许可，也不承担任何责任。
 
-4. 账户、审查与安全
+3.3. **非受监管服务:** 互助者承诺不得提供受监管的服务（如法律、医疗、金融、会计、房地产咨询等），除非持有必要的许可/执照并完全遵守当地法律。否则，互助者应避免此类服务，并将用户转介给具有合法资质的专业人士（如注册律师）。
 
-每位协助者仅限一个账户；资料应准确、完整并保持最新。Ulixai 可进行合理核查（身份证件、资料一致性、制裁/客户识别筛查等），并可因安全、合规或质量原因拒绝、暂停或撤销访问权限。协助者应妥善保管凭证；账户内的活动视为协助者本人行为。
+3.4. **一般合规** 互助者遵守适用法律/法规（消费者保护、电子商务、广告/营销、公平竞争、反洗钱/客户尽调（如适用）、税务、数据保护、制裁/出口管制、人员安全等）。
 
-5. 使用规则 – 质量、禁止行为、禁止规避
+3.5. **保险** 互助者声明已持有必要保险（如职业责任险），涵盖其业务活动及服务地区。
 
-需准确描述，不得虚假宣称专业身份，不得保证结果。
+3.6. **保密性** 互助者应保护用户信息，除法律要求或经同意外，不得泄露。
 
-**禁止行为：**违法、歧视、欺骗性内容；不公平行为；滥用数据；逆向工程；串通或抵制；违反制裁/出口规定；任何非法活动。
+---
 
-禁止规避： 通过平台与新用户建立的每次新连接均会触发连接费用；规避平台以逃避新引介费用的行为被禁止。
+## 4. 账户、审查与安全
 
-可用性： 平台按“原样提供”。
+4.1. **注册:** 每位互助者仅可拥有一个账户；所填信息必须准确、完整并保持更新（身份、联系方式、服务描述、地区范围等）。
 
-6. 协助者–用户关系（平台外）
+4.2. **验证:** Ulixai 可进行合理检查（身份验证、资料一致性、制裁/尽调筛查等），并可因安全、合规或服务质量原因拒绝/暂停/撤销访问。
 
-连接完成后，双方可在平台外签订合同。协助者负责提供服务确认/条款、开具发票及处理税务。Ulixai 对协助者的服务或承诺不承担责任。
+4.3. **账户安全:** 互助者须保护其登录凭证。任何账户下的操作均视为互助者本人行为。
 
-7. 费用、单次付款与税务
+---
 
-固定连接费。 每次连接 19 欧元 / 25 美元，不含税及支付处理费；Ulixai 可调整金额及/或按国家/货币公布本地收费表，并以前瞻性方式生效。
+## 5. 使用规则 – 质量、禁止行为、禁止规避
 
-单次付款与分配。 用户通过平台支付一个总金额，涵盖：(i) 协助者的报酬（经双方约定），以及 (ii) Ulixai 的连接费。Ulixai（或其处理方）收款后扣除自身费用，再汇款余额给协助者；协助者授权此类扣除。
+5.1. **质量与真实描述:** 互助者必须准确描述服务内容，不得承诺结果。不得虚假宣称专业身份（如未具备受监管职业资格）。
 
-应得且不可退还。 连接费用自连接时即应计入并不可退还（若因平台自身原因失败，Ulixai 可在法律允许范围内酌情退款）。
+5.2. **禁止事项。** 禁止违法、歧视或误导性内容；不正当竞争；滥用数据；规避或逆向工程平台；恶意合谋/抵制；违反制裁或出口限制；任何非法活动。
 
-用户退款。 若发生退款，将从协助者分成中承担：Ulixai 可抵扣未来付款或在无应付款项时要求返还。
+5.3. **禁止规避。** 每次通过平台与新用户建立的新匹配均须支付匹配费用（第 7 条）。严禁为避免该费用而绕过平台进行新引介。
 
-汇率与税务： 支付处理方可能收取汇率/手续费；协助者负责所有适用税费；Ulixai 在需要时对连接费征收并缴纳增值税或本地等价税。
+5.4. **可用性。** 平台按**“原样”**提供；不保证持续可用（维护、事故、不可抗力等）。在法律要求下可限制访问。
 
-抵销权已获授权。
+---
 
-8. 数据保护（全球框架）
+## 6. 协助者–用户关系（平台外）
 
-角色。 对于为实现连接而获得的用户数据，Ulixai 与协助者各自作为独立数据控制者并为各自目的处理。
+6.1. 匹配后，互助者与用户可在平台外自行签订合同。服务费与条款由双方自由约定，须符合当地法律。
 
-法律依据与目的： 合同履行、合法利益（安全/防欺诈/服务改进）、法律合规（反洗钱/制裁）及在适用时的同意。
+6.2. 互助者应提供符合当地法律的服务确认/条款，并自行处理开票与纳税义务。
 
-国际传输可能发生，并在需要时采取适当保障措施。
+6.3. Ulixai 不对互助者服务的质量、准确性或结果负责，也不对互助者与用户之间的任何承诺承担责任。
 
-权利与联系方式：可通过平台联系表单行使。
+---
 
-安全措施适用；若发生数据泄露，将按要求通知。协助者根据介入国家法律处理数据。
+## 7. 费用、单次付款与税务
 
-9. 知识产权
+7.1. **匹配费用（固定费率）。 每次匹配收费 €19（欧元） 或 $25（美元）**，不含税及支付服务费用。Ulixai 可调整金额及/或按国家/货币发布本地费率表，具前瞻性效力。
 
-平台知识产权归 Ulixai 所有。协助者在条款有效期内获得个人的、非独占、不可转让的访问权。协助者内容授予 Ulixai 全球范围内的非独占许可，用于托管与展示。
+7.2. **一次性支付与分配。** 用户通过平台进行一次性支付，涵盖 (i) 互助者报酬（双方约定）及 (ii) Ulixai 的匹配费用。Ulixai（或其服务商）收款后，扣除费用并将余额转给互助者。互助者授权此类扣除与分配。
 
-10. 免责声明、责任与赔偿
+7.3. **应付且不退款。** 匹配费用自匹配达成即应付且不可退还（除非 Ulixai 出于善意、且在法律允许范围内、因平台自身原因造成失败而决定退款）。
 
-不对结果、质量或数量作任何保证；平台按“原样”提供。
+7.4. **用户退款。** 若用户获批退款，该金额从互助者份额中扣除：Ulixai 可抵扣/保留未来支付款，或在无未来支付时要求返还。匹配费用不退，除非 Ulixai 自主决定。
 
-责任上限： 在法律允许的最大范围内，Ulixai 对协助者的总责任限于直接损失，且不超过Ulixai 就引起索赔的交易所收取的连接费用总额。
+7.5. **货币与兑换。** 平台可支持多种货币；可能适用服务商汇率及手续费。
 
-不承担间接、后果性、特殊或惩罚性损害赔偿。
+7.6. **税费。** 互助者自行承担所有适用税费（增值税、所得税、社保等）。Ulixai 在必要时收取/代缴匹配费用相关增值税或同等税项。
 
-赔偿： 协助者应赔偿并使 Ulixai（及其关联方、管理人员、员工、代理人）免受损害，包括因 (i) 违反本条款或法律，(ii) 协助者内容，(iii) 协助者的服务或疏漏，(iv) 缺乏工作许可/移民/执照而引起的索赔、损失或费用（包括合理的律师费）。
+7.7. **抵销。** Ulixai 可将互助者所欠款项与其应收款项相互抵销。
 
-11. 适用法律 – 国际商会仲裁 – 爱沙尼亚法院 – 集体诉讼放弃
+---
 
-实体法： 对每次连接，介入国家法律适用于 Ulixai 与协助者关系，但须受强制性当地法律及国际强行规范约束。
+## 8. 个人数据（全球框架)
 
-强制性 ICC 仲裁： 所有 Ulixai–协助者争议均提交国际商会仲裁。仲裁地：爱沙尼亚塔林。语言：法语。 仲裁庭适用上述实体法，程序保密。
+8.1. **角色。** 就为匹配目的接收的用户数据而言，Ulixai 与互助者各自为其自身目的的独立数据控制者。
 
-放弃集体诉讼：在法律允许范围内放弃集体/联合诉讼权利。
+8.2. **法律依据与目的。** 合同履行（匹配）、合法利益（安全、防欺诈、改进）、法律合规（反洗钱、制裁）及必要时的同意。
 
-非仲裁事项、执行与紧急措施由爱沙尼亚法院（塔林）专属管辖；协助者放弃有关管辖地/不便法院的异议。
+8.3. 国际传输在必要时附带适当保障措施。
 
-12. 其他条款
+8.4. **权利与联系。** 用户可通过平台的联系表单行使相关权利。
 
-转让： Ulixai 可将本条款转让给集团实体或继任者；协助者未经同意不得转让。
+8.5. **安全。** 采取合理的技术和组织措施；数据泄露将依照适用法律通报。
 
-完整协议： 本条款取代此前所有理解与约定。
+8.6. 互助者根据服务国家法律处理数据。
 
-通知： 通过平台发布、应用内通知或联系表单发送。
+---
 
-解释： 标题仅为便利；不适用不利解释原则（contra proferentem）。
+## 9. 知识产权
 
-语言： 可提供翻译版本；如有歧义，以法语版本为准。
+平台及其商标、标识、数据库和内容受保护。除在条款有效期内享有个人的、非独占、不可转让的访问权外，互助者不获得任何权利。互助者提供的内容授予 Ulixai 全球性、非独占许可，用于平台的托管与展示。
 
-可分割性： 无效条款将由具有等效效果的有效条款替代。
+---
 
-不放弃： 未执行权利不构成放弃。
+## 10. 免责声明、责任与赔偿
 
-13. 联系方式
+10.1. 不作任何保证，包括成果、质量或业务量；平台按**“原样”**提供。
+
+10.2. **责任限制：** 在法律允许范围内，Ulixai 对互助者的总责任仅限于直接损失，且不得超过 Ulixai 在引发索赔的匹配交易中所收取的匹配费用总额。
+
+10.3. **排除责任：** Ulixai 不承担任何间接、连带、特殊或惩罚性损失（包括利润损失、机会损失、客户流失、声誉损害、替代成本等）。
+
+10.4. **赔偿义务：** 互助者应赔偿并保障 Ulixai（及其关联方、管理人员、员工、代理）免受因以下情况产生的任何索赔、损害、罚款或费用（包括律师费）：(i) 违反本条款/法律，(ii) 提供的内容，(iii) 服务或疏忽行为，(iv) 无合法工作/移民/执照许可。
+
+10.5. 无代表关系。 本条款不构成 Ulixai 与互助者之间的代理、雇佣、合作或合资关系。
+
+10.6. 存续条款。 第 5、7、8、9、10、11、12 条在终止后仍有效。
+
+---
+
+## 11. 适用法律 – 仲裁 – 爱沙尼亚司法管辖 – 集体诉讼放弃
+
+11.1. **实体法：** 每次匹配中，Ulixai–互助者关系受服务国家法律管辖，受当地强制性法律及国际强制规范约束。补充适用及本条款的解释/效力或任何未被服务国家法律规制的事项，适用爱沙尼亚法。
+
+11.2. **强制 ICC 仲裁：** Ulixai 与互助者的任何争议应根据国际商会仲裁规则（ICC）最终解决。仲裁地：爱沙尼亚塔林。 语言：法语。 仲裁庭适用第 11.1 条所述实体法。程序保密。
+
+11.3. **集体诉讼放弃：** 在法律允许范围内，任何集体/代表性诉讼均被排除；仅允许个人索赔。
+
+11.4. **爱沙尼亚法院专属管辖：** 对于不可仲裁事项、裁决执行或紧急措施，爱沙尼亚法院（塔林有管辖权）享有专属管辖权。互助者放弃任何关于法院选择或不便法院的异议。
+
+---
+
+## 12. 其他条款
+
+12.1. **转让。** Ulixai 可将本条款转让给其关联实体或继承方；互助者未经书面同意不得转让。
+
+12.2. **完整协议。** 本条款构成完整协议，取代此前关于同一主题的任何协议。
+
+12.3. **通知。** 通过平台公告、应用内通知或联系表单发出。
+
+12.4. **解释。** 标题仅为方便阅读，不具法律效力；不适用**“不利起草方解释”**规则。
+
+12.5. **语言。** 可能提供翻译版本；如有歧义，以法语版为准。
+
+12.6. **可分割性。** 若任何条款无效/不可执行，其余条款仍有效；可在可能范围内以具有等效效力的有效条款替代。
+
+12.7. **权利不弃。** 未行使权利不构成放弃。
+
+---
+
+## 13. 联系方式
 
 如有任何问题或法律请求，请联系我们：
 `;
