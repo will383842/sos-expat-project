@@ -203,7 +203,7 @@ const TermsExpats: React.FC = () => {
         liability: "Garanties, responsabilité et indemnisation",
         law: "Droit applicable – Arbitrage – Juridiction estonienne",
         misc: "Divers",
-        contact: "Contact",
+        contact: "Contact", 
       },
       readyToJoin: "Prêt à rejoindre SOS Expat ?",
       readySubtitle:

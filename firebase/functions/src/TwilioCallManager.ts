@@ -110,6 +110,7 @@ export interface CallSessionState {
     providerLanguages?: string[];
     selectedLanguage?: string;
     ttsLocale?: string;
+    invoicesCreated?: boolean;
   };
 }
 
@@ -120,7 +121,7 @@ const CALL_CONFIG = {
   MAX_RETRIES: 3,
   CALL_TIMEOUT: 60, // 60 s
   CONNECTION_WAIT_TIME: 90_000, // 90 s
-  MIN_CALL_DURATION: 120, // 2 min
+  MIN_CALL_DURATION: 5, // 2 min -> later do it to 120 seconds -> 2 minutes
   MAX_CONCURRENT_CALLS: 50,
   WEBHOOK_VALIDATION: true,
 } as const;
@@ -128,6 +129,7 @@ const CALL_CONFIG = {
 // =============================
 // Locales TTS Twilio (principales)
 // =============================
+
 const VOICE_LOCALES: Record<string, string> = {
   fr: "fr-FR",
   en: "en-US",
@@ -896,6 +898,7 @@ export class TwilioCallManager {
       if (!session) return;
 
       if (duration < CALL_CONFIG.MIN_CALL_DURATION) {
+        console.log(`📄 Early disconnect: ${sessionId}`);
         await this.handleCallFailure(
           sessionId,
           `early_disconnect_${participantType}`
@@ -911,6 +914,7 @@ export class TwilioCallManager {
           },
         });
       } else {
+        console.log(`📄 Handling call completion for session: ${sessionId}`);
         await this.handleCallCompletion(sessionId, duration);
       }
     } catch (error) {
@@ -1113,10 +1117,13 @@ export class TwilioCallManager {
           notificationError as unknown
         );
       }
+      console.log(`📄 Should capture payment: ${this.shouldCapturePayment(callSession, duration)}`);
 
       if (this.shouldCapturePayment(callSession, duration)) {
+        console.log(`📄 Capturing payment for session: ${sessionId}`);
         await this.capturePaymentForSession(sessionId);
       }
+      console.log(`📄 Just logging the record : ${sessionId}`);
 
       await logCallRecord({
         callId: sessionId,
@@ -1147,27 +1154,59 @@ export class TwilioCallManager {
 
   async capturePaymentForSession(sessionId: string): Promise<boolean> {
     try {
+      console.log(`📄 Capturing payment for session: ${sessionId}`);
       const session = await this.getCallSession(sessionId);
       if (!session) return false;
 
-      if (!this.shouldCapturePayment(session)) return false;
-      if (session.payment.status === "captured") return true;
+      console.log(`📄 Session: ${session}`);
 
+      if (session.payment.status === "captured") {
+      console.log(`📄 Capturing payment for session: ${sessionId}`);
+
+        // Already captured (e.g., Stripe automatic capture) → ensure invoices exist once
+        if (!session.metadata?.invoicesCreated) {
+          console.log(`📄 Creating invoices for session: ${sessionId}`);
+          await this.createInvoices(sessionId, session);
+          await this.db.collection("call_sessions").doc(sessionId).update({
+            "metadata.invoicesCreated": true,
+            "metadata.updatedAt": admin.firestore.Timestamp.now(),
+          });
+        }
+        return true;
+      }
+
+      console.log(`📄 Should capture payment: ${this.shouldCapturePayment(session)}`);
+
+      if (!this.shouldCapturePayment(session)) return false;
+      console.log(`📄 Should capture payment: ${this.shouldCapturePayment(session)}`);
+  
       const captureResult = await stripeManager.capturePayment(
         session.payment.intentId,
         sessionId
       );
-
+      console.log(`📄 Capture result: ${captureResult}`);
+  
       if (captureResult.success) {
         await this.db.collection("call_sessions").doc(sessionId).update({
           "payment.status": "captured",
           "payment.capturedAt": admin.firestore.Timestamp.now(),
           "metadata.updatedAt": admin.firestore.Timestamp.now(),
         });
+        console.log(`📄 Updated call session: ${sessionId}`);
+
+
+      await this.createReviewRequest(session);
+      await this.createInvoices(sessionId, session);
+      await this.db.collection("call_sessions").doc(sessionId).update({
+        "metadata.invoicesCreated": true,
+      });
+      console.log(`📄 Updated call session: ${sessionId}`);
+
 
         await this.createReviewRequest(session);
 
         await this.createInvoices(sessionId, session);
+        console.log(`📄 Updated call session: ${sessionId}`);
 
         await logCallRecord({
           callId: sessionId,

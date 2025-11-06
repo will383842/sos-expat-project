@@ -23,13 +23,7 @@ export interface Review {
 
 type ReviewType = Review;
 
-// TODO:
-// what we need to add in each testimonial
-// 1. title
-// 2. fullcontent
-// 3.service_used
-// 4.duration
-// 5. help_type
+
 
 export const createMockReviewsData = (language: string): ReviewType[] => {
  const reviews_fr: ReviewType[] = [
