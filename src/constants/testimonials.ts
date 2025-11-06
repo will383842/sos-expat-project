@@ -14,22 +14,25 @@ export interface Review {
   helpfulVotes: number;
   clientAvatar?: string;
   verified: boolean;
+  title: string;
+  fullcontent: string;
+  service_used: string;
+  duration: string;
+  help_type: string[];
 }
 
 type ReviewType = Review;
 
-// TODO: 
+// TODO:
 // what we need to add in each testimonial
-// 1. title 
-// 2. fullcontent 
-// 3.service_used 
-// 4.duration 
+// 1. title
+// 2. fullcontent
+// 3.service_used
+// 4.duration
 // 5. help_type
 
-
-
-const createMockReviews = (language: string): ReviewType[] => {
-  const reviews_fr: ReviewType[] = [
+export const createMockReviewsData = (language: string): ReviewType[] => {
+ const reviews_fr: ReviewType[] = [
     // Expatriés (9 témoignages - 55%)
     {
       id: "1",
@@ -48,10 +51,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       helpfulVotes: 23,
       clientAvatar:
         "https://images.unsplash.com/photo-1643842730000-db266bbc1b28?q=80&w=400&h=400&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-
-      
-          verified: true,
-      
+      verified: true,
+      title: "Service exceptionnel en Thaïlande",
+      fullcontent: "Incroyable ! En 3 minutes j'avais un expatrié français au bout du fil depuis Bangkok. Il m'a expliqué toute la procédure visa Thaïlandais, les pièges à éviter et m'a même donné les contacts de son agent immobilier. Service qui change la vie !",
+      service_used: "Consultation Expatrié",
+      duration: "30 min",
+      help_type: ["Visa", "Immobilier", "Installation"],
     },
     {
       id: "2",
@@ -70,8 +75,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       helpfulVotes: 31,
       clientAvatar:
         "https://images.unsplash.com/photo-1601455763557-db1bea8a9a5a?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXZhdGFyJTIwbWFsZXxlbnwwfHwwfHx8MA%3D%3D",
-
       verified: true,
+      title: "Installation à Vancouver facilitée",
+      fullcontent: "Génial ! L'expatrié m'a aidé avec mon installation à Vancouver. Banque, logement, assurance santé, transport... tout en 30 minutes ! Il connaissait tous les bons plans et m'a évité des mois de galère administrative.",
+      service_used: "Consultation Expatrié",
+      duration: "30 min",
+      help_type:  ["Banque", "Logement", "Assurance"],
     },
     {
       id: "3",
@@ -90,8 +99,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       helpfulVotes: 18,
       clientAvatar:
         "https://images.unsplash.com/photo-1677537946831-4590ff82359c?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjB8fGF2YXRhciUyMGZlbWFsZXxlbnwwfHwwfHx8MA%3D%3D",
-
       verified: true,
+      title: "Conseils précieux pour Melbourne",
+      fullcontent: "Super expérience ! Expatrié à Melbourne depuis 8 ans, il m'a donné tous les conseils pour mon working holiday visa. Écoles, quartiers, jobs... Une mine d'or d'informations pratiques !",
+      service_used: "Consultation Expatrié",
+      duration: "25 min",
+      help_type:  ["Visa", "Emploi", "Quartiers"],
     },
     {
       id: "4",
@@ -110,9 +123,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       helpfulVotes: 27,
       clientAvatar:
         "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
-
-
       verified: true,
+      title: "Guide complet pour Dubaï",
+      fullcontent: "Excellent ! L'expatrié vivant à Dubaï depuis 5 ans m'a tout expliqué : visa, compte bancaire, logement, culture locale. Il m'a même mis en contact avec sa communauté d'expats français !",
+      service_used: "Consultation Expatrié",
+      duration: "40 min",
+      help_type:  ["Visa", "Banque", "Réseau"],
     },
     {
       id: "5",
@@ -131,8 +147,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       helpfulVotes: 22,
       clientAvatar:
         "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
-
       verified: true,
+      title: "Aide rapide depuis Tokyo",
+      fullcontent: "Parfait ! En urgence depuis Tokyo, j'ai eu un expatrié en 2 minutes. Il m'a aidé avec la paperasse japonaise complexe et m'a orienté vers les bonnes administrations. Très rassurant !",
+      service_used: "Consultation Expatrié",
+      duration: "20 min",
+      help_type: ["Administration", "Documents", "Urgence"],
     },
     {
       id: "6",
@@ -151,8 +171,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       helpfulVotes: 15,
       clientAvatar:
         "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
-
       verified: true,
+      title: "Conseils étudiants à Oslo",
+      fullcontent: "Très utile ! L'expatrié français en Norvège m'a donné tous les tips pour Oslo : logement étudiant, jobs d'appoint, transports. Il m'a fait gagner un temps précieux pour mes études !",
+      service_used: "Consultation Expatrié",
+      duration: "25 min",
+      help_type: ["Logement", "Études", "Emploi"],
     },
     {
       id: "7",
@@ -171,8 +195,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       helpfulVotes: 29,
       clientAvatar:
         "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
-
       verified: true,
+      title: "Installation familiale à São Paulo",
+      fullcontent: "Formidable ! Depuis le Brésil, l'expatrié m'a tout expliqué sur São Paulo : quartiers sûrs, carte de transports, meilleures écoles pour mes enfants. Une aide inestimable !",
+      service_used: "Consultation Expatrié",
+      duration: "35 min",
+      help_type: ["Famille", "Écoles", "Quartiers"],
     },
     {
       id: "8",
@@ -191,8 +219,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       helpfulVotes: 33,
       clientAvatar:
         "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&h=400&q=80",
-
       verified: true,
+      title: "Guide complet Singapour",
+      fullcontent: "Extraordinaire ! L'expatrié à Singapour m'a guidé pas à pas pour mon installation. Permis de travail, logement, banque locale... Tout était clair et détaillé. Service top !",
+      service_used: "Consultation Expatrié",
+      duration: "45 min",
+      help_type: ["Permis", "Logement", "Banque"],
     },
     {
       id: "9",
@@ -211,9 +243,14 @@ const createMockReviews = (language: string): ReviewType[] => {
       helpfulVotes: 19,
       clientAvatar:
         "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80",
-
       verified: true,
+      title: "Échange universitaire à Séoul",
+      fullcontent: "Très professionnel ! L'expatrié français en Corée du Sud m'a donné tous les conseils pour Séoul : visa étudiant, logement universitaire, culture coréenne. Parfait pour mon échange !",
+      service_used: "Consultation Expatrié",
+      duration: "30 min",
+      help_type: ["Visa", "Université", "Culture"],
     },
+
 
     // Avocats (7 témoignages - 45%)
     {
@@ -233,8 +270,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       helpfulVotes: 41,
       clientAvatar:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
-
       verified: true,
+      title: "Expertise juridique à Londres",
+      fullcontent: "Avocat exceptionnel ! Depuis Londres, problème urgent avec mon propriétaire. L'avocat m'a expliqué mes droits en droit anglais, les démarches à suivre et m'a orienté vers un solicitor local. Précis et efficace !",
+      service_used: "Appel Avocat",
+      duration: "25 minutes",
+      help_type: ["Droit immobilier", "Droit des baux", "Conseil juridique", "Contentieux"],
     },
     {
       id: "11",
@@ -253,8 +294,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       helpfulVotes: 38,
       clientAvatar:
         "https://images.unsplash.com/photo-1625262550495-1d3bfb5c1502?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTc2fHxhdmF0YXIlMjBtYWxlfGVufDB8fDB8fHww",
-
       verified: true,
+      title: "Accident en Allemagne",
+      fullcontent: "Consultation remarquable ! Accident de voiture en Allemagne, l'avocat spécialisé en droit international m'a tout expliqué : assurances, procédures, droits. Il m'a évité des erreurs coûteuses !",
+      service_used: "Consultation Avocat",
+      duration: "40 min",
+      help_type: ["Accident", "Assurance", "Droit international"],
     },
     {
       id: "12",
@@ -273,8 +318,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       helpfulVotes: 26,
       clientAvatar:
         "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDB8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
-
       verified: true,
+      title: "Litige commercial en Italie",
+      fullcontent: "Très compétent ! Litige commercial en Italie, l'avocat m'a donné une analyse claire de ma situation juridique et les options disponibles. Conseil précieux pour mon business !",
+      service_used: "Consultation Avocat",
+      duration: "30 min",
+      help_type: ["Droit commercial", "Litige", "Business"],
     },
     {
       id: "13",
@@ -293,8 +342,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       helpfulVotes: 45,
       clientAvatar:
         "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
-
       verified: true,
+      title: "Problème de visa aux USA",
+      fullcontent: "Avocat brillant ! Problème de visa aux États-Unis, il m'a expliqué toutes les procédures d'immigration, les risques et solutions. Grâce à lui, j'ai évité l'expulsion !",
+      service_used: "Appel Avocat",
+      duration: "50 min",
+      help_type: ["Immigration", "Visa", "Urgence"],
     },
     {
       id: "14",
@@ -313,8 +366,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       helpfulVotes: 34,
       clientAvatar:
         "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
-
       verified: true,
+      title: "Divorce international",
+      fullcontent: "Service juridique excellent ! Divorce international complexe, l'avocat a su naviguer entre droit français et espagnol. Conseil clair, stratégie efficace. Je recommande vivement !",
+      service_used: "Consultation Avocat",
+      duration: "60 min",
+      help_type: ["Divorce", "Droit international", "Famille"],
     },
     {
       id: "15",
@@ -333,8 +390,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       helpfulVotes: 21,
       clientAvatar:
         "https://images.unsplash.com/photo-1701615004837-40d8573b6652?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
-
       verified: true,
+      title: "Contrat de travail au Mexique",
+      fullcontent: "Très professionnel ! Contrat de travail au Mexique, l'avocat m'a expliqué toutes les clauses, mes droits et obligations. Il m'a aidé à négocier de meilleures conditions !",
+      service_used: "Consultation Avocat",
+      duration: "35 min",
+      help_type: ["Droit du travail", "Contrat", "Négociation"],
     },
     {
       id: "16",
@@ -353,12 +414,17 @@ const createMockReviews = (language: string): ReviewType[] => {
       helpfulVotes: 37,
       clientAvatar:
         "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YXZhdGFyfGVufDB8fDB8fHww",
-
       verified: true,
+      title: "Problème fiscal en Suisse",
+      fullcontent: "Avocat remarquable ! Problème fiscal en Suisse, il m'a expliqué les implications légales, les démarches et m'a orienté vers un fiscaliste local. Service impeccable !",
+      service_used: "Consultation Avocat",
+      duration: "45 min",
+      help_type: ["Fiscal", "Droit", "Conseil"],
     },
   ];
 
-  const reviews_en: ReviewType[] = [
+
+const reviews_en: ReviewType[] = [
     // Expats (9 testimonials - 55%)
     {
       id: "1",
@@ -378,6 +444,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1643842730000-db266bbc1b28?q=80&w=400&h=400&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       verified: true,
+      title: "Exceptional Service in Thailand",
+      fullcontent: "Incredible! In 3 minutes I had a French expat on the phone from Bangkok. He explained the entire Thai visa procedure, pitfalls to avoid, and even gave me his real estate agent's contacts. Life-changing service!",
+      service_used: "Expat Consultation",
+      duration: "30 min",
+      help_type: ["Visa", "Real Estate", "Relocation"],
     },
     {
       id: "2",
@@ -397,6 +468,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1601455763557-db1bea8a9a5a?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXZhdGFyJTIwbWFsZXxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "Vancouver Setup Made Easy",
+      fullcontent:
+        "Brilliant! The expat helped me with my Vancouver setup. Banking, housing, health insurance, transport... everything in 30 minutes! He knew all the insider tips and saved me months of administrative hassle.",
+      service_used: "Expat Consultation",
+      duration: "30 min",
+      help_type: ["Banking", "Housing", "Insurance"],
     },
     {
       id: "3",
@@ -416,6 +493,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1677537946831-4590ff82359c?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjB8fGF2YXRhciUyMGZlbWFsZXxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "Valuable Advice for Melbourne",
+      fullcontent:
+        "Great experience! Expat in Melbourne for 8 years, he gave me all the advice for my working holiday visa. Schools, neighborhoods, jobs... A goldmine of practical information!",
+      service_used: "Expat Consultation",
+      duration: "25 min",
+      help_type: ["Visa", "Employment", "Neighborhoods"],
     },
     {
       id: "4",
@@ -435,6 +518,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Complete Guide for Dubai",
+      fullcontent:
+        "Excellent! The expat living in Dubai for 5 years explained everything: visa, bank account, housing, local culture. He even connected me with his French expat community!",
+      service_used: "Expat Consultation",
+      duration: "40 min",
+      help_type: ["Visa", "Banking", "Network"],
     },
     {
       id: "5",
@@ -454,6 +543,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Quick Help from Tokyo",
+      fullcontent:
+        "Perfect! In urgent situation from Tokyo, I got an expat in 2 minutes. He helped me with complex Japanese paperwork and directed me to the right administrations. Very reassuring!",
+      service_used: "Expat Consultation",
+      duration: "20 min",
+      help_type: ["Administration", "Documents", "Emergency"],
     },
     {
       id: "6",
@@ -473,6 +568,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Student Tips in Oslo",
+      fullcontent:
+        "Very useful! The French expat in Norway gave me all the tips for Oslo: student housing, part-time jobs, transport. He saved me precious time for my studies!",
+      service_used: "Expat Consultation",
+      duration: "25 min",
+      help_type: ["Housing", "Studies", "Employment"],
     },
     {
       id: "7",
@@ -492,6 +593,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Family Relocation to São Paulo",
+      fullcontent:
+        "Wonderful! From Brazil, the expat explained everything about São Paulo: safe neighborhoods, transport cards, best schools for my children. Invaluable help!",
+      service_used: "Expat Consultation",
+      duration: "35 min",
+      help_type: ["Family", "Schools", "Neighborhoods"],
     },
     {
       id: "8",
@@ -511,6 +618,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Complete Singapore Guide",
+      fullcontent:
+        "Extraordinary! The expat in Singapore guided me step by step for my installation. Work permit, housing, local bank... Everything was clear and detailed. Top service!",
+      service_used: "Expat Consultation",
+      duration: "45 min",
+      help_type: ["Permit", "Housing", "Banking"],
     },
     {
       id: "9",
@@ -530,6 +643,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "University Exchange in Seoul",
+      fullcontent:
+        "Very professional! The French expat in South Korea gave me all the advice for Seoul: student visa, university housing, Korean culture. Perfect for my exchange!",
+      service_used: "Expat Consultation",
+      duration: "30 min",
+      help_type: ["Visa", "University", "Culture"],
     },
 
     // Lawyers (7 testimonials - 45%)
@@ -551,6 +670,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Legal Expertise in London",
+      fullcontent:
+        "Exceptional lawyer! From London, urgent problem with my landlord. The lawyer explained my rights in English law, the steps to follow and directed me to a local solicitor. Precise and efficient!",
+      service_used: "Lawyer Call",
+      duration: "25 minutes",
+      help_type: ["Property law", "Tenancy law", "Legal advice", "Litigation"],
     },
     {
       id: "11",
@@ -570,6 +695,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1625262550495-1d3bfb5c1502?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTc2fHxhdmF0YXIlMjBtYWxlfGVufDB8fDB8fHww",
       verified: true,
+      title: "Accident in Germany",
+      fullcontent:
+        "Remarkable consultation! Car accident in Germany, the lawyer specialized in international law explained everything: insurance, procedures, rights. He saved me from costly mistakes!",
+      service_used: "Lawyer Consultation",
+      duration: "40 min",
+      help_type: ["Accident", "Insurance", "International Law"],
     },
     {
       id: "12",
@@ -589,6 +720,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDB8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "Commercial Dispute in Italy",
+      fullcontent:
+        "Very competent! Commercial dispute in Italy, the lawyer gave me a clear analysis of my legal situation and available options. Valuable advice for my business!",
+      service_used: "Lawyer Consultation",
+      duration: "30 min",
+      help_type: ["Commercial Law", "Dispute", "Business"],
     },
     {
       id: "13",
@@ -608,6 +745,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Visa Issue in USA",
+      fullcontent:
+        "Brilliant lawyer! Visa problem in the United States, he explained all immigration procedures, risks and solutions. Thanks to him, I avoided deportation!",
+      service_used: "Lawyer Call",
+      duration: "50 min",
+      help_type: ["Immigration", "Visa", "Emergency"],
     },
     {
       id: "14",
@@ -627,6 +770,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "International Divorce",
+      fullcontent:
+        "Excellent legal service! Complex international divorce, the lawyer navigated between French and Spanish law. Clear advice, effective strategy. Highly recommend!",
+      service_used: "Lawyer Consultation",
+      duration: "60 min",
+      help_type: ["Divorce", "International Law", "Family"],
     },
     {
       id: "15",
@@ -646,6 +795,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1701615004837-40d8573b6652?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "Employment Contract in Mexico",
+      fullcontent:
+        "Very professional! Employment contract in Mexico, the lawyer explained all clauses, my rights and obligations. He helped me negotiate better conditions!",
+      service_used: "Lawyer Consultation",
+      duration: "35 min",
+      help_type: ["Employment Law", "Contract", "Negotiation"],
     },
     {
       id: "16",
@@ -665,8 +820,15 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YXZhdGFyfGVufDB8fDB8fHww",
       verified: true,
+      title: "Tax Issue in Switzerland",
+      fullcontent:
+        "Remarkable lawyer! Tax issue in Switzerland, he explained legal implications, procedures and directed me to a local tax specialist. Impeccable service!",
+      service_used: "Lawyer Consultation",
+      duration: "45 min",
+      help_type: ["Tax", "Law", "Advice"],
     },
   ];
+
 
   const reviews_de: ReviewType[] = [
     // Expatriés (9 testimonials - 55%)
@@ -688,6 +850,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1643842730000-db266bbc1b28?q=80&w=400&h=400&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       verified: true,
+      title: "Außergewöhnlicher Service in Thailand",
+      fullcontent: "Unglaublich! In 3 Minuten hatte ich einen französischen Expat am Telefon aus Bangkok. Er erklärte mir das gesamte thailändische Visumverfahren, Fallstricke, die es zu vermeiden gilt, und gab mir sogar die Kontakte seines Immobilienmaklers. Lebensverändernder Service!",
+      service_used: "Expat-Beratung",
+      duration: "30 min",
+      help_type: ["Visum", "Immobilien", "Umzug"],
     },
     {
       id: "2",
@@ -707,6 +874,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1601455763557-db1bea8a9a5a?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXZhdGFyJTIwbWFsZXxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "Vancouver-Setup leicht gemacht",
+      fullcontent: "Großartig! Der Expat half mir bei meiner Vancouver-Einrichtung. Banking, Wohnung, Krankenversicherung, Transport... alles in 30 Minuten! Er kannte alle Insider-Tipps und sparte mir Monate administrativer Probleme.",
+      service_used: "Expat-Beratung",
+      duration: "30 min",
+      help_type: ["Banking", "Wohnung", "Versicherung"],
     },
     {
       id: "3",
@@ -726,6 +898,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1677537946831-4590ff82359c?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjB8fGF2YXRhciUyMGZlbWFsZXxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "Wertvolle Tipps für Melbourne",
+      fullcontent: "Großartige Erfahrung! Expat in Melbourne seit 8 Jahren gab mir alle Tipps für mein Working-Holiday-Visum. Schulen, Viertel, Jobs... Eine Goldgrube praktischer Informationen!",
+      service_used: "Expat-Beratung",
+      duration: "25 min",
+      help_type: ["Visum", "Beschäftigung", "Viertel"],
     },
     {
       id: "4",
@@ -745,6 +922,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Kompletter Leitfaden für Dubai",
+      fullcontent: "Ausgezeichnet! Der Expat, der seit 5 Jahren in Dubai lebt, erklärte mir alles: Visum, Bankkonto, Wohnung, lokale Kultur. Er verband mich sogar mit seiner französischen Expat-Gemeinde!",
+      service_used: "Expat-Beratung",
+      duration: "40 min",
+      help_type: ["Visum", "Banking", "Netzwerk"],
     },
     {
       id: "5",
@@ -764,6 +946,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Schnelle Hilfe aus Tokio",
+      fullcontent: "Perfekt! In dringender Situation aus Tokio bekam ich in 2 Minuten einen Expat. Er half mir mit komplexen japanischen Unterlagen und wies mich auf die richtigen Behörden hin. Sehr beruhigend!",
+      service_used: "Expat-Beratung",
+      duration: "20 min",
+      help_type: ["Verwaltung", "Dokumente", "Notfall"],
     },
     {
       id: "6",
@@ -783,6 +970,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Studentenratschläge in Oslo",
+      fullcontent: "Sehr nützlich! Der französische Expat in Norwegen gab mir alle Tipps für Oslo: Studentenwohnheim, Teilzeitarbeit, Transport. Er sparte mir kostbare Zeit für mein Studium!",
+      service_used: "Expat-Beratung",
+      duration: "25 min",
+      help_type: ["Wohnung", "Studium", "Beschäftigung"],
     },
     {
       id: "7",
@@ -802,6 +994,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Familienumsiedlung nach São Paulo",
+      fullcontent: "Wunderbar! Aus Brasilien erklärte mir der Expat alles über São Paulo: sichere Viertel, Fahrkarten, beste Schulen für meine Kinder. Unschätzbare Hilfe!",
+      service_used: "Expat-Beratung",
+      duration: "35 min",
+      help_type: ["Familie", "Schulen", "Viertel"],
     },
     {
       id: "8",
@@ -821,6 +1018,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Kompletter Singapore-Leitfaden",
+      fullcontent: "Außergewöhnlich! Der Expat in Singapur führte mich Schritt für Schritt durch meine Installation. Arbeitserlaubnis, Wohnung, lokale Bank... Alles war klar und detailliert. Spitzenservice!",
+      service_used: "Expat-Beratung",
+      duration: "45 min",
+      help_type: ["Erlaubnis", "Wohnung", "Banking"],
     },
     {
       id: "9",
@@ -840,6 +1042,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Universitätsaustausch in Seoul",
+      fullcontent: "Sehr professionell! Der französische Expat in Südkorea gab mir alle Tipps für Seoul: Studentenvisum, Studentenwohnheim, koreanische Kultur. Perfekt für meinen Austausch!",
+      service_used: "Expat-Beratung",
+      duration: "30 min",
+      help_type: ["Visum", "Universität", "Kultur"],
     },
 
     // Lawyers (7 testimonials - 45%)
@@ -861,6 +1068,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Rechtsfachkompetenz in London",
+      fullcontent: "Außergewöhnlicher Anwalt! Aus London, dringendes Problem mit meinem Vermieter. Der Anwalt erklärte mir meine Rechte nach englischem Recht, die zu befolgenden Schritte und wies mich auf einen lokalen Anwalt hin. Präzise und effizient!",
+      service_used: "Rechtsberatung",
+      duration: "25 Minuten",
+      help_type: ["Immobilienrecht", "Streit", "Beratung"],
     },
     {
       id: "11",
@@ -880,6 +1092,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1625262550495-1d3bfb5c1502?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTc2fHxhdmF0YXIlMjBtYWxlfGVufDB8fDB8fHww",
       verified: true,
+      title: "Unfall in Deutschland",
+      fullcontent: "Bemerkenswerte Beratung! Autounfall in Deutschland, der auf Internationales Recht spezialisierte Anwalt erklärte mir alles: Versicherung, Verfahren, Rechte. Er sparte mich vor kostspieligen Fehlern!",
+      service_used: "Rechtsberatung",
+      duration: "40 min",
+      help_type: ["Unfall", "Versicherung", "Internationales Recht"],
     },
     {
       id: "12",
@@ -899,6 +1116,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDB8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "Handelsstreit in Italien",
+      fullcontent: "Sehr kompetent! Handelsstreit in Italien gab mir der Anwalt eine klare Analyse meiner Rechtslage und der verfügbaren Optionen. Wertvoller Rat für mein Geschäft!",
+      service_used: "Rechtsberatung",
+      duration: "30 min",
+      help_type: ["Handelsrecht", "Streit", "Geschäft"],
     },
     {
       id: "13",
@@ -918,6 +1140,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Visumproblem in den USA",
+      fullcontent: "Glänzender Anwalt! Visumproblem in den USA erklärte mir alle Einwanderungsverfahren, Risiken und Lösungen. Dank ihm habe ich Abschiebung vermieden!",
+      service_used: "Rechtsberatung",
+      duration: "50 min",
+      help_type: ["Einwanderung", "Visum", "Notfall"],
     },
     {
       id: "14",
@@ -937,6 +1164,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "Internationale Scheidung",
+      fullcontent: "Ausgezeichneter Rechtsdienst! Komplexe internationale Scheidung, der Anwalt navigierte zwischen französischem und spanischem Recht. Klarer Rat, effektive Strategie. Ich empfehle dringend!",
+      service_used: "Rechtsberatung",
+      duration: "60 min",
+      help_type: ["Scheidung", "Internationales Recht", "Familie"],
     },
     {
       id: "15",
@@ -956,7 +1188,13 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1701615004837-40d8573b6652?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "Arbeitsvertrag in Mexiko",
+      fullcontent: "Sehr professionell! Arbeitsvertrag in Mexiko, der Anwalt erklärte mir alle Klauseln, meine Rechte und Pflichten. Er half mir, bessere Bedingungen zu verhandeln!",
+      service_used: "Rechtsberatung",
+      duration: "35 min",
+      help_type: ["Arbeitsrecht", "Vertrag", "Verhandlung"],
     },
+
     {
       id: "16",
       callId: "call16",
@@ -975,10 +1213,16 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YXZhdGFyfGVufDB8fDB8fHww",
       verified: true,
+      title: "Steuerproblem in der Schweiz",
+      fullcontent: "Bemerkenswerter Anwalt! Steuerproblem in der Schweiz, er erklärte mir die rechtlichen Auswirkungen, die Schritte und orientierte mich auf einen lokalen Steuerberater. Tadelloses Service!",
+      service_used: "Rechtsberatung",
+      duration: "45 min",
+      help_type: ["Steuer", "Recht", "Beratung"],
     },
   ];
 
-  const reviews_ru: ReviewType[] = [
+
+const reviews_ru: ReviewType[] = [
     // Эмигранты (9 отзывов - 55%)
     {
       id: "1",
@@ -998,6 +1242,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1643842730000-db266bbc1b28?q=80&w=400&h=400&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       verified: true,
+      title: "Исключительный сервис в Таиланде",
+      fullcontent: "Невероятно! За 3 минуты я связался с французским эмигрантом из Бангкока. Он объяснил мне всю процедуру получения таиландской визы, подводные камни, которых следует избегать, и даже дал контакты своего агента по недвижимости. Услуга, которая меняет жизнь!",
+      service_used: "Консультация эмигранта",
+      duration: "30 мин",
+      help_type: ["Виза", "Недвижимость", "Переезд"],
     },
     {
       id: "2",
@@ -1017,6 +1266,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1601455763557-db1bea8a9a5a?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXZhdGFyJTIwbWFsZXxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "Легкая настройка в Ванкувере",
+      fullcontent: "Отлично! Эмигрант помог мне с обустройством в Ванкувере. Банк, жилье, медицинская страховка, транспорт... всё за 30 минут! Он знал все инсайдерские советы и сэкономил мне месяцы административных хлопот.",
+      service_used: "Консультация эмигранта",
+      duration: "30 мин",
+      help_type: ["Банки", "Жилье", "Страхование"],
     },
     {
       id: "3",
@@ -1036,6 +1290,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1677537946831-4590ff82359c?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjB8fGF2YXRhciUyMGZlbWFsZXxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "Ценные советы для Мельбурна",
+      fullcontent: "Превосходный опыт! Эмигрант в Мельбурне уже 8 лет дал мне все советы по визе для работающих отдыхающих. Школы, районы, работа... Кладезь практической информации!",
+      service_used: "Консультация эмигранта",
+      duration: "25 мин",
+      help_type: ["Виза", "Трудоустройство", "Районы"],
     },
     {
       id: "4",
@@ -1055,6 +1314,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Полное руководство по Дубаю",
+      fullcontent: "Отлично! Эмигрант, живущий в Дубае 5 лет, объяснил мне всё: виза, банковский счет, жилье, местная культура. Он даже познакомил меня со своей французской эмигрантской общиной!",
+      service_used: "Консультация эмигранта",
+      duration: "40 мин",
+      help_type: ["Виза", "Банки", "Сеть"],
     },
     {
       id: "5",
@@ -1074,6 +1338,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Быстрая помощь из Токио",
+      fullcontent: "Идеально! В срочной ситуации из Токио я получил эмигранта за 2 минуты. Он помог мне со сложными японскими документами и направил меня в правильные администрации. Очень успокаивающе!",
+      service_used: "Консультация эмигранта",
+      duration: "20 мин",
+      help_type: ["Администрация", "Документы", "Экстренная помощь"],
     },
     {
       id: "6",
@@ -1093,6 +1362,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Советы студенту в Осло",
+      fullcontent: "Очень полезно! Французский эмигрант в Норвегии дал мне все советы для Осло: студенческое жилье, подработка, транспорт. Он сэкономил мне драгоценное время для учёбы!",
+      service_used: "Консультация эмигранта",
+      duration: "25 мин",
+      help_type: ["Жилье", "Учёба", "Трудоустройство"],
     },
     {
       id: "7",
@@ -1112,6 +1386,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Переезд семьи в Сан-Паулу",
+      fullcontent: "Замечательно! Из Бразилии эмигрант объяснил мне всё о Сан-Паулу: безопасные районы, транспортные карты, лучшие школы для моих детей. Неоценимая помощь!",
+      service_used: "Консультация эмигранта",
+      duration: "35 мин",
+      help_type: ["Семья", "Школы", "Районы"],
     },
     {
       id: "8",
@@ -1131,6 +1410,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Полное руководство по Сингапуру",
+      fullcontent: "Исключительно! Эмигрант в Сингапуре провел меня шаг за шагом по моей установке. Разрешение на работу, жилье, местный банк... Всё было ясно и подробно. Первоклассный сервис!",
+      service_used: "Консультация эмигранта",
+      duration: "45 мин",
+      help_type: ["Разрешение", "Жилье", "Банки"],
     },
     {
       id: "9",
@@ -1150,7 +1434,13 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Университетский обмен в Сеуле",
+      fullcontent: "Очень профессионально! Французский эмигрант в Южной Корее дал мне все советы для Сеула: студенческая виза, университетское жилье, корейская культура. Идеально для моего обмена!",
+      service_used: "Консультация эмигранта",
+      duration: "30 мин",
+      help_type: ["Виза", "Университет", "Культура"],
     },
+    
     // Адвокаты (7 отзывов - 45%)
     {
       id: "10",
@@ -1170,6 +1460,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Юридическая экспертиза в Лондоне",
+      fullcontent: "Выдающийся адвокат! Из Лондона, срочная проблема с арендодателем. Адвокат объяснил мои права по английскому праву, шаги, которые необходимо предпринять, и направил меня к местному адвокату. Точно и эффективно!",
+      service_used: "Консультация адвоката",
+      duration: "25 минут",
+      help_type: ["Имущественное право", "Арендное право", "Юридическая консультация", "Спор"],
     },
     {
       id: "11",
@@ -1189,6 +1484,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1625262550495-1d3bfb5c1502?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTc2fHxhdmF0YXIlMjBtYWxlfGVufDB8fDB8fHww",
       verified: true,
+      title: "Авария в Германии",
+      fullcontent: "Примечательная консультация! Авария в Германии, адвокат, специализирующийся на международном праве, объяснил мне всё: страховку, процедуры, права. Спас меня от дорогостоящих ошибок!",
+      service_used: "Консультация адвоката",
+      duration: "40 мин",
+      help_type: ["Авария", "Страхование", "Международное право"],
     },
     {
       id: "12",
@@ -1208,6 +1508,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDB8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "Коммерческий спор в Италии",
+      fullcontent: "Очень компетентный! Коммерческий спор в Италии, адвокат дал мне ясный анализ моего юридического положения и доступных вариантов. Ценный совет для моего бизнеса!",
+      service_used: "Консультация адвоката",
+      duration: "30 мин",
+      help_type: ["Коммерческое право", "Спор", "Бизнес"],
     },
     {
       id: "13",
@@ -1227,6 +1532,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Проблема с визой в США",
+      fullcontent: "Блестящий адвокат! Проблема с визой в США, он объяснил все иммиграционные процедуры, риски и решения. Благодаря ему я избежал депортации!",
+      service_used: "Консультация адвоката",
+      duration: "50 мин",
+      help_type: ["Иммиграция", "Виза", "Экстренная помощь"],
     },
     {
       id: "14",
@@ -1246,6 +1556,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "Международный развод",
+      fullcontent: "Отличный юридический сервис! Сложный международный развод, адвокат умело ориентировался между французским и испанским правом. Ясный совет, эффективная стратегия. Настоятельно рекомендую!",
+      service_used: "Консультация адвоката",
+      duration: "60 мин",
+      help_type: ["Развод", "Международное право", "Семья"],
     },
     {
       id: "15",
@@ -1265,6 +1580,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1701615004837-40d8573b6652?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "Трудовой договор в Мексике",
+      fullcontent: "Очень профессионально! Трудовой договор в Мексике, адвокат объяснил все пункты, мои права и обязанности. Он помог мне договориться о лучших условиях!",
+      service_used: "Консультация адвоката",
+      duration: "35 мин",
+      help_type: ["Трудовое право", "Договор", "Переговоры"],
     },
     {
       id: "16",
@@ -1284,10 +1604,16 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YXZhdGFyfGVufDB8fDB8fHww",
       verified: true,
+      title: "Налоговая проблема в Швейцарии",
+      fullcontent: "Замечательный адвокат! Налоговая проблема в Швейцарии, он объяснил юридические последствия, процедуры и направил меня к местному налоговому консультанту. Безупречный сервис!",
+      service_used: "Консультация адвоката",
+      duration: "45 мин",
+      help_type: ["Налоги", "Право", "Консультация"],
     },
   ];
 
-  const reviews_es: ReviewType[] = [
+
+ const reviews_es: ReviewType[] = [
     // Expatriados (9 testimonios - 55%)
     {
       id: "1",
@@ -1307,6 +1633,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1643842730000-db266bbc1b28?q=80&w=400&h=400&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       verified: true,
+      title: "Servicio excepcional en Tailandia",
+      fullcontent: "¡Increíble! En 3 minutos tenía a un expatriado francés desde Bangkok por teléfono. Me explicó todo el procedimiento del visado tailandés, las trampas a evitar e incluso me dio los contactos de su agente inmobiliario. ¡Servicio que cambia la vida!",
+      service_used: "Consulta Expatriado",
+      duration: "30 min",
+      help_type: ["Visado", "Inmobiliaria", "Reubicación"],
     },
     {
       id: "2",
@@ -1326,6 +1657,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1601455763557-db1bea8a9a5a?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXZhdGFyJTIwbWFsZXxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "Instalación facilitada en Vancouver",
+      fullcontent: "¡Genial! El expatriado me ayudó con mi instalación en Vancouver. Banco, vivienda, seguro médico, transporte... ¡todo en 30 minutos! Conocía todos los consejos internos y me ahorró meses de problemas administrativos.",
+      service_used: "Consulta Expatriado",
+      duration: "30 min",
+      help_type: ["Banca", "Vivienda", "Seguros"],
     },
     {
       id: "3",
@@ -1345,6 +1681,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1677537946831-4590ff82359c?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjB8fGF2YXRhciUyMGZlbWFsZXxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "Consejos valiosos para Melbourne",
+      fullcontent: "¡Súper experiencia! Expatriado en Melbourne desde hace 8 años me dio todos los consejos para mi visado de vacaciones-trabajo. Escuelas, barrios, empleos... ¡Una mina de oro de información práctica!",
+      service_used: "Consulta Expatriado",
+      duration: "25 min",
+      help_type: ["Visado", "Empleo", "Barrios"],
     },
     {
       id: "4",
@@ -1364,6 +1705,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Guía completa para Dubái",
+      fullcontent: "¡Excelente! El expatriado que vive en Dubái desde hace 5 años me explicó todo: visado, cuenta bancaria, vivienda, cultura local. ¡Incluso me conectó con su comunidad de expatriados franceses!",
+      service_used: "Consulta Expatriado",
+      duration: "40 min",
+      help_type: ["Visado", "Banca", "Red"],
     },
     {
       id: "5",
@@ -1383,6 +1729,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Ayuda rápida desde Tokio",
+      fullcontent: "¡Perfecto! En situación urgente desde Tokio, conseguí un expatriado en 2 minutos. Me ayudó con el papeleo japonés complejo y me dirigió a las administraciones correctas. ¡Muy tranquilizador!",
+      service_used: "Consulta Expatriado",
+      duration: "20 min",
+      help_type: ["Administración", "Documentos", "Emergencia"],
     },
     {
       id: "6",
@@ -1402,6 +1753,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Consejos para estudiantes en Oslo",
+      fullcontent: "¡Muy útil! El expatriado francés en Noruega me dio todos los consejos para Oslo: alojamiento estudiantil, trabajos a tiempo parcial, transporte. ¡Me ahorró tiempo precioso para mis estudios!",
+      service_used: "Consulta Expatriado",
+      duration: "25 min",
+      help_type: ["Vivienda", "Estudios", "Empleo"],
     },
     {
       id: "7",
@@ -1421,6 +1777,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Reubicación familiar en São Paulo",
+      fullcontent: "¡Formidable! Desde Brasil, el expatriado me explicó todo sobre São Paulo: barrios seguros, tarjetas de transporte, mejores escuelas para mis hijos. ¡Ayuda invaluable!",
+      service_used: "Consulta Expatriado",
+      duration: "35 min",
+      help_type: ["Familia", "Escuelas", "Barrios"],
     },
     {
       id: "8",
@@ -1440,6 +1801,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Guía completa de Singapur",
+      fullcontent: "¡Extraordinario! El expatriado en Singapur me guió paso a paso para mi instalación. Permiso de trabajo, vivienda, banco local... Todo estaba claro y detallado. ¡Servicio de primera!",
+      service_used: "Consulta Expatriado",
+      duration: "45 min",
+      help_type: ["Permiso", "Vivienda", "Banca"],
     },
     {
       id: "9",
@@ -1459,7 +1825,13 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Intercambio universitario en Seúl",
+      fullcontent: "¡Muy profesional! El expatriado francés en Corea del Sur me dio todos los consejos para Seúl: visado de estudiante, alojamiento universitario, cultura coreana. ¡Perfecto para mi intercambio!",
+      service_used: "Consulta Expatriado",
+      duration: "30 min",
+      help_type: ["Visado", "Universidad", "Cultura"],
     },
+    
     // Abogados (7 testimonios - 45%)
     {
       id: "10",
@@ -1479,6 +1851,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Experiencia jurídica en Londres",
+      fullcontent: "¡Abogado excepcional! Desde Londres, problema urgente con mi arrendador. El abogado explicó mis derechos según la ley inglesa, los pasos a seguir y me dirigió a un abogado local. ¡Preciso y eficaz!",
+      service_used: "Consulta Abogado",
+      duration: "25 minutos",
+      help_type: ["Derecho inmobiliario", "Derecho de arrendamiento", "Asesoría legal", "Litigio"],
     },
     {
       id: "11",
@@ -1498,6 +1875,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1625262550495-1d3bfb5c1502?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTc2fHxhdmF0YXIlMjBtYWxlfGVufDB8fDB8fHww",
       verified: true,
+      title: "Accidente en Alemania",
+      fullcontent: "¡Consulta notable! Accidente de coche en Alemania, el abogado especializado en derecho internacional me explicó todo: seguros, procedimientos, derechos. ¡Me salvó de errores costosos!",
+      service_used: "Consulta Abogado",
+      duration: "40 min",
+      help_type: ["Accidente", "Seguros", "Derecho internacional"],
     },
     {
       id: "12",
@@ -1517,6 +1899,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDB8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "Disputa comercial en Italia",
+      fullcontent: "¡Muy competente! Disputa comercial en Italia, el abogado me dio un análisis claro de mi situación legal y las opciones disponibles. ¡Consejo valioso para mi negocio!",
+      service_used: "Consulta Abogado",
+      duration: "30 min",
+      help_type: ["Derecho comercial", "Disputa", "Negocios"],
     },
     {
       id: "13",
@@ -1536,6 +1923,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Problema de visado en EE.UU.",
+      fullcontent: "¡Abogado brillante! Problema de visado en Estados Unidos, me explicó todos los procedimientos de inmigración, riesgos y soluciones. ¡Gracias a él evité la deportación!",
+      service_used: "Consulta Abogado",
+      duration: "50 min",
+      help_type: ["Inmigración", "Visado", "Emergencia"],
     },
     {
       id: "14",
@@ -1555,6 +1947,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "Divorcio internacional",
+      fullcontent: "¡Servicio jurídico excelente! Divorcio internacional complejo, el abogado navegó entre la ley francesa y española. Consejo claro, estrategia eficaz. ¡Lo recomiendo totalmente!",
+      service_used: "Consulta Abogado",
+      duration: "60 min",
+      help_type: ["Divorcio", "Derecho internacional", "Familia"],
     },
     {
       id: "15",
@@ -1574,6 +1971,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1701615004837-40d8573b6652?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "Contrato laboral en México",
+      fullcontent: "¡Muy profesional! Contrato de trabajo en México, el abogado me explicó todas las cláusulas, mis derechos y obligaciones. ¡Me ayudó a negociar mejores condiciones!",
+      service_used: "Consulta Abogado",
+      duration: "35 min",
+      help_type: ["Derecho laboral", "Contrato", "Negociación"],
     },
     {
       id: "16",
@@ -1593,10 +1995,16 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YXZhdGFyfGVufDB8fDB8fHww",
       verified: true,
+      title: "Problema fiscal en Suiza",
+      fullcontent: "¡Abogado magnífico! Problema fiscal en Suiza, me explicó las implicaciones legales, los procedimientos y me orientó hacia un especialista fiscal local. ¡Servicio impecable!",
+      service_used: "Consulta Abogado",
+      duration: "45 min",
+      help_type: ["Fiscal", "Derecho", "Asesoría"],
     },
   ];
 
-  const reviews_hi: ReviewType[] = [
+
+ const reviews_hi: ReviewType[] = [
     // प्रवासी (9 समीक्षाएं - 55%)
     {
       id: "1",
@@ -1616,6 +2024,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1643842730000-db266bbc1b28?q=80&w=400&h=400&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       verified: true,
+      title: "थाईलैंड में असाधारण सेवा",
+      fullcontent: "अविश्वसनीय! 3 मिनट में बैंकॉक से एक फ्रांसीसी प्रवासी से मेरी बात हुई। उन्होंने थाई वीज़ा की पूरी प्रक्रिया, बचने योग्य नुकसान समझाए और मुझे अपने रियल एस्टेट एजेंट का संपर्क भी दिया। जीवन बदलने वाली सेवा!",
+      service_used: "प्रवासी परामर्श",
+      duration: "30 मिनट",
+      help_type: ["वीज़ा", "रियल एस्टेट", "स्थानांतरण"],
     },
     {
       id: "2",
@@ -1635,6 +2048,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1601455763557-db1bea8a9a5a?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXZhdGFyJTIwbWFsZXxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "वैंकूवर में आसान स्थापना",
+      fullcontent: "शानदार! प्रवासी ने वैंकूवर में मेरी स्थापना में मदद की। बैंक, आवास, स्वास्थ्य बीमा, परिवहन... सब कुछ 30 मिनट में! वह सभी अंदरूनी सूझ-बूझ जानते थे और मुझे महीनों की प्रशासनिक परेशानियों से बचाया।",
+      service_used: "प्रवासी परामर्श",
+      duration: "30 मिनट",
+      help_type: ["बैंकिंग", "आवास", "बीमा"],
     },
     {
       id: "3",
@@ -1654,6 +2072,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1677537946831-4590ff82359c?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjB8fGF2YXRhciUyMGZlbWFsZXxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "मेलबर्न के लिए मूल्यवान सुझाव",
+      fullcontent: "बहुत अच्छा अनुभव! मेलबर्न में 8 साल से रहने वाले प्रवासी ने मुझे वर्किंग हॉलिडे वीज़ा के लिए सभी सलाह दीं। स्कूल, इलाके, नौकरियां... व्यावहारिक जानकारी का खजाना!",
+      service_used: "प्रवासी परामर्श",
+      duration: "25 मिनट",
+      help_type: ["वीज़ा", "रोजगार", "इलाके"],
     },
     {
       id: "4",
@@ -1673,6 +2096,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "दुबई के लिए संपूर्ण मार्गदर्शिका",
+      fullcontent: "उत्कृष्ट! दुबई में 5 साल से रहने वाले प्रवासी ने मुझे सब कुछ समझाया: वीज़ा, बैंक खाता, आवास, स्थानीय संस्कृति। उन्होंने मुझे अपने फ्रांसीसी प्रवासी समुदाय से भी जोड़ा!",
+      service_used: "प्रवासी परामर्श",
+      duration: "40 मिनट",
+      help_type: ["वीज़ा", "बैंकिंग", "नेटवर्क"],
     },
     {
       id: "5",
@@ -1692,6 +2120,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "टोक्यो से तेजी से सहायता",
+      fullcontent: "परफेक्ट! टोक्यो से आपातकालीन स्थिति में, मुझे 2 मिनट में एक प्रवासी मिला। उन्होंने जटिल जापानी कागजात में मेरी मदद की और मुझे सही प्रशासनों की ओर निर्देशित किया। बहुत आश्वस्त करने वाला!",
+      service_used: "प्रवासी परामर्श",
+      duration: "20 मिनट",
+      help_type: ["प्रशासन", "दस्तावेज", "आपातकालीन"],
     },
     {
       id: "6",
@@ -1711,6 +2144,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "ओस्लो में छात्र सुझाव",
+      fullcontent: "बहुत उपयोगी! नॉर्वे में फ्रांसीसी प्रवासी ने मुझे ओस्लो के लिए सभी टिप्स दिए: छात्र आवास, अंशकालिक नौकरियां, परिवहन। उन्होंने मेरी पढ़ाई के लिए कीमती समय बचाया!",
+      service_used: "प्रवासी परामर्श",
+      duration: "25 मिनट",
+      help_type: ["आवास", "शिक्षा", "रोजगार"],
     },
     {
       id: "7",
@@ -1730,6 +2168,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "साओ पाउलो में परिवार का स्थानांतरण",
+      fullcontent: "शानदार! ब्राज़ील से, प्रवासी ने मुझे साओ पाउलो के बारे में सब कुछ समझाया: सुरक्षित इलाके, परिवहन कार्ड, मेरे बच्चों के लिए सर्वश्रेष्ठ स्कूल। अमूल्य सहायता!",
+      service_used: "प्रवासी परामर्श",
+      duration: "35 मिनट",
+      help_type: ["परिवार", "स्कूल", "इलाके"],
     },
     {
       id: "8",
@@ -1749,6 +2192,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "सिंगापुर की संपूर्ण मार्गदर्शिका",
+      fullcontent: "असाधारण! सिंगापुर में प्रवासी ने मेरी स्थापना के लिए कदम दर कदम मार्गदर्शन किया। वर्क परमिट, आवास, स्थानीय बैंक... सब कुछ स्पष्ट और विस्तृत था। शीर्ष सेवा!",
+      service_used: "प्रवासी परामर्श",
+      duration: "45 मिनट",
+      help_type: ["अनुमति", "आवास", "बैंकिंग"],
     },
     {
       id: "9",
@@ -1768,6 +2216,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "सियोल में विश्वविद्यालय विनिमय",
+      fullcontent: "बहुत पेशेवर! दक्षिण कोरिया में फ्रांसीसी प्रवासी ने मुझे सियोल के लिए सभी सलाह दीं: छात्र वीज़ा, विश्वविद्यालय आवास, कोरियाई संस्कृति। मेरे विनिमय के लिए परफेक्ट!",
+      service_used: "प्रवासी परामर्श",
+      duration: "30 मिनट",
+      help_type: ["वीज़ा", "विश्वविद्यालय", "संस्कृति"],
     },
 
     // वकील (7 समीक्षाएं - 45%)
@@ -1789,6 +2242,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "लंदन में कानूनी विशेषज्ञता",
+      fullcontent: "असाधारण वकील! लंदन से, मकान मालिक के साथ तत्काल समस्या। वकील ने मुझे अंग्रेजी कानून में मेरे अधिकार, अनुसरण करने योग्य कदम समझाए और मुझे स्थानीय वकील की ओर निर्देशित किया। सटीक और प्रभावी!",
+      service_used: "वकील परामर्श",
+      duration: "25 मिनट",
+      help_type: ["संपत्ति कानून", "किराये का कानून", "कानूनी सलाह", "विवाद"],
     },
     {
       id: "11",
@@ -1808,6 +2266,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1625262550495-1d3bfb5c1502?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTc2fHxhdmF0YXIlMjBtYWxlfGVufDB8fDB8fHww",
       verified: true,
+      title: "जर्मनी में दुर्घटना",
+      fullcontent: "उल्लेखनीय परामर्श! जर्मनी में कार दुर्घटना, अंतरराष्ट्रीय कानून में विशेषज्ञ वकील ने मुझे सब कुछ समझाया: बीमा, प्रक्रियाएं, अधिकार। उन्होंने मुझे महंगी गलतियों से बचाया!",
+      service_used: "वकील परामर्श",
+      duration: "40 मिनट",
+      help_type: ["दुर्घटना", "बीमा", "अंतरराष्ट्रीय कानून"],
     },
     {
       id: "12",
@@ -1827,6 +2290,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDB8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "इटली में व्यावसायिक विवाद",
+      fullcontent: "बहुत सक्षम! इटली में व्यावसायिक विवाद, वकील ने मुझे मेरी कानूनी स्थिति का स्पष्ट विश्लेषण और उपलब्ध विकल्प दिए। मेरे व्यवसाय के लिए मूल्यवान सलाह!",
+      service_used: "वकील परामर्श",
+      duration: "30 मिनट",
+      help_type: ["वाणिज्य कानून", "विवाद", "व्यवसाय"],
     },
     {
       id: "13",
@@ -1846,6 +2314,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "अमेरिका में वीज़ा समस्या",
+      fullcontent: "शानदार वकील! संयुक्त राज्य अमेरिका में वीज़ा समस्या, उन्होंने मुझे सभी आप्रवासन प्रक्रियाएं, जोखिम और समाधान समझाए। उनके लिए धन्यवाद, मैंने निर्वासन से बचा!",
+      service_used: "वकील परामर्श",
+      duration: "50 मिनट",
+      help_type: ["आप्रवासन", "वीज़ा", "आपातकालीन"],
     },
     {
       id: "14",
@@ -1865,6 +2338,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "अंतरराष्ट्रीय तलाक",
+      fullcontent: "उत्कृष्ट कानूनी सेवा! जटिल अंतरराष्ट्रीय तलाक, वकील फ्रांसीसी और स्पेनिश कानून के बीच नेविगेट करने में सक्षम थे। स्पष्ट सलाह, प्रभावी रणनीति। मैं दृढ़ता से अनुशंसा करता हूं!",
+      service_used: "वकील परामर्श",
+      duration: "60 मिनट",
+      help_type: ["तलाक", "अंतरराष्ट्रीय कानून", "परिवार"],
     },
     {
       id: "15",
@@ -1884,6 +2362,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1701615004837-40d8573b6652?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "मेक्सिको में रोजगार अनुबंध",
+      fullcontent: "बहुत पेशेवर! मेक्सिको में रोजगार अनुबंध, वकील ने मुझे सभी खंड, मेरे अधिकार और दायित्व समझाए। उन्होंने मुझे बेहतर शर्तों पर बातचीत करने में मदद की!",
+      service_used: "वकील परामर्श",
+      duration: "35 मिनट",
+      help_type: ["रोजगार कानून", "अनुबंध", "बातचीत"],
     },
     {
       id: "16",
@@ -1903,10 +2386,16 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YXZhdGFyfGVufDB8fDB8fHww",
       verified: true,
+      title: "स्विट्जरलैंड में कर समस्या",
+      fullcontent: "उल्लेखनीय वकील! स्विट्जरलैंड में कर समस्या, उन्होंने मुझे कानूनी निहितार्थ, कदम समझाए और मुझे स्थानीय कर सलाहकार की ओर निर्देशित किया। त्रुटिहीन सेवा!",
+      service_used: "वकील परामर्श",
+      duration: "45 मिनट",
+      help_type: ["कर", "कानून", "सलाह"],
     },
   ];
 
-  const reviews_ch: ReviewType[] = [
+
+const reviews_ch: ReviewType[] = [
     {
       id: "1",
       callId: "call1",
@@ -1924,8 +2413,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       helpfulVotes: 23,
       clientAvatar:
         "https://images.unsplash.com/photo-1643842730000-db266bbc1b28?q=80&w=400&h=400&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      // clientAvatar:"https://images.unsplash.com/photo-1494790108755-2616b74193d4?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "泰国卓越服务",
+      fullcontent: "太棒了！短短三分钟，我就联系上了一位身在曼谷的法国侨民。他详细地给我讲解了整个泰国签证流程，包括需要避免的陷阱，甚至还给了我他房产经纪人的联系方式。这项服务简直改变了我的人生！",
+      service_used: "侨民咨询",
+      duration: "30分钟",
+      help_type: ["签证", "房地产", "搬迁"],
     },
     {
       id: "2",
@@ -1942,10 +2435,14 @@ const createMockReviews = (language: string): ReviewType[] => {
       serviceType: "expat_call",
       status: "published",
       helpfulVotes: 31,
-      // clientAvatar:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
       clientAvatar:
         "https://images.unsplash.com/photo-1601455763557-db1bea8a9a5a?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXZhdGFyJTIwbWFsZXxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "温哥华设置简单",
+      fullcontent: "太棒了！这位外籍人士帮我安顿好了在温哥华的一切。银行、住房、医疗保险、交通……所有事情30分钟就搞定了！他知道所有内幕消息，帮我省去了几个月的行政麻烦。",
+      service_used: "侨民咨询",
+      duration: "30分钟",
+      help_type: ["银行", "住房", "保险"],
     },
     {
       id: "3",
@@ -1964,8 +2461,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       helpfulVotes: 18,
       clientAvatar:
         "https://images.unsplash.com/photo-1677537946831-4590ff82359c?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjB8fGF2YXRhciUyMGZlbWFsZXxlbnwwfHwwfHx8MA%3D%3D",
-    
       verified: true,
+      title: "墨尔本宝贵建议",
+      fullcontent: "非常棒的体验！我在墨尔本生活了8年，他为我的打工度假签证提供了所有建议。学校、社区、工作……简直是实用信息的宝库！",
+      service_used: "侨民咨询",
+      duration: "25分钟",
+      help_type: ["签证", "就业", "社区"],
     },
     {
       id: "4",
@@ -1985,6 +2486,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "迪拜完整指南",
+      fullcontent: "太棒了！这位在迪拜生活了五年的外籍人士给我讲解了一切：签证、银行账户、住房、当地文化等等。他甚至还帮我联系了他的法国外籍人士社群！",
+      service_used: "侨民咨询",
+      duration: "40分钟",
+      help_type: ["签证", "银行", "网络"],
     },
     {
       id: "5",
@@ -2004,6 +2510,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "东京快速帮助",
+      fullcontent: "太好了！我当时身在东京，情况紧急，两分钟之内就联系到了一位外籍人士。他帮我处理了复杂的日本文件，并指引我去了正确的部门。真是太让人放心了！",
+      service_used: "侨民咨询",
+      duration: "20分钟",
+      help_type: ["行政", "文件", "紧急"],
     },
     {
       id: "6",
@@ -2023,6 +2534,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "奥斯陆学生建议",
+      fullcontent: "太有用了！那位在挪威的法国侨民给了我很多关于奥斯陆的建议：学生公寓、兼职工作、交通等等。他帮我节省了宝贵的学习时间！",
+      service_used: "侨民咨询",
+      duration: "25分钟",
+      help_type: ["住房", "学习", "就业"],
     },
     {
       id: "7",
@@ -2042,6 +2558,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "圣保罗家庭搬迁",
+      fullcontent: "太棒了！这位来自巴西的外国人详细地介绍了圣保罗的情况：安全的街区、交通卡、适合我孩子的好学校等等。真是帮了我大忙！",
+      service_used: "侨民咨询",
+      duration: "35分钟",
+      help_type: ["家庭", "学校", "社区"],
     },
     {
       id: "8",
@@ -2061,6 +2582,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "新加坡完整指南",
+      fullcontent: "太棒了！这位在新加坡的外国人一步一步地指导我完成所有手续。工作许可、住房、当地银行……一切都清晰明了、讲解详尽。一流的服务！",
+      service_used: "侨民咨询",
+      duration: "45分钟",
+      help_type: ["许可证", "住房", "银行"],
     },
     {
       id: "9",
@@ -2080,6 +2606,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "首尔大学交流",
+      fullcontent: "非常专业！这位在韩国的法国侨民给了我很多关于首尔的建议：学生签证、大学住宿、韩国文化等等。对我的交换学习来说简直完美！",
+      service_used: "侨民咨询",
+      duration: "30分钟",
+      help_type: ["签证", "大学", "文化"],
     },
 
     // Lawyers (7 testimonials - 45%)
@@ -2101,6 +2632,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "伦敦法律专业知识",
+      fullcontent: "这位律师太棒了！我住在伦敦，和房东之间出了紧急纠纷。律师详细解释了我在英国法律下的权利，以及我应该采取的步骤，并推荐了一位当地的律师。他办事精准高效！",
+      service_used: "律师咨询",
+      duration: "25分钟",
+      help_type: ["房地产法", "租赁法", "法律建议", "诉讼"],
     },
     {
       id: "11",
@@ -2119,8 +2655,12 @@ const createMockReviews = (language: string): ReviewType[] => {
       helpfulVotes: 38,
       clientAvatar:
         "https://images.unsplash.com/photo-1625262550495-1d3bfb5c1502?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTc2fHxhdmF0YXIlMjBtYWxlfGVufDB8fDB8fHww",
-      // clientAvatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "德国事故",
+      fullcontent: "咨询效果极佳！我在德国出了车祸，这位精通国际法的律师详细解释了所有问题：保险、程序、我的权利。他帮我避免了代价高昂的错误！",
+      service_used: "律师咨询",
+      duration: "40分钟",
+      help_type: ["事故", "保险", "国际法"],
     },
     {
       id: "12",
@@ -2140,6 +2680,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDB8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "意大利商业纠纷",
+      fullcontent: "非常专业！我遇到意大利的商业纠纷，这位律师清晰地分析了我的法律处境和可行的方案。对我的业务来说，这是非常宝贵的建议！",
+      service_used: "律师咨询",
+      duration: "30分钟",
+      help_type: ["商法", "纠纷", "商业"],
     },
     {
       id: "13",
@@ -2159,6 +2704,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "美国签证问题",
+      fullcontent: "这位律师太棒了！我在美国遇到了签证问题，他详细解释了所有移民程序、风险和解决方案。多亏了他，我才避免了被遣返！",
+      service_used: "律师咨询",
+      duration: "50分钟",
+      help_type: ["移民", "签证", "紧急"],
     },
     {
       id: "14",
@@ -2178,6 +2728,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "国际离婚",
+      fullcontent: "卓越的法律服务！复杂的国际离婚案件，律师精通法国和西班牙法律。建议清晰明了，策略有效。强烈推荐！",
+      service_used: "律师咨询",
+      duration: "60分钟",
+      help_type: ["离婚", "国际法", "家庭"],
     },
     {
       id: "15",
@@ -2197,6 +2752,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1701615004837-40d8573b6652?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "墨西哥雇佣合同",
+      fullcontent: "非常专业！墨西哥的雇佣合同，律师详细解释了所有条款、我的权利和义务。他还帮我争取到了更好的待遇！",
+      service_used: "律师咨询",
+      duration: "35分钟",
+      help_type: ["劳动法", "合同", "谈判"],
     },
     {
       id: "16",
@@ -2216,10 +2776,16 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YXZhdGFyfGVufDB8fDB8fHww",
       verified: true,
+      title: "瑞士税务问题",
+      fullcontent: "这位律师太棒了！我遇到了瑞士的税务问题，他详细解释了相关的法律规定和程序，并推荐了一位当地的税务专家。服务无可挑剔！",
+      service_used: "律师咨询",
+      duration: "45分钟",
+      help_type: ["税务", "法律", "咨询"],
     },
   ];
 
-  const reviews_pt: ReviewType[] = [
+
+ const reviews_pt: ReviewType[] = [
     {
       id: "1",
       callId: "call1",
@@ -2238,6 +2804,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1643842730000-db266bbc1b28?q=80&w=400&h=400&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       verified: true,
+      title: "Serviço Excepcional na Tailândia",
+      fullcontent: "Fantástico! Em apenas três minutos, consegui entrar em contato com um expatriado francês em Bangkok. Ele me explicou detalhadamente todo o processo de visto tailandês, incluindo as armadilhas a evitar, e até me passou o contato de seu corretor de imóveis. Este serviço mudou minha vida!",
+      service_used: "Consulta de Expatriado",
+      duration: "30 min",
+      help_type: ["Visto", "Imobiliária", "Realocação"],
     },
     {
       id: "2",
@@ -2257,6 +2828,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1601455763557-db1bea8a9a5a?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXZhdGFyJTIwbWFsZXxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "Instalação Facilitada em Vancouver",
+      fullcontent: "Fantástico! Este expatriado me ajudou a resolver tudo em Vancouver. Banco, moradia, seguro de saúde, transporte... tudo em apenas 30 minutos! Ele conhece todos os macetes e me poupou meses de problemas administrativos.",
+      service_used: "Consulta de Expatriado",
+      duration: "30 min",
+      help_type: ["Banco", "Moradia", "Seguro"],
     },
     {
       id: "3",
@@ -2276,6 +2852,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1677537946831-4590ff82359c?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjB8fGF2YXRhciUyMGZlbWFsZXxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "Conselhos Valiosos para Melbourne",
+      fullcontent: "Experiência muito boa! Vivo em Melbourne há 8 anos e ele me deu todos os conselhos para meu visto de trabalho e férias. Escola, comunidade, trabalho... um verdadeiro tesouro de informações práticas!",
+      service_used: "Consulta de Expatriado",
+      duration: "25 min",
+      help_type: ["Visto", "Emprego", "Bairros"],
     },
     {
       id: "4",
@@ -2295,6 +2876,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Guia Completo para Dubai",
+      fullcontent: "Fantástico! Este expatriado que vive em Dubai há cinco anos me explicou tudo: visto, conta bancária, moradia, cultura local e muito mais. Ele até me conectou com sua comunidade de expatriados franceses!",
+      service_used: "Consulta de Expatriado",
+      duration: "40 min",
+      help_type: ["Visto", "Banco", "Rede"],
     },
     {
       id: "5",
@@ -2314,6 +2900,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Ajuda Rápida de Tóquio",
+      fullcontent: "Excelente! Eu estava em Tóquio em uma situação urgente e consegui contato com um expatriado em apenas dois minutos. Ele me ajudou com documentos complicados em japonês e me orientou aos departamentos corretos. Muito tranquilizador!",
+      service_used: "Consulta de Expatriado",
+      duration: "20 min",
+      help_type: ["Administração", "Documentos", "Emergência"],
     },
     {
       id: "6",
@@ -2333,6 +2924,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Dicas para Estudantes em Oslo",
+      fullcontent: "Muito útil! Este expatriado francês na Noruega me deu ótimos conselhos sobre Oslo: apartamentos para estudantes, trabalho meio período, transporte e muito mais. Me poupou tempo de estudo valioso!",
+      service_used: "Consulta de Expatriado",
+      duration: "25 min",
+      help_type: ["Moradia", "Estudos", "Emprego"],
     },
     {
       id: "7",
@@ -2352,6 +2948,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Realocação Familiar para São Paulo",
+      fullcontent: "Fantástico! Este estrangeiro do Brasil me explicou tudo sobre São Paulo em detalhes: bairros seguros, cartão de transporte, escolas boas para meu filho e muito mais. Muito me ajudou!",
+      service_used: "Consulta de Expatriado",
+      duration: "35 min",
+      help_type: ["Família", "Escolas", "Bairros"],
     },
     {
       id: "8",
@@ -2371,6 +2972,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Guia Completo de Singapura",
+      fullcontent: "Fantástico! Este estrangeiro em Singapura me guiou passo a passo em todos os procedimentos. Visto de trabalho, moradia, banco local... tudo estava claro e bem explicado. Serviço de primeira classe!",
+      service_used: "Consulta de Expatriado",
+      duration: "45 min",
+      help_type: ["Permissão", "Moradia", "Banco"],
     },
     {
       id: "9",
@@ -2390,6 +2996,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Intercâmbio Universitário em Seul",
+      fullcontent: "Muito profissional! Este expatriado francês na Coreia do Sul me deu ótimos conselhos sobre Seul: visto de estudante, acomodação universitária, cultura coreana e muito mais. Perfeito para meu intercâmbio!",
+      service_used: "Consulta de Expatriado",
+      duration: "30 min",
+      help_type: ["Visto", "Universidade", "Cultura"],
     },
 
     // Lawyers (7 testimonials - 45%)
@@ -2411,6 +3022,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Expertise Jurídica em Londres",
+      fullcontent: "Este advogado foi fantástico! Eu estava em Londres com uma disputa urgente com meu senhorio. O advogado explicou detalhadamente meus direitos sob a lei britânica e os passos que deveria tomar, além de recomendar um advogado local. Muito eficiente e preciso!",
+      service_used: "Consulta Jurídica",
+      duration: "25 minutos",
+      help_type: ["Direito Imobiliário", "Direito de Arrendamento", "Consultoria Jurídica", "Litígio"],
     },
     {
       id: "11",
@@ -2430,6 +3046,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1625262550495-1d3bfb5c1502?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTc2fHxhdmF0YXIlMjBtYWxlfGVufDB8fDB8fHww",
       verified: true,
+      title: "Acidente na Alemanha",
+      fullcontent: "Consultoria excelente! Eu estava na Alemanha e sofri um acidente de carro. Este advogado especializado em direito internacional explicou tudo em detalhes: seguro, procedimentos, meus direitos. Ele me ajudou a evitar erros custosos!",
+      service_used: "Consulta Jurídica",
+      duration: "40 min",
+      help_type: ["Acidente", "Seguro", "Direito Internacional"],
     },
     {
       id: "12",
@@ -2449,6 +3070,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDB8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "Disputa Comercial na Itália",
+      fullcontent: "Muito profissional! Eu tinha uma disputa comercial na Itália e este advogado analisou claramente minha posição legal e opções viáveis. Conselhos muito valiosos para meu negócio!",
+      service_used: "Consulta Jurídica",
+      duration: "30 min",
+      help_type: ["Direito Comercial", "Disputa", "Negócios"],
     },
     {
       id: "13",
@@ -2468,6 +3094,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
       verified: true,
+      title: "Problema de Visto nos EUA",
+      fullcontent: "Este advogado foi fantástico! Eu tinha um problema de visto nos Estados Unidos e ele explicou em detalhes todos os procedimentos de imigração, riscos e soluções. Graças a ele, evitei ser deportado!",
+      service_used: "Consulta Jurídica",
+      duration: "50 min",
+      help_type: ["Imigração", "Visto", "Emergência"],
     },
     {
       id: "14",
@@ -2487,6 +3118,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "Divórcio Internacional",
+      fullcontent: "Serviço jurídico excelente! Caso complexo de divórcio internacional, o advogado domina leis francesa e espanhola. Aconselhamento claro e estratégia eficaz. Altamente recomendado!",
+      service_used: "Consulta Jurídica",
+      duration: "60 min",
+      help_type: ["Divórcio", "Direito Internacional", "Família"],
     },
     {
       id: "15",
@@ -2506,6 +3142,11 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1701615004837-40d8573b6652?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D",
       verified: true,
+      title: "Contrato de Emprego no México",
+      fullcontent: "Muito profissional! Contrato de emprego no México, o advogado explicou em detalhes todas as cláusulas, meus direitos e obrigações. Ele até me ajudou a negociar melhores termos!",
+      service_used: "Consulta Jurídica",
+      duration: "35 min",
+      help_type: ["Direito Trabalhista", "Contrato", "Negociação"],
     },
     {
       id: "16",
@@ -2525,304 +3166,404 @@ const createMockReviews = (language: string): ReviewType[] => {
       clientAvatar:
         "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YXZhdGFyfGVufDB8fDB8fHww",
       verified: true,
+      title: "Problema Fiscal na Suíça",
+      fullcontent: "Este advogado foi fantástico! Eu tinha um problema fiscal na Suíça e ele explicou em detalhes a legislação relevante e procedimentos, além de recomendar um especialista fiscal local. Serviço impecável!",
+      service_used: "Consulta Jurídica",
+      duration: "45 min",
+      help_type: ["Fiscal", "Direito", "Consultoria"],
     },
   ];
 
 
+ const reviews_ar: ReviewType[] = [
+    // المغتربون (9 شهادات - 55%)
+    {
+      id: "1",
+      callId: "call1",
+      clientId: "client1",
+      providerId: "provider1",
+      rating: 5,
+      comment:
+        "لا يصدق! في 3 دقائق كان لدي مغترب فرنسي من بانكوك على الهاتف. شرح لي كامل إجراءات التأشيرة التايلاندية، المخاطر التي يجب تجنبها وأعطاني حتى جهات اتصال وكيله العقاري. خدمة تغير الحياة!",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+      clientName: "Aisha M.",
+      clientCountry: "تايلاند",
+      serviceType: "expat_call",
+      status: "published",
+      helpfulVotes: 23,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1643842730000-db266bbc1b28?q=80&w=400&h=400&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      verified: true,
+      title: "خدمة استثنائية في تايلاند",
+      fullcontent: "لا يصدق! في 3 دقائق كان لدي مغترب فرنسي من بانكوك على الهاتف. شرح لي كامل إجراءات التأشيرة التايلاندية، المخاطر التي يجب تجنبها وأعطاني حتى جهات اتصال وكيله العقاري. خدمة تغير الحياة!",
+      service_used: "استشارة المغتربين",
+      duration: "30 دقيقة",
+      help_type: ["تأشيرة", "عقارات", "نقل"],
+    },
+    {
+      id: "2",
+      callId: "call2",
+      clientId: "client2",
+      providerId: "provider2",
+      rating: 5,
+      comment:
+        "رائع! ساعدني المغترب في تثبيت أموري في فانكوفر. البنك والسكن والتأمين الصحي والنقل... كل شيء في 30 دقيقة! كان يعرف جميع الحيل الداخلية وأنقذني من أشهر من الإزعاج الإداري.",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+      clientName: "Chen L.",
+      clientCountry: "كندا",
+      serviceType: "expat_call",
+      status: "published",
+      helpfulVotes: 19,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
+      verified: true,
+      title: "التثبيت الميسر في فانكوفر",
+      fullcontent: "رائع! ساعدني المغترب في تثبيت أموري في فانكوفر. البنك والسكن والتأمين الصحي والنقل... كل شيء في 30 دقيقة! كان يعرف جميع الحيل الداخلية وأنقذني من أشهر من الإزعاج الإداري.",
+      service_used: "استشارة المغتربين",
+      duration: "30 دقيقة",
+      help_type: ["بنك", "سكن", "تأمين"],
+    },
+    {
+      id: "3",
+      callId: "call3",
+      clientId: "client3",
+      providerId: "provider3",
+      rating: 4,
+      comment:
+        "تجربة رائعة! المغترب الذي يعيش في ملبورن منذ 8 سنوات أعطاني كل النصائح: الفيزا والعمل والأحياء... كنز من المعلومات العملية!",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000),
+      clientName: "Emma K.",
+      clientCountry: "أستراليا",
+      serviceType: "expat_call",
+      status: "published",
+      helpfulVotes: 17,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
+      verified: true,
+      title: "نصائح قيمة لملبورن",
+      fullcontent: "تجربة رائعة! المغترب الذي يعيش في ملبورن منذ 8 سنوات أعطاني كل النصائح: الفيزا والعمل والأحياء... كنز من المعلومات العملية!",
+      service_used: "استشارة المغتربين",
+      duration: "25 دقيقة",
+      help_type: ["تأشيرة", "توظيف", "أحياء"],
+    },
+    {
+      id: "4",
+      callId: "call4",
+      clientId: "client4",
+      providerId: "provider4",
+      rating: 5,
+      comment:
+        "ممتاز! المغترب الذي يعيش في دبي منذ 5 سنوات شرح لي كل شيء: الفيزا وفتح حساب بنكي والسكن والثقافة المحلية. حتى ربطني بمجتمع المغتربين الفرنسيين!",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
+      clientName: "Kwame A.",
+      clientCountry: "الإمارات العربية المتحدة",
+      serviceType: "expat_call",
+      status: "published",
+      helpfulVotes: 21,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
+      verified: true,
+      title: "الدليل الكامل لدبي",
+      fullcontent: "ممتاز! المغترب الذي يعيش في دبي منذ 5 سنوات شرح لي كل شيء: الفيزا وفتح حساب بنكي والسكن والثقافة المحلية. حتى ربطني بمجتمع المغتربين الفرنسيين!",
+      service_used: "استشارة المغتربين",
+      duration: "40 دقيقة",
+      help_type: ["تأشيرة", "بنك", "شبكة"],
+    },
+    {
+      id: "5",
+      callId: "call5",
+      clientId: "client5",
+      providerId: "provider5",
+      rating: 5,
+      comment:
+        "مثالي! في حالة طارئة من طوكيو، حصلت على مغترب في دقيقتين. ساعدني مع الأوراق اليابانية المعقدة وأرشدني إلى الإدارات الصحيحة. مطمئن جداً!",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000),
+      clientName: "Yuki T.",
+      clientCountry: "اليابان",
+      serviceType: "expat_call",
+      status: "published",
+      helpfulVotes: 18,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
+      verified: true,
+      title: "مساعدة سريعة من طوكيو",
+      fullcontent: "مثالي! في حالة طارئة من طوكيو، حصلت على مغترب في دقيقتين. ساعدني مع الأوراق اليابانية المعقدة وأرشدني إلى الإدارات الصحيحة. مطمئن جداً!",
+      service_used: "استشارة المغتربين",
+      duration: "20 دقيقة",
+      help_type: ["إدارة", "مستندات", "طوارئ"],
+    },
+    {
+      id: "6",
+      callId: "call6",
+      clientId: "client6",
+      providerId: "provider6",
+      rating: 4,
+      comment:
+        "مفيد جداً! المغترب الفرنسي في النرويج أعطاني كل النصائح لأوسلو: السكن الطلابي والعمل بدوام جزئي والنقل. وفر لي وقتاً قيماً للدراسة!",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000),
+      clientName: "Fatima R.",
+      clientCountry: "النرويج",
+      serviceType: "expat_call",
+      status: "published",
+      helpfulVotes: 16,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
+      verified: true,
+      title: "نصائح الطلاب في أوسلو",
+      fullcontent: "مفيد جداً! المغترب الفرنسي في النرويج أعطاني كل النصائح لأوسلو: السكن الطلابي والعمل بدوام جزئي والنقل. وفر لي وقتاً قيماً للدراسة!",
+      service_used: "استشارة المغتربين",
+      duration: "25 دقيقة",
+      help_type: ["سكن", "دراسة", "توظيف"],
+    },
+    {
+      id: "7",
+      callId: "call7",
+      clientId: "client7",
+      providerId: "provider7",
+      rating: 5,
+      comment:
+        "رائع! من البرازيل شرح لي المغترب كل شيء عن ساو باولو: الأحياء الآمنة وبطاقات النقل والمدارس الأفضل لأطفالي. مساعدة لا تقدر بثمن!",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000),
+      clientName: "Carlos M.",
+      clientCountry: "البرازيل",
+      serviceType: "expat_call",
+      status: "published",
+      helpfulVotes: 22,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
+      verified: true,
+      title: "نقل الأسرة إلى ساو باولو",
+      fullcontent: "رائع! من البرازيل شرح لي المغترب كل شيء عن ساو باولو: الأحياء الآمنة وبطاقات النقل والمدارس الأفضل لأطفالي. مساعدة لا تقدر بثمن!",
+      service_used: "استشارة المغتربين",
+      duration: "35 دقيقة",
+      help_type: ["أسرة", "مدارس", "أحياء"],
+    },
+    {
+      id: "8",
+      callId: "call8",
+      clientId: "client8",
+      providerId: "provider8",
+      rating: 5,
+      comment:
+        "استثنائي! المغترب في سنغافورة أرشدني خطوة بخطوة للتثبيت. تصريح العمل والسكن والبنك المحلي... كل شيء كان واضحاً ومفصلاً. خدمة من الدرجة الأولى!",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000),
+      clientName: "Priya S.",
+      clientCountry: "سنغافورة",
+      serviceType: "expat_call",
+      status: "published",
+      helpfulVotes: 20,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&h=400&q=80",
+      verified: true,
+      title: "الدليل الكامل لسنغافورة",
+      fullcontent: "استثنائي! المغترب في سنغافورة أرشدني خطوة بخطوة للتثبيت. تصريح العمل والسكن والبنك المحلي... كل شيء كان واضحاً ومفصلاً. خدمة من الدرجة الأولى!",
+      service_used: "استشارة المغتربين",
+      duration: "45 دقيقة",
+      help_type: ["تصريح", "سكن", "بنك"],
+    },
+    {
+      id: "9",
+      callId: "call9",
+      clientId: "client9",
+      providerId: "provider9",
+      rating: 4,
+      comment:
+        "احترافي جداً! المغترب الفرنسي في كوريا الجنوبية أعطاني كل نصيحة لسيول: تأشيرة الطالب والإسكان الجامعي والثقافة الكورية. مثالي لتبادلي!",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 22 * 24 * 60 * 60 * 1000),
+      clientName: "Jin W.",
+      clientCountry: "كوريا الجنوبية",
+      serviceType: "expat_call",
+      status: "published",
+      helpfulVotes: 15,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80",
+      verified: true,
+      title: "التبادل الجامعي في سيول",
+      fullcontent: "احترافي جداً! المغترب الفرنسي في كوريا الجنوبية أعطاني كل نصيحة لسيول: تأشيرة الطالب والإسكان الجامعي والثقافة الكورية. مثالي لتبادلي!",
+      service_used: "استشارة المغتربين",
+      duration: "30 دقيقة",
+      help_type: ["تأشيرة", "جامعة", "ثقافة"],
+    },
 
-  const reviews_ar: ReviewType[] = [
-  // المغتربون (9 شهادات - 55%)
-  {
-    id: "1",
-    callId: "call1",
-    clientId: "client1",
-    providerId: "provider1",
-    rating: 5,
-    comment:
-      "لا يصدق! في 3 دقائق كان لدي مغترب فرنسي من بانكوك على الهاتف. شرح لي كامل إجراءات التأشيرة التايلاندية، المخاطر التي يجب تجنبها وأعطاني حتى جهات اتصال وكيله العقاري. خدمة تغير الحياة!",
-    isPublic: true,
-    createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-    clientName: "Aisha M.",
-    clientCountry: "تايلاند",
-    serviceType: "expat_call",
-    status: "published",
-    helpfulVotes: 23,
-    clientAvatar: "https://images.unsplash.com/photo-1643842730000-db266bbc1b28?q=80&w=400&h=400&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    verified: true,
-  },
-  {
-    id: "2",
-    callId: "call2",
-    clientId: "client2",
-    providerId: "provider2",
-    rating: 5,
-    comment:
-      "رائع! ساعدني المغترب في تثبيت أموري في فانكوفر. البنك والسكن والتأمين الصحي والنقل... كل شيء في 30 دقيقة! كان يعرف جميع الحيل الداخلية وأنقذني من أشهر من الإزعاج الإداري.",
-    isPublic: true,
-    createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-    clientName: "Chen L.",
-    clientCountry: "كندا",
-    serviceType: "expat_call",
-    status: "published",
-    helpfulVotes: 19,
-    clientAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
-    verified: true,
-  },
-  {
-    id: "3",
-    callId: "call3",
-    clientId: "client3",
-    providerId: "provider3",
-    rating: 4,
-    comment:
-      "تجربة رائعة! المغترب الذي يعيش في ملبورن منذ 8 سنوات أعطاني كل النصائح: الفيزا والعمل والأحياء... كنز من المعلومات العملية!",
-    isPublic: true,
-    createdAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000),
-    clientName: "Emma K.",
-    clientCountry: "أستراليا",
-    serviceType: "expat_call",
-    status: "published",
-    helpfulVotes: 17,
-    clientAvatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
-    verified: true,
-  },
-  {
-    id: "4",
-    callId: "call4",
-    clientId: "client4",
-    providerId: "provider4",
-    rating: 5,
-    comment:
-      "ممتاز! المغترب الذي يعيش في دبي منذ 5 سنوات شرح لي كل شيء: الفيزا وفتح حساب بنكي والسكن والثقافة المحلية. حتى ربطني بمجتمع المغتربين الفرنسيين!",
-    isPublic: true,
-    createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
-    clientName: "Kwame A.",
-    clientCountry: "الإمارات العربية المتحدة",
-    serviceType: "expat_call",
-    status: "published",
-    helpfulVotes: 21,
-    clientAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
-    verified: true,
-  },
-  {
-    id: "5",
-    callId: "call5",
-    clientId: "client5",
-    providerId: "provider5",
-    rating: 5,
-    comment:
-      "مثالي! في حالة طارئة من طوكيو، حصلت على مغترب في دقيقتين. ساعدني مع الأوراق اليابانية المعقدة وأرشدني إلى الإدارات الصحيحة. مطمئن جداً!",
-    isPublic: true,
-    createdAt: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000),
-    clientName: "Yuki T.",
-    clientCountry: "اليابان",
-    serviceType: "expat_call",
-    status: "published",
-    helpfulVotes: 18,
-    clientAvatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
-    verified: true,
-  },
-  {
-    id: "6",
-    callId: "call6",
-    clientId: "client6",
-    providerId: "provider6",
-    rating: 4,
-    comment:
-      "مفيد جداً! المغترب الفرنسي في النرويج أعطاني كل النصائح لأوسلو: السكن الطلابي والعمل بدوام جزئي والنقل. وفر لي وقتاً قيماً للدراسة!",
-    isPublic: true,
-    createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000),
-    clientName: "Fatima R.",
-    clientCountry: "النرويج",
-    serviceType: "expat_call",
-    status: "published",
-    helpfulVotes: 16,
-    clientAvatar: "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
-    verified: true,
-  },
-  {
-    id: "7",
-    callId: "call7",
-    clientId: "client7",
-    providerId: "provider7",
-    rating: 5,
-    comment:
-      "رائع! من البرازيل شرح لي المغترب كل شيء عن ساو باولو: الأحياء الآمنة وبطاقات النقل والمدارس الأفضل لأطفالي. مساعدة لا تقدر بثمن!",
-    isPublic: true,
-    createdAt: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000),
-    clientName: "Carlos M.",
-    clientCountry: "البرازيل",
-    serviceType: "expat_call",
-    status: "published",
-    helpfulVotes: 22,
-    clientAvatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
-    verified: true,
-  },
-  {
-    id: "8",
-    callId: "call8",
-    clientId: "client8",
-    providerId: "provider8",
-    rating: 5,
-    comment:
-      "استثنائي! المغترب في سنغافورة أرشدني خطوة بخطوة للتثبيت. تصريح العمل والسكن والبنك المحلي... كل شيء كان واضحاً ومفصلاً. خدمة من الدرجة الأولى!",
-    isPublic: true,
-    createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000),
-    clientName: "Priya S.",
-    clientCountry: "سنغافورة",
-    serviceType: "expat_call",
-    status: "published",
-    helpfulVotes: 20,
-    clientAvatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&h=400&q=80",
-    verified: true,
-  },
-  {
-    id: "9",
-    callId: "call9",
-    clientId: "client9",
-    providerId: "provider9",
-    rating: 4,
-    comment:
-      "احترافي جداً! المغترب الفرنسي في كوريا الجنوبية أعطاني كل نصيحة لسيول: تأشيرة الطالب والإسكان الجامعي والثقافة الكورية. مثالي لتبادلي!",
-    isPublic: true,
-    createdAt: new Date(Date.now() - 22 * 24 * 60 * 60 * 1000),
-    clientName: "Jin W.",
-    clientCountry: "كوريا الجنوبية",
-    serviceType: "expat_call",
-    status: "published",
-    helpfulVotes: 15,
-    clientAvatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80",
-    verified: true,
-  },
-  // المحامون (7 شهادات - 45%)
-  {
-    id: "10",
-    callId: "call10",
-    clientId: "client10",
-    providerId: "provider10",
-    rating: 5,
-    comment:
-      "محامٍ استثنائي! من لندن، مشكلة عاجلة مع صاحب منزلي. شرح المحامي حقوقي بموجب القانون الإنجليزي والخطوات المطلوبة وأرشدني إلى محام محلي. دقيق وفعال!",
-    isPublic: true,
-    createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-    clientName: "James P.",
-    clientCountry: "المملكة المتحدة",
-    serviceType: "lawyer_call",
-    status: "published",
-    helpfulVotes: 25,
-    clientAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
-    verified: true,
-  },
-  {
-    id: "11",
-    callId: "call11",
-    clientId: "client11",
-    providerId: "provider11",
-    rating: 5,
-    comment:
-      "استشارة رائعة! حادث سيارة في ألمانيا، شرح المحامي المتخصص في القانون الدولي كل شيء: التأمين والإجراءات والحقوق. أنقذني من أخطاء مكلفة!",
-    isPublic: true,
-    createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-    clientName: "Anya V.",
-    clientCountry: "ألمانيا",
-    serviceType: "lawyer_call",
-    status: "published",
-    helpfulVotes: 24,
-    clientAvatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
-    verified: true,
-  },
-  {
-    id: "12",
-    callId: "call12",
-    clientId: "client12",
-    providerId: "provider12",
-    rating: 4,
-    comment:
-      "كفء جداً! نزاع تجاري في إيطاليا أعطاني المحامي تحليلاً واضحاً لحالتي القانونية والخيارات المتاحة. نصيحة قيمة لعملي!",
-    isPublic: true,
-    createdAt: new Date(Date.now() - 11 * 24 * 60 * 60 * 1000),
-    clientName: "Giuseppe L.",
-    clientCountry: "إيطاليا",
-    serviceType: "lawyer_call",
-    status: "published",
-    helpfulVotes: 14,
-    clientAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
-    verified: true,
-  },
-  {
-    id: "13",
-    callId: "call13",
-    clientId: "client13",
-    providerId: "provider13",
-    rating: 5,
-    comment:
-      "محامٍ رائع! مشكلة فيزا في الولايات المتحدة شرح لي جميع إجراءات الهجرة والمخاطر والحلول. بفضله تجنبت الترحيل!",
-    isPublic: true,
-    createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
-    clientName: "Maria G.",
-    clientCountry: "الولايات المتحدة",
-    serviceType: "lawyer_call",
-    status: "published",
-    helpfulVotes: 26,
-    clientAvatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
-    verified: true,
-  },
-  {
-    id: "14",
-    callId: "call14",
-    clientId: "client14",
-    providerId: "provider14",
-    rating: 5,
-    comment:
-      "خدمة قانونية ممتازة! طلاق دولي معقد تمكن المحامي من التنقل بين القانون الفرنسي والإسباني. نصيحة واضحة واستراتيجية فعالة. أوصي به بشدة!",
-    isPublic: true,
-    createdAt: new Date(Date.now() - 16 * 24 * 60 * 60 * 1000),
-    clientName: "Ahmed B.",
-    clientCountry: "إسبانيا",
-    serviceType: "lawyer_call",
-    status: "published",
-    helpfulVotes: 19,
-    clientAvatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
-    verified: true,
-  },
-  {
-    id: "15",
-    callId: "call15",
-    clientId: "client15",
-    providerId: "provider15",
-    rating: 4,
-    comment:
-      "احترافي جداً! عقد العمل في المكسيك شرح المحامي جميع البنود وحقوقي والتزاماتي. ساعدني في التفاوض على ظروف أفضل!",
-    isPublic: true,
-    createdAt: new Date(Date.now() - 19 * 24 * 60 * 60 * 1000),
-    clientName: "Sofia R.",
-    clientCountry: "المكسيك",
-    serviceType: "lawyer_call",
-    status: "published",
-    helpfulVotes: 13,
-    clientAvatar: "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
-    verified: true,
-  },
-  {
-    id: "16",
-    callId: "call16",
-    clientId: "client16",
-    providerId: "provider16",
-    rating: 5,
-    comment:
-      "محامٍ ملحوظ! مشكلة ضريبية في سويسرا شرح الآثار القانونية والإجراءات وأرشدني إلى متخصص ضريبي محلي. خدمة لا تشوبها شائبة!",
-    isPublic: true,
-    createdAt: new Date(Date.now() - 21 * 24 * 60 * 60 * 1000),
-    clientName: "Lars H.",
-    clientCountry: "سويسرا",
-    serviceType: "lawyer_call",
-    status: "published",
-    helpfulVotes: 12,
-    clientAvatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YXZhdGFyfGVufDB8fDB8fHww",
-    verified: true,
-  },
-];
-
+    // المحامون (7 شهادات - 45%)
+    {
+      id: "10",
+      callId: "call10",
+      clientId: "client10",
+      providerId: "provider10",
+      rating: 5,
+      comment:
+        "محامٍ استثنائي! من لندن، مشكلة عاجلة مع صاحب منزلي. شرح المحامي حقوقي بموجب القانون الإنجليزي والخطوات المطلوبة وأرشدني إلى محام محلي. دقيق وفعال!",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+      clientName: "James P.",
+      clientCountry: "المملكة المتحدة",
+      serviceType: "lawyer_call",
+      status: "published",
+      helpfulVotes: 25,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80",
+      verified: true,
+      title: "الخبرة القانونية في لندن",
+      fullcontent: "محامٍ استثنائي! من لندن، مشكلة عاجلة مع صاحب منزلي. شرح المحامي حقوقي بموجب القانون الإنجليزي والخطوات المطلوبة وأرشدني إلى محام محلي. دقيق وفعال!",
+      service_used: "استشارة قانونية",
+      duration: "25 دقيقة",
+      help_type: ["القانون العقاري", "قانون الإيجار", "استشارة قانونية", "نزاع"],
+    },
+    {
+      id: "11",
+      callId: "call11",
+      clientId: "client11",
+      providerId: "provider11",
+      rating: 5,
+      comment:
+        "استشارة رائعة! حادث سيارة في ألمانيا، شرح المحامي المتخصص في القانون الدولي كل شيء: التأمين والإجراءات والحقوق. أنقذني من أخطاء مكلفة!",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+      clientName: "Anya V.",
+      clientCountry: "ألمانيا",
+      serviceType: "lawyer_call",
+      status: "published",
+      helpfulVotes: 24,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&h=400&q=80",
+      verified: true,
+      title: "حادث في ألمانيا",
+      fullcontent: "استشارة رائعة! حادث سيارة في ألمانيا، شرح المحامي المتخصص في القانون الدولي كل شيء: التأمين والإجراءات والحقوق. أنقذني من أخطاء مكلفة!",
+      service_used: "استشارة قانونية",
+      duration: "40 دقيقة",
+      help_type: ["حادث", "تأمين", "قانون دولي"],
+    },
+    {
+      id: "12",
+      callId: "call12",
+      clientId: "client12",
+      providerId: "provider12",
+      rating: 4,
+      comment:
+        "كفء جداً! نزاع تجاري في إيطاليا أعطاني المحامي تحليلاً واضحاً لحالتي القانونية والخيارات المتاحة. نصيحة قيمة لعملي!",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 11 * 24 * 60 * 60 * 1000),
+      clientName: "Giuseppe L.",
+      clientCountry: "إيطاليا",
+      serviceType: "lawyer_call",
+      status: "published",
+      helpfulVotes: 14,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&h=400&q=80",
+      verified: true,
+      title: "نزاع تجاري في إيطاليا",
+      fullcontent: "كفء جداً! نزاع تجاري في إيطاليا أعطاني المحامي تحليلاً واضحاً لحالتي القانونية والخيارات المتاحة. نصيحة قيمة لعملي!",
+      service_used: "استشارة قانونية",
+      duration: "30 دقيقة",
+      help_type: ["القانون التجاري", "نزاع", "أعمال"],
+    },
+    {
+      id: "13",
+      callId: "call13",
+      clientId: "client13",
+      providerId: "provider13",
+      rating: 5,
+      comment:
+        "محامٍ رائع! مشكلة فيزا في الولايات المتحدة شرح لي جميع إجراءات الهجرة والمخاطر والحلول. بفضله تجنبت الترحيل!",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
+      clientName: "Maria G.",
+      clientCountry: "الولايات المتحدة",
+      serviceType: "lawyer_call",
+      status: "published",
+      helpfulVotes: 26,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&h=400&q=80",
+      verified: true,
+      title: "مشكلة تأشيرة في الولايات المتحدة",
+      fullcontent: "محامٍ رائع! مشكلة فيزا في الولايات المتحدة شرح لي جميع إجراءات الهجرة والمخاطر والحلول. بفضله تجنبت الترحيل!",
+      service_used: "استشارة قانونية",
+      duration: "50 دقيقة",
+      help_type: ["هجرة", "تأشيرة", "طوارئ"],
+    },
+    {
+      id: "14",
+      callId: "call14",
+      clientId: "client14",
+      providerId: "provider14",
+      rating: 5,
+      comment:
+        "خدمة قانونية ممتازة! طلاق دولي معقد تمكن المحامي من التنقل بين القانون الفرنسي والإسباني. نصيحة واضحة واستراتيجية فعالة. أوصي به بشدة!",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 16 * 24 * 60 * 60 * 1000),
+      clientName: "Ahmed B.",
+      clientCountry: "إسبانيا",
+      serviceType: "lawyer_call",
+      status: "published",
+      helpfulVotes: 19,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&h=400&q=80",
+      verified: true,
+      title: "طلاق دولي",
+      fullcontent: "خدمة قانونية ممتازة! طلاق دولي معقد تمكن المحامي من التنقل بين القانون الفرنسي والإسباني. نصيحة واضحة واستراتيجية فعالة. أوصي به بشدة!",
+      service_used: "استشارة قانونية",
+      duration: "60 دقيقة",
+      help_type: ["طلاق", "قانون دولي", "عائلة"],
+    },
+    {
+      id: "15",
+      callId: "call15",
+      clientId: "client15",
+      providerId: "provider15",
+      rating: 4,
+      comment:
+        "احترافي جداً! عقد العمل في المكسيك شرح المحامي جميع البنود وحقوقي والتزاماتي. ساعدني في التفاوض على ظروف أفضل!",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 19 * 24 * 60 * 60 * 1000),
+      clientName: "Sofia R.",
+      clientCountry: "المكسيك",
+      serviceType: "lawyer_call",
+      status: "published",
+      helpfulVotes: 13,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?auto=format&fit=crop&w=400&h=400&q=80",
+      verified: true,
+      title: "عقد العمل في المكسيك",
+      fullcontent: "احترافي جداً! عقد العمل في المكسيك شرح المحامي جميع البنود وحقوقي والتزاماتي. ساعدني في التفاوض على ظروف أفضل!",
+      service_used: "استشارة قانونية",
+      duration: "35 دقيقة",
+      help_type: ["قانون العمل", "عقد", "تفاوض"],
+    },
+    {
+      id: "16",
+      callId: "call16",
+      clientId: "client16",
+      providerId: "provider16",
+      rating: 5,
+      comment:
+        "محامٍ ملحوظ! مشكلة ضريبية في سويسرا شرح الآثار القانونية والإجراءات وأرشدني إلى متخصص ضريبي محلي. خدمة لا تشوبها شائبة!",
+      isPublic: true,
+      createdAt: new Date(Date.now() - 21 * 24 * 60 * 60 * 1000),
+      clientName: "Lars H.",
+      clientCountry: "سويسرا",
+      serviceType: "lawyer_call",
+      status: "published",
+      helpfulVotes: 12,
+      clientAvatar:
+        "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YXZhdGFyfGVufDB8fDB8fHww",
+      verified: true,
+      title: "مشكلة ضريبية في سويسرا",
+      fullcontent: "محامٍ ملحوظ! مشكلة ضريبية في سويسرا شرح الآثار القانونية والإجراءات وأرشدني إلى متخصص ضريبي محلي. خدمة لا تشوبها شائبة!",
+      service_used: "استشارة قانونية",
+      duration: "45 دقيقة",
+      help_type: ["ضريبة", "قانون", "استشارة"],
+    },
+  ];
 
 
   return language === "en"
@@ -2841,5 +3582,5 @@ const createMockReviews = (language: string): ReviewType[] => {
                 ? reviews_pt
                 : language === "ar"
                   ? reviews_ar
-                : reviews_fr;
+                  : reviews_fr;
 };

@@ -1524,6 +1524,7 @@
    "registerExpat.selectedLanguages": "Idiomas seleccionados",
      "dashboard.messages": "Mis mensajes",
        "dashboard.emptyMessages": "Sin mensajes por el momento",
+        "testimonialOtherReviews": "Descubre otros testimonios de expatriados y viajeros que confiaron en nuestros expertos.",
 
   "registerExpat.ui.financialInfo": "Información financiera y de identidad",
     "validators.firstName": "El nombre es obligatorio",

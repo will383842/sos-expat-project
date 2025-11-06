@@ -22,6 +22,7 @@
   "registerClient.errors.whatsappInvalid": "Пожалуйста, введите действительный номер WhatsApp",
   "registerClient.help.whatsappHint": "Номер WhatsApp с кодом страны (напр.: +7 912 345 67 89)",
    "dashboard.emptyMessages": "Сообщений нет",
+    "testimonialOtherReviews": "Откройте для себя другие отзывы эмигрантов и путешественников, которые доверяли нашим экспертам.",
   "registerClient.success.whatsappValid": "Действительный номер WhatsApp ✓",
   "registerClient.help.phoneHint": "Международный формат с кодом страны (напр.: +7 912 345 67 89)",
   "expertsTitle": "к вашим услугам",
