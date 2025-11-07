@@ -1136,7 +1136,7 @@ const handlePaymentIntentSucceeded = (0, ultraDebugLogger_1.traceFunction)(async
                 // }
                 console.log("✅ Call session updated, scheduling task...");
                 // Schedule call task
-                await (0, tasks_1.scheduleCallTask)(callSessionId, 240);
+                await (0, tasks_1.scheduleCallTask)(callSessionId, 0);
                 console.log("✅ Call task scheduled, sending notifications...");
                 ultraDebugLogger_1.ultraLogger.info("STRIPE_PAYMENT_SUCCEEDED", "Cloud Task créée pour appel à +300s", {
                     callSessionId,

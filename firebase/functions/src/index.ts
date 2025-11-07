@@ -1555,7 +1555,7 @@ const handlePaymentIntentSucceeded = traceFunction(
 
           // Schedule call task
 
-          await scheduleCallTask(callSessionId, 240);
+          await scheduleCallTask(callSessionId, 0);
 
           console.log("✅ Call task scheduled, sending notifications...");
 

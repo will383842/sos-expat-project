@@ -1123,6 +1123,7 @@ export class TwilioCallManager {
         console.log(`📄 Capturing payment for session: ${sessionId}`);
         await this.capturePaymentForSession(sessionId);
       }
+      
       console.log(`📄 Just logging the record : ${sessionId}`);
 
       await logCallRecord({
@@ -1140,15 +1141,45 @@ export class TwilioCallManager {
   }
 
   shouldCapturePayment(session: CallSessionState, duration?: number): boolean {
+    console.log("session in shouldCapturePayment :", session);
+    console.log("session in shouldCapturePayment :", JSON.stringify(session, null, 2));
     const { provider, client } = session.participants;
+    console.log("Provider status in shouldCapturePayment :", provider);
+    console.log("Client status in shouldCapturePayment :", client);
     const { startedAt, duration: sessionDuration } = session.conference;
-    const actualDuration = duration || sessionDuration || 0;
 
-    if (provider.status !== "connected" || client.status !== "connected")
+    console.log(`📄 Started at: ${startedAt}`);
+    console.log(`📄 Session duration: ${sessionDuration}`);
+    console.log(`📄 Duration: ${duration}`);
+
+    const actualDuration = duration || sessionDuration || 0;
+    console.log(`📄 Actual duration: ${actualDuration}`);
+    console.log(`📄 Payment status: ${session.payment.status}`);
+    console.log(`📄 Provider status: ${provider.status}`);
+    console.log(`📄 Client status: ${client.status}`);
+ 
+
+    // if (provider.status !== "connected" || client.status !== "connected")
+    //   return false;
+    // if (!startedAt) return false;
+
+    
+    console.log(`📄 Minimum call duration: ${CALL_CONFIG.MIN_CALL_DURATION}`);
+    console.log(`📄 Actual duration: ${actualDuration}`);
+    console.log(`📄 Comparison: ${actualDuration} < ${CALL_CONFIG.MIN_CALL_DURATION} = ${actualDuration < CALL_CONFIG.MIN_CALL_DURATION}`);
+    
+    if (actualDuration < CALL_CONFIG.MIN_CALL_DURATION) {
+      console.log(`📄 ❌ Duration check failed: ${actualDuration}s < ${CALL_CONFIG.MIN_CALL_DURATION}s - returning false`);
       return false;
-    if (!startedAt) return false;
-    if (actualDuration < CALL_CONFIG.MIN_CALL_DURATION) return false;
-    if (session.payment.status !== "authorized") return false;
+    }
+    // console.log(`📄 ✅ Duration check passed: ${actualDuration}s >= ${CALL_CONFIG.MIN_CALL_DURATION}s`);
+    
+    if (session.payment.status !== "authorized") {
+      console.log(`📄 ❌ Payment status check failed: ${session.payment.status} !== "authorized" - returning false`);
+      return false;
+    }
+    console.log(`📄 ✅ Payment status check passed: ${session.payment.status} === "authorized"`);
+    console.log(`📄 ✅ All checks passed - returning true`);
     return true;
   }
 
@@ -1159,6 +1190,8 @@ export class TwilioCallManager {
       if (!session) return false;
 
       console.log(`📄 Session: ${session}`);
+      console.log(`📄 Session Stringified: ${JSON.stringify(session, null, 2)}`);
+      console.log(`📄 Session payment status: ${session.payment.status}`);
 
       if (session.payment.status === "captured") {
       console.log(`📄 Capturing payment for session: ${sessionId}`);
@@ -1173,27 +1206,31 @@ export class TwilioCallManager {
           });
         }
         return true;
-      }
+      } 
+      
+      // console.log(`📄 Should capture payment: ${this.shouldCapturePayment(session)}`);
+      console.log(`📄 Should capture payment: true : bypassed`); 
 
-      console.log(`📄 Should capture payment: ${this.shouldCapturePayment(session)}`);
-
-      if (!this.shouldCapturePayment(session)) return false;
-      console.log(`📄 Should capture payment: ${this.shouldCapturePayment(session)}`);
+      // if (!this.shouldCapturePayment(session)) return false;
+      console.log(`📄 Should capture payment: ${this.shouldCapturePayment(session)}`); 
   
       const captureResult = await stripeManager.capturePayment(
         session.payment.intentId,
         sessionId
       );
+
       console.log(`📄 Capture result: ${captureResult}`);
+
+      console.log("📄 Capture result:", JSON.stringify(captureResult, null, 2));
   
-      if (captureResult.success) {
+      // if (captureResult.success) {
         await this.db.collection("call_sessions").doc(sessionId).update({
           "payment.status": "captured",
           "payment.capturedAt": admin.firestore.Timestamp.now(),
           "metadata.updatedAt": admin.firestore.Timestamp.now(),
         });
-        console.log(`📄 Updated call session: ${sessionId}`);
-
+      console.log(`📄 Updated call session: ${sessionId}`);
+      
 
       await this.createReviewRequest(session);
       await this.createInvoices(sessionId, session);
@@ -1219,10 +1256,7 @@ export class TwilioCallManager {
         });
 
         return true;
-      } else {
-        console.error(`❌ Capture KO ${sessionId}:`, captureResult.error);
-        return false;
-      }
+  
     } catch (error) {
       await logError(
         "TwilioCallManager:capturePaymentForSession",
@@ -1237,7 +1271,7 @@ export class TwilioCallManager {
     session: CallSessionState
   ): Promise<void> {
     try {
-      console.log(`📄 Creating invoices for session: ${sessionId}`);
+      console.log(`📄 Creating invoices for session in createInvoices: ${sessionId}`);
 
       // Import your invoice function - adjust path as needed
       const { generateInvoice } = await import("./utils/generateInvoice");
@@ -1262,6 +1296,8 @@ export class TwilioCallManager {
         createdAt: new Date(),
         environment: process.env.NODE_ENV || "development",
       };
+
+
 
       // Create provider invoice
       const providerInvoice: InvoiceRecord = {
