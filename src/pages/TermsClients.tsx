@@ -471,104 +471,180 @@ const TermsClients: React.FC = () => {
 
 
   const defaultHi = `
-# सामान्य शर्तें – ग्राहक (वैश्विक)
+# सामान्य सेवा शर्तें – ग्राहक (वैश्विक)
 
-**Ulixai OÜ द्वारा SOS Expat** ("प्लेटफ़ॉर्म", "SOS", "हम")
+**SOS Expat द्वारा Ulixai OÜ** (आगे “प्लेटफ़ॉर्म”, “SOS”, “हम”)
 
-**संस्करण 2.2 – अंतिम अपडेट: 16 जून 2025**
-
----
-
-## 1. उद्देश्य और दायरा
-
-ये शर्तें किसी भी व्यक्ति या संस्था द्वारा प्लेटफ़ॉर्म के उपयोग को नियंत्रित करती हैं जो ग्राहक खाता बनाता है और सेवा बुक करता है ("ग्राहक")। **SOS Expat एक मेलमिलाप प्लेटफ़ॉर्म है** जो ग्राहकों को स्वतंत्र **वकीलों** और स्वतंत्र **सहायकों** से जोड़ता है। Ulixai **कानूनी फर्म नहीं है** और कोई कानूनी/चिकित्सा/कर/विनियमित सलाह प्रदान नहीं करता है और ग्राहक-प्रदाता अनुबंध का **भाग नहीं** है।
+**संस्करण 2.2 – अंतिम अद्यतन: 16 जून 2025**
 
 ---
 
-## 2. खाते, पात्रता और उपयोग
+## 1. उद्देश्य और क्षेत्र
 
-- **18+ और कानूनी क्षमता।** कॉर्पोरेट उपयोगकर्ता प्राधिकार की गारंटी देते हैं।
-- **सटीक जानकारी** प्रदान की जानी चाहिए और अद्यतन रखी जानी चाहिए।
-- **कोई अवैध/अपमानजनक उपयोग नहीं**; प्लेटफ़ॉर्म **आपातकालीन सेवा नहीं** है।
-- **उपलब्धता** "जैसा है" के आधार पर है।
+1.1. ये सामान्य सेवा शर्तें (“T&C”) उस प्लेटफ़ॉर्म के उपयोग को नियंत्रित करती हैं जहाँ कोई भी व्यक्ति या संस्था खाता बनाकर सेवाएँ बुक करती है (आगे “ग्राहक”)।
 
----
+1.2. **Ulixai की भूमिका।** SOS Expat एक प्लेटफ़ॉर्म है जो (i) स्वतंत्र वकीलों (“वकील”) और/या (ii) स्वतंत्र Expat सहायक (“सहायक”) से कनेक्शन प्रदान करता है। Ulixai कोई वकील फर्म नहीं है, कोई कानूनी, चिकित्सा, कर या विनियमित सलाह नहीं देता, और ग्राहक और सेवा प्रदाता (वकील/सहायक) के बीच कोई अनुबंध पक्ष नहीं है।
 
-## 3. बुक करने योग्य सेवाएं
+1.3. **इलेक्ट्रॉनिक सहमति (Click-wrap).** “स्वीकार करें” पर क्लिक करना या प्लेटफ़ॉर्म का उपयोग करना इन T&C की स्वीकृति का संकेत है। SOS तकनीकी रिकॉर्ड रख सकता है (टाइमस्टैम्प, आईडी)।
 
-वकीलों के साथ संक्षिप्त कानूनी मार्गदर्शन कॉल (उदाहरण के लिए, 20 मिनट) और सहायकों के साथ गैर-विनियमित सहायता। परिणाम/गुणवत्ता/उपलब्धता के बारे में **कोई गारंटी नहीं**।
+1.4. **परिवर्तन।** हम T&C और/या शुल्क समय-समय पर प्लेटफ़ॉर्म पर प्रकाशित करके बदल सकते हैं। लगातार उपयोग का अर्थ है सहमति।
 
 ---
 
-## 4. मूल्य, मुद्राएं और कनेक्शन शुल्क
+## 2. खाते, अनुपालन और उपयोग
 
-दिखाई गई **कुल कीमत** में शामिल हैं (i) प्रदाता का पारिश्रमिक और (ii) SOS का **फ्लैट कनेक्शन शुल्क**। **कनेक्शन शुल्क:** प्रति कनेक्शन **19 EUR** या **25 USD** (कर अलग से), परिवर्तन के अधीन और/या भविष्य के प्रभाव के साथ स्थानीय अनुसूचियां। **FX और भुगतान प्रोसेसर शुल्क** लागू हो सकते हैं। कनेक्शन शुल्क पर जहां आवश्यक हो कर शामिल हैं; प्रदाता अपने स्वयं के करों के लिए जिम्मेदार हैं।
+2.1. **आयु और क्षमता।** ग्राहक पुष्टि करता है कि वह कम से कम 18 वर्ष का है और कानूनी रूप से सक्षम है। यदि ग्राहक एक संस्था है, तो उपयोगकर्ता प्रमाणित करता है कि वह संस्था को बाध्य करने के लिए सक्षम है।
 
----
+2.2. **सटीक जानकारी।** प्रदान की गई जानकारी (पहचान, संपर्क विवरण, देश, अनुरोध का उद्देश्य) सही और अद्यतन होनी चाहिए।
 
-## 5. बुकिंग, कॉलिंग और प्रयास
+2.3. **उचित उपयोग।** ग्राहक प्लेटफ़ॉर्म का अवैध या दुरुपयोग के लिए उपयोग नहीं कर सकता। प्लेटफ़ॉर्म को आपातकालीन चिकित्सा या जीवन-धमकाने वाली स्थिति के लिए नहीं उपयोग किया जाना चाहिए।
 
-संपर्क विवरण का आदान-प्रदान करने और/या कॉल/संदेश/वीडियो चैनल खोलने और/या प्रदाता स्वीकृति पर **कनेक्शन** होता है। तत्काल कॉल के लिए ~15 मिनट के भीतर **तीन (3) प्रयासों** तक। प्रयासों के बाद **यदि कोई कनेक्शन नहीं**, तो **पूर्ण रिफंड**। यदि कनेक्शन हुआ लेकिन ग्राहक संलग्न होने में विफल रहा (कोई उत्तर नहीं/अस्वीकृति/जल्दी समाप्ति), तो **भुगतान देय रहता है** और वापसी योग्य नहीं है।
-
----
-
-## 6. वापसी का अधिकार (उपभोक्ता) और तत्काल प्रदर्शन
-
-जहां अनिवार्य स्थानीय कानून वापसी का अधिकार प्रदान करता है, यह लागू हो सकता है जब तक कि ग्राहक **तत्काल प्रदर्शन** का अनुरोध नहीं करता। तत्काल या निकट-अवधि कॉल बुक करके, ग्राहक तत्काल प्रदर्शन का अनुरोध करता है और स्वीकार करता है कि एक बार **पूरी तरह से प्रदर्शन** हो जाने पर, वापसी का अधिकार खो जाता है; यदि वापसी से पहले **आंशिक रूप से प्रदर्शन** किया गया, तो ग्राहक को प्रदर्शन किए गए भाग और **गैर-वापसी योग्य कनेक्शन शुल्क** के लिए भुगतान करना होगा। प्लेटफ़ॉर्म जहां आवश्यक हो **स्पष्ट सहमति** एकत्र करता है।
+2.4. **उपलब्धता।** प्लेटफ़ॉर्म “जैसा उपलब्ध है” आधार पर है; निरंतर उपलब्धता की कोई गारंटी नहीं है (रखरखाव, तकनीकी समस्याएं, FORCE MAJEURE)।
 
 ---
 
-## 7. भुगतान, सुरक्षा, चार्जबैक
+## 3. प्लेटफ़ॉर्म पर बुक की जाने वाली सेवाओं का प्रकार
 
-**एकल भुगतान और विभाजन:** ग्राहक प्रदाता के हिस्से और कनेक्शन शुल्क को कवर करने वाली एक राशि का भुगतान करता है। SOS (या इसका प्रोसेसर) **एकत्र करता है**, अपना शुल्क **काटता है**, और शेष को प्रदाता को **भेजता है**। तीसरे पक्ष के प्रोसेसर के माध्यम से भुगतान; **AML/KYC** लागू हो सकता है। **चार्जबैक/विवाद** के मामले में, SOS प्रोसेसर के साथ सख्ती से आवश्यक डेटा साझा कर सकता है और संबंधित सेवाओं/भुगतानों को निलंबित कर सकता है। **सेट-ऑफ:** ग्राहकों को धनवापसी प्रदाता के हिस्से द्वारा वहन की जाती है; SOS भविष्य के भुगतानों के खिलाफ ऑफसेट कर सकता है।
+3.1. **कानूनी परामर्श।** संक्षिप्त परामर्श (उदा., 20 मिनट)। वकील अपने सुझावों और पेशेवर/कानूनी नियमों के लिए पूरी तरह जिम्मेदार है।
 
----
+3.2. **सहायक सेवाएँ।** गैर-योग्य सहायता (व्यावहारिक मदद, अनौपचारिक अनुवाद, स्थानीय संपर्क आदि)। कानूनी, चिकित्सा या विनियमित सलाह केवल लाइसेंस प्राप्त पेशेवर द्वारा दी जाएगी।
 
-## 8. रद्दीकरण और धनवापसी
-
-जब तक अनिवार्य कानून अन्यथा प्रदान नहीं करता: एक बार कनेक्शन होने पर **कनेक्शन शुल्क गैर-वापसी योग्य है**; प्रदर्शन शुरू होने के बाद प्रदाता का हिस्सा गैर-वापसी योग्य है, प्रदाता की सद्भावना को बचाएं। **कनेक्शन से पहले:** पूर्ण धनवापसी। **प्रदाता रद्दीकरण:** पूर्ण धनवापसी। **प्लेटफ़ॉर्म-दोष तकनीकी मामले:** कानून द्वारा अनुमत सीमा तक SOS के विवेक पर धनवापसी या क्रेडिट।
+3.3. **कोई गारंटी नहीं।** SOS परिणाम, गुणवत्ता, उपयुक्तता या उपलब्धता के लिए कोई गारंटी नहीं देता।
 
 ---
 
-## 9. आचरण, सुरक्षा और सामग्री
+## 4. मूल्य, मुद्रा और Vermittlungsgebühr (मध्यस्थता शुल्क)
 
-सम्मानजनक व्यवहार; कोई गैरकानूनी रिकॉर्डिंग/वितरण नहीं; अवैध कृत्यों की कोई याचिका नहीं। ग्राहक जानकारी वैध, सटीक और निष्पक्ष होनी चाहिए। दुरुपयोग संपर्क फॉर्म के माध्यम से रिपोर्ट किया जा सकता है।
+4.1. **मूल्य।** बुकिंग पर कुल मूल्य में शामिल है: (i) सेवा प्रदाता का शुल्क और (ii) SOS की Vermittlungsgebühr।
+
+4.2. **स्थिर Vermittlungsgebühr।** 19 € (EUR) या 25 $ (USD) प्रति मध्यस्थता (करों के बिना), कुल मूल्य में शामिल। SOS भविष्य में शुल्क बदल सकता है।
+
+4.3. **मुद्रा और रूपांतरण।** कीमतें विभिन्न मुद्राओं में दिखाई जा सकती हैं। भुगतान प्रदाता के विनिमय शुल्क लागू हो सकते हैं।
+
+4.4. **कर।** प्रदर्शित कीमतों में VAT या लागू कर शामिल हो सकते हैं। सेवा प्रदाता अपने कर दायित्व के लिए स्वयं जिम्मेदार हैं।
 
 ---
 
-## 10. डेटा सुरक्षा
+## 5. बुकिंग, कॉल और संपर्क प्रयास
 
-अलग नियंत्रक: **SOS** और **प्रदाता** प्रत्येक अपने स्वयं के उद्देश्यों के लिए व्यक्तिगत डेटा को संसाधित करते हैं (अनुबंध निष्पादन, सुरक्षा/धोखाधड़ी रोकथाम/सेवा सुधार, AML/प्रतिबंध, जहां लागू हो सहमति)। जहां आवश्यक हो सुरक्षा उपायों के साथ **अंतर्राष्ट्रीय स्थानांतरण**। संपर्क फॉर्म के माध्यम से **अधिकार और संपर्क**। सुरक्षा उपाय; आवश्यकतानुसार उल्लंघन अधिसूचनाएं।
+5.1. **“मध्यस्थता” की परिभाषा।** मध्यस्थता तब पूरी मानी जाएगी जब: (a) ग्राहक और सेवा प्रदाता का संपर्क विवरण साझा किया गया और/या (b) कॉल/मैसेज/वीडियो चैनल प्लेटफ़ॉर्म पर खुल गया और/या (c) सेवा प्रदाता ग्राहक के अनुरोध को स्वीकार करता है।
+
+5.2. **कॉल प्रयास।** तुरंत कॉल पर प्लेटफ़ॉर्म 15 मिनट में अधिकतम तीन (3) प्रयास करेगा।
+
+5.3. **सेवा प्रदाता अनुपलब्ध।** यदि मध्यस्थता असफल होती है, बुकिंग रद्द होगी और ग्राहक को पूर्ण रिफंड मिलेगा।
+
+5.4. **ग्राहक उत्तर नहीं देता।** यदि मध्यस्थता हो गई है लेकिन कोई संचार नहीं हुआ, तो भुगतान वापस नहीं किया जाएगा।
+
+5.5. **कनेक्शन गुणवत्ता।** ग्राहक को पर्याप्त नेटवर्क और संगत उपकरण का उपयोग करना होगा। SOS कनेक्शन समस्याओं के लिए जिम्मेदार नहीं है।
+
+---
+
+## 6. वापसी अधिकार (उपभोक्ता) और तात्कालिक सेवा
+
+6.1. **सूचना।** यदि ग्राहक उपभोक्ता है और राष्ट्रीय कानून वापसी अधिकार देता है, तो इसे वैध अवधि में लागू किया जा सकता है, सिवाय तत्काल सेवा की मांग के।
+
+6.2. **वापसी का त्याग।** तत्काल या नियोजित कॉल बुक करने पर वापसी अधिकार समाप्त हो जाता है। पहले से दी गई सेवा के लिए भुगतान किया जाएगा।
+
+6.3. **प्रपत्र।** प्लेटफ़ॉर्म ग्राहक की स्पष्ट सहमति दर्ज करता है।
+
+---
+
+## 7. भुगतान, सुरक्षा और रिफंड
+
+7.1. **सिंगल पेमेंट और वितरण।** ग्राहक एक कुल राशि का भुगतान करता है। SOS Vermittlungsgebühr काटकर शेष सेवा प्रदाता को देता है।
+
+7.2. **सुरक्षा।** भुगतान बाहरी प्रदाता के माध्यम से होते हैं। KYC/AML जांच हो सकती है।
+
+7.3. **भुगतान विवाद।** SOS केवल आवश्यक डेटा भुगतान प्रदाता को देगा।
+
+7.4. **मुआवजा।** रिफंड में सेवा प्रदाता की राशि काटी जा सकती है।
+
+---
+
+## 8. रद्दीकरण और रिफंड
+
+8.1. **सिद्धांत।** मध्यस्थता शुल्क लौटाया नहीं जाएगा। सेवा प्रदाता शुल्क सेवा शुरू होने के बाद नहीं लौटाया जाएगा।
+
+8.2. **ग्राहक द्वारा पूर्व रद्दीकरण।** पूर्ण रिफंड।
+
+8.3. **सेवा प्रदाता द्वारा रद्द।** पूर्ण रिफंड। SOS विकल्प सेवा प्रदाता सुझा सकता है।
+
+8.4. **SOS तकनीकी समस्या।** SOS वैधानिक रूप से रिफंड या क्रेडिट प्रदान कर सकता है।
+
+---
+
+## 9. व्यवहार, सुरक्षा और सामग्री
+
+9.1. **सम्मान।** ग्राहक को सम्मानजनक व्यवहार करना चाहिए और अवैध रिकॉर्डिंग/साझा नहीं करनी चाहिए।
+
+9.2. **प्रदान की गई सामग्री।** सामग्री सही, कानूनी और सटीक होनी चाहिए। ग्राहक SOS और सेवा प्रदाता को किसी दावे से मुक्त रखेगा।
+
+9.3. **शिकायत।** दुरुपयोग प्लेटफ़ॉर्म पर रिपोर्ट किया जा सकता है।
+
+---
+
+## 10. व्यक्तिगत डेटा
+
+10.1. **भूमिकाएँ।** डेटा के संदर्भ में SOS और सेवा प्रदाता स्वतंत्र डेटा नियंत्रक हैं।
+
+10.2. **कानूनी आधार।** अनुबंध पूरा करना, वैध हित (सुरक्षा, धोखाधड़ी रोकथाम), कानूनी दायित्व, सहमति।
+
+10.3. **अंतरराष्ट्रीय ट्रांसफर।** सुरक्षित ट्रांसफर संभव।
+
+10.4. **अधिकार और संपर्क।** प्लेटफ़ॉर्म के संपर्क फ़ॉर्म के माध्यम से।
+
+10.5. **सुरक्षा।** उचित तकनीकी और संगठनात्मक उपाय; डेटा उल्लंघन की सूचना कानून अनुसार।
 
 ---
 
 ## 11. बौद्धिक संपदा
 
-प्लेटफ़ॉर्म IP Ulixai के पास रहता है; ग्राहक को **व्यक्तिगत, सीमित** पहुंच का अधिकार प्राप्त होता है।
+प्लेटफ़ॉर्म, ट्रेडमार्क, लोगो, डेटाबेस और सामग्री सुरक्षित हैं। कोई अधिकार ग्राहक को नहीं दिए जाते।
 
 ---
 
 ## 12. उत्तरदायित्व
 
-प्रदाता **स्वतंत्र** हैं; SOS उनकी सेवाओं/परिणामों के लिए उत्तरदायी नहीं है। अधिकतम अनुमत सीमा तक, सिद्ध प्रत्यक्ष क्षति के लिए SOS की **उत्तरदायित्व सीमा** संबंधित बुकिंग के लिए **भुगतान की गई कुल कीमत** है; **कोई अप्रत्यक्ष/विशेष/परिणामी क्षति नहीं**, जहां अनुमति हो।
+12.1. **स्वतंत्र सेवा प्रदाता।** ग्राहक मानता है कि वकील और सहायक स्वतंत्र हैं। SOS किसी सलाह/सेवा या परिणाम के लिए जिम्मेदार नहीं है।
+
+12.2. **सीमित उत्तरदायित्व।** SOS की अधिकतम उत्तरदायित्व राशि उस बुकिंग के लिए ग्राहक द्वारा भुगतान की गई कुल राशि तक सीमित है।
+
+12.3. **कोई गारंटी नहीं।** SOS लगातार प्लेटफ़ॉर्म संचालन या त्रुटि-रहित सेवा की गारंटी नहीं देता।
 
 ---
 
-## 13. शासी कानून, विवाद और अदालतें
+## 13. लागू कानून और विवाद समाधान
 
-**सामग्री कानून:** सेवा द्वारा कवर किए गए प्रत्येक देश के लिए, **हस्तक्षेप के देश** के कानून निवास पर ग्राहक के अनिवार्य उपभोक्ता अधिकारों के पूर्वाग्रह के बिना SOS-ग्राहक संबंध को नियंत्रित करते हैं। **पूरक:** एस्टोनियाई कानून व्याख्या/वैधता और स्थानीय कानून द्वारा शासित किसी भी मामले को नियंत्रित करता है। **ICC मध्यस्थता:** **गैर-उपभोक्ताओं** के लिए अनिवार्य (स्थान: तेलिन, एस्टोनिया; भाषा: फ्रेंच; गोपनीय)। **उपभोक्ता** ICC मध्यस्थता का विकल्प चुन सकते हैं या अनिवार्य कानून के तहत उपलब्ध अदालतों का उपयोग कर सकते हैं। **एस्टोनियाई अदालतों (तेलिन)** के पास गैर-मध्यस्थता योग्य दावों, पुरस्कार प्रवर्तन और तत्काल उपायों के लिए विशेष अधिकार क्षेत्र है, उपभोक्ता अनिवार्य अधिकारों के अधीन। **कक्षा/सामूहिक कार्रवाइयों को छोड़ दिया गया है** कानून द्वारा अनुमत सीमा तक।
+13.1. **सामग्री कानून।** सेवा के देश का कानून लागू होगा। अतिरिक्त रूप से, व्याख्या और रिक्तियों के लिए एस्टोनियाई कानून।
+
+13.2. **ICC मध्यस्थता / B2C विकल्प।**
+
+* **B2B ग्राहक:** ICC मध्यस्थता, स्थान: Tallinn, भाषा: फ्रेंच।
+* **उपभोक्ता:** ICC या राष्ट्रीय न्यायालय।
+
+13.3. **एस्टोनियाई न्यायालय।** असंबद्ध विवाद, आदेश और आपात उपायों के लिए।
+
+13.4. **समूह दावे का त्याग।** समूह/समानित दावे निषिद्ध, जब तक कानून न कहे।
 
 ---
 
-## 14. समाप्ति/निलंबन और विविध
+## 14. समाप्ति/निलंबन और अन्य
 
-हम धोखाधड़ी, गैर-अनुपालन, दुरुपयोग या कानूनी जोखिम के लिए खातों को निलंबित/बंद कर सकते हैं। व्याख्या के लिए **फ्रेंच प्रबल होती है**। **पृथक्करणीयता** और **गैर-छूट** लागू होती है। पोस्टिंग/इन-ऐप या संपर्क फॉर्म के माध्यम से नोटिस।
+14.1. **निलंबन।** धोखाधड़ी, उल्लंघन या कानूनी जोखिम पर SOS खाता निलंबित कर सकता है।
+
+14.2. **पूर्णता।** T&C प्लेटफ़ॉर्म उपयोग के लिए संपूर्ण समझौता है।
+
+14.3. **भाषा।** अनुवाद संभव; व्याख्या में फ्रेंच संस्करण सर्वोच्च।
+
+14.4. **अंश-अमान्यता।** एक खंड अमान्य होने पर बाकी वैध रहेंगे।
+
+14.5. **त्याग।** किसी अधिकार का उपयोग न करना त्याग नहीं है।
 
 ---
 
 ## 15. संपर्क
 
-**संपर्क फॉर्म (सहायता और कानूनी अनुरोध):** [**http://localhost:5174/contact**](http://localhost:5174/contact)
+**संपर्क फ़ॉर्म (सहायता और कानूनी पूछताछ)**: **http://localhost:5174/contact**
 `;
 
   const defaultFr = `
@@ -750,407 +826,723 @@ La Plateforme, ses marques, logos, bases de données et contenus sont protégés
 `;
 
   const defaultEn = `
-# General Terms – Customers (Global)
+# Terms and Conditions – Clients (Global)
 
-**SOS Expat by Ulixai OÜ** (the “Platform”, “SOS”, “we”)
+**SOS Expat of Ulixai OÜ** (the “Platform,” “SOS,” “we”)
 
-**Version 2.2 – Last updated: 16 June 2025**
+**Version 2.2 – Last updated: June 16, 2025**
 
 ---
 
 ## 1. Purpose and Scope
 
-These Terms govern the use of the Platform by any person or entity creating a customer account and booking a service (the “Customer”). **SOS Expat is a matchmaking platform** connecting Customers with independent **Lawyers** and independent **Helpers**. Ulixai is **not a law firm** and provides no legal/medical/tax/regulated advice and is **not** a party to the Customer–Provider contract.
+1.1. These general terms and conditions (“T&Cs”) govern the use of the Platform by any individual or legal entity who creates a client account and books a service via the Platform (the “Client”).
+
+1.2. **Role of Ulixai.** SOS Expat is a connection platform: (i) with independent lawyers (“Lawyers”), and/or (ii) with independent expat helpers (“Helpers”). Ulixai is not a law firm, does not provide legal, medical, tax, or regulated advice, and is not a party to the service contract concluded between the Client and the provider (Lawyer/Helper).
+
+1.3. **Electronic Acceptance (click-wrap).** By checking the acceptance box and/or using the Platform, the Client accepts these T&Cs (electronic signature). SOS may retain technical evidence (timestamp, identifiers).
+
+1.4. **Changes.** We may update the T&Cs and/or fees with prospective effect by posting on the Platform. Continued use constitutes acceptance.
 
 ---
 
-## 2. Accounts, Eligibility and Use
+## 2. Accounts, Eligibility, and Use
 
-- **18+ and legal capacity.** Corporate users warrant authority.
-- **Accurate information** must be provided and kept up to date.
-- **No illegal/abusive use**; the Platform is **not** an emergency service.
-- **Availability** is “as is.”
+2.1. **Age and Capacity.** The Client declares they are at least 18 years old and legally competent. For legal entities, the user declares they are authorized to bind the company.
 
----
+2.2. **Accuracy of Information.** Information provided (identity, contact methods, country, purpose of request) must be accurate and up-to-date.
 
-## 3. Bookable Services
+2.3. **Proper Use.** The Client shall not engage in any unlawful or abusive use (fraud, illegal content, harassment, infringement of third-party rights, payment diversion, etc.). No use for medical or life-threatening emergencies; SOS is not an emergency service.
 
-Short legal orientation calls with Lawyers (e.g., 20 minutes) and non-regulated assistance with Helpers. **No guarantees** as to outcome/quality/availability.
+2.4. **Availability.** The Platform is provided “as-is”: uninterrupted availability is not guaranteed (maintenance, incidents, force majeure).
 
 ---
 
-## 4. Prices, Currencies and Connection Fee
+## 3. Nature of Bookable Services
 
-The **total price** shown includes (i) the Provider’s remuneration and (ii) SOS’s **flat Connection Fee**. **Connection Fee:** **EUR 19** or **USD 25** per Connection (excl. taxes), subject to change and/or local schedules with prospective effect. **FX and payment processor charges** may apply. Taxes included where required on the Connection Fee; Providers are responsible for their own taxes.
+3.1. **Calls with Lawyers.** Short orientation consultations (e.g., 20 minutes). The Lawyer remains solely responsible for their advice and compliance with professional ethics/local laws.
 
----
+3.2. **Calls with Helpers.** Unregulated assistance (practical guidance, informal translation, local contacts…). No legal/medical/regulated advice without appropriate local license.
 
-## 5. Booking, Calling and Attempts
-
-A **Connection** occurs upon exchanging contact details and/or opening a call/message/video channel and/or Provider acceptance. Up to **three (3) attempts** within ~15 minutes for immediate calls. **If no Connection** after attempts, **full refund**. If a Connection occurred but the Customer fails to engage (no answer/refusal/early termination), **payment remains due** and non-refundable.
+3.3. **No Guarantee.** We do not guarantee outcome, quality, suitability for specific needs, or provider availability.
 
 ---
 
-## 6. Withdrawal Right (Consumers) & Immediate Performance
+## 4. Prices, Currencies, and Connection Fees
 
-Where mandatory local law grants a withdrawal right, it may apply unless the Customer requests **immediate performance**. By booking an immediate or near-term call, the Customer requests immediate performance and acknowledges that once **fully performed**, the withdrawal right is lost; if **partially performed** before withdrawal, the Customer must pay for the part performed and the **non-refundable Connection Fee**. The Platform collects **explicit consent** where required.
+4.1. **Price Display.** The total price shown at booking includes: (i) the provider’s fee (Lawyer/Helper) as per the presented offer, and (ii) the connection fee due to SOS (flat fee).
+
+4.2. **Connection Fee (flat).** €19 (EUR) or $25 (USD) per connection (excluding taxes), included in the total price. SOS may modify this fee and/or publish local rates per country/currency with prospective effect.
+
+4.3. **Currencies & Conversion.** Prices may be offered in multiple currencies. Payment provider fees/exchange rates may apply.
+
+4.4. **Taxes.** Displayed prices include VAT or applicable taxes on the connection fee, if any. Providers remain responsible for their own tax obligations.
+
+---
+
+## 5. Booking, Call, and Contact Attempts
+
+5.1. **Definition of “Connection.”** Connection occurs when: (a) Client–Provider contact information is transmitted, and/or (b) a call/messaging/video channel is opened via the Platform, and/or (c) the Provider accepts a Client request.
+
+5.2. **Call Attempts.** For immediate calls, the Platform makes up to three (3) attempts within about 15 minutes (unless stated otherwise in-app).
+
+5.3. **Provider Unavailability.** If no connection occurs after attempts, the booking is canceled and the Client is fully refunded.
+
+5.4. **Client Non-Response.** If a connection occurs (per 5.1) but no effective exchange happens (no answer, busy, refusal, premature end), payment remains due and non-refundable.
+
+5.5. **Communication Quality.** Client must be in adequate coverage area and use compatible equipment. SOS is not responsible for third-party network interruptions.
+
+---
+
+## 6. Right of Withdrawal (Consumers) & Immediate Execution
+
+6.1. **Information.** If the Client is a consumer and local mandatory law provides a right of withdrawal, it may be exercised within legal deadlines unless the Client requests immediate execution.
+
+6.2. **Waiver.** By booking an immediate or scheduled call before the legal deadline expires, the Client requests immediate execution and acknowledges that, once fully performed, the right of withdrawal is lost. For partial execution before withdrawal, the Client must pay for services already provided and the connection fee, non-refundable.
+
+6.3. **Formality.** The Platform collects explicit acceptance of these points at booking, when required.
 
 ---
 
 ## 7. Payment, Security, Chargebacks
 
-**Single payment & split:** Customer pays one amount covering the Provider’s share and the Connection Fee. SOS (or its processor) **collects**, **deducts** its Fee, and **remits** the remainder to the Provider. Payments via third-party processors; **AML/KYC** may apply. In case of **chargeback/dispute**, SOS may share strictly necessary data with the processor and suspend related services/payouts. **Set-off:** refunds to Customers are borne by the Provider’s share; SOS may offset against future payouts.
+7.1. **Single Payment & Allocation.** The Client makes a single payment via the Platform covering (i) the Provider’s share and (ii) the connection fee. SOS (or its payment provider) collects, deducts its fees, and transfers the balance to the Provider.
+
+7.2. **Security.** Payments are processed by third-party payment providers. KYC/AML controls may apply.
+
+7.3. **Chargebacks/Disputes.** In case of payment dispute, SOS may provide strictly necessary data to the payment provider and suspend related services/payments.
+
+7.4. **Compensation.** If a refund is granted to the Client, the corresponding share is deducted from the relevant provider; SOS may offset against future payments.
 
 ---
 
 ## 8. Cancellations and Refunds
 
-Unless mandatory law provides otherwise: the **Connection Fee is non-refundable** once a Connection occurs; the Provider’s share is non-refundable once performance starts, save goodwill by the Provider. **Before Connection:** full refund. **Provider cancellation:** full refund. **Platform-fault technical cases:** refund or credit at SOS’s discretion to the extent permitted by law.
+8.1. **General.** Except for mandatory legal provisions:
+
+* connection fees are non-refundable once the connection occurs (5.1);
+* provider fees are non-refundable once the service starts, unless waived by the Provider.
+
+8.2. **Client Cancellation Before Connection.** Full refund.
+
+8.3. **Provider Cancellation.** Full refund. SOS may offer rerouting to another available provider.
+
+8.4. **Technical Issues Attributable to SOS.** Refund or re-credit at SOS discretion, to the extent permitted by law.
 
 ---
 
-## 9. Conduct, Safety and Content
+## 9. Behavior, Security, and Content
 
-Respectful behaviour; no unlawful recording/distribution; no solicitation of illegal acts. Customer information must be lawful, accurate and fair. Abuse can be reported via the contact form.
+9.1. **Respect.** Client agrees to behave respectfully, not record or share exchanges without legally required consent, and not solicit illegal acts.
 
----
+9.2. **Provided Content.** Information provided must be honest, accurate, and lawful. Client indemnifies SOS and Provider against claims related to illegal content.
 
-## 10. Data Protection
-
-Separate controllers: **SOS** and the **Provider** each process personal data for their own purposes (contract performance, security/fraud prevention/service improvement, AML/sanctions, consent where applicable). **International transfers** with safeguards where required. **Rights & contact** via the contact form. Security measures; breach notifications as required.
+9.3. **Reporting.** Any abuse can be reported via the contact form.
 
 ---
 
-## 11. IP
+## 10. Personal Data
 
-Platform IP remains with Ulixai; Customer receives a **personal, limited** right of access.
+10.1. **Roles.** For data strictly necessary for connection, SOS and the Provider act as independent controllers for their own purposes.
+
+10.2. **Bases & Purposes.** Contract performance (booking), legitimate interests (security, fraud prevention, improvement), compliance (AML/sanctions), and consent if required.
+
+10.3. **International Transfers** possible with appropriate safeguards.
+
+10.4. **Rights & Contact.** Exercised via Platform contact form.
+
+10.5. **Security.** Reasonable technical/organizational measures; breach notification as required by law.
+
+---
+
+## 11. Intellectual Property
+
+The Platform, its trademarks, logos, databases, and content are protected. No rights are transferred to the Client. Use is strictly limited to personal access per the T&Cs.
 
 ---
 
 ## 12. Liability
 
-Providers are **independent**; SOS is not liable for their services/results. To the maximum extent permitted, SOS’s **liability cap** for proven direct damage is the **total price paid** for the relevant booking; **no indirect/special/consequential damages**, where permitted.
+12.1. **Independent Providers.** Client acknowledges that Lawyers and Helpers are independent. SOS is not responsible for advice/services provided or their outcome.
+
+12.2. **Limitations.** To the extent permitted by law, SOS’s liability for proven direct damage is limited to the total price paid by the Client for the relevant booking. SOS is not liable for indirect/special/consequential damages (loss of opportunity, profit, reputation, etc.), to the extent permitted.
+
+12.3. **No Guarantee.** SOS does not guarantee continuous availability of the Platform or absence of errors.
 
 ---
 
-## 13. Governing Law, Disputes and Courts
+## 13. Governing Law, Dispute Resolution, and Competent Courts
 
-**Substantive law:** for each country covered by the service, the laws of the **Country of Intervention** govern the SOS–Customer relationship without prejudice to the Customer’s mandatory consumer rights at residence. **Supplementary:** Estonian law governs interpretation/validity and any matter not governed by local law. **ICC arbitration:** mandatory for **non-consumers** (seat: Tallinn, Estonia; language: French; confidential). **Consumers** may opt-in to ICC arbitration or use courts available under mandatory law. **Estonian courts (Tallinn)** have exclusive jurisdiction for non-arbitrable claims, award enforcement and urgent measures, subject to consumer mandatory rights. **Class/collective actions are waived** to the extent permitted by law.
+13.1. **Substantive Law.** For each service covering a given country, the SOS–Client relationship is governed by the laws of the country of intervention without depriving the consumer of mandatory residence rights. Supplementarily, Estonian law governs T&Cs interpretation/validity and issues not governed by local law.
+
+13.2. **ICC Arbitration (Consumer Option) / Mandatory for Non-Consumer.**
+
+* **Non-consumer Client (B2B):** ICC arbitration mandatory, seat: Tallinn (Estonia), language: French, substantive law per 13.1, confidential procedure.
+* **Consumer Client:** Option to resort to ICC arbitration (same terms) or competent courts under applicable mandatory laws.
+
+13.3. **Estonian Courts Competence (Tallinn).** For any non-arbitrable claim, enforcement of awards, or urgent measures, exclusive competence of Estonian courts (Tallinn), without prejudice to mandatory consumer rights.
+
+13.4. **Waiver of Class Actions (where permitted).** Any collective/group/representative action is excluded, unless mandatory law of consumer residence provides otherwise.
 
 ---
 
 ## 14. Termination/Suspension and Miscellaneous
 
-We may suspend/close accounts for fraud, non-compliance, abuse or legal risk. **French prevails** for interpretation. **Severability** and **no-waiver** apply. Notices by posting/in-app or via contact form.
+14.1. **Suspension.** SOS may suspend/close accounts in case of fraud, non-compliance, abuse, or legal risk.
+
+14.2. **Entire Agreement.** The T&Cs constitute the entire agreement between SOS and the Client for Platform use.
+
+14.3. **Languages.** Translations may be provided; French prevails for interpretation.
+
+14.4. **Partial Invalidity.** If a provision is invalid/unenforceable, the rest remains in force; it may be replaced by a valid clause of equivalent effect.
+
+14.5. **No Waiver.** Failure to exercise a right does not constitute waiver.
 
 ---
 
 ## 15. Contact
 
-**Contact form (support & legal requests):** **http://localhost:5174/contact**
+**Contact Form (Support & Legal Requests):** **[http://localhost:5174/contact](http://localhost:5174/contact)**
 `;
 
   const defaultEs = `
-# Términos Generales – Clientes (Global)
+# Condiciones Generales – Clientes (Global)
 
-**SOS Expat de Ulixai OÜ** (la "Plataforma", "SOS", "nosotros")
+**SOS Expat de Ulixai OÜ** (la “Plataforma”, “SOS”, “nosotros”)
 
 **Versión 2.2 – Última actualización: 16 de junio de 2025**
 
 ---
 
-## 1. Propósito y Alcance
+## 1. Objeto y alcance
 
-Estos Términos rigen el uso de la Plataforma por cualquier persona o entidad que cree una cuenta de cliente y reserve un servicio (el "Cliente"). **SOS Expat es una plataforma de conexión** que conecta a Clientes con **Abogados** independientes y **Ayudantes** independientes. Ulixai **no es un bufete de abogados** y no proporciona asesoramiento legal/médico/fiscal/regulado y **no** es parte del contrato Cliente-Proveedor.
+1.1. Estas condiciones generales (“CG”) regulan el uso de la Plataforma por cualquier persona física o jurídica que cree una cuenta de cliente y reserve un servicio a través de la Plataforma (el “Cliente”).
 
----
+1.2. **Rol de Ulixai.** SOS Expat es una plataforma de conexión: (i) con abogados independientes (“Abogados”), y/o (ii) con ayudantes expatriados independientes (“Ayudantes”). Ulixai no es un despacho de abogados, no proporciona asesoramiento legal, médico, fiscal o regulado, y no es parte del contrato de prestación celebrado entre el Cliente y el proveedor (Abogado/Ayudante).
 
-## 2. Cuentas, Elegibilidad y Uso
+1.3. **Aceptación electrónica (click-wrap).** Al marcar la casilla de aceptación y/o utilizar la Plataforma, el Cliente acepta estas CG (firma electrónica). SOS puede conservar pruebas técnicas (sello de tiempo, identificadores).
 
-- **18+ y capacidad legal.** Los usuarios corporativos garantizan autoridad.
-- **Información precisa** debe proporcionarse y mantenerse actualizada.
-- **Sin uso ilegal/abusivo**; la Plataforma **no** es un servicio de emergencia.
-- **Disponibilidad** es "tal cual".
+1.4. **Modificaciones.** Podemos actualizar las CG y/o tarifas con efecto prospectivo mediante publicación en la Plataforma. La continuación del uso implica aceptación.
 
 ---
 
-## 3. Servicios Reservables
+## 2. Cuentas, elegibilidad y uso
 
-Llamadas breves de orientación legal con Abogados (por ejemplo, 20 minutos) y asistencia no regulada con Ayudantes. **Sin garantías** sobre resultado/calidad/disponibilidad.
+2.1. **Edad y capacidad.** El Cliente declara tener al menos 18 años y capacidad legal. Para personas jurídicas, el usuario declara estar autorizado para comprometer a la empresa.
 
----
+2.2. **Exactitud de la información.** La información proporcionada (identidad, medios de contacto, país, objeto de la solicitud) debe ser exacta y estar actualizada.
 
-## 4. Precios, Monedas y Tarifa de Conexión
+2.3. **Uso adecuado.** El Cliente no deberá realizar ningún uso ilícito o abusivo (fraude, contenido ilegal, acoso, vulneración de derechos de terceros, desvío de pagos, etc.). No se permite el uso para situaciones médicas o de emergencia vital; SOS no es un servicio de urgencias.
 
-El **precio total** mostrado incluye (i) la remuneración del Proveedor y (ii) la **Tarifa de Conexión fija** de SOS. **Tarifa de Conexión:** **19 EUR** o **25 USD** por Conexión (impuestos excl.), sujeto a cambios y/o tarifas locales con efecto prospectivo. Pueden aplicarse **cargos de procesador de pagos y FX**. Impuestos incluidos cuando sea requerido en la Tarifa de Conexión; los Proveedores son responsables de sus propios impuestos.
-
----
-
-## 5. Reserva, Llamadas e Intentos
-
-Una **Conexión** ocurre al intercambiar detalles de contacto y/o abrir un canal de llamada/mensaje/video y/o aceptación del Proveedor. Hasta **tres (3) intentos** en ~15 minutos para llamadas inmediatas. **Si no hay Conexión** después de los intentos, **reembolso completo**. Si ocurrió una Conexión pero el Cliente no logra comprometerse (sin respuesta/rechazo/terminación temprana), **el pago sigue siendo debido** y no reembolsable.
+2.4. **Disponibilidad.** La Plataforma se proporciona “tal cual”: no se garantiza disponibilidad continua (mantenimiento, incidentes, fuerza mayor).
 
 ---
 
-## 6. Derecho de Desistimiento (Consumidores) y Ejecución Inmediata
+## 3. Naturaleza de los servicios reservables
 
-Cuando la ley local obligatoria otorga un derecho de desistimiento, puede aplicarse a menos que el Cliente solicite **ejecución inmediata**. Al reservar una llamada inmediata o a corto plazo, el Cliente solicita ejecución inmediata y reconoce que una vez **completamente ejecutada**, el derecho de desistimiento se pierde; si **parcialmente ejecutada** antes del desistimiento, el Cliente debe pagar por la parte ejecutada y la **Tarifa de Conexión no reembolsable**. La Plataforma recoge **consentimiento explícito** cuando sea requerido.
+3.1. **Llamadas con Abogados.** Consultas breves de orientación (p.ej., 20 minutos). El Abogado es el único responsable de sus consejos y del cumplimiento de su ética profesional y leyes locales.
 
----
+3.2. **Llamadas con Ayudantes.** Asistencia no regulada (orientación práctica, traducción informal, contactos locales…). No se proporciona asesoramiento legal, médico o regulado sin la licencia local adecuada.
 
-## 7. Pago, Seguridad, Contracargos
-
-**Pago único y división:** El Cliente paga un monto que cubre la parte del Proveedor y la Tarifa de Conexión. SOS (o su procesador) **recauda**, **deduce** su Tarifa y **remite** el resto al Proveedor. Pagos a través de procesadores de terceros; puede aplicarse **AML/KYC**. En caso de **contracargo/disputa**, SOS puede compartir datos estrictamente necesarios con el procesador y suspender servicios/pagos relacionados. **Compensación:** los reembolsos a Clientes son soportados por la parte del Proveedor; SOS puede compensar contra pagos futuros.
+3.3. **Sin garantía.** No garantizamos resultados, calidad, adecuación a necesidades específicas ni disponibilidad de los proveedores.
 
 ---
 
-## 8. Cancelaciones y Reembolsos
+## 4. Precios, monedas y tarifas de conexión
 
-A menos que la ley obligatoria disponga lo contrario: la **Tarifa de Conexión no es reembolsable** una vez que ocurre una Conexión; la parte del Proveedor no es reembolsable una vez que comienza la ejecución, salvo buena voluntad del Proveedor. **Antes de la Conexión:** reembolso completo. **Cancelación del Proveedor:** reembolso completo. **Casos técnicos por falla de la Plataforma:** reembolso o crédito a discreción de SOS en la medida permitida por la ley.
+4.1. **Visualización de precios.** El precio total mostrado al momento de la reserva incluye: (i) la remuneración del proveedor (Abogado/Ayudante) según la oferta presentada, y (ii) la tarifa de conexión debida a SOS (tarifa fija).
 
----
+4.2. **Tarifa de conexión (fija).** 19 € (EUR) o 25 $ (USD) por conexión (sin impuestos), incluida en el precio total. SOS puede modificar esta tarifa y/o publicar tarifas locales por país/moneda con efecto prospectivo.
 
-## 9. Conducta, Seguridad y Contenido
+4.3. **Monedas y conversión.** Los precios pueden mostrarse en varias monedas. Pueden aplicarse comisiones/tasas de cambio del proveedor de pago.
 
-Comportamiento respetuoso; sin grabación/distribución ilegal; sin solicitud de actos ilegales. La información del Cliente debe ser legal, precisa y justa. Los abusos pueden ser reportados a través del formulario de contacto.
-
----
-
-## 10. Protección de Datos
-
-Controladores separados: **SOS** y el **Proveedor** procesan datos personales para sus propios fines (ejecución del contrato, seguridad/prevención de fraude/mejora del servicio, AML/sanciones, consentimiento cuando aplique). **Transferencias internacionales** con salvaguardas cuando sea requerido. **Derechos y contacto** a través del formulario de contacto. Medidas de seguridad; notificaciones de violación según sea requerido.
+4.4. **Impuestos.** Los precios mostrados incluyen, cuando corresponda, IVA o impuestos aplicables sobre la tarifa de conexión. Los proveedores siguen siendo responsables de sus obligaciones fiscales.
 
 ---
 
-## 11. PI
+## 5. Reserva, llamada e intentos de contacto
 
-La PI de la Plataforma permanece con Ulixai; el Cliente recibe un derecho de acceso **personal y limitado**.
+5.1. **Definición de “conexión”.** Se considera realizada cuando: (a) se transmiten los datos de contacto Cliente–Proveedor, y/o (b) se abre un canal de llamada/mensajería/video a través de la Plataforma, y/o (c) el Proveedor acepta la solicitud del Cliente.
+
+5.2. **Intentos de llamada.** En caso de llamada inmediata, la Plataforma realiza hasta tres (3) intentos en aproximadamente 15 minutos (a menos que se indique lo contrario en la app).
+
+5.3. **Indisponibilidad del proveedor.** Si no se logra ninguna conexión tras los intentos, la reserva se cancela y el Cliente recibe un reembolso completo.
+
+5.4. **No respuesta del Cliente.** Si se realiza la conexión (según 5.1) pero no se produce un intercambio efectivo (no contesta, ocupado, rechazo, interrupción prematura), el pago sigue siendo debido y no es reembolsable.
+
+5.5. **Calidad de la comunicación.** El Cliente debe encontrarse en una zona con cobertura suficiente y usar un equipo compatible. SOS no se responsabiliza de interrupciones o redes de terceros.
+
+---
+
+## 6. Derecho de desistimiento (consumidores) y ejecución inmediata
+
+6.1. **Información.** Si el Cliente es consumidor y la ley local imperativa prevé un derecho de desistimiento, este podrá ejercerse dentro de los plazos legales, salvo que el Cliente solicite la ejecución inmediata del servicio.
+
+6.2. **Renuncia.** Al reservar una llamada inmediata o programada antes de que expire el plazo legal, el Cliente solicita la ejecución inmediata y reconoce que, una vez prestado el servicio por completo, pierde el derecho de desistimiento. En caso de ejecución parcial antes del desistimiento, el Cliente debe pagar la parte ya prestada y la tarifa de conexión, no reembolsable.
+
+6.3. **Formalidad.** La Plataforma recoge la aceptación explícita de estos puntos al realizar la reserva, cuando sea necesario.
+
+---
+
+## 7. Pago, seguridad y contracargos
+
+7.1. **Pago único y distribución.** El Cliente realiza un único pago a través de la Plataforma cubriendo (i) la parte del Proveedor y (ii) la tarifa de conexión. SOS (o su proveedor de pago) cobra, deduce sus comisiones y transfiere el saldo al Proveedor.
+
+7.2. **Seguridad.** Los pagos se realizan mediante proveedores de pago externos. Pueden aplicarse controles KYC/AML.
+
+7.3. **Contracargos/Disputas.** En caso de disputa de pago, SOS puede facilitar al proveedor de pago los datos estrictamente necesarios y suspender los servicios/pagos relacionados.
+
+7.4. **Compensación.** Si se concede un reembolso al Cliente, la parte correspondiente se deduce del proveedor implicado; SOS puede compensar en pagos futuros.
+
+---
+
+## 8. Cancelaciones y reembolsos
+
+8.1. **General.** Salvo disposiciones legales imperativas:
+
+* Las tarifas de conexión no son reembolsables una vez realizada la conexión (5.1).
+* La parte del Proveedor no es reembolsable una vez comenzado el servicio, salvo gesto comercial del Proveedor.
+
+8.2. **Cancelación por el Cliente antes de la conexión.** Reembolso completo.
+
+8.3. **Cancelación por el Proveedor.** Reembolso completo. SOS puede ofrecer redirigir a otro proveedor disponible.
+
+8.4. **Problemas técnicos imputables a SOS.** Reembolso o crédito a discreción de SOS, en la medida permitida por la ley.
+
+---
+
+## 9. Comportamiento, seguridad y contenidos
+
+9.1. **Respeto.** El Cliente se compromete a comportarse respetuosamente, no grabar ni difundir el intercambio sin consentimiento legal y no solicitar actos ilegales.
+
+9.2. **Contenidos proporcionados.** La información transmitida debe ser veraz, exacta y lícita. El Cliente indemniza a SOS y al Proveedor frente a cualquier reclamación relacionada con contenidos ilegales que proporcione.
+
+9.3. **Denuncias.** Cualquier abuso puede notificarse a través del formulario de contacto.
+
+---
+
+## 10. Datos personales
+
+10.1. **Roles.** Para los datos estrictamente necesarios para la conexión, SOS y el Proveedor actúan como responsables independientes para sus propios fines.
+
+10.2. **Bases y fines.** Ejecución del contrato (reserva), intereses legítimos (seguridad, prevención de fraude, mejora), cumplimiento normativo (AML/sanciones) y consentimiento si se requiere.
+
+10.3. **Transferencias internacionales** posibles con garantías adecuadas.
+
+10.4. **Derechos y contacto.** Ejercicio a través del formulario de contacto de la Plataforma.
+
+10.5. **Seguridad.** Medidas técnicas/organizativas razonables; notificación de violaciones según la ley.
+
+---
+
+## 11. Propiedad intelectual
+
+La Plataforma, sus marcas, logotipos, bases de datos y contenidos están protegidos. No se ceden derechos al Cliente. El uso se limita estrictamente a acceso personal conforme a las CG.
 
 ---
 
 ## 12. Responsabilidad
 
-Los Proveedores son **independientes**; SOS no es responsable de sus servicios/resultados. En la máxima medida permitida, el **límite de responsabilidad** de SOS por daño directo probado es el **precio total pagado** por la reserva relevante; **sin daños indirectos/especiales/consecuentes**, donde sea permitido.
+12.1. **Proveedores independientes.** El Cliente reconoce que Abogados y Ayudantes son independientes. SOS no se responsabiliza de los consejos/servicios proporcionados ni de sus resultados.
+
+12.2. **Limitaciones.** En la medida permitida por la ley, la responsabilidad de SOS por daño directo probado se limita al precio total pagado por el Cliente para la reserva correspondiente. SOS no es responsable de daños indirectos/especiales/consecuentes (pérdida de oportunidad, beneficios, imagen, etc.), en la medida permitida.
+
+12.3. **Sin garantía.** SOS no garantiza la disponibilidad continua de la Plataforma ni la ausencia de errores.
 
 ---
 
-## 13. Ley Aplicable, Disputas y Tribunales
+## 13. Ley aplicable, resolución de conflictos y tribunales competentes
 
-**Ley sustantiva:** para cada país cubierto por el servicio, las leyes del **País de Intervención** rigen la relación SOS-Cliente sin perjuicio de los derechos obligatorios del consumidor en su residencia. **Suplementaria:** la ley estonia rige la interpretación/validez y cualquier asunto no regido por la ley local. **Arbitraje CCI:** obligatorio para **no consumidores** (sede: Tallin, Estonia; idioma: francés; confidencial). Los **Consumidores** pueden optar por el arbitraje CCI o usar tribunales disponibles bajo ley obligatoria. Los **tribunales estonios (Tallin)** tienen jurisdicción exclusiva para reclamaciones no arbitrables, ejecución de laudos y medidas urgentes, sujeto a derechos obligatorios del consumidor. **Las acciones colectivas/de clase se renuncian** en la medida permitida por la ley.
+13.1. **Derecho sustantivo.** Para cada servicio que cubra un país, la relación SOS–Cliente se rige por las leyes del país de intervención sin privar al consumidor de sus derechos imperativos de residencia. Supletoriamente, el derecho estonio rige la interpretación/validez de las CG y cualquier cuestión no regulada por la ley local.
+
+13.2. **Arbitraje CCI (opción consumidor) / obligatorio para no consumidores.**
+
+* **Cliente no consumidor (B2B):** arbitraje CCI obligatorio, sede: Tallinn (Estonia), idioma: francés, derecho sustantivo según 13.1, procedimiento confidencial.
+* **Cliente consumidor:** opción de recurrir al arbitraje CCI (mismas condiciones) o tribunales competentes según leyes imperativas aplicables.
+
+13.3. **Tribunales estonios (Tallinn).** Para cualquier reclamo no arbitrable, ejecución de laudos o medidas urgentes, competencia exclusiva de tribunales de Estonia (Tallinn), sin perjuicio de los derechos imperativos del consumidor.
+
+13.4. **Renuncia a acciones colectivas (dentro de lo permitido).** Se excluye cualquier acción colectiva/de grupo/repre- sentativa, salvo que la ley imperativa del lugar de residencia del consumidor disponga lo contrario.
 
 ---
 
-## 14. Terminación/Suspensión y Misceláneos
+## 14. Terminación/suspensión y diversos
 
-Podemos suspender/cerrar cuentas por fraude, incumplimiento, abuso o riesgo legal. **El francés prevalece** para interpretación. Aplica **Separabilidad** y **no renuncia**. Avisos por publicación/en la aplicación o a través del formulario de contacto.
+14.1. **Suspensión.** SOS puede suspender/cerrar la cuenta en caso de fraude, incumplimiento, abuso o riesgo legal.
+
+14.2. **Integridad.** Las CG constituyen el acuerdo completo entre SOS y el Cliente para el uso de la Plataforma.
+
+14.3. **Idiomas.** Pueden proporcionarse traducciones; prevalece el francés para interpretación.
+
+14.4. **Nulidad parcial.** Si una disposición es nula/inaplicable, el resto sigue en vigor; puede sustituirse por una cláusula válida de efecto equivalente.
+
+14.5. **No renuncia.** La falta de ejercicio de un derecho no implica renuncia.
 
 ---
 
 ## 15. Contacto
 
-**Formulario de contacto (soporte y solicitudes legales):** [**http://localhost:5174/contact**](http://localhost:5174/contact)
+**Formulario de contacto (soporte y solicitudes legales):** **[http://localhost:5174/contact](http://localhost:5174/contact)**
 `;
 
   const defaultDe = `
-# Allgemeine Bedingungen – Kunden (Global)
+# Allgemeine Geschäftsbedingungen – Kunden (Global)
 
-**SOS Expat von Ulixai OÜ** (die "Plattform", "SOS", "wir")
+**SOS Expat von Ulixai OÜ** (im Folgenden „Plattform“, „SOS“, „wir“)
 
 **Version 2.2 – Letzte Aktualisierung: 16. Juni 2025**
 
 ---
 
-## 1. Zweck und Geltungsbereich
+## 1. Zweck und Anwendungsbereich
 
-Diese Bedingungen regeln die Nutzung der Plattform durch jede Person oder Organisation, die ein Kundenkonto erstellt und einen Service bucht (der "Kunde"). **SOS Expat ist eine Vermittlungsplattform**, die Kunden mit unabhängigen **Anwälten** und unabhängigen **Helfern** verbindet. Ulixai ist **keine Anwaltskanzlei** und bietet keine rechtliche/medizinische/steuerliche/regulierte Beratung und ist **keine** Vertragspartei des Kunde-Anbieter-Vertrags.
+1.1. Diese Allgemeinen Geschäftsbedingungen („AGB“) regeln die Nutzung der Plattform durch jede natürliche oder juristische Person, die ein Kundenkonto erstellt und über die Plattform eine Dienstleistung bucht (im Folgenden „Kunde“).
 
----
+1.2. **Rolle von Ulixai.** SOS Expat ist eine Plattform, die (i) unabhängige Anwälte („Anwälte“) und/oder (ii) unabhängige Expat-Helfer („Helfer“) vermittelt. Ulixai ist keine Anwaltskanzlei, bietet keine rechtliche, medizinische, steuerliche oder regulierte Beratung an und ist keine Vertragspartei zwischen Kunde und Anbieter (Anwalt/Helfer).
 
-## 2. Konten, Berechtigung und Nutzung
+1.3. **Elektronische Zustimmung (Click-wrap).** Das Anklicken der Zustimmung oder die Nutzung der Plattform bedeutet die Annahme dieser AGB (elektronische Signatur). SOS kann technische Nachweise speichern (Zeitstempel, IDs).
 
-- **18+ und Geschäftsfähigkeit.** Unternehmensnutzer gewährleisten Befugnis.
-- **Genaue Informationen** müssen bereitgestellt und aktuell gehalten werden.
-- **Keine illegale/missbräuchliche Nutzung**; die Plattform ist **kein** Notdienst.
-- **Verfügbarkeit** ist "wie besehen".
+1.4. **Änderungen.** Wir können die AGB und/oder Gebühren mit Wirkung für die Zukunft durch Veröffentlichung auf der Plattform aktualisieren. Die fortgesetzte Nutzung bedeutet Zustimmung.
 
 ---
 
-## 3. Buchbare Dienste
+## 2. Konten, Compliance und Nutzung
 
-Kurze rechtliche Orientierungsgespräche mit Anwälten (z.B. 20 Minuten) und nicht regulierte Unterstützung mit Helfern. **Keine Garantien** bezüglich Ergebnis/Qualität/Verfügbarkeit.
+2.1. **Alter und Geschäftsfähigkeit.** Der Kunde erklärt, dass er mindestens 18 Jahre alt ist und voll geschäftsfähig ist. Bei juristischen Personen bestätigt der Nutzer, dass er befugt ist, das Unternehmen zu binden.
 
----
+2.2. **Genauigkeit der Informationen.** Bereitgestellte Informationen (Identität, Kontaktdaten, Land, Zweck der Anfrage) müssen korrekt und aktuell sein.
 
-## 4. Preise, Währungen und Verbindungsgebühr
+2.3. **Richtige Nutzung.** Der Kunde darf die Plattform nicht rechtswidrig oder missbräuchlich verwenden (Betrug, rechtswidrige Inhalte, Belästigung, Verletzung von Rechten Dritter, Umgehung von Zahlungen usw.). Die Plattform darf nicht für Notfälle im medizinischen oder lebensbedrohlichen Bereich genutzt werden; SOS ist kein Notfalldienst.
 
-Der angezeigte **Gesamtpreis** umfasst (i) die Vergütung des Anbieters und (ii) die **pauschale Verbindungsgebühr** von SOS. **Verbindungsgebühr:** **19 EUR** oder **25 USD** pro Verbindung (ohne Steuern), vorbehaltlich Änderungen und/oder lokaler Zeitpläne mit prospektiver Wirkung. **Wechselkurs- und Zahlungsabwicklungsgebühren** können anfallen. Steuern enthalten, wo erforderlich auf die Verbindungsgebühr; Anbieter sind für ihre eigenen Steuern verantwortlich.
-
----
-
-## 5. Buchung, Anrufe und Versuche
-
-Eine **Verbindung** erfolgt beim Austausch von Kontaktdaten und/oder Öffnen eines Anruf-/Nachrichten-/Videokanals und/oder Anbieterakzeptanz. Bis zu **drei (3) Versuche** innerhalb von ~15 Minuten für sofortige Anrufe. **Bei keiner Verbindung** nach Versuchen, **volle Rückerstattung**. Wenn eine Verbindung erfolgte, aber der Kunde sich nicht engagiert (keine Antwort/Ablehnung/vorzeitige Beendigung), **bleibt die Zahlung fällig** und nicht erstattungsfähig.
+2.4. **Verfügbarkeit.** Die Plattform wird „wie verfügbar“ bereitgestellt; eine durchgehende Verfügbarkeit wird nicht garantiert (Wartung, technische Probleme, höhere Gewalt).
 
 ---
 
-## 6. Widerrufsrecht (Verbraucher) und Sofortige Ausführung
+## 3. Art der über die Plattform buchbaren Dienstleistungen
 
-Wo zwingendes lokales Recht ein Widerrufsrecht gewährt, kann dies gelten, es sei denn, der Kunde verlangt **sofortige Ausführung**. Durch Buchung eines sofortigen oder kurzfristigen Anrufs verlangt der Kunde sofortige Ausführung und erkennt an, dass nach **vollständiger Ausführung** das Widerrufsrecht erlischt; bei **teilweiser Ausführung** vor Widerruf muss der Kunde für den ausgeführten Teil und die **nicht erstattungsfähige Verbindungsgebühr** bezahlen. Die Plattform sammelt **ausdrückliche Zustimmung**, wo erforderlich.
+3.1. **Anwaltliche Beratung.** Kurze Beratungen (z. B. 20 Minuten). Der Anwalt ist allein verantwortlich für seine Ratschläge und die Einhaltung beruflicher und gesetzlicher Vorschriften.
 
----
+3.2. **Helfer-Dienstleistungen.** Unqualifizierte Unterstützung (praktische Hilfe, informelle Übersetzungen, lokale Kontakte etc.). Rechts-, medizinische oder regulierte Beratung wird nur von lizenzierten Fachkräften bereitgestellt.
 
-## 7. Zahlung, Sicherheit, Rückbuchungen
-
-**Einzelzahlung und Aufteilung:** Kunde zahlt einen Betrag, der den Anteil des Anbieters und die Verbindungsgebühr abdeckt. SOS (oder sein Prozessor) **kassiert**, **zieht** seine Gebühr ab und **überweist** den Rest an den Anbieter. Zahlungen über Drittanbieter-Prozessoren; **AML/KYC** kann gelten. Im Falle von **Rückbuchung/Streit** kann SOS streng notwendige Daten mit dem Prozessor teilen und damit verbundene Dienste/Auszahlungen aussetzen. **Verrechnung:** Rückerstattungen an Kunden werden vom Anbieteranteil getragen; SOS kann gegen zukünftige Auszahlungen verrechnen.
+3.3. **Keine Garantie.** Wir übernehmen keine Garantie für Ergebnisse, Qualität, Eignung für bestimmte Bedürfnisse oder Verfügbarkeit der Dienstleister.
 
 ---
 
-## 8. Stornierungen und Rückerstattungen
+## 4. Preise, Währungen und Vermittlungsgebühr
 
-Sofern nicht zwingendes Recht anders bestimmt: die **Verbindungsgebühr ist nicht erstattungsfähig**, sobald eine Verbindung erfolgt; der Anbieteranteil ist nicht erstattungsfähig, sobald die Ausführung beginnt, außer bei Kulanz durch den Anbieter. **Vor Verbindung:** volle Rückerstattung. **Anbieterstornierung:** volle Rückerstattung. **Plattformfehler technische Fälle:** Rückerstattung oder Gutschrift nach Ermessen von SOS im gesetzlich zulässigen Umfang.
+4.1. **Preisangabe.** Der Gesamtpreis bei Buchung umfasst: (i) die Vergütung des Dienstleisters (Anwalt/Helfer) laut Angebot und (ii) die Vermittlungsgebühr von SOS (fest).
+
+4.2. **Vermittlungsgebühr (fest).** 19 € (EUR) oder 25 $ (USD) pro Vermittlung (ohne Steuern), im Gesamtpreis enthalten. SOS kann diese Gebühr ändern und/oder lokale Tarife je nach Land/Währung veröffentlichen.
+
+4.3. **Währungen und Umrechnung.** Preise können in unterschiedlichen Währungen angezeigt werden. Gebühren/Kurse des Zahlungsanbieters können anfallen.
+
+4.4. **Steuern.** Angezeigte Preise enthalten, sofern zutreffend, Mehrwertsteuer oder andere Steuern auf die Vermittlungsgebühr. Dienstleister sind für ihre steuerlichen Pflichten selbst verantwortlich.
 
 ---
 
-## 9. Verhalten, Sicherheit und Inhalt
+## 5. Buchung, Anruf und Kontaktversuche
 
-Respektvolles Verhalten; keine rechtswidrige Aufzeichnung/Verbreitung; keine Aufforderung zu illegalen Handlungen. Kundeninformationen müssen rechtmäßig, genau und fair sein. Missbrauch kann über das Kontaktformular gemeldet werden.
+5.1. **Definition „Vermittlung“.** Eine Vermittlung gilt als durchgeführt, wenn: (a) die Kontaktdaten von Kunde und Dienstleister übermittelt wurden und/oder (b) ein Anruf-/Nachrichten-/Video-Kanal über die Plattform geöffnet wurde und/oder (c) der Dienstleister die Anfrage des Kunden akzeptiert.
+
+5.2. **Anrufversuche.** Bei Sofortanrufen unternimmt die Plattform bis zu drei (3) Versuche innerhalb von ca. 15 Minuten (sofern in der App nicht anders angegeben).
+
+5.3. **Nichtverfügbarkeit des Dienstleisters.** Gelingt die Vermittlung nach allen Versuchen nicht, wird die Buchung storniert und der Kunde erhält eine vollständige Rückerstattung.
+
+5.4. **Keine Antwort des Kunden.** Wird die Vermittlung durchgeführt (5.1), aber der Austausch findet nicht statt (keine Antwort, beschäftigt, Ablehnung, vorzeitiges Beenden), bleibt die Zahlung bestehen und wird nicht zurückerstattet.
+
+5.5. **Verbindungsqualität.** Der Kunde muss sich in einem Bereich mit ausreichender Netzabdeckung befinden und kompatible Geräte nutzen. SOS haftet nicht für Unterbrechungen oder Drittanbieter-Netze.
 
 ---
 
-## 10. Datenschutz
+## 6. Widerrufsrecht (Verbraucher) und sofortige Ausführung
 
-Getrennte Verantwortliche: **SOS** und der **Anbieter** verarbeiten jeweils personenbezogene Daten für ihre eigenen Zwecke (Vertragserfüllung, Sicherheit/Betrugsprävention/Serviceverbesserung, AML/Sanktionen, Zustimmung falls anwendbar). **Internationale Übermittlungen** mit Sicherungen, wo erforderlich. **Rechte und Kontakt** über das Kontaktformular. Sicherheitsmaßnahmen; Verletzungsbenachrichtigungen wie erforderlich.
+6.1. **Information.** Wenn der Kunde Verbraucher ist und nationales Recht ein Widerrufsrecht vorsieht, kann dieses innerhalb der gesetzlichen Fristen ausgeübt werden, außer bei Anforderung einer sofortigen Dienstleistung.
+
+6.2. **Verzicht auf Widerruf.** Bei Buchung eines sofortigen oder geplanten Anrufs vor Ablauf der Widerrufsfrist gilt das Widerrufsrecht als vereinbart und erlischt nach vollständiger Erbringung der Dienstleistung. Bei teilweiser Leistungserbringung vor Widerruf zahlt der Kunde für den bereits erbrachten Teil und die Vermittlungsgebühr (nicht erstattungsfähig).
+
+6.3. **Form.** Die Plattform dokumentiert die ausdrückliche Zustimmung des Kunden bei der Buchung, falls erforderlich.
+
+---
+
+## 7. Zahlung, Sicherheit und Rückerstattung
+
+7.1. **Einzelzahlung und Verteilung.** Der Kunde zahlt eine Gesamtzahlung über die Plattform, die (i) den Anteil des Dienstleisters und (ii) die Vermittlungsgebühr abdeckt. SOS (oder Zahlungsanbieter) zieht die Gebühr ab und überweist den Rest an den Dienstleister.
+
+7.2. **Sicherheit.** Zahlungen erfolgen über externe Zahlungsanbieter. KYC/AML-Prüfungen können erfolgen.
+
+7.3. **Zahlungsstreitigkeiten.** Bei Streitigkeiten kann SOS dem Zahlungsanbieter nur notwendige Daten zur Verfügung stellen und Dienste/Zahlungen aussetzen.
+
+7.4. **Entschädigung.** Bei Rückerstattungen wird der Dienstleisteranteil abgezogen; SOS kann künftige Zahlungen anrechnen.
+
+---
+
+## 8. Stornierung und Rückerstattung
+
+8.1. **Grundsatz.** Mit Ausnahme zwingender gesetzlicher Bestimmungen:
+
+* Vermittlungsgebühr wird nach erfolgter Vermittlung (5.1) nicht erstattet.
+* Dienstleisteranteil wird nach Beginn der Dienstleistung nicht erstattet, außer als Kulanz.
+
+8.2. **Stornierung durch Kunden vor Vermittlung.** Vollständige Rückerstattung.
+
+8.3. **Stornierung durch Dienstleister.** Vollständige Rückerstattung. SOS kann einen alternativen verfügbaren Dienstleister vorschlagen.
+
+8.4. **Technische Probleme seitens SOS.** Rückerstattung oder Gutschrift nach Ermessen von SOS, soweit gesetzlich zulässig.
+
+---
+
+## 9. Verhalten, Sicherheit und Inhalte
+
+9.1. **Respekt.** Der Kunde verpflichtet sich zu respektvollem Verhalten, keine Aufzeichnungen oder Weitergabe ohne gesetzliche Zustimmung und keine Aufforderung zu rechtswidrigen Handlungen.
+
+9.2. **Bereitgestellte Inhalte.** Informationen müssen wahr, korrekt und legal sein. Der Kunde stellt SOS und Dienstleister frei von Ansprüchen im Zusammenhang mit rechtswidrigen Inhalten.
+
+9.3. **Beschwerden.** Missbrauch kann über das Kontaktformular gemeldet werden.
+
+---
+
+## 10. Persönliche Daten
+
+10.1. **Rollen.** Für datenbezogene Zwecke agieren SOS und Dienstleister jeweils als unabhängige Verantwortliche.
+
+10.2. **Rechtsgrundlagen und Zwecke.** Vertragserfüllung (Buchung), berechtigtes Interesse (Sicherheit, Betrugsprävention, Optimierung), gesetzliche Pflichten (AML/Sanktionen), Einwilligung falls erforderlich.
+
+10.3. **Internationale Übertragungen.** Möglich mit angemessenen Garantien.
+
+10.4. **Rechte und Kontakt.** Umsetzung über das Kontaktformular auf der Plattform.
+
+10.5. **Sicherheit.** Angemessene technische und organisatorische Maßnahmen; Benachrichtigung bei Datenschutzverletzungen gemäß Gesetz.
 
 ---
 
 ## 11. Geistiges Eigentum
 
-Plattform-IP verbleibt bei Ulixai; Kunde erhält ein **persönliches, begrenztes** Zugangsrecht.
+Die Plattform, Marken, Logos, Datenbanken und Inhalte sind geschützt. Keine Rechte werden auf den Kunden übertragen. Nutzung beschränkt auf persönlichen Zugang gemäß AGB.
 
 ---
 
 ## 12. Haftung
 
-Anbieter sind **unabhängig**; SOS haftet nicht für deren Dienste/Ergebnisse. Im maximal zulässigen Umfang ist die **Haftungsobergrenze** von SOS für nachgewiesene direkte Schäden der **gezahlte Gesamtpreis** für die relevante Buchung; **keine indirekten/speziellen/Folgeschäden**, wo zulässig.
+12.1. **Unabhängige Dienstleister.** Kunde erkennt an, dass Anwälte und Helfer unabhängig sind. SOS haftet nicht für Ratschläge/Dienstleistungen oder deren Ergebnisse.
+
+12.2. **Haftungsbeschränkung.** Im gesetzlich maximal zulässigen Umfang ist die Haftung von SOS für direkten Schaden auf die vom Kunden für die jeweilige Buchung gezahlte Summe beschränkt. SOS haftet nicht für indirekte, spezielle oder Folgeschäden (entgangene Chancen, Gewinne, Reputation etc.).
+
+12.3. **Keine Garantie.** SOS garantiert weder durchgehenden Plattformbetrieb noch Fehlerfreiheit.
 
 ---
 
-## 13. Anwendbares Recht, Streitigkeiten und Gerichte
+## 13. Anwendbares Recht, Streitbeilegung und Gerichtsbarkeit
 
-**Materielles Recht:** für jedes vom Dienst abgedeckte Land regeln die Gesetze des **Interventionslandes** die SOS-Kundenbeziehung unbeschadet der zwingenden Verbraucherrechte am Wohnsitz. **Ergänzend:** Estnisches Recht regelt Auslegung/Gültigkeit und jede nicht vom lokalen Recht geregelte Angelegenheit. **ICC-Schiedsverfahren:** obligatorisch für **Nicht-Verbraucher** (Sitz: Tallinn, Estland; Sprache: Französisch; vertraulich). **Verbraucher** können sich für ICC-Schiedsverfahren entscheiden oder verfügbare Gerichte nach zwingendem Recht nutzen. **Estnische Gerichte (Tallinn)** haben ausschließliche Zuständigkeit für nicht schiedsfähige Ansprüche, Schiedsspruchvollstreckung und dringende Maßnahmen, vorbehaltlich zwingender Verbraucherrechte. **Sammelklagen sind ausgeschlossen** im gesetzlich zulässigen Umfang.
+13.1. **Materielles Recht.** Für jede Dienstleistung gilt das Recht des Landes, in dem sie erbracht wird, ohne zwingende Verbraucherrechte einzuschränken. Zusätzlich gilt estnisches Recht für Auslegung und Lücken.
+
+13.2. **ICC-Schiedsverfahren (Option für Verbraucher) / verbindlich für B2B.**
+
+* **Kunde kein Verbraucher (B2B):** verbindliches ICC-Schiedsverfahren, Ort: Tallinn (Estland), Sprache: Französisch, materielles Recht gem. 13.1, vertrauliches Verfahren.
+* **Verbraucher:** Wahl zwischen ICC-Schiedsverfahren (wie oben) oder ordentlichen Gerichten mit zwingendem Recht.
+
+13.3. **Estnische Gerichte (Tallinn).** Für Streitigkeiten, die nicht schiedsbar sind, Vollstreckung von Schiedssprüchen oder dringende Maßnahmen – ausschließliche Zuständigkeit estnischer Gerichte (Tallinn), ohne zwingende Verbraucherrechte einzuschränken.
+
+13.4. **Verzicht auf Sammelklagen.** Gruppen-, Sammel- oder Vertreterklagen sind ausgeschlossen, soweit nicht zwingendes Recht anderes vorsieht.
 
 ---
 
 ## 14. Kündigung/Aussetzung und Sonstiges
 
-Wir können Konten wegen Betrug, Nichteinhaltung, Missbrauch oder rechtlichem Risiko aussetzen/schließen. **Französisch gilt** zur Auslegung. **Salvatorische Klausel** und **Nicht-Verzicht** gelten. Mitteilungen durch Veröffentlichung/in der App oder über Kontaktformular.
+14.1. **Aussetzung.** SOS kann Konten bei Betrug, Verstößen gegen AGB, Missbrauch oder rechtlichem Risiko aussetzen oder schließen.
+
+14.2. **Gesamtheit.** Die AGB bilden die vollständige Vereinbarung zwischen SOS und Kunde über die Nutzung der Plattform.
+
+14.3. **Sprachen.** Übersetzungen möglich; bei Auslegung hat die französische Version Vorrang.
+
+14.4. **Teilnichtigkeit.** Ist eine Bestimmung ungültig, bleiben die übrigen gültig; sie kann durch eine gültige Bestimmung mit äquivalenter Wirkung ersetzt werden.
+
+14.5. **Verzicht.** Unterlassene Durchsetzung eines Rechts gilt nicht als Verzicht.
 
 ---
 
 ## 15. Kontakt
 
-**Kontaktformular (Support und rechtliche Anfragen):** [**http://localhost:5174/contact**](http://localhost:5174/contact)
+**Kontaktformular (Support und rechtliche Anfragen):** **[http://localhost:5174/contact](http://localhost:5174/contact)**
 `;
 
   const defaultRu = `
 # Общие условия – Клиенты (Глобальные)
 
-**SOS Expat от Ulixai OÜ** ("Платформа", "SOS", "мы")
+**SOS Expat от Ulixai OÜ** (далее — «Платформа», «SOS», «мы»)
 
-**Версия 2.2 – Последнее обновление: 16 июня 2025**
-
----
-
-## 1. Цель и сфера применения
-
-Эти Условия регулируют использование Платформы любым лицом или организацией, создающей клиентскую учетную запись и бронирующей услугу ("Клиент"). **SOS Expat является платформой для подбора**, связывающей Клиентов с независимыми **Юристами** и независимыми **Помощниками**. Ulixai **не является юридической фирмой** и не предоставляет юридических/медицинских/налоговых/регулируемых консультаций и **не** является стороной контракта Клиент-Поставщик.
+**Версия 2.2 – Последнее обновление: 16 июня 2025 г.**
 
 ---
 
-## 2. Аккаунты, право на использование и использование
+## 1. Цель и область применения
 
-- **18+ и дееспособность.** Корпоративные пользователи гарантируют полномочия.
-- **Точная информация** должна быть предоставлена и поддерживаться в актуальном состоянии.
-- **Никакого незаконного/оскорбительного использования**; Платформа **не является** службой экстренной помощи.
-- **Доступность** "как есть".
+1.1. Настоящие общие условия («ОУ») регулируют использование Платформы любым физическим или юридическим лицом, которое создаёт учётную запись клиента и бронирует услугу через Платформу (далее — «Клиент»).
 
----
+1.2. **Роль Ulixai.** SOS Expat является платформой для соединения: (i) с независимыми юристами («Юристы») и/или (ii) с независимыми помощниками для экспатов («Помощники»). Ulixai не является юридической фирмой, не предоставляет юридические, медицинские, налоговые или регулируемые консультации и не является стороной договора между Клиентом и поставщиком (Юрист/Помощник).
 
-## 3. Бронируемые услуги
+1.3. **Электронное согласие (click-wrap).** Отметка галочки согласия и/или использование Платформы означает принятие настоящих ОУ (электронная подпись). SOS может сохранять технические доказательства (метка времени, идентификаторы).
 
-Короткие юридические консультации с Юристами (например, 20 минут) и нерегулируемая помощь с Помощниками. **Никаких гарантий** относительно результата/качества/доступности.
+1.4. **Изменения.** Мы можем обновлять ОУ и/или тарифы с перспективным действием через публикацию на Платформе. Продолжение использования означает согласие.
 
 ---
 
-## 4. Цены, валюты и плата за соединение
+## 2. Учётные записи, соответствие требованиям и использование
 
-Указанная **общая цена** включает (i) вознаграждение Поставщика и (ii) **фиксированную плату за соединение** SOS. **Плата за соединение:** **19 EUR** или **25 USD** за Соединение (без налогов), с возможностью изменения и/или местных графиков с перспективным действием. Могут применяться **комиссии за обработку платежей и валютный обмен**. Налоги включены, где требуется на плату за соединение; Поставщики несут ответственность за свои собственные налоги.
+2.1. **Возраст и дееспособность.** Клиент заявляет, что ему/ей не менее 18 лет и он/она обладает полной дееспособностью. Для юридических лиц пользователь подтверждает, что имеет полномочия связывать компанию.
 
----
+2.2. **Точность информации.** Предоставленная информация (личность, контактные данные, страна, цель запроса) должна быть точной и актуальной.
 
-## 5. Бронирование, звонки и попытки
+2.3. **Правильное использование.** Клиент не должен использовать Платформу незаконно или злоумышленно (мошенничество, незаконный контент, домогательства, нарушение прав третьих лиц, обход платежей и т.д.). Запрещено использовать для экстренных медицинских или жизненных ситуаций; SOS не является службой экстренной помощи.
 
-**Соединение** происходит при обмене контактными данными и/или открытии канала звонка/сообщения/видео и/или принятии Поставщиком. До **трех (3) попыток** в течение ~15 минут для немедленных звонков. **Если нет Соединения** после попыток, **полный возврат средств**. Если Соединение произошло, но Клиент не смог взаимодействовать (нет ответа/отказ/досрочное завершение), **оплата остается обязательной** и не возвращается.
-
----
-
-## 6. Право на отказ (Потребители) и немедленное выполнение
-
-Где обязательное местное законодательство предоставляет право на отказ, оно может применяться, если только Клиент не запрашивает **немедленное выполнение**. Бронируя немедленный или краткосрочный звонок, Клиент запрашивает немедленное выполнение и признает, что после **полного выполнения** право на отказ утрачивается; если **частично выполнено** до отказа, Клиент должен оплатить выполненную часть и **невозвратную плату за соединение**. Платформа собирает **явное согласие**, где требуется.
+2.4. **Доступность.** Платформа предоставляется «как есть»: непрерывная доступность не гарантируется (техническое обслуживание, инциденты, форс-мажор).
 
 ---
 
-## 7. Оплата, безопасность, возвратные платежи
+## 3. Характер услуг, доступных для бронирования
 
-**Единый платеж и разделение:** Клиент платит одну сумму, покрывающую долю Поставщика и плату за соединение. SOS (или его процессор) **собирает**, **вычитает** свою плату и **переводит** остаток Поставщику. Платежи через сторонние процессоры; может применяться **AML/KYC**. В случае **возвратного платежа/спора** SOS может делиться строго необходимыми данными с процессором и приостанавливать связанные услуги/выплаты. **Зачет:** возвраты Клиентам несет доля Поставщика; SOS может зачесть против будущих выплат.
+3.1. **Консультации с юристами.** Краткие консультации (например, 20 минут). Юрист несёт полную ответственность за свои советы и соблюдение профессиональной этики и местного законодательства.
+
+3.2. **Консультации с помощниками.** Неквалифицированная поддержка (практическая помощь, неформальный перевод, контакты на месте и др.). Юридические, медицинские или регулируемые консультации предоставляются только при наличии соответствующей лицензии.
+
+3.3. **Без гарантии.** Мы не гарантируем результаты, качество, соответствие конкретным потребностям или доступность поставщиков услуг.
 
 ---
 
-## 8. Отмены и возвраты
+## 4. Цены, валюты и комиссия за соединение
 
-Если обязательное законодательство не предусматривает иное: **плата за соединение не возвращается**, как только происходит Соединение; доля Поставщика не возвращается, как только начинается выполнение, кроме как по доброй воле Поставщика. **До Соединения:** полный возврат. **Отмена Поставщиком:** полный возврат. **Технические случаи по вине Платформы:** возврат или кредит по усмотрению SOS в разрешенной законом степени.
+4.1. **Отображение цен.** Общая цена при бронировании включает: (i) вознаграждение поставщика (Юриста/Помощника) согласно предложению и (ii) комиссию SOS за соединение (фиксированная).
+
+4.2. **Комиссия за соединение (фиксированная).** 19 € (EUR) или 25 $ (USD) за соединение (без налогов), включена в общую стоимость. SOS может изменять эту комиссию и/или публиковать местные тарифы по странам/валютам с перспективным действием.
+
+4.3. **Валюты и конвертация.** Цены могут отображаться в разных валютах. Могут применяться комиссии/курсы обмена платёжного провайдера.
+
+4.4. **Налоги.** Отображаемые цены включают, где применимо, НДС или другие налоги на комиссию за соединение. Поставщики остаются ответственными за свои налоговые обязательства.
+
+---
+
+## 5. Бронирование, звонок и попытки связи
+
+5.1. **Определение «соединения».** Соединение считается выполненным, когда: (a) переданы контактные данные Клиента и Поставщика, и/или (b) открыт канал звонка/сообщений/видео через Платформу, и/или (c) Поставщик принимает запрос Клиента.
+
+5.2. **Попытки звонка.** В случае немедленного звонка Платформа выполняет до трёх (3) попыток в течение примерно 15 минут (если не указано иначе в приложении).
+
+5.3. **Недоступность поставщика.** Если соединение не удалось после всех попыток, бронирование отменяется и Клиент получает полный возврат.
+
+5.4. **Отсутствие ответа Клиента.** Если соединение выполнено (по 5.1), но обмен не состоялся (не отвечает, занят, отказ, преждевременное завершение), оплата подлежит сохранению и не возвращается.
+
+5.5. **Качество связи.** Клиент должен находиться в зоне с достаточным покрытием и использовать совместимое оборудование. SOS не несёт ответственности за перебои или сети третьих сторон.
+
+---
+
+## 6. Право на отказ (потребители) и немедленное исполнение
+
+6.1. **Информация.** Если Клиент является потребителем и местное законодательство предусматривает право на отказ, оно может быть реализовано в законные сроки, за исключением случаев запроса немедленного предоставления услуги.
+
+6.2. **Отказ от права.** При бронировании немедленного или запланированного звонка до истечения срока право на отказ считается согласованным Клиентом и теряется после полного оказания услуги. При частичном исполнении услуги до отказа Клиент оплачивает оказанную часть и комиссию за соединение (невозвратная).
+
+6.3. **Формальность.** Платформа фиксирует явное согласие Клиента при бронировании, если это необходимо.
+
+---
+
+## 7. Оплата, безопасность и возвраты
+
+7.1. **Единый платёж и распределение.** Клиент осуществляет единый платёж через Платформу, покрывающий (i) долю Поставщика и (ii) комиссию за соединение. SOS (или платёжный провайдер) списывает платёж, удерживает комиссию и переводит остаток Поставщику.
+
+7.2. **Безопасность.** Платежи проходят через внешние платёжные провайдеры. Могут применяться проверки KYC/AML.
+
+7.3. **Споры по платежам.** В случае спора SOS может предоставить платёжному провайдеру только необходимые данные и приостановить связанные услуги/платежи.
+
+7.4. **Компенсация.** При возврате суммы часть, относящаяся к Поставщику, вычитается; SOS может компенсировать будущие платежи.
+
+---
+
+## 8. Отмена и возврат средств
+
+8.1. **Общее правило.** За исключением обязательных законодательных положений:
+
+* Комиссия за соединение не возвращается после выполнения соединения (5.1).
+* Доля Поставщика не возвращается после начала услуги, за исключением коммерческого жеста.
+
+8.2. **Отмена Клиентом до соединения.** Полный возврат.
+
+8.3. **Отмена Поставщиком.** Полный возврат. SOS может предложить альтернативного доступного поставщика.
+
+8.4. **Технические проблемы по вине SOS.** Возврат или кредит по усмотрению SOS, в пределах закона.
 
 ---
 
 ## 9. Поведение, безопасность и контент
 
-Уважительное поведение; никакой незаконной записи/распространения; никакого подстрекательства к незаконным действиям. Информация Клиента должна быть законной, точной и справедливой. О нарушениях можно сообщить через контактную форму.
+9.1. **Уважение.** Клиент обязуется вести себя уважительно, не записывать и не распространять обмен без законного согласия и не запрашивать незаконные действия.
+
+9.2. **Предоставленный контент.** Информация должна быть правдивой, точной и законной. Клиент компенсирует SOS и Поставщика за любые претензии, связанные с незаконным контентом.
+
+9.3. **Жалобы.** Любые злоупотребления могут быть сообщены через форму обратной связи.
 
 ---
 
-## 10. Защита данных
+## 10. Персональные данные
 
-Отдельные контроллеры: **SOS** и **Поставщик** обрабатывают персональные данные для своих собственных целей (исполнение контракта, безопасность/предотвращение мошенничества/улучшение сервиса, AML/санкции, согласие где применимо). **Международные передачи** с гарантиями, где требуется. **Права и контакт** через контактную форму. Меры безопасности; уведомления о нарушениях по мере необходимости.
+10.1. **Роли.** Для данных, необходимых для соединения, SOS и Поставщик выступают как независимые контролёры для своих целей.
+
+10.2. **Основания и цели.** Исполнение договора (бронирование), законные интересы (безопасность, предотвращение мошенничества, улучшение), соблюдение норм (AML/санкции), согласие при необходимости.
+
+10.3. **Международные передачи.** Возможны с адекватными гарантиями.
+
+10.4. **Права и контакт.** Реализуются через форму обратной связи на Платформе.
+
+10.5. **Безопасность.** Разумные технические и организационные меры; уведомление о нарушениях в соответствии с законом.
 
 ---
 
 ## 11. Интеллектуальная собственность
 
-ИС Платформы остается за Ulixai; Клиент получает **личное, ограниченное** право доступа.
+Платформа, её бренды, логотипы, базы данных и контент защищены. Права Клиенту не передаются. Использование ограничено личным доступом согласно ОУ.
 
 ---
 
 ## 12. Ответственность
 
-Поставщики **независимы**; SOS не несет ответственности за их услуги/результаты. В максимально разрешенной степени, **предел ответственности** SOS за доказанный прямой ущерб составляет **общую уплаченную цену** за соответствующее бронирование; **никаких косвенных/специальных/последующих убытков**, где разрешено.
+12.1. **Независимые поставщики.** Клиент признаёт, что Юристы и Помощники независимы. SOS не несёт ответственности за советы/услуги и их результаты.
+
+12.2. **Ограничения.** В максимально допустимой законом степени ответственность SOS за прямой ущерб ограничивается общей суммой, уплаченной Клиентом за соответствующее бронирование. SOS не отвечает за косвенный/специальный/побочный ущерб (потеря возможностей, прибыли, имиджа и т.д.).
+
+12.3. **Без гарантии.** SOS не гарантирует непрерывность Платформы и отсутствие ошибок.
 
 ---
 
-## 13. Применимое право, споры и суды
+## 13. Применимое право, разрешение споров и юрисдикция
 
-**Материальное право:** для каждой страны, охваченной услугой, законы **Страны вмешательства** регулируют отношения SOS-Клиент без ущерба для обязательных прав потребителя по месту жительства. **Дополнительно:** эстонское право регулирует толкование/действительность и любой вопрос, не регулируемый местным правом. **Арбитраж ICC:** обязателен для **не-потребителей** (место: Таллинн, Эстония; язык: французский; конфиденциально). **Потребители** могут выбрать арбитраж ICC или использовать доступные суды в соответствии с обязательным законодательством. **Эстонские суды (Таллинн)** имеют исключительную юрисдикцию для неарбитрабельных требований, исполнения решений и срочных мер, с учетом обязательных прав потребителя. **Коллективные иски отменяются** в разрешенной законом степени.
+13.1. **Материальное право.** Для каждой услуги, охватывающей страну, отношения SOS–Клиент регулируются законами страны предоставления без ограничения обязательных прав потребителя. Дополнительно применимо эстонское право для толкования и любых пробелов.
+
+13.2. **Арбитраж ICC (опция для потребителя) / обязательный для B2B.**
+
+* **Клиент не потребитель (B2B):** обязательный арбитраж ICC, место: Таллинн (Эстония), язык: французский, материальное право по 13.1, конфиденциальная процедура.
+* **Потребитель:** выбор между арбитражем ICC (те же условия) или судами по законам обязательного применения.
+
+13.3. **Эстонские суды (Таллинн).** Для споров, не подлежащих арбитражу, исполнения арбитражных решений или срочных мер — исключительная юрисдикция судов Эстонии (Таллинн), без ущерба обязательным правам потребителя.
+
+13.4. **Отказ от коллективных исков.** Запрещены коллективные/групповые/представительные иски, если местное императивное право не устанавливает иное.
 
 ---
 
 ## 14. Прекращение/приостановка и прочее
 
-Мы можем приостановить/закрыть аккаунты из-за мошенничества, несоблюдения, злоупотребления или юридического риска. **Французский имеет приоритет** для толкования. Применяются **делимость** и **отсутствие отказа**. Уведомления путем публикации/в приложении или через контактную форму.
+14.1. **Приостановка.** SOS может приостановить/закрыть учётную запись в случае мошенничества, нарушения ОУ, злоупотребления или юридического риска.
+
+14.2. **Целостность.** ОУ составляют полное соглашение между SOS и Клиентом по использованию Платформы.
+
+14.3. **Языки.** Возможны переводы; для толкования преимущество имеет французский.
+
+14.4. **Частичная недействительность.** Если положение недействительно, остальные остаются в силе; может быть заменено действительным положением эквивалентного эффекта.
+
+14.5. **Отсутствие отказа.** Неприменение права не означает отказ.
 
 ---
 
-## 15. Контакт
+## 15. Контакты
 
-**Контактная форма (поддержка и юридические запросы):** [**http://localhost:5174/contact**](http://localhost:5174/contact)
+**Форма обратной связи (поддержка и юридические запросы):** **[http://localhost:5174/contact](http://localhost:5174/contact)**
 `;
 
 const defaultPt = `
@@ -1416,110 +1808,151 @@ A Plataforma, suas marcas, logos, bases de dados e conteúdos são protegidos. N
 **Formulário de contato (suporte & solicitações legais)**: [**http://localhost:5174/contact**](http://localhost:5174/contact)
 `;
 const defaultCh = `
-  一般条款 – 客户（全球）
+# 一般条款 – 客户（全球）
 
-  SOS Expat by Ulixai OÜ（以下简称“平台”、“SOS”、“我们”）
+**SOS Expat by Ulixai OÜ**（以下简称“平台”、“SOS”、“我们”）
 
-  版本 2.2 – 最后更新：2025年6月16日
+**版本 2.2 – 最后更新：2025年6月16日**
 
-  1. 目的与适用范围
+## 1. 目的与适用范围
 
-  本条款规范任何创建客户账户并预订服务的个人或实体（“客户”）对平台的使用。SOS Expat 是一个撮合平台，连接客户与独立的律师（Lawyers）及独立的协助者（Helpers）。Ulixai 并非律师事务所，不提供任何法律、医疗、税务或其他受监管的建议，也不是客户与服务提供方之间合同的当事方。
+1.1 本通用条款及条件（“GTC”）适用于任何创建客户账户并通过平台预订服务的个人或法人实体（“客户”）。
 
-  2. 账户、资格与使用
+1.2 Ulixai 的角色。SOS Expat 是一个连接以下双方的平台：(i) 独立律师（“律师”），和/或 (ii) 独立外籍护理人员（“护理人员”）。Ulixai 并非律师事务所，不提供任何法律、医疗、税务或监管方面的建议，也并非客户与服务提供商（律师/护理人员）之间签订的服务协议的当事方。
 
-  年满18岁且具备法律行为能力。 企业用户保证其代表授权合法。
+1.3 电子接受（点击式）。客户勾选接受框和/或使用平台即表示接受本 GTC（电子签名）。SOS 可能会保留技术证据（时间戳、标识符）。
 
-  必须提供并保持准确、最新的信息。
+1.4 条款及条件的修改。我们可能会通过在平台上发布更新后的条款及条件和/或价格/费用，该更新将对未来生效。继续使用即表示接受。
 
-  禁止非法或滥用行为；平台并非紧急服务。
+---
 
-  可用性按“现状”提供（“as is”）。
+## 2. 账户、资格与使用
 
-  3. 可预订的服务
+2.1 年满18岁且具备法律行为能力。 企业用户保证其代表授权合法。
 
-  包括律师的简短法律咨询电话（如20分钟）及协助者提供的非受监管协助服务。不对结果、质量或可用性提供任何保证。
+2.2 必须提供并保持准确、最新的信息。
 
-  4. 价格、货币与连接费用
+2.3 禁止非法或滥用行为；平台并非紧急服务。
 
-  显示的总价包括：(i) 服务提供方的报酬；及 (ii) SOS 的固定连接费用。
-  连接费用： 每次连接 19欧元（EUR） 或 25美元（USD）（不含税），金额可能调整，或依据不同国家/货币制定本地费用表并前瞻性生效。
-  可能适用汇率及支付处理费用。在法律要求的情况下，连接费含税；服务提供方负责其自身税务义务。
+2.4 可用性按“现状”提供（“as is”）。
 
-  5. 预订、通话与尝试
+---
 
-  当客户与提供方交换联系方式和/或开启通话/消息/视频渠道及/或提供方接受请求时，即视为建立连接（Connection）。
-  即时通话可进行最多三（3）次尝试，约15分钟内完成。
-  如未能建立连接，则全额退款。
-  如已建立连接，但客户未参与（未接听、拒绝或提前终止），支付仍视为应付且不可退款。
+## 3. 可预订的服务
 
-  6. 撤销权（消费者）与立即履行
+3.1 与律师通话。提供简短的初步咨询（例如 20 分钟）。律师对其提供的建议以及遵守职业道德和当地法律负全部责任。
 
-  若强制性当地法律赋予撤销权，则该权利可能适用，除非客户要求立即履行服务。
-  当客户预订立即或短期通话时，即表示其要求立即履行，并确认服务完全履行后撤销权即消失；若在撤销前部分履行，客户须支付已履行部分的费用及不可退款的连接费。
-  平台在需要时会收集明确同意。
+3.2 与护理人员通话。提供非监管性协助（实用指导、非正式翻译、当地联系人等）。未持有相应的当地执照，我们不提供任何法律、医疗或监管方面的建议。
 
-  7. 付款、安全与退款争议
+3.3 不作任何保证。我们不保证服务结果、质量、是否适合特定需求或服务提供商的可用性。
 
-  单次付款与分配： 客户支付的总金额涵盖提供方份额及连接费用。SOS（或其支付处理方）收取款项，扣除连接费后将余额汇给提供方。
-  付款通过第三方处理；可能适用反洗钱（AML）/客户识别（KYC）要求。
-  如发生退款或争议（chargeback），SOS可与支付处理方共享必要数据，并可暂停相关服务或款项支付。
-  抵销： 若客户获得退款，将从提供方份额中承担；SOS可从未来应付款中抵销。
+---
 
-  8. 取消与退款
+## 4. 价格、货币与连接费用
 
-  除强制性法律另有规定外：
+4.1 显示的总价包括：(i) 服务提供方的报酬；及 (ii) SOS 的固定连接费用。
+4.2 连接费用： 每次连接 19欧元（EUR） 或 25美元（USD）（不含税），金额可能调整，或依据不同国家/货币制定本地费用表并前瞻性生效。
+4.3 可能适用汇率及支付处理费用。在法律要求的情况下，连接费含税；服务提供方负责其自身税务义务。
 
-  一旦建立连接，连接费不可退款；
+---
 
-  一旦服务开始履行，提供方份额不可退款，除非提供方基于善意自行处理；
+## 5. 预订、通话与尝试
 
-  连接前取消： 全额退款；
+5.1 当客户与提供方交换联系方式和/或开启通话/消息/视频渠道及/或提供方接受请求时，即视为建立连接（Connection）。
+5.2 即时通话可进行最多三（3）次尝试，约15分钟内完成。
+5.3 如未能建立连接，则全额退款。
+5.4 如已建立连接，但客户未参与（未接听、拒绝或提前终止），支付仍视为应付且不可退款。
 
-  提供方取消： 全额退款；
+---
 
-  因平台技术故障： SOS可在法律允许范围内酌情退款或发放信用额度。
+## 6. 撤销权（消费者）与立即履行
 
-  9. 行为规范、安全与内容
+6.1 若强制性当地法律赋予撤销权，则该权利可能适用，除非客户要求立即履行服务。
+6.2 当客户预订立即或短期通话时，即表示其要求立即履行，并确认服务完全履行后撤销权即消失；若在撤销前部分履行，客户须支付已履行部分的费用及不可退款的连接费。
+6.3 平台在需要时会收集明确同意。
 
-  客户须保持尊重行为；禁止非法录音、传播或招揽违法行为。客户提供的信息须合法、准确且公正。
-  滥用行为可通过联系表单举报。
+---
 
-  10. 数据保护
+## 7. 付款、安全与退款争议
 
-  独立数据控制者： SOS 与服务提供方各自独立处理个人数据，用于各自目的（合同履行、安全与防欺诈、服务改进、反洗钱/制裁、及在适用时的同意）。
-  可能进行国际数据传输，并在需要时采取保障措施。
-  权利与联系： 可通过联系表单行使。
-  采用安全措施，并在发生泄露时依规通知。
+7.1 单次付款与分配： 客户支付的总金额涵盖提供方份额及连接费用。SOS（或其支付处理方）收取款项，扣除连接费后将余额汇给提供方。
+7.2 付款通过第三方处理；可能适用反洗钱（AML）/客户识别（KYC）要求。
+7.3 如发生退款或争议（chargeback），SOS可与支付处理方共享必要数据，并可暂停相关服务或款项支付。
+7.4 抵销： 若客户获得退款，将从提供方份额中承担；SOS可从未来应付款中抵销。
 
-  11. 知识产权
+---  
 
-  平台的知识产权归 Ulixai 所有；客户仅获得个人、有限的访问使用权。
+## 8. 取消与退款
 
-  12. 责任
+8.1 除强制性法律另有规定外：
 
-  服务提供方为独立主体；SOS 对其服务或结果不承担责任。
-  在法律允许的最大范围内，SOS 对客户的总责任限于因相关预订而支付的总价；在允许的范围内，不承担间接、特殊或后果性损害赔偿。
+一旦建立连接，连接费不可退款；
 
-  13. 适用法律、争议与法院管辖
+一旦服务开始履行，提供方份额不可退款，除非提供方基于善意自行处理；
 
-  实体法： 对每个提供服务的国家，适用该介入国家的法律，同时不影响客户在居住地享有的强制性消费者权利。
-  补充适用： 爱沙尼亚法律用于解释与效力，以及未被当地法律涵盖的事项。
-  非消费者： 争议须提交国际商会（ICC）仲裁（仲裁地：爱沙尼亚塔林；语言：法语；保密）。
-  消费者： 可选择参加ICC仲裁或依据强制性法律使用有管辖权的法院。
-  非仲裁事项、裁决执行及紧急措施由**爱沙尼亚法院（塔林）**专属管辖，但须遵守强制性消费者权利。
-  在法律允许范围内，放弃集体/联合诉讼权利。
+8.2 连接前取消： 全额退款；
 
-  14. 终止/暂停及其他条款
+8.3 提供方取消： 全额退款；
 
-  如存在欺诈、不合规、滥用或法律风险，我们可暂停或关闭账户。
-  法语版本优先用于解释。
-  适用可分割性及不放弃原则。
-  通知可通过平台发布、应用内提示或联系表单发送。
+8.4 因平台技术故障： SOS可在法律允许范围内酌情退款或发放信用额度。
 
-  15. 联系方式
+---
 
-  联系表单（支持与法律请求）： http://localhost:5174/contact
+## 9. 行为规范、安全与内容
+
+9.1 尊重。客户参与时应尊重行为，不得在未取得法律同意的情况下进行变更注册，也不得要求采取非法行为。
+
+9.2 Contenus fournis。信息以忠诚、严格和合法的方式传播。客户保证 SOS 和 Prestataire 不会完全收回其内容。
+
+9.3 信号。请通过联系方式发送信号。
+
+---
+
+## 10. 数据保护
+
+10.1 独立数据控制者： SOS 与服务提供方各自独立处理个人数据，用于各自目的（合同履行、安全与防欺诈、服务改进、反洗钱/制裁、及在适用时的同意）。
+10.2 可能进行国际数据传输，并在需要时采取保障措施。
+10.3 权利与联系： 可通过联系表单行使。
+10.4 采用安全措施，并在发生泄露时依规通知。
+
+---
+
+## 11. 知识产权
+
+平台的知识产权归 Ulixai 所有；客户仅获得个人、有限的访问使用权。
+
+---
+
+## 12. 责任
+
+12.1 服务提供方为独立主体；SOS 对其服务或结果不承担责任。
+12.2 在法律允许的最大范围内，SOS 对客户的总责任限于因相关预订而支付的总价；在允许的范围内，不承担间接、特殊或后果性损害赔偿。
+
+---
+
+## 13. 适用法律、争议与法院管辖
+
+13.1 实体法： 对每个提供服务的国家，适用该介入国家的法律，同时不影响客户在居住地享有的强制性消费者权利。
+13.2 补充适用： 爱沙尼亚法律用于解释与效力，以及未被当地法律涵盖的事项。
+ 非消费者： 争议须提交国际商会（ICC）仲裁（仲裁地：爱沙尼亚塔林；语言：法语；保密）。
+ 消费者： 可选择参加ICC仲裁或依据强制性法律使用有管辖权的法院。
+13.3 非仲裁事项、裁决执行及紧急措施由**爱沙尼亚法院（塔林）**专属管辖，但须遵守强制性消费者权利。
+13.4 在法律允许范围内，放弃集体/联合诉讼权利。
+
+---
+
+## 14. 终止/暂停及其他条款
+
+14.1 如存在欺诈、不合规、滥用或法律风险，我们可暂停或关闭账户。
+14.2 法语版本优先用于解释。
+14.3 适用可分割性及不放弃原则。
+14.4 通知可通过平台发布、应用内提示或联系表单发送。
+
+---
+
+## 15. 联系方式
+
+联系表单（支持与法律请求）： http://localhost:5174/contact
 `
 
   
@@ -1702,9 +2135,6 @@ const defaultCh = `
 `;
 
   
-
-
-
   // const defaultContent = selectedLanguage === 'fr' ? defaultFr : defaultEn;
   // ✅ NEW (5 languages):
 const defaultContent =

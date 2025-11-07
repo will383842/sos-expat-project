@@ -40,14 +40,14 @@ const TermsLawyers: React.FC = () => {
   const [content, setContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedLanguage, setSelectedLanguage] = useState<
-    "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt"
-  >((language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt") || "fr");
+    "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt" | "ch" | "ar"
+  >((language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt" | "ch" | "ar") || "fr");
 
   // Rester aligné avec la langue globale si elle change
   useEffect(() => {
     if (language)
       setSelectedLanguage(
-        language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt"
+        language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt" | "ch" | "ar"
       );
   }, [language]);
 
@@ -380,6 +380,88 @@ const TermsLawyers: React.FC = () => {
       ctaHero: "Junte-se como advogado",
       contactForm: "Formulário de contato",
     },
+    ch: {
+      title: "律师使用条款",
+      subtitle: "为律师服务提供者制定的一般使用条款",
+      lastUpdated: "版本 2.2 – 最近更新：2025年6月16日",
+      loading: "加载中...",
+      joinNetwork: "加入网络",
+      trustedByExperts: "已有超过2,000名律师信任我们",
+      keyFeatures: "主要特点",
+      features: [
+        "7天内保证付款",
+        "全天候24/7技术支持",
+        "优化的移动界面",
+        "经过验证的客户",
+      ],
+      languageToggle: "切换语言",
+      sections: {
+        definitions: "定义",
+        scope: "目的、范围与接受",
+        status: "律师状态 – 独立性与合规性",
+        account: "账户创建、验证与安全",
+        rules: "使用规则 – 冲突、隐私、禁止规避",
+        relationship: "律师–用户关系（平台外）",
+        fees: "费用、一次性付款及税费",
+        payments: "支付 – KYC/反洗钱 – 制裁",
+        data: "个人数据（全球框架）",
+        ip: "知识产权",
+        liability: "保证、责任与赔偿",
+        law: "适用法律 – 仲裁 – 爱沙尼亚司法管辖",
+        misc: "其他事项",
+        contact: "联系方式",
+      },
+      readyToJoin: "准备加入SOS Expat吗？",
+      readySubtitle: "拓展您的国际业务，帮助数千名外籍人士。",
+      startNow: "立即开始",
+      contactUs: "联系我们",
+      anchorTitle: "目录",
+      editHint: "可通过管理控制台编辑文档",
+      heroBadge: "新 — 条款已更新",
+      ctaHero: "加入律师行列",
+      contactForm: "联系表单",
+    },
+    ar: {
+      title: "شروط استخدام المحامين",
+      subtitle: "الشروط العامة لاستخدام مقدمي خدمات المحاماة",
+      lastUpdated: "الإصدار 2.2 – آخر تحديث: 16 يونيو 2025",
+      loading: "جارٍ التحميل...",
+      joinNetwork: "انضم إلى الشبكة",
+      trustedByExperts: "أكثر من 2000 محامٍ يثقون بنا",
+      keyFeatures: "الميزات الرئيسية",
+      features: [
+        "دفع مضمون خلال 7 أيام",
+        "دعم فني على مدار الساعة طوال أيام الأسبوع",
+        "واجهة محمولة محسّنة",
+        "عملاء تم التحقق منهم",
+      ],
+      languageToggle: "تغيير اللغة",
+      sections: {
+        definitions: "التعريفات",
+        scope: "الغرض والنطاق والموافقة",
+        status: "حالة المحامي – الاستقلالية والامتثال",
+        account: "إنشاء الحساب، التحقق والأمان",
+        rules: "قواعد الاستخدام – النزاعات، الخصوصية، منع التحايل",
+        relationship: "علاقة المحامي بالمستخدم (خارج المنصة)",
+        fees: "الرسوم، الدفع الواحد والضرائب",
+        payments: "المدفوعات – KYC/مكافحة غسل الأموال – العقوبات",
+        data: "البيانات الشخصية (الإطار العام)",
+        ip: "الملكية الفكرية",
+        liability: "الضمانات والمسؤولية والتعويض",
+        law: "القانون المطبق – التحكيم – الاختصاص القضائي الإستوني",
+        misc: "متفرقات",
+        contact: "الاتصال",
+      },
+      readyToJoin: "هل أنت مستعد للانضمام إلى SOS Expat؟",
+      readySubtitle: "نمّ نشاطك التجاري دوليًا وساعد آلاف المغتربين.",
+      startNow: "ابدأ الآن",
+      contactUs: "اتصل بنا",
+      anchorTitle: "المحتويات",
+      editHint: "يمكن تحرير المستند من خلال لوحة الإدارة",
+      heroBadge: "جديد — تم تحديث الشروط",
+      ctaHero: "انضم إلى المحامين",
+      contactForm: "نموذج الاتصال",
+    }
   };
 
   const t = translations[selectedLanguage];
@@ -765,920 +847,1561 @@ Pour toute question ou demande légale : **http://localhost:5174/contact**
 
 **SOS Expat by Ulixai OÜ** (the "**Platform**", "**SOS**", "**we**")
 
-**Version 2.2 – Last updated: 16 June 2025**
+**Version 2.2 – Last updated: June 16, 2025**
 
 ---
 
 ## 1. Definitions
 
-"Connection" means the technical/operational introduction enabling contact (sharing details and/or initiating a call/message/video). "Country of Intervention" means the jurisdiction primarily targeted by the User's Request at the time of Connection; if multiple, the most closely connected jurisdiction. "Connection Fee" means **EUR 19** (if paid in EUR) or **USD 25** (if paid in USD), subject to future changes and/or local schedules by country/currency with prospective effect.
+**Application / Site / Platform**: digital services operated by **Ulixai OÜ** enabling the connection between users (the "**Users**") and lawyers (the "**Lawyers**").
+
+**Connection**: the technical/operational introduction made by the Platform between a User and a Lawyer, represented by (i) the transmission of contact details, (ii) opening a communication channel (call, message, video), or (iii) the Lawyer accepting a request submitted via the Platform.
+
+**Country of Intervention**: the jurisdiction primarily targeted by the Request at the time of the Connection. Failing that, the country of residence of the User at the time of the request; in case of multiple jurisdictions, the one most closely related to the subject of the Request.
+
+**Connection Fee**: fees owed to SOS for each Connection (art. 7): **€19** if paid in **EUR** or **$25 USD** if paid in **USD**, provided that Ulixai may modify these amounts and/or publish local scales per country/currency, with prospective effect.
+
+**Request**: the legal situation/project presented by the User.
+
+**Payment Provider(s)**: third-party services used to collect the User's single payment and distribute funds.
 
 ---
 
-## 2. Purpose, Scope and Acceptance
+## 2. Purpose, Scope, and Acceptance
 
-Ulixai acts **solely as a technical intermediary**. Ulixai does not provide legal advice and is not a party to Lawyer–User engagements. **Click-wrap acceptance** constitutes electronic signature and consent; SOS may keep technical evidence. SOS may update these Terms and/or fee schedules with prospective effect upon posting. Term: open-ended.
+2.1. These Terms govern access to and use of the Platform by Lawyers.
+
+2.2. Ulixai acts solely as a technical intermediary for connections. Ulixai does not practice law, provide legal advice, or participate in the Lawyer–User relationship.
+
+2.3. **Electronic Acceptance (click-wrap).** The Lawyer accepts the Terms by checking the dedicated box during registration and/or by using the Platform. This constitutes an electronic signature and contractual consent. SOS may retain proof logs (timestamps, technical identifiers).
+
+2.4. **Changes.** SOS may update the Terms and/or fee schedules (per country/currency) at any time, with prospective effect after publication on the Platform. Continued use constitutes acceptance.
+
+2.5. Duration: indefinite.
 
 ---
 
 ## 3. Lawyer Status – Independence and Compliance
 
-The Lawyer acts as an independent professional. No employment, mandate, agency, partnership or joint venture is created. The Lawyer is solely responsible for (i) qualifications, admissions and licenses, (ii) professional liability insurance adequate for all intended Countries of Intervention, (iii) local law and professional rules (ethics, advertising/solicitation, conflicts, confidentiality, AML/KYC, tax, consumer protection, etc.). Ulixai does not supervise or assess the Lawyer's advice.
+3.1. The Lawyer acts as an independent professional; no employment, mandate, agency, partnership, or joint venture is created with Ulixai.
 
-**Professional capacity (B2B).** The Lawyer confirms they act **exclusively for professional purposes**. Consumer protection regimes do not apply to the Ulixai–Lawyer relationship.
+3.2. The Lawyer is solely responsible for: (i) their degrees, titles, bar/equivalent registrations, and practice authorizations; (ii) their professional liability insurance valid and appropriate for the Countries of Intervention; (iii) compliance with local laws and professional rules (ethics, advertising/solicitation, conflicts of interest, professional secrecy, AML/KYC, taxation, consumer protection, etc.).
 
----
+3.3. Ulixai does not supervise or evaluate the content or quality of the Lawyer’s advice and assumes no responsibility in this regard.
 
-## 4. Account, Checks and Security
-
-Valid right to practice in at least one jurisdiction; identity/qualification documents; manual review (which may include video and AML/KYC checks). Accuracy and updates are the Lawyer's duty; one account per Lawyer. Keep credentials secure and report compromise immediately.
+3.4. **Professional capacity (B2B).** The Lawyer declares acting exclusively for professional purposes. Consumer protection regimes do not apply to the Ulixai–Lawyer relationship.
 
 ---
 
-## 5. Use Rules – Conflicts, Confidentiality, No Circumvention
+## 4. Account Creation, Verification, and Security
 
-**Conflicts.** Screen for conflicts before any advice; withdraw and inform the User if a conflict exists. **Confidentiality.** Maintain privilege and confidentiality under the Country of Intervention's law. **No circumvention.** Ulixai takes no commission on legal fees. Each new Connection with a new User via the Platform triggers the Connection Fee. Avoiding the Platform to evade fees on a new introduction is prohibited. **Prohibited conduct** includes identity fraud, illegal content, manipulation, collusion/boycott, sanctions/export breaches, or any unlawful activity. **Availability** is "as is"; access may be restricted where required by law.
+4.1. Requirements: valid right to practice in at least one jurisdiction, proof of identity and qualifications, valid professional liability insurance.
 
----
+4.2. Process: account creation, document submission, manual validation which may include a video interview and KYC/AML checks via Providers.
 
-## 6. Lawyer–User Relationship (Off-Platform)
+4.3. Accuracy & Updates: the Lawyer guarantees the accuracy and currency of information; one (1) account per Lawyer.
 
-After the Connection, parties may contract **off-Platform**. Ulixai does not set or collect the Lawyer's fees (except via the single-payment mechanism below). The Lawyer provides local fee agreements, handles taxes, and complies with local rules.
-
----
-
-## 7. Fees, Single Payment and Taxes
-
-**Flat Connection Fee.** EUR 19 or USD 25 per Connection, exclusive of taxes and payment processor charges. Ulixai may change amounts and/or publish local schedules by country/currency with prospective effect.
-
-**Single payment & split.** The User makes **one payment** via the Platform covering (i) the Lawyer's fee (as agreed) and (ii) Ulixai's Connection Fee. Ulixai (or its processor) collects, **deducts** its Fee, then **remits** the remainder to the Lawyer, who **authorizes** such deductions and allocations.
-
-**Due & non-refundable.** The Connection Fee is **earned upon** Connection and **non-refundable** (subject to Ulixai's discretionary goodwill **to the extent permitted by law** in case of Platform-only failure).
-
-**User refund.** If granted, refunds are **borne by the Lawyer's share**: Ulixai may **withhold/offset** against future payouts or request reimbursement if none are due.
-
-**FX & taxes.** Processor FX rates/fees may apply; the Lawyer is responsible for all applicable taxes; Ulixai collects/remits VAT or local equivalent on the Connection Fee where required. **Set-off** authorized.
+4.4. Security: the Lawyer protects their credentials; any activity via the account is deemed performed by them; immediate reporting of any compromise.
 
 ---
 
-## 8. Payments – AML/KYC – Sanctions
+## 5. Rules of Use – Conflicts, Confidentiality, Non-Circumvention
 
-Payments are processed by third-party providers. The Lawyer agrees to their terms and AML/KYC procedures. Ulixai may delay, withhold or cancel payouts in case of suspected fraud, non-compliance, or legal order. Access may be restricted in sanctioned territories where required by law. The Lawyer warrants it is not on sanctions lists and complies with export controls.
+5.1. **Conflicts of interest.** The Lawyer conducts appropriate screening before any advice. In case of conflict, they withdraw and inform the User.
+
+5.2. **Professional secrecy & confidentiality.** The Lawyer respects confidentiality/professional secrecy according to the applicable law of the Country of Intervention. Exchanges are not recorded by SOS, except as required by law.
+
+5.3. **Non-circumvention.** Ulixai does not receive any commission on fees. Each new Connection with a new User via the Platform incurs Connection Fees. Circumventing the Platform to avoid these fees for a new introduction is prohibited.
+
+5.4. **Prohibited behavior.** Identity/title impersonation, illegal content, manipulation, collusion/boicotting to harm the Platform, violation of sanctions/export laws, or any illegal activity.
+
+5.5. **Availability.** The Platform is provided "as is"; uninterrupted availability is not guaranteed (maintenance, incidents, force majeure). Access may be restricted if required by law.
 
 ---
 
-## 9. Data Protection (Global Framework)
+## 6. Lawyer–User Relationship (off-Platform)
 
-**Roles.** For User data received for Connection, **Ulixai and the Lawyer** each act as an **independent controller** for their own purposes. **Legal bases & purposes** include contract performance (Connection), legitimate interests (security, fraud prevention, service improvement), legal compliance (AML, sanctions), and consent where applicable. **International transfers** may occur with appropriate safeguards where required. **Rights & contact** via the Platform contact form. **Security** measures apply; data breaches are notified as required. The Lawyer processes data under the Country of Intervention's law and professional secrecy.
+6.1. After the Connection, the Lawyer and User may contract off-Platform (Ulixai does not intervene in fee setting or collection, except for the single payment mechanism described below).
+
+6.2. The Lawyer issues fee agreements according to local law, collects/remits applicable taxes, and complies with local rules (advertising, solicitation, conflicts of interest, consumer law).
+
+6.3. Ulixai is not responsible for the quality, accuracy, or outcome of the Lawyer's advice.
+
+---
+
+## 7. Fees, Single Payment, and Taxes
+
+7.1. **Connection Fees (flat rate).** €19 (EUR) or $25 (USD) per Connection, excluding taxes and Payment Provider fees. Ulixai may modify these amounts and/or publish local scales per country/currency, with prospective effect.
+
+7.2. **Single payment and distribution.** The User makes a single payment via the Platform covering (i) the Lawyer’s fees (as agreed between Lawyer and User) and (ii) Ulixai’s Connection Fees. Ulixai (or its Provider) collects this payment, deducts its Connection Fees, then transfers the balance to the Lawyer. The Lawyer authorizes Ulixai to make these deductions and distributions.
+
+7.3. **Due & non-refundable.** Connection Fees are due upon Connection and are non-refundable (except at Ulixai's discretion in case of failure solely attributable to the Platform, to the extent allowed by law).
+
+7.4. **User refunds.** If a refund is granted to the User, it is charged to the Lawyer’s share: Ulixai may withhold/offset the corresponding amount from future payments to the Lawyer or request repayment if no payments are forthcoming. No refund of Connection Fees is due, except at Ulixai's discretion.
+
+7.5. **Currencies & conversion.** Multiple currencies may be offered; Provider conversion rates/fees may apply.
+
+7.6. **Taxes.** The Lawyer remains responsible for their tax obligations. Ulixai collects and remits, where required, VAT/local equivalent on Connection Fees.
+
+7.7. **Offset.** Ulixai may offset any amount the Lawyer owes (for a User refund or other) against any amount owed to the Lawyer.
+
+---
+
+## 8. Payments – KYC/AML – Sanctions
+
+8.1. Payments are processed by third-party Providers. The Lawyer agrees to their KYC/AML terms and processes.
+
+8.2. Ulixai may defer, withhold, or cancel payments in case of suspected fraud, non-compliance, or legal order.
+
+8.3. Access may be restricted in sanctioned/embargoed territories if required by law. The Lawyer declares not to appear on any sanctions list and to comply with applicable export controls.
+
+---
+
+## 9. Personal Data (Global Framework)
+
+9.1. **Roles.** For User data received for Connections, Ulixai and the Lawyer each act as data controllers for their respective purposes.
+
+9.2. **Bases & purposes.** Contract performance (Connection), legitimate interests (security, fraud prevention, improvement), legal compliance (AML, sanctions), and, if applicable, consent.
+
+9.3. **International transfers** with appropriate safeguards where required.
+
+9.4. **Rights & contact.** Exercise of rights via the Platform contact form.
+
+9.5. **Security.** Reasonable technical/organizational measures; breach notification according to applicable laws.
+
+9.6. The Lawyer processes received data in accordance with the law of the Country of Intervention and professional secrecy.
 
 ---
 
 ## 10. Intellectual Property
 
-The Platform, trademarks, logos, databases and contents are protected. No rights are assigned to the Lawyer beyond a personal, non-exclusive, non-transferable right to access during these Terms. Lawyer-provided content (profile, photo, descriptions) is licensed to Ulixai on a **worldwide, non-exclusive** basis for hosting and display on the Platform.
+The Platform, its trademarks, logos, databases, and content are protected. No rights are granted to the Lawyer except a personal, non-exclusive, non-transferable right to access during the Terms. Content provided by the Lawyer (profile, photo, descriptions) is licensed globally, non-exclusively, to Ulixai for hosting and display on the Platform.
 
 ---
 
-## 11. Warranties, Liability and Indemnity
+## 11. Warranties, Liability, and Indemnification
 
-No warranty for legal outcomes, quality, volume or Users' reliability. Platform is provided "as is." **Liability cap**: to the fullest extent permitted, Ulixai's total liability to the Lawyer is limited to **direct damages** and **shall not exceed** the total **Connection Fees** received by Ulixai for the **transaction** giving rise to the claim. No indirect/consequential/special/punitive damages. **Indemnity**: the Lawyer shall indemnify and hold harmless Ulixai (and affiliates, officers, employees, agents) from claims/costs (including reasonable attorneys' fees) arising from (i) breach of these Terms/laws, (ii) Lawyer content, (iii) Lawyer services or omissions. No agency/employment/partnership/JV is created. **Survival**: Sections 5, 7, 8, 9, 10, 11, 12 and 13 survive termination.
+11.1. No guarantee regarding legal services; Ulixai does not ensure outcome, quality, or volume of business.
+
+11.2. Platform "as is"; no guarantee of continuous availability.
+
+11.3. **Limitation of liability**: to the extent permitted, Ulixai’s total liability to the Lawyer is limited to direct damages and may not exceed the total Connection Fees received by Ulixai for the transaction giving rise to the claim.
+
+11.4. **Exclusions**: no indirect/consequential/special/punitive damages (loss of profits, clients, reputation, etc.).
+
+11.5. **Indemnification**: the Lawyer indemnifies and holds Ulixai (and its affiliates, officers, employees, agents) harmless from any claim/damage/costs (including attorney fees) related to (i) breaches of the Terms/laws, (ii) their content, (iii) their advice/omissions.
+
+11.6. No representation: nothing creates mandate, employment, partnership, or joint venture between Ulixai and the Lawyer.
+
+11.7. **Survival**: articles 5, 7, 8, 9, 10, 11, 12, and 13 survive termination.
 
 ---
 
-## 12. Governing Law – ICC Arbitration – Estonian Courts – Class Actions
+## 12. Governing Law – Arbitration – Estonian Jurisdiction – Class Actions
 
-**Substantive law:** for each Connection, the **laws of the Country of Intervention** govern the Ulixai–Lawyer relationship, subject to mandatory local rules and peremptory international norms.
+12.1. **Substantive law**: for each Connection, the Ulixai–Lawyer relationship is governed by the laws of the Country of Intervention, subject to local public policy rules and mandatory international norms. **Supplementarily and for interpretation/validity of these Terms and for any matter not governed by the Country of Intervention’s law, Estonian law applies.**
 
-**Mandatory ICC arbitration** for any Ulixai–Lawyer dispute. **Seat: Tallinn (Estonia). Language: French.** Tribunal applies the **substantive law** defined above. Proceedings are **confidential**.
+12.2. **Mandatory ICC Arbitration**: any dispute between Ulixai/Lawyer is finally resolved under the ICC Arbitration Rules. **Seat: Tallinn, Estonia**. **Language: French.** The tribunal applies the substantive law defined in 12.1. Confidential procedure.
 
-**Class/collective actions are waived** to the extent permitted by law.
+12.3. **Waiver of class actions**: to the extent permitted, all collective/group/representative actions are excluded; individual claims only.
 
-**Exclusive jurisdiction of Estonian courts** (Tallinn) for **non-arbitrable** claims, enforcement of awards and urgent measures; the Lawyer waives objections to venue/forum non conveniens.
+12.4. **Exclusive jurisdiction of Estonian courts**: for any non-arbitrable claims and for enforcement of awards or urgent measures, the **Estonian courts** (with jurisdiction in Tallinn) have **exclusive jurisdiction**. The Lawyer waives any forum or inconvenience objection.
 
 ---
 
 ## 13. Miscellaneous
 
-**Assignment**: Ulixai may assign these Terms to a group entity or successor; the Lawyer may not assign without Ulixai's consent. **Entire Agreement**: these Terms supersede prior understandings. **Notices**: by posting on the Platform, in-app, or via the contact form. **Interpretation**: headings are for convenience; no **contra proferentem**. **Languages**: translations may be provided; **French prevails** for interpretation. **Severability**: invalid terms are replaced by valid ones of equivalent effect. **No waiver**: failure to enforce is not a waiver.
+13.1. **Assignment**: Ulixai may assign the Terms to a group entity or successor; the Lawyer may not assign without Ulixai’s written consent.
+
+13.2. **Entire agreement**: the Terms constitute the complete agreement and replace any prior agreement regarding the same subject.
+
+13.3. **Notices**: by publication on the Platform, in-app notification, or via the contact form.
+
+13.4. **Interpretation**: headings are indicative. No contra proferentem rule.
+
+13.5. **Languages**: translations may be provided; English prevails for interpretation.
+
+13.6. **Partial invalidity**: if a provision is invalid/unenforceable, the remainder remains in effect; replacement by a valid provision of equivalent effect where possible.
+
+13.7. **Non-waiver**: failure to exercise a right does not constitute a waiver.
 
 ---
 
 ## 14. Contact
 
-**Contact form (support & legal requests)**: **http://localhost:5174/contact**
+For any legal question or request: **http://localhost:5174/contact**
 `;
 
   const defaultEs = `
-# Condiciones de Uso – Abogados (Global)
+# Condiciones Generales de Uso – Abogados (Global)
 
-
-**SOS Expat por Ulixai OÜ** (la "**Plataforma**", "**SOS**", "**nosotros**")
-
+**SOS Expat de Ulixai OÜ** (la « **Plataforma** », « **SOS** », « **nosotros** »)
 
 **Versión 2.2 – Última actualización: 16 de junio de 2025**
 
-
 ---
-
 
 ## 1. Definiciones
 
+**Aplicación / Sitio / Plataforma**: servicios digitales operados por **Ulixai OÜ** que permiten la conexión entre usuarios (los « **Usuarios** ») y abogados (los « **Abogados** »).
 
-"Conexión" significa la introducción técnica/operativa que permite el contacto (compartir detalles y/o iniciar una llamada/mensaje/vídeo). "País de Intervención" significa la jurisdicción principalmente dirigida por la Solicitud del Usuario en el momento de la Conexión; si hay varias, la más estrechamente conectada. "Tarifa de Conexión" significa **EUR 19** (si se paga en EUR) o **USD 25** (si se paga en USD), sujeto a cambios futuros y/o calendarios locales por país/moneda con efecto prospectivo.
+**Conexión**: la introducción técnica/operativa realizada por la Plataforma entre un Usuario y un Abogado, materializada mediante (i) la transmisión de datos de contacto, (ii) la apertura de un canal de comunicación (llamada, mensaje, videoconferencia), o (iii) la aceptación por parte del Abogado de una solicitud realizada a través de la Plataforma.
 
+**País de Intervención**: la jurisdicción principal a la que se dirige la Solicitud en el momento de la Conexión. En su defecto, el país de residencia del Usuario en el momento de la solicitud; en caso de pluralidad, la jurisdicción más estrechamente vinculada al objeto de la Solicitud.
 
----
+**Tarifa de Conexión**: tarifa debida a SOS por cada Conexión (art. 7): **19 €** si se paga en **EUR** o **25 $ USD** si se paga en **USD**, precisando que Ulixai puede modificar estos montos y/o publicar tarifas locales por país/moneda, con efecto prospectivo.
 
+**Solicitud**: la situación/proyecto legal presentado por el Usuario.
 
-## 2. Propósito, Alcance y Aceptación
-
-
-Ulixai actúa **únicamente como intermediario técnico**. Ulixai no proporciona asesoría legal y no es parte en los compromisos Abogado-Usuario. **La aceptación click-wrap** constituye firma electrónica y consentimiento; SOS puede conservar evidencia técnica. SOS puede actualizar estos Términos y/o tarifas con efecto prospectivo al publicar. Plazo: indefinido.
-
-
----
-
-
-## 3. Estado del Abogado – Independencia y Cumplimiento
-
-
-El Abogado actúa como profesional independiente. No se crea empleo, mandato, agencia, asociación o empresa conjunta. El Abogado es exclusivamente responsable de (i) calificaciones, admisiones y licencias, (ii) seguro de responsabilidad profesional adecuado para todos los Países de Intervención previstos, (iii) ley local y reglas profesionales (ética, publicidad/solicitud, conflictos, confidencialidad, AML/KYC, impuestos, protección del consumidor, etc.). Ulixai no supervisa ni evalúa el asesoramiento del Abogado.
-
-
-**Capacidad profesional (B2B).** El Abogado confirma que actúa **exclusivamente con fines profesionales**. Los regímenes de protección del consumidor no se aplican a la relación Ulixai-Abogado.
-
+**Proveedor(es) de pago**: servicios de terceros utilizados para recibir el pago único del Usuario y distribuir los fondos.
 
 ---
 
+## 2. Objeto, alcance y aceptación
 
-## 4. Cuenta, Verificaciones y Seguridad
+2.1. Estas CGU regulan el acceso y uso de la Plataforma por parte de los Abogados.
 
+2.2. Ulixai actúa únicamente como intermediario técnico de conexión. Ulixai no ejerce la profesión de abogado, no ofrece asesoramiento legal y no es parte de la relación Abogado-Usuario.
 
-Derecho válido a ejercer en al menos una jurisdicción; documentos de identidad/calificación; revisión manual (que puede incluir verificaciones de vídeo y AML/KYC). La precisión y actualizaciones son obligación del Abogado; una cuenta por Abogado. Mantenga las credenciales seguras e informe inmediatamente de cualquier compromiso.
+2.3. **Aceptación electrónica (click-wrap).** El Abogado acepta las CGU marcando la casilla correspondiente durante el registro y/o utilizando la Plataforma. Este acto equivale a firma electrónica y consentimiento contractual. SOS puede conservar registros de prueba (marcas de tiempo, identificadores técnicos).
 
+2.4. **Modificaciones.** SOS puede actualizar las CGU y/o la tarifa (por país/moneda) en cualquier momento, con efecto prospectivo tras su publicación en la Plataforma. El uso continuado implica aceptación.
 
----
-
-
-## 5. Reglas de Uso – Conflictos, Confidencialidad, Sin Evasión
-
-
-**Conflictos.** Cribado de conflictos antes de cualquier asesoramiento; retirarse e informar al Usuario si existe un conflicto. **Confidencialidad.** Mantener el privilegio y confidencialidad bajo la ley del País de Intervención. **Sin evasión.** Ulixai no toma comisión sobre honorarios legales. Cada nueva Conexión con un nuevo Usuario a través de la Plataforma genera la Tarifa de Conexión. Evitar la Plataforma para evadir tarifas en una nueva introducción está prohibido. **Conducta prohibida** incluye fraude de identidad, contenido ilegal, manipulación, colusión/boicot, incumplimiento de sanciones/controles de exportación, o cualquier actividad ilegal. **Disponibilidad** es "tal cual"; el acceso puede ser restringido donde sea requerido por ley.
-
+2.5. Duración: indefinida.
 
 ---
 
+## 3. Estatus del Abogado – Independencia y cumplimiento
 
-## 6. Relación Abogado-Usuario (Fuera de la Plataforma)
+3.1. El Abogado actúa como profesional independiente; no se crea ninguna relación laboral, mandato, agencia, asociación o joint venture con Ulixai.
 
+3.2. El Abogado es el único responsable de: (i) sus títulos, inscripciones en colegios de abogados/equivalentes y autorizaciones para ejercer; (ii) su seguro de responsabilidad civil profesional vigente y adecuado para los Países de Intervención; (iii) cumplir con las leyes y normas profesionales locales (ética, publicidad/contacto, conflictos de interés, secreto profesional, AML/KYC, fiscalidad, protección del consumidor, etc.).
 
-Después de la Conexión, las partes pueden contratar **fuera de la Plataforma**. Ulixai no fija ni cobra los honorarios del Abogado (excepto a través del mecanismo de pago único a continuación). El Abogado proporciona acuerdos de tarifas locales, maneja impuestos y cumple con reglas locales.
+3.3. Ulixai no supervisa ni evalúa el contenido o la calidad del asesoramiento del Abogado y no asume ninguna responsabilidad al respecto.
 
-
----
-
-
-## 7. Honorarios, Pago Único e Impuestos
-
-
-**Tarifa Plana de Conexión.** EUR 19 o USD 25 por Conexión, exclusive de impuestos y cargos del procesador de pagos. Ulixai puede cambiar cantidades y/o publicar calendarios locales por país/moneda con efecto prospectivo.
-
-
-**Pago único y división.** El Usuario realiza **un pago** a través de la Plataforma cubriendo (i) el honorario del Abogado (según lo acordado) y (ii) la Tarifa de Conexión de Ulixai. Ulixai (o su procesador) cobra, **deduce** su Tarifa, luego **remite** el resto al Abogado, quien **autoriza** tales deducciones y asignaciones.
-
-
-**Debido y no reembolsable.** La Tarifa de Conexión se **gana en** la Conexión y es **no reembolsable** (sujeto a **buena voluntad discrecional** de Ulixai **en la medida permitida por ley** en caso de falla solo de la Plataforma).
-
-
-**Reembolso del Usuario.** Si se otorga, los reembolsos son **asumidos por la parte del Abogado**: Ulixai puede **retener/compensar** contra pagos futuros o solicitar reembolso si no hay ninguno.
-
-
-**TC e impuestos.** Las tarifas/cuotas TC del procesador pueden aplicarse; el Abogado es responsable de todos los impuestos aplicables; Ulixai cobra/remite IVA o equivalente local en la Tarifa de Conexión donde sea requerido. **Compensación** autorizada.
-
+3.4. **Capacidad profesional (B2B).** El Abogado declara actuar exclusivamente con fines profesionales. Las protecciones de consumidores no se aplican a la relación Ulixai–Abogado.
 
 ---
 
+## 4. Creación de cuenta, verificaciones y seguridad
 
-## 8. Pagos – AML/KYC – Sanciones
+4.1. Condiciones: derecho válido a ejercer en al menos una jurisdicción, comprobantes de identidad y calificaciones, seguro de responsabilidad civil vigente.
 
+4.2. Proceso: creación de cuenta, envío de documentos, validación manual que puede incluir entrevista por videoconferencia y controles KYC/AML mediante Proveedores.
 
-Los pagos se procesan por proveedores terceros. El Abogado acepta sus términos y procedimientos AML/KYC. Ulixai puede retrasar, retener o cancelar pagos en caso de fraude sospechoso, incumplimiento u orden legal. El acceso puede ser restringido en territorios sancionados donde sea requerido por ley. El Abogado garantiza que no está en listas de sanciones y cumple con controles de exportación.
+4.3. Exactitud y actualización: el Abogado garantiza la exactitud y actualidad de la información; una (1) cuenta por Abogado.
 
-
----
-
-
-## 9. Protección de Datos (Marco Global)
-
-
-**Funciones.** Para datos de Usuario recibidos para Conexión, **Ulixai y el Abogado** actúan cada uno como **controlador independiente** para sus propios fines. **Bases legales y propósitos** incluyen ejecución de contrato (Conexión), intereses legítimos (seguridad, prevención de fraude, mejora de servicio), cumplimiento legal (AML, sanciones), y consentimiento donde sea aplicable. **Transferencias internacionales** pueden ocurrir con garantías apropiadas donde sea requerido. **Derechos y contacto** a través del formulario de contacto de la Plataforma. **Medidas de seguridad** se aplican; violaciones de datos se notifican según sea requerido. El Abogado procesa datos bajo la ley del País de Intervención y secreto profesional.
-
+4.4. Seguridad: el Abogado protege sus credenciales; cualquier actividad realizada a través de la cuenta se considera hecha por él; notificación inmediata de cualquier compromiso.
 
 ---
 
+## 5. Reglas de uso – Conflictos, confidencialidad, no elusión
 
-## 10. Propiedad Intelectual
+5.1. **Conflictos de interés.** El Abogado realiza un examen adecuado antes de cualquier asesoramiento. En caso de conflicto, se retira e informa al Usuario.
 
+5.2. **Secreto profesional y confidencialidad.** El Abogado respeta la confidencialidad/secreto profesional según la ley aplicable del País de Intervención. Los intercambios no son grabados por SOS, salvo obligaciones legales.
 
-La Plataforma, marcas, logos, bases de datos y contenidos están protegidos. No se ceden derechos al Abogado más allá de un derecho personal, no exclusivo, no transferible para acceder durante estos Términos. El contenido proporcionado por el Abogado (perfil, foto, descripciones) se licencia a Ulixai en base **mundial, no exclusiva** para hosting y visualización en la Plataforma.
+5.3. **No elusión.** Ulixai no recibe comisión sobre honorarios. Cada nueva Conexión con un Usuario nuevo mediante la Plataforma genera Tarifa de Conexión. Está prohibido eludir la Plataforma para evitar estas tarifas.
 
+5.4. **Conductas prohibidas.** Suplantación de identidad/título, contenidos ilícitos, manipulación, colusión/boicot contra la Plataforma, violación de leyes de sanciones/exportación o cualquier actividad ilegal.
 
----
-
-
-## 11. Garantías, Responsabilidad e Indemnización
-
-
-Sin garantía de resultados legales, calidad, volumen o fiabilidad de Usuarios. La Plataforma se proporciona "tal cual". **Límite de responsabilidad**: en la máxima medida permitida, la responsabilidad total de Ulixai ante el Abogado se limita a **daños directos** y **no excederá** los **Honorarios de Conexión** totales recibidos por Ulixai para la **transacción** que da lugar al reclamo. Sin daños indirectos/consecuentes/especiales/punitivos. **Indemnización**: el Abogado indemnizará y eximirá de responsabilidad a Ulixai (y afiliados, funcionarios, empleados, agentes) de reclamos/costos (incluyendo honorarios de abogados razonables) que surjan de (i) incumplimiento de estos Términos/leyes, (ii) contenido del Abogado, (iii) servicios u omisiones del Abogado. No se crea agencia/empleo/asociación/EJ. **Sobrevivencia**: Secciones 5, 7, 8, 9, 10, 11, 12 y 13 sobreviven a la terminación.
-
+5.5. **Disponibilidad.** La Plataforma se proporciona “tal cual”; no se garantiza disponibilidad continua (mantenimiento, incidentes, fuerza mayor). El acceso puede ser restringido si la ley lo requiere.
 
 ---
 
+## 6. Relación Abogado–Usuario (fuera de la Plataforma)
 
-## 12. Ley Aplicable – Arbitraje ICC – Tribunales Estonios – Acciones Colectivas
+6.1. Tras la Conexión, Abogado y Usuario pueden contratar fuera de la Plataforma (Ulixai no interviene en la fijación ni cobro de honorarios, salvo el mecanismo de pago único descrito a continuación).
 
+6.2. El Abogado entrega sus acuerdos de honorarios según la ley local, recauda/reembolsa impuestos aplicables y cumple normas locales (publicidad, contacto, conflictos de interés, consumidores).
 
-**Ley sustantiva:** para cada Conexión, las **leyes del País de Intervención** rigen la relación Ulixai-Abogado, sujeto a reglas locales obligatorias y normas internacionales imperativas.
-
-
-**Arbitraje ICC obligatorio** para cualquier disputa Ulixai-Abogado. **Sede: Tallín (Estonia). Idioma: francés.** El Tribunal aplica la **ley sustantiva** definida arriba. Los procedimientos son **confidenciales**.
-
-
-**Las acciones colectivas/conjuntas son renunciadas** en la medida permitida por ley.
-
-
-**Jurisdicción exclusiva de tribunales estonios** (Tallín) para reclamos **no arbitrables**, ejecución de laudos y medidas urgentes; el Abogado renuncia a objeciones de competencia/forum non conveniens.
-
+6.3. Ulixai no es responsable de la calidad, exactitud o resultado del asesoramiento del Abogado.
 
 ---
 
+## 7. Tarifas, pago único e impuestos
 
-## 13. Diversos
+7.1. **Tarifa de Conexión (tarifa fija).** 19 € (EUR) o 25 $ (USD) por Conexión, sin impuestos ni tarifas de Proveedor de pago. Ulixai puede modificar estos montos y/o publicar tarifas locales por país/moneda, con efecto prospectivo.
 
+7.2. **Pago único y distribución.** El Usuario realiza un pago único mediante la Plataforma cubriendo (i) honorarios del Abogado (según lo acordado entre Abogado y Usuario) y (ii) la Tarifa de Conexión de Ulixai. Ulixai (o su Proveedor) recibe el pago, deduce la Tarifa de Conexión y transfiere el saldo al Abogado. El Abogado autoriza a Ulixai a realizar estas deducciones y distribuciones.
 
-**Asignación**: Ulixai puede ceder estos Términos a una entidad del grupo o sucesor; el Abogado no puede asignar sin consentimiento de Ulixai. **Acuerdo completo**: estos Términos anulan entendimientos previos. **Avisos**: mediante publicación en la Plataforma, en la app, o a través del formulario de contacto. **Interpretación**: los títulos son por conveniencia; sin **contra proferentem**. **Idiomas**: las traducciones pueden proporcionarse; **el francés prevalece** para interpretación. **Divisibilidad**: términos inválidos se reemplazan por válidos de efecto equivalente. **Sin renuncia**: el incumplimiento de aplicación no es una renuncia.
+7.3. **Exigibilidad y no reembolso.** La Tarifa de Conexión se debe desde la Conexión y no es reembolsable (salvo gesto comercial discrecional de Ulixai en caso de fallo atribuible exclusivamente a la Plataforma y permitido por ley).
 
+7.4. **Reembolso al Usuario.** Si se concede un reembolso al Usuario, se imputa a la parte del Abogado: Ulixai puede retener/compensar la cantidad correspondiente de pagos futuros del Abogado, o solicitar reembolso si no hay pagos pendientes. Ningún reembolso de la Tarifa de Conexión es obligatorio salvo decisión discrecional de Ulixai.
+
+7.5. **Monedas y conversión.** Se pueden ofrecer varias monedas; pueden aplicarse tasas/cargos de conversión del Proveedor.
+
+7.6. **Impuestos.** El Abogado sigue siendo responsable de sus obligaciones fiscales. Ulixai recauda y remite, cuando se requiera, IVA/equivalente local sobre la Tarifa de Conexión.
+
+7.7. **Compensación.** Ulixai puede compensar cualquier cantidad que el Abogado le deba (por reembolso a Usuario u otro) con cualquier monto adeudado al Abogado.
 
 ---
 
+## 8. Pagos – KYC/AML – Sanciones
+
+8.1. Los pagos son procesados por Proveedores externos. El Abogado acepta sus condiciones y procesos KYC/AML.
+
+8.2. Ulixai puede diferir, retener o cancelar pagos en caso de sospecha de fraude, incumplimiento o mandato legal.
+
+8.3. El acceso puede ser restringido en territorios sujetos a sanciones/embargos si la ley lo exige. El Abogado declara no figurar en listas de sanciones y cumplir controles de exportación aplicables.
+
+---
+
+## 9. Datos personales (marco global)
+
+9.1. **Roles.** Para datos de Usuarios recibidos para la Conexión, Ulixai y el Abogado actúan cada uno como responsables de tratamiento para sus fines respectivos.
+
+9.2. **Bases y finalidades.** Ejecución del contrato (Conexión), intereses legítimos (seguridad, prevención de fraude, mejora), cumplimiento legal (AML, sanciones), y, cuando aplique, consentimiento.
+
+9.3. **Transferencias internacionales** con garantías adecuadas cuando se requiera.
+
+9.4. **Derechos y contacto.** Ejercicio de derechos mediante el formulario de contacto de la Plataforma.
+
+9.5. **Seguridad.** Medidas técnicas/organizativas razonables; notificación de violaciones según la ley aplicable.
+
+9.6. El Abogado procesa los datos recibidos conforme a la ley del País de Intervención y su ética profesional (secreto profesional).
+
+---
+
+## 10. Propiedad intelectual
+
+La Plataforma, sus marcas, logotipos, bases de datos y contenidos están protegidos. Ningún derecho se transfiere al Abogado, excepto un derecho personal, no exclusivo e intransferible de acceso durante la vigencia de las CGU. Los contenidos proporcionados por el Abogado (perfil, foto, descripciones) están licenciados mundialmente, de manera no exclusiva, a favor de Ulixai para alojamiento y visualización en la Plataforma.
+
+---
+
+## 11. Garantías, responsabilidad e indemnización
+
+11.1. No hay garantía sobre servicios legales; Ulixai no asegura resultados, calidad ni volumen de negocios.
+
+11.2. Plataforma “tal cual”; no hay garantía de acceso continuo.
+
+11.3. **Limitación de responsabilidad:** en la medida permitida, la responsabilidad total de Ulixai hacia el Abogado se limita a daños directos y no puede exceder el total de la Tarifa de Conexión recibida por Ulixai por la transacción que originó la reclamación.
+
+11.4. **Exclusiones:** no hay responsabilidad por daños indirectos, consecuentes, especiales o punitivos (pérdida de ganancias, clientela, reputación, etc.).
+
+11.5. **Indemnización:** el Abogado indemniza y protege a Ulixai (y sus afiliados, directivos, empleados, agentes) frente a cualquier reclamación/daño/gasto (incluidos honorarios legales) relacionados con (i) incumplimientos de CGU/leyes, (ii) sus contenidos, (iii) sus consejos/omisiones.
+
+11.6. Ninguna representación: nada genera mandato, empleo, asociación o joint venture entre Ulixai y el Abogado.
+
+11.7. **Supervivencia:** los artículos 5, 7, 8, 9, 10, 11, 12 y 13 sobreviven a la terminación.
+
+---
+
+## 12. Ley aplicable – Arbitraje – Jurisdicción estonia – Acciones colectivas
+
+12.1. **Derecho material:** para cada Conexión, la relación Ulixai–Abogado se rige por las leyes del País de Intervención, sujetas a normas imperativas y orden público local. **Suplementariamente y para la interpretación/validez de estas CGU o cuestiones no reguladas por el derecho del País de Intervención, se aplica la ley estonia.**
+
+12.2. **Arbitraje obligatorio CCI:** cualquier disputa Ulixai/Abogado se resuelve de manera definitiva según el Reglamento de Arbitraje de la CCI. **Sede: Tallinn (Estonia)**. **Idioma: francés.** El tribunal aplica el derecho material definido en el art. 12.1. Procedimiento confidencial.
+
+12.3. **Renuncia a acciones colectivas:** en la medida permitida, se excluyen acciones colectivas/grupales/representativas; solo reclamaciones individuales.
+
+12.4. **Competencia exclusiva tribunales de Estonia:** para cualquier demanda no arbitral y ejecución de laudos o medidas urgentes, los **tribunales estonios** (competentes en Tallinn) tienen **competencia exclusiva**. El Abogado renuncia a cualquier objeción de foro o inconveniencia.
+
+---
+
+## 13. Varios
+
+13.1. **Cesión:** Ulixai puede ceder las CGU a una entidad de su grupo o a un sucesor; el Abogado no puede ceder sin consentimiento escrito de Ulixai.
+
+13.2. **Integralidad:** las CGU constituyen el acuerdo completo y reemplazan cualquier acuerdo previo sobre el mismo objeto.
+
+13.3. **Notificaciones:** mediante publicación en la Plataforma, notificación in-app o formulario de contacto.
+
+13.4. **Interpretación:** los títulos son indicativos. No se aplica regla contra proferente.
+
+13.5. **Idiomas:** se pueden proporcionar traducciones; prevalece el inglés para interpretación.
+
+13.6. **Nulidad parcial:** si una cláusula es nula/inaplicable, el resto sigue vigente; reemplazo por cláusula válida de efecto equivalente cuando sea posible.
+
+13.7. **No renuncia:** la falta de ejercicio de un derecho no implica renuncia.
+
+---
 
 ## 14. Contacto
 
-
-**Formulario de contacto (soporte y solicitudes legales)**: [**http://localhost:5174/contact**](http://localhost:5174/contact)
+Para cualquier pregunta o solicitud legal: **[http://localhost:5174/contact](http://localhost:5174/contact)**
 `;
 
   const defaultRu = `
-# Условия использования – Адвокаты (Глобальные)
+# Общие условия использования – Юристы (Глобально)
 
+**SOS Expat от Ulixai OÜ** (далее « **Платформа** », « **SOS** », « **мы** »)
 
-**SOS Expat от Ulixai OÜ** (the "**Платформа**", "**SOS**", "**мы**")
-
-
-**Версия 2.2 – Последнее обновление: 16 июня 2025**
-
+**Версия 2.2 – Последнее обновление: 16 июня 2025 г.**
 
 ---
-
 
 ## 1. Определения
 
+**Приложение / Сайт / Платформа**: цифровые сервисы, управляемые **Ulixai OÜ**, позволяющие соединять пользователей (« **Пользователи** ») с юристами (« **Юристы** »).
 
-"Соединение" означает техническое/операционное знакомство, позволяющее установить контакт (обмен контактной информацией и/или инициирование звонка/сообщения/видео). "Страна вмешательства" означает юрисдикцию, в первую очередь указанную в запросе пользователя на момент соединения; если их несколько, то наиболее тесно связанная юрисдикция. "Плата за соединение" означает **EUR 19** (если платеж производится в EUR) или **USD 25** (если платеж производится в USD), с учетом будущих изменений и/или местных графиков по странам/валютам с перспективным эффектом.
+**Соединение (Connection)**: техническое/операционное действие, осуществляемое Платформой для связи Пользователя с Юристом, включая: (i) передачу контактных данных, (ii) открытие канала связи (звонок, сообщение, видеоконференция), или (iii) принятие Юристом запроса через Платформу.
 
+**Страна вмешательства (Country of Intervention)**: основная юрисдикция, к которой относится Запрос в момент Соединения. Если не указано, страна проживания Пользователя в момент запроса; при множественности – юрисдикция, наиболее тесно связанная с предметом Запроса.
 
----
+**Плата за Соединение (Connection Fee)**: плата, подлежащая уплате SOS за каждое Соединение (п. 7): **19 €** при оплате в **EUR** или **25 $ USD** при оплате в **USD**, с возможностью изменения Ulixai с уведомлением о новых тарифах по странам/валютам с перспективным действием.
 
+**Запрос (Request)**: правовая ситуация/проект, представленный Пользователем.
 
-## 2. Цель, область применения и принятие
-
-
-Ulixai действует **исключительно как технический посредник**. Ulixai не предоставляет правовые консультации и не является стороной в договорах между адвокатом и пользователем. **Принятие click-wrap** составляет электронную подпись и согласие; SOS может сохранять техническое свидетельство. SOS может обновлять эти Условия и/или графики сборов с перспективным эффектом при публикации. Срок: открытый.
-
-
----
-
-
-## 3. Статус адвоката – Независимость и соответствие
-
-
-Адвокат действует как независимый профессионал. Не создаются трудовые отношения, мандат, агентство, партнерство или совместное предприятие. Адвокат несет исключительную ответственность за (i) квалификацию, допуск и лицензии, (ii) профессиональное страхование ответственности, адекватное для всех предусмотренных стран вмешательства, (iii) местное законодательство и профессиональные правила (этика, реклама/привлечение, конфликты, конфиденциальность, AML/KYC, налоги, защита прав потребителей и т. д.). Ulixai не контролирует и не оценивает консультации адвоката.
-
-
-**Профессиональная деятельность (B2B).** Адвокат подтверждает, что действует **исключительно в профессиональных целях**. Режимы защиты прав потребителей не применяются к отношениям между Ulixai и адвокатом.
-
+**Поставщики платежей (Payment Providers)**: сторонние сервисы, используемые для получения единовременной оплаты от Пользователя и распределения средств.
 
 ---
 
+## 2. Цель, область применения и акцепт
 
-## 4. Аккаунт, проверки и безопасность
+2.1. Настоящие Условия регулируют доступ и использование Платформы Юристами.
 
+2.2. Ulixai выступает только как технический посредник. Ulixai не оказывает юридических услуг, не даёт правовых советов и не является стороной отношений Юрист–Пользователь.
 
-Действительное право на практику в по крайней мере одной юрисдикции; документы удостоверения личности/квалификации; ручная проверка (которая может включать проверки по видео и AML/KYC). Точность и обновления являются обязанностью адвоката; один аккаунт на адвоката. Храните учетные данные в безопасности и немедленно сообщайте о взломе.
+2.3. **Электронное согласие (click-wrap).** Юрист принимает Условия, устанавливая галочку при регистрации и/или используя Платформу. Это считается эквивалентом электронной подписи. SOS может сохранять доказательства (временные метки, идентификаторы).
 
+2.4. **Изменения.** SOS может обновлять Условия и/или тарифы (по странам/валютам) в любое время, с перспективным действием после публикации на Платформе. Продолжение использования означает согласие.
 
----
-
-
-## 5. Правила использования – Конфликты, конфиденциальность, без обхода
-
-
-**Конфликты.** Проверка конфликтов перед любыми консультациями; отказ и информирование пользователя при наличии конфликта. **Конфиденциальность.** Сохранение привилегии и конфиденциальности в соответствии с законодательством страны вмешательства. **Без обхода.** Ulixai не берет комиссию с гонораров адвокатов. Каждое новое соединение с новым пользователем через платформу влечет плату за соединение. Избежание платформы для уклонения от сборов при новом знакомстве запрещено. **Запрещенное поведение** включает подделку личности, незаконный контент, манипуляцию, сговор/бойкот, нарушение санкций/экспортного контроля или любую незаконную деятельность. **Доступность** предоставляется "в том виде, в котором она есть"; доступ может быть ограничен, если это требуется по закону.
-
+2.5. Срок действия: бессрочно.
 
 ---
 
+## 3. Статус Юриста – Независимость и соблюдение норм
 
-## 6. Отношения адвокат-пользователь (вне платформы)
+3.1. Юрист действует как независимый профессионал; никакие трудовые, агентские, ассоциированные или совместные отношения с Ulixai не создаются.
 
+3.2. Юрист несет полную ответственность за: (i) свои квалификации и регистрацию в профессиональных органах; (ii) наличие действующей профессиональной страховки; (iii) соблюдение местного законодательства и правил профессии (этика, реклама, конфликт интересов, тайна, AML/KYC, налоги, защита потребителей и т.д.).
 
-После соединения стороны могут заключить договор **вне платформы**. Ulixai не устанавливает и не собирает гонорары адвоката (кроме как через механизм единовременного платежа ниже). Адвокат предоставляет местные соглашения о гонорарах, обрабатывает налоги и соблюдает местные правила.
+3.3. Ulixai не контролирует качество или содержание консультаций Юриста и не несет ответственности за это.
 
-
----
-
-
-## 7. Гонорары, единовременный платеж и налоги
-
-
-**Фиксированная плата за соединение.** EUR 19 или USD 25 за соединение, без учета налогов и платежей процессора платежей. Ulixai может изменять суммы и/или публиковать местные графики по странам/валютам с перспективным эффектом.
-
-
-**Единовременный платеж и разделение.** Пользователь производит **один платеж** через платформу, охватывающий (i) гонорар адвоката (согласно договоренности) и (ii) плату за соединение Ulixai. Ulixai (или его процессор) собирает, **вычитает** свой сбор, затем **перечисляет** остаток адвокату, который **авторизует** такие вычеты и распределения.
-
-
-**Подлежит оплате и не подлежит возврату.** Плата за соединение **зарабатывается при** соединении и **не подлежит возврату** (с учетом дискреционной **доброй воли** Ulixai **в допустимой законом мере** в случае отказа только платформы).
-
-
-**Возврат пользователю.** Если утвержден, возвраты **несет доля адвоката**: Ulixai может **удержать/компенсировать** против будущих выплат или запросить возмещение, если они не причитаются.
-
-
-**Обмен валюты и налоги.** Могут применяться ставки обмена валюты/сборы процессора; адвокат несет ответственность за все применимые налоги; Ulixai собирает/перечисляет НДС или местный эквивалент за плату за соединение, где требуется. **Компенсация** авторизирована.
-
+3.4. **Профессиональная деятельность (B2B).** Юрист заявляет, что действует исключительно в профессиональных целях. Права потребителей не применяются к отношениям Ulixai–Юрист.
 
 ---
 
+## 4. Создание аккаунта, проверки и безопасность
 
-## 8. Платежи – AML/KYC – Санкции
+4.1. Условия: право на профессиональную практику в хотя бы одной юрисдикции, подтверждение личности и квалификации, действующая страховка.
 
+4.2. Процесс: регистрация, отправка документов, ручная проверка, включая видеособеседование и KYC/AML проверки через Поставщиков.
 
-Платежи обрабатываются поставщиками третьих сторон. Адвокат соглашается с их условиями и процедурами AML/KYC. Ulixai может отложить, удержать или отменить выплаты в случае подозрения на мошенничество, несоответствие или судебное решение. Доступ может быть ограничен на санкционированных территориях, где это требуется по закону. Адвокат гарантирует, что он не находится в списках санкций и соблюдает экспортный контроль.
+4.3. Точность и актуальность: Юрист гарантирует правильность и актуальность информации; один аккаунт на Юриста.
 
-
----
-
-
-## 9. Защита данных (глобальная база)
-
-
-**Роли.** Для данных пользователя, полученных для соединения, **Ulixai и адвокат** каждый действуют как **независимый контролер** для своих собственных целей. **Правовые основы и цели** включают выполнение договора (соединение), законные интересы (безопасность, предотвращение мошенничества, улучшение услуги), соответствие закону (AML, санкции) и согласие, где применимо. **Международные передачи** могут происходить с надлежащими гарантиями, где требуется. **Права и контакт** через форму контакта платформы. **Меры безопасности** применяются; утечки данных уведомляются согласно требованиям. Адвокат обрабатывает данные в соответствии с законодательством страны вмешательства и профессиональной тайной.
-
+4.4. Безопасность: Юрист защищает свои данные доступа; любая активность через аккаунт считается совершенной им; немедленное уведомление при компрометации.
 
 ---
 
+## 5. Правила использования – Конфликты, конфиденциальность, недопущение обхода
+
+5.1. **Конфликты интересов.** Юрист проверяет наличие конфликтов перед консультацией. При конфликте он отказывается от работы и информирует Пользователя.
+
+5.2. **Конфиденциальность.** Юрист соблюдает профессиональную тайну в соответствии с законом страны вмешательства. SOS не записывает обмены, за исключением случаев, требуемых законом.
+
+5.3. **Недопущение обхода.** Ulixai получает плату только за новые Соединения через Платформу. Запрещено обходить Платформу для уклонения от платы.
+
+5.4. **Запрещенное поведение.** Выдача себя за кого-либо, незаконный контент, манипуляции, сговор/бойкот Платформы, нарушение санкций/экспорта или любая незаконная деятельность.
+
+5.5. **Доступность.** Платформа предоставляется «как есть»; непрерывность работы не гарантируется (техническое обслуживание, сбои, форс-мажор). Доступ может быть ограничен по закону.
+
+---
+
+## 6. Отношения Юрист–Пользователь (вне Платформы)
+
+6.1. После Соединения Юрист и Пользователь могут заключать соглашения вне Платформы. Ulixai не участвует в согласовании или оплате гонораров, кроме описанного единовременного платежа.
+
+6.2. Юрист обеспечивает соблюдение местного законодательства при заключении соглашений о гонорарах, собирает налоги и соблюдает местные нормы (реклама, конфликты интересов, защита потребителей).
+
+6.3. Ulixai не несет ответственности за качество, точность или результат консультаций.
+
+---
+
+## 7. Тарифы, единоразовый платеж и налоги
+
+7.1. **Плата за Соединение.** 19 € (EUR) или 25 $ (USD) за Соединение, без налогов и комиссий Поставщика платежей. Ulixai может менять тарифы по странам/валютам с перспективным действием.
+
+7.2. **Единоразовый платеж и распределение.** Пользователь оплачивает единоразово через Платформу, покрывая (i) гонорары Юриста и (ii) Плату за Соединение Ulixai. Ulixai (или Поставщик) удерживает Плату за Соединение и перечисляет остаток Юристу.
+
+7.3. **Неотзывность.** Плата за Соединение подлежит уплате с момента Соединения и не возвращается, кроме как по усмотрению Ulixai при сбое, вызванном Платформой.
+
+7.4. **Возврат Пользователю.** Если возврат предоставлен, он компенсируется из суммы, причитающейся Юристу; Ulixai может удержать сумму из будущих выплат.
+
+7.5. **Валюты и конвертация.** Возможна оплата в разных валютах; могут применяться комиссии за конвертацию.
+
+7.6. **Налоги.** Юрист отвечает за свои налоговые обязательства. Ulixai может собирать и перечислять НДС/аналогичные налоги на Плату за Соединение.
+
+7.7. **Компенсация.** Ulixai может компенсировать любые долги Юриста суммами, причитающимися ему.
+
+---
+
+## 8. Платежи – KYC/AML – Санкции
+
+8.1. Платежи обрабатываются сторонними Поставщиками. Юрист принимает их условия и процессы KYC/AML.
+
+8.2. Ulixai может задерживать или отменять платежи при подозрении на мошенничество, нарушение или по закону.
+
+8.3. Доступ может быть ограничен в странах, подпадающих под санкции. Юрист заявляет, что не находится в санкционных списках и соблюдает экспортные ограничения.
+
+---
+
+## 9. Персональные данные (глобальная рамка)
+
+9.1. **Роли.** Для данных Пользователей, полученных для Соединения, Ulixai и Юрист действуют как независимые контролеры данных.
+
+9.2. **Цели.** Выполнение контракта (Соединение), законные интересы (безопасность, предотвращение мошенничества, улучшение), соблюдение закона (AML, санкции), согласие, если требуется.
+
+9.3. **Международные передачи** с адекватными гарантиями, если необходимо.
+
+9.4. **Права и контакт.** Реализация прав через форму контакта на Платформе.
+
+9.5. **Безопасность.** Разумные технические и организационные меры; уведомление о нарушениях согласно закону.
+
+9.6. Юрист обрабатывает данные в соответствии с законодательством страны вмешательства и профессиональной этикой.
+
+---
 
 ## 10. Интеллектуальная собственность
 
-
-Платформа, товарные знаки, логотипы, базы данных и содержание защищены. Адвокату не предоставляются никакие права, кроме личного, неисключительного, неотчуждаемого права на доступ в течение этих условий. Содержание, предоставленное адвокатом (профиль, фото, описания), лицензируется Ulixai на **мировой, неисключительной** основе для размещения и отображения на платформе.
-
+Платформа, бренды, логотипы, базы данных и контент защищены. Юрист получает только личное, неисключительное, непередаваемое право на доступ во время действия Условий. Контент Юриста (профиль, фото, описание) лицензируется Ulixai для размещения и отображения на Платформе.
 
 ---
 
+## 11. Гарантии, ответственность и возмещение
 
-## 11. Гарантии, ответственность и возмещение убытков
+11.1. Юридические услуги предоставляются без гарантий; Ulixai не гарантирует результат, качество или объем работы.
 
+11.2. Платформа «как есть»; непрерывность работы не гарантируется.
 
-Нет гарантий в отношении юридических результатов, качества, объема или надежности пользователей. Платформа предоставляется "в том виде, в котором она есть". **Лимит ответственности**: в максимально допустимой законом степени общая ответственность Ulixai перед адвокатом ограничена **прямыми убытками** и **не превышает** всего **сборов за соединение**, полученные Ulixai за **операцию**, дающую основание для иска. Нет косвенных/побочных/специальных/штрафных убытков. **Возмещение убытков**: адвокат возмещает убытки и освобождает Ulixai (и аффилированных лиц, должностных лиц, работников, агентов) от исков/расходов (включая разумные гонорары адвокатов), вытекающих из (i) нарушения этих условий/законов, (ii) содержания адвоката, (iii) услуг или упущений адвоката. Не создаются отношения агентства/трудовые отношения/партнерство/СП. **Выживание**: разделы 5, 7, 8, 9, 10, 11, 12 и 13 выживают при расторжении.
+11.3. **Ограничение ответственности:** максимальная ответственность Ulixai перед Юристом ограничена суммой Платы за Соединение, полученной за транзакцию, вызвавшую претензию.
 
+11.4. **Исключения:** нет ответственности за косвенные, особые, штрафные убытки.
 
----
+11.5. **Возмещение:** Юрист компенсирует Ulixai любые убытки, претензии, расходы (включая юридические), связанные с нарушением Условий, контента или консультаций.
 
+11.6. Никаких агентских или партнерских отношений не возникает.
 
-## 12. Применимое право – Арбитраж ICC – Эстонские суды – Коллективные иски
-
-
-**Материальное право:** для каждого соединения **законы страны вмешательства** регулируют отношения Ulixai-адвокат с учетом обязательных местных правил и неотъемлемых международных норм.
-
-
-**Обязательный арбитраж ICC** для любого спора между Ulixai и адвокатом. **Место проведения: Таллин (Эстония). Язык: французский.** Арбитраж применяет **материальное право**, определенное выше. Разбирательство **конфиденциально**.
-
-
-**Коллективные/групповые иски отказываются** в допустимой законом мере.
-
-
-**Исключительная юрисдикция эстонских судов** (Таллин) для **не подлежащих арбитражу** исков, принудительного исполнения решений и срочных мер; адвокат отказывается от возражений по поводу подсудности/форум non conveniens.
-
+11.7. **Сохранение действия:** пп. 5, 7–13 остаются в силе после прекращения.
 
 ---
 
+## 12. Применимое право – Арбитраж – Эстония – Коллективные иски
 
-## 13. Прочее
+12.1. **Материальное право:** для каждого Соединения отношения Ulixai–Юрист регулируются правом страны вмешательства, с учетом императивных норм. **В дополнение и для толкования настоящих Условий применяется право Эстонии.**
 
+12.2. **Обязательный арбитраж ICC:** любые споры решаются окончательно по правилам ICC. **Место: Таллинн, Эстония.** **Язык: французский.** Арбитраж применяет материальное право, указанное в п.12.1. Конфиденциально.
 
-**Уступка**: Ulixai может уступить эти условия групповой компании или правопреемнику; адвокат не может уступить без согласия Ulixai. **Полнота соглашения**: эти условия заменяют предыдущие договоренности. **Уведомления**: путем публикации на платформе, в приложении или через форму контакта. **Интерпретация**: заголовки приводятся для удобства; без **contra proferentem**. **Языки**: переводы могут предоставляться; **французский преобладает** при интерпретации. **Делимость**: неверные условия заменяются действительными условиями эквивалентного эффекта. **Без отказа**: неиспользование права не является отказом.
+12.3. **Отказ от коллективных исков:** допускаются только индивидуальные претензии.
 
+12.4. **Исключительная юрисдикция судов Эстонии:** для неарбитражных дел и исполнения арбитражных решений. Юрист отказывается от возражений по поводу неудобства форума.
 
 ---
 
+## 13. Разное
 
-## 14. Контакт
+13.1. **Передача прав:** Ulixai может передавать Условия аффилированной компании или правопреемнику; Юрист не может без письменного согласия.
 
+13.2. **Полнота соглашения:** Условия являются полным соглашением и заменяют предыдущие.
 
-**Форма контакта (поддержка и юридические запросы)**: [**http://localhost:5174/contact**](http://localhost:5174/contact)
+13.3. **Уведомления:** публикация на Платформе, через приложение или контактную форму.
+
+13.4. **Толкование:** заголовки справочные. Не применяется правило против составителя.
+
+13.5. **Языки:** переводы возможны; приоритет – английский.
+
+13.6. **Частичная недействительность:** недействительная статья не влияет на остальные; заменяется допустимой.
+
+13.7. **Отсутствие отказа:** неиспользование права не означает отказ.
+
+---
+
+## 14. Контакты
+
+По вопросам (поддержка и юридические запросы): **[http://localhost:5174/contact](http://localhost:5174/contact)**
 `;
 
   const defaultDe = `
-# Nutzungsbedingungen – Anwälte (Global)
+# Allgemeine Nutzungsbedingungen – Anwälte (Global)
 
-
-**SOS Expat von Ulixai OÜ** (die "**Plattform**", "**SOS**", "**wir**")
-
+**SOS Expat von Ulixai OÜ** (die « **Plattform** », « **SOS** », « **wir** »)
 
 **Version 2.2 – Letzte Aktualisierung: 16. Juni 2025**
 
-
 ---
-
 
 ## 1. Definitionen
 
+**Anwendung / Website / Plattform**: Digitale Dienste, die von **Ulixai OÜ** betrieben werden und die Vernetzung zwischen Nutzern (den « **Nutzern** ») und Anwälten (den « **Anwälten** ») ermöglichen.
 
-"Verbindung" bezeichnet die technische/operationale Einleitung, die einen Kontakt ermöglicht (Austausch von Details und/oder Einleitung eines Anrufs/einer Nachricht/eines Videos). "Interventionsland" bezeichnet die Gerichtsbarkeit, die von der Benutzeranfrage zum Zeitpunkt der Verbindung hauptsächlich anvisiert wird; bei mehreren die am engsten verbundene Gerichtsbarkeit. "Verbindungsgebühr" bedeutet **EUR 19** (wenn in EUR bezahlt) oder **USD 25** (wenn in USD bezahlt), vorbehaltlich künftiger Änderungen und/oder lokaler Gebührenordnungen pro Land/Währung mit prospektiver Wirkung.
+**Vermittlung**: Die technische/operative Einführung, die von der Plattform zwischen einem Nutzer und einem Anwalt vorgenommen wird, die sich manifestiert durch (i) die Übermittlung von Kontaktdaten, (ii) die Eröffnung eines Kommunikationskanals (Anruf, Nachricht, Video), oder (iii) die Annahme einer über die Plattform gestellten Anfrage durch den Anwalt.
 
+**Einsatzland**: Die Rechtsordnung, die zum Zeitpunkt der Vermittlung hauptsächlich von der Anfrage betroffen ist. Fehlt eine solche, gilt das Wohnsitzland des Nutzers zum Zeitpunkt der Anfrage; bei mehreren Jurisdiktionen gilt diejenige, die dem Gegenstand der Anfrage am engsten verbunden ist.
+
+**Vermittlungsgebühr**: Gebühr, die SOS für jede Vermittlung geschuldet wird (Art. 7): **19 €** bei Zahlung in **EUR** oder **25 $ USD** bei Zahlung in **USD**; Ulixai kann diese Beträge ändern und/oder lokale Tarife nach Land/Währung veröffentlichen, mit prospektiver Wirkung.
+
+**Anfrage**: Die vom Nutzer dargestellte rechtliche Situation oder das rechtliche Projekt.
+
+**Zahlungsdienstleister**: Dritte, die für den Einzug der einmaligen Zahlung des Nutzers und die Verteilung der Gelder genutzt werden.
 
 ---
-
 
 ## 2. Zweck, Geltungsbereich und Annahme
 
+2.1. Diese AGB regeln den Zugang und die Nutzung der Plattform durch Anwälte.
 
-Ulixai fungiert **ausschließlich als technischer Vermittler**. Ulixai erbringt keine Rechtsberatung und ist nicht Partei von Anwalt-Benutzer-Engagements. **Click-wrap-Annahme** stellt eine elektronische Signatur und Zustimmung dar; SOS kann technische Nachweise aufbewahren. SOS kann diese Bedingungen und/oder Gebührenordnungen mit prospektiver Wirkung bei Veröffentlichung aktualisieren. Laufzeit: offene Laufzeit.
+2.2. Ulixai agiert ausschließlich als technischer Vermittler. Ulixai übt den Anwaltsberuf nicht aus, erbringt keine Rechtsberatung und ist nicht Partei der Beziehung zwischen Anwalt und Nutzer.
 
+2.3. **Elektronische Zustimmung (Click-Wrap).** Der Anwalt akzeptiert die AGB durch Anklicken des entsprechenden Feldes bei der Registrierung und/oder durch Nutzung der Plattform. Diese Handlung gilt als elektronische Unterschrift und vertragliche Zustimmung. SOS kann Nachweisprotokolle (Zeitstempel, technische Kennungen) speichern.
 
----
+2.4. **Änderungen.** SOS kann die AGB und/oder die Gebührenordnung (nach Land/Währung) jederzeit mit prospektiver Wirkung nach Veröffentlichung auf der Plattform aktualisieren. Die fortgesetzte Nutzung gilt als Zustimmung.
 
-
-## 3. Anwaltsstatus – Unabhängigkeit und Compliance
-
-
-Der Anwalt handelt als unabhängiger Fachmann. Es werden keine Arbeitsverhältnisse, Mandat, Agentur, Partnerschaft oder Joint Venture begründet. Der Anwalt trägt allein die Verantwortung für (i) Qualifikationen, Zulassungen und Lizenzen, (ii) angemessene Berufshaftpflichtversicherung für alle beabsichtigten Interventionsländer, (iii) Landesrecht und Berufsregeln (Ethik, Werbung/Akquisition, Konflikte, Geheimhaltung, AML/KYC, Steuern, Verbraucherschutz usw.). Ulixai überwacht oder bewertet die Beratung des Anwalts nicht.
-
-
-**Berufliche Tätigkeit (B2B).** Der Anwalt bestätigt, dass er **ausschließlich zu beruflichen Zwecken** handelt. Verbraucherschutzbestimmungen gelten nicht für das Ulixai-Anwalt-Verhältnis.
-
+2.5. Laufzeit: unbefristet.
 
 ---
 
+## 3. Status des Anwalts – Unabhängigkeit und Compliance
 
-## 4. Konto, Überprüfungen und Sicherheit
+3.1. Der Anwalt handelt als unabhängiger Berufsträger; es entsteht kein Arbeits-, Agentur-, Mandats-, Partnerschafts- oder Joint-Venture-Verhältnis mit Ulixai.
 
+3.2. Der Anwalt ist allein verantwortlich für: (i) seine Abschlüsse, Titel, Zulassungen zur Rechtsanwaltschaft/Äquivalente und Berufsausübungsberechtigungen; (ii) seine gültige Berufshaftpflichtversicherung, angepasst an die Einsatzländer; (iii) die Einhaltung der lokalen Gesetze und Berufsregeln (Berufsordnung, Werbung/Mandantenakquise, Interessenkonflikte, Berufsgeheimnis, Geldwäscheprävention/KYC, Steuern, Verbraucherschutz usw.).
 
-Gültiges Recht zur Ausübung in mindestens einer Gerichtsbarkeit; Identitäts-/Qualifikationsdokumente; manuelle Überprüfung (die Video- und AML/KYC-Überprüfungen umfassen kann). Genauigkeit und Aktualisierungen sind Pflicht des Anwalts; ein Konto pro Anwalt. Halten Sie Anmeldedaten sicher und melden Sie Kompromisse sofort.
+3.3. Ulixai überwacht oder bewertet weder den Inhalt noch die Qualität der Beratung des Anwalts und übernimmt hierfür keinerlei Verantwortung.
 
-
----
-
-
-## 5. Nutzungsregeln – Konflikte, Geheimhaltung, kein Umgehen
-
-
-**Konflikte.** Überprüfen Sie Konflikte vor jeder Beratung; treten Sie zurück und informieren Sie den Benutzer, wenn ein Konflikt besteht. **Geheimhaltung.** Bewahren Sie Vertraulichkeit und Geheimnisse gemäß Recht des Interventionslandes. **Kein Umgehen.** Ulixai nimmt keine Provisionen auf Anwaltsgebühren. Jede neue Verbindung mit einem neuen Benutzer über die Plattform zieht die Verbindungsgebühr nach sich. Das Vermeiden der Plattform zur Gebührenvermeidung bei einer neuen Einführung ist verboten. **Verbotenes Verhalten** umfasst Identitätsdelikte, illegale Inhalte, Manipulation, Absprache/Boykott, Verstöße gegen Sanktionen/Exportkontrollen oder andere rechtswidrige Aktivitäten. **Verfügbarkeit** liegt im Bestand "wie besehen"; der Zugriff kann wo erforderlich eingeschränkt werden.
-
+3.4. **Berufliche Kapazität (B2B).** Der Anwalt erklärt, ausschließlich zu beruflichen Zwecken zu handeln. Verbraucherschutzregelungen gelten nicht für die Beziehung zwischen Ulixai und dem Anwalt.
 
 ---
 
+## 4. Kontoerstellung, Überprüfungen und Sicherheit
 
-## 6. Anwalt-Benutzer-Beziehung (außerhalb der Plattform)
+4.1. Voraussetzungen: gültige Zulassung zur Berufsausübung in mindestens einer Jurisdiktion, Identitäts- und Qualifikationsnachweise, gültige Berufshaftpflichtversicherung.
 
+4.2. Verfahren: Kontoerstellung, Vorlage der Dokumente, manuelle Validierung, die ein Videointerview und KYC/AML-Prüfungen über Dienstleister umfassen kann.
 
-Nach der Verbindung können die Parteien **außerhalb der Plattform** vertraglich tätig werden. Ulixai legt die Anwaltsgebühren nicht fest und nimmt sie nicht ein (außer über den Einzelzahlungsmechanismus unten). Der Anwalt stellt lokale Gebührenvereinbarungen bereit, bearbeitet Steuern und beachtet lokale Regeln.
+4.3. Richtigkeit & Aktualisierung: Der Anwalt garantiert die Richtigkeit und Aktualität der Angaben; ein (1) Konto pro Anwalt.
 
-
----
-
-
-## 7. Gebühren, Einzelzahlung und Steuern
-
-
-**Pauschalgebühr für Verbindung.** EUR 19 oder USD 25 pro Verbindung, exklusive Steuern und Zahlungsabwicklungsgebühren. Ulixai kann Beträge ändern und/oder lokale Gebührenordnungen pro Land/Währung mit prospektiver Wirkung veröffentlichen.
-
-
-**Einzelzahlung und Aufteilung.** Der Benutzer leistet **eine Zahlung** über die Plattform, die abdeckt (i) die Anwaltsgebühr (wie vereinbart) und (ii) Ulixais Verbindungsgebühr. Ulixai (oder sein Verarbeiter) zieht ein, **zieht** seine Gebühr ab, dann **überweist** den Rest an den Anwalt, der solche **Abzüge und Zuordnungen genehmigt**.
-
-
-**Fällig und nicht rückzahlbar.** Die Verbindungsgebühr wird **bei** Verbindung **verdient** und ist **nicht rückzahlbar** (vorbehaltlich **diskretionärer Großzügigkeit** von Ulixai **in dem von Gesetz erlaubten Umfang** im Falle eines ausschließlich plattformgebundenen Ausfalls).
-
-
-**Rückerstattung des Benutzers.** Wenn gewährt, werden Rückerstattungen **vom Anwaltsanteil getragen**: Ulixai kann **zurückhalten/verrechnen** gegen zukünftige Auszahlungen oder Rückerstattung anfordern, wenn keine fällig sind.
-
-
-**Wechselkurs & Steuern.** Wechselkurse/Gebühren des Verarbeiters können anfallen; der Anwalt ist verantwortlich für alle anwendbaren Steuern; Ulixai erhebt/überweist MwSt. oder lokales Äquivalent auf die Verbindungsgebühr, wo erforderlich. **Verrechnung** genehmigt.
-
+4.4. Sicherheit: Der Anwalt schützt seine Zugangsdaten; jede Aktivität über das Konto gilt als von ihm vorgenommen; jede Kompromittierung ist unverzüglich zu melden.
 
 ---
 
+## 5. Nutzungsregeln – Interessenkonflikte, Vertraulichkeit, Umgehungsverbot
 
-## 8. Zahlungen – AML/KYC – Sanktionen
+5.1. **Interessenkonflikte.** Der Anwalt führt vor jeder Beratung eine angemessene Konfliktprüfung durch. Im Falle eines Konflikts zieht er sich zurück und informiert den Nutzer.
 
+5.2. **Berufsgeheimnis & Vertraulichkeit.** Der Anwalt wahrt Vertraulichkeit und Berufsgeheimnis gemäß dem im Einsatzland geltenden Recht. Gespräche werden von SOS nicht aufgezeichnet, außer wenn gesetzlich vorgeschrieben.
 
-Zahlungen werden von Drittanbietern verarbeitet. Der Anwalt akzeptiert deren Bedingungen und AML/KYC-Verfahren. Ulixai kann Auszahlungen im Falle des Verdachts auf Betrug, Nichtkonformität oder behördliche Anordnung verzögern, einbehalten oder stornieren. Der Zugang kann in sanktionierten Gebieten, wo von Gesetz erforderlich, eingeschränkt werden. Der Anwalt erklärt, dass er nicht auf Sanktionslisten steht und Exportkontrollen einhält.
+5.3. **Umgehungsverbot.** Ulixai erhält keine Provision auf Honorare. Jede neue Vermittlung mit einem neuen Nutzer über die Plattform löst die Vermittlungsgebühr aus. Es ist verboten, die Plattform zu umgehen, um diese Gebühren bei einer neuen Einführung zu vermeiden.
 
+5.4. **Verbotene Handlungen.** Identitäts-/Titelmissbrauch, illegale Inhalte, Manipulation, Kollusion/Boykott zum Nachteil der Plattform, Verstöße gegen Sanktions- oder Exportgesetze oder jegliche illegale Aktivität.
 
----
-
-
-## 9. Datenschutz (globaler Rahmen)
-
-
-**Rollen.** Für Benutzerdaten, die für Verbindung empfangen wurden, handeln **Ulixai und der Anwalt** jeweils als **unabhängige Verantwortliche** für ihre eigenen Zwecke. **Rechtliche Grundlagen & Zwecke** umfassen Vertragserfüllung (Verbindung), legitime Interessen (Sicherheit, Betrugsprävention, Dienstverbesserung), Rechtseinhaltung (AML, Sanktionen) und Zustimmung, sofern anwendbar. **Internationale Übermittlungen** können mit angemessenen Garantien erfolgen, wenn erforderlich. **Rechte & Kontakt** über das Kontaktformular der Plattform. **Sicherheitsmaßnahmen** gelten; Datenverletzungen werden wie erforderlich benachrichtigt. Der Anwalt verarbeitet Daten gemäß Landesrecht des Interventionslandes und Berufsgeheimnis.
-
+5.5. **Verfügbarkeit.** Die Plattform wird „wie besehen“ bereitgestellt; keine Garantie für ununterbrochene Verfügbarkeit (Wartung, Störungen, höhere Gewalt). Der Zugang kann gesetzlich eingeschränkt werden.
 
 ---
 
+## 6. Beziehung Anwalt–Nutzer (außerhalb der Plattform)
+
+6.1. Nach der Vermittlung können Anwalt und Nutzer außerhalb der Plattform einen Vertrag schließen (Ulixai ist nicht an der Festsetzung oder dem Einzug der Honorare beteiligt, außer beim unten beschriebenen Einmalzahlungsmechanismus).
+
+6.2. Der Anwalt übermittelt seine Honorarvereinbarung gemäß dem lokalen Recht, erhebt/entrichtet anfallende Steuern und hält die lokalen Vorschriften (Werbung, Akquise, Interessenkonflikte, Verbraucherschutz) ein.
+
+6.3. Ulixai ist nicht verantwortlich für die Qualität, Richtigkeit oder das Ergebnis der Beratung des Anwalts.
+
+---
+
+## 7. Gebühren, Einmalzahlung und Steuern
+
+7.1. **Vermittlungsgebühr (Pauschalbetrag).** 19 € (EUR) oder 25 $ (USD) pro Vermittlung, exkl. Steuern und Zahlungsdienstleistergebühren. Ulixai kann diese Beträge ändern und/oder lokale Tarife veröffentlichen, mit prospektiver Wirkung.
+
+7.2. **Einmalzahlung und Verteilung.** Der Nutzer leistet über die Plattform eine Einmalzahlung, die (i) das Honorar des Anwalts (wie zwischen Anwalt und Nutzer vereinbart) und (ii) die Vermittlungsgebühr von Ulixai umfasst. Ulixai (oder sein Dienstleister) zieht die Zahlung ein, behält die Vermittlungsgebühr ein und überweist den Restbetrag an den Anwalt. Der Anwalt ermächtigt Ulixai zu diesen Abzügen und Verteilungen.
+
+7.3. **Fälligkeit & Nicht-Erstattung.** Die Vermittlungsgebühr wird mit der Vermittlung fällig und ist nicht erstattungsfähig (außer aus Kulanz, wenn der Fehler ausschließlich der Plattform zuzuschreiben ist und soweit gesetzlich zulässig).
+
+7.4. **Rückzahlung an den Nutzer.** Wird einem Nutzer eine Rückzahlung gewährt, wird diese vom Anteil des Anwalts abgezogen: Ulixai kann den Betrag mit zukünftigen Auszahlungen an den Anwalt verrechnen oder die Rückzahlung verlangen, falls keine weiteren Zahlungen anstehen. Eine Rückzahlung der Vermittlungsgebühr erfolgt nur nach Ermessen von Ulixai.
+
+7.5. **Währungen & Umrechnung.** Mehrere Währungen können angeboten werden; Konversionskurse/-gebühren des Zahlungsdienstleisters können anfallen.
+
+7.6. **Steuern.** Der Anwalt bleibt für seine steuerlichen Verpflichtungen verantwortlich. Ulixai erhebt und führt, sofern erforderlich, die Mehrwertsteuer/entsprechende lokale Steuer auf die Vermittlungsgebühr ab.
+
+7.7. **Verrechnung.** Ulixai kann Beträge, die der Anwalt schuldet (z. B. wegen Nutzererstattung), mit jeglichen Beträgen, die dem Anwalt zustehen, verrechnen.
+
+---
+
+## 8. Zahlungen – KYC/AML – Sanktionen
+
+8.1. Zahlungen werden über Drittanbieter abgewickelt. Der Anwalt akzeptiert deren Bedingungen und KYC/AML-Verfahren.
+
+8.2. Ulixai kann Zahlungen bei Verdacht auf Betrug, Nichtkonformität oder aufgrund gesetzlicher Anordnung zurückhalten, verzögern oder stornieren.
+
+8.3. Der Zugang kann in sanktionierten/embargo-belegten Gebieten eingeschränkt werden, falls gesetzlich erforderlich. Der Anwalt erklärt, auf keiner Sanktionsliste zu stehen und geltende Exportkontrollen einzuhalten.
+
+---
+
+## 9. Personenbezogene Daten (globaler Rahmen)
+
+9.1. **Rollen.** Für Nutzerdaten, die zum Zweck der Vermittlung verarbeitet werden, handeln Ulixai und der Anwalt jeweils als eigenständige Verantwortliche für ihre jeweiligen Zwecke.
+
+9.2. **Rechtsgrundlagen & Zwecke.** Vertragserfüllung (Vermittlung), berechtigte Interessen (Sicherheit, Betrugsprävention, Verbesserung), gesetzliche Verpflichtungen (AML, Sanktionen) und ggf. Einwilligung.
+
+9.3. **Internationale Übermittlungen** mit angemessenen Garantien, sofern erforderlich.
+
+9.4. **Rechte & Kontakt.** Ausübung der Rechte über das Kontaktformular der Plattform.
+
+9.5. **Sicherheit.** Angemessene technische/organisatorische Maßnahmen; Meldung von Datenschutzverletzungen gemäß geltendem Recht.
+
+9.6. Der Anwalt verarbeitet die erhaltenen Daten gemäß dem Recht des Einsatzlandes und seiner Berufsordnung (Berufsgeheimnis).
+
+---
 
 ## 10. Geistiges Eigentum
 
-
-Die Plattform, Marken, Logos, Datenbanken und Inhalte sind geschützt. Dem Anwalt werden keine Rechte gewährt außer einem persönlichen, nicht-exklusiven, nicht-übertragbaren Recht zum Zugriff während dieser Bedingungen. Vom Anwalt bereitgestellte Inhalte (Profil, Foto, Beschreibungen) werden an Ulixai auf **weltweiter, nicht-exklusiver** Grundlage für Hosting und Anzeige auf der Plattform lizenziert.
-
+Die Plattform, ihre Marken, Logos, Datenbanken und Inhalte sind geschützt. Es werden keine Rechte an den Anwalt übertragen, außer einem persönlichen, nicht exklusiven, nicht übertragbaren Zugangsrecht während der Laufzeit dieser AGB. Inhalte, die vom Anwalt bereitgestellt werden (Profil, Foto, Beschreibungen), werden Ulixai mit einer weltweiten, nicht exklusiven Lizenz zur Speicherung und Anzeige auf der Plattform eingeräumt.
 
 ---
 
+## 11. Garantien, Haftung und Freistellung
 
-## 11. Gewährleistungen, Haftung und Schadensersatz
+11.1. Keine Garantie in Bezug auf juristische Dienstleistungen; Ulixai garantiert weder Ergebnis, Qualität noch Geschäftsvolumen.
 
+11.2. Plattform „wie besehen“; keine Garantie für ständige Verfügbarkeit.
 
-Keine Gewährleistung für Rechtsergebnisse, Qualität, Volumen oder Benutzerzuverlässigkeit. Die Plattform wird "wie besehen" bereitgestellt. **Haftungsbegrenzung**: Im höchstmöglichen Umfang ist die Gesamthaftung von Ulixai gegenüber dem Anwalt auf **direkte Schäden** begrenzt und darf nicht die gesamten **Verbindungsgebühren** übersteigen, die Ulixai für die **Transaktion** erhielt, die zum Anspruch führte. Keine indirekten/Folge-/besonderen/Strafschadensersätze. **Schadloshaltung**: Der Anwalt hält Ulixai (und verbundene Unternehmen, Beamte, Mitarbeiter, Vertreter) schadlos von Ansprüchen/Kosten (einschließlich angemessener Anwaltsgebühren), die sich ergeben aus (i) Verstoß gegen diese Bedingungen/Gesetze, (ii) Inhalte des Anwalts, (iii) Leistungen oder Unterlassungen des Anwalts. Es werden keine Agentur-/Arbeitsverhältnisse/Partnerschaften/JVs begründet. **Fortbestand**: Die Abschnitte 5, 7, 8, 9, 10, 11, 12 und 13 bleiben nach Beendigung bestehen.
+11.3. **Haftungsbeschränkung**: Soweit gesetzlich zulässig, ist die Gesamthaftung von Ulixai gegenüber dem Anwalt auf direkte Schäden beschränkt und darf den Gesamtbetrag der von Ulixai im Zusammenhang mit der betreffenden Transaktion erhobenen Vermittlungsgebühren nicht überschreiten.
 
+11.4. **Ausschlüsse**: keine Haftung für indirekte/folgende/besondere/punitive Schäden (z. B. entgangener Gewinn, Kundenverlust, Rufschaden usw.).
 
----
+11.5. **Freistellung**: Der Anwalt stellt Ulixai (und dessen verbundene Unternehmen, Führungskräfte, Mitarbeiter, Vertreter) von allen Ansprüchen/Schäden/Kosten (einschließlich Anwaltskosten) frei, die sich aus (i) Verstößen gegen die AGB/Gesetze, (ii) seinen Inhalten, (iii) seinen Beratungen oder Unterlassungen ergeben.
 
+11.6. Keine Vertretung: Nichts hierin begründet ein Mandats-, Arbeits-, Partner- oder Joint-Venture-Verhältnis zwischen Ulixai und dem Anwalt.
 
-## 12. Anwendbares Recht – ICC-Schiedsverfahren – Estnische Gerichte – Sammelklagen
-
-
-**Materielles Recht:** für jede Verbindung, **Gesetze des Interventionslandes** regeln das Ulixai-Anwalt-Verhältnis, vorbehaltlich zwingender lokaler Regeln und unabdingbarer internationaler Normen.
-
-
-**Zwingendes ICC-Schiedsverfahren** für jeden Ulixai-Anwalt-Streit. **Sitz: Tallinn (Estland). Sprache: Französisch.** Das Schiedsgericht wendet das oben definierte **materielle Recht** an. Verfahren sind **vertraulich**.
-
-
-**Sammelklagen werden verzichtet** im zulässigen Umfang.
-
-
-**Ausschließliche Gerichtsbarkeit estnischer Gerichte** (Tallinn) für **nicht-schiedsbare** Ansprüche, Durchsetzung von Schiedssprüchen und dringende Maßnahmen; der Anwalt verzichtet auf Einwände zu Gerichtsstand/forum non conveniens.
-
+11.7. **Fortbestand**: Die Artikel 5, 7, 8, 9, 10, 11, 12 und 13 bleiben nach Beendigung in Kraft.
 
 ---
 
+## 12. Anwendbares Recht – Schiedsgerichtsbarkeit – Estnische Gerichtsbarkeit – Sammelklagen
 
-## 13. Sonstiges
+12.1. **Sachrecht**: Für jede Vermittlung gilt, dass die Beziehung Ulixai–Anwalt dem Recht des Einsatzlandes unterliegt, vorbehaltlich zwingender lokaler Normen und international zwingender Bestimmungen. **Ergänzend und für die Auslegung/Gültigkeit dieser AGB sowie für alle nicht vom Recht des Einsatzlandes geregelten Fragen gilt estnisches Recht.**
 
+12.2. **Verbindliche ICC-Schiedsgerichtsbarkeit**: Jeder Streit zwischen Ulixai und dem Anwalt wird endgültig gemäß der ICC-Schiedsgerichtsordnung entschieden. **Sitz: Tallinn (Estland)**. **Sprache: Französisch.** Das Schiedsgericht wendet das in Art. 12.1 genannte materielle Recht an. Das Verfahren ist vertraulich.
 
-**Abtretung**: Ulixai kann diese Bedingungen an ein Konzernunternehmen oder einen Nachfolger abtreten; der Anwalt kann ohne Zustimmung von Ulixai nicht abtreten. **Gesamter Vertrag**: Diese Bedingungen ersetzen vorherige Absprachen. **Mitteilungen**: durch Veröffentlichung auf der Plattform, in der App oder über das Kontaktformular. **Auslegung**: Überschriften dienen dem Komfort; kein **contra proferentem**. **Sprachen**: Übersetzungen können bereitgestellt werden; **Französisch kommt Vorrang** bei der Auslegung zu. **Salvatorische Klausel**: Ungültige Bedingungen werden durch gültige mit gleichwertiger Wirkung ersetzt. **Keine Verzichtserklärung**: Nichtdurchsetzung eines Rechts ist keine Verzichtserklärung.
+12.3. **Verzicht auf Sammelklagen**: Soweit gesetzlich zulässig, sind alle Sammel-, Gruppen- oder Vertretungsklagen ausgeschlossen; nur individuelle Ansprüche sind zulässig.
 
+12.4. **Ausschließliche Zuständigkeit estnischer Gerichte**: Für nicht schiedsfähige Ansprüche und die Vollstreckung von Schiedssprüchen oder Eilmaßnahmen sind ausschließlich die **Gerichte Estlands** (zuständig in Tallinn) zuständig. Der Anwalt verzichtet auf jede Einrede des unzuständigen oder ungeeigneten Gerichts.
 
 ---
 
+## 13. Verschiedenes
+
+13.1. **Abtretung**: Ulixai kann die AGB an ein Konzernunternehmen oder einen Rechtsnachfolger übertragen; der Anwalt darf dies nur mit schriftlicher Zustimmung von Ulixai.
+
+13.2. **Gesamtheit**: Diese AGB stellen die vollständige Vereinbarung dar und ersetzen alle früheren Vereinbarungen zum selben Gegenstand.
+
+13.3. **Mitteilungen**: Durch Veröffentlichung auf der Plattform, In-App-Benachrichtigung oder über das Kontaktformular.
+
+13.4. **Auslegung**: Überschriften dienen nur der Übersicht. Keine Auslegungsregel contra proferentem.
+
+13.5. **Sprachen**: Übersetzungen können bereitgestellt werden; für die Auslegung ist die englische Fassung maßgeblich.
+
+13.6. **Teilnichtigkeit**: Sollte eine Bestimmung ungültig/nicht durchsetzbar sein, bleibt der Rest in Kraft; sie wird, soweit möglich, durch eine gültige Bestimmung mit ähnlicher Wirkung ersetzt.
+
+13.7. **Nichtverzicht**: Das Unterlassen der Ausübung eines Rechts stellt keinen Verzicht dar.
+
+---
 
 ## 14. Kontakt
 
-
-**Kontaktformular (Unterstützung & Rechtsfragen)**: [**http://localhost:5174/contact**](http://localhost:5174/contact)
+Für rechtliche oder sonstige Anfragen: **[http://localhost:5174/contact](http://localhost:5174/contact)**
 `;
 
   const defaultHi = `
-# उपयोग की शर्तें – वकील (वैश्विक)
+# उपयोग की सामान्य शर्तें – वकील (वैश्विक)
 
+**Ulixai OÜ द्वारा SOS Expat** ( " **प्लेटफ़ॉर्म** ", " **SOS** ", " **हम** " )
 
-**SOS Expat द्वारा Ulixai OÜ** (the "**प्लेटफॉर्म**", "**SOS**", "**हम**")
-
-
-**संस्करण 2.2 – अंतिम अपडेट: 16 जून 2025**
-
+**संस्करण 2.2 – अंतिम अद्यतन: 16 जून 2025**
 
 ---
 
+## 1. परिभाषाएँ
 
-## 1. परिभाषाएं
+**एप्लिकेशन / साइट / प्लेटफ़ॉर्म**: **Ulixai OÜ** द्वारा संचालित डिजिटल सेवाएँ जो उपयोगकर्ताओं ( " **उपयोगकर्ता** " ) और वकीलों ( " **वकील** " ) के बीच संपर्क स्थापित करती हैं।
 
+**संपर्क स्थापना (मिलान)**: तकनीकी/संचालनात्मक परिचय जो प्लेटफ़ॉर्म उपयोगकर्ता और वकील के बीच करता है, जो निम्न रूपों में हो सकता है:
+(i) संपर्क विवरण साझा करना,
+(ii) संचार चैनल खोलना (कॉल, संदेश, वीडियो), या
+(iii) प्लेटफ़ॉर्म पर भेजे गए अनुरोध को वकील द्वारा स्वीकार करना।
 
-"कनेक्शन" से तात्पर्य तकनीकी/परिचालन परिचय से है जो संपर्क को सक्षम बनाता है (विवरण साझा करना और/या कॉल/संदेश/वीडियो शुरू करना)। "हस्तक्षेप का देश" उस न्यायक्षेत्र को दर्शाता है जिसे कनेक्शन के समय उपयोगकर्ता के अनुरोध द्वारा मुख्य रूप से लक्षित किया जाता है; यदि कई हैं, तो सबसे निकटता से जुड़ा हुआ न्यायक्षेत्र। "कनेक्शन शुल्क" का अर्थ है **EUR 19** (यदि EUR में भुगतान किया जाए) या **USD 25** (यदि USD में भुगतान किया जाए), भविष्य के परिवर्तनों और/या देश/मुद्रा के आधार पर स्थानीय शेड्यूल के अधीन।
+**सेवा देश**: वह न्याय क्षेत्र जो अनुरोध के समय सबसे अधिक प्रासंगिक है। यदि यह स्पष्ट नहीं है, तो उपयोगकर्ता के निवास देश को माना जाएगा; यदि एक से अधिक हों, तो वह क्षेत्र जो अनुरोध के विषय से सबसे अधिक जुड़ा हुआ हो।
 
+**संपर्क शुल्क (Frais de Mise en relation)**: प्रत्येक संपर्क के लिए SOS को देय शुल्क (अनुच्छेद 7):
+**19 €** यदि **EUR** में भुगतान किया गया हो या **25 $ USD** यदि **USD** में भुगतान किया गया हो।
+Ulixai इन राशियों या देश/मुद्रा के अनुसार स्थानीय दरों को भविष्य में बदल सकता है।
+
+**अनुरोध (Requête)**: वह कानूनी स्थिति या परियोजना जिसे उपयोगकर्ता द्वारा प्रस्तुत किया गया है।
+
+**भुगतान सेवा प्रदाता**: वे तृतीय पक्ष जो भुगतान प्राप्त करने और धनराशि के वितरण के लिए उपयोग किए जाते हैं।
 
 ---
-
 
 ## 2. उद्देश्य, दायरा और स्वीकृति
 
+2.1. ये शर्तें प्लेटफ़ॉर्म तक वकीलों की पहुँच और उपयोग को नियंत्रित करती हैं।
 
-Ulixai **केवल तकनीकी मध्यस्थ** के रूप में कार्य करता है। Ulixai कानूनी सलाह प्रदान नहीं करता है और वकील-उपयोगकर्ता समझौतों का पक्ष नहीं है। **Click-wrap स्वीकृति** इलेक्ट्रॉनिक हस्ताक्षर और सहमति का गठन करती है; SOS तकनीकी साक्ष्य रख सकता है। SOS इन शर्तों और/या शुल्क शेड्यूल को प्रकाशन पर भविष्य के प्रभाव के साथ अपडेट कर सकता है। अवधि: खुली-खुली।
+2.2. Ulixai केवल तकनीकी मध्यस्थ के रूप में कार्य करता है। यह न तो कानूनी सलाह देता है और न ही वकील-उपयोगकर्ता संबंध में पक्ष है।
 
+2.3. **इलेक्ट्रॉनिक स्वीकृति (Click-Wrap)।** वकील पंजीकरण के समय या प्लेटफ़ॉर्म के उपयोग से इन शर्तों को स्वीकार करता है। यह क्रिया इलेक्ट्रॉनिक हस्ताक्षर के समान है। SOS सत्यापन के लिए लॉग (समय, तकनीकी पहचान) सुरक्षित रख सकता है।
+
+2.4. **संशोधन।** SOS इन शर्तों या शुल्कों को कभी भी भविष्य में लागू करने के लिए बदल सकता है। निरंतर उपयोग को स्वीकृति माना जाएगा।
+
+2.5. **अवधि:** अनिश्चितकालीन।
 
 ---
-
 
 ## 3. वकील की स्थिति – स्वतंत्रता और अनुपालन
 
+3.1. वकील स्वतंत्र पेशेवर के रूप में कार्य करता है; Ulixai के साथ कोई नौकरी, एजेंसी, साझेदारी या संयुक्त उद्यम संबंध नहीं बनता।
 
-वकील स्वतंत्र पेशेवार के रूप में कार्य करता है। कोई रोजगार, जनादेश, एजेंसी, साझेदारी या संयुक्त उद्यम नहीं बनाई जाती है। वकील (i) योग्यताएं, प्रवेश और लाइसेंस, (ii) सभी इच्छित हस्तक्षेप देशों के लिए पर्याप्त व्यावसायिक दायित्व बीमा, (iii) स्थानीय कानून और व्यावसायिक नियम (नैतिकता, विज्ञापन/प्रस्तावना, संघर्ष, गोपनीयता, AML/KYC, कर, उपभोक्ता संरक्षण, आदि) के लिए एकमात्र जिम्मेदार है। Ulixai वकील की सलाह की निगरानी या मूल्यांकन नहीं करता है।
+3.2. वकील अकेले जिम्मेदार है:
+(i) अपने डिग्री, योग्यता और बार पंजीकरण के लिए;
+(ii) उचित पेशेवर बीमा बनाए रखने के लिए;
+(iii) स्थानीय कानूनों और व्यावसायिक आचार संहिता (विज्ञापन, गोपनीयता, हित संघर्ष, कर, उपभोक्ता संरक्षण आदि) के पालन के लिए।
 
+3.3. Ulixai वकील की सलाह की सामग्री या गुणवत्ता की निगरानी नहीं करता और इसके लिए जिम्मेदार नहीं है।
 
-**पेशेवर क्षमता (B2B).** वकील पुष्टि करता है कि वह **एक्सक्लूसिव रूप से व्यावसायिक उद्देश्यों के लिए** कार्य करता है। उपभोक्ता संरक्षण व्यवस्था Ulixai-वकील संबंध पर लागू नहीं होती है।
-
-
----
-
-
-## 4. खाता, सत्यापन और सुरक्षा
-
-
-कम से कम एक न्यायक्षेत्र में अभ्यास करने का वैध अधिकार; पहचान/योग्यता दस्तावेज; मैनुअल समीक्षा (जिसमें वीडियो और AML/KYC जांच शामिल हो सकती है)। सटीकता और अपडेट वकील की जिम्मेदारी हैं; प्रति वकील एक खाता। क्रेडेंशियल सुरक्षित रखें और समझौते की तुरंत रिपोर्ट करें।
-
+3.4. **व्यावसायिक (B2B) संबंध।** वकील यह घोषित करता है कि वह केवल व्यावसायिक उद्देश्यों के लिए कार्य कर रहा है; उपभोक्ता सुरक्षा नियम लागू नहीं होंगे।
 
 ---
 
+## 4. खाता निर्माण, सत्यापन और सुरक्षा
 
-## 5. उपयोग के नियम – संघर्ष, गोपनीयता, कोई बायपास नहीं
+4.1. आवश्यकताएँ: कम से कम एक अधिकार क्षेत्र में वैध अभ्यास लाइसेंस, पहचान और योग्यता दस्तावेज़, और वैध बीमा।
 
+4.2. प्रक्रिया: खाता निर्माण, दस्तावेज़ जमा, मैनुअल सत्यापन (जिसमें वीडियो इंटरव्यू या KYC/AML जांच शामिल हो सकती है)।
 
-**संघर्ष।** किसी भी सलाह से पहले संघर्षों की जांच करें; सेवानिवृत्ति लें और यदि कोई संघर्ष मौजूद है तो उपयोगकर्ता को सूचित करें। **गोपनीयता।** हस्तक्षेप के देश के कानून के अनुसार विशेषाधिकार और गोपनीयता बनाए रखें। **कोई बायपास नहीं।** Ulixai कानूनी शुल्क पर कमीशन नहीं लेता है। प्लेटफॉर्म के माध्यम से एक नए उपयोगकर्ता के साथ प्रत्येक नया कनेक्शन कनेक्शन शुल्क लगाता है। प्लेटफॉर्म से बचना नई शुरुआत में शुल्क से बचने के लिए निषिद्ध है। **निषिद्ध आचरण** में पहचान धोखाधड़ी, अवैध सामग्री, हेराफेरी, मिलीभगत/बहिष्कार, प्रतिबंध/निर्यात नियंत्रण उल्लंघन, या किसी भी गैरकानूनी गतिविधि शामिल है। **उपलब्धता** "जैसी है" प्रदान की जाती है; जहां कानून द्वारा आवश्यक हो, वहां पहुंच प्रतिबंधित की जा सकती है।
+4.3. सटीकता और अद्यतन: वकील अपने डेटा की सटीकता और अद्यतन बनाए रखेगा; प्रत्येक वकील के लिए केवल एक खाता अनुमत है।
 
-
----
-
-
-## 6. वकील-उपयोगकर्ता संबंध (प्लेटफॉर्म के बाहर)
-
-
-कनेक्शन के बाद, पक्ष **प्लेटफॉर्म के बाहर** अनुबंध कर सकते हैं। Ulixai वकील के शुल्क निर्धारित या एकत्र नहीं करता है (नीचे एकल-भुगतान तंत्र के माध्यम से छोड़कर)। वकील स्थानीय शुल्क समझौते प्रदान करता है, कर को संभालता है और स्थानीय नियमों का अनुपालन करता है।
-
+4.4. सुरक्षा: वकील अपने लॉगिन डेटा की सुरक्षा करेगा; उसके खाते से होने वाली सभी गतिविधियाँ उसी की मानी जाएँगी।
 
 ---
 
+## 5. उपयोग के नियम – हित संघर्ष, गोपनीयता, प्लेटफ़ॉर्म की अवहेलना नहीं
 
-## 7. शुल्क, एकल भुगतान और कर
+5.1. **हित संघर्ष।** वकील किसी भी परामर्श से पहले संभावित हित संघर्ष की जाँच करेगा। संघर्ष की स्थिति में, वह उपयोगकर्ता को सूचित करेगा और पीछे हटेगा।
 
+5.2. **गोपनीयता।** वकील स्थानीय कानून के अनुसार गोपनीयता और पेशेवर रहस्य बनाए रखेगा। SOS बातचीत रिकॉर्ड नहीं करता जब तक कि कानून द्वारा आवश्यक न हो।
 
-**कनेक्शन के लिए फ्लैट शुल्क।** प्रति कनेक्शन EUR 19 या USD 25, कर और भुगतान प्रोसेसर शुल्क को छोड़कर। Ulixai राशि बदल सकता है और/या देश/मुद्रा के आधार पर स्थानीय शेड्यूल भविष्य के प्रभाव के साथ प्रकाशित कर सकता है।
+5.3. **प्लेटफ़ॉर्म का अवरोध/परिहार निषिद्ध।** Ulixai वकील के शुल्क पर कोई कमीशन नहीं लेता। प्रत्येक नया उपयोगकर्ता संपर्क नई शुल्क देयता उत्पन्न करता है। वकील को इन शुल्कों से बचने हेतु प्लेटफ़ॉर्म को दरकिनार करने की अनुमति नहीं है।
 
+5.4. **निषिद्ध गतिविधियाँ।** पहचान की चोरी, झूठी जानकारी, अवैध सामग्री, साजिश या प्लेटफ़ॉर्म को नुकसान पहुँचाने के प्रयास, या किसी भी अवैध गतिविधि की मनाही है।
 
-**एकल भुगतान और विभाजन।** उपयोगकर्ता प्लेटफॉर्म के माध्यम से **एक भुगतान** करता है जो (i) वकील शुल्क (सहमत के रूप में) और (ii) Ulixai का कनेक्शन शुल्क शामिल करता है। Ulixai (या उसका प्रोसेसर) एकत्र करता है, **अपना शुल्क काटता है**, फिर **शेष वकील को भेजता है**, जो ऐसे **कटौती और आवंटन को अधिकृत करता है**।
-
-
-**देय और गैर-वापसी योग्य।** कनेक्शन शुल्क कनेक्शन पर **अर्जित** होता है और **गैर-वापसी योग्य** है (Ulixai के **विवेकपूर्ण उदारता** के अधीन **कानून द्वारा अनुमति प्राप्त सीमा तक** केवल-प्लेटफॉर्म विफलता की स्थिति में)।
-
-
-**उपयोगकर्ता वापसी।** यदि प्रदान किया जाए, तो वापसी **वकील के हिस्से द्वारा वहन की जाती है**: Ulixai **भविष्य के भुगतान के विरुद्ध रोक सकता है/समायोजन कर सकता है** या यदि कोई देय न हो तो प्रतिपूर्ति का अनुरोध कर सकता है।
-
-
-**विदेशी मुद्रा और कर।** प्रोसेसर विदेशी मुद्रा दरें/शुल्क लागू हो सकते हैं; वकील सभी लागू करों के लिए जिम्मेदार है; Ulixai कनेक्शन शुल्क पर VAT या स्थानीय समकक्ष एकत्र/प्रेषित करता है जहां आवश्यक हो। **समायोजन** अधिकृत है।
-
+5.5. **उपलब्धता।** प्लेटफ़ॉर्म "जैसा है" के आधार पर उपलब्ध कराया गया है; निरंतर उपलब्धता की कोई गारंटी नहीं है।
 
 ---
 
+## 6. वकील–उपयोगकर्ता संबंध (प्लेटफ़ॉर्म के बाहर)
 
-## 8. भुगतान – AML/KYC – प्रतिबंध
+6.1. संपर्क के बाद, वकील और उपयोगकर्ता स्वतंत्र रूप से अनुबंध कर सकते हैं (Ulixai केवल भुगतान वितरण तक सीमित है)।
 
+6.2. वकील अपने स्थानीय कानून के अनुसार शुल्क समझौता प्रदान करेगा, करों का पालन करेगा और उपभोक्ता सुरक्षा नियमों का पालन करेगा।
 
-भुगतान तृतीय-पक्ष प्रदाताओं द्वारा संसाधित किए जाते हैं। वकील उनकी शर्तों और AML/KYC प्रक्रियाओं से सहमत होता है। Ulixai संदिग्ध धोखाधड़ी, गैर-अनुपालन, या कानूनी आदेश के मामले में भुगतान में देरी, रोक या रद्द कर सकता है। प्रतिबंधित क्षेत्रों में पहुंच प्रतिबंधित की जा सकती है जहां कानून द्वारा आवश्यक हो। वकील यह प्रमाणित करता है कि वह प्रतिबंध सूचियों पर नहीं है और निर्यात नियंत्रण का अनुपालन करता है।
-
-
----
-
-
-## 9. डेटा संरक्षण (वैश्विक ढांचा)
-
-
-**भूमिकाएं।** कनेक्शन के लिए प्राप्त उपयोगकर्ता डेटा के लिए, **Ulixai और वकील** प्रत्येक अपनी स्वयं की उद्देश्यों के लिए **स्वतंत्र नियंत्रक** के रूप में कार्य करते हैं। **कानूनी आधार और उद्देश्य** में अनुबंध निष्पादन (कनेक्शन), वैध हित (सुरक्षा, धोखाधड़ी रोकथाम, सेवा सुधार), कानूनी अनुपालन (AML, प्रतिबंध), और जहां लागू हो सहमति शामिल है। **अंतर्राष्ट्रीय हस्तांतरण** आवश्यक होने पर उचित गारंटी के साथ हो सकते हैं। **अधिकार और संपर्क** प्लेटफॉर्म संपर्क फॉर्म के माध्यम से। **सुरक्षा** उपाय लागू होते हैं; डेटा उल्लंघनों को आवश्यकतानुसार सूचित किया जाता है। वकील हस्तक्षेप के देश के कानून और व्यावसायिक गोपनीयता के अनुसार डेटा संसाधित करता है।
-
+6.3. Ulixai किसी भी कानूनी सलाह की गुणवत्ता या परिणाम के लिए जिम्मेदार नहीं है।
 
 ---
 
+## 7. शुल्क, एकमुश्त भुगतान और कर
+
+7.1. **संपर्क शुल्क।** 19 € (EUR) या 25 $ (USD) प्रति संपर्क (कर और भुगतान प्रदाता शुल्क अतिरिक्त)। Ulixai इन्हें भविष्य में संशोधित कर सकता है।
+
+7.2. **एकमुश्त भुगतान और वितरण।** उपयोगकर्ता एक ही भुगतान करता है जिसमें (i) वकील की फीस और (ii) Ulixai की शुल्क शामिल होती है। Ulixai शुल्क घटाकर शेष वकील को भेजता है।
+
+7.3. **भुगतान देय और गैर-वापसी योग्य।** संपर्क के समय शुल्क देय होता है और वापस नहीं किया जाएगा।
+
+7.4. **उपयोगकर्ता को धनवापसी।** यदि उपयोगकर्ता को धनवापसी दी जाती है, तो यह वकील के हिस्से से समायोजित होगी।
+
+7.5. **मुद्राएँ और रूपांतरण।** विभिन्न मुद्राएँ उपलब्ध हो सकती हैं; रूपांतरण शुल्क लागू हो सकते हैं।
+
+7.6. **कर।** वकील अपने कर दायित्वों के लिए जिम्मेदार है। Ulixai केवल अपने शुल्क पर लागू VAT/कर एकत्र करेगा।
+
+7.7. **समायोजन।** Ulixai वकील से बकाया राशि को भविष्य के भुगतान से समायोजित कर सकता है।
+
+---
+
+## 8. भुगतान – KYC/AML – प्रतिबंध
+
+8.1. भुगतान तृतीय-पक्ष प्रदाताओं द्वारा संसाधित किए जाते हैं। वकील उनके नियमों और KYC प्रक्रियाओं को स्वीकार करता है।
+
+8.2. धोखाधड़ी या गैर-अनुपालन की स्थिति में Ulixai भुगतान रोक सकता है या रद्द कर सकता है।
+
+8.3. वकील पुष्टि करता है कि वह किसी भी प्रतिबंध सूची में नहीं है और सभी निर्यात नियंत्रणों का पालन करता है।
+
+---
+
+## 9. व्यक्तिगत डेटा (वैश्विक ढांचा)
+
+9.1. **भूमिकाएँ।** उपयोगकर्ता डेटा के संबंध में Ulixai और वकील प्रत्येक स्वतंत्र रूप से नियंत्रक हैं।
+
+9.2. **आधार और उद्देश्य।** अनुबंध निष्पादन, वैध हित (सुरक्षा, धोखाधड़ी रोकथाम), कानूनी अनुपालन, और आवश्यकता पड़ने पर सहमति।
+
+9.3. **अंतर्राष्ट्रीय स्थानांतरण** उपयुक्त सुरक्षा उपायों के साथ।
+
+9.4. **अधिकार और संपर्क।** अधिकार प्लेटफ़ॉर्म के संपर्क फ़ॉर्म के माध्यम से प्रयोग किए जा सकते हैं।
+
+9.5. **सुरक्षा।** उचित तकनीकी और संगठनात्मक उपाय लागू होंगे।
+
+9.6. वकील स्थानीय कानून और पेशेवर गोपनीयता नियमों के अनुसार डेटा का उपयोग करेगा।
+
+---
 
 ## 10. बौद्धिक संपदा
 
-
-प्लेटफॉर्म, ट्रेडमार्क, लोगो, डेटाबेस और सामग्री सुरक्षित हैं। वकील को इन शर्तों के दौरान पहुंच के अलावा कोई अधिकार नहीं दिया जाता है। वकील द्वारा प्रदान की गई सामग्री (प्रोफाइल, फोटो, विवरण) Ulixai को **वैश्विक, गैर-एक्सक्लूसिव** आधार पर प्लेटफॉर्म पर होस्टिंग और प्रदर्शन के लिए लाइसेंस दी गई है।
-
-
----
-
-
-## 11. वारंटी, दायित्व और क्षतिपूर्ति
-
-
-कानूनी परिणाम, गुणवत्ता, मात्रा या उपयोगकर्ता विश्वसनीयता की कोई वारंटी नहीं। प्लेटफॉर्म "जैसी है" प्रदान किया जाता है। **दायित्व सीमा**: अधिकतम सीमा तक अनुमत, Ulixai का वकील के प्रति कुल दायित्व **सीधे नुकसान** तक सीमित है और दावे को जन्म देने वाले **लेनदेन** के लिए Ulixai द्वारा प्राप्त कुल **कनेक्शन शुल्क** से अधिक नहीं हो सकता है। कोई अप्रत्यक्ष/परिणामी/विशेष/दंडकारी नुकसान नहीं। **क्षतिपूर्ति**: वकील Ulixai (और संबद्ध, अधिकारी, कर्मचारी, एजेंट) को दावों/लागत (युक्तिसंगत वकील शुल्क सहित) से क्षतिपूर्ति और हानिरहित रखता है जो (i) इन शर्तों/कानूनों के उल्लंघन, (ii) वकील सामग्री, (iii) वकील सेवाओं या चूक से उत्पन्न होते हैं। कोई एजेंसी/रोजगार/साझेदारी/JV नहीं बनाई गई है। **अस्तित्व**: धारा 5, 7, 8, 9, 10, 11, 12 और 13 समाप्ति के बाद जीवित रहती है।
-
+प्लेटफ़ॉर्म, इसके लोगो, ब्रांड और डेटाबेस संरक्षित हैं। वकील को केवल सीमित, व्यक्तिगत और गैर-हस्तांतरणीय पहुँच अधिकार प्राप्त है।
+वकील द्वारा प्रदान की गई सामग्री (प्रोफ़ाइल, चित्र, विवरण) के लिए Ulixai को वैश्विक, गैर-विशिष्ट उपयोग की अनुमति दी जाती है।
 
 ---
 
+## 11. गारंटी, दायित्व और क्षतिपूर्ति
 
-## 12. लागू कानून – ICC मध्यस्थता – एस्टोनियाई अदालतें – सामूहिक कार्रवाई
+11.1. Ulixai किसी भी कानूनी सेवा के परिणाम या गुणवत्ता की गारंटी नहीं देता।
 
+11.2. प्लेटफ़ॉर्म "जैसा है" प्रदान किया गया है।
 
-**सामग्री कानून:** प्रत्येक कनेक्शन के लिए, **हस्तक्षेप के देश के कानून** Ulixai-वकील संबंध को नियंत्रित करते हैं, अनिवार्य स्थानीय नियमों और अपरिहार्य अंतर्राष्ट्रीय मानदंडों के अधीन।
+11.3. **दायित्व की सीमा:** Ulixai की कुल जिम्मेदारी केवल उसी लेन-देन से संबंधित शुल्क तक सीमित है जिसने दावा उत्पन्न किया।
 
+11.4. **अपवर्जन:** अप्रत्यक्ष, विशेष या परिणामी क्षति (जैसे लाभ या प्रतिष्ठा की हानि) के लिए कोई दायित्व नहीं।
 
-**अनिवार्य ICC मध्यस्थता** किसी भी Ulixai-वकील विवाद के लिए। **सीट: तेलिन (एस्टोनिया)। भाषा: फ्रांसीसी।** ट्रिब्यूनल ऊपर परिभाषित **सामग्री कानून** लागू करता है। कार्यवाही **गोपनीय** हैं।
+11.5. **क्षतिपूर्ति:** वकील Ulixai को अपने किसी भी उल्लंघन, सामग्री या कार्य से उत्पन्न दावों से मुक्त रखेगा।
 
+11.6. कोई साझेदारी, एजेंसी या रोजगार संबंध नहीं माना जाएगा।
 
-**सामूहिक/समूह कार्रवाई को कानून द्वारा अनुमत सीमा तक त्याग दिया जाता है।**
-
-
-**एस्टोनियाई अदालतों का एक्सक्लूसिव अधिकार क्षेत्र** (तेलिन) **गैर-पंचायत योग्य** दावों, पुरस्कारों के निष्पादन और तत्काल उपायों के लिए; वकील अधिकार क्षेत्र/फोरम गैर सुविधाजनक के लिए आपत्तियों को त्यागता है।
-
+11.7. **जीवित रहना:** अनुच्छेद 5, 7, 8, 9, 10, 11, 12 और 13 समाप्ति के बाद भी लागू रहेंगे।
 
 ---
 
+## 12. लागू कानून – मध्यस्थता – एस्टोनियाई अधिकार क्षेत्र – सामूहिक कार्रवाई
+
+12.1. **प्रासंगिक कानून:** प्रत्येक संपर्क के लिए वकील–Ulixai संबंध उस देश के कानून के अधीन होगा जहाँ सेवा दी गई है।
+यदि कुछ विषय वहाँ से नियंत्रित नहीं हैं, तो **एस्टोनियाई कानून** लागू होगा।
+
+12.2. **अनिवार्य ICC मध्यस्थता:** किसी भी विवाद का अंतिम समाधान ICC मध्यस्थता नियमों के अनुसार होगा।
+**स्थान:** टालिन (एस्टोनिया)
+**भाषा:** फ्रेंच
+कार्यवाही गोपनीय रहेगी।
+
+12.3. **सामूहिक दावे का त्याग:** जहाँ कानून अनुमति देता है, केवल व्यक्तिगत दावे स्वीकार्य होंगे।
+
+12.4. **एस्टोनिया के न्यायालयों का विशेषाधिकार:** मध्यस्थता से बाहर के मामलों या निर्णयों के प्रवर्तन के लिए केवल टालिन की अदालतें सक्षम होंगी।
+
+---
 
 ## 13. विविध
 
+13.1. **हस्तांतरण:** Ulixai इन शर्तों को अपने समूह या उत्तराधिकारी को स्थानांतरित कर सकता है; वकील नहीं।
 
-**असाइनमेंट**: Ulixai इन शर्तों को एक समूह इकाई या उत्तराधिकारी को निर्दिष्ट कर सकता है; वकील Ulixai की सहमति के बिना निर्दिष्ट नहीं कर सकता है। **संपूर्ण समझौता**: ये शर्तें पूर्ववर्ती समझ को प्रतिस्थापित करती हैं। **नोटिस**: प्लेटफॉर्म पर प्रकाशन द्वारा, ऐप में, या संपर्क फॉर्म के माध्यम से। **व्याख्या**: शीर्षक सुविधा के लिए हैं; कोई **विरुद्ध प्रस्तावक** नहीं। **भाषाएं**: अनुवाद प्रदान किए जा सकते हैं; **फ्रांसीसी व्याख्या के लिए प्रबल होती है**। **विभाज्यता**: अमान्य शर्तें समतुल्य प्रभाव की वैध शर्तों द्वारा प्रतिस्थापित की जाती हैं। **कोई त्याग नहीं**: अधिकार के गैर-प्रयोग से कोई त्याग नहीं होता है।
+13.2. **पूर्ण समझौता:** ये शर्तें पूरे समझौते का गठन करती हैं और किसी भी पूर्व समझौते को प्रतिस्थापित करती हैं।
 
+13.3. **सूचनाएँ:** प्लेटफ़ॉर्म, ऐप या संपर्क फ़ॉर्म के माध्यम से दी जाएँगी।
+
+13.4. **व्याख्या:** शीर्षक केवल संदर्भ हेतु हैं। कोई “contra proferentem” नियम लागू नहीं होगा।
+
+13.5. **भाषाएँ:** अनुवाद प्रदान किए जा सकते हैं; व्याख्या के लिए अंग्रेज़ी संस्करण प्राथमिक होगा।
+
+13.6. **आंशिक अमान्यता:** यदि कोई धारा अमान्य है, तो शेष प्रभावी रहेगा।
+
+13.7. **अधिकारों का परित्याग नहीं।**
 
 ---
-
 
 ## 14. संपर्क
 
-
-**संपर्क फॉर्म (समर्थन और कानूनी अनुरोध)**: [**http://localhost:5174/contact**](http://localhost:5174/contact)
+किसी भी प्रश्न या कानूनी अनुरोध के लिए: **[http://localhost:5174/contact](http://localhost:5174/contact)**
 `;
 
   const defaultPt = `
-# Termos de Uso – Advogados (Global)
+# Termos e Condições de Utilização – Advogados (Global)
 
-
-**SOS Expat da Ulixai OÜ** (a "**Plataforma**", "**SOS**", "**nós**")
-
+**SOS Expat da Ulixai OÜ** (a « **Plataforma** », « **SOS** », « **nós** »)
 
 **Versão 2.2 – Última atualização: 16 de junho de 2025**
 
-
 ---
-
 
 ## 1. Definições
 
+**Aplicativo / Site / Plataforma**: serviços digitais operados pela **Ulixai OÜ** que permitem a ligação entre utilizadores (os « **Utilizadores** ») e advogados (os « **Advogados** »).
 
-"Conexão" significa a introdução técnica/operacional que permite contato (compartilhamento de detalhes e/ou iniciação de chamada/mensagem/vídeo). "País de Intervenção" significa a jurisdição principalmente alvo da Solicitação do Usuário no momento da Conexão; se houver várias, a mais proximamente conectada. "Taxa de Conexão" significa **EUR 19** (se paga em EUR) ou **USD 25** (se paga em USD), sujeita a mudanças futuras e/ou cronogramas locais por país/moeda com efeito prospectivo.
+**Ligação (Correspondência)**: a introdução técnica/operacional realizada pela Plataforma entre um Utilizador e um Advogado, concretizada por (i) transmissão de contactos, (ii) abertura de canal de comunicação (chamada, mensagem, vídeo) ou (iii) aceitação, pelo Advogado, de um pedido feito através da Plataforma.
 
+**País de Atuação**: a jurisdição principalmente visada pelo Pedido no momento da Ligação. Na falta de indicação, considera-se o país de residência do Utilizador; em caso de pluralidade, o país mais estreitamente ligado ao objeto do Pedido.
 
----
+**Taxa de Ligação**: valor devido à SOS por cada Ligação (art. 7): **19 €** se pagos em **EUR** ou **25 $ USD** se pagos em **USD**.
+A Ulixai pode modificar estes valores e/ou publicar tabelas locais por país/moeda, com efeito apenas futuro.
 
+**Pedido (Requête)**: a situação ou projeto jurídico apresentado pelo Utilizador.
 
-## 2. Propósito, Escopo e Aceitação
-
-
-Ulixai atua **exclusivamente como intermediária técnica**. Ulixai não fornece consultoria jurídica e não é parte dos compromissos Advogado-Usuário. **Aceitação por click-wrap** constitui assinatura eletrônica e consentimento; SOS pode manter evidência técnica. SOS pode atualizar estes Termos e/ou cronogramas de taxas com efeito prospectivo mediante publicação. Prazo: indefinido.
-
-
----
-
-
-## 3. Status do Advogado – Independência e Conformidade
-
-
-O Advogado atua como profissional independente. Nenhuma relação de emprego, mandato, agência, parceria ou empreendimento conjunto é criada. O Advogado é exclusivamente responsável por (i) qualificações, admissões e licenças, (ii) seguro de responsabilidade profissional adequado para todos os Países de Intervenção previstos, (iii) lei local e regras profissionais (ética, publicidade/solicitação, conflitos, confidencialidade, AML/KYC, impostos, proteção do consumidor, etc.). Ulixai não supervisiona nem avalia o parecer jurídico do Advogado.
-
-
-**Capacidade profissional (B2B).** O Advogado confirma que atua **exclusivamente para fins profissionais**. Regimes de proteção do consumidor não se aplicam à relação Ulixai-Advogado.
-
+**Prestadores de Pagamento**: serviços de terceiros usados para receber o pagamento único do Utilizador e distribuir os fundos.
 
 ---
 
+## 2. Objeto, âmbito e aceitação
 
-## 4. Conta, Verificações e Segurança
+2.1. Os presentes Termos regulam o acesso e a utilização da Plataforma pelos Advogados.
 
+2.2. A Ulixai atua unicamente como intermediário técnico. A Ulixai não exerce a advocacia, não presta consultoria jurídica e não é parte da relação entre Advogado e Utilizador.
 
-Direito válido de exercer em pelo menos uma jurisdição; documentos de identidade/qualificação; revisão manual (que pode incluir verificações de vídeo e AML/KYC). Precisão e atualizações são obrigação do Advogado; uma conta por Advogado. Mantenha credenciais seguras e relate comprometimento imediatamente.
+2.3. **Aceitação eletrónica (Click-Wrap).** O Advogado aceita os Termos ao marcar a caixa correspondente durante o registo e/ou ao usar a Plataforma. Este ato equivale a assinatura eletrónica e consentimento contratual. A SOS pode manter registos (timestamp, identificadores técnicos).
 
+2.4. **Modificações.** A SOS pode atualizar os Termos e/ou a tabela de taxas (por país/moeda) a qualquer momento, com efeito futuro após publicação na Plataforma. O uso contínuo implica aceitação.
 
----
-
-
-## 5. Regras de Uso – Conflitos, Confidencialidade, Sem Bypass
-
-
-**Conflitos.** Tela para conflitos antes de qualquer consultoria; retire-se e informe o Usuário se um conflito existir. **Confidencialidade.** Mantenha privilégio e confidencialidade sob a lei do País de Intervenção. **Sem bypass.** Ulixai não recebe comissão sobre honorários legais. Cada nova Conexão com um novo Usuário através da Plataforma gera a Taxa de Conexão. Evitar a Plataforma para evadir taxas em uma nova introdução é proibido. **Conduta proibida** inclui fraude de identidade, conteúdo ilegal, manipulação, conluio/boicote, violações de sanções/controles de exportação, ou qualquer atividade ilegal. **Disponibilidade** é "no estado em que se encontra"; acesso pode ser restringido onde exigido por lei.
-
+2.5. **Duração:** indeterminada.
 
 ---
 
+## 3. Estatuto do Advogado – Independência e conformidade
 
-## 6. Relacionamento Advogado-Usuário (Fora da Plataforma)
+3.1. O Advogado atua como profissional independente; não existe vínculo de emprego, agência, mandato, parceria ou joint venture com a Ulixai.
 
+3.2. O Advogado é o único responsável por: (i) seus diplomas, títulos, inscrição na ordem dos advogados ou equivalentes e autorizações profissionais; (ii) sua apólice de responsabilidade civil profissional válida e adequada aos Países de Atuação; (iii) o cumprimento das leis e regras profissionais locais (deontologia, publicidade, conflitos de interesse, sigilo profissional, AML/KYC, fiscalidade, proteção do consumidor, etc.).
 
-Após a Conexão, as partes podem contratar **fora da Plataforma**. Ulixai não define nem cobra honorários do Advogado (exceto através do mecanismo de pagamento único abaixo). O Advogado fornece acordos de taxas locais, gerencia impostos e cumpre regras locais.
+3.3. A Ulixai não supervisiona nem avalia o conteúdo ou a qualidade dos serviços jurídicos do Advogado e não assume qualquer responsabilidade a esse respeito.
 
-
----
-
-
-## 7. Honorários, Pagamento Único e Impostos
-
-
-**Taxa Fixa de Conexão.** EUR 19 ou USD 25 por Conexão, exclusivos de impostos e taxas do processador de pagamento. Ulixai pode alterar valores e/ou publicar cronogramas locais por país/moeda com efeito prospectivo.
-
-
-**Pagamento único e divisão.** O Usuário faz **um pagamento** através da Plataforma cobrindo (i) o honorário do Advogado (conforme acordado) e (ii) a Taxa de Conexão de Ulixai. Ulixai (ou seu processador) coleta, **deduz** sua Taxa, depois **remete** o saldo ao Advogado, que **autoriza** tais deduções e alocações.
-
-
-**Devido e não reembolsável.** A Taxa de Conexão é **ganha na** Conexão e é **não reembolsável** (sujeita a **liberalidade discricionária** de Ulixai **na medida permitida por lei** em caso de falha exclusivamente da Plataforma).
-
-
-**Reembolso do Usuário.** Se concedido, reembolsos são **suportados pela parcela do Advogado**: Ulixai pode **reter/compensar** contra pagamentos futuros ou solicitar reembolso se nenhum for devido.
-
-
-**Câmbio & impostos.** Taxas de câmbio do processador/taxas podem se aplicar; o Advogado é responsável por todos os impostos aplicáveis; Ulixai coleta/remete IVA ou equivalente local na Taxa de Conexão onde exigido. **Compensação** autorizada.
-
+3.4. **Capacidade profissional (B2B).** O Advogado declara atuar exclusivamente para fins profissionais. Não se aplicam os regimes de proteção do consumidor.
 
 ---
 
+## 4. Criação de conta, verificações e segurança
 
-## 8. Pagamentos – AML/KYC – Sanções
+4.1. **Requisitos:** direito válido de exercer em pelo menos uma jurisdição, documentos de identidade e qualificação, e seguro de responsabilidade civil profissional vigente.
 
+4.2. **Processo:** criação de conta, envio de documentos, validação manual que pode incluir entrevista por vídeo e verificações KYC/AML via Prestadores.
 
-Pagamentos são processados por provedores terceirizados. O Advogado concorda com seus termos e procedimentos AML/KYC. Ulixai pode atrasar, reter ou cancelar pagamentos em caso de suspeita de fraude, não conformidade ou ordem legal. Acesso pode ser restringido em territórios sancionados onde exigido por lei. O Advogado garante que não está em listas de sanções e cumpre controles de exportação.
+4.3. **Exatidão e atualização:** o Advogado garante a veracidade e atualização das informações; um (1) único conta por Advogado.
 
-
----
-
-
-## 9. Proteção de Dados (Estrutura Global)
-
-
-**Funções.** Para dados de Usuário recebidos para Conexão, **Ulixai e o Advogado** cada um atuam como **controlador independente** para seus próprios fins. **Bases legais e fins** incluem execução do contrato (Conexão), interesses legítimos (segurança, prevenção de fraude, melhoria de serviço), conformidade legal (AML, sanções), e consentimento onde aplicável. **Transferências internacionais** podem ocorrer com garantias apropriadas onde exigido. **Direitos e contato** via formulário de contato da Plataforma. **Medidas de segurança** aplicam-se; violações de dados são notificadas conforme exigido. O Advogado processa dados sob a lei do País de Intervenção e sigilo profissional.
-
+4.4. **Segurança:** o Advogado deve proteger suas credenciais; toda atividade realizada através da conta é considerada de sua responsabilidade.
 
 ---
 
+## 5. Regras de utilização – Conflitos, confidencialidade, não contorno
 
-## 10. Propriedade Intelectual
+5.1. **Conflitos de interesse.** O Advogado deve verificar eventuais conflitos antes de prestar qualquer serviço. Em caso de conflito, deve se retirar e informar o Utilizador.
 
+5.2. **Sigilo profissional e confidencialidade.** O Advogado deve respeitar o sigilo profissional e a confidencialidade segundo a lei aplicável no País de Atuação. As comunicações não são gravadas pela SOS, salvo exigência legal.
 
-A Plataforma, marcas, logos, bancos de dados e conteúdo são protegidos. Nenhum direito é concedido ao Advogado além de um direito pessoal, não-exclusivo, não-transferível para acessar durante estes Termos. Conteúdo fornecido pelo Advogado (perfil, foto, descrições) é licenciado a Ulixai em base **mundial, não-exclusiva** para hospedagem e exibição na Plataforma.
+5.3. **Proibição de contorno.** A Ulixai não recebe comissão sobre honorários. Cada nova Ligação com um novo Utilizador gera uma nova Taxa de Ligação. É proibido contornar a Plataforma para evitar o pagamento de taxas em novas introduções.
 
+5.4. **Comportamentos proibidos.** Falsificação de identidade/título, conteúdos ilícitos, manipulação, conluio/boycott visando prejudicar a Plataforma, violação de leis de sanções/exportação ou qualquer atividade ilegal.
 
----
-
-
-## 11. Garantias, Responsabilidade e Indenização
-
-
-Nenhuma garantia para resultados legais, qualidade, volume ou confiabilidade de Usuários. Plataforma é fornecida "no estado em que se encontra". **Limitação de responsabilidade**: na máxima medida permitida, a responsabilidade total de Ulixai perante o Advogado é limitada a **danos diretos** e **não deve exceder** o total de **Taxas de Conexão** recebidas por Ulixai pela **transação** que dá origem ao pedido. Nenhum dano indireto/consequente/especial/punitivo. **Indenização**: o Advogado indeniza e mantém indemne Ulixai (e afiliadas, oficiais, funcionários, agentes) de pedidos/custos (incluindo honorários advocatícios razoáveis) decorrentes de (i) violação destes Termos/leis, (ii) conteúdo do Advogado, (iii) serviços ou omissões do Advogado. Nenhuma relação de agência/emprego/parceria/JV é criada. **Sobrevivência**: Seções 5, 7, 8, 9, 10, 11, 12 e 13 sobrevivem à rescisão.
-
+5.5. **Disponibilidade.** A Plataforma é fornecida “tal como está”; não há garantia de disponibilidade contínua (manutenção, falhas, força maior). O acesso pode ser restringido se exigido por lei.
 
 ---
 
+## 6. Relação Advogado–Utilizador (fora da Plataforma)
 
-## 12. Lei Aplicável – Arbitragem ICC – Tribunais Estonianos – Ações Coletivas
+6.1. Após a Ligação, o Advogado e o Utilizador podem celebrar contrato fora da Plataforma (a Ulixai não participa na definição ou cobrança dos honorários, salvo no mecanismo de pagamento único descrito abaixo).
 
+6.2. O Advogado deve fornecer seu contrato de honorários segundo a lei local, recolher/repassar os impostos aplicáveis e respeitar as regras locais (publicidade, conflitos de interesse, consumidores).
 
-**Lei material:** para cada Conexão, as **leis do País de Intervenção** regem o relacionamento Ulixai-Advogado, sujeito a regras locais obrigatórias e normas internacionais imperativas.
-
-
-**Arbitragem ICC obrigatória** para qualquer disputa Ulixai-Advogado. **Sede: Tallinn (Estônia). Idioma: francês.** Tribunal aplica a **lei material** definida acima. Procedimentos são **confidenciais**.
-
-
-**Ações coletivas/de grupo são renunciadas** na medida permitida por lei.
-
-
-**Jurisdição exclusiva de tribunais estonianos** (Tallinn) para pedidos **não arbitráveis**, execução de sentenças e medidas urgentes; o Advogado renuncia a objeções a foro/forum non conveniens.
-
+6.3. A Ulixai não é responsável pela qualidade, exatidão ou resultado dos serviços jurídicos prestados pelo Advogado.
 
 ---
 
+## 7. Taxas, pagamento único e impostos
+
+7.1. **Taxa de Ligação (fixa):** 19 € (EUR) ou 25 $ (USD) por Ligação, sem incluir impostos ou taxas do prestador de pagamento. A Ulixai pode modificar estes valores ou publicar tarifas locais, com efeito futuro.
+
+7.2. **Pagamento único e distribuição.** O Utilizador efetua um único pagamento via Plataforma, cobrindo (i) os honorários do Advogado (acordados entre Advogado e Utilizador) e (ii) a Taxa de Ligação da Ulixai. A Ulixai (ou seu Prestador) recebe o pagamento, deduz sua taxa e transfere o restante ao Advogado, que autoriza essas deduções.
+
+7.3. **Exigibilidade e não reembolso.** A Taxa de Ligação é devida no momento da Ligação e não é reembolsável (salvo decisão de boa vontade da Ulixai, quando o fracasso for exclusivamente imputável à Plataforma e permitido por lei).
+
+7.4. **Reembolso ao Utilizador.** Caso um reembolso seja concedido ao Utilizador, ele será descontado da parte do Advogado: a Ulixai pode compensar o valor em pagamentos futuros ou solicitar reembolso direto. Nenhum reembolso da Taxa de Ligação é devido, salvo decisão da Ulixai.
+
+7.5. **Moedas e conversão.** Podem ser oferecidas várias moedas; taxas de conversão podem aplicar-se.
+
+7.6. **Impostos.** O Advogado é responsável por suas obrigações fiscais. A Ulixai recolhe e remete, quando aplicável, o IVA/imposto local sobre suas próprias taxas.
+
+7.7. **Compensação.** A Ulixai pode compensar quaisquer valores devidos pelo Advogado (ex.: reembolso de Utilizador) com montantes a pagar-lhe.
+
+---
+
+## 8. Pagamentos – KYC/AML – Sanções
+
+8.1. Os pagamentos são processados por Prestadores terceiros. O Advogado aceita seus termos e processos de verificação (KYC/AML).
+
+8.2. A Ulixai pode reter, atrasar ou cancelar pagamentos em caso de suspeita de fraude, não conformidade ou ordem legal.
+
+8.3. O acesso pode ser restrito em territórios sob sanções/embargos, conforme exigido por lei. O Advogado declara não estar em listas de sanções e cumprir as regras de exportação aplicáveis.
+
+---
+
+## 9. Dados pessoais (quadro global)
+
+9.1. **Funções.** Para os dados de Utilizadores recebidos para efeitos de Ligação, Ulixai e Advogado atuam como controladores independentes para suas finalidades específicas.
+
+9.2. **Bases legais e finalidades.** Execução contratual (Ligação), interesses legítimos (segurança, prevenção de fraude, melhoria), obrigações legais (AML, sanções) e, quando aplicável, consentimento.
+
+9.3. **Transferências internacionais** com garantias adequadas, quando exigido.
+
+9.4. **Direitos e contato.** Exercício de direitos via formulário de contato da Plataforma.
+
+9.5. **Segurança.** Medidas técnicas e organizacionais adequadas; notificação de violações conforme leis aplicáveis.
+
+9.6. O Advogado deve tratar os dados em conformidade com a lei do País de Atuação e com o seu dever profissional de sigilo.
+
+---
+
+## 10. Propriedade intelectual
+
+A Plataforma, suas marcas, logotipos, bases de dados e conteúdos são protegidos. Nenhum direito é concedido ao Advogado, exceto o direito pessoal, não exclusivo e intransferível de acesso durante a vigência dos Termos.
+Os conteúdos fornecidos pelo Advogado (perfil, foto, descrições) são licenciados à Ulixai de forma mundial, não exclusiva, para hospedagem e exibição na Plataforma.
+
+---
+
+## 11. Garantias, responsabilidade e indenização
+
+11.1. Nenhuma garantia quanto aos serviços jurídicos; a Ulixai não assegura resultado, qualidade ou volume de negócios.
+
+11.2. Plataforma fornecida “no estado em que se encontra”; sem garantia de disponibilidade contínua.
+
+11.3. **Limitação de responsabilidade:** na medida do permitido, a responsabilidade total da Ulixai perante o Advogado é limitada aos danos diretos e não excede o total das Taxas de Ligação recebidas pela Ulixai na transação que originou a reclamação.
+
+11.4. **Exclusões:** sem responsabilidade por danos indiretos/consequenciais/especiais/punitivos (perda de lucros, clientela, reputação etc.).
+
+11.5. **Indenização:** o Advogado indeniza e isenta a Ulixai (e suas afiliadas, diretores, empregados, agentes) de qualquer reclamação/dano/custo (incluindo honorários advocatícios) resultante de (i) violações destes Termos ou da lei, (ii) seus conteúdos, (iii) seus atos ou omissões profissionais.
+
+11.6. Nenhuma relação de agência, parceria ou emprego é criada entre Ulixai e o Advogado.
+
+11.7. **Sobrevivência:** os artigos 5, 7, 8, 9, 10, 11, 12 e 13 permanecem em vigor após o término.
+
+---
+
+## 12. Lei aplicável – Arbitragem – Jurisdição da Estônia – Ações coletivas
+
+12.1. **Lei material:** para cada Ligação, a relação Ulixai–Advogado é regida pela lei do País de Atuação, sujeita às normas imperativas locais. **De forma supletiva, e para interpretação/validade destes Termos, aplica-se a lei da Estônia.**
+
+12.2. **Arbitragem obrigatória CCI:** qualquer litígio Ulixai/Advogado será resolvido de forma definitiva conforme o Regulamento de Arbitragem da CCI. **Sede:** Tallinn (Estônia) **Idioma:** francês O tribunal aplica a lei material referida no art. 12.1. O procedimento é confidencial.
+
+12.3. **Renúncia a ações coletivas:** na medida permitida, ficam excluídas ações coletivas, representativas ou de grupo; apenas ações individuais são admitidas.
+
+12.4. **Competência exclusiva dos tribunais da Estônia:** para questões não arbitráveis e execução de sentenças ou medidas urgentes, os **tribunais de Tallinn (Estônia)** têm **competência exclusiva**. O Advogado renuncia a objeções de foro ou inconveniência.
+
+---
 
 ## 13. Diversos
 
+13.1. **Cessão:** a Ulixai pode ceder estes Termos a uma entidade do seu grupo ou sucessora; o Advogado não pode fazê-lo sem consentimento escrito da Ulixai.
 
-**Cessão**: Ulixai pode ceder estes Termos a uma entidade do grupo ou sucessor; o Advogado não pode ceder sem consentimento de Ulixai. **Acordo integral**: estes Termos substituem entendimentos anteriores. **Avisos**: por publicação na Plataforma, no app, ou via formulário de contato. **Interpretação**: títulos são para conveniência; sem **contra proferentem**. **Idiomas**: traduções podem ser fornecidas; **francês prevalece** para interpretação. **Divisibilidade**: termos inválidos são substituídos por válidos de efeito equivalente. **Sem renúncia**: falha em fazer valer um direito não é renúncia.
+13.2. **Integralidade:** os Termos constituem o acordo completo e substituem qualquer acordo anterior sobre o mesmo objeto.
 
+13.3. **Notificações:** por publicação na Plataforma, aviso in-app ou via formulário de contato.
+
+13.4. **Interpretação:** títulos são meramente indicativos. Nenhuma regra contra proferentem.
+
+13.5. **Idiomas:** podem ser fornecidas traduções; prevalece a versão em inglês para interpretação.
+
+13.6. **Nulidade parcial:** se qualquer cláusula for inválida/inexequível, o restante permanece válido; substituição por cláusula válida equivalente sempre que possível.
+
+13.7. **Não renúncia:** a omissão no exercício de um direito não implica renúncia.
 
 ---
 
-
 ## 14. Contato
 
+Para qualquer questão ou solicitação legal: **[http://localhost:5174/contact](http://localhost:5174/contact)**
+`;
 
-**Formulário de contato (suporte e solicitações legais)**: [**http://localhost:5174/contact**](http://localhost:5174/contact)
+  const defaultCh = `
+# 使用条款 – 律师（全球）
+
+**Ulixai OÜ 的 SOS Expat**（“**平台**”、“**SOS**”、“**我们**”）
+
+**版本 2.2 – 最后更新日期：2025 年 6 月 16 日**
+
+---
+
+## 1. 定义
+
+**应用程序 / 网站 / 平台**：由 **Ulixai OÜ** 运营的数字服务，用于连接用户（“**用户**”）与律师（“**律师**”）。
+
+**对接（匹配）**：平台在用户与律师之间进行的技术或操作性引荐，包括：(i) 提供联系方式，(ii) 开通沟通渠道（电话、消息、视频），或 (iii) 律师接受通过平台发出的请求。
+
+**执业国家**：与用户请求最相关的司法辖区。如无法确定，则为用户在请求时的居住国；如涉及多个司法辖区，则为与案件最密切相关的国家。
+
+**对接费用**：律师每次通过平台获得对接时需向 SOS 支付的费用（第 7 条）：**19 欧元（EUR）** 或 **25 美元（USD）**。
+Ulixai 可根据国家/货币发布本地费率表或调整金额，自公布之日起生效。
+
+**请求（Requête）**：用户描述的法律问题或项目。
+
+**支付服务提供商**：用于收取用户一次性付款并分配资金的第三方支付服务。
+
+---
+
+## 2. 目的、适用范围与接受
+
+2.1. 本条款规范律师对平台的访问与使用。
+
+2.2. Ulixai 仅作为技术中介提供对接服务。Ulixai 不从事律师业务，不提供法律意见，也不是律师与用户之间合同关系的当事方。
+
+2.3. **电子接受（Click-Wrap）**：律师在注册或使用平台时勾选同意，即视为已签署电子合同并同意条款。SOS 可保存时间戳与技术日志作为证据。
+
+2.4. **修改**：SOS 可随时更新本条款及费用标准，并在平台发布后生效。继续使用平台视为接受更新。
+
+2.5. **有效期**：不限期。
+
+---
+
+## 3. 律师身份 – 独立性与合规
+
+3.1. 律师以独立专业人士身份行事，Ulixai 与其之间不存在雇佣、代理、委托、合伙或联合关系。
+
+3.2. 律师独立负责：(i) 自身的学历、资格、律师协会注册及执业许可；(ii) 有效且适用于执业国家的职业责任保险；(iii) 遵守当地法律与职业规则（包括职业道德、广告与招揽、利益冲突、保密义务、反洗钱/客户识别、税务与消费者保护等）。
+
+3.3. Ulixai 不监督或评估律师提供的法律服务内容或质量，对此不承担任何责任。
+
+3.4. **专业主体（B2B）**：律师确认仅以专业身份使用平台，不适用消费者保护制度。
+
+---
+
+## 4. 账户创建、验证与安全
+
+4.1. **条件**：律师必须具备至少一个司法辖区的合法执业资格，提供身份证明、资质文件及有效的职业责任保险。
+
+4.2. **流程**：注册账户 → 上传文件 → 手动审核（可能包含视频面试及 KYC/反洗钱核查）。
+
+4.3. **信息准确性**：律师保证其资料真实、准确且保持更新；每位律师仅限一个账户。
+
+4.4. **安全**：律师须妥善保管账户凭证。通过账户进行的任何操作均视为本人行为；若发现被盗用应立即报告。
+
+---
+
+## 5. 使用规则 – 利益冲突、保密与禁止规避
+
+5.1. **利益冲突**：律师在提供任何建议前应进行利益冲突检查。如发现冲突，应退出并通知用户。
+
+5.2. **保密与职业秘密**：律师应根据执业国家的法律严格遵守职业保密义务。除法律要求外，SOS 不会录制交流内容。
+
+5.3. **禁止规避**：Ulixai 不从律师费用中抽成。但每次新的用户对接均需支付对接费用。禁止绕过平台以规避支付。
+
+5.4. **禁止行为**：包括但不限于身份/资格伪造、发布非法内容、操纵系统、恶意串通、违反制裁与出口管制、或其他非法活动。
+
+5.5. **服务可用性**：平台按“现状”提供，不保证持续运行（可能因维护、技术故障或不可抗力中断）。必要时可依法限制访问。
+
+---
+
+## 6. 律师与用户的关系（平台外）
+
+6.1. 对接完成后，律师与用户可在线下签订独立合同。Ulixai 不参与律师费用的设定或收取，除非适用“一次性支付机制”。
+
+6.2. 律师应根据当地法律签订收费协议，收取与缴纳税款，并遵守广告、利益冲突及消费者保护规则。
+
+6.3. Ulixai 不对律师提供的建议质量、准确性或结果承担责任。
+
+---
+
+## 7. 费用、支付与税务
+
+7.1. **对接费用（固定）**：每次对接 19 欧元（EUR）或 25 美元（USD），不含税及支付服务费。Ulixai 可发布本地价格表并调整金额。
+
+7.2. **一次性支付与分配**：用户通过平台一次性支付金额，涵盖：(i) 律师费用（由律师与用户约定）及 (ii) Ulixai 的对接费。Ulixai（或支付服务商）代收款项，扣除对接费后将余额转给律师。律师授权 Ulixai 执行此扣款及分配。
+
+7.3. **费用生效与不退款**：对接费用在对接时即产生，不可退款（除非 Ulixai 自主决定在平台技术原因导致失败的情况下退款）。
+
+7.4. **用户退款**：若向用户退款，相关金额从律师份额中扣除。Ulixai 可从未来付款中抵扣或要求返还。对接费用不予退还，除非 Ulixai 自行决定。
+
+7.5. **货币与汇率**：平台可支持多币种，支付服务商可能收取汇率或转换费。
+
+7.6. **税务**：律师自行负责履行纳税义务。Ulixai 将根据法律要求就其对接费用征收与缴纳增值税（或等效税）。
+
+7.7. **抵销**：Ulixai 可将律师应付的任何金额（如退款）与待支付金额进行抵销。
+
+---
+
+## 8. 支付 – KYC / 反洗钱 – 制裁
+
+8.1. 支付由第三方服务商处理。律师须同意其条款与 KYC/AML 程序。
+
+8.2. 如有欺诈、违规或法律命令嫌疑，Ulixai 可暂停、保留或取消付款。
+
+8.3. 若法律要求，Ulixai 可限制受制裁或禁运地区的访问。律师声明未列入任何制裁名单，并遵守出口管制法规。
+
+---
+
+## 9. 个人数据（全球框架）
+
+9.1. **数据控制者身份**：就为对接目的收集的用户数据，Ulixai 与律师各自为独立的数据控制者。
+
+9.2. **法律依据与目的**：合同履行（对接）、合法利益（安全、防欺诈、改进）、法律合规（反洗钱、制裁）及必要时的同意。
+
+9.3. **跨境传输**：如有需要，将在具备适当保障的前提下进行。
+
+9.4. **用户权利与联系方式**：用户可通过平台联系表行使数据权利。
+
+9.5. **安全**：采取合理的技术与组织措施，并依法报告数据泄露事件。
+
+9.6. 律师须依执业国家法律与职业道德（保密义务）处理所获个人数据。
+
+---
+
+## 10. 知识产权
+
+平台的品牌、标识、数据库及内容均受法律保护。除在本条款有效期内的个人、非独占、不可转让访问权外，律师不享有任何权利。
+律师上传的内容（资料、头像、描述等）授权 Ulixai 全球范围内以非独占方式用于托管与展示。
+
+---
+
+## 11. 保证、责任与赔偿
+
+11.1. Ulixai 不对律师服务的质量或结果作出任何保证。
+
+11.2. 平台按“现状”提供，不保证持续或无故障运行。
+
+11.3. **责任限制**：在法律允许范围内，Ulixai 对律师的总赔偿责任限于直接损失，且最高不超过相关交易中 Ulixai 所收取的对接费用总额。
+
+11.4. **免责**：Ulixai 不承担间接、连带、特殊或惩罚性损害（包括利润、客户或声誉损失）。
+
+11.5. **赔偿义务**：律师须就 (i) 违反本条款或法律、(ii) 提供的内容、(iii) 专业行为或疏忽，向 Ulixai（及其附属公司、员工、代理）赔偿由此产生的索赔、损失或费用（含律师费）。
+
+11.6. 本条款不构成雇佣、代理、合作或合资关系。
+
+11.7. **存续条款**：第 5、7、8、9、10、11、12、13 条在合同终止后继续有效。
+
+---
+
+## 12. 适用法律 – 仲裁 – 爱沙尼亚司法管辖 – 集体诉讼放弃
+
+12.1. **实质法律**：每次对接中，Ulixai 与律师关系受执业国家法律管辖，并受当地强制性法律约束。若无相关规定或为解释本条款之目的，适用 **爱沙尼亚法律**。
+
+12.2. **强制仲裁（ICC）**：所有争议按国际商会（ICC）仲裁规则最终解决。**仲裁地：**爱沙尼亚塔林（Tallinn）**仲裁语言：**法语 仲裁庭依据第 12.1 条规定的法律审理，程序保密。
+
+12.3. **放弃集体诉讼**：在法律允许范围内，排除任何集体、代表或群体诉讼；仅可提起个人诉求。
+
+12.4. **爱沙尼亚法院专属管辖**：对非仲裁事项或仲裁裁决执行及紧急救济，**塔林法院**享有**专属管辖权**。律师放弃异议或不便管辖抗辩。
+
+---
+
+## 13. 其他条款
+
+13.1. **转让**：Ulixai 可将本条款转让予集团公司或继任者；律师不得未经书面同意转让。
+
+13.2. **完整协议**：本条款构成双方完整协议，取代任何先前协议。
+
+13.3. **通知**：通过平台公告、应用内消息或联系表进行。
+
+13.4. **解释规则**：标题仅供参考，不影响解释；不适用对起草方不利的解释规则。
+
+13.5. **语言**：可提供翻译版本；若有歧义，以英文版本为准。
+
+13.6. **可分割性**：如任何条款无效或不可执行，其余条款仍有效；Ulixai 可以合法条款替代。
+
+13.7. **权利不弃权**：未行使任何权利不视为放弃。
+
+---
+
+## 14. 联系方式
+
+如有法律问题或请求，请访问：**[http://localhost:5174/contact](http://localhost:5174/contact)**
+`;
+  const defaultAr = `
+# شروط الاستخدام – للمحامين (عالمي)
+
+**SOS Expat التابعة لشركة Ulixai OÜ** (المشار إليها بـ «**المنصّة**»، «**SOS**»، «**نحن**»)
+
+**الإصدار 2.2 – آخر تحديث: 16 يونيو 2025**
+
+---
+
+## 1. التعريفات
+
+**التطبيق / الموقع / المنصّة**: الخدمات الرقمية التي تديرها **Ulixai OÜ**، والتي تتيح التواصل بين المستخدمين («**المستخدمون**») والمحامين («**المحامون**»).
+
+**الربط (المطابقة)**: عملية الاتصال الفني/العملي التي تُجريها المنصّة بين المستخدم والمحامي، والمتمثلة في:
+(i) نقل بيانات الاتصال، أو (ii) فتح قناة تواصل (مكالمة، رسالة، فيديو)، أو (iii) قبول المحامي لطلب قُدّم عبر المنصّة.
+
+**بلد التدخّل**: الدولة أو الاختصاص القضائي الذي يتعلق به الطلب أساسًا. وفي حال عدم التحديد، يُعتبر بلد إقامة المستخدم وقت الطلب؛ وإذا وُجد أكثر من بلد، فيُختار البلد الأكثر ارتباطًا بالطلب.
+
+**رسوم الربط**: الرسوم المستحقة لـ SOS عن كل عملية ربط (المادة 7): **19 يورو (EUR)** أو **25 دولارًا أمريكيًا (USD)**.
+يجوز لـ Ulixai تعديل هذه الرسوم و/أو نشر جداول أسعار محلية حسب الدولة أو العملة، وتكون سارية بأثر مستقبلي فقط.
+
+**الطلب (Requête)**: الحالة أو المشروع القانوني الذي يقدمه المستخدم.
+
+**مزوّدو خدمات الدفع**: أطراف ثالثة تتولى تحصيل الدفعة الواحدة من المستخدم وتوزيع الأموال.
+
+---
+
+## 2. الهدف والنطاق والقبول
+
+2.1. تحكم هذه الشروط وصول المحامين إلى المنصّة واستخدامهم لها.
+
+2.2. تعمل Ulixai فقط كوسيط تقني في عملية الربط. ولا تمارس مهنة المحاماة، ولا تقدم استشارات قانونية، وليست طرفًا في العلاقة بين المحامي والمستخدم.
+
+2.3. **القبول الإلكتروني (Click-Wrap):** يوافق المحامي على هذه الشروط عند تحديد خانة القبول أثناء التسجيل و/أو باستخدام المنصّة. هذا الفعل يُعد توقيعًا إلكترونيًا وموافقةً تعاقدية. يجوز لـ SOS الاحتفاظ بسجلات إثبات (الوقت، المعرفات التقنية).
+
+2.4. **التعديلات:** يجوز لـ SOS تحديث هذه الشروط و/أو جدول الرسوم في أي وقت، وتُطبّق التعديلات مستقبلاً بعد نشرها على المنصّة. الاستمرار في الاستخدام يُعتبر قبولًا.
+
+2.5. **المدة:** غير محددة.
+
+---
+
+## 3. وضع المحامي – الاستقلال والامتثال
+
+3.1. يعمل المحامي كمهني مستقل، ولا تنشأ بينه وبين Ulixai أي علاقة عمل أو وكالة أو شراكة أو مشروع مشترك.
+
+3.2. يكون المحامي وحده مسؤولاً عن: (i) شهاداته ومؤهلاته وتسجيله في نقابة المحامين/الهيئات المعادلة وترخيصه المهني؛ (ii) تأمين المسؤولية المهنية الساري والمناسب لبلد التدخّل؛ (iii) الامتثال للقوانين والأنظمة المهنية المحلية (الأخلاقيات، الإعلان، تضارب المصالح، السرية المهنية، مكافحة غسل الأموال، الضرائب، حماية المستهلك، إلخ).
+
+3.3. لا تقوم Ulixai بالإشراف على محتوى الخدمات القانونية التي يقدمها المحامي أو تقييمها، ولا تتحمل أي مسؤولية عنها.
+
+3.4. **صفة مهنية (B2B):** يقرّ المحامي بأنه يتصرف لأغراض مهنية بحتة، ولا تسري عليه أحكام حماية المستهلك.
+
+---
+
+## 4. إنشاء الحساب، التحقق والأمان
+
+4.1. **الشروط:** وجود ترخيص ساري في إحدى الولايات القضائية، وتقديم مستندات الهوية والمؤهلات، وتأمين مهني ساري.
+
+4.2. **الإجراءات:** إنشاء حساب، تقديم المستندات، تحقق يدوي قد يشمل مقابلة بالفيديو وفحص الهوية ومكافحة غسل الأموال عبر مزودي الخدمة.
+
+4.3. **الدقة والتحديث:** يضمن المحامي دقة وحداثة المعلومات المقدّمة؛ يُسمح بحساب واحد فقط لكل محامٍ.
+
+4.4. **الأمان:** يتعين على المحامي حماية بيانات دخوله؛ وتُعتبر أي نشاطات من الحساب صادرة عنه؛ ويجب الإبلاغ فورًا عن أي خرق أمني.
+
+---
+
+## 5. قواعد الاستخدام – تضارب المصالح، السرية، عدم التحايل
+
+5.1. **تضارب المصالح:** يتعيّن على المحامي التحقق من أي تضارب قبل تقديم أي استشارة. وفي حال وجود تضارب، عليه الانسحاب وإخطار المستخدم.
+
+5.2. **السرية المهنية:** يلتزم المحامي بالسرية وفق القوانين المطبقة في بلد التدخّل. ولا تسجل SOS المحادثات إلا إذا تطلب القانون ذلك.
+
+5.3. **عدم التحايل:** لا تتقاضى Ulixai عمولة على أتعاب المحامين. ويجب دفع رسوم الربط عن كل مستخدم جديد يتم التعرف عليه عبر المنصّة. يُحظر التحايل على المنصّة لتفادي دفع هذه الرسوم.
+
+5.4. **السلوكيات المحظورة:** انتحال الهوية أو المؤهلات، نشر محتوى غير قانوني، التلاعب أو التواطؤ أو المقاطعة للإضرار بالمنصّة، مخالفة أنظمة العقوبات أو التصدير، أو أي نشاط غير قانوني.
+
+5.5. **التوافر:** تُقدَّم المنصّة "كما هي" دون ضمان تشغيل مستمر. وقد يُقيّد الوصول لأسباب قانونية أو تقنية أو في حالات القوة القاهرة.
+
+---
+
+## 6. العلاقة بين المحامي والمستخدم (خارج المنصّة)
+
+6.1. بعد عملية الربط، يمكن للمحامي والمستخدم إبرام اتفاق منفصل خارج المنصّة.
+ولا تتدخل Ulixai في تحديد أو تحصيل الأتعاب، إلا في حال استخدام نظام الدفع الموحد الموضح أدناه.
+
+6.2. يلتزم المحامي بتقديم اتفاق الأتعاب وفق القانون المحلي، وجمع الضرائب المستحقة وسدادها، والامتثال للقواعد المهنية (الإعلان، تضارب المصالح، المستهلكين).
+
+6.3. لا تتحمل Ulixai أي مسؤولية عن جودة أو دقة أو نتائج الخدمات القانونية المقدّمة من المحامي.
+
+---
+
+## 7. الرسوم، الدفع والضرائب
+
+7.1. **رسوم الربط (ثابتة):** 19 يورو (EUR) أو 25 دولارًا أمريكيًا (USD) لكل ربط، غير شاملة الضرائب ورسوم مزوّد الدفع. يجوز لـ Ulixai تعديلها أو نشر جداول أسعار محلية بتأثير مستقبلي فقط.
+
+7.2. **الدفع الموحد وتوزيع المبالغ:** يقوم المستخدم بدفع مبلغ واحد عبر المنصّة يشمل: (i) أتعاب المحامي (حسب الاتفاق بينه وبين المستخدم) و (ii) رسوم الربط الخاصة بـ Ulixai. تقوم Ulixai (أو مزوّد الدفع) بتحصيل المبلغ، واقتطاع رسومها، ثم تحويل الرصيد المتبقي للمحامي، الذي يفوض Ulixai بذلك.
+
+7.3. **الاستحقاق وعدم الاسترداد:** تستحق رسوم الربط عند تنفيذ عملية الربط ولا تُردّ، إلا في حال تقصير تقني مثبت من المنصّة وبقرار تقديري من Ulixai.
+
+7.4. **استرداد المستخدم:** في حال ردّ مبلغ للمستخدم، يُخصم من حصة المحامي. يجوز لـ Ulixai اقتطاع المبلغ من الدفعات المستقبلية أو المطالبة بردّه. لا تُسترد رسوم الربط إلا بقرار تقديري من Ulixai.
+
+7.5. **العملات والتحويل:** يمكن الدفع بعملات متعددة، وقد تُطبَّق رسوم تحويل من مزوّد الخدمة.
+
+7.6. **الضرائب:** المحامي مسؤول عن التزاماته الضريبية. تقوم Ulixai بتحصيل وتحويل ضريبة القيمة المضافة (أو ما يعادلها محليًا) على رسومها فقط.
+
+7.7. **المقاصة:** يجوز لـ Ulixai مقاصة أي مبالغ مستحقة لها مع ما تدين به للمحامي.
+
+---
+
+## 8. المدفوعات – التحقق (KYC) – مكافحة غسل الأموال – العقوبات
+
+8.1. تُنفَّذ المدفوعات عبر مزوّدي خدمات طرف ثالث. ويوافق المحامي على شروطهم وإجراءات التحقق (KYC/AML).
+
+8.2. يجوز لـ Ulixai تعليق أو حجز أو إلغاء أي مدفوعات في حال الاشتباه بالاحتيال أو المخالفة أو صدور أوامر قانونية.
+
+8.3. قد يُقيَّد الوصول في المناطق الخاضعة للعقوبات أو الحظر بموجب القانون. ويقرّ المحامي بأنه غير مدرج على أي قوائم عقوبات ويلتزم بلوائح التصدير ذات الصلة.
+
+---
+
+## 9. البيانات الشخصية (إطار عالمي)
+
+9.1. **الأطراف المتحكمة بالبيانات:** بالنسبة لبيانات المستخدمين المستلمة لغرض الربط، تُعد Ulixai والمحامي كلٌّ منهما مسؤولاً مستقلاً عن المعالجة لأغراضه الخاصة.
+
+9.2. **الأسس والأغراض القانونية:** تنفيذ العقد (الربط)، المصالح المشروعة (الأمن، منع الاحتيال، التحسين)، الالتزام القانوني (مكافحة غسل الأموال، العقوبات)، أو بموافقة المستخدم عند الحاجة.
+
+9.3. **النقل الدولي للبيانات:** يتم مع الضمانات اللازمة عند الاقتضاء.
+
+9.4. **حقوق المستخدم والتواصل:** يمكن للمستخدم ممارسة حقوقه عبر نموذج الاتصال في المنصّة.
+
+9.5. **الأمن:** اتخاذ تدابير تقنية وتنظيمية مناسبة؛ والإبلاغ عن أي خرق للبيانات وفق القوانين المعمول بها.
+
+9.6. يلتزم المحامي بمعالجة البيانات وفق قوانين بلد التدخّل وأخلاقيات المهنة (السرية المهنية).
+
+---
+
+## 10. الملكية الفكرية
+
+المنصّة وعلاماتها وشعاراتها وقواعد بياناتها ومحتواها محمية قانونيًا.
+ولا يُمنح المحامي سوى حق وصول شخصي غير حصري وغير قابل للتحويل طوال مدة الشروط.
+ويمنح المحامي Ulixai ترخيصًا عالميًا غير حصري لاستضافة وعرض محتواه (الملف الشخصي، الصورة، الوصف) ضمن المنصّة.
+
+---
+
+## 11. الضمان والمسؤولية والتعويض
+
+11.1. لا تقدم Ulixai أي ضمانات بخصوص الخدمات القانونية أو نتائجها.
+
+11.2. تُقدَّم المنصّة «كما هي» دون أي ضمان لاستمرارية الوصول أو الجاهزية.
+
+11.3. **تحديد المسؤولية:** في حدود القانون، لا تتجاوز مسؤولية Ulixai تجاه المحامي عن أي ضرر مباشر إجمالي رسوم الربط المستلمة عن المعاملة محل النزاع.
+
+11.4. **الاستثناءات:** لا تتحمل Ulixai أي أضرار غير مباشرة أو تبعية أو خاصة أو تأديبية (مثل فقدان الأرباح أو السمعة).
+
+11.5. **التعويض:** يتعهد المحامي بتعويض Ulixai (وشركاتها التابعة وموظفيها ووكلائها) عن أي دعاوى أو أضرار أو تكاليف (بما في ذلك أتعاب المحاماة) ناتجة عن (i) خرق هذه الشروط أو القوانين، (ii) محتواه، أو (iii) أفعاله أو إغفالاته المهنية.
+
+11.6. لا تُفسَّر هذه الشروط على أنها تنشئ علاقة توظيف أو وكالة أو شراكة بين Ulixai والمحامي.
+
+11.7. **البقاء بعد الإنهاء:** تظل المواد 5 و7 و8 و9 و10 و11 و12 و13 سارية بعد انتهاء العقد.
+
+---
+
+## 12. القانون الواجب التطبيق – التحكيم – الاختصاص في إستونيا – الدعاوى الجماعية
+
+12.1. **القانون الموضوعي:** تخضع علاقة Ulixai–المحامي لقانون بلد التدخّل، مع مراعاة القواعد الإلزامية المحلية. وعند غيابها أو لتفسير الشروط، يُطبّق **القانون الإستوني** تكميليًا.
+
+12.2. **التحكيم الإلزامي (ICC):** تُحلّ جميع النزاعات نهائيًا وفق قواعد التحكيم لغرفة التجارة الدولية (ICC). **مقر التحكيم:** تالين (إستونيا) **اللغة:** الفرنسية يُطبّق المحكّم القانون المنصوص عليه في المادة 12.1، وتُجرى الإجراءات بسرية.
+
+12.3. **التنازل عن الدعاوى الجماعية:** في حدود القانون، تُستبعد الدعاوى الجماعية أو التمثيلية؛ ويُسمح فقط بالدعاوى الفردية.
+
+12.4. **الاختصاص الحصري للمحاكم الإستونية:** في المسائل غير القابلة للتحكيم أو لتنفيذ الأحكام أو التدابير العاجلة، تختص **محاكم تالين (إستونيا)** حصريًا. ويتنازل المحامي عن أي اعتراض على الاختصاص أو مكان التقاضي.
+
+---
+
+## 13. أحكام عامة
+
+13.1. **التحويل:** يجوز لـ Ulixai نقل هذه الشروط إلى كيان تابع أو خلف قانوني؛ ولا يجوز للمحامي نقلها دون موافقة مكتوبة.
+
+13.2. **الاتفاق الكامل:** تمثل هذه الشروط الاتفاق الكامل بين الطرفين وتُلغي أي اتفاقات سابقة.
+
+13.3. **الإشعارات:** تُقدَّم عبر نشرها على المنصّة أو إشعارات داخل التطبيق أو نموذج الاتصال.
+
+13.4. **التفسير:** العناوين لغرض التوضيح فقط ولا تؤثر على التفسير؛ ولا تُطبَّق قاعدة التفسير ضد الصائغ.
+
+13.5. **اللغة:** قد تتوفر ترجمات، وتُعتبر النسخة الإنجليزية المرجع في حال التعارض.
+
+13.6. **قابلية الفصل:** إذا كانت أي مادة باطلة أو غير قابلة للتنفيذ، تبقى باقي المواد سارية؛ ويُستبدل النص بآخر قانوني مكافئ قدر الإمكان.
+
+13.7. **عدم التنازل:** عدم ممارسة أي حق لا يُعد تنازلاً عنه.
+
+---
+
+## 14. الاتصال
+
+لأي استفسار قانوني أو طلب، يُرجى زيارة: **[http://localhost:5174/contact](http://localhost:5174/contact)**
 `;
 
   // const defaultContent = selectedLanguage === 'fr' ? defaultFr : defaultEn;
   const defaultContent =
     selectedLanguage === "fr"
       ? defaultFr
-      : selectedLanguage === "de"
-        ? defaultDe
-        : selectedLanguage === "hi"
-          ? defaultHi
-          : selectedLanguage === "pt"
-            ? defaultPt
-            : defaultEn;
+      : selectedLanguage === "es"
+        ? defaultEs
+        : selectedLanguage === "de"
+          ? defaultDe
+          : selectedLanguage === "ru"
+            ? defaultRu
+            : selectedLanguage === "hi"
+              ? defaultHi
+              : selectedLanguage === "ch"
+                ? defaultCh
+                 : selectedLanguage === "ar"
+                   ? defaultAr
+                  : selectedLanguage === "pt"
+                    ? defaultPt
+                    : defaultEn;
 
   // Sections du sommaire (UI)
   const anchorMap = useMemo(
