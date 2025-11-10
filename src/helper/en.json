@@ -586,6 +586,8 @@
   "providerProfile.years": "yrs",
   "providerProfile.minutes": "minutes",
   "providerProfile.memberSince": "Member since ",
+  "providerProfile.alreadyOnCall": "Already on a call",
+  "providerProfile.onCallMessage": "This expert is currently on a call. Please try again later.",
   "bookingRequest.metaTitle": "Consultation Request • SOS Expats",
   "bookingRequest.metaDesc": "A fun, fluid, ultra-clear booking form 🚀",
   "bookingRequest.heroTitle": "Describe your request",

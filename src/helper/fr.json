@@ -566,6 +566,8 @@
   "providerProfile.years": "ans",
   "providerProfile.minutes": "minutes",
   "providerProfile.memberSince": "Membre depuis ",
+  "providerProfile.alreadyOnCall": "Déjà en appel",
+  "providerProfile.onCallMessage": "Cet expert est actuellement en appel. Veuillez réessayer plus tard.",
   "bookingRequest.metaTitle": "Demande de consultation • SOS Expats",
   "bookingRequest.metaDesc": "Un formulaire fun, fluide et ultra clair pour réserver votre appel 🚀",
   "bookingRequest.heroTitle": "Décrivez votre demande",

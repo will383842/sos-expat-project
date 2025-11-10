@@ -807,6 +807,8 @@ class TwilioCallManager {
         console.log("Client status in shouldCapturePayment :", client);
         const { startedAt, duration: sessionDuration } = session.conference;
         console.log(`📄 Started at: ${startedAt}`);
+        console.log(`📄 Session duration: ${sessionDuration}`);
+        console.log(`📄 Duration: ${duration}`);
         const actualDuration = duration || sessionDuration || 0;
         console.log(`📄 Actual duration: ${actualDuration}`);
         console.log(`📄 Payment status: ${session.payment.status}`);
@@ -818,15 +820,15 @@ class TwilioCallManager {
         console.log(`📄 Minimum call duration: ${CALL_CONFIG.MIN_CALL_DURATION}`);
         console.log(`📄 Actual duration: ${actualDuration}`);
         console.log(`📄 Comparison: ${actualDuration} < ${CALL_CONFIG.MIN_CALL_DURATION} = ${actualDuration < CALL_CONFIG.MIN_CALL_DURATION}`);
-        // if (actualDuration < CALL_CONFIG.MIN_CALL_DURATION) {
-        //   console.log(`📄 ❌ Duration check failed: ${actualDuration}s < ${CALL_CONFIG.MIN_CALL_DURATION}s - returning false`);
-        //   return false;
-        // }
+        if (actualDuration < CALL_CONFIG.MIN_CALL_DURATION) {
+            console.log(`📄 ❌ Duration check failed: ${actualDuration}s < ${CALL_CONFIG.MIN_CALL_DURATION}s - returning false`);
+            return false;
+        }
         // console.log(`📄 ✅ Duration check passed: ${actualDuration}s >= ${CALL_CONFIG.MIN_CALL_DURATION}s`);
-        // if (session.payment.status !== "authorized") {
-        //   console.log(`📄 ❌ Payment status check failed: ${session.payment.status} !== "authorized" - returning false`);
-        //   return false;
-        // }
+        if (session.payment.status !== "authorized") {
+            console.log(`📄 ❌ Payment status check failed: ${session.payment.status} !== "authorized" - returning false`);
+            return false;
+        }
         console.log(`📄 ✅ Payment status check passed: ${session.payment.status} === "authorized"`);
         console.log(`📄 ✅ All checks passed - returning true`);
         return true;
@@ -838,6 +840,8 @@ class TwilioCallManager {
             if (!session)
                 return false;
             console.log(`📄 Session: ${session}`);
+            console.log(`📄 Session Stringified: ${JSON.stringify(session, null, 2)}`);
+            console.log(`📄 Session payment status: ${session.payment.status}`);
             if (session.payment.status === "captured") {
                 console.log(`📄 Capturing payment for session: ${sessionId}`);
                 // Already captured (e.g., Stripe automatic capture) → ensure invoices exist once
@@ -892,7 +896,7 @@ class TwilioCallManager {
     }
     async createInvoices(sessionId, session) {
         try {
-            console.log(`📄 Creating invoices for session: ${sessionId}`);
+            console.log(`📄 Creating invoices for session in createInvoices: ${sessionId}`);
             // Import your invoice function - adjust path as needed
             const { generateInvoice } = await Promise.resolve().then(() => __importStar(require("./utils/generateInvoice")));
             const platformFee = Math.round(session.payment.amount * 0.15);

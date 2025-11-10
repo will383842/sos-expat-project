@@ -81,7 +81,7 @@ const TEXTS = {
     yearsExperience: "ans d'expérience",
     yearsAsExpat: "ans d'expatriation",
     reviews: "avis",
-    share: "Partager :",
+    share: "Partager : ",
     copyLink: "Copier le lien",
     successRate: "Taux de succès",
     availability: "Disponibilité",
@@ -367,7 +367,7 @@ const formatJoinDate = (val: TSLike, lang: "fr" | "en"): string | undefined => {
   if (!val) return undefined;
   const d = isFsTimestamp(val)
     ? val.toDate()
-    : val instanceof Date
+    : val instanceof Date 
       ? val
       : undefined;
   if (!d) return undefined;
@@ -470,6 +470,9 @@ const ProviderProfile: React.FC = () => {
     listenerActive: false,
     connectionAttempts: 0,
   });
+
+  // Call status - tracks if provider is currently on a call
+  const [isOnCall, setIsOnCall] = useState(false);
 
   const [activePromo, setActivePromo] = useState<{
     code: string;
@@ -959,6 +962,43 @@ const ProviderProfile: React.FC = () => {
       unsub();
     };
   }, [realProviderId]);
+
+  // Real-time listener for active call sessions
+  useEffect(() => {
+    if (!realProviderId || !provider) return;
+
+    // Query for active call sessions where this provider is involved
+    const activeCallStatuses = [
+      "pending",
+      "provider_connecting",
+      "client_connecting",
+      "both_connecting",
+      "active",
+    ];
+
+    const callSessionsQuery = query(
+      collection(db, "call_sessions"),
+      where("metadata.providerId", "==", realProviderId),
+      where("status", "in", activeCallStatuses),
+      limit(1)
+    );
+
+    const unsubscribe = onSnapshot(
+      callSessionsQuery,
+      (snapshot) => {
+        // Provider is on a call if there's at least one active session
+        setIsOnCall(!snapshot.empty);
+      },
+      (error) => {
+        console.error("Error listening to call sessions:", error);
+        setIsOnCall(false);
+      }
+    );
+
+    return () => {
+      unsubscribe();
+    };
+  }, [realProviderId, provider]);
 
   // Redirect si not found
   useEffect(() => {
@@ -1707,22 +1747,18 @@ const ProviderProfile: React.FC = () => {
                         </span>
                         <span
                           className={`font-bold text-sm px-3 py-1 rounded-full transition-all duration-500 ${
-                            onlineStatus.isOnline
-                              ? "bg-green-100 text-green-800 border border-green-300"
-                              : "bg-red-100 text-red-800 border border-red-300"
+                            isOnCall
+                              ? "bg-orange-100 text-orange-800 border border-orange-300"
+                              : onlineStatus.isOnline
+                                ? "bg-green-100 text-green-800 border border-green-300"
+                                : "bg-red-100 text-red-800 border border-red-300"
                           }`}
                         >
-                          {/* {onlineStatus.isOnline
-                            ? "🟢 " + t("online")
-                            : "🔴 " + t("offline")
-                          } */}
-
-                          {
-                            onlineStatus.isOnline
+                          {isOnCall
+                            ? `📞 ${intl.formatMessage({ id: "providerProfile.alreadyOnCall" })}`
+                            : onlineStatus.isOnline
                               ? `🟢 ${intl.formatMessage({ id: "providerProfile.online" })}`
-                              : `🔴 ${intl.formatMessage({ id: "providerProfile.online" })}`
-                            // "🔴 " + t("offline")
-                          }
+                              : `🔴 ${intl.formatMessage({ id: "providerProfile.offline" })}`}
                         </span>
                       </div>
                       <div className="flex items-center justify-between text-sm">
@@ -1741,30 +1777,28 @@ const ProviderProfile: React.FC = () => {
                     <button
                       onClick={handleBookCall}
                       className={`w-full py-4 px-4 rounded-2xl font-bold text-lg transition-all duration-500 flex items-center justify-center gap-3 min-h-[56px] focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                        onlineStatus.isOnline
+                        onlineStatus.isOnline && !isOnCall
                           ? "bg-gradient-to-r from-green-600 to-green-500 text-white hover:scale-105 shadow-lg ring-green-600/30"
                           : "bg-gray-200 text-gray-500 cursor-not-allowed"
                       }`}
-                      disabled={!onlineStatus.isOnline}
+                      disabled={!onlineStatus.isOnline || isOnCall}
                       aria-label={
-                        onlineStatus.isOnline ? t("bookNow") : t("unavailable")
+                        isOnCall
+                          ? intl.formatMessage({ id: "providerProfile.alreadyOnCall" })
+                          : onlineStatus.isOnline
+                            ? intl.formatMessage({ id: "providerProfile.bookNow" })
+                            : intl.formatMessage({ id: "providerProfile.unavailable" })
                       }
                     >
                       <Phone size={24} aria-hidden="true" />
                       <span>
-                        {/* {onlineStatus.isOnline
-                          ? t("bookNow")
-                          : t("unavailable")} */}
-
-                        {onlineStatus.isOnline
-                          ? intl.formatMessage({
-                              id: "providerProfile.bookNow",
-                            })
-                          : intl.formatMessage({
-                              id: "providerProfile.unavailable",
-                            })}
+                        {isOnCall
+                          ? intl.formatMessage({ id: "providerProfile.alreadyOnCall" })
+                          : onlineStatus.isOnline
+                            ? intl.formatMessage({ id: "providerProfile.bookNow" })
+                            : intl.formatMessage({ id: "providerProfile.unavailable" })}
                       </span>
-                      {onlineStatus.isOnline && (
+                      {onlineStatus.isOnline && !isOnCall && (
                         <div className="flex gap-1" aria-hidden="true">
                           <div className="w-2 h-2 rounded-full animate-pulse bg-white/80"></div>
                           <div className="w-2 h-2 rounded-full animate-pulse delay-75 bg-white/80"></div>
@@ -1774,15 +1808,17 @@ const ProviderProfile: React.FC = () => {
                     </button>
 
                     <div className="mt-4 text-center text-sm">
-                      {onlineStatus.isOnline ? (
+                      {isOnCall ? (
+                        <div className="text-orange-600 font-medium">
+                          📞 <FormattedMessage id="providerProfile.onCallMessage" />
+                        </div>
+                      ) : onlineStatus.isOnline ? (
                         <div className="text-green-600 font-medium">
-                          {/* ✅ {t("availableNow")} */}✅{" "}
-                          <FormattedMessage id="providerProfile.availableNow" />
+                          ✅ <FormattedMessage id="providerProfile.availableNow" />
                         </div>
                       ) : (
                         <div className="text-red-600">
-                          {/* ❌ {t("currentlyOffline")} */}❌{" "}
-                          <FormattedMessage id="providerProfile.currentlyOffline" />
+                          ❌ <FormattedMessage id="providerProfile.currentlyOffline" />
                         </div>
                       )}
                     </div>
