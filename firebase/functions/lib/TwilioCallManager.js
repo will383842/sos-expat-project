@@ -799,32 +799,78 @@ class TwilioCallManager {
             await (0, logError_1.logError)("TwilioCallManager:handleCallCompletion", error);
         }
     }
+    // shouldCapturePayment(session: CallSessionState, duration?: number): boolean {
+    //   console.log("session in shouldCapturePayment :", session);
+    //   console.log("session in shouldCapturePayment :", JSON.stringify(session, null, 2));
+    //   const { provider, client } = session.participants;
+    //   console.log("Provider status in shouldCapturePayment :", provider);
+    //   console.log("Client status in shouldCapturePayment :", client);
+    //   // const { startedAt, duration: sessionDuration } = session.conference;
+    //   const {  duration: sessionDuration } = session.conference;
+    //   console.log(`📄 Session duration: ${sessionDuration}`);
+    //   console.log(`📄 Duration: ${duration}`);
+    //   const actualDuration = duration || sessionDuration || 0;
+    //   // if (provider.status !== "connected" || client.status !== "connected")
+    //   //   return false;
+    //   // if (!startedAt) return false;
+    //   console.log(`📄 Minimum call duration: ${CALL_CONFIG.MIN_CALL_DURATION}`);
+    //   console.log(`📄 Actual duration: ${actualDuration}`);
+    //   console.log(`📄 Comparison: ${actualDuration} < ${CALL_CONFIG.MIN_CALL_DURATION} = ${actualDuration < CALL_CONFIG.MIN_CALL_DURATION}`);
+    //   if (actualDuration < CALL_CONFIG.MIN_CALL_DURATION) {
+    //     console.log(`📄 ❌ Duration check failed: ${actualDuration}s < ${CALL_CONFIG.MIN_CALL_DURATION}s - returning false`);
+    //     return false;
+    //   }
+    //   // console.log(`📄 ✅ Duration check passed: ${actualDuration}s >= ${CALL_CONFIG.MIN_CALL_DURATION}s`);
+    //   if (session.payment.status !== "authorized") {
+    //     console.log(`📄 ❌ Payment status check failed: ${session.payment.status} !== "authorized" - returning false`);
+    //     return false;
+    //   }
+    //   console.log(`📄 ✅ Payment status check passed: ${session.payment.status} === "authorized"`);
+    //   console.log(`📄 ✅ All checks passed - returning true`);
+    //   return true;
+    // }
     shouldCapturePayment(session, duration) {
         console.log("session in shouldCapturePayment :", session);
         console.log("session in shouldCapturePayment :", JSON.stringify(session, null, 2));
         const { provider, client } = session.participants;
         console.log("Provider status in shouldCapturePayment :", provider);
         console.log("Client status in shouldCapturePayment :", client);
-        const { startedAt, duration: sessionDuration } = session.conference;
-        console.log(`📄 Started at: ${startedAt}`);
+        const { duration: sessionDuration } = session.conference;
         console.log(`📄 Session duration: ${sessionDuration}`);
-        console.log(`📄 Duration: ${duration}`);
-        const actualDuration = duration || sessionDuration || 0;
-        console.log(`📄 Actual duration: ${actualDuration}`);
-        console.log(`📄 Payment status: ${session.payment.status}`);
-        console.log(`📄 Provider status: ${provider.status}`);
-        console.log(`📄 Client status: ${client.status}`);
-        // if (provider.status !== "connected" || client.status !== "connected")
-        //   return false;
-        // if (!startedAt) return false;
+        console.log(`📄 Duration parameter: ${duration}`);
+        // Calculate actual duration with multiple fallbacks
+        let actualDuration = duration || sessionDuration || 0;
+        // 🆕 FALLBACK 1: Calculate from conference timestamps
+        if (actualDuration === 0 && session.conference.startedAt && session.conference.endedAt) {
+            const startTime = session.conference.startedAt.toDate().getTime();
+            const endTime = session.conference.endedAt.toDate().getTime();
+            actualDuration = Math.floor((endTime - startTime) / 1000);
+            console.log(`📄 Duration calculated from conference timestamps: ${actualDuration}s`);
+        }
+        // 🆕 FALLBACK 2: Calculate from participant timestamps (MOST RELIABLE)
+        if (actualDuration === 0) {
+            // Use the earlier connected timestamp
+            const clientConnected = client.connectedAt?.toDate().getTime();
+            const providerConnected = provider.connectedAt?.toDate().getTime();
+            const startTime = Math.min(clientConnected || Infinity, providerConnected || Infinity);
+            // Use the later disconnected timestamp
+            const clientDisconnected = client.disconnectedAt?.toDate().getTime();
+            const providerDisconnected = provider.disconnectedAt?.toDate().getTime();
+            const endTime = Math.max(clientDisconnected || 0, providerDisconnected || 0);
+            if (startTime !== Infinity && endTime > 0) {
+                actualDuration = Math.floor((endTime - startTime) / 1000);
+                console.log(`📄 Duration calculated from participant timestamps: ${actualDuration}s`);
+                console.log(`📄   Client: connected=${clientConnected}, disconnected=${clientDisconnected}`);
+                console.log(`📄   Provider: connected=${providerConnected}, disconnected=${providerDisconnected}`);
+            }
+        }
+        console.log(`📄 Actual duration (final): ${actualDuration}`);
         console.log(`📄 Minimum call duration: ${CALL_CONFIG.MIN_CALL_DURATION}`);
-        console.log(`📄 Actual duration: ${actualDuration}`);
         console.log(`📄 Comparison: ${actualDuration} < ${CALL_CONFIG.MIN_CALL_DURATION} = ${actualDuration < CALL_CONFIG.MIN_CALL_DURATION}`);
         if (actualDuration < CALL_CONFIG.MIN_CALL_DURATION) {
             console.log(`📄 ❌ Duration check failed: ${actualDuration}s < ${CALL_CONFIG.MIN_CALL_DURATION}s - returning false`);
             return false;
         }
-        // console.log(`📄 ✅ Duration check passed: ${actualDuration}s >= ${CALL_CONFIG.MIN_CALL_DURATION}s`);
         if (session.payment.status !== "authorized") {
             console.log(`📄 ❌ Payment status check failed: ${session.payment.status} !== "authorized" - returning false`);
             return false;
