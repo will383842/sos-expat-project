@@ -78,9 +78,16 @@ export const createStripeAccount = onCall<CreateAccountData>(
           .collection("users")
           .doc(userId)
           .set(stripeData, { merge: true }),
+
+        // ✅ Also save to sos_profiles collection
+        admin
+          .firestore()
+          .collection("sos_profiles")
+          .doc(userId)
+          .set(stripeData, { merge: true }),
       ]);
 
-      console.log(`✅ Saved to ${collectionName} and users collections`);
+      console.log(`✅ Saved stripeAccountId to ${collectionName}, users, and sos_profiles collections`);
 
       return {
         success: true,

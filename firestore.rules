@@ -145,15 +145,27 @@ service cloud.firestore {
                request.resource.data.status in ['pending','authorized','captured','succeeded','failed','refunded','canceled'];
       }
       allow read: if (isAuthenticated() && (request.auth.uid == resource.data.clientId || request.auth.uid == resource.data.providerId)) || isAdmin() || isDev();
-      allow create, update, delete: if (isAdmin() && hasValidPaymentFields()) || isDev();
+      allow create: if (isAuthenticated() && request.resource.data.clientId == request.auth.uid && hasValidPaymentFields()) || isAdmin() || isDev();
+      allow update: if (isAuthenticated() && request.auth.uid == resource.data.clientId) || isAdmin() || isDev();
+      allow delete: if isAdmin() || isDev();
     }
     match /users/{userId}/payments/{paymentId} {
       allow read: if request.auth.uid == userId || isAdmin() || isDev();
-      allow create, update, delete: if isAdmin() || isDev();
+      allow create, update: if (isAuthenticated() && request.auth.uid == userId) || isAdmin() || isDev();
+      allow delete: if isAdmin() || isDev();
     }
     match /providers/{providerId}/payments/{paymentId} {
       allow read: if request.auth.uid == providerId || isAdmin() || isDev();
-      allow create, update, delete: if isAdmin() || isDev();
+      allow create, update: if isAuthenticated() || isAdmin() || isDev();
+      allow delete: if isAdmin() || isDev();
+    }
+
+    // ============ ORDERS ============
+    match /orders/{orderId} {
+      allow read: if (isAuthenticated() && (request.auth.uid == resource.data.clientId || request.auth.uid == resource.data.providerId)) || isAdmin() || isDev();
+      allow create: if (isAuthenticated() && request.resource.data.clientId == request.auth.uid) || isAdmin() || isDev();
+      allow update: if (isAuthenticated() && request.auth.uid == resource.data.clientId) || isAdmin() || isDev();
+      allow delete: if isAdmin() || isDev();
     }
 
     // ========== REVIEWS ==========
@@ -202,17 +214,23 @@ service cloud.firestore {
 
     // ================= CALL_SESSIONS =================
     match /call_sessions/{sessionId} {
-      allow read: if (isAuthenticated() && (request.auth.uid == resource.data.clientId || request.auth.uid == resource.data.providerId)) || isAdmin() || isDev();
+      allow read: if (isAuthenticated() && (request.auth.uid == resource.data.metadata.clientId || request.auth.uid == resource.data.metadata.providerId)) || isAdmin() || isDev();
       allow create, update, delete: if isAdmin() || isDev();
     }
     match /callSessions/{sessionId} { // alias éventuel
-      allow read: if (isAuthenticated() && (request.auth.uid == resource.data.clientId || request.auth.uid == resource.data.providerId)) || isAdmin() || isDev();
+      allow read: if (isAuthenticated() && (request.auth.uid == resource.data.metadata.clientId || request.auth.uid == resource.data.metadata.providerId)) || isAdmin() || isDev();
       allow create, update, delete: if isAdmin() || isDev();
     }
 
     // ================== INVOICE_RECORDS ==================
     match /invoice_records/{invoiceId} {
       allow read: if (isAuthenticated() && (request.auth.uid == resource.data.clientId || request.auth.uid == resource.data.providerId)) || isAdmin() || isDev();
+      allow create, update, delete: if isAdmin() || isDev();
+    }
+
+    // ================== TRANSFERS ==================
+    match /transfers/{transferId} {
+      allow read: if (isAuthenticated() && request.auth.uid == resource.data.providerId) || isAdmin() || isDev();
       allow create, update, delete: if isAdmin() || isDev();
     }
 

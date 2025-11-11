@@ -331,6 +331,84 @@ class StripeManager {
             return { success: false, error: msg };
         }
     }
+    async transferToProvider(providerId, providerAmount, sessionId, metadata, secretKey) {
+        try {
+            this.validateConfiguration(secretKey);
+            if (!this.stripe)
+                throw new https_1.HttpsError('internal', 'Stripe non initialisé');
+            console.log(`💸 Initiating transfer to provider ${providerId}: ${providerAmount} EUR`);
+            // Get provider's Stripe account ID from sos_profiles
+            const providerDoc = await this.db
+                .collection('sos_profiles')
+                .doc(providerId)
+                .get();
+            if (!providerDoc.exists) {
+                throw new https_1.HttpsError('not-found', `Provider profile not found: ${providerId}`);
+            }
+            const providerData = providerDoc.data();
+            const stripeAccountId = providerData?.stripeAccountId;
+            if (!stripeAccountId) {
+                console.error(`❌ Provider ${providerId} has no Stripe account - cannot transfer`);
+                throw new https_1.HttpsError('failed-precondition', 'Provider has not completed Stripe onboarding');
+            }
+            // Verify provider's account is capable of receiving payments
+            const account = await this.stripe.accounts.retrieve(stripeAccountId);
+            if (!account.charges_enabled) {
+                console.error(`❌ Provider ${providerId} charges not enabled`);
+                throw new https_1.HttpsError('failed-precondition', 'Provider account cannot receive payments yet');
+            }
+            // Create the transfer
+            const transfer = await this.stripe.transfers.create({
+                amount: Math.round(providerAmount * 100), // Convert to cents
+                currency: 'eur',
+                destination: stripeAccountId,
+                transfer_group: sessionId,
+                description: `Payment for call ${sessionId}`,
+                metadata: {
+                    sessionId: sessionId,
+                    providerId: providerId,
+                    providerAmountEuros: providerAmount.toFixed(2),
+                    environment: process.env.NODE_ENV || 'development',
+                    mode: this.mode,
+                    ...metadata,
+                },
+            });
+            console.log(`✅ Transfer created: ${transfer.id}`, {
+                amount: transfer.amount,
+                destination: stripeAccountId,
+                created: transfer.created,
+            });
+            // Record transfer in payments collection
+            await this.db.collection('transfers').add({
+                transferId: transfer.id,
+                providerId: providerId,
+                stripeAccountId: stripeAccountId,
+                amount: providerAmount,
+                amountCents: transfer.amount,
+                currency: transfer.currency,
+                sessionId: sessionId,
+                stripeTransferObject: transfer.object,
+                reversed: transfer.reversed || false,
+                createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                metadata: metadata || {},
+                environment: process.env.NODE_ENV || 'development',
+            });
+            return {
+                success: true,
+                transferId: transfer.id,
+                paymentIntentId: sessionId,
+            };
+        }
+        catch (error) {
+            await (0, logError_1.logError)('StripeManager:transferToProvider', error);
+            const msg = error instanceof https_1.HttpsError
+                ? error.message
+                : error instanceof Error
+                    ? error.message
+                    : 'Erreur lors du transfert';
+            return { success: false, error: msg };
+        }
+    }
     async cancelPayment(paymentIntentId, reason, sessionId, secretKey) {
         try {
             this.validateConfiguration(secretKey);

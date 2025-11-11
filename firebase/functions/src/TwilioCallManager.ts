@@ -96,6 +96,10 @@ export interface CallSessionState {
     capturedAt?: admin.firestore.Timestamp;
     refundedAt?: admin.firestore.Timestamp;
     failureReason?: string;
+    transferId?: string;
+    transferredAt?: admin.firestore.Timestamp;
+    transferStatus?: "pending" | "succeeded" | "failed";
+    transferFailureReason?: string;
   };
   metadata: {
     providerId: string;
@@ -1302,31 +1306,96 @@ export class TwilioCallManager {
         });
       console.log(`📄 Updated call session: ${sessionId}`);
       
-
+      // Create review request
       await this.createReviewRequest(session);
+
+      // Create invoices
       await this.createInvoices(sessionId, session);
       await this.db.collection("call_sessions").doc(sessionId).update({
         "metadata.invoicesCreated": true,
       });
-      console.log(`📄 Updated call session: ${sessionId}`);
+      console.log(`📄 Invoices created for session: ${sessionId}`);
 
+      // Transfer provider's share (85%)
+      const providerAmount = Math.round(session.payment.amount * 0.85);
+      console.log(`💸 Attempting to transfer ${providerAmount} EUR to provider ${session.metadata.providerId}`);
+      
+      try {
+        const transferResult = await stripeManager.transferToProvider(
+          session.metadata.providerId,
+          providerAmount,
+          sessionId,
+          {
+            serviceType: session.metadata.serviceType,
+            providerType: session.metadata.providerType,
+          }
+        );
 
-        await this.createReviewRequest(session);
+        if (transferResult.success && transferResult.transferId) {
+          console.log(`✅ Transfer successful: ${transferResult.transferId}`);
+          
+          // Update session with transfer info
+          await this.db.collection("call_sessions").doc(sessionId).update({
+            "payment.transferId": transferResult.transferId,
+            "payment.transferredAt": admin.firestore.Timestamp.now(),
+            "payment.transferStatus": "succeeded",
+            "metadata.updatedAt": admin.firestore.Timestamp.now(),
+          });
 
-        await this.createInvoices(sessionId, session);
-        console.log(`📄 Updated call session: ${sessionId}`);
+          await logCallRecord({
+            callId: sessionId,
+            status: "provider_payment_transferred",
+            retryCount: 0,
+            additionalData: {
+              transferId: transferResult.transferId,
+              amount: providerAmount,
+              providerId: session.metadata.providerId,
+            },
+          });
+        } else {
+          console.error(`❌ Transfer failed: ${transferResult.error}`);
+          
+          // Mark transfer as failed but don't fail the whole process
+          await this.db.collection("call_sessions").doc(sessionId).update({
+            "payment.transferStatus": "failed",
+            "payment.transferFailureReason": transferResult.error || "Unknown error",
+            "metadata.updatedAt": admin.firestore.Timestamp.now(),
+          });
 
-        await logCallRecord({
-          callId: sessionId,
-          status: "payment_captured",
-          retryCount: 0,
-          additionalData: {
-            amount: session.payment.amount,
-            duration: session.conference.duration,
-          },
+          await logCallRecord({
+            callId: sessionId,
+            status: "provider_payment_transfer_failed",
+            retryCount: 0,
+            additionalData: {
+              error: transferResult.error,
+              amount: providerAmount,
+              providerId: session.metadata.providerId,
+            },
+          });
+        }
+      } catch (transferError) {
+        console.error(`❌ Transfer exception:`, transferError);
+        await logError('TwilioCallManager:transferToProvider', transferError as unknown);
+        
+        // Record failure but continue
+        await this.db.collection("call_sessions").doc(sessionId).update({
+          "payment.transferStatus": "failed",
+          "payment.transferFailureReason": transferError instanceof Error ? transferError.message : "Unknown error",
+          "metadata.updatedAt": admin.firestore.Timestamp.now(),
         });
+      }
 
-        return true;
+      await logCallRecord({
+        callId: sessionId,
+        status: "payment_captured",
+        retryCount: 0,
+        additionalData: {
+          amount: session.payment.amount,
+          duration: session.conference.duration,
+        },
+      });
+
+      return true;
   
     } catch (error) {
       await logError(

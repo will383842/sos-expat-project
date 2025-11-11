@@ -94,6 +94,7 @@ const ROLE = {
     "bg-gradient-to-r from-red-500 via-orange-500 to-purple-600 text-white",
 } as const;
 
+
 const getHeaderClassForRole = (role?: string): string => {
   if (role === "admin") return ROLE.admin.header;
   if (role === "lawyer") return ROLE.lawyer.header;

@@ -116,13 +116,30 @@ export const checkStripeAccountStatus = onCall<{
 
       if (sosProfileDoc.exists) {
         await sosProfileRef.update({
+          stripeAccountId: accountId,
           isApproved: true,
           isVisible: true,
           kycCompleted: true,
           kycCompletedAt: admin.firestore.FieldValue.serverTimestamp(),
+          chargesEnabled: account.charges_enabled || false,
+          payoutsEnabled: account.payouts_enabled || false,
           updatedAt: admin.firestore.FieldValue.serverTimestamp(),
         });
-        console.log(`✅ Updated sos_profiles - ${userType} now visible`);
+        console.log(`✅ Updated sos_profiles with stripeAccountId - ${userType} now visible and ready for payments`);
+      } else {
+        // If sos_profiles doc doesn't exist yet, create it with minimal data
+        await sosProfileRef.set({
+          stripeAccountId: accountId,
+          kycCompleted: true,
+          kycCompletedAt: admin.firestore.FieldValue.serverTimestamp(),
+          isApproved: true,
+          isVisible: true,
+          chargesEnabled: account.charges_enabled || false,
+          payoutsEnabled: account.payouts_enabled || false,
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+          updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        }, { merge: true });
+        console.log(`✅ Created sos_profiles entry with stripeAccountId for ${userType}`);
       }
     }
 
