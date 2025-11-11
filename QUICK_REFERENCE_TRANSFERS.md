@@ -85,17 +85,29 @@ payment: {
 
 ## 📊 Money Reconciliation
 
-### For 49 EUR lawyer call:
+### For 49 EUR lawyer call (using admin pricing):
 
 **In Your Stripe Account:**
 - Received from client: +49.00 EUR
-- Transferred to provider: -41.65 EUR
+- Transferred to provider: -30.00 EUR
 - Stripe transfer fee: ~-0.25 EUR
-- **Net in your account: ~7.10 EUR** (14.5% after fees)
+- **Net in your account: ~18.75 EUR** (38% after fees)
 
 **In Provider's Stripe Account:**
-- Received from platform: +41.65 EUR
-- **Provider gets: 41.65 EUR** (85% - no fees deducted)
+- Received from platform: +30.00 EUR
+- **Provider gets: 30.00 EUR** (61% - no fees deducted)
+
+### For 19 EUR expat call (using admin pricing):
+
+**In Your Stripe Account:**
+- Received from client: +19.00 EUR
+- Transferred to provider: -10.00 EUR
+- Stripe transfer fee: ~-0.25 EUR
+- **Net in your account: ~8.75 EUR** (46% after fees)
+
+**In Provider's Stripe Account:**
+- Received from platform: +10.00 EUR
+- **Provider gets: 10.00 EUR** (53% - no fees deducted)
 
 ---
 

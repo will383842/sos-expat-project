@@ -486,7 +486,7 @@ const PasswordReset: React.FC = () => {
         "@id": `${window.location.origin}#organization`,
         "name": "SOS Expats",
         "url": window.location.origin,
-        "logo": `${window.location.origin}/images/logo.png`,
+        "logo": `${window.location.origin}/sos-logo.jpg`,
         "sameAs": [
           "https://www.facebook.com/sosexpats",
           "https://www.linkedin.com/company/sosexpats",

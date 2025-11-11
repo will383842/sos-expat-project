@@ -923,8 +923,14 @@ class TwilioCallManager {
                 "metadata.invoicesCreated": true,
             });
             console.log(`📄 Invoices created for session: ${sessionId}`);
-            // Transfer provider's share (85%)
-            const providerAmount = Math.round(session.payment.amount * 0.85);
+            // Get provider amount from admin pricing config
+            const { getPricingConfig } = await Promise.resolve().then(() => __importStar(require("./services/pricingService")));
+            const pricingConfig = await getPricingConfig();
+            const serviceType = session.metadata.providerType; // 'lawyer' or 'expat'
+            const currency = 'eur'; // Default to EUR, or could get from session metadata
+            const providerAmount = pricingConfig[serviceType][currency].providerAmount;
+            const platformFee = pricingConfig[serviceType][currency].connectionFeeAmount;
+            console.log(`💸 Using admin pricing config - Platform: ${platformFee} EUR, Provider: ${providerAmount} EUR`);
             console.log(`💸 Attempting to transfer ${providerAmount} EUR to provider ${session.metadata.providerId}`);
             try {
                 const transferResult = await StripeManager_1.stripeManager.transferToProvider(session.metadata.providerId, providerAmount, sessionId, {
@@ -1002,8 +1008,14 @@ class TwilioCallManager {
             console.log(`📄 Creating invoices for session in createInvoices: ${sessionId}`);
             // Import your invoice function - adjust path as needed
             const { generateInvoice } = await Promise.resolve().then(() => __importStar(require("./utils/generateInvoice")));
-            const platformFee = Math.round(session.payment.amount * 0.15);
-            const providerAmount = Math.round(session.payment.amount * 0.85);
+            // Get amounts from admin pricing config instead of hardcoded percentages
+            const { getPricingConfig } = await Promise.resolve().then(() => __importStar(require("./services/pricingService")));
+            const pricingConfig = await getPricingConfig();
+            const serviceType = session.metadata.providerType; // 'lawyer' or 'expat'
+            const currency = 'eur'; // Default to EUR
+            const platformFee = pricingConfig[serviceType][currency].connectionFeeAmount;
+            const providerAmount = pricingConfig[serviceType][currency].providerAmount;
+            console.log(`📄 Creating invoices with admin pricing - Platform: ${platformFee} EUR, Provider: ${providerAmount} EUR`);
             // Create platform invoice
             const platformInvoice = {
                 invoiceNumber: `PLT-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,

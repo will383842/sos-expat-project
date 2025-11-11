@@ -784,11 +784,11 @@ const PWAInstallArea = memo(({ scrolled }: { scrolled: boolean }) => {
           language === "fr" ? "Installer l'application" : "Install the app"
         }
       >
-        <img
-          src="/icons/icon-512x512-maskable.png"
-          alt="SOS Expat App Icon"
-          className="w-full h-full object-cover"
-        />
+    <img
+      src="/sos-logo.jpg"
+      alt="SOS Expat Logo"
+      className="w-full h-full object-cover"
+    />
       </button>
 
       <div className="ml-3">
@@ -843,8 +843,8 @@ const PWAIconButton = memo(() => {
       title={language === "fr" ? "Installer l'application" : "Install the app"}
     >
       <img
-        src="/icons/icon-512x512-maskable.png"
-        alt="SOS Expat App Icon"
+        src="/sos-logo.jpg"
+        alt="SOS Expat Logo"
         className="w-full h-full object-cover"
       />
     </button>

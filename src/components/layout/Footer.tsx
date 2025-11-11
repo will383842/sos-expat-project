@@ -367,7 +367,7 @@ const Footer: React.FC = () => {
           : "https://sos-urgently.example",
       logo:
         typeof window !== "undefined"
-          ? `${window.location.origin}/logo.svg`
+          ? `${window.location.origin}/sos-logo.jpg`
           : undefined,
       description: intl.formatMessage({ id: "footer.company.description" }),
       sameAs,

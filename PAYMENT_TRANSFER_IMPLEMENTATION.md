@@ -13,14 +13,23 @@ This document explains the automatic Stripe Transfer system that pays providers 
 - Money goes to **SOS Expat main Stripe account**
 - Payment captured immediately (`capture_method: 'automatic'`)
 
-### Step 2: Commission Split Calculation
-- **Platform commission**: 49 EUR × 15% = **7.35 EUR**
-- **Provider share**: 49 EUR × 85% = **41.65 EUR**
+### Step 2: Commission Split (From Admin Config)
+For lawyer calls (from `admin_config/pricing`):
+- **Platform commission**: **19 EUR** (connectionFeeAmount)
+- **Provider share**: **30 EUR** (providerAmount)
+- Total: 49 EUR
+
+For expat calls:
+- **Platform commission**: **9 EUR** (connectionFeeAmount)
+- **Provider share**: **10 EUR** (providerAmount)
+- Total: 19 EUR
 
 ### Step 3: Automatic Transfer (NEW)
 - After successful call completion
-- **41.65 EUR** transferred to provider's Stripe Connect account
-- **7.35 EUR** stays in SOS Expat account (platform commission)
+- Amount transferred based on admin pricing config:
+  - **Lawyer:** 30 EUR to provider
+  - **Expat:** 10 EUR to provider
+- Platform commission stays in SOS Expat account
 
 ---
 

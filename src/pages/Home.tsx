@@ -266,8 +266,8 @@ function PWAInstallIconWithHint({
         aria-label="Installer l'application"
       >
         <img
-          src="/icons/icon-512x512-maskable.png"
-          alt="Icône appli SOS Expat"
+          src="/sos-logo.jpg"
+          alt="SOS Expat Logo"
           className={`${canInstall ? "animate-bounce" : "animate-pulse"} w-full h-full object-cover`}
         />
       </button>
