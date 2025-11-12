@@ -809,6 +809,8 @@
   "testimonial.otherTestimonialsDesc": "अन्य प्रवासियों और यात्रियों के प्रशंसापत्र खोजें जिन्होंने हमारे विशेषज्ञों पर भरोसा किया।",
   "testimonial.reviewsCount": "+2,500 {reviews}",
   "dashboard.redirecting": "रीडायरेक्ट किया जा रहा है…",
+  "dashboard.loading": "आपका डैशबोर्ड लोड हो रहा है...",
+  "dashboard.loading.subtitle": "आपकी प्रोफ़ाइल और सत्यापन स्थिति तैयार की जा रही है...",
   "dashboard.myProfile": "मेरा प्रोफ़ाइल",
   "dashboard.settings": "सेटिंग्स",
   "dashboard.myCalls": "मेरे कॉल",

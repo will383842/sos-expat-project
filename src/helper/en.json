@@ -830,6 +830,8 @@
   "testimonial.reviewsCount": "+2,500 {reviews}",
    "testimonialOtherReviews": "Discover other testimonials from expats and travelers who trusted our experts.",
   "dashboard.redirecting": "Redirecting…",
+  "dashboard.loading": "Loading your dashboard...",
+  "dashboard.loading.subtitle": "Preparing your profile and verification status...",
   "dashboard.myProfile": "My profile",
   "dashboard.settings": "Settings",
   "dashboard.myCalls": "My calls",

@@ -850,6 +850,8 @@
   "testimonial.otherTestimonialsDesc": "查看其他曾信赖我们专家的外籍人士和旅者的评价。",
   "testimonial.reviewsCount": "+2 500 {reviews}",
   "dashboard.redirecting": "重定向中…",
+  "dashboard.loading": "正在加载您的仪表板...",
+  "dashboard.loading.subtitle": "正在准备您的个人资料和验证状态...",
   "dashboard.myProfile": "我的资料",
   "dashboard.settings": "设置",
   "dashboard.myCalls": "我的通话",

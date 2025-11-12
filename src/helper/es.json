@@ -862,6 +862,8 @@
   "testimonial.otherTestimonialsDesc": "Descubre otros testimonios de expatriados y viajeros que confiaron en nuestros expertos.",
   "testimonial.reviewsCount": "+2,500 {reviews}",
   "dashboard.redirecting": "Redirigiendo…",
+  "dashboard.loading": "Cargando su panel...",
+  "dashboard.loading.subtitle": "Preparando su perfil y estado de verificación...",
   "dashboard.myProfile": "Mi perfil",
   "dashboard.settings": "Configuración",
   "dashboard.myCalls": "Mis llamadas",

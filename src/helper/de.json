@@ -819,6 +819,8 @@
   "testimonial.otherTestimonialsDesc": "Entdecken Sie weitere Bewertungen von Expatriates und Reisenden, die unseren Experten vertraut haben.",
   "testimonial.reviewsCount": "+2.500 {reviews}",
   "dashboard.redirecting": "Weiterleitung…",
+  "dashboard.loading": "Laden Ihres Dashboards...",
+  "dashboard.loading.subtitle": "Vorbereitung Ihres Profils und Verifizierungsstatus...",
   "dashboard.myProfile": "Mein Profil",
   "dashboard.settings": "Einstellungen",
   "dashboard.myCalls": "Meine Anrufe",

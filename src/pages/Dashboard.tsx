@@ -388,6 +388,10 @@ const Dashboard: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  
+  // ✅ Track if user data is ready (for KYC component fix)
+  const [userDataReady, setUserDataReady] = useState<boolean>(false);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
   // data
   const [currentStatus, setCurrentStatus] = useState<boolean>(
@@ -476,6 +480,42 @@ const Dashboard: React.FC = () => {
     if (!user) navigate("/login");
     console.log(user, " : this is the user .");
   }, [user, navigate]);
+
+  // ✅ Force refresh user data on mount for lawyer/expat (fixes KYC loading issue after signup)
+  useEffect(() => {
+    const checkAndRefreshUserData = async () => {
+      if (!user) {
+        setUserDataReady(false);
+        return;
+      }
+
+      // If user is lawyer or expat, ensure KYC fields are loaded
+      if (user.role === "lawyer" || user.role === "expat") {
+        // Check if KYC fields are missing (happens right after signup)
+        const missingKycData = 
+          user.kycStatus === undefined || 
+          user.stripeOnboardingComplete === undefined ||
+          user.chargesEnabled === undefined;
+
+        if (missingKycData && !isRefreshing) {
+          console.log("🔄 KYC data missing, refreshing user...");
+          setIsRefreshing(true);
+          try {
+            await refreshUser();
+          } catch (error) {
+            console.error("Error refreshing user:", error);
+          } finally {
+            setIsRefreshing(false);
+          }
+        }
+      }
+      
+      // Mark as ready after check/refresh
+      setUserDataReady(true);
+    };
+
+    checkAndRefreshUserData();
+  }, [user?.uid, user?.role]); // Trigger when user ID or role changes
 
   // Status en temps réel (priorité = sos_profiles, fallback = users)
 
@@ -881,11 +921,35 @@ const Dashboard: React.FC = () => {
   return (
     <Layout>
       {/* ========================================== */}
+      {/* LOADING STATE (while fetching user data) */}
+      {/* ========================================== */}
+      {!userDataReady && (user?.role === "lawyer" || user?.role === "expat") && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+            <p className="text-gray-600 text-lg">
+              <FormattedMessage
+                id="dashboard.loading"
+                defaultMessage="Loading your dashboard..."
+              />
+            </p>
+            <p className="text-gray-400 text-sm mt-2">
+              <FormattedMessage
+                id="dashboard.loading.subtitle"
+                defaultMessage="Preparing your profile and verification status..."
+              />
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================== */}
       {/* STRIPE KYC STATUS & VERIFICATION SECTION */}
       {/* ========================================== */}
 
       {/* Show KYC verification form if not started or incomplete */}
-      {user &&
+      {userDataReady &&
+        user &&
         (user.role === "lawyer" || user.role === "expat") &&
         (user?.kycStatus === "not_started" ||
           user?.kycStatus === "in_progress" ||

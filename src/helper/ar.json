@@ -806,6 +806,8 @@
   "testimonial.otherTestimonialsDesc": "اكتشف تقييمات أخرى من مغتربين ومسافرين وثقوا بخبرائنا.",
   "testimonial.reviewsCount": "+2,500 {reviews}",
   "dashboard.redirecting": "جارٍ إعادة التوجيه…",
+  "dashboard.loading": "جارٍ تحميل لوحة التحكم الخاصة بك...",
+  "dashboard.loading.subtitle": "جارٍ تحضير ملفك الشخصي وحالة التحقق...",
   "dashboard.myProfile": "ملفي",
   "dashboard.settings": "الإعدادات",
   "dashboard.myCalls": "مكالماتي",

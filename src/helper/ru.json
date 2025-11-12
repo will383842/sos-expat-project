@@ -820,6 +820,8 @@
   "testimonial.otherTestimonialsDesc": "Ознакомьтесь с другими отзывами экспатов и путешественников, которые доверились нашим экспертам.",
   "testimonial.reviewsCount": "+2500 {reviews}",
   "dashboard.redirecting": "Перенаправление…",
+  "dashboard.loading": "Загрузка вашей панели...",
+  "dashboard.loading.subtitle": "Подготовка вашего профиля и статуса верификации...",
   "dashboard.myProfile": "Мой профиль",
   "dashboard.settings": "Настройки",
   "dashboard.myCalls": "Мои звонки",
