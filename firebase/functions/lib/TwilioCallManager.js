@@ -933,7 +933,7 @@ class TwilioCallManager {
             console.log(`💸 Using admin pricing config - Platform: ${platformFee} EUR, Provider: ${providerAmount} EUR`);
             // ===== DELAYED TRANSFER LOGIC (NEW) =====
             // Schedule transfer for later instead of immediate execution
-            const TRANSFER_DELAY_DAYS = 1; // Configure: 3, 7, 14, or 30 days
+            const TRANSFER_DELAY_DAYS = 1 / 1440; // Configure: 3, 7, 14, or 30 days
             const scheduledDate = new Date(Date.now() + TRANSFER_DELAY_DAYS * 24 * 60 * 60 * 1000);
             console.log(`📅 Scheduling transfer of ${providerAmount} EUR to provider ${session.metadata.providerId}`);
             console.log(`📅 Transfer will execute on: ${scheduledDate.toISOString()}`);
