@@ -694,13 +694,13 @@ const OptimizedHomePage: React.FC = () => {
 
   const stats: Stat[] = [
     {
-      value: "15K+",
+      value: "304 Millions",
       label: "statsExpatriatesHelped",
       icon: <Users className="w-8 h-8" />,
       color: "from-blue-500 to-cyan-500",
     },
     {
-      value: "2K+",
+      value: "197+",
       label: "statsCountriesCovered",
       icon: <Shield className="w-8 h-8" />,
       color: "from-green-500 to-emerald-500",
