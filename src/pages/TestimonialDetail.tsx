@@ -1637,23 +1637,33 @@ const COUNTRY_TRANSLATIONS: Record<
 
 const TestimonialDetail: React.FC = () => {
   const intl = useIntl();
-  // ✅ USEPARAMS CORRIGÉ AVEC LA NOUVELLE STRUCTURE URL
-  const {
-    serviceType,
-    country,
-    year,
-    language: urlLanguage,
-    id,
-  } = useParams<{
-    serviceType: string;
-    country: string;
-    year: string;
-    language: string;
-    id: string;
+  // ✅ NEW: Parse URL params
+  const { country, language: urlLanguage, reviewType } = useParams<{ 
+    country: string; 
+    language: string; 
+    reviewType: string;
   }>();
-
+  
   const navigate = useNavigate();
   const { language } = useApp();
+  
+  // ✅ Check if current language is RTL
+  const isRTL = language === 'ar';
+
+  // Extract testimonial ID from sessionStorage (set during navigation)
+  const testimonialId = useMemo(() => {
+    const storedId = sessionStorage.getItem('testimonialId');
+    const storedCountry = sessionStorage.getItem('testimonialCountry');
+    const storedLanguage = sessionStorage.getItem('testimonialLanguage');
+    
+    // Verify URL params match stored data (in case of direct URL access)
+    if (storedCountry === country && storedLanguage === urlLanguage && storedId) {
+      return storedId;
+    }
+    
+    // If direct URL access, fallback to first testimonial
+    return storedId || '1';
+  }, [country, urlLanguage]);
 
   // Helper: pick a localized value from objects that have keys like { fr, en, es, de, ru, hi }
   const pickLang = <T extends Record<string, any> | undefined>(obj: T): any => {
@@ -1668,18 +1678,17 @@ const TestimonialDetail: React.FC = () => {
     );
   };
 
-  // ✅ FALLBACK SUR ID SI PAS TROUVÉ
+  // ✅ FIND TESTIMONIAL BY ID
   const testimonialData = useMemo(() => {
-    // const data = TESTIMONIALS_DATA[id];
     const reviews = createMockReviewsData(language);
-    const data = reviews.find((review) => review.id === id);
+    const data = reviews.find((review) => review.id === testimonialId);
 
     if (!data) {
-      // Fallback sur le premier témoignage disponible
-      // return TESTIMONIALS_DATA['1'];
+      // Fallback to first testimonial if not found
+      return reviews[0];
     }
     return data;
-  }, [id]);
+  }, [testimonialId, language]);
 
   // Memoization of date formatting / Mémoisation du formatage de date
   const formattedDate = useMemo(() => {
@@ -2250,14 +2259,17 @@ const TestimonialDetail: React.FC = () => {
                   {intl.formatMessage({ id: "testimonial.backToTestimonials" })}
                 </div>
 
-                <div className="flex flex-col lg:flex-row lg:items-center space-y-3 lg:space-y-0 lg:space-x-4 mb-4">
+                <div className="flex items-center gap-3 flex-wrap mb-4">
                   <h1 className="text-4xl lg:text-5xl font-black text-white leading-tight">
                     {testimonialData.clientName}
                   </h1>
+                  {/* Early Beta User Badge */}
+                  <span className="inline-flex items-center px-3 py-1 text-xs sm:text-sm font-semibold rounded-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-lg whitespace-nowrap">
+                    Early Beta User
+                  </span>
                   {testimonialData.verified && (
-                    <span className="inline-flex items-center gap-2 bg-green-500/20 border border-green-400/30 text-green-300 text-sm px-3 py-1.5 rounded-full backdrop-blur-sm">
+                    <span className="inline-flex items-center gap-2 bg-green-500/20 border border-green-400/30 text-green-300 text-xs sm:text-sm px-3 py-1.5 rounded-full backdrop-blur-sm whitespace-nowrap">
                       <Shield size={14} />
-                      {/* {t.verified} */}
                       {intl.formatMessage({ id: "testimonial.verified" })}
                     </span>
                   )}

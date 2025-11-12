@@ -146,35 +146,38 @@ const Reviews: React.FC<ReviewsProps> = ({
       {reviews.map((review: ReviewItem) => (
         <div key={review.id} className="border-b border-gray-200 pb-6 last:border-b-0">
           <div className="flex items-start justify-between mb-3">
-            <div>
-              <div className="flex items-center space-x-2 mb-1">
+            <div className="flex-1">
+              <div className="flex items-center gap-2 flex-wrap mb-2">
                 <span className="font-medium text-gray-900">{review.clientName}</span>
+                {/* Early Beta User Badge */}
+                <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-sm whitespace-nowrap">
+                  Early Beta User
+                </span>
+                {review.serviceType && (
+                  <span
+                    className={
+                      'px-2 py-1 text-xs font-semibold rounded-full ' +
+                      (review.serviceType === 'lawyer_call' ? 'bg-orange-100 text-orange-800' : 'bg-blue-100 text-blue-800')
+                    }
+                  >
+                    {review.serviceType === 'lawyer_call' ? 'Lawyer' : 'Expat'}
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-3 flex-wrap">
+                <div className="flex">{renderStars(review.rating)}</div>
                 {review.clientCountry && (
                   <div className="flex items-center text-sm text-gray-500">
                     <MapPin size={12} className="mr-1" />
                     <span>{review.clientCountry}</span>
                   </div>
                 )}
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="flex">{renderStars(review.rating)}</div>
                 <span className="text-sm text-gray-500">
                   <Calendar size={12} className="inline mr-1" />
                   {formatDate(review.createdAt)}
                 </span>
               </div>
             </div>
-
-            {review.serviceType && (
-              <span
-                className={
-                  'px-2 py-1 text-xs rounded-full ' +
-                  (review.serviceType === 'lawyer_call' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800')
-                }
-              >
-                {review.serviceType === 'lawyer_call' ? 'Avocat' : 'Expatrié'}
-              </span>
-            )}
           </div>
 
           <p className="text-gray-700 mb-3">{review.comment}</p>

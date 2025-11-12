@@ -126,16 +126,13 @@ const routeConfigs: RouteConfig[] = [
 
   // Témoignages
   { path: "/testimonials", component: Testimonials, alias: "/temoignages" },
-  // {
-  //   path: "/testimonials/:serviceType/:country/:year/:language/:id",
-  //   component: TestimonialDetail,
-  // },
-    {
-    path: "/testimonials/:id",
+  // New SEO-friendly URL format: /testimonials/country/language/review-type-urgently
+  {
+    path: "/testimonials/:country/:language/:reviewType",
     component: TestimonialDetail,
   },
   {
-    path: "/temoignages/:serviceType/:country/:year/:language/:id",
+    path: "/temoignages/:country/:language/:reviewType",
     component: TestimonialDetail,
   },
 

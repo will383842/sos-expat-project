@@ -504,10 +504,16 @@ function ReviewsSlider({ theme = "dark" }: { theme?: "dark" | "light" }) {
                       />
                     </div>
                     <div className="mt-3">
-                      <div
-                        className={`font-extrabold ${isDark ? "text-white" : "text-gray-900"} text-lg sm:text-xl leading-tight`}
-                      >
-                        {r.name}
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <div
+                          className={`font-extrabold ${isDark ? "text-white" : "text-gray-900"} text-lg sm:text-xl leading-tight`}
+                        >
+                          {r.name}
+                        </div>
+                        {/* Early Beta User Badge */}
+                        <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-sm whitespace-nowrap">
+                          Early Beta User
+                        </span>
                       </div>
                       <div
                         className={`mt-0.5 inline-flex items-center gap-1 ${isDark ? "text-gray-300/90" : "text-gray-500"} text-xs sm:text-sm`}

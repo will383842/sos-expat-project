@@ -70,72 +70,212 @@ const smoothScrollToTop = () => {
 const createCountrySlug = (country: string): string => {
 
   const slugMap: Record<string, string> = {
-    // Pays avec caractères spéciaux
-    Thaïlande: "thailande",
-    "Royaume-Uni": "royaume-uni",
-    "États-Unis": "etats-unis",
-    "Émirats Arabes Unis": "emirats-arabes-unis",
-    "Corée du Sud": "coree-du-sud",
-    "Nouvelle-Zélande": "nouvelle-zelande",
-    "Afrique du Sud": "afrique-du-sud",
-    "Côte d'Ivoire": "cote-divoire",
-    "République Tchèque": "republique-tcheque",
-    "Arabie Saoudite": "arabie-saoudite",
-    Norvège: "norvege",
-    Suède: "suede",
-    Pérou: "perou",
+    // French country names
+    Thaïlande: "thailand",
+    "Royaume-Uni": "united-kingdom",
+    "États-Unis": "united-states",
+    "Émirats Arabes Unis": "united-arab-emirates",
+    "Corée du Sud": "south-korea",
+    "Nouvelle-Zélande": "new-zealand",
+    "Afrique du Sud": "south-africa",
+    "Côte d'Ivoire": "ivory-coast",
+    "République Tchèque": "czech-republic",
+    "Arabie Saoudite": "saudi-arabia",
+    Norvège: "norway",
+    Suède: "sweden",
+    Pérou: "peru",
     Sénégal: "senegal",
-    Indonésie: "indonesie",
-    Grèce: "grece",
-    Danemark: "danemark",
-    Finlande: "finlande",
-    Islande: "islande",
-    Irlande: "irlande",
-    Turquie: "turquie",
-    // Pays simples (déjà en bon format)
+    Indonésie: "indonesia",
+    Grèce: "greece",
+    Danemark: "denmark",
+    Finlande: "finland",
+    Islande: "iceland",
+    Irlande: "ireland",
+    Turquie: "turkey",
     Canada: "canada",
-    Espagne: "espagne",
-    Allemagne: "allemagne",
-    Italie: "italie",
+    Espagne: "spain",
+    Allemagne: "germany",
+    Italie: "italy",
     Portugal: "portugal",
-    Belgique: "belgique",
-    Suisse: "suisse",
-    Australie: "australie",
-    Japon: "japon",
-    Brésil: "bresil",
-    Mexique: "mexique",
-    Argentine: "argentine",
-    Chili: "chili",
-    Colombie: "colombie",
-    Maroc: "maroc",
-    Tunisie: "tunisie",
+    Belgique: "belgium",
+    Suisse: "switzerland",
+    Australie: "australia",
+    Japon: "japan",
+    Brésil: "brazil",
+    Mexique: "mexico",
+    Argentine: "argentina",
+    Chili: "chile",
+    Colombie: "colombia",
+    Maroc: "morocco",
+    Tunisie: "tunisia",
     Vietnam: "vietnam",
-    Cambodge: "cambodge",
-    Inde: "inde",
-    Chine: "chine",
-    Singapour: "singapour",
-    Malaisie: "malaisie",
+    Cambodge: "cambodia",
+    Inde: "india",
+    Chine: "china",
+    Singapour: "singapore",
+    Malaisie: "malaysia",
     Philippines: "philippines",
     Qatar: "qatar",
-    Croatie: "croatie",
-    Pologne: "pologne",
-    Hongrie: "hongrie",
-    Roumanie: "roumanie",
-    Bulgarie: "bulgarie",
-    Russie: "russie",
+    Croatie: "croatia",
+    Pologne: "poland",
+    Hongrie: "hungary",
+    Roumanie: "romania",
+    Bulgarie: "bulgaria",
+    Russie: "russia",
     Ukraine: "ukraine",
     Luxembourg: "luxembourg",
-    Autriche: "autriche",
+    Autriche: "austria",
+    
+    // English country names
+    Thailand: "thailand",
+    "United Kingdom": "united-kingdom",
+    "United States": "united-states",
+    "United Arab Emirates": "united-arab-emirates",
+    "South Korea": "south-korea",
+    "New Zealand": "new-zealand",
+    "South Africa": "south-africa",
+    "Czech Republic": "czech-republic",
+    "Saudi Arabia": "saudi-arabia",
+    Norway: "norway",
+    Sweden: "sweden",
+    Peru: "peru",
+    Senegal: "senegal",
+    Indonesia: "indonesia",
+    Greece: "greece",
+    Denmark: "denmark",
+    Finland: "finland",
+    Iceland: "iceland",
+    Ireland: "ireland",
+    Turkey: "turkey",
+    Spain: "spain",
+    Germany: "germany",
+    Italy: "italy",
+    Brazil: "brazil",
+    Mexico: "mexico",
+    Argentina: "argentina",
+    Chile: "chile",
+    Colombia: "colombia",
+    Morocco: "morocco",
+    Tunisia: "tunisia",
+    France: "france",
+    Switzerland: "switzerland",
+    India: "india",
+    China: "china",
+    Singapore: "singapore",
+    Malaysia: "malaysia",
+    
+    // German country names (Deutsch)
+    "Vereinigte Arabische Emirate": "united-arab-emirates",
+    "Südkorea": "south-korea",
+    Norwegen: "norway",
+    Schweden: "sweden",
+    Brasilien: "brazil",
+    Singapur: "singapore",
+    "Vereinigtes Königreich": "united-kingdom",
+    Deutschland: "germany",
+    Italien: "italy",
+    "Vereinigte Staaten": "united-states",
+    Spanien: "spain",
+    Mexiko: "mexico",
+    Schweiz: "switzerland",
+    Australien: "australia",
+    Kanada: "canada",
+    
+    // Spanish country names (Español)
+    Tailandia: "thailand",
+    Canadá: "canada",
+    "Reino Unido": "united-kingdom",
+    "Estados Unidos": "united-states",
+    Alemania: "germany",
+    Francia: "france",
+    España: "spain",
+    Suiza: "switzerland",
+    México: "mexico",
+    Brasil: "brazil",
+    
+    // Russian country names (Русский)
+    Таиланд: "thailand",
+    Канада: "canada",
+    "Великобритания": "united-kingdom",
+    "США": "united-states",
+    Германия: "germany",
+    Франция: "france",
+    Испания: "spain",
+    Италия: "italy",
+    Швейцария: "switzerland",
+    Австралия: "australia",
+    Япония: "japan",
+    
+    // Portuguese country names (Português)
+    Tailândia: "thailand",
+    Canadá: "canada",
+    "Reino Unido": "united-kingdom",
+    "Estados Unidos": "united-states",
+    Alemanha: "germany",
+    França: "france",
+    Espanha: "spain",
+    Itália: "italy",
+    Suíça: "switzerland",
+    Austrália: "australia",
+    Japão: "japan",
+    
+    // Hindi country names (हिन्दी)
+    "थाईलैंड": "thailand",
+    "कनाडा": "canada",
+    "यूनाइटेड किंगडम": "united-kingdom",
+    "संयुक्त राज्य अमेरिका": "united-states",
+    "जर्मनी": "germany",
+    "फ्रांस": "france",
+    "स्पेन": "spain",
+    "इटली": "italy",
+    "स्विट्जरलैंड": "switzerland",
+    "ऑस्ट्रेलिया": "australia",
+    "जापान": "japan",
+    
+    // Chinese country names (中文)
+    "泰国": "thailand",
+    "加拿大": "canada",
+    "英国": "united-kingdom",
+    "美国": "united-states",
+    "德国": "germany",
+    "法国": "france",
+    "西班牙": "spain",
+    "意大利": "italy",
+    "瑞士": "switzerland",
+    "澳大利亚": "australia",
+    "日本": "japan",
+    
+    // Arabic country names (العربية)
+    "تايلاند": "thailand",
+    "كندا": "canada",
+    "المملكة المتحدة": "united-kingdom",
+    "الولايات المتحدة": "united-states",
+    "ألمانيا": "germany",
+    "فرنسا": "france",
+    "إسبانيا": "spain",
+    "إيطاليا": "italy",
+    "سويسرا": "switzerland",
+    "أستراليا": "australia",
+    "اليابان": "japan",
+    "المغرب": "morocco",
+    "تونس": "tunisia",
+    "مصر": "egypt",
+    "الإمارات العربية المتحدة": "united-arab-emirates",
+    "السعودية": "saudi-arabia",
+    "قطر": "qatar",
   };
 
+  // Return mapped slug or fallback to lowercase ASCII
   return (
     slugMap[country] ||
     country
       .toLowerCase()
       .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "") // Supprimer les accents
+      .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
       .replace(/\s+/g, "-")
-      .replace(/[^\w-]/g, "")
+      .replace(/[^\w-]/g, "") // Remove non-ASCII
+      .replace(/^-+|-+$/g, "") // Trim dashes
+      || "unknown" // Final fallback
   );
 };
 
@@ -2999,6 +3139,9 @@ const Testimonials: React.FC = () => {
   const intl = useIntl();
   const { language } = useApp();
   const navigate = useNavigate();
+  
+  // ✅ Check if current language is RTL
+  const isRTL = language === 'ar';
 
   // Use detected language or app language
   const [currentLanguage, setCurrentLanguage] = useState<string>(() => {
@@ -3163,7 +3306,7 @@ const Testimonials: React.FC = () => {
     smoothScrollToTop();
   }, []);
 
-  // ✅ FONCTION DE REDIRECTION CORRIGÉE POUR URL SEO PARFAITE
+  // ✅ FONCTION DE REDIRECTION - NEW SEO URL FORMAT
   const handleTestimonialClick = useCallback(
     (testimonial: ReviewType) => {
       // Déterminer le type de service pour l'URL (lawyer ou expat)
@@ -3175,17 +3318,32 @@ const Testimonials: React.FC = () => {
       // Créer le slug du pays pour l'URL SEO
       const countrySlug = createCountrySlug(testimonial.clientCountry);
 
-      // Obtenir l'année du témoignage
-      const year = testimonial.createdAt.getFullYear();
+      // Créer le slug de la langue
+      const languageSlug = currentLanguage === 'en' ? 'english' :
+                           currentLanguage === 'fr' ? 'french' :
+                           currentLanguage === 'es' ? 'spanish' :
+                           currentLanguage === 'de' ? 'german' :
+                           currentLanguage === 'ru' ? 'russian' :
+                           currentLanguage === 'hi' ? 'hindi' :
+                           currentLanguage === 'ch' ? 'chinese' :
+                           currentLanguage === 'pt' ? 'portuguese' :
+                           currentLanguage === 'ar' ? 'arabic' : 'english';
 
-      // Construire l'URL SEO-friendly parfaite pour Google
-      // Format: /testimonials/:serviceType/:country/:year/:language/:id
-      console.log("country slug : ", countrySlug);
-
-      // const path = `/testimonials/${serviceType}/${countrySlug}/${year}/${currentLanguage}/${testimonial.id}`;
-      const path = `/testimonials/${testimonial.id}`;
+      // Construire l'URL SEO-friendly selon le nouveau format
+      // Format: /testimonials/country/language/review-lawyer-urgently
+      // Exemple: /testimonials/thailand/english/review-lawyer-urgently
+      const reviewType = serviceType === "lawyer" ? "review-lawyer" : "review-expat";
+      const path = `/testimonials/${countrySlug}/${languageSlug}/${reviewType}-urgently`;
 
       console.log("🚀 Navigation vers:", path); // Pour débugger
+      console.log("🔗 SEO URL:", path, `(${path.length} chars)`);
+      
+      // Store testimonial data in sessionStorage for detail page
+      sessionStorage.setItem('testimonialId', testimonial.id);
+      sessionStorage.setItem('testimonialCountry', countrySlug);
+      sessionStorage.setItem('testimonialLanguage', languageSlug);
+      sessionStorage.setItem('testimonialServiceType', serviceType);
+      
       navigate(path);
 
       // Analytics pour tracking
@@ -3195,8 +3353,8 @@ const Testimonials: React.FC = () => {
           testimonial_id: testimonial.id,
           service_type: serviceType,
           country: countrySlug,
-          year: year,
-          language: currentLanguage,
+          language: languageSlug,
+          url_path: path,
         },
       });
     },
@@ -3522,6 +3680,7 @@ const Testimonials: React.FC = () => {
                       style={{ animationDelay: `${index * 0.1}s` }}
                       onClick={() => handleTestimonialClick(testimonial)}
                       aria-label={`${intl.formatMessage({ id: "testy.aria.testimonialCard" })} ${testimonial.clientName}`}
+                      dir={isRTL ? 'rtl' : 'ltr'}
                     >
                       <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 via-orange-500/5 to-yellow-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
@@ -3546,11 +3705,16 @@ const Testimonials: React.FC = () => {
                                 </div>
                               )}
                             </div>
-                            <div>
-                              <h3 className="font-bold text-gray-900 text-base sm:text-lg">
+                            <div className="flex-1">
+                              <h3 className="font-bold text-gray-900 text-base sm:text-lg mb-2">
                                 {testimonial.clientName}
                               </h3>
-                              <div className="flex items-center gap-2 mt-1">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                {/* Early Beta User Badge */}
+                                <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-sm whitespace-nowrap">
+                                  Early Beta User
+                                </span>
+                                {/* Service Type Badge */}
                                 <span
                                   className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-semibold ${getServiceTypeClass(testimonial.serviceType)}`}
                                 >
@@ -3593,7 +3757,15 @@ const Testimonials: React.FC = () => {
                           </div>
                         </div>
 
-                        <blockquote className="text-gray-700 mb-6 leading-relaxed text-sm sm:text-base line-clamp-4">
+                        <blockquote 
+                          className="text-gray-700 mb-6 leading-relaxed text-sm sm:text-base line-clamp-4"
+                          style={{ 
+                            fontFamily: language === 'ar' ? 'Arial, sans-serif' : 
+                                       language === 'hi' ? 'Noto Sans Devanagari, sans-serif' : 
+                                       language === 'ch' ? 'Noto Sans SC, sans-serif' : 
+                                       'inherit'
+                          }}
+                        >
                           "{testimonial.comment}"
                         </blockquote>
 
