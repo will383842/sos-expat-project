@@ -234,6 +234,12 @@ service cloud.firestore {
       allow create, update, delete: if isAdmin() || isDev();
     }
 
+    // ================== PENDING TRANSFERS ==================
+    match /pending_transfers/{transferId} {
+      allow read: if (isAuthenticated() && request.auth.uid == resource.data.providerId) || isAdmin() || isDev();
+      allow create, update, delete: if isAdmin() || isDev();
+    }
+
     // =================== NOTIFICATION_LOGS ===================
     match /notification_logs/{logId} {
       allow read: if (isAuthenticated() && request.auth.uid == resource.data.recipientId) || isAdmin() || isDev();

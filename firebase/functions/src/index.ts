@@ -93,6 +93,9 @@ export {
 
 export { completeLawyerOnboarding } from "./lawyerOnboarding";
 
+// Scheduled transfer processing
+export { processScheduledTransfers } from "./processScheduledTransfers";
+
 // ====== IMPORTS PRINCIPAUX ======
 import {
   onRequest,

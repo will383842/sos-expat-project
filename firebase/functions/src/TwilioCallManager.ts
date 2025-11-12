@@ -98,8 +98,10 @@ export interface CallSessionState {
     failureReason?: string;
     transferId?: string;
     transferredAt?: admin.firestore.Timestamp;
-    transferStatus?: "pending" | "succeeded" | "failed";
+    transferStatus?: "scheduled" | "pending" | "succeeded" | "failed" | "scheduling_failed";
     transferFailureReason?: string;
+    scheduledTransferDate?: admin.firestore.Timestamp;
+    pendingTransferId?: string;
   };
   metadata: {
     providerId: string;
@@ -1327,6 +1329,70 @@ export class TwilioCallManager {
       const platformFee = pricingConfig[serviceType][currency].connectionFeeAmount;
       
       console.log(`💸 Using admin pricing config - Platform: ${platformFee} EUR, Provider: ${providerAmount} EUR`);
+
+      // ===== DELAYED TRANSFER LOGIC (NEW) =====
+      // Schedule transfer for later instead of immediate execution
+      const TRANSFER_DELAY_DAYS = 1; // Configure: 3, 7, 14, or 30 days
+      const scheduledDate = new Date(Date.now() + TRANSFER_DELAY_DAYS * 24 * 60 * 60 * 1000);
+      
+      console.log(`📅 Scheduling transfer of ${providerAmount} EUR to provider ${session.metadata.providerId}`);
+      console.log(`📅 Transfer will execute on: ${scheduledDate.toISOString()}`);
+
+      try {
+        // Create pending transfer record
+        const pendingTransferDoc = await this.db.collection('pending_transfers').add({
+          providerId: session.metadata.providerId,
+          amount: providerAmount,
+          sessionId: sessionId,
+          status: 'pending',
+          scheduledFor: admin.firestore.Timestamp.fromDate(scheduledDate),
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+          metadata: {
+            serviceType: session.metadata.serviceType,
+            providerType: session.metadata.providerType,
+            callCompletedAt: admin.firestore.Timestamp.now(),
+            platformFee: platformFee,
+          },
+        });
+
+        console.log(`✅ Pending transfer created: ${pendingTransferDoc.id}`);
+        console.log(`📅 Will be processed in ${TRANSFER_DELAY_DAYS} days`);
+
+        // Update session with scheduled transfer info
+        await this.db.collection("call_sessions").doc(sessionId).update({
+          "payment.transferStatus": "scheduled",
+          "payment.scheduledTransferDate": admin.firestore.Timestamp.fromDate(scheduledDate),
+          "payment.pendingTransferId": pendingTransferDoc.id,
+          "metadata.updatedAt": admin.firestore.Timestamp.now(),
+        });
+
+        await logCallRecord({
+          callId: sessionId,
+          status: "provider_payment_scheduled",
+          retryCount: 0,
+          additionalData: {
+            pendingTransferId: pendingTransferDoc.id,
+            amount: providerAmount,
+            providerId: session.metadata.providerId,
+            scheduledFor: scheduledDate.toISOString(),
+            delayDays: TRANSFER_DELAY_DAYS,
+          },
+        });
+
+      } catch (schedulingError) {
+        console.error(`❌ Error scheduling transfer:`, schedulingError);
+        await logError('TwilioCallManager:scheduleTransfer', schedulingError as unknown);
+        
+        // Record failure
+        await this.db.collection("call_sessions").doc(sessionId).update({
+          "payment.transferStatus": "scheduling_failed",
+          "payment.transferFailureReason": schedulingError instanceof Error ? schedulingError.message : "Unknown error",
+          "metadata.updatedAt": admin.firestore.Timestamp.now(),
+        });
+      }
+
+      /* ===== IMMEDIATE TRANSFER LOGIC (COMMENTED OUT) =====
+      // This was the old immediate transfer - kept for reference
       console.log(`💸 Attempting to transfer ${providerAmount} EUR to provider ${session.metadata.providerId}`);
       
       try {
@@ -1343,7 +1409,6 @@ export class TwilioCallManager {
         if (transferResult.success && transferResult.transferId) {
           console.log(`✅ Transfer successful: ${transferResult.transferId}`);
           
-          // Update session with transfer info
           await this.db.collection("call_sessions").doc(sessionId).update({
             "payment.transferId": transferResult.transferId,
             "payment.transferredAt": admin.firestore.Timestamp.now(),
@@ -1364,7 +1429,6 @@ export class TwilioCallManager {
         } else {
           console.error(`❌ Transfer failed: ${transferResult.error}`);
           
-          // Mark transfer as failed but don't fail the whole process
           await this.db.collection("call_sessions").doc(sessionId).update({
             "payment.transferStatus": "failed",
             "payment.transferFailureReason": transferResult.error || "Unknown error",
@@ -1386,13 +1450,13 @@ export class TwilioCallManager {
         console.error(`❌ Transfer exception:`, transferError);
         await logError('TwilioCallManager:transferToProvider', transferError as unknown);
         
-        // Record failure but continue
         await this.db.collection("call_sessions").doc(sessionId).update({
           "payment.transferStatus": "failed",
           "payment.transferFailureReason": transferError instanceof Error ? transferError.message : "Unknown error",
           "metadata.updatedAt": admin.firestore.Timestamp.now(),
         });
       }
+      ===== END COMMENTED OUT CODE ===== */
 
       await logCallRecord({
         callId: sessionId,
