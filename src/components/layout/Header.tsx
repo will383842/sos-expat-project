@@ -772,29 +772,19 @@ const PWAInstallArea = memo(({ scrolled }: { scrolled: boolean }) => {
   };
 
   return (
-    <div className="flex items-center select-none">
-      <button
-        type="button"
-        onClick={onClick}
-        className="relative w-[72px] h-[72px] rounded-2xl overflow-hidden bg-transparent focus:outline-none focus:ring-0 shrink-0 touch-manipulation"
-        aria-label={
-          language === "fr" ? "Installer l'application" : "Install the app"
-        }
-        title={
-          language === "fr" ? "Installer l'application" : "Install the app"
-        }
-      >
-    <img
-      src="/sos-logo.jpg"
-      alt="SOS Expat Logo"
-      className="w-full h-full object-cover"
-    />
-      </button>
+    <Link to="/" className="flex items-center select-none group" aria-label="Go to home">
+      <div className="relative w-[72px] h-[72px] rounded-2xl overflow-hidden bg-transparent shrink-0 touch-manipulation transition-transform duration-300 group-hover:scale-105">
+        <img
+          src="/icons/icon-72x72.png"
+          alt="SOS Expat Logo"
+          className="w-full h-full object-cover"
+        />
+      </div>
 
       <div className="ml-3">
         <div className="flex flex-col leading-tight text-center">
           <span
-            className={`font-extrabold text-sm ${scrolled ? "text-white" : "text-gray-900"}`}
+            className={`font-extrabold text-sm ${scrolled ? "text-white" : "text-gray-900"} transition-colors duration-300`}
           >
             SOS Expat
           </span>
@@ -816,7 +806,7 @@ const PWAInstallArea = memo(({ scrolled }: { scrolled: boolean }) => {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 });
 PWAInstallArea.displayName = "PWAInstallArea";
@@ -825,29 +815,20 @@ PWAInstallArea.displayName = "PWAInstallArea";
  *  PWA icon button (mobile)
  *  ================================ */
 const PWAIconButton = memo(() => {
-  const { install } = usePWAInstall();
   const { language } = useApp();
 
-  const handleClick = async () => {
-    await install();
-  };
-
   return (
-    <button
-      type="button"
-      onClick={handleClick}
-      className="w-16 h-16 rounded-2xl overflow-hidden bg-transparent focus:outline-none focus:ring-0 touch-manipulation"
-      aria-label={
-        language === "fr" ? "Installer l'application" : "Install the app"
-      }
-      title={language === "fr" ? "Installer l'application" : "Install the app"}
+    <Link 
+      to="/"
+      className="w-16 h-16 rounded-2xl overflow-hidden bg-transparent focus:outline-none focus:ring-2 focus:ring-red-500/50 touch-manipulation transition-transform duration-300 hover:scale-105"
+      aria-label={language === "fr" ? "Retour à l'accueil" : "Go to home"}
     >
       <img
-        src="/sos-logo.jpg"
+        src="/icons/icon-72x72.png"
         alt="SOS Expat Logo"
         className="w-full h-full object-cover"
       />
-    </button>
+    </Link>
   );
 });
 PWAIconButton.displayName = "PWAIconButton";
