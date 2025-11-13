@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { Service, AppSettings, Notification, EnhancedSettings } from "./types";
 import { ensureCollectionsExist } from "../utils/firestore";
+import { detectUserLanguage, saveLanguagePreference } from "../utils/languageDetection";
 
 // ✅ ADD "es" to the type
 type Language = "fr" | "en" | "es" | "ru" | "de" | "hi" | "pt" | "ch" | "ar";
@@ -126,23 +127,19 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
     setServices(defaultServices);
 
-    const savedLanguage = localStorage.getItem(
-      "sos_language"
-    ) as Language | null;
-    if (
-      savedLanguage &&
-      ["fr", "en", "es", "ru", "de", "hi", "pt", "ch", "ar"].includes(
-        savedLanguage
-      )
-    ) {
-      setLanguage(savedLanguage as Language);
-    }
+    // Detect language with priority: saved preference > location > browser > default
+    const initializeLanguage = async () => {
+      const detectedLang = await detectUserLanguage('fr');
+      setLanguage(detectedLang);
+    };
+
+    initializeLanguage();
   }, []);
 
-  // ✅ Updated parameter type
+  // ✅ Updated parameter type - Save user's manual language choice
   const handleSetLanguage = (lang: Language) => {
     setLanguage(lang);
-    localStorage.setItem("sos_language", lang);
+    saveLanguagePreference(lang); // Save user preference (takes priority over location)
   };
 
   const addNotification = (

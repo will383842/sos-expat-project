@@ -1020,7 +1020,6 @@ const Testimonials: React.FC = () => {
               <div className="flex items-center space-x-2 text-white/90">
                 <Globe className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span className="font-medium text-sm sm:text-base">
-                  {/* {t.cta.countries150} */}
                   <FormattedMessage id="testy.cta.countries150" />
                 </span>
               </div>
@@ -1040,7 +1039,6 @@ const Testimonials: React.FC = () => {
                 className="group relative overflow-hidden bg-white text-red-600 hover:text-red-700 px-8 sm:px-12 py-4 sm:py-6 rounded-3xl font-black text-lg sm:text-xl transition-all duration-300 hover:scale-110 hover:shadow-2xl flex items-center gap-3 sm:gap-4 min-h-[56px] active:scale-95 touch-manipulation"
               >
                 <span>
-                  {/* {t.cta.findExpert} */}
                   <FormattedMessage id="testy.cta.findExpert" />
                 </span>
                 <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform duration-300" />
@@ -1053,7 +1051,6 @@ const Testimonials: React.FC = () => {
               >
                 <Sparkles className="w-5 h-5 sm:w-6 sm:h-6" />
                 <span>
-                  {/* {t.cta.becomeExpert} */}
                   <FormattedMessage id="testy.cta.becomeExpert" />
                 </span>
               </a>
@@ -1061,7 +1058,6 @@ const Testimonials: React.FC = () => {
 
             <div className="mt-8 sm:mt-12 text-white/80">
               <p className="text-base sm:text-lg px-4">
-                {/* {t.cta.joinExperts} */}
                 <FormattedMessage id="testy.cta.joinExperts" />
               </p>
             </div>

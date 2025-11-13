@@ -46,9 +46,15 @@ const AdminLogin: React.FC = () => {
       // Check if user is admin
       const userRef = doc(db, 'users', user.uid);
       const userDoc = await getDoc(userRef);
+
+      console.log('i am here');
+      console.log(userDoc.exists(), " : userDoc.exists()");
+      console.log(userDoc.data(), " : userDoc data");
       
       if (!userDoc.exists()) {
-        // Create user document if it doesn't exist
+        
+        
+        // Create user document if it doesn't exist 
         await setDoc(userRef, {
           id: user.uid,
           uid: user.uid,
@@ -64,21 +70,31 @@ const AdminLogin: React.FC = () => {
         
         navigate('/admin/dashboard');
       } else if (userDoc.data().role === 'admin') {
+
+        console.log("now i am in the admin check ")
+
+        console.log('userDoc.data().role === admin');
+        console.log(userDoc.data());
+        console.log(user);
+        console.log(userRef);
+        console.log(serverTimestamp());
+     
         // Update last login
-        await setDoc(userRef, {
-          lastLoginAt: serverTimestamp(),
-          isActive: true
-        }, { merge: true });
+        // await setDoc(userRef, {
+        //   lastLoginAt: serverTimestamp(),
+        //   isActive: true
+        // }, { merge: true });
         
         // Log the event
-        await addDoc(collection(db, 'logs'), {
-          type: 'admin_login',
-          userId: user.uid,
-          timestamp: serverTimestamp()
-        });
+        // await addDoc(collection(db, 'logs'), {
+        //   type: 'admin_login',
+        //   userId: user.uid,
+        //   timestamp: serverTimestamp()
+        // });
         
         navigate('/admin/dashboard');
       } else {
+        console.log("now i am in the else");
         setError('Accès non autorisé. Vous n\'avez pas les droits d\'administration.');
         try {
           await signOut(auth);
