@@ -1,5 +1,5 @@
 // src/pages/ProviderProfile.tsx
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   Star,
@@ -481,6 +481,16 @@ const ProviderProfile: React.FC = () => {
     services: string[];
   } | null>(null);
 
+  // Ref to prevent SEO metadata from being updated multiple times
+  const seoUpdatedRef = useRef(false);
+  const lastUrlRef = useRef<string>('');
+
+  // Reset SEO flag when provider ID changes
+  useEffect(() => {
+    seoUpdatedRef.current = false;
+    lastUrlRef.current = '';
+  }, [id, params.slug, params.profileId]);
+
   // Load active promo from sessionStorage
   useEffect(() => {
     try {
@@ -908,16 +918,19 @@ const ProviderProfile: React.FC = () => {
     };
 
     loadProviderData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     id,
     typeParam,
     countryParam,
     langParam,
-    location.state,
-    location.pathname,
+    // Removed location.state and location.pathname to prevent infinite loops
+    // The component re-mounts when route changes, so these aren't needed
     preferredLangKey,
-    loadReviews,
-    params,
+    // Removed loadReviews as it's stable
+    params.slug,
+    params.profileId,
+    params.name,
   ]);
 
   // Realtime online status
@@ -965,7 +978,7 @@ const ProviderProfile: React.FC = () => {
 
   // Real-time listener for active call sessions
   useEffect(() => {
-    if (!realProviderId || !provider) return;
+    if (!realProviderId) return;
 
     // Query for active call sessions where this provider is involved
     const activeCallStatuses = [
@@ -998,7 +1011,7 @@ const ProviderProfile: React.FC = () => {
     return () => {
       unsubscribe();
     };
-  }, [realProviderId, provider]);
+  }, [realProviderId]); // Removed 'provider' dependency to prevent listener recreation
 
   // Redirect si not found
   useEffect(() => {
@@ -1013,7 +1026,8 @@ const ProviderProfile: React.FC = () => {
 
   // SEO
   const updateSEOMetadata = useCallback(() => {
-    if (!provider || isLoading) return;
+    if (!provider || isLoading || seoUpdatedRef.current) return;
+    
     try {
       const isLawyer = provider.type === "lawyer";
       const displayType = isLawyer ? "avocat" : "expatrie";
@@ -1030,8 +1044,15 @@ const ProviderProfile: React.FC = () => {
         ) ||
         safeNormalize(provider.fullName || "");
       const seoUrl = `/${displayType}/${countrySlug}/${langSlug}/${nameSlug}-${provider.id}`;
-      if (window.location.pathname !== seoUrl)
+      
+      // Only update URL if it's different AND we haven't already updated it
+      const currentPath = window.location.pathname.replace(/\/$/, '');
+      const targetPath = seoUrl.replace(/\/$/, '');
+      
+      if (currentPath !== targetPath && lastUrlRef.current !== targetPath) {
         window.history.replaceState(null, "", seoUrl);
+        lastUrlRef.current = targetPath;
+      }
 
       const pageTitle = `${provider.fullName} - ${
         isLawyer
@@ -1072,14 +1093,19 @@ const ProviderProfile: React.FC = () => {
         "og:locale",
         detectedLang === "fr" ? "fr_FR" : "en_US"
       );
+      
+      // Mark SEO as updated to prevent re-running
+      seoUpdatedRef.current = true;
     } catch (e) {
       console.error("Error updating SEO metadata:", e);
     }
   }, [provider, isLoading, preferredLangKey, detectedLang]);
 
   useEffect(() => {
-    updateSEOMetadata();
-  }, [updateSEOMetadata]);
+    if (provider && !isLoading) {
+      updateSEOMetadata();
+    }
+  }, [provider, isLoading, updateSEOMetadata]);
 
   // Actions
   const handleBookCall = useCallback(() => {
@@ -1476,7 +1502,7 @@ const ProviderProfile: React.FC = () => {
                         onClick={() => setShowImageModal(true)}
                         onError={handleImageError}
                         loading="eager"
-                        fetchpriority="high"
+                        fetchPriority="high"
                       />
                     </div>
                     {/* Online status */}
@@ -1791,7 +1817,7 @@ const ProviderProfile: React.FC = () => {
                       }
                     >
                       <Phone size={24} aria-hidden="true" />
-                      <span>
+                      <span className="flex-1">
                         {isOnCall
                           ? intl.formatMessage({ id: "providerProfile.alreadyOnCall" })
                           : onlineStatus.isOnline
@@ -1799,7 +1825,7 @@ const ProviderProfile: React.FC = () => {
                             : intl.formatMessage({ id: "providerProfile.unavailable" })}
                       </span>
                       {onlineStatus.isOnline && !isOnCall && (
-                        <div className="flex gap-1" aria-hidden="true">
+                        <div className="flex gap-1 w-12" aria-hidden="true">
                           <div className="w-2 h-2 rounded-full animate-pulse bg-white/80"></div>
                           <div className="w-2 h-2 rounded-full animate-pulse delay-75 bg-white/80"></div>
                           <div className="w-2 h-2 rounded-full animate-pulse delay-150 bg-white/80"></div>
@@ -1807,7 +1833,7 @@ const ProviderProfile: React.FC = () => {
                       )}
                     </button>
 
-                    <div className="mt-4 text-center text-sm">
+                    <div className="mt-4 text-center text-sm min-h-[32px] flex items-center justify-center">
                       {isOnCall ? (
                         <div className="text-orange-600 font-medium">
                           📞 <FormattedMessage id="providerProfile.onCallMessage" />
