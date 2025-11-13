@@ -636,6 +636,71 @@ export const updateCallRecord = async (
   return true;
 };
 
+// Fetch call sessions for a user (from call_sessions collection)
+export const getUserCallSessions = async (
+  userId: string,
+  userRole: "client" | "lawyer" | "expat" | "admin"
+) => {
+  try {
+    const callSessionsRef = collection(db, "call_sessions");
+    
+    // Determine which field to query based on role
+    const fieldName = userRole === "client" ? "metadata.clientId" : "metadata.providerId";
+    
+    const q = query(
+      callSessionsRef,
+      where(fieldName, "==", userId),
+      orderBy("metadata.createdAt", "desc"),
+      fsLimit(50)
+    );
+    
+    const snapshot = await getDocs(q);
+    
+    return snapshot.docs.map(docSnap => {
+      const data = asDict(docSnap.data());
+      const metadata = asDict(data.metadata || {});
+      const payment = asDict(data.payment || {});
+      const participants = asDict(data.participants || {});
+      const clientParticipant = asDict(participants.client || {});
+      const providerParticipant = asDict(participants.provider || {});
+      
+      const createdAt = metadata.createdAt?.toDate?.() || new Date();
+      const updatedAt = metadata.updatedAt?.toDate?.() || new Date();
+      
+      return {
+        id: docSnap.id,
+        sessionId: String(data.id || docSnap.id),
+        clientId: String(metadata.clientId || ""),
+        providerId: String(metadata.providerId || ""),
+        clientName: String(clientParticipant.name || "Client"),
+        providerName: String(providerParticipant.name || "Provider"),
+        serviceType: String(metadata.serviceType || "expat_call") as "lawyer_call" | "expat_call",
+        providerType: String(metadata.providerType || "expat"),
+        title: `${metadata.serviceType === "lawyer_call" ? "Lawyer" : "Expat"} Call`,
+        description: `Call session - ${data.status || "pending"}`,
+        status: String(data.status || "pending") as "completed" | "pending" | "in_progress" | "failed",
+        duration: Number(metadata.maxDuration || 0) / 60, // Convert seconds to minutes
+        price: Number(payment.amount || 0),
+        amount: Number(payment.amount || 0),
+        paymentStatus: String(payment.status || ""),
+        paymentIntentId: String(payment.intentId || ""),
+        clientPhone: String(clientParticipant.phone || ""),
+        providerPhone: String(providerParticipant.phone || ""),
+        clientStatus: String(clientParticipant.status || ""),
+        providerStatus: String(providerParticipant.status || ""),
+        createdAt,
+        updatedAt,
+        startedAt: createdAt, // Use createdAt as fallback for startedAt
+        endedAt: updatedAt, // Use updatedAt as fallback for endedAt
+        clientRating: undefined,
+      };
+    });
+  } catch (error) {
+    console.error("Error fetching user call sessions:", error);
+    return [];
+  }
+};
+
 // ========================= Payments =========================
 export const createPaymentRecord = async (paymentData: Partial<Payment>) => {
   const paymentsRef = collection(db, "payments");

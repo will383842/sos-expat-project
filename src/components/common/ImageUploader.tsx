@@ -906,7 +906,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     if (e) e.stopPropagation();
     if (isUploading || disabled) return;
 
-    if (window.innerWidth < 640 && isCameraSupported) {
+    // Show modal with camera option if camera is supported (all devices)
+    if (isCameraSupported) {
       const modal = document.createElement('div');
       modal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black/50';
       const container = document.createElement('div');
@@ -920,10 +921,12 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
 
       const cameraBtn = document.createElement('button');
       cameraBtn.className = 'w-full flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700';
-      cameraBtn.textContent = I18N[locale].ui.takePhoto;
+      cameraBtn.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg><span>${I18N[locale].ui.takePhoto}</span>`;
+      
       const galleryBtn = document.createElement('button');
       galleryBtn.className = 'w-full flex items-center justify-center px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50';
-      galleryBtn.textContent = I18N[locale].ui.chooseFromGallery;
+      galleryBtn.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span>${I18N[locale].ui.chooseFromGallery}</span>`;
+      
       const cancelBtn = document.createElement('button');
       cancelBtn.className = 'w-full px-4 py-2 text-gray-500 text-sm hover:text-gray-700';
       cancelBtn.textContent = I18N[locale].ui.cancel;
@@ -939,6 +942,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       document.body.appendChild(modal);
       modal.onclick = (evt) => { if (evt.target === modal) cleanup(); };
     } else {
+      // If camera not supported, just open file selector
       openFileSelector('image/*');
     }
   }, [isUploading, disabled, isCameraSupported, openCameraCapture, openFileSelector, locale]);
@@ -1034,11 +1038,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
             if (!disabled && !isUploading && !isDragActive) {
               e.preventDefault();
               e.stopPropagation();
-              if (window.innerWidth < 640 && isCameraSupported) {
-                handleReplaceImage();
-              } else {
-                openFileSelector('image/*');
-              }
+              // Let the buttons below handle camera/file selection
+              // Clicking the dropzone area itself does nothing (buttons handle it)
             }
           }}
           className={
@@ -1090,8 +1091,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
                   {t.ui.formatInfo(maxSizeMB)}
                 </p>
 
-                {/* Mobile quick actions */}
-                <div className="mt-4 flex gap-2 sm:hidden">
+                {/* Quick actions - Available on all devices */}
+                <div className="mt-4 flex gap-2">
                   {isCameraSupported && (
                     <button
                       type="button"
@@ -1100,7 +1101,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
                       className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
                     >
                       <Camera className="w-4 h-4" />
-                      {t.ui.takePhoto}
+                      <span className="hidden sm:inline">{t.ui.takePhoto}</span>
+                      <span className="sm:hidden">📷</span>
                     </button>
                   )}
                   <button
@@ -1110,13 +1112,9 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
                     className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
                   >
                     <FileImage className="w-4 h-4" />
-                    {t.ui.chooseFromGallery}
+                    <span className="hidden sm:inline">{t.ui.chooseFromGallery}</span>
+                    <span className="sm:hidden">🖼️</span>
                   </button>
-                </div>
-
-                {/* Desktop info */}
-                <div className="hidden sm:block mt-2 text-xs text-gray-400">
-                  {isCameraSupported ? t.ui.webcamInfo : ''}
                 </div>
               </div>
             </div>

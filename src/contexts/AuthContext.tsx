@@ -162,6 +162,29 @@ const logAuthEvent = async (type: string, data: LogPayload = {}): Promise<void> 
 };
 
 /* =========================================================
+   Utils helpers
+   ========================================================= */
+/**
+ * Split displayName into firstName and lastName
+ */
+const splitDisplayName = (displayName: string | null | undefined): { firstName: string; lastName: string } => {
+  if (!displayName || displayName.trim() === '') {
+    return { firstName: '', lastName: '' };
+  }
+  
+  const parts = displayName.trim().split(' ');
+  if (parts.length === 1) {
+    return { firstName: parts[0], lastName: '' };
+  }
+  
+  // First part is firstName, rest is lastName
+  const firstName = parts[0];
+  const lastName = parts.slice(1).join(' ');
+  
+  return { firstName, lastName };
+};
+
+/* =========================================================
    Utils photo de profil
    ========================================================= */
 const processProfilePhoto = async (
@@ -238,12 +261,22 @@ const createUserDocumentInFirestore = async (
 
   const userRef = doc(db, 'users', firebaseUser.uid);
   
+  // Split displayName into firstName and lastName if not provided
+  const { firstName, lastName } = additionalData.firstName && additionalData.lastName 
+    ? { firstName: additionalData.firstName, lastName: additionalData.lastName }
+    : splitDisplayName(firebaseUser.displayName);
+  
+  const fullName = additionalData.fullName || `${firstName} ${lastName}`.trim() || firebaseUser.displayName || '';
+  
   try {
     await setDoc(userRef, {
       uid: firebaseUser.uid,
       email: firebaseUser.email || null,
       emailLower: (firebaseUser.email || '').toLowerCase(),
       displayName: firebaseUser.displayName || null,
+      firstName: firstName || '',
+      lastName: lastName || '',
+      fullName,
       photoURL: firebaseUser.photoURL || null,
       profilePhoto: firebaseUser.photoURL || '/default-avatar.png',
       avatar: firebaseUser.photoURL || '/default-avatar.png',
@@ -666,31 +699,51 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
           });
           throw new Error('GOOGLE_ROLE_RESTRICTION');
         }
+        // Split displayName if firstName/lastName are missing
+        const needsNameSplit = !existing.firstName || !existing.lastName;
+        const { firstName, lastName } = needsNameSplit 
+          ? splitDisplayName(googleUser.displayName)
+          : { firstName: existing.firstName, lastName: existing.lastName };
+        
+        // Always update photo from Google to ensure it's current
+        const photoUpdates = googleUser.photoURL ? {
+          photoURL: googleUser.photoURL,
+          profilePhoto: googleUser.photoURL,
+          avatar: googleUser.photoURL,
+        } : {};
+        
         await updateDoc(userRef, {
           lastLoginAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
           isActive: true,
-          ...(googleUser.photoURL &&
-            googleUser.photoURL !== existing.photoURL && {
-              photoURL: googleUser.photoURL,
-              profilePhoto: googleUser.photoURL,
-              avatar: googleUser.photoURL,
-            }),
+          ...(needsNameSplit && {
+            firstName: firstName || '',
+            lastName: lastName || '',
+            fullName: `${firstName} ${lastName}`.trim() || googleUser.displayName || '',
+          }),
+          ...photoUpdates,
         });
       } else {
-        await createUserDocumentInFirestore(googleUser, {
+        // Create new user - only include photo fields if Google provides them
+        const newUserData: any = {
           role: 'client',
           email: googleUser.email || '',
-          profilePhoto: googleUser.photoURL || '',
-          photoURL: googleUser.photoURL || '',
-          avatar: googleUser.photoURL || '',
           preferredLanguage: 'fr',
           isApproved: true,
           isActive: true,
           provider: 'google.com',
           isVerified: googleUser.emailVerified,
           isVerifiedEmail: googleUser.emailVerified,
-        });
+        };
+        
+        // Add photo fields if available from Google
+        if (googleUser.photoURL) {
+          newUserData.profilePhoto = googleUser.photoURL;
+          newUserData.photoURL = googleUser.photoURL;
+          newUserData.avatar = googleUser.photoURL;
+        }
+        
+        await createUserDocumentInFirestore(googleUser, newUserData);
       }
 
       await logAuthEvent('successful_google_login', {
@@ -699,6 +752,9 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         rememberMe,
         deviceInfo
       });
+      
+      // Log photo URL for debugging
+      console.log('[Auth] Google login successful. Photo URL:', googleUser.photoURL);
     } catch (e) {
       if (!(e instanceof Error && e.message === 'GOOGLE_ROLE_RESTRICTION')) {
         const msg = 'Connexion Google annulée ou impossible.';
@@ -751,25 +807,51 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
             });
             return;
           }
+          // Split displayName if firstName/lastName are missing
+          const needsNameSplit = !existing.firstName || !existing.lastName;
+          const { firstName, lastName } = needsNameSplit 
+            ? splitDisplayName(googleUser.displayName)
+            : { firstName: existing.firstName, lastName: existing.lastName };
+          
+          // Always update photo from Google to ensure it's current
+          const photoUpdates = googleUser.photoURL ? {
+            photoURL: googleUser.photoURL,
+            profilePhoto: googleUser.photoURL,
+            avatar: googleUser.photoURL,
+          } : {};
+          
           await updateDoc(userRef, {
             lastLoginAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
             isActive: true,
+            ...(needsNameSplit && {
+              firstName: firstName || '',
+              lastName: lastName || '',
+              fullName: `${firstName} ${lastName}`.trim() || googleUser.displayName || '',
+            }),
+            ...photoUpdates,
           });
         } else {
-          await createUserDocumentInFirestore(googleUser, {
+          // Create new user - only include photo fields if Google provides them
+          const newUserData: any = {
             role: 'client',
             email: googleUser.email || '',
-            profilePhoto: googleUser.photoURL || '',
-            photoURL: googleUser.photoURL || '',
-            avatar: googleUser.photoURL || '',
             preferredLanguage: 'fr',
             isApproved: true,
             isActive: true,
             provider: 'google.com',
             isVerified: googleUser.emailVerified,
             isVerifiedEmail: googleUser.emailVerified,
-          });
+          };
+          
+          // Add photo fields if available from Google
+          if (googleUser.photoURL) {
+            newUserData.profilePhoto = googleUser.photoURL;
+            newUserData.photoURL = googleUser.photoURL;
+            newUserData.avatar = googleUser.photoURL;
+          }
+          
+          await createUserDocumentInFirestore(googleUser, newUserData);
         }
 
         await logAuthEvent('successful_google_login', {
@@ -777,6 +859,9 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
           userEmail: googleUser.email,
           deviceInfo
         });
+        
+        // Log photo URL for debugging
+        console.log('[Auth] Google redirect login successful. Photo URL:', googleUser.photoURL);
       } catch (e) {
         console.warn('[Auth] getRedirectResult error', e);
       } finally {

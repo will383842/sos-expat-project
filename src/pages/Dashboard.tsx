@@ -32,7 +32,7 @@ import MultiLanguageSelect from "../components/forms-data/MultiLanguageSelect";
 
 import { useAuth } from "../contexts/AuthContext";
 import { useApp } from "../contexts/AppContext";
-import { updateUserProfile, logAuditEvent } from "../utils/firestore";
+import { updateUserProfile, logAuditEvent, getUserCallSessions } from "../utils/firestore";
 
 import {
   collection,
@@ -361,6 +361,46 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const { user, firebaseUser, logout, refreshUser } = useAuth();
   const { language } = useApp();
+  
+  // Helper to get user's full name safely
+  const getUserFullName = useCallback(() => {
+    if (!user) return '';
+    
+    // Try firstName + lastName
+    if (user.firstName || user.lastName) {
+      return `${user.firstName || ''} ${user.lastName || ''}`.trim();
+    }
+    
+    // Fallback to fullName
+    if ((user as any).fullName) {
+      return (user as any).fullName;
+    }
+    
+    // Fallback to displayName
+    if ((user as any).displayName) {
+      return (user as any).displayName;
+    }
+    
+    // Last resort
+    return user.email || 'User';
+  }, [user]);
+  
+  // Helper to get first name only
+  const getUserFirstName = useCallback(() => {
+    if (!user) return '';
+    
+    if (user.firstName) {
+      return user.firstName;
+    }
+    
+    // Try to extract from fullName or displayName
+    const fullName = (user as any).fullName || (user as any).displayName || '';
+    if (fullName) {
+      return fullName.split(' ')[0];
+    }
+    
+    return user.email?.split('@')[0] || 'User';
+  }, [user]);
 
   //   const { control: phoneControl, setValue: setPhoneValue, watch: watchPhone } = useForm({
   //   defaultValues: {
@@ -606,10 +646,22 @@ const Dashboard: React.FC = () => {
     setNotifications([]);
   }, []);
 
-  // Appels (placeholder lisible – garde tes fetch si tu en as)
+  // Fetch call sessions from Firestore
   useEffect(() => {
-    setCalls([]);
-  }, []);
+    if (!user) return;
+
+    const fetchCallSessions = async () => {
+      try {
+        const sessions = await getUserCallSessions(user.id, user.role);
+        setCalls(sessions as unknown as Call[]);
+      } catch (error) {
+        console.error("Error fetching call sessions:", error);
+        setCalls([]);
+      }
+    };
+
+    fetchCallSessions();
+  }, [user]);
 
   // Helpers
   const formatDate = (date: Date): string =>
@@ -651,7 +703,7 @@ const Dashboard: React.FC = () => {
       },
     };
     const config = statusConfig[status];
-    return <span className={config.className}>{config.text}</span>;
+    // return <span >{config.text}</span>;
   };
 
   // Palette alignée Home (fallback si rôle non défini)
@@ -1139,7 +1191,7 @@ const Dashboard: React.FC = () => {
                     {user.profilePhoto ? (
                       <img
                         src={`${user.profilePhoto}?v=${(user.updatedAt as Date | undefined)?.valueOf?.() || Date.now()}`}
-                        alt={user.firstName}
+                        alt={getUserFirstName()}
                         className="w-16 h-16 rounded-full object-cover ring-2 ring-white/80"
                       />
                     ) : (
@@ -1149,7 +1201,7 @@ const Dashboard: React.FC = () => {
                     )}
                     <div>
                       <h2 className="text-xl font-extrabold leading-tight">
-                        {user.firstName} {user.lastName}
+                        {getUserFullName()}
                       </h2>
                       <p
                         className="text-white/90 text-sm flex items-center gap-1"
@@ -1427,9 +1479,7 @@ const Dashboard: React.FC = () => {
                             label={intl.formatMessage({
                               id: "dashboard.fullName",
                             })}
-                            // value={`${user.firstName} ${user.lastName}`}
-                            value={user.role != "client" ? `${user.firstName} ${user.lastName}` : `${user.firstName}`}
-                          
+                            value={user.role !== "client" ? getUserFullName() : getUserFirstName()}
                           />
                           <InfoRow label="Email" value={user.email} />
                           {(user as { phone?: string }).phone && (
@@ -1483,7 +1533,7 @@ const Dashboard: React.FC = () => {
                           {user.profilePhoto ? (
                             <img
                               src={`${user.profilePhoto}?v=${(user.updatedAt as Date | undefined)?.valueOf?.() || Date.now()}`}
-                              alt={user.firstName}
+                              alt={getUserFirstName()}
                               className="w-32 h-32 rounded-full object-cover border border-white/30 dark:border-white/10"
                             />
                           ) : (
@@ -2168,18 +2218,16 @@ const Dashboard: React.FC = () => {
                               </div>
                               <div className="flex flex-col items-end space-y-2">
                                 {getStatusBadge(call.status)}
-                                {call.status === "completed" &&
+                                {/* {call.status === "completed" &&
                                   user.role === "client" &&
                                   !call.clientRating && (
                                     <Button size="small" variant="outline">
-                                      {/* {language === "fr"
-                                        ? "Laisser un avis"
-                                        : "Leave a review"} */}
+                                    
                                       {intl.formatMessage({
                                         id: "dashboard.leaveReview",
                                       })}
                                     </Button>
-                                  )}
+                                  )} */}
                               </div>
                             </div>
                           </div>
