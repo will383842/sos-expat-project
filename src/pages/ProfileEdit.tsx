@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
-import { doc, updateDoc, getDoc, getDocs, collection, query, where } from "firebase/firestore";
+import { doc, updateDoc, getDoc, getDocs, collection, query, where, Timestamp, serverTimestamp } from "firebase/firestore";
 import { db, auth, storage } from "../config/firebase";
 import { useAuth } from "../contexts/AuthContext";
 import Layout from "../components/layout/Layout";
@@ -272,8 +272,21 @@ const ProfileEdit: React.FC = () => {
       const current = auth.currentUser;
       if (!current?.uid) throw new Error("ID utilisateur non disponible");
 
-      const newRef = ref(storage, `profilePhotos/${current.uid}/${Date.now()}_${photo.file.name}`);
-      const snapshot = await uploadBytes(newRef, photo.file);
+      // Use image optimizer to standardize size and convert to WebP
+      const { optimizeProfileImage, getOptimalFormat, getFileExtension } = await import('../utils/imageOptimizer');
+      
+      const format = await getOptimalFormat();
+      const optimized = await optimizeProfileImage(photo.file, {
+        targetSize: 512,
+        quality: 0.85,
+        format,
+      });
+
+      console.log(`[ProfileEdit] Profile photo optimized: ${(optimized.originalSize / 1024).toFixed(1)}KB → ${(optimized.optimizedSize / 1024).toFixed(1)}KB`);
+
+      const extension = getFileExtension(format);
+      const newRef = ref(storage, `profilePhotos/${current.uid}/${Date.now()}${extension}`);
+      const snapshot = await uploadBytes(newRef, optimized.blob);
       const url = await getDownloadURL(snapshot.ref);
       return url;
     } catch (err) {
@@ -363,7 +376,7 @@ const ProfileEdit: React.FC = () => {
         if ((userData?.role ?? "client") !== "client") {
           await updateDoc(doc(db, "sos_profiles", ctxUser.uid), {
             photoURL,
-            updatedAt: new Date(),
+            updatedAt: serverTimestamp() as Timestamp,
           }).catch((err) => console.warn("Erreur mise à jour sos_profiles :", err));
         }
 

@@ -329,16 +329,44 @@ export const createUserProfile = async (userData: Partial<User>) => {
     let finalProfilePhoto = "/default-avatar.png";
     if (userData.profilePhoto) {
       if (userData.profilePhoto.startsWith("data:image")) {
-        const storageRef = ref(
-          storage,
-          `profilePhotos/${userData.id}/${Date.now()}.jpg`
-        );
-        const uploadResult = await uploadString(
-          storageRef,
-          userData.profilePhoto,
-          "data_url"
-        );
-        finalProfilePhoto = await getDownloadURL(uploadResult.ref);
+        // Use image optimizer to standardize size and convert to WebP
+        const { optimizeProfileImage, getOptimalFormat, getFileExtension } = await import('./imageOptimizer');
+        
+        try {
+          const format = await getOptimalFormat();
+          const optimized = await optimizeProfileImage(userData.profilePhoto, {
+            targetSize: 512,
+            quality: 0.85,
+            format,
+          });
+
+          console.log(`[Firestore] Profile photo optimized: ${(optimized.originalSize / 1024).toFixed(1)}KB → ${(optimized.optimizedSize / 1024).toFixed(1)}KB`);
+
+          const extension = getFileExtension(format);
+          const storageRef = ref(
+            storage,
+            `profilePhotos/${userData.id}/${Date.now()}${extension}`
+          );
+          const uploadResult = await uploadString(
+            storageRef,
+            optimized.dataUrl,
+            "data_url"
+          );
+          finalProfilePhoto = await getDownloadURL(uploadResult.ref);
+        } catch (error) {
+          console.error('[Firestore] Image optimization failed:', error);
+          // Fallback to original upload without optimization
+          const storageRef = ref(
+            storage,
+            `profilePhotos/${userData.id}/${Date.now()}.jpg`
+          );
+          const uploadResult = await uploadString(
+            storageRef,
+            userData.profilePhoto,
+            "data_url"
+          );
+          finalProfilePhoto = await getDownloadURL(uploadResult.ref);
+        }
       } else if (userData.profilePhoto.startsWith("http")) {
         finalProfilePhoto = userData.profilePhoto;
       }

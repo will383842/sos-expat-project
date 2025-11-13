@@ -44,6 +44,7 @@ import {
   doc,
   updateDoc,
   serverTimestamp,
+  Timestamp,
 } from "firebase/firestore";
 import { db, auth } from "../config/firebase";
 import {
@@ -792,7 +793,7 @@ const Dashboard: React.FC = () => {
         profilePhoto: profileData.profilePhoto || "",
         photoURL: profileData.profilePhoto || "",
         avatar: profileData.profilePhoto || "",
-        updatedAt: new Date(),
+        updatedAt: serverTimestamp()  as Timestamp,
       };
 
       if (user.role === "lawyer") {
@@ -1426,7 +1427,9 @@ const Dashboard: React.FC = () => {
                             label={intl.formatMessage({
                               id: "dashboard.fullName",
                             })}
-                            value={`${user.firstName} ${user.lastName}`}
+                            // value={`${user.firstName} ${user.lastName}`}
+                            value={user.role != "client" ? `${user.firstName} ${user.lastName}` : `${user.firstName}`}
+                          
                           />
                           <InfoRow label="Email" value={user.email} />
                           {(user as { phone?: string }).phone && (

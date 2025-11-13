@@ -716,64 +716,86 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   }, []);
 
   const uploadImage = useCallback(async (file: File | Blob): Promise<string> => {
-    console.log('🔄 Starting image upload...', {
+    console.log('🔄 Starting image upload and optimization...', {
       blobSize: file.size,
       isRegistration,
       uploadPath: isRegistration ? 'registration_temp' : uploadPath
     });
 
     const storage = getStorage();
+    
+    // First, convert legacy formats if needed
     const processed = await (file instanceof File ? processImage(file) : processImage(new File([file], 'image.jpg', { type: 'image/jpeg' })));
-    const ext = (processed.name.split('.').pop() || 'jpg').toLowerCase();
-    const fileName = `${generateUniqueId()}.${ext}`;
-    const finalUploadPath = isRegistration ? 'registration_temp' : uploadPath;
-    const refObj: StorageReference = storageRef(storage, `${finalUploadPath}/${fileName}`);
+    
+    // Then optimize: standardize size and convert to WebP
+    const { optimizeProfileImage, getOptimalFormat, getFileExtension } = await import('../../utils/imageOptimizer');
+    
+    try {
+      const format = await getOptimalFormat();
+      const optimized = await optimizeProfileImage(processed, {
+        targetSize: 512,
+        quality: 0.85,
+        format,
+      });
 
-    console.log('📁 Upload path:', `${finalUploadPath}/${fileName}`);
+      console.log(`📊 Image optimized: ${(optimized.originalSize / 1024).toFixed(1)}KB → ${(optimized.optimizedSize / 1024).toFixed(1)}KB (${optimized.compressionRatio.toFixed(1)}x compression)`);
 
-    return new Promise((resolve, reject) => {
-      const task = uploadBytesResumable(refObj, processed);
-      task.on('state_changed',
-        (snap) => {
-          const p = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
-          setUploadProgress(p);
-          console.log('📈 Upload progress:', p + '%');
-        },
-        (err) => {
-          console.error('❌ Upload error:', err);
-          setUploadProgress(0);
-          
-          // Messages d'erreur spécifiques selon le code
-          let userMessage = t.errors.uploadFailed('Upload failed');
-          if (err.code === 'storage/unauthorized') {
-            userMessage = locale === 'fr' 
-              ? 'Permissions insuffisantes. Réessayez ou contactez le support.'
-              : 'Insufficient permissions. Try again or contact support.';
-          } else if (err.code === 'storage/quota-exceeded') {
-            userMessage = locale === 'fr'
-              ? 'Quota de stockage dépassé. Contactez le support.'
-              : 'Storage quota exceeded. Contact support.';
-          } else if (err.code === 'storage/invalid-format') {
-            userMessage = locale === 'fr'
-              ? 'Format de fichier invalide. Utilisez JPG, PNG ou WEBP.'
-              : 'Invalid file format. Use JPG, PNG or WEBP.';
+      const extension = getFileExtension(format);
+      const fileName = `${generateUniqueId()}${extension}`;
+      const finalUploadPath = isRegistration ? 'registration_temp' : uploadPath;
+      const refObj: StorageReference = storageRef(storage, `${finalUploadPath}/${fileName}`);
+
+      console.log('📁 Upload path:', `${finalUploadPath}/${fileName}`);
+
+      return new Promise((resolve, reject) => {
+        const task = uploadBytesResumable(refObj, optimized.blob);
+        task.on('state_changed',
+          (snap) => {
+            const p = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
+            setUploadProgress(p);
+            console.log('📈 Upload progress:', p + '%');
+          },
+          (err) => {
+            console.error('❌ Upload error:', err);
+            setUploadProgress(0);
+            
+            // Messages d'erreur spécifiques selon le code
+            let userMessage = t.errors.uploadFailed('Upload failed');
+            if (err.code === 'storage/unauthorized') {
+              userMessage = locale === 'fr' 
+                ? 'Permissions insuffisantes. Réessayez ou contactez le support.'
+                : 'Insufficient permissions. Try again or contact support.';
+            } else if (err.code === 'storage/quota-exceeded') {
+              userMessage = locale === 'fr'
+                ? 'Quota de stockage dépassé. Contactez le support.'
+                : 'Storage quota exceeded. Contact support.';
+            } else if (err.code === 'storage/invalid-format') {
+              userMessage = locale === 'fr'
+                ? 'Format de fichier invalide. Utilisez JPG, PNG ou WEBP.'
+                : 'Invalid file format. Use JPG, PNG or WEBP.';
+            }
+            
+            reject(new Error(userMessage));
+          },
+          async () => {
+            try {
+              const url = await getDownloadURL(task.snapshot.ref);
+              setUploadProgress(100);
+              console.log('✅ Upload successful:', url);
+              resolve(url);
+            } catch (e) {
+              console.error('❌ GetDownloadURL error:', e);
+              reject(e);
+            }
           }
-          
-          reject(new Error(userMessage));
-        },
-        async () => {
-          try {
-            const url = await getDownloadURL(task.snapshot.ref);
-            setUploadProgress(100);
-            console.log('✅ Upload successful:', url);
-            resolve(url);
-          } catch (e) {
-            console.error('❌ GetDownloadURL error:', e);
-            reject(e);
-          }
-        }
-      );
-    });
+        );
+      });
+    } catch (optimizationError) {
+      console.error('❌ Optimization error:', optimizationError);
+      throw new Error(locale === 'fr' 
+        ? "Erreur lors de l'optimisation de l'image"
+        : 'Image optimization error');
+    }
   }, [uploadPath, processImage, isRegistration, t, locale]);
 
   const handleFileSelect = useCallback(async (files: File[]) => {

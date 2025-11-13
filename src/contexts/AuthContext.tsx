@@ -190,32 +190,30 @@ const processProfilePhoto = async (
 
     if (photoUrl.startsWith('data:image')) {
       if (typeof document === 'undefined') return '/default-avatar.png';
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return '/default-avatar.png';
+      
+      // Use image optimizer to standardize size and convert to WebP
+      const { optimizeProfileImage, getOptimalFormat, getFileExtension } = await import('../utils/imageOptimizer');
+      
+      try {
+        const format = await getOptimalFormat();
+        const optimized = await optimizeProfileImage(photoUrl, {
+          targetSize: 512,
+          quality: 0.85,
+          format,
+        });
 
-      const img = new Image();
-      return await new Promise<string>((resolve) => {
-        img.onload = async () => {
-          try {
-            const maxSize = getDeviceInfo().type === 'mobile' ? 200 : 400;
-            const ratio = Math.min(maxSize / img.width, maxSize / img.height);
-            canvas.width = Math.max(1, Math.round(img.width * ratio));
-            canvas.height = Math.max(1, Math.round(img.height * ratio));
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            const compressed = canvas.toDataURL('image/jpeg', 0.8);
-
-            const storageRef = ref(storage, `profilePhotos/${uid}/${Date.now()}.jpg`);
-            const upload = await uploadString(storageRef, compressed, 'data_url');
-            const url = await getDownloadURL(upload.ref);
-            resolve(url);
-          } catch {
-            resolve('/default-avatar.png');
-          }
-        };
-        img.onerror = () => resolve('/default-avatar.png');
-        img.src = photoUrl;
-      });
+        const extension = getFileExtension(format);
+        const storageRef = ref(storage, `profilePhotos/${uid}/${Date.now()}${extension}`);
+        const upload = await uploadString(storageRef, optimized.dataUrl, 'data_url');
+        const url = await getDownloadURL(upload.ref);
+        
+        console.log(`[Auth] Profile photo optimized: ${(optimized.originalSize / 1024).toFixed(1)}KB → ${(optimized.optimizedSize / 1024).toFixed(1)}KB (${optimized.compressionRatio.toFixed(1)}x compression)`);
+        
+        return url;
+      } catch (error) {
+        console.error('[Auth] Image optimization failed, falling back to default:', error);
+        return '/default-avatar.png';
+      }
     }
 
     if (photoUrl.startsWith('http')) return photoUrl;
