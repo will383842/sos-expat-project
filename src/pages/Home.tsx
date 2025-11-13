@@ -711,12 +711,12 @@ const OptimizedHomePage: React.FC = () => {
       icon: <Shield className="w-8 h-8" />,
       color: "from-green-500 to-emerald-500",
     },
-    {
-      value: "50+",
-      label: "statsCountriesCovered",
-      icon: <Globe className="w-8 h-8" />,
-      color: "from-purple-500 to-pink-500",
-    },
+    // {
+    //   value: "50+",
+    //   label: "statsCountriesCovered",
+    //   icon: <Globe className="w-8 h-8" />,
+    //   color: "from-purple-500 to-pink-500",
+    // },
     {
       value: "24/7",
       label: "statsUrgentSupport",
@@ -872,7 +872,7 @@ const OptimizedHomePage: React.FC = () => {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
               {stats.map((stat, index) => (
                 <div
                   key={index}
