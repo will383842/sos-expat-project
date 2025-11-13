@@ -163,7 +163,7 @@ export async function detectLanguageFromLocation(): Promise<Language | null> {
   try {
     // Use ipapi.co - free tier allows 1000 requests/day, no API key needed
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 3000); // 3 second timeout
+    const timeout = setTimeout(() => controller.abort(), 2000); // 2 second timeout
     
     const response = await fetch('https://ipapi.co/json/', {
       signal: controller.signal,
@@ -172,7 +172,8 @@ export async function detectLanguageFromLocation(): Promise<Language | null> {
     clearTimeout(timeout);
     
     if (!response.ok) {
-      throw new Error('Geolocation API failed');
+      // Silently fail and let fallback handle it
+      return null;
     }
     
     const data: GeoLocationData = await response.json();
@@ -185,10 +186,13 @@ export async function detectLanguageFromLocation(): Promise<Language | null> {
     
     return null;
   } catch (error) {
-    if (error instanceof Error && error.name === 'AbortError') {
-      console.warn('[Language] Geolocation detection timed out');
-    } else {
-      console.warn('[Language] Geolocation detection failed:', error);
+    // Silently fail - this is not critical, we have fallbacks
+    if (process.env.NODE_ENV === 'development') {
+      if (error instanceof Error && error.name === 'AbortError') {
+        console.info('[Language] Geolocation timed out - using fallback');
+      } else {
+        console.info('[Language] Geolocation unavailable - using fallback');
+      }
     }
     return null;
   }

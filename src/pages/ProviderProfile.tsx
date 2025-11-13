@@ -506,6 +506,8 @@ const ProviderProfile: React.FC = () => {
 
   // ======= Prix depuis Admin uniquement (EUR principal + équivalent USD) =======
   const serviceTypeForPricing: "lawyer" | "expat" | undefined = provider?.type;
+
+
   // const bookingPrice = useMemo(() => {
   //   if (!pricing || !serviceTypeForPricing) return null;
   //   const cfg = pricing[serviceTypeForPricing];
@@ -517,8 +519,7 @@ const ProviderProfile: React.FC = () => {
   //   };
   // }, [pricing, serviceTypeForPricing]);
 
-  // Reviews loader
-
+  // Reviews loader 
   const bookingPrice = useMemo(() => {
     if (!pricing || !serviceTypeForPricing) return null;
 

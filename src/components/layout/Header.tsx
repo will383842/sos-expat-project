@@ -778,6 +778,12 @@ const PWAInstallArea = memo(({ scrolled }: { scrolled: boolean }) => {
           src="/icons/icon-72x72.png"
           alt="SOS Expat Logo"
           className="w-full h-full object-cover"
+          onError={(e) => {
+            const img = e.currentTarget;
+            if (img.src.includes('icon-72x72.png')) {
+              img.src = '/sos-logo.jpg'; // Fallback to original logo
+            }
+          }}
         />
       </div>
 
@@ -827,6 +833,12 @@ const PWAIconButton = memo(() => {
         src="/icons/icon-72x72.png"
         alt="SOS Expat Logo"
         className="w-full h-full object-cover"
+        onError={(e) => {
+          const img = e.currentTarget;
+          if (img.src.includes('icon-72x72.png')) {
+            img.src = '/sos-logo.jpg'; // Fallback to original logo
+          }
+        }}
       />
     </Link>
   );
