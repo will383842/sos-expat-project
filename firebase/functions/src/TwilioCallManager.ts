@@ -489,7 +489,7 @@ export class TwilioCallManager {
 
   async initiateCallSequence(
     sessionId: string,
-    delayMinutes: number = 5
+    delayMinutes: number = 4
   ): Promise<void> {
     try {
       console.log(

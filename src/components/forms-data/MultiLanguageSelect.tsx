@@ -9,7 +9,8 @@ import {
   getDetectedBrowserLanguage,
   searchLanguages as searchLanguagesMultilingual,
   getSortedLanguages,
-  languagesData
+  languagesData,
+  getLanguageLabel
 } from '../../data/languages-spoken';
 
 interface LanguageOption {
@@ -53,7 +54,7 @@ const MultiLanguageSelect: React.FC<MultiLanguageSelectProps> = React.memo(({
 
   // Langues selon la locale
   const currentLanguages = useMemo(() => {
-    return getSortedLanguages(languagesData);
+    return getSortedLanguages(languagesData, currentLocale);
   }, [currentLocale]);
 
   // Filtrage des langues
@@ -69,11 +70,11 @@ const MultiLanguageSelect: React.FC<MultiLanguageSelectProps> = React.memo(({
       
       return {
         value: lang.code,
-        label: lang.name,
+        label: getLanguageLabel(lang, currentLocale),
         isShared
       };
     });
-  }, [filteredLanguages, highlightShared, providerLanguages]);
+  }, [filteredLanguages, highlightShared, providerLanguages, currentLocale]);
 
   // Trier les options (compatibles en premier)
   const sortedOptions = useMemo(() => {

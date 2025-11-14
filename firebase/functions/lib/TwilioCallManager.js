@@ -321,7 +321,7 @@ class TwilioCallManager {
             throw error;
         }
     }
-    async initiateCallSequence(sessionId, delayMinutes = 5) {
+    async initiateCallSequence(sessionId, delayMinutes = 4) {
         try {
             console.log(`🚀 Init séquence d'appel ${sessionId} dans ${delayMinutes} min`);
             const callSession = await this.getCallSession(sessionId);

@@ -32,7 +32,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useApp } from "../contexts/AppContext";
 
 import { logLanguageMismatch } from "../services/analytics";
-import languages from "../data/languages-spoken";
+import languages, { getLanguageLabel, type Language as AppLanguage } from "../data/languages-spoken";
 
 import { db } from "../config/firebase";
 import { doc, onSnapshot, getDoc } from "firebase/firestore";
@@ -52,13 +52,12 @@ import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { createBookingRequest } from "../services/booking";
 // ✅ composant RHF pour le téléphone
 import PhoneField from "@/components/PhoneField";
-import PhoneInput from "react-phone-number-input";
-import "react-phone-number-input/style.css";
 import { FormattedMessage, useIntl } from "react-intl";
+import IntlPhoneInput from "@/components/forms-data/IntlPhoneInput";
 
 /** ===== Types complémentaires ===== */
 type LangKey = keyof typeof I18N;
-type Language = { code: string; name: string };
+type BookingLanguage = AppLanguage;
 
 /** Props attendues par le composant MultiLanguageSelect */
 type MultiLanguageOption = { value: string; label: string };
@@ -860,7 +859,7 @@ const countries = [
 ];
 
 type MinimalUser = { uid?: string; firstName?: string } | null;
-const ALL_LANGS = languages as unknown as Language[];
+const ALL_LANGS = languages as BookingLanguage[];
 
 interface BookingRequestData {
   clientPhone: string;
@@ -1094,7 +1093,7 @@ const BookingRequest: React.FC = () => {
   });
 
   const watched = watch();
-  const [languagesSpoken, setLanguagesSpoken] = useState<Language[]>([]);
+  const [languagesSpoken, setLanguagesSpoken] = useState<BookingLanguage[]>([]);
   const [hasLanguageMatchRealTime, setHasLanguageMatchRealTime] =
     useState(true);
   const [showPreview, setShowPreview] = useState(false);
@@ -1531,7 +1530,7 @@ const BookingRequest: React.FC = () => {
         clientWhatsapp: bookingRequest.clientWhatsapp,
         price: bookingRequest.price,
         // ✅ on envoie le littéral `20 | 30`
-        svcDuration,
+        duration: svcDuration,
         clientLanguages: bookingRequest.clientLanguages,
         clientLanguagesDetails: bookingRequest.clientLanguagesDetails,
         providerName: bookingRequest.providerName,
@@ -1558,7 +1557,7 @@ const BookingRequest: React.FC = () => {
       const roleForPricing: ServiceType = role;
 
       let svcAmount = 0;
-      let svcDurationNumber = FALLBACK_TOTALS[roleForPricing].duration;
+      let svcDurationNumber: number = FALLBACK_TOTALS[roleForPricing].duration;
       let svcCommission = 0;
       let svcProviderAmount = 0;
 
@@ -1754,12 +1753,13 @@ const BookingRequest: React.FC = () => {
                 <div className="mt-2 flex flex-wrap gap-1">
                   {(provider.languages || []).slice(0, 3).map((code, idx) => {
                     const l = ALL_LANGS.find((x) => x.code === code);
+                    const label = l ? getLanguageLabel(l, lang) : code.toUpperCase();
                     return (
                       <span
                         key={`${code}-${idx}`}
                         className="inline-block px-2 py-0.5 bg-blue-50 text-blue-800 text-xs rounded border border-blue-200"
                       >
-                        {l ? l.name : code}
+                        {label}
                       </span>
                     );
                   })}
@@ -2097,9 +2097,7 @@ const BookingRequest: React.FC = () => {
                       <textarea
                         {...field}
                         rows={5}
-                        onChange={(e) =>
-                          field.onChange(sanitizeText(e.target.value))
-                        }
+                        onChange={(e) => field.onChange(e.target.value)}
                         className={`resize-none ${inputClass(Boolean(errors.description))}`}
                         // placeholder={t.placeholders.description}
                         placeholder={intl.formatMessage({
@@ -2155,7 +2153,7 @@ const BookingRequest: React.FC = () => {
                   <MultiLanguageSelect
                     value={languagesSpoken.map((l) => ({
                       value: l.code,
-                      label: l.name,
+                      label: getLanguageLabel(l, lang),
                     }))}
                     onChange={(selected: MultiLanguageOption[]) => {
                       const options = selected || [];
@@ -2165,7 +2163,7 @@ const BookingRequest: React.FC = () => {
                             (langItem) => langItem.code === opt.value
                           )
                         )
-                        .filter((v): v is Language => Boolean(v));
+                        .filter((v): v is BookingLanguage => Boolean(v));
                       setLanguagesSpoken(selectedLangs);
                       setValue(
                         "clientLanguages",
@@ -2224,7 +2222,7 @@ const BookingRequest: React.FC = () => {
                                         key={l.code}
                                         className="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full border border-green-200"
                                       >
-                                        🌐 {l.name}
+                                        🌐 {getLanguageLabel(l, lang)}
                                       </span>
                                     ))}
                                   </div>
@@ -2250,7 +2248,7 @@ const BookingRequest: React.FC = () => {
                                         key={l.code}
                                         className="inline-flex items-center px-3 py-1 bg-red-100 text-red-800 text-sm rounded-full border border-red-200"
                                       >
-                                        🌐 {l.name}
+                                        🌐 {getLanguageLabel(l, lang)}
                                       </span>
                                     ))}
                                   </div>
@@ -2385,13 +2383,13 @@ const BookingRequest: React.FC = () => {
                       },
                     }}
                     render={({ field }) => (
-                      <PhoneInput
-                        {...field}
-                        defaultCountry="FR"
-                        international
-                        countryCallingCodeEditable={false}
-                        className={inputClass(Boolean(errors.clientPhone))}
+                      <IntlPhoneInput
+                        value={field.value || ""}
+                        onChange={field.onChange}
+                        defaultCountry="fr"
                         placeholder="+33 6 12 34 56 78"
+                        className={inputClass(Boolean(errors.clientPhone))}
+                        name="clientPhone"
                       />
                     )}
                   />
@@ -2475,13 +2473,11 @@ const BookingRequest: React.FC = () => {
                   <Controller
                     control={control}
                     name="whatsapp"
-                
                     rules={{
                       required: intl.formatMessage({
                         id: "bookingRequest.validators.whatsapp",
                       }),
                       validate: (v) => {
-                        // Now that required is set, this only validates format
                         if (!v || !v.trim()) {
                           return intl.formatMessage({
                             id: "bookingRequest.validators.whatsapp",
@@ -2502,13 +2498,13 @@ const BookingRequest: React.FC = () => {
                       },
                     }}
                     render={({ field }) => (
-                      <PhoneInput
-                        {...field}
-                        defaultCountry="FR"
-                        international
-                        countryCallingCodeEditable={false}
+                      <IntlPhoneInput
+                        value={field.value || ""}
+                        onChange={field.onChange}
+                        defaultCountry="fr"
                         placeholder="+33 6 12 34 56 78"
-                        className={inputClass(Boolean(errors.clientPhone))}
+                        className={inputClass(Boolean(errors.whatsapp))}
+                        name="whatsapp"
                       />
                     )}
                   />

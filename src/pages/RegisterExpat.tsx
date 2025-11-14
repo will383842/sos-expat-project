@@ -44,8 +44,7 @@ import { useIntl, FormattedMessage } from "react-intl";
 import PhoneField from "@/components/PhoneField";
 import { useForm } from "react-hook-form";
 
-import PhoneInput from "react-phone-number-input";
-import "react-phone-number-input/style.css";
+import IntlPhoneInput from "@/components/forms-data/IntlPhoneInput";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 
 // ===== Lazy (perf) =====
@@ -3425,12 +3424,11 @@ const RegisterExpat: React.FC = () => {
                         <span className="text-red-500">*</span>
                       </label>
 
-                      <PhoneInput
+                      <IntlPhoneInput
                         value={form.phone}
                         onChange={(value) => {
                           setForm((prev) => ({ ...prev, phone: value || "" }));
 
-                          // Clear error if valid
                           if (value) {
                             try {
                               const parsed = parsePhoneNumberFromString(value);
@@ -3443,11 +3441,10 @@ const RegisterExpat: React.FC = () => {
                             } catch {}
                           }
                         }}
-                        defaultCountry="FR"
-                        international
-                        countryCallingCodeEditable={false}
+                        defaultCountry="fr"
                         className={`w-full ${fieldErrors.phone ? "border-red-500 bg-red-50" : valid.phone ? "border-green-300 bg-green-50" : "border-gray-200"}`}
                         placeholder="+33 6 12 34 56 78"
+                        name="phone"
                       />
 
                       {form.phone && (

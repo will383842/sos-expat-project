@@ -53,8 +53,7 @@ import {
 } from "firebase/auth";
 import { FormattedMessage, useIntl } from "react-intl";
 import StripeKYC from "@/components/StripeKyc";
-import PhoneInput from "react-phone-number-input";
-import "react-phone-number-input/style.css";
+import IntlPhoneInput from "@/components/forms-data/IntlPhoneInput";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { useForm, Controller } from "react-hook-form";
 
@@ -1783,13 +1782,13 @@ const Dashboard: React.FC = () => {
                               }}
                               render={({ field, fieldState: { error } }) => (
                                 <>
-                                  <PhoneInput
-                                    {...field}
-                                    defaultCountry="FR"
-                                    international
-                                    countryCallingCodeEditable={false}
-                                    className="w-full px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 transition"
+                                  <IntlPhoneInput
+                                    value={field.value || ""}
+                                    onChange={field.onChange}
+                                    defaultCountry="fr"
                                     placeholder="+33 6 12 34 56 78"
+                                    name="dashboardPhone"
+                                    className="w-full px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 transition"
                                   />
 
                                   {error && (
@@ -1909,13 +1908,13 @@ const Dashboard: React.FC = () => {
                               }}
                               render={({ field, fieldState: { error } }) => (
                                 <>
-                                  <PhoneInput
-                                    {...field}
-                                    defaultCountry="FR"
-                                    international
-                                    countryCallingCodeEditable={false}
-                                    className="w-full px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 transition"
+                                  <IntlPhoneInput
+                                    value={field.value || ""}
+                                    onChange={field.onChange}
+                                    defaultCountry="fr"
                                     placeholder="+33 6 12 34 56 78"
+                                    name="dashboardWhatsapp"
+                                    className="w-full px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 transition"
                                   />
 
                                   {error && (

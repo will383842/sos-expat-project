@@ -40,11 +40,10 @@ import type { MultiValue } from "react-select";
 import type { Provider } from "../types/provider";
 import { useIntl, FormattedMessage } from "react-intl";
 
-import PhoneInput from "react-phone-number-input";
-import "react-phone-number-input/style.css";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { browserLocalPersistence, setPersistence } from "firebase/auth";
 import { auth } from "@/config/firebase";
+import IntlPhoneInput from "@/components/forms-data/IntlPhoneInput";
 
 // ===== Lazy (perf) =====
 const ImageUploader = lazy(() => import("../components/common/ImageUploader"));
@@ -5599,7 +5598,7 @@ const missing = useMemo(() => {
                           <span className="text-red-500">*</span>
                         </label>
 
-                        <PhoneInput
+                        <IntlPhoneInput
                           value={form.phone}
                           onChange={(value) => {
                             const phoneValue = value || "";
@@ -5614,7 +5613,6 @@ const missing = useMemo(() => {
                                 parsePhoneNumberFromString(phoneValue);
 
                               if (!phoneValue) {
-                                // Empty → clear error
                                 setFieldErrors((prev) => {
                                   const { phone, ...rest } = prev;
                                   return rest;
@@ -5642,11 +5640,10 @@ const missing = useMemo(() => {
                             }
                           }}
                           onBlur={() => markTouched("phone")}
-                          defaultCountry="FR"
-                          international
-                          countryCallingCodeEditable={false}
+                          defaultCountry="fr"
                           className={inputClass()}
                           placeholder="+33 6 12 34 56 78"
+                          name="phone"
                         />
 
                         {form.phone && (
@@ -5690,7 +5687,7 @@ const missing = useMemo(() => {
                           <FormattedMessage id="registerLawyer.fields.whatsapp" />
                         </label>
 
-                        <PhoneInput
+                        <IntlPhoneInput
                           value={form.whatsapp}
                           onChange={(value) => {
                             const whatsappValue = value || "";
@@ -5708,7 +5705,6 @@ const missing = useMemo(() => {
                                 parsePhoneNumberFromString(whatsappValue);
 
                               if (!whatsappValue) {
-                                // Empty → clear error
                                 setFieldErrors((prev) => {
                                   const { whatsapp, ...rest } = prev;
                                   return rest;
@@ -5729,18 +5725,17 @@ const missing = useMemo(() => {
                             } catch {
                               setFieldErrors((prev) => ({
                                 ...prev,
-                                phone: intl.formatMessage({
+                                whatsapp: intl.formatMessage({
                                   id: "registerLawyer.errors.whatsappInvalid",
                                 }),
                               }));
                             }
                           }}
                           onBlur={() => markTouched("whatsapp")}
-                          defaultCountry="FR"
-                          international
-                          countryCallingCodeEditable={false}
+                          defaultCountry="fr"
                           className={inputClass()}
                           placeholder="+33 6 12 34 56 78"
+                          name="whatsapp"
                         />
 
                         {form.whatsapp && (

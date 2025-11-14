@@ -1,0 +1,70 @@
+.intl-phone-input {
+  width: 100%;
+}
+
+.intl-phone-input__container {
+  width: 100% !important;
+  background: transparent !important;
+}
+
+.intl-phone-input .react-tel-input {
+  width: 100%;
+}
+
+.intl-phone-input__flag-btn {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 3.25rem !important;
+  border-radius: 0.75rem 0 0 0.75rem !important;
+  border-right: 1px solid rgba(209, 213, 219, 0.8) !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+}
+
+.intl-phone-input__flag-btn:hover,
+.intl-phone-input__flag-btn:focus {
+  background-color: rgba(249, 250, 251, 0.8) !important;
+}
+
+.intl-phone-input__field {
+  width: 100% !important;
+  height: 3.25rem !important;
+  padding: 0.75rem 1rem 0.75rem 3.5rem !important;
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  color: #111827 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.intl-phone-input .react-tel-input .flag-dropdown.open .selected-flag {
+  background-color: rgba(249, 250, 251, 0.9) !important;
+}
+
+.intl-phone-input__dropdown {
+  border-radius: 0.75rem !important;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12) !important;
+  border: 1px solid rgba(226, 232, 240, 0.9) !important;
+  font-size: 0.9375rem !important;
+  padding: 0.5rem !important;
+}
+
+.intl-phone-input__dropdown .country {
+  padding: 0.45rem 0.75rem;
+  border-radius: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.intl-phone-input__dropdown .country.highlight,
+.intl-phone-input__dropdown .country:hover {
+  background: rgba(248, 250, 252, 0.95);
+}
+
+.intl-phone-input__dropdown .dial-code {
+  font-weight: 600;
+  color: #0f172a;
+}
+

@@ -1206,7 +1206,7 @@ export const stripeWebhook = onRequest(
                 // }
 
                 console.log("⏰ Scheduling task...");
-                await scheduleCallTask(callSessionId, 300);
+                await scheduleCallTask(callSessionId, 240);
 
                 console.log("📨 Sending notifications...");
                 await sendPaymentNotifications(callSessionId, database);
@@ -1558,7 +1558,7 @@ const handlePaymentIntentSucceeded = traceFunction(
 
           // Schedule call task
 
-          await scheduleCallTask(callSessionId, 0);
+          await scheduleCallTask(callSessionId, 240);
 
           console.log("✅ Call task scheduled, sending notifications...");
 
@@ -1567,7 +1567,7 @@ const handlePaymentIntentSucceeded = traceFunction(
             "Cloud Task créée pour appel à +300s",
             {
               callSessionId,
-              delaySeconds: 300,
+              delaySeconds: 240,
             }
           );
 

@@ -874,7 +874,7 @@ exports.stripeWebhook = (0, https_1.onRequest)({
                         //   console.log("💥 Error updating call session:", error);
                         // }
                         console.log("⏰ Scheduling task...");
-                        await (0, tasks_1.scheduleCallTask)(callSessionId, 300);
+                        await (0, tasks_1.scheduleCallTask)(callSessionId, 240);
                         console.log("📨 Sending notifications...");
                         await sendPaymentNotifications(callSessionId, database);
                         console.log("✅ Checkout processing complete");
@@ -1139,11 +1139,11 @@ const handlePaymentIntentSucceeded = (0, ultraDebugLogger_1.traceFunction)(async
                 // }
                 console.log("✅ Call session updated, scheduling task...");
                 // Schedule call task
-                await (0, tasks_1.scheduleCallTask)(callSessionId, 0);
+                await (0, tasks_1.scheduleCallTask)(callSessionId, 240);
                 console.log("✅ Call task scheduled, sending notifications...");
                 ultraDebugLogger_1.ultraLogger.info("STRIPE_PAYMENT_SUCCEEDED", "Cloud Task créée pour appel à +300s", {
                     callSessionId,
-                    delaySeconds: 300,
+                    delaySeconds: 240,
                 });
                 // Send notifications
                 try {

@@ -42,9 +42,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 // ✅ PhoneField imports
 import PhoneField from "@/components/PhoneField";
 import { Controller, useForm } from "react-hook-form";
-
-import PhoneInput from "react-phone-number-input";
-import "react-phone-number-input/style.css";
+import IntlPhoneInput from "@/components/forms-data/IntlPhoneInput";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 
 // ==========================
@@ -1214,11 +1212,12 @@ if (formData.whatsappNumber) {
                         }}
                         render={({ field, fieldState: { error } }) => (
                           <>
-                            <PhoneInput
-                              {...field}
-                              defaultCountry="FR"
-                              international
-                              countryCallingCodeEditable={false}
+                            <IntlPhoneInput
+                              value={field.value || ""}
+                              onChange={field.onChange}
+                              defaultCountry="fr"
+                              placeholder="+33 6 12 34 56 78"
+                              name="clientPhone"
                               className={`w-full px-3 py-3 border-2 rounded-xl bg-white text-gray-900 transition-all duration-200 ${
                                 error || fieldErrors.clientPhone
                                   ? "border-red-500 bg-red-50"
@@ -1226,7 +1225,6 @@ if (formData.whatsappNumber) {
                                     ? "border-green-500 bg-green-50"
                                     : "border-gray-200 hover:border-gray-300 focus:border-none"
                               }`}
-                              placeholder="+33 6 12 34 56 78"
                             />
 
                             {error && (
@@ -1301,11 +1299,12 @@ if (formData.whatsappNumber) {
     }}
     render={({ field, fieldState: { error } }) => (
       <>
-        <PhoneInput
-          {...field}
-          defaultCountry="FR"
-          international
-          countryCallingCodeEditable={false}
+        <IntlPhoneInput
+          value={field.value || ""}
+          onChange={field.onChange}
+          defaultCountry="fr"
+          placeholder="+33 6 12 34 56 78"
+          name="whatsappNumber"
           className={`w-full px-3 py-3 border-2 rounded-xl bg-white text-gray-900 transition-all duration-200 ${
             error || fieldErrors.whatsappNumber
               ? "border-red-500 bg-red-50"
@@ -1313,7 +1312,6 @@ if (formData.whatsappNumber) {
               ? "border-green-500 bg-green-50"
               : "border-gray-200 hover:border-gray-300 focus:border-none"
           }`}
-          placeholder="+33 6 12 34 56 78"
         />
 
         {error && (
