@@ -1756,7 +1756,7 @@ const Dashboard: React.FC = () => {
                           /> */}
                           {/* Phone Number with country selector */}
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            <label className="block text-sm font-medium text-white dark:text-gray-300 mb-1">
                               {intl.formatMessage({ id: "dashboard.phone" })}
                             </label>
 
@@ -1788,7 +1788,8 @@ const Dashboard: React.FC = () => {
                                     defaultCountry="fr"
                                     placeholder="+33 6 12 34 56 78"
                                     name="dashboardPhone"
-                                    className="w-full px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 transition"
+                                    // className="w-full px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500 transition"
+                                    className="w-full px-3 py-2 border border-gray-200 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-red-500 transition dark:bg-gray-900 dark:border-white dark:text-white"
                                   />
 
                                   {error && (
@@ -1914,7 +1915,8 @@ const Dashboard: React.FC = () => {
                                     defaultCountry="fr"
                                     placeholder="+33 6 12 34 56 78"
                                     name="dashboardWhatsapp"
-                                    className="w-full px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 transition"
+                                    // className="w-full px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500 transition"
+                                    className="w-full px-3 py-2 border border-gray-200 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-red-500 transition dark:bg-gray-900 dark:border-white dark:text-white"
                                   />
 
                                   {error && (
@@ -1924,7 +1926,7 @@ const Dashboard: React.FC = () => {
                                   )}
 
                                   {field.value && !error && (
-                                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                    <p className="mt-1 text-xs text-gray-500 dark:text-white">
                                       WhatsApp:{" "}
                                       <span className="font-mono">
                                         {field.value}
@@ -1964,6 +1966,7 @@ const Dashboard: React.FC = () => {
                           placeholder={intl.formatMessage({
                             id: "dashboard.searchLanguages",
                           })}
+                          className="w-full px-3 py-2 border border-gray-200 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-red-500 transition dark:bg-gray-900 dark:border-white dark:text-white"
                         />
                       </div>
 
@@ -1982,7 +1985,7 @@ const Dashboard: React.FC = () => {
                             }))
                           }
                           rows={5}
-                          className="w-full px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500"
+                          className="w-full px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-black text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500"
                           placeholder={intl.formatMessage({
                             id: "dashboard.bioPlaceholder",
                           })}

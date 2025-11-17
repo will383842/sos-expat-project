@@ -55,7 +55,7 @@ const CALL_CONFIG = {
     MAX_RETRIES: 3,
     CALL_TIMEOUT: 60, // 60 s
     CONNECTION_WAIT_TIME: 90000, // 90 s
-    MIN_CALL_DURATION: 5, // 2 min -> later do it to 120 seconds -> 2 minutes
+    MIN_CALL_DURATION: 120, // 2 minutes (120 seconds)
     MAX_CONCURRENT_CALLS: 50,
     WEBHOOK_VALIDATION: true,
 };
@@ -455,9 +455,22 @@ class TwilioCallManager {
         }
     }
     async callParticipantWithRetries(sessionId, participantType, phoneNumber, conferenceName, timeLimit, ttsLocale, langKey, backoffOverrideMs) {
-        for (let attempt = 1; attempt <= CALL_CONFIG.MAX_RETRIES; attempt++) {
+        // 🆕 Only retry for clients, not providers (providers get 1 attempt only)
+        const maxRetries = participantType === "client" ? CALL_CONFIG.MAX_RETRIES : 1;
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
             try {
-                console.log(`📞 Tentative ${attempt}/${CALL_CONFIG.MAX_RETRIES} → ${participantType} (${sessionId})`);
+                // 🛑 STOP if session is already failed/cancelled (prevents unnecessary retries)
+                const sessionCheck = await this.getCallSession(sessionId);
+                if (sessionCheck && (sessionCheck.status === "failed" || sessionCheck.status === "cancelled")) {
+                    console.log(`🛑 Stopping retries for ${participantType}: session is ${sessionCheck.status}`);
+                    await (0, logCallRecord_1.logCallRecord)({
+                        callId: sessionId,
+                        status: `${participantType}_retries_stopped_session_${sessionCheck.status}`,
+                        retryCount: attempt - 1,
+                    });
+                    return false;
+                }
+                console.log(`📞 Tentative ${attempt}/${maxRetries} → ${participantType} (${sessionId})`);
                 await this.incrementAttemptCount(sessionId, participantType);
                 await (0, logCallRecord_1.logCallRecord)({
                     callId: sessionId,
@@ -503,7 +516,18 @@ class TwilioCallManager {
                     });
                     return true;
                 }
-                if (attempt < CALL_CONFIG.MAX_RETRIES) {
+                if (attempt < maxRetries) {
+                    // 🛑 Check again before retrying - session might have been marked as failed
+                    const sessionCheckBeforeRetry = await this.getCallSession(sessionId);
+                    if (sessionCheckBeforeRetry && (sessionCheckBeforeRetry.status === "failed" || sessionCheckBeforeRetry.status === "cancelled")) {
+                        console.log(`🛑 Stopping retries before attempt ${attempt + 1}: session is ${sessionCheckBeforeRetry.status}`);
+                        await (0, logCallRecord_1.logCallRecord)({
+                            callId: sessionId,
+                            status: `${participantType}_retries_stopped_before_attempt_${attempt + 1}`,
+                            retryCount: attempt,
+                        });
+                        return false;
+                    }
                     if (typeof backoffOverrideMs === "number") {
                         await this.delay(backoffOverrideMs);
                     }
@@ -521,14 +545,14 @@ class TwilioCallManager {
                     retryCount: attempt,
                     errorMessage: error instanceof Error ? error.message : "Unknown error",
                 });
-                if (attempt === CALL_CONFIG.MAX_RETRIES)
+                if (attempt === maxRetries)
                     break;
             }
         }
         await (0, logCallRecord_1.logCallRecord)({
             callId: sessionId,
             status: `${participantType}_failed_all_attempts`,
-            retryCount: CALL_CONFIG.MAX_RETRIES,
+            retryCount: maxRetries,
         });
         return false;
     }
@@ -680,6 +704,35 @@ class TwilioCallManager {
             // 🛠️ FIX: Always fallback to 'en' if missing
             const clientLanguage = callSession.metadata?.clientLanguages?.[0] || "en";
             const providerLanguage = callSession.metadata?.providerLanguages?.[0] || "en";
+            // 🆕 NEW: If provider doesn't answer and client is already connected, redirect their call to play voice message
+            if (reason === "provider_no_answer" &&
+                callSession.participants.client.status === "connected" &&
+                callSession.participants.client.callSid) {
+                try {
+                    const base = (0, urlBase_1.getFunctionsBaseUrl)();
+                    const redirectUrl = `${base}/providerNoAnswerTwiML?sessionId=${sessionId}&lang=${clientLanguage}`;
+                    const twilioClient = (0, twilio_1.getTwilioClient)();
+                    await twilioClient.calls(callSession.participants.client.callSid).update({
+                        url: redirectUrl,
+                        method: "GET"
+                    });
+                    console.log(`📞 Redirected client call ${callSession.participants.client.callSid} to provider no-answer message`);
+                    await (0, logCallRecord_1.logCallRecord)({
+                        callId: sessionId,
+                        status: "client_call_redirected_to_no_answer_message",
+                        retryCount: 0,
+                        additionalData: {
+                            clientCallSid: callSession.participants.client.callSid,
+                            redirectUrl
+                        }
+                    });
+                }
+                catch (redirectError) {
+                    console.error(`❌ Failed to redirect client call:`, redirectError);
+                    await (0, logError_1.logError)("TwilioCallManager:handleCallFailure:redirect", redirectError);
+                    // Continue with normal flow even if redirect fails
+                }
+            }
             try {
                 const notificationPromises = [];
                 if (reason === "client_no_answer" || reason === "system_error") {

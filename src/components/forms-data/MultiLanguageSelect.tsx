@@ -12,6 +12,7 @@ import {
   languagesData,
   getLanguageLabel
 } from '../../data/languages-spoken';
+import '@/styles/multi-language-select.css';
 
 interface LanguageOption {
   value: string;
@@ -93,16 +94,16 @@ const MultiLanguageSelect: React.FC<MultiLanguageSelectProps> = React.memo(({
       ...provided,
       // Réinitialiser tous les styles pour hériter du parent
     border: state.isFocused
-      ? '2px solid var(--input-border-focus, #dc2626)' // rouge (équivalent focus:ring-red-500/border-red-600)
-      : '2px solid var(--input-border, #e5e7eb)',       // gris-200
-   backgroundColor: 'var(--input-bg, #ffffff)',
+      ? '2px solid var(--mls-border-focus, #dc2626)'
+      : '2px solid var(--mls-border, #e5e7eb)',
+   backgroundColor: 'var(--mls-bg, #ffffff)',
      boxShadow: 'none',
      minHeight: '3rem',    // approx. py-3
      height: 'auto',
      borderRadius: '0.75rem', // rounded-xl
      fontSize: 'inherit',
      fontFamily: 'inherit',
-     color: 'inherit',
+     color: 'var(--mls-text, #111827)',
     cursor: 'inherit',
      padding: '0.5rem 0.75rem', // approx. px-3 py-2
      margin: '0',
@@ -128,7 +129,7 @@ const MultiLanguageSelect: React.FC<MultiLanguageSelectProps> = React.memo(({
     placeholder: (provided) => ({
       ...provided,
       // Hériter de la couleur et taille du parent
-      color: 'inherit',
+      color: 'var(--mls-placeholder, rgba(107,114,128,0.8))',
       fontSize: 'inherit',
       fontFamily: 'inherit',
       opacity: 0.5, // Juste un peu plus transparent
@@ -155,8 +156,8 @@ const MultiLanguageSelect: React.FC<MultiLanguageSelectProps> = React.memo(({
     menu: (provided) => ({
       ...provided,
       // Garder quelques styles pour la lisibilité
-      background: 'white',
-      border: '1px solid #e5e7eb',
+      background: 'var(--mls-menu-bg, #ffffff)',
+      border: '1px solid var(--mls-border, #e5e7eb)',
       borderRadius: '0.75rem', // 12px
       boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
       marginTop: '0.25rem',
@@ -179,16 +180,16 @@ const MultiLanguageSelect: React.FC<MultiLanguageSelectProps> = React.memo(({
         cursor: 'pointer',
         fontSize: '0.875rem',
         backgroundColor: state.isFocused 
-          ? (highlightShared && data.isShared ? '#f0fdf4' : '#f8fafc')
+          ? (highlightShared && data.isShared ? 'var(--mls-success-bg, #f0fdf4)' : 'var(--mls-option-hover, #f8fafc)')
           : 'transparent',
-        color: data.isShared ? '#374151' : '#6b7280',
+        color: data.isShared ? 'var(--mls-text, #111827)' : 'var(--mls-placeholder, #6b7280)',
         fontWeight: data.isShared ? '500' : '400',
         border: state.isFocused && highlightShared && data.isShared 
-          ? '1px solid #10b981' 
+          ? '1px solid var(--mls-success-border, #bbf7d0)' 
           : 'none',
         '&:active': {
           backgroundColor: state.isFocused 
-            ? (highlightShared && data.isShared ? '#f0fdf4' : '#f8fafc')
+            ? (highlightShared && data.isShared ? 'var(--mls-success-bg, #f0fdf4)' : 'var(--mls-option-hover, #f8fafc)')
             : 'transparent'
         }
       };
@@ -200,8 +201,8 @@ const MultiLanguageSelect: React.FC<MultiLanguageSelectProps> = React.memo(({
       return {
         ...provided,
         // Base adaptative - hérite des variables CSS de la page
-        backgroundColor: data.isShared ? 'var(--color-success-bg, #f0fdf4)' : 'var(--color-primary-bg, #eff6ff)',
-        border: data.isShared ? '1px solid var(--color-success-border, #bbf7d0)' : '1px solid var(--color-primary-border, #dbeafe)',
+        backgroundColor: data.isShared ? 'var(--mls-success-bg, #f0fdf4)' : 'var(--mls-chip-bg, #eff6ff)',
+        border: data.isShared ? '1px solid var(--mls-success-border, #bbf7d0)' : '1px solid var(--mls-chip-border, #dbeafe)',
         borderRadius: 'var(--border-radius-pill, 9999px)', // Par défaut très arrondi
         margin: '0.125rem',
         fontSize: 'var(--font-size-sm, 0.875rem)',
@@ -220,7 +221,7 @@ const MultiLanguageSelect: React.FC<MultiLanguageSelectProps> = React.memo(({
       const { data } = state;
       return {
         ...provided,
-        color: data.isShared ? 'var(--color-success-text, #166534)' : 'var(--color-primary-text, #1e40af)',
+        color: data.isShared ? 'var(--mls-success-text, #166534)' : 'var(--mls-chip-text, #1e40af)',
         padding: '0.375rem 0.75rem',
         fontSize: 'inherit',
         fontWeight: 'inherit',
@@ -288,24 +289,25 @@ const MultiLanguageSelect: React.FC<MultiLanguageSelectProps> = React.memo(({
   }, [currentLocale]);
 
   return (
-    <Select<LanguageOption, true>
-      isMulti
-      options={sortedOptions}
-      onChange={onChange}
-      onInputChange={handleInputChange}
-      value={value}
-      placeholder={placeholder || defaultPlaceholder}
-      className={className}
-      classNamePrefix="react-select"
-      styles={adaptiveStyles}
-      closeMenuOnSelect={false}
-      hideSelectedOptions={false}
-      blurInputOnSelect={false}
-      isSearchable={true}
-      isDisabled={disabled}
-      noOptionsMessage={noOptionsMessage}
-      filterOption={() => true}
-    />
+    <div className={`multi-language-select ${className}`.trim()}>
+      <Select<LanguageOption, true>
+        isMulti
+        options={sortedOptions}
+        onChange={onChange}
+        onInputChange={handleInputChange}
+        value={value}
+        placeholder={placeholder || defaultPlaceholder}
+        classNamePrefix="mls"
+        styles={adaptiveStyles}
+        closeMenuOnSelect={false}
+        hideSelectedOptions={false}
+        blurInputOnSelect={false}
+        isSearchable={true}
+        isDisabled={disabled}
+        noOptionsMessage={noOptionsMessage}
+        filterOption={() => true}
+      />
+    </div>
   );
 });
 

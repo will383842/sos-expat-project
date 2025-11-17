@@ -7,6 +7,13 @@
   background: transparent !important;
 }
 
+.intl-phone-input.dark,
+.dark .intl-phone-input {
+  background-color: rgba(15, 23, 42, 0.45) !important;
+  border: 1px solid rgba(148, 163, 184, 0.35) !important;
+  border-radius: 0.75rem;
+}
+
 .intl-phone-input .react-tel-input {
   width: 100%;
 }
@@ -33,14 +40,32 @@
   padding: 0.75rem 1rem 0.75rem 3.5rem !important;
   font-size: 1rem !important;
   font-weight: 500 !important;
-  color: #111827 !important;
-  background: transparent !important;
+  color: #0f172a !important;
+  background: #ffffff !important;
   border: none !important;
   box-shadow: none !important;
 }
 
+.dark .intl-phone-input__field {
+  color: #f8fafc !important;
+  background: rgba(15, 23, 42, 0.7) !important;
+}
+
+.dark .intl-phone-input__field {
+  color: #f8fafc !important;
+}
+
+.dark .intl-phone-input__field::placeholder {
+  color: rgba(226, 232, 240, 0.65) !important;
+}
+
 .intl-phone-input .react-tel-input .flag-dropdown.open .selected-flag {
   background-color: rgba(249, 250, 251, 0.9) !important;
+}
+
+.intl-phone-input.dark .react-tel-input .flag-dropdown.open .selected-flag,
+.dark .intl-phone-input .react-tel-input .flag-dropdown.open .selected-flag {
+  background-color: rgba(51, 65, 85, 0.75) !important;
 }
 
 .intl-phone-input__dropdown {
@@ -49,6 +74,13 @@
   border: 1px solid rgba(226, 232, 240, 0.9) !important;
   font-size: 0.9375rem !important;
   padding: 0.5rem !important;
+}
+
+.dark .intl-phone-input__dropdown {
+  background: rgba(15, 23, 42, 0.98) !important;
+  border-color: rgba(148, 163, 184, 0.45) !important;
+  box-shadow: 0 20px 35px rgba(2, 6, 23, 0.65) !important;
+  color: #e2e8f0 !important;
 }
 
 .intl-phone-input__dropdown .country {
@@ -63,8 +95,16 @@
   background: rgba(248, 250, 252, 0.95);
 }
 
+.dark .intl-phone-input__dropdown .country.highlight,
+.dark .intl-phone-input__dropdown .country:hover {
+  background: rgba(71, 85, 105, 0.45);
+}
+
 .intl-phone-input__dropdown .dial-code {
   font-weight: 600;
   color: #0f172a;
 }
 
+.dark .intl-phone-input__dropdown .dial-code {
+  color: #f8fafc;
+}
