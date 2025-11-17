@@ -1505,5 +1505,19 @@
     "registerExpat.selectedLanguages": "Idiomas selecionados",
     "dashboard.messages": "Minhas mensagens",
      "dashboard.emptyMessages": "Nenhuma mensagem no momento",
-     "testimonialOtherReviews": "Descubra outros depoimentos de expatriados e viajantes que confiaram em nossos especialistas."
+     "testimonialOtherReviews": "Descubra outros depoimentos de expatriados e viajantes que confiaram em nossos especialistas.",
+
+  "reviewForm.title.lawyer": "Avaliar o Advogado",
+  "reviewForm.title.expat": "Avaliar o Expatriado",
+  "reviewForm.title.withName": " — {name}",
+  "reviewForm.label.rating": "Sua avaliação",
+  "reviewForm.label.comment": "Seu comentário",
+  "reviewForm.placeholder.comment": "Compartilhe sua experiência com este prestador...",
+  "reviewForm.button.cancel": "Cancelar",
+  "reviewForm.button.submit": "Enviar minha avaliação",
+  "reviewForm.aria.rating": "Dar {count} estrela{plural}",
+  "reviewForm.error.commentRequired": "Por favor, insira um comentário",
+  "reviewForm.error.loginRequired": "Você deve estar logado para deixar uma avaliação",
+  "reviewForm.error.ratingRequired": "Por favor, selecione uma avaliação",
+  "reviewForm.error.submitFailed": "Ocorreu um erro ao enviar sua avaliação: {message}. Por favor, tente novamente."
 }

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Star } from "lucide-react";
+import { useIntl } from "react-intl";
 import Button from "../common/Button";
 import { useAuth } from "../../contexts/AuthContext";
 import { createReviewRecord } from "../../utils/firestore";
@@ -22,6 +23,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
   onCancel,
 }) => {
   const { user } = useAuth();
+  const intl = useIntl();
   const [rating, setRating] = useState<number>(5);
   const [comment, setComment] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -36,19 +38,19 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
     setError(null);
 
     if (!comment.trim()) {
-      setError("Veuillez entrer un commentaire");
+      setError(intl.formatMessage({ id: "reviewForm.error.commentRequired" }));
       setIsSubmitting(false);
       return;
     }
 
     if (!user) {
-      setError("Vous devez être connecté pour laisser un avis");
+      setError(intl.formatMessage({ id: "reviewForm.error.loginRequired" }));
       setIsSubmitting(false);
       return;
     }
 
     if (rating < 1) {
-      setError("Veuillez sélectionner une note");
+      setError(intl.formatMessage({ id: "reviewForm.error.ratingRequired" }));
       setIsSubmitting(false);
       return;
     }
@@ -77,20 +79,28 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
 
       onSuccess?.();
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Erreur inconnue";
+      const message = err instanceof Error ? err.message : "Unknown error";
       setError(
-        `Une erreur est survenue lors de l'envoi de votre avis: ${message}. Veuillez réessayer.`
+        intl.formatMessage(
+          { id: "reviewForm.error.submitFailed" },
+          { message }
+        )
       );
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const titleKey = isLawyer ? "reviewForm.title.lawyer" : "reviewForm.title.expat";
+  const titleBase = intl.formatMessage({ id: titleKey });
+  const titleWithName = providerName 
+    ? `${titleBase}${intl.formatMessage({ id: "reviewForm.title.withName" }, { name: providerName })}`
+    : titleBase;
+
   return (
     <div className="bg-white rounded-lg p-6">
       <h3 className="text-xl font-semibold text-gray-900 mb-4">
-        Évaluer {isLawyer ? "l'Avocat" : "l'Expatrié"}
-        {providerName ? ` — ${providerName}` : ""}
+        {titleWithName}
       </h3>
 
       {error && (
@@ -102,7 +112,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Votre note
+            {intl.formatMessage({ id: "reviewForm.label.rating" })}
           </label>
           <div className="flex space-x-2">
             {[1, 2, 3, 4, 5].map((star) => (
@@ -111,7 +121,10 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
                 type="button"
                 onClick={() => setRating(star)}
                 className="focus:outline-none"
-                aria-label={`Donner ${star} étoile${star > 1 ? "s" : ""}`}
+                aria-label={intl.formatMessage(
+                  { id: "reviewForm.aria.rating" },
+                  { count: star, plural: star > 1 ? "s" : "" }
+                )}
               >
                 <Star
                   size={32}
@@ -131,7 +144,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
             htmlFor="comment"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
-            Votre commentaire
+            {intl.formatMessage({ id: "reviewForm.label.comment" })}
           </label>
           <textarea
             id="comment"
@@ -141,23 +154,22 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
             }
             rows={4}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 text-black"
-            placeholder="Partagez votre expérience avec ce prestataire..."
+            placeholder={intl.formatMessage({ id: "reviewForm.placeholder.comment" })}
           />
         </div>
 
         <div className="flex justify-end space-x-3">
           {onCancel && (
             <Button type="button" onClick={onCancel} variant="outline">
-              Annuler
+              {intl.formatMessage({ id: "reviewForm.button.cancel" })}
             </Button>
           )}
-
           <Button
             type="submit"
             loading={isSubmitting}
             disabled={isSubmitting || rating < 1}
           >
-            Envoyer mon avis
+            {intl.formatMessage({ id: "reviewForm.button.submit" })}
           </Button>
         </div>
       </form>

@@ -1463,5 +1463,19 @@
   "validators.languages": "مطلوب لغة واحدة على الأقل",
   "validators.langMismatch": "يرجى اختيار لغة صالحة",
   "validators.accept": "يجب قبول الشروط",
-  "bookingRequest.validators.selectCountry": "يرجى اختيار دولة"
+  "bookingRequest.validators.selectCountry": "يرجى اختيار دولة",
+
+  "reviewForm.title.lawyer": "تقييم المحامي",
+  "reviewForm.title.expat": "تقييم المغترب",
+  "reviewForm.title.withName": " — {name}",
+  "reviewForm.label.rating": "تقييمك",
+  "reviewForm.label.comment": "تعليقك",
+  "reviewForm.placeholder.comment": "شارك تجربتك مع هذا المزود...",
+  "reviewForm.button.cancel": "إلغاء",
+  "reviewForm.button.submit": "إرسال تقييمي",
+  "reviewForm.aria.rating": "إعطاء {count} نجمة{plural}",
+  "reviewForm.error.commentRequired": "يرجى إدخال تعليق",
+  "reviewForm.error.loginRequired": "يجب تسجيل الدخول لترك تقييم",
+  "reviewForm.error.ratingRequired": "يرجى اختيار تقييم",
+  "reviewForm.error.submitFailed": "حدث خطأ أثناء إرسال تقييمك: {message}. يرجى المحاولة مرة أخرى."
 }

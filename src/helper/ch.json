@@ -1594,5 +1594,19 @@
   "validators.languages": "至少选择一种语言",
   "validators.langMismatch": "请选择有效的语言",
   "validators.accept": "您必须同意条款",
-  "bookingRequest.validators.selectCountry": "请选择一个国家"
+  "bookingRequest.validators.selectCountry": "请选择一个国家",
+
+  "reviewForm.title.lawyer": "评价律师",
+  "reviewForm.title.expat": "评价外籍人士",
+  "reviewForm.title.withName": " — {name}",
+  "reviewForm.label.rating": "您的评分",
+  "reviewForm.label.comment": "您的评论",
+  "reviewForm.placeholder.comment": "分享您与此提供商的体验...",
+  "reviewForm.button.cancel": "取消",
+  "reviewForm.button.submit": "提交我的评价",
+  "reviewForm.aria.rating": "给{count}星{plural}",
+  "reviewForm.error.commentRequired": "请输入评论",
+  "reviewForm.error.loginRequired": "您必须登录才能留下评价",
+  "reviewForm.error.ratingRequired": "请选择评分",
+  "reviewForm.error.submitFailed": "提交您的评价时发生错误：{message}。请重试。"
 }

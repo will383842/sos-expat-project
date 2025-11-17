@@ -1511,5 +1511,19 @@
   "validators.languages": "Требуется хотя бы один язык",
   "validators.langMismatch": "Пожалуйста, выберите допустимый язык",
   "validators.accept": "Вы должны принять условия",
-  "bookingRequest.validators.selectCountry": "Пожалуйста, выберите страну"
+  "bookingRequest.validators.selectCountry": "Пожалуйста, выберите страну",
+
+  "reviewForm.title.lawyer": "Оценить адвоката",
+  "reviewForm.title.expat": "Оценить экспата",
+  "reviewForm.title.withName": " — {name}",
+  "reviewForm.label.rating": "Ваша оценка",
+  "reviewForm.label.comment": "Ваш комментарий",
+  "reviewForm.placeholder.comment": "Поделитесь своим опытом работы с этим поставщиком...",
+  "reviewForm.button.cancel": "Отмена",
+  "reviewForm.button.submit": "Отправить мой отзыв",
+  "reviewForm.aria.rating": "Дать {count} звезд{plural}",
+  "reviewForm.error.commentRequired": "Пожалуйста, введите комментарий",
+  "reviewForm.error.loginRequired": "Вы должны войти в систему, чтобы оставить отзыв",
+  "reviewForm.error.ratingRequired": "Пожалуйста, выберите оценку",
+  "reviewForm.error.submitFailed": "Произошла ошибка при отправке вашего отзыва: {message}. Пожалуйста, попробуйте снова."
 }

@@ -1540,5 +1540,19 @@
   "validators.languages": "Mindestens eine Sprache ist erforderlich",
   "validators.langMismatch": "Bitte wählen Sie eine gültige Sprache",
   "validators.accept": "Sie müssen die Bedingungen akzeptieren",
-  "bookingRequest.validators.selectCountry": " Bitte wählen Sie ein Land aus"
+  "bookingRequest.validators.selectCountry": " Bitte wählen Sie ein Land aus",
+
+  "reviewForm.title.lawyer": "Anwalt bewerten",
+  "reviewForm.title.expat": "Expatriate bewerten",
+  "reviewForm.title.withName": " — {name}",
+  "reviewForm.label.rating": "Ihre Bewertung",
+  "reviewForm.label.comment": "Ihr Kommentar",
+  "reviewForm.placeholder.comment": "Teilen Sie Ihre Erfahrung mit diesem Anbieter...",
+  "reviewForm.button.cancel": "Abbrechen",
+  "reviewForm.button.submit": "Meine Bewertung absenden",
+  "reviewForm.aria.rating": "{count} Stern{plural} geben",
+  "reviewForm.error.commentRequired": "Bitte geben Sie einen Kommentar ein",
+  "reviewForm.error.loginRequired": "Sie müssen angemeldet sein, um eine Bewertung zu hinterlassen",
+  "reviewForm.error.ratingRequired": "Bitte wählen Sie eine Bewertung",
+  "reviewForm.error.submitFailed": "Beim Senden Ihrer Bewertung ist ein Fehler aufgetreten: {message}. Bitte versuchen Sie es erneut."
 }

@@ -1541,7 +1541,20 @@
   "validators.languages": "At least one language is required",
   "validators.langMismatch": "Please select a valid language",
   "validators.accept": "You must accept the terms",
-  "bookingRequest.validators.selectCountry":"Please select a country"
+  "bookingRequest.validators.selectCountry":"Please select a country",
 
+  "reviewForm.title.lawyer": "Rate the Lawyer",
+  "reviewForm.title.expat": "Rate the Expatriate",
+  "reviewForm.title.withName": " — {name}",
+  "reviewForm.label.rating": "Your rating",
+  "reviewForm.label.comment": "Your comment",
+  "reviewForm.placeholder.comment": "Share your experience with this provider...",
+  "reviewForm.button.cancel": "Cancel",
+  "reviewForm.button.submit": "Submit my review",
+  "reviewForm.aria.rating": "Give {count} star{plural}",
+  "reviewForm.error.commentRequired": "Please enter a comment",
+  "reviewForm.error.loginRequired": "You must be logged in to leave a review",
+  "reviewForm.error.ratingRequired": "Please select a rating",
+  "reviewForm.error.submitFailed": "An error occurred while submitting your review: {message}. Please try again."
 
 }

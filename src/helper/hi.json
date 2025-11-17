@@ -1464,5 +1464,19 @@
   "validators.languages": "कम से कम एक भाषा आवश्यक है",
   "validators.langMismatch": "कृपया एक वैध भाषा चुनें",
   "validators.accept": "आपको नियम स्वीकार करने चाहिए",
-  "bookingRequest.validators.selectCountry": "कृपया एक देश चुनें"
+  "bookingRequest.validators.selectCountry": "कृपया एक देश चुनें",
+
+  "reviewForm.title.lawyer": "वकील को रेट करें",
+  "reviewForm.title.expat": "प्रवासी को रेट करें",
+  "reviewForm.title.withName": " — {name}",
+  "reviewForm.label.rating": "आपकी रेटिंग",
+  "reviewForm.label.comment": "आपकी टिप्पणी",
+  "reviewForm.placeholder.comment": "इस प्रदाता के साथ अपना अनुभव साझा करें...",
+  "reviewForm.button.cancel": "रद्द करें",
+  "reviewForm.button.submit": "मेरी समीक्षा सबमिट करें",
+  "reviewForm.aria.rating": "{count} स्टार{plural} दें",
+  "reviewForm.error.commentRequired": "कृपया एक टिप्पणी दर्ज करें",
+  "reviewForm.error.loginRequired": "समीक्षा छोड़ने के लिए आपको लॉग इन होना चाहिए",
+  "reviewForm.error.ratingRequired": "कृपया एक रेटिंग चुनें",
+  "reviewForm.error.submitFailed": "आपकी समीक्षा सबमिट करते समय एक त्रुटि हुई: {message}. कृपया पुनः प्रयास करें।"
 }

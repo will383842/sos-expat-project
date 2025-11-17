@@ -1558,5 +1558,19 @@
   "validators.languages": "Se requiere al menos un idioma",
   "validators.langMismatch": "Por favor seleccione un idioma válido",
   "validators.accept": "Debe aceptar los términos",
-  "bookingRequest.validators.selectCountry":"Por favor seleccione un país"
+  "bookingRequest.validators.selectCountry":"Por favor seleccione un país",
+
+  "reviewForm.title.lawyer": "Evaluar al Abogado",
+  "reviewForm.title.expat": "Evaluar al Expatriado",
+  "reviewForm.title.withName": " — {name}",
+  "reviewForm.label.rating": "Tu calificación",
+  "reviewForm.label.comment": "Tu comentario",
+  "reviewForm.placeholder.comment": "Comparte tu experiencia con este proveedor...",
+  "reviewForm.button.cancel": "Cancelar",
+  "reviewForm.button.submit": "Enviar mi reseña",
+  "reviewForm.aria.rating": "Dar {count} estrella{plural}",
+  "reviewForm.error.commentRequired": "Por favor ingresa un comentario",
+  "reviewForm.error.loginRequired": "Debes iniciar sesión para dejar una reseña",
+  "reviewForm.error.ratingRequired": "Por favor selecciona una calificación",
+  "reviewForm.error.submitFailed": "Ocurrió un error al enviar tu reseña: {message}. Por favor intenta de nuevo."
 }

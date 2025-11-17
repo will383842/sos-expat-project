@@ -50,6 +50,7 @@ const PaymentSuccess: React.FC = () => {
   const paymentIntentId = searchParams.get('paymentIntentId');
 
   // State
+  // Review modal disabled
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
   const [callState, setCallState] = useState<CallState>(
@@ -125,6 +126,7 @@ const PaymentSuccess: React.FC = () => {
 
   // Initialize service data
   const initializeServiceData = useCallback(() => {
+
     // ✅ Prioriser les paramètres URL (plus fiables)
     const urlAmount = searchParams.get('amount');
     const urlServiceType = searchParams.get('serviceType') || searchParams.get('service');
@@ -505,15 +507,14 @@ Montant: ${paidAmount}€
                   {isGeneratingInvoices ? t.generatingInvoices : t.viewInvoices}
                 </button>
 
-                {callState === 'completed' && (
-                  <button
-                    onClick={() => setShowReviewModal(true)}
-                    className="w-full bg-yellow-500 text-white py-3 px-4 rounded-lg hover:bg-yellow-600 transition-colors flex items-center justify-center"
-                  >
-                    <Star size={20} className="mr-2" />
-                    {t.leaveReview}
-                  </button>
-                )}
+                {/* 🧪 TESTING: Always show review button for testing */}
+                <button
+                  onClick={() => setShowReviewModal(true)}
+                  className="w-full bg-yellow-500 text-white py-3 px-4 rounded-lg hover:bg-yellow-600 transition-colors flex items-center justify-center"
+                >
+                  <Star size={20} className="mr-2" />
+                  {t.leaveReview} {showReviewModal ? '(Open)' : '(Click to Open)'}
+                </button>
 
                 <button
                   onClick={() => window.location.href = '/dashboard'}
@@ -527,13 +528,13 @@ Montant: ${paidAmount}€
         </div>
       </div>
       
-      {/* Review Modal */}
+      {/* Review Modal - Disabled for now */}
       <ReviewModal
         isOpen={showReviewModal}
         onClose={() => setShowReviewModal(false)}
-        providerId={providerId}
+        providerId={providerId || 'test-provider-id'}
         providerName={isLawyer ? 'Avocat' : 'Expatrié'}
-        callId={callId}
+        callId={callId || `test-call-${Date.now()}`}
         serviceType={isLawyer ? 'lawyer_call' : 'expat_call'}
       />
       
