@@ -848,7 +848,6 @@ const SuccessPayment: React.FC = () => {
                         {order.metadata!.override_label}
                       </div>
                     )}
-
                   {/* Remise coupon */}
                   {toNum(order?.coupon?.discountAmount) > 0 && (
                     <div className="text-sm text-green-700">

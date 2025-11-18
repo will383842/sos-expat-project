@@ -21,8 +21,10 @@ interface InvoiceRecord {
   clientId: string;
   providerId: string;
   amount: number;
+  currency?: string;
   status: string;
   downloadUrl: string;
+  callId?: string;
   createdAt: { seconds: number; nanoseconds: number };
 }
 
@@ -35,8 +37,26 @@ export default function UserInvoices() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(true);
+  const [refundedInvoices, setRefundedInvoices] = useState<Set<string>>(new Set());
 
   const PAGE_SIZE = 10;
+
+  // Currency formatting helper
+  const formatCurrency = (amount: number, currency: string = 'EUR'): string => {
+    const currencyMap: Record<string, { symbol: string; position: 'before' | 'after' }> = {
+      EUR: { symbol: '€', position: 'after' },
+      USD: { symbol: '$', position: 'before' },
+      GBP: { symbol: '£', position: 'before' },
+      CHF: { symbol: 'CHF', position: 'after' },
+    };
+    
+    const config = currencyMap[currency.toUpperCase()] || currencyMap.EUR;
+    const formatted = amount.toFixed(2);
+    
+    return config.position === 'before' 
+      ? `${config.symbol}${formatted}`
+      : `${formatted} ${config.symbol}`;
+  };
 
   const exportSinglePDF = (invoice: any) => {
     console.log('Export PDF:', invoice);
@@ -130,7 +150,7 @@ export default function UserInvoices() {
 
     const tableData = invoices.map((invoice) => [
       invoice.id,
-      invoice.amount.toFixed(2) + ' €',
+      formatCurrency(invoice.amount, invoice.currency || 'EUR'),
       invoice.status,
       new Date(invoice.createdAt.seconds * 1000).toLocaleDateString(intl.locale),
     ]);
@@ -148,6 +168,57 @@ export default function UserInvoices() {
 
     doc.save(intl.formatMessage({ id: 'userInvoices.pdfFilename' }));
   };
+
+  // Check for refunded invoices by checking payment status
+  useEffect(() => {
+    if (!invoices.length) return;
+
+    const checkRefunds = async () => {
+      const refundedSet = new Set<string>();
+      
+      for (const invoice of invoices) {
+        if (!invoice.callId) continue;
+
+        try {
+          // Check payments collection for refunded status
+          // Try both callId and callSessionId fields
+          const paymentQueries = [
+            query(
+              collection(db, 'payments'),
+              where('callId', '==', invoice.callId),
+              where('status', '==', 'refunded'),
+              limit(1)
+            ),
+            query(
+              collection(db, 'payments'),
+              where('callSessionId', '==', invoice.callId),
+              where('status', '==', 'refunded'),
+              limit(1)
+            ),
+          ];
+
+          for (const paymentQuery of paymentQueries) {
+            try {
+              const paymentSnapshot = await getDocs(paymentQuery);
+              if (!paymentSnapshot.empty) {
+                refundedSet.add(invoice.id);
+                break; // Found refund, no need to check other queries
+              }
+            } catch (queryError) {
+              // Continue to next query if this one fails
+              console.warn('Error checking payment query:', queryError);
+            }
+          }
+        } catch (err) {
+          console.error('Error checking refund status for invoice:', invoice.id, err);
+        }
+      }
+      
+      setRefundedInvoices(refundedSet);
+    };
+
+    checkRefunds();
+  }, [invoices]);
 
   if (loading) return <p>{intl.formatMessage({ id: 'userInvoices.loading' })}</p>;
   if (error) return <p className="text-red-500">{error}</p>;
@@ -167,37 +238,63 @@ export default function UserInvoices() {
       </button>
 
       <ul className="space-y-2">
-        {invoices.map((invoice) => (
-          <li key={invoice.id} className="border p-4 rounded-md shadow-sm">
-            <p>
-              <strong>{intl.formatMessage({ id: 'userInvoices.amount' })}:</strong> {invoice.amount.toFixed(2)} €
-            </p>
-            <p>
-              <strong>{intl.formatMessage({ id: 'userInvoices.status' })}:</strong> {invoice.status}
-            </p>
-            <p>
-              <strong>{intl.formatMessage({ id: 'userInvoices.date' })}:</strong>{' '}
-              {new Date(invoice.createdAt.seconds * 1000).toLocaleDateString(intl.locale)}
-            </p>
-            <div className="flex gap-4 mt-2">
-              <a
-                href={invoice.downloadUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 underline"
-              >
-                {intl.formatMessage({ id: 'userInvoices.downloadInvoice' })}
-              </a>
+        {invoices.map((invoice) => {
+          const isRefunded = refundedInvoices.has(invoice.id) || invoice.status === 'refunded';
+          const isIssued = invoice.status === 'issued';
+          
+          return (
+            <li key={invoice.id} className={`border p-4 rounded-md shadow-sm ${isRefunded ? 'bg-red-50 border-red-200' : isIssued ? 'bg-green-50 border-green-200' : ''}`}>
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <p>
+                    <strong>{intl.formatMessage({ id: 'userInvoices.amount' })}:</strong> {formatCurrency(invoice.amount, invoice.currency || 'EUR')}
+                  </p>
+                  <p>
+                    <strong>{intl.formatMessage({ id: 'userInvoices.status' })}:</strong>{' '}
+                    <span className={isRefunded ? 'text-red-600 font-semibold' : isIssued ? 'text-green-600 font-semibold' : ''}>
+                      {isRefunded 
+                        ? intl.formatMessage({ id: 'userInvoices.statusRefunded' })
+                        : isIssued
+                        ? intl.formatMessage({ id: 'userInvoices.statusIssued' })
+                        : invoice.status}
+                    </span>
+                    {isRefunded && (
+                      <span className="ml-2 px-2 py-1 bg-red-100 text-red-800 text-xs rounded font-semibold">
+                        {intl.formatMessage({ id: 'userInvoices.refunded' })}
+                      </span>
+                    )}
+                    {isIssued && (
+                      <span className="ml-2 px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-semibold">
+                        {intl.formatMessage({ id: 'userInvoices.issued' })}
+                      </span>
+                    )}
+                  </p>
+                  <p>
+                    <strong>{intl.formatMessage({ id: 'userInvoices.date' })}:</strong>{' '}
+                    {new Date(invoice.createdAt.seconds * 1000).toLocaleDateString(intl.locale)}
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-4 mt-2">
+                <a
+                  href={invoice.downloadUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 underline"
+                >
+                  {intl.formatMessage({ id: 'userInvoices.downloadInvoice' })}
+                </a>
 
-              <button
-                onClick={() => exportSinglePDF(invoice)}
-                className="text-green-600 underline"
-              >
-                {intl.formatMessage({ id: 'userInvoices.exportPdf' })}
-              </button>
-            </div>
-          </li>
-        ))}
+                <button
+                  onClick={() => exportSinglePDF(invoice)}
+                  className="text-green-600 underline"
+                >
+                  {intl.formatMessage({ id: 'userInvoices.exportPdf' })}
+                </button>
+              </div>
+            </li>
+          );
+        })}
       </ul>
 
       {hasMore && (

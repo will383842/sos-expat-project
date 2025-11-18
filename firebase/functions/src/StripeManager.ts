@@ -422,6 +422,34 @@ export class StripeManager {
         sessionId: sessionId || null,
       });
 
+      // Update related invoices to refunded status
+      if (sessionId) {
+        try {
+          // Find invoices linked to this call session
+          const invoicesQuery = await this.db.collection('invoice_records')
+            .where('callId', '==', sessionId)
+            .get();
+          
+          if (!invoicesQuery.empty) {
+            const invoiceUpdateBatch = this.db.batch();
+            invoicesQuery.docs.forEach((invoiceDoc) => {
+              invoiceUpdateBatch.update(invoiceDoc.ref, {
+                status: 'refunded',
+                refundedAt: admin.firestore.FieldValue.serverTimestamp(),
+                refundReason: reason,
+                refundId: refund.id,
+                updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+              });
+            });
+            await invoiceUpdateBatch.commit();
+            console.log(`✅ Updated ${invoicesQuery.docs.length} invoice(s) to refunded status for session ${sessionId}`);
+          }
+        } catch (invoiceError) {
+          console.error('⚠️ Error updating invoices to refunded status:', invoiceError);
+          // Don't fail the refund if invoice update fails
+        }
+      }
+
       console.log('Paiement remboursé:', {
         paymentIntentId,
         refundId: refund.id,

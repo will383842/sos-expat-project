@@ -42,7 +42,10 @@ export interface InvoiceRecord extends BaseLogEntry {
   amount: number;
   currency: string;
   downloadUrl: string;
-  status: 'issued' | 'sent' | 'paid' | 'cancelled';
+  status: 'issued' | 'sent' | 'paid' | 'cancelled' | 'refunded';
   sentToAdmin: boolean;
   locale?: string;
+  refundedAt?: admin.firestore.Timestamp | admin.firestore.FieldValue;
+  refundReason?: string;
+  refundId?: string;
 }

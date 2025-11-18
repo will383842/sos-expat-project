@@ -763,6 +763,16 @@ class TwilioCallManager {
                 await (0, logError_1.logError)("TwilioCallManager:handleCallFailure:notification", notificationError);
             }
             await this.processRefund(sessionId, `failed_${reason}`);
+            // Create invoices even for failed/refunded calls (marked as refunded)
+            const updatedSession = await this.getCallSession(sessionId);
+            if (updatedSession && !updatedSession.metadata?.invoicesCreated) {
+                console.log(`📄 Creating refunded invoices for failed call session: ${sessionId}`);
+                await this.createInvoices(sessionId, updatedSession);
+                await this.db.collection("call_sessions").doc(sessionId).update({
+                    "metadata.invoicesCreated": true,
+                    "metadata.updatedAt": admin.firestore.Timestamp.now(),
+                });
+            }
             await (0, logCallRecord_1.logCallRecord)({
                 callId: sessionId,
                 status: `call_failed_${reason}`,
@@ -787,6 +797,7 @@ class TwilioCallManager {
                 await this.db.collection("call_sessions").doc(sessionId).update({
                     "payment.status": "refunded",
                     "payment.refundedAt": admin.firestore.Timestamp.now(),
+                    "payment.refundReason": reason,
                     "metadata.updatedAt": admin.firestore.Timestamp.now(),
                 });
             }
@@ -839,6 +850,24 @@ class TwilioCallManager {
             if (this.shouldCapturePayment(callSession, duration)) {
                 console.log(`📄 Capturing payment for session: ${sessionId}`);
                 await this.capturePaymentForSession(sessionId);
+            }
+            else {
+                // Call duration < 120 seconds or payment not authorized - refund the payment
+                console.log(`📄 Call duration too short or payment not authorized - processing refund for session: ${sessionId}`);
+                const refundReason = duration < CALL_CONFIG.MIN_CALL_DURATION
+                    ? `Call duration too short: ${duration}s < ${CALL_CONFIG.MIN_CALL_DURATION}s`
+                    : 'Payment not authorized';
+                await this.processRefund(sessionId, refundReason);
+                // Create invoices even for refunded calls (marked as refunded)
+                const updatedSession = await this.getCallSession(sessionId);
+                if (updatedSession && !updatedSession.metadata?.invoicesCreated) {
+                    console.log(`📄 Creating refunded invoices for session: ${sessionId}`);
+                    await this.createInvoices(sessionId, updatedSession);
+                    await this.db.collection("call_sessions").doc(sessionId).update({
+                        "metadata.invoicesCreated": true,
+                        "metadata.updatedAt": admin.firestore.Timestamp.now(),
+                    });
+                }
             }
             console.log(`📄 Just logging the record : ${sessionId}`);
             await (0, logCallRecord_1.logCallRecord)({
@@ -1123,16 +1152,35 @@ class TwilioCallManager {
     async createInvoices(sessionId, session) {
         try {
             console.log(`📄 Creating invoices for session in createInvoices: ${sessionId}`);
+            // Check if payment is refunded - if so, mark invoices as refunded
+            const isRefunded = session.payment.status === "refunded";
+            const invoiceStatus = isRefunded ? "refunded" : "issued";
+            // Get payment currency from payments collection
+            let paymentCurrency = 'eur'; // Default to EUR
+            try {
+                const paymentDoc = await this.db.collection('payments').doc(session.payment.intentId).get();
+                if (paymentDoc.exists) {
+                    const paymentData = paymentDoc.data();
+                    if (paymentData?.currency) {
+                        paymentCurrency = paymentData.currency.toLowerCase();
+                        console.log(`📄 Found payment currency: ${paymentCurrency.toUpperCase()}`);
+                    }
+                }
+            }
+            catch (paymentError) {
+                console.warn(`⚠️ Could not fetch payment currency, defaulting to EUR:`, paymentError);
+            }
             // Import your invoice function - adjust path as needed
             const { generateInvoice } = await Promise.resolve().then(() => __importStar(require("./utils/generateInvoice")));
             // Get amounts from admin pricing config instead of hardcoded percentages
             const { getPricingConfig } = await Promise.resolve().then(() => __importStar(require("./services/pricingService")));
             const pricingConfig = await getPricingConfig();
             const serviceType = session.metadata.providerType; // 'lawyer' or 'expat'
-            const currency = 'eur'; // Default to EUR
+            const currency = paymentCurrency; // Use actual payment currency
             const platformFee = pricingConfig[serviceType][currency].connectionFeeAmount;
             const providerAmount = pricingConfig[serviceType][currency].providerAmount;
-            console.log(`📄 Creating invoices with admin pricing - Platform: ${platformFee} EUR, Provider: ${providerAmount} EUR`);
+            console.log(`📄 Creating invoices with admin pricing - Platform: ${platformFee} ${currency.toUpperCase()}, Provider: ${providerAmount} ${currency.toUpperCase()}`);
+            console.log(`📄 Invoice status: ${invoiceStatus} (payment status: ${session.payment.status})`);
             // Create platform invoice
             const platformInvoice = {
                 invoiceNumber: `PLT-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
@@ -1141,15 +1189,20 @@ class TwilioCallManager {
                 clientId: session.metadata.clientId,
                 providerId: session.metadata.providerId,
                 amount: platformFee,
-                currency: "EUR",
+                currency: currency.toUpperCase(),
                 downloadUrl: "",
-                status: "issued",
+                status: invoiceStatus,
                 sentToAdmin: true,
                 locale: session.metadata.selectedLanguage || "fr",
                 timestamp: admin.firestore.FieldValue.serverTimestamp(),
                 createdAt: new Date(),
                 environment: process.env.NODE_ENV || "development",
             };
+            // Add refund info if refunded
+            if (isRefunded) {
+                platformInvoice.refundedAt = admin.firestore.FieldValue.serverTimestamp();
+                platformInvoice.refundReason = session.payment.refundReason || "Payment refunded";
+            }
             // Create provider invoice
             const providerInvoice = {
                 invoiceNumber: `PRV-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
@@ -1158,21 +1211,26 @@ class TwilioCallManager {
                 clientId: session.metadata.clientId,
                 providerId: session.metadata.providerId,
                 amount: providerAmount,
-                currency: "EUR",
+                currency: currency.toUpperCase(),
                 downloadUrl: "",
-                status: "issued",
+                status: invoiceStatus,
                 sentToAdmin: true,
                 locale: session.metadata.selectedLanguage || "fr",
                 timestamp: admin.firestore.FieldValue.serverTimestamp(),
                 createdAt: new Date(),
                 environment: process.env.NODE_ENV || "development",
             };
+            // Add refund info if refunded
+            if (isRefunded) {
+                providerInvoice.refundedAt = admin.firestore.FieldValue.serverTimestamp();
+                providerInvoice.refundReason = session.payment.refundReason || "Payment refunded";
+            }
             // Generate both invoices
             await Promise.all([
                 generateInvoice(platformInvoice),
                 generateInvoice(providerInvoice),
             ]);
-            console.log(`✅ Invoices created successfully for ${sessionId}`);
+            console.log(`✅ Invoices created successfully for ${sessionId} with status: ${invoiceStatus}`);
         }
         catch (error) {
             console.error("❌ Error creating invoices:", error);
