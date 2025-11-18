@@ -1,6 +1,7 @@
 import React from "react";
 import Modal from "../common/Modal";
 import ReviewForm from "./ReviewForm";
+import { useIntl } from "react-intl";
 
 interface ReviewModalProps {
   isOpen: boolean;
@@ -19,6 +20,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
   callId,
   serviceType,
 }) => {
+  const intl = useIntl();
   const handleSuccess = () => {
     onClose();
     // Optionally show a success message or refresh reviews
@@ -28,7 +30,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Laisser un avis"
+      title={intl.formatMessage({ id: "dashboard.leaveReview" })}
       size="medium"
     >
       <ReviewForm

@@ -819,9 +819,10 @@ const SuccessPayment: React.FC = () => {
               {/* Order absent */}
               {!orderLoading && !order && (
                 <div className="text-green-900/80 text-sm">
-                  Impossible de récupérer la commande
-                  {orderId ? ` (${orderId})` : ""}. Vérifie le lien ou réessaie
-                  plus tard.
+                  {intl.formatMessage(
+                    { id: "success.orderNotFound" },
+                    { orderId: orderId || "" }
+                  )}
                 </div>
               )}
 
@@ -830,7 +831,9 @@ const SuccessPayment: React.FC = () => {
                 <div className="space-y-1">
                   {/* Total payé */}
                   <div className="flex justify-between">
-                    <span className="text-green-900/80">Total payé</span>
+                    <span className="text-green-900/80">
+                      {intl.formatMessage({ id: "success.totalPaid" })}
+                    </span>
                     <span className="font-bold text-green-900">
                       {C}
                       {fmt(toNum(order.amount))}
@@ -841,7 +844,7 @@ const SuccessPayment: React.FC = () => {
                   {order?.metadata?.price_origin === "override" &&
                     !!order?.metadata?.override_label && (
                       <div className="text-sm text-green-700">
-                        Tarif spécial appliqué :{" "}
+                        {intl.formatMessage({ id: "success.specialPrice" })}{" "}
                         {order.metadata!.override_label}
                       </div>
                     )}
@@ -849,8 +852,14 @@ const SuccessPayment: React.FC = () => {
                   {/* Remise coupon */}
                   {toNum(order?.coupon?.discountAmount) > 0 && (
                     <div className="text-sm text-green-700">
-                      Code {order?.coupon?.code} : -{C}
-                      {fmt(toNum(order?.coupon?.discountAmount))}
+                      {intl.formatMessage(
+                        { id: "success.couponDiscount" },
+                        {
+                          code: order?.coupon?.code || "",
+                          symbol: C,
+                          amount: fmt(toNum(order?.coupon?.discountAmount)),
+                        }
+                      )}
                     </div>
                   )}
 
@@ -872,12 +881,27 @@ const SuccessPayment: React.FC = () => {
                     if (!original || totalSaved <= 0) return null;
                     return (
                       <div className="text-sm text-emerald-700">
-                        Vous avez économisé {C}
-                        {fmt(totalSaved)}
+                        {intl.formatMessage(
+                          { id: "success.youSaved" },
+                          { symbol: C, amount: fmt(totalSaved) }
+                        )}
                         {savedFromOverride > 0 &&
-                          ` (dont ${C}${fmt(savedFromOverride)} via le tarif spécial)`}
+                          ` ${intl.formatMessage(
+                            { id: "success.viaSpecialPrice" },
+                            {
+                              symbol: C,
+                              amount: fmt(savedFromOverride),
+                            }
+                          )}`}
                         {savedFromCoupon > 0 &&
-                          ` (dont ${C}${fmt(savedFromCoupon)} via le code ${order?.coupon?.code ?? ""})`}
+                          ` ${intl.formatMessage(
+                            { id: "success.viaCoupon" },
+                            {
+                              symbol: C,
+                              amount: fmt(savedFromCoupon),
+                              code: order?.coupon?.code ?? "",
+                            }
+                          )}`}
                       </div>
                     );
                   })()}
@@ -885,22 +909,24 @@ const SuccessPayment: React.FC = () => {
               )}
             </div>
 
-            {/* Détails “debug” optionnels */}
+            {/* Détails "debug" optionnels */}
             {!!order && (
               <details className="mt-3 rounded-lg border border-white/10 bg-white/5 p-4 text-white/80">
                 <summary className="cursor-pointer select-none text-sm">
-                  Détails de la commande
+                  {intl.formatMessage({ id: "success.orderDetails" })}
                 </summary>
                 <div className="mt-3 space-y-1 text-sm">
                   <div className="flex justify-between">
-                    <span>Devise</span>
+                    <span>{intl.formatMessage({ id: "success.currency" })}</span>
                     <span className="font-medium uppercase">
                       {orderCurrency}
                     </span>
                   </div>
                   {order?.metadata?.price_origin && (
                     <div className="flex justify-between">
-                      <span>Origine du prix</span>
+                      <span>
+                        {intl.formatMessage({ id: "success.priceOrigin" })}
+                      </span>
                       <span className="font-medium">
                         {order.metadata!.price_origin}
                       </span>
@@ -908,7 +934,9 @@ const SuccessPayment: React.FC = () => {
                   )}
                   {order?.metadata?.override_label && (
                     <div className="flex justify-between">
-                      <span>Libellé override</span>
+                      <span>
+                        {intl.formatMessage({ id: "success.overrideLabel" })}
+                      </span>
                       <span className="font-medium">
                         {order.metadata!.override_label}
                       </span>
@@ -917,7 +945,11 @@ const SuccessPayment: React.FC = () => {
                   {typeof order?.metadata?.original_standard_amount !==
                     "undefined" && (
                     <div className="flex justify-between">
-                      <span>Prix standard d’origine</span>
+                      <span>
+                        {intl.formatMessage({
+                          id: "success.originalStandard",
+                        })}
+                      </span>
                       <span className="font-medium">
                         {C}
                         {fmt(toNum(order?.metadata?.original_standard_amount))}
@@ -927,7 +959,9 @@ const SuccessPayment: React.FC = () => {
                   {typeof order?.metadata?.effective_base_amount !==
                     "undefined" && (
                     <div className="flex justify-between">
-                      <span>Base effective (après override)</span>
+                      <span>
+                        {intl.formatMessage({ id: "success.effectiveBase" })}
+                      </span>
                       <span className="font-medium">
                         {C}
                         {fmt(toNum(order?.metadata?.effective_base_amount))}
@@ -936,7 +970,9 @@ const SuccessPayment: React.FC = () => {
                   )}
                   {order?.coupon?.code && (
                     <div className="flex justify-between">
-                      <span>Coupon</span>
+                      <span>
+                        {intl.formatMessage({ id: "success.coupon" })}
+                      </span>
                       <span className="font-medium">
                         {order.coupon.code} (-{C}
                         {fmt(toNum(order?.coupon?.discountAmount))})
@@ -960,8 +996,8 @@ const SuccessPayment: React.FC = () => {
                       <Briefcase className="w-5 h-5" />
                     </div>
                     {/* {t.serviceDetails} */}
-                    {intl.formatMessage({ id: "success.serviceDetails" })} —
-                    Avocat 🎯
+                    {intl.formatMessage({ id: "success.serviceDetails" })} —{" "}
+                    {intl.formatMessage({ id: "success.lawyerLabel" })}
                   </>
                 ) : (
                   <>
@@ -969,8 +1005,8 @@ const SuccessPayment: React.FC = () => {
                       <User className="w-5 h-5" />
                     </div>
                     {/* {t.serviceDetails} */}
-                    {intl.formatMessage({ id: "success.serviceDetails" })} —
-                    Expat 🌍
+                    {intl.formatMessage({ id: "success.serviceDetails" })} —{" "}
+                    {intl.formatMessage({ id: "success.expatLabel" })}
                   </>
                 )}
               </h2>
@@ -1043,25 +1079,21 @@ const SuccessPayment: React.FC = () => {
                   <div className="flex items-center justify-center gap-2 text-green-600">
                     <Shield className="w-5 h-5" />
                     <span className="font-medium text-sm">
-                      {language === "fr"
-                        ? "Paiement ultra-sécurisé 🔐"
-                        : "Ultra-secure payment 🔐"}
+                      {intl.formatMessage({ id: "success.paymentSecure" })}
                     </span>
                   </div>
                   <div className="flex items-center justify-center gap-2 text-blue-600">
                     <Zap className="w-5 h-5" />
                     <span className="font-medium text-sm">
-                      {language === "fr"
-                        ? "Connexion rapide ⚡"
-                        : "Lightning connection ⚡"}
+                      {intl.formatMessage({ id: "success.connectionFast" })}
                     </span>
                   </div>
                   <div className="flex items-center justify-center gap-2 text-purple-600">
                     <CheckCircle className="w-5 h-5" />
                     <span className="font-medium text-sm">
-                      {language === "fr"
-                        ? "Satisfaction garantie 🌟"
-                        : "Satisfaction guaranteed 🌟"}
+                      {intl.formatMessage({
+                        id: "success.satisfactionGuaranteed",
+                      })}
                     </span>
                   </div>
                 </div>
@@ -1071,11 +1103,11 @@ const SuccessPayment: React.FC = () => {
             {/* Raccourcis utiles */}
             <div className="mt-6 flex items-center gap-3 text-sm text-gray-600">
               <Link to="/dashboard" className="underline hover:text-gray-800">
-                Espace client
+                {intl.formatMessage({ id: "success.clientSpace" })}
               </Link>
               <span>•</span>
               <Link to="/" className="underline hover:text-gray-800">
-                Accueil
+                {intl.formatMessage({ id: "success.home" })}
               </Link>
             </div>
           </div>
@@ -1128,7 +1160,11 @@ const SuccessPayment: React.FC = () => {
         isOpen={showReviewModal}
         onClose={() => setShowReviewModal(false)}
         providerId={providerId}
-        providerName={isLawyer ? "Avocat" : "Expatrié"}
+        providerName={
+          isLawyer
+            ? intl.formatMessage({ id: "success.providerNameLawyer" })
+            : intl.formatMessage({ id: "success.providerNameExpat" })
+        }
         callId={callId}
         serviceType={isLawyer ? "lawyer_call" : "expat_call"}
       />
