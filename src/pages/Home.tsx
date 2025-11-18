@@ -6,7 +6,7 @@ import React, {
   useRef,
   useMemo,
 } from "react";
-import { Form, Link } from "react-router-dom";
+import { Form, Link, useNavigate } from "react-router-dom";
 import {
   ArrowRight,
   Play,
@@ -203,6 +203,7 @@ function PWAInstallIconWithHint({
   canInstall: boolean;
   onInstall: () => void;
 }) {
+  const navigate = useNavigate();
   const [showHint, setShowHint] = useState(false);
   const [hintMessageId, setHintMessageId] = useState(""); // ✅ Store message ID instead
   const hideTimer = useRef<number | null>(null);
@@ -240,7 +241,11 @@ function PWAInstallIconWithHint({
     ) as unknown as number;
   };
 
-  const onClick = () => {
+  const onClick = (e: React.MouseEvent) => {
+    // Stop event propagation to prevent parent link from triggering
+    e.stopPropagation();
+    e.preventDefault();
+    
     if (canInstall) onInstall();
     else {
       reveal();
@@ -801,15 +806,18 @@ const OptimizedHomePage: React.FC = () => {
 
           <div className="relative z-10 max-w-7xl mx-auto px-6">
             <div className="text-center mb-20">
-              {/* Badge “Nouveau” + PWA */}
-              <div className="inline-flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-full pl-6 pr-2 py-3 border border-white/20 mb-8 touch-manipulation">
+              {/* Badge "Nouveau" + PWA */}
+              <a 
+                href="https://ulixai.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-full pl-6 pr-2 py-3 border border-white/20 mb-8 touch-manipulation hover:bg-white/15 transition-colors cursor-pointer"
+              >
                 <Sparkles className="w-5 h-5 text-yellow-400" />
                 <span className="text-white font-medium">
-                  {/* Nouveau — téléchargez l’appli <strong>SOS Expat d’Ulixai</strong> ! */}
+                  {/* Nouveau — téléchargez l'appli <strong>SOS Expat d'Ulixai</strong> ! */}
                   {/* <strong>Ulixai.com</strong> */}
-                  <a href="https://ulixai.com" target="_blank" rel="noopener noreferrer">
-                    <strong>Ulixai.com</strong>
-                  </a>
+                  <strong>Ulixai.com</strong>
                   <FormattedMessage id="appDownloadAnnouncement" />
                   {/* <strong>SOS Expat d'Ulixai</strong> */}
                 </span>
@@ -818,7 +826,7 @@ const OptimizedHomePage: React.FC = () => {
                   onInstall={onInstallClick}
                 />
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              </div>
+              </a>
 
               <h1 className="text-6xl md:text-8xl font-black mb-8 leading-tight">
                 <span className="bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">

@@ -150,7 +150,7 @@ export default function UserInvoices() {
 
     const tableData = invoices.map((invoice) => [
       invoice.id,
-      formatCurrency(invoice.amount, invoice.currency || 'EUR'),
+      invoice.amount.toFixed(2) + ' €',
       invoice.status,
       new Date(invoice.createdAt.seconds * 1000).toLocaleDateString(intl.locale),
     ]);
