@@ -1,11 +1,13 @@
 /**
  * Locale Routes Utility
  * Handles language-country locale prefixes in routes (e.g., /en-us/, /fr-fr/)
- */
+ ***/
+
+import { getCachedGeoData, detectCountryFromTimezone } from "./languageDetection";
 
 type Language = "fr" | "en" | "es" | "ru" | "de" | "hi" | "pt" | "ch" | "ar";
 
-// Map language to default country code
+// Map language to default country code (fallback only)
 const LANGUAGE_TO_COUNTRY: Record<Language, string> = {
   fr: "fr",  // French → France
   en: "us",  // English → United States
@@ -19,10 +21,43 @@ const LANGUAGE_TO_COUNTRY: Record<Language, string> = {
 };
 
 /**
+ * Get country code from geolocation (synchronous - uses cache and timezone)
+ * Returns lowercase country code or null if not available
+ */
+function getCountryFromGeolocation(): string | null {
+  // Try cached geolocation data first (fastest, no API calls)
+  const cachedCountry = getCachedGeoData();
+  if (cachedCountry) {
+    return cachedCountry.toLowerCase();
+  }
+  
+  // Try timezone detection (no API, no rate limits)
+  const timezoneCountry = detectCountryFromTimezone();
+  if (timezoneCountry) {
+    return timezoneCountry.toLowerCase();
+  }
+  
+  return null;
+}
+
+/**
  * Generate locale string (e.g., "en-us", "fr-fr")
+ * Uses geolocation country when available, falls back to language default
  */
 export function getLocaleString(lang: Language, country?: string): string {
-  const countryCode = country || LANGUAGE_TO_COUNTRY[lang];
+  // If country is explicitly provided, use it
+  if (country) {
+    return `${lang}-${country.toLowerCase()}`;
+  }
+  
+  // Try to get country from geolocation
+  const geoCountry = getCountryFromGeolocation();
+  if (geoCountry) {
+    return `${lang}-${geoCountry}`;
+  }
+  
+  // Fallback to language-to-country mapping
+  const countryCode = LANGUAGE_TO_COUNTRY[lang];
   return `${lang}-${countryCode}`;
 }
 
@@ -79,4 +114,3 @@ export function getLocaleFromPath(pathname: string, defaultLang: Language): stri
   const parsed = parseLocaleFromPath(pathname);
   return parsed.locale || getLocaleString(defaultLang);
 }
-

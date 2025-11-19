@@ -347,7 +347,7 @@ interface GeoCache {
 /**
  * Get cached geolocation data
  */
-function getCachedGeoData(): string | null {
+export function getCachedGeoData(): string | null {
   try {
     const cached = localStorage.getItem(GEO_CACHE_KEY);
     if (!cached) return null;
