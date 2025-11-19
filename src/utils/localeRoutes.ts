@@ -21,7 +21,7 @@ const LANGUAGE_TO_COUNTRY: Record<Language, string> = {
 };
 
 /**
- * Get country code from geolocation (synchronous - uses cache and timezone)
+ * Get country code from geolocation (synchronous - uses cache and timezcone)
  * Returns lowercase country code or null if not available
  */
 function getCountryFromGeolocation(): string | null {

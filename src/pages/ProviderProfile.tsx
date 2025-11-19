@@ -1,6 +1,7 @@
 // src/pages/ProviderProfile.tsx
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { parseLocaleFromPath, getLocaleString } from "../utils/localeRoutes";
 import {
   Star,
   MapPin,
@@ -1044,7 +1045,14 @@ const ProviderProfile: React.FC = () => {
           `${provider.firstName || ""}-${provider.lastName || ""}`
         ) ||
         safeNormalize(provider.fullName || "");
-      const seoUrl = `/${displayType}/${countrySlug}/${langSlug}/${nameSlug}-${provider.id}`;
+      
+      // Extract locale from current pathname to preserve it
+      const currentPathname = location.pathname;
+      const { locale: currentLocale } = parseLocaleFromPath(currentPathname);
+      
+      // Build SEO URL with locale prefix if present
+      const seoPath = `/${displayType}/${countrySlug}/${langSlug}/${nameSlug}-${provider.id}`;
+      const seoUrl = currentLocale ? `/${currentLocale}${seoPath}` : seoPath;
       
       // Only update URL if it's different AND we haven't already updated it
       const currentPath = window.location.pathname.replace(/\/$/, '');
@@ -1100,7 +1108,7 @@ const ProviderProfile: React.FC = () => {
     } catch (e) {
       console.error("Error updating SEO metadata:", e);
     }
-  }, [provider, isLoading, preferredLangKey, detectedLang]);
+  }, [provider, isLoading, preferredLangKey, detectedLang, location.pathname]);
 
   useEffect(() => {
     if (provider && !isLoading) {
@@ -1176,8 +1184,11 @@ const ProviderProfile: React.FC = () => {
       const nameSlug =
         provider.slug ||
         safeNormalize(`${provider.firstName}-${provider.lastName}`);
+      // Extract locale from current pathname to preserve it
+      const { locale: currentLocale } = parseLocaleFromPath(location.pathname);
       const seoPath = `/${isLawyer ? "avocat" : "expatrie"}/${countrySlug}/${langSlug}/${nameSlug}-${provider.id}`;
-      const currentUrl = `${window.location.origin}${seoPath}`;
+      const fullSeoPath = currentLocale ? `/${currentLocale}${seoPath}` : seoPath;
+      const currentUrl = `${window.location.origin}${fullSeoPath}`;
       const title = `${provider.fullName} - ${
         isLawyer
           ? detectedLang === "fr"
@@ -1226,7 +1237,7 @@ const ProviderProfile: React.FC = () => {
           break;
       }
     },
-    [provider, detectedLang, t]
+    [provider, detectedLang, t, location.pathname]
   );
 
   const handleHelpfulClick = useCallback(
