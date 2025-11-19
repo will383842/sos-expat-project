@@ -6,6 +6,7 @@ import {
   useParams,
   Link,
 } from "react-router-dom";
+import { useLocaleNavigate } from "../hooks/useLocaleNavigate";
 import {
   Phone,
   CheckCircle,
@@ -94,7 +95,7 @@ const COMMISSION_RATES = {
 const SuccessPayment: React.FC = () => {
   const intl = useIntl();
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
+  const navigate = useLocaleNavigate();
   const { language } = useApp();
 
   // URL Parameters

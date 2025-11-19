@@ -86,7 +86,7 @@ const registerUser = async (userData: Partial<User>, password: string): Promise<
     
 
     
-    // Créer le document utilisateur dans Firestore
+    // Créer le document utilisateur dans Firestore 
     const userDocData = {
       ...userData,
       uid: firebaseUser.uid,
@@ -124,7 +124,11 @@ const registerUser = async (userData: Partial<User>, password: string): Promise<
         sms: false
       }
     };
-    // 🔒 Sécurité renforcée pour les avocats
+
+
+  // 🔒 Sécurité renforcée pour les avocats
+
+
 if (userData.role === 'lawyer') {
   userDocData.isOnline = false;
   userDocData.isApproved = false;
@@ -592,5 +596,5 @@ export {
   getUserData,
   isUserApproved,
   isUserAdmin
-}; 0 0 0 0
+};
 

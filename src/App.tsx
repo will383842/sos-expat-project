@@ -23,6 +23,8 @@ import ptMessages from "./helper/pt.json";
 import chMessages from "./helper/ch.json";
 import arMessages from './helper/ar.json';
 import { useApp } from "./contexts/AppContext";
+import LocaleRouter from "./components/routing/LocaleRouter";
+import { getLocaleString, parseLocaleFromPath } from "./utils/localeRoutes";
 
 // --------------------------------------------
 // Types
@@ -189,6 +191,10 @@ const protectedUserRoutes: RouteConfig[] = [
 // SEO par défaut
 // --------------------------------------------
 const DefaultHelmet: React.FC<{ pathname: string }> = ({ pathname }) => {
+  // Remove locale prefix from pathname for metadata lookup
+  const { pathWithoutLocale } = parseLocaleFromPath(pathname);
+  const pathForMetadata = pathWithoutLocale === "/" ? "/" : pathWithoutLocale;
+  
   const getPageMetadata = (path: string) => {
     const metaMap: Record<
       string,
@@ -238,7 +244,7 @@ const DefaultHelmet: React.FC<{ pathname: string }> = ({ pathname }) => {
     );
   };
 
-  const metadata = getPageMetadata(pathname);
+  const metadata = getPageMetadata(pathForMetadata);
   return (
     <Helmet>
       <html lang={metadata.lang} />
@@ -302,42 +308,92 @@ const App: React.FC = () => {
       role,
       alias,
     } = config;
-    const routes = [path, ...(alias ? [alias] : [])];
+    
+    // Add locale prefix to paths - use simple parameter, validation happens in LocaleRouter
+    // React Router v6 doesn't support regex in path params, so we use :locale and validate elsewhere
+    const localePrefix = `/:locale`;
+    
+    // Handle root path specially - match both with and without trailing slash
+    let routes: string[];
+    if (path === "/") {
+      // For root, create routes that match both /en-us and /en-us/
+      routes = [
+        `${localePrefix}`,      // Matches /en-us
+        `${localePrefix}/`,     // Matches /en-us/
+      ];
+    } else {
+      routes = [
+        `${localePrefix}${path}`,
+        ...(alias ? [`${localePrefix}${alias}`] : []),
+      ];
+    }
 
-    return routes.map((routePath, i) => (
-      <Route
-        key={`${index}-${i}-${routePath}`}
-        path={routePath}
-        element={
-          isProtected ? (
-            <ProtectedRoute allowedRoles={role}>
+    return routes.map((routePath, i) => {
+      // Debug: log route paths in development
+      if (process.env.NODE_ENV === 'development' && path === "/") {
+        console.log(`[Route] Registering locale route: ${routePath}`);
+      }
+      
+      return (
+        <Route
+          key={`${index}-${i}-${routePath}`}
+          path={routePath}
+          element={
+            isProtected ? (
+              <ProtectedRoute allowedRoles={role}>
+                <Component />
+              </ProtectedRoute>
+            ) : (
               <Component />
-            </ProtectedRoute>
-          ) : (
-            <Component />
-          )
-        }
-      />
-    ));
+            )
+          }
+        />
+      );
+    });
   };
 
   return (
     <HelmetProvider>
       <IntlProvider locale={locale} messages={messages[locale]} defaultLocale="fr" >
-        <div className={`App ${isMobile ? "mobile-layout" : "desktop-layout"}`}>
-          <DefaultHelmet pathname={location.pathname} />
-          <Suspense fallback={<LoadingSpinner size="large" color="red" />}>
-            {/* Routes de l'app */}
-            <Routes>
-              {routeConfigs.map((cfg, i) => renderRoute(cfg, i))}
-              {protectedUserRoutes.map((cfg, i) => renderRoute(cfg, i + 1000))}
+        <LocaleRouter>
+          <div className={`App ${isMobile ? "mobile-layout" : "desktop-layout"}`}>
+            <DefaultHelmet pathname={location.pathname} />
+            <Suspense fallback={<LoadingSpinner size="large" color="red" />}>
+              {/* Routes de l'app */}
+              <Routes>
+                {/* Root redirect to locale */}
+                <Route
+                  path="/"
+                  element={<Navigate to={`/${getLocaleString(language)}`} replace />}
+                />
+                
+                {/* Payment success route without locale (backward compatibility) */}
+                <Route
+                  path="/payment-success"
+                  element={
+                    <ProtectedRoute>
+                      <PaymentSuccess />
+                    </ProtectedRoute>
+                  }
+                />
+                
+                {/* Routes with locale prefix - Home route first for root locale path */}
+                {routeConfigs
+                  .sort((a, b) => {
+                    // Put root path first
+                    if (a.path === "/") return -1;
+                    if (b.path === "/") return 1;
+                    return 0;
+                  })
+                  .map((cfg, i) => renderRoute(cfg, i))}
+                {protectedUserRoutes.map((cfg, i) => renderRoute(cfg, i + 1000))}
 
-              {/* Admin routes - Fix: Redirect /admin to /admin/dashboard */}
-              <Route
-                path="/admin"
-                element={<Navigate to="/admin/dashboard" replace />}
-              />
-              <Route path="/admin/*" element={<AdminRoutesV2 />} />
+                {/* Admin routes - no locale prefix */}
+                <Route
+                  path="/admin"
+                  element={<Navigate to="/admin/dashboard" replace />}
+                />
+                <Route path="/admin/*" element={<AdminRoutesV2 />} />
 
               {/* Marketing & Communication */}
               <Route
@@ -356,11 +412,12 @@ const App: React.FC = () => {
                 path="marketing/messages-temps-reel"
                 element={<MessagesTempsReel />}
               />
-            </Routes>
+              </Routes>
 
-            {/* Routes admin gérées par AdminRoutesV2 */}
-          </Suspense>
-        </div>
+              {/* Routes admin gérées par AdminRoutesV2 */}
+            </Suspense>
+          </div>
+        </LocaleRouter>
       </IntlProvider>
     </HelmetProvider>
   );

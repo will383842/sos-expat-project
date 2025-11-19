@@ -17,6 +17,7 @@ import {
   X,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useLocaleNavigate } from "../hooks/useLocaleNavigate";
 import { useAuth } from "../contexts/AuthContext";
 import { loadStripe, Stripe } from "@stripe/stripe-js";
 import {
@@ -2131,7 +2132,7 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({
 }) => {
   const { t, language } = useTranslation();
   const intl = useIntl();
-  const navigate = useNavigate();
+  const navigate = useLocaleNavigate();
   const { user } = useAuth();
 
   const isMobile = useIsMobile();

@@ -7,6 +7,7 @@ import React, {
   useState,
 } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { getLocaleString, parseLocaleFromPath } from "../../utils/localeRoutes";
 import {
   Menu,
   X,
@@ -635,6 +636,8 @@ const LanguageDropdown = memo<{
   variant?: "light" | "dark";
 }>(({ isMobile = false, variant = "dark" }) => {
   const { language, setLanguage } = useApp();
+  const location = useLocation();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -655,12 +658,37 @@ const LanguageDropdown = memo<{
     (langCode: "fr" | "en" | "es" | "ru" | "de" | "hi" | "pt" | "ch" | "ar") => {
       setLanguage(langCode);
       setOpen(false);
+      
+      // Update the route to reflect the new language
+      const { pathname } = location;
+      
+      // Skip route update for admin routes
+      if (pathname.startsWith("/admin") || pathname.startsWith("/marketing")) {
+        window.gtag?.("event", "language_change", {
+          event_category: "engagement",
+          event_label: langCode,
+        });
+        return;
+      }
+      
+      // Get current path without locale
+      const { pathWithoutLocale } = parseLocaleFromPath(pathname);
+      const newLocale = getLocaleString(langCode);
+      
+      // Build new path with new locale
+      const newPath = pathWithoutLocale === "/" 
+        ? `/${newLocale}` 
+        : `/${newLocale}${pathWithoutLocale}`;
+      
+      // Navigate to new locale route
+      navigate(newPath, { replace: true });
+      
       window.gtag?.("event", "language_change", {
         event_category: "engagement",
         event_label: langCode,
       });
     },
-    [setLanguage]
+    [setLanguage, location, navigate]
   );
 
   if (isMobile) {
