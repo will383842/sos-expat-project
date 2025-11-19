@@ -947,9 +947,6 @@ const t = {
 };
 
 
-
-
-
     if (!typedUser) {
       const loginBtnDesktop = scrolled
         ? "group relative p-3 rounded-full hover:bg-white/10 transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50 min-h-[44px] min-w-[44px] flex items-center justify-center"

@@ -199,11 +199,15 @@ export function supportsWebP(): Promise<boolean> {
 }
 
 /**
- * Get optimal format based on browser support
+ * Get optimal format - always returns WebP for consistency
+ * All profile pictures are saved as WebP format in Firebase Storage
  */
 export async function getOptimalFormat(): Promise<'webp' | 'jpeg'> {
-  const hasWebPSupport = await supportsWebP();
-  return hasWebPSupport ? 'webp' : 'jpeg';
+  // Force WebP format for all profile uploads
+  // Modern browsers can encode WebP even if they can't display it natively
+  const format = 'webp';
+  console.log(`🖼️ [ImageOptimizer] Format: WEBP (forced - always WebP)`);
+  return format;
 }
 
 /**

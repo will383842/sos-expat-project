@@ -343,6 +343,7 @@ export const createUserProfile = async (userData: Partial<User>) => {
           console.log(`[Firestore] Profile photo optimized: ${(optimized.originalSize / 1024).toFixed(1)}KB → ${(optimized.optimizedSize / 1024).toFixed(1)}KB`);
 
           const extension = getFileExtension(format);
+          console.log(`💾 [Firestore] Saving to Firebase Storage as: ${format.toUpperCase()} format (${extension} extension)`);
           const storageRef = ref(
             storage,
             `profilePhotos/${userData.id}/${Date.now()}${extension}`

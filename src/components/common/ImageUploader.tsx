@@ -745,6 +745,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       const finalUploadPath = isRegistration ? 'registration_temp' : uploadPath;
       const refObj: StorageReference = storageRef(storage, `${finalUploadPath}/${fileName}`);
 
+      console.log(`💾 [ImageUploader] Saving to Firebase Storage as: ${format.toUpperCase()} format (${extension} extension)`);
       console.log('📁 Upload path:', `${finalUploadPath}/${fileName}`);
 
       return new Promise((resolve, reject) => {

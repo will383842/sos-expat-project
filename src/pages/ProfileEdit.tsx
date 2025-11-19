@@ -285,6 +285,7 @@ const ProfileEdit: React.FC = () => {
       console.log(`[ProfileEdit] Profile photo optimized: ${(optimized.originalSize / 1024).toFixed(1)}KB → ${(optimized.optimizedSize / 1024).toFixed(1)}KB`);
 
       const extension = getFileExtension(format);
+      console.log(`💾 [ProfileEdit] Saving to Firebase Storage as: ${format.toUpperCase()} format (${extension} extension)`);
       const newRef = ref(storage, `profilePhotos/${current.uid}/${Date.now()}${extension}`);
       const snapshot = await uploadBytes(newRef, optimized.blob);
       const url = await getDownloadURL(snapshot.ref);
