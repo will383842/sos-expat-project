@@ -2564,3 +2564,6 @@ export const testWebhook = onRequest(
     }
   )
 );
+
+// Add to your existing index.ts exports
+export * from './sitemap';

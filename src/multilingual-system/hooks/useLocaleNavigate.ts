@@ -1,7 +1,8 @@
 /**
  * useLocaleNavigate Hook
  * Provides locale-aware navigation that automatically adds locale prefix to paths
- */
+ **/
+
 import { useNavigate as useRouterNavigate, useLocation } from "react-router-dom";
 import { useApp } from "../../contexts/AppContext";
 import { getLocaleString, parseLocaleFromPath } from "../core/routing/localeRoutes";
@@ -14,6 +15,7 @@ export function useLocaleNavigate() {
   
   // Get current locale from URL
   const currentLocale = useMemo(() => {
+
     const parsed = parseLocaleFromPath(location.pathname);
     return parsed.locale || getLocaleString(language);
   }, [location.pathname, language]);

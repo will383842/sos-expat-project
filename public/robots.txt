@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemaps
-Sitemap: https://sosexpats.com/sitemap.xml
+Sitemap: https://sosexpats.com/sitemaps/sitemap-index.xml.gz
 Sitemap: https://sosexpats.com/sitemap-lawyers.xml
 Sitemap: https://sosexpats.com/sitemap-expats.xml
 
