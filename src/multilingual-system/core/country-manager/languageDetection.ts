@@ -420,18 +420,6 @@ const GEO_API_PROVIDERS: GeoAPIProvider[] = [
     getCountryCode: (data: any) => data.countryCode?.toUpperCase(),
     rateLimit: '45/min (free tier)',
   },
-  // Cloudflare endpoint (only works if site is on Cloudflare CDN)
-  // Uncomment if you use Cloudflare:
-  // {
-  //   name: 'cloudflare',
-  //   url: 'https://www.cloudflare.com/cdn-cgi/trace',
-  //   getCountryCode: async (text: string) => {
-  //     const match = text.match(/loc=([A-Z]{2})/);
-  //     return match ? match[1].toUpperCase() : null;
-  //   },
-  //   isTextResponse: true, // Returns text, not JSON
-  //   rateLimit: 'Unlimited (free on Cloudflare)',
-  // },
 ];
 
 /**
@@ -470,7 +458,7 @@ async function fetchFromProvider(provider: GeoAPIProvider): Promise<string | nul
       }
     } else {
       const data = await response.json();
-      countryCode = provider.getCountryCode(data);
+      countryCode = await provider.getCountryCode(data);
     }
     
     if (countryCode && typeof countryCode === 'string') {
@@ -599,7 +587,7 @@ export function getSavedLanguage(): Language | null {
  */
 export async function detectUserLanguage(defaultLang: Language = 'fr'): Promise<Language> {
   // Priority 1: Saved preference (user manually changed it)
-  const savedLang = getSavedLanguage();
+  const savedLang = getSavedLanguage(); 
   if (savedLang) {
     return savedLang;
   }

@@ -17,7 +17,7 @@ import {
   X,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useLocaleNavigate } from "../hooks/useLocaleNavigate";
+import { useLocaleNavigate } from "../multilingual-system";
 import { useAuth } from "../contexts/AuthContext";
 import { loadStripe, Stripe } from "@stripe/stripe-js";
 import {

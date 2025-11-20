@@ -3,8 +3,8 @@
  * Provides locale-aware navigation that automatically adds locale prefix to paths
  */
 import { useNavigate as useRouterNavigate, useLocation } from "react-router-dom";
-import { useApp } from "../contexts/AppContext";
-import { getLocaleString, parseLocaleFromPath } from "../utils/localeRoutes";
+import { useApp } from "../../contexts/AppContext";
+import { getLocaleString, parseLocaleFromPath } from "../core/routing/localeRoutes";
 import { useMemo } from "react";
 
 export function useLocaleNavigate() {

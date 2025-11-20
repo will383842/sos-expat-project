@@ -23,8 +23,15 @@ import ptMessages from "./helper/pt.json";
 import chMessages from "./helper/ch.json";
 import arMessages from './helper/ar.json';
 import { useApp } from "./contexts/AppContext";
-import LocaleRouter from "./components/routing/LocaleRouter";
-import { getLocaleString, parseLocaleFromPath } from "./utils/localeRoutes";
+import { 
+  LocaleRouter,
+  getLocaleString, 
+  parseLocaleFromPath,
+  getTranslatedRouteSlug,
+  getAllTranslatedSlugs,
+  getRouteKeyFromSlug,
+  type RouteKey,
+} from "./multilingual-system";
 
 // --------------------------------------------
 // Types
@@ -38,6 +45,7 @@ interface RouteConfig {
   role?: string;
   alias?: string;
   preload?: boolean;
+  translated?: RouteKey;
 }
 
 // --------------------------------------------
@@ -110,80 +118,86 @@ const messages = {
 // Publiques (sans EmailVerification)
 const routeConfigs: RouteConfig[] = [
   { path: "/", component: Home, preload: true },
-  { path: "/login", component: Login, preload: true },
-  { path: "/register", component: Register, preload: true },
-  { path: "/register/client", component: RegisterClient },
-  { path: "/register/lawyer", component: RegisterLawyer },
-  { path: "/register/expat", component: RegisterExpat },
-  { path: "/password-reset", component: PasswordReset },
+  { path: "/login", component: Login, preload: true, translated: "login" },
+  { path: "/register", component: Register, preload: true, translated: "register" },
+  { path: "/register/client", component: RegisterClient, translated: "register-client" },
+  { path: "/register/lawyer", component: RegisterLawyer, translated: "register-lawyer" },
+  { path: "/register/expat", component: RegisterExpat, translated: "register-expat" },
+  { path: "/password-reset", component: PasswordReset, translated: "password-reset" },
 
   // Tarifs (alias FR/EN)
-  { path: "/tarifs", component: Pricing, alias: "/pricing", preload: true },
+  { path: "/tarifs", component: Pricing, alias: "/pricing", preload: true, translated: "pricing" },
 
   // Contact & aide
-  { path: "/contact", component: Contact },
-  { path: "/how-it-works", component: HowItWorks },
-  { path: "/faq", component: FAQ },
-  { path: "/centre-aide", component: HelpCenter },
+  { path: "/contact", component: Contact, translated: "contact" },
+  { path: "/how-it-works", component: HowItWorks, translated: "how-it-works" },
+  { path: "/faq", component: FAQ, translated: "faq" },
+  { path: "/centre-aide", component: HelpCenter, translated: "help-center" },
 
   // Témoignages
-  { path: "/testimonials", component: Testimonials, alias: "/temoignages" },
+  { path: "/testimonials", component: Testimonials, alias: "/temoignages", translated: "testimonials" },
   // New SEO-friendly URL format: /testimonials/country/language/review-type-urgently
   {
     path: "/testimonials/:country/:language/:reviewType",
     component: TestimonialDetail,
+    translated: "testimonials",
   },
   {
     path: "/temoignages/:country/:language/:reviewType",
     component: TestimonialDetail,
+    translated: "testimonials",
   },
 
   // Légal / info (alias FR/EN)
-  { path: "/terms-clients", component: TermsClients, alias: "/cgu-clients" },
-  { path: "/terms-lawyers", component: TermsLawyers, alias: "/cgu-avocats" },
-  { path: "/terms-expats", component: TermsExpats, alias: "/cgu-expatries" },
+  { path: "/terms-clients", component: TermsClients, alias: "/cgu-clients", translated: "terms-clients" },
+  { path: "/terms-lawyers", component: TermsLawyers, alias: "/cgu-avocats", translated: "terms-lawyers" },
+  { path: "/terms-expats", component: TermsExpats, alias: "/cgu-expatries", translated: "terms-expats" },
   {
     path: "/privacy-policy",
     component: PrivacyPolicy,
     alias: "/politique-confidentialite",
+    translated: "privacy-policy",
   },
-  { path: "/cookies", component: Cookies },
-  { path: "/consumers", component: Consumers, alias: "/consommateurs" },
-  { path: "/statut-service", component: ServiceStatus },
-  { path: "/seo", component: SEO, alias: "/referencement" },
+  { path: "/cookies", component: Cookies, translated: "cookies" },
+  { path: "/consumers", component: Consumers, alias: "/consommateurs", translated: "consumers" },
+  { path: "/statut-service", component: ServiceStatus, translated: "service-status" },
+  { path: "/seo", component: SEO, alias: "/referencement", translated: "seo" },
 
   // Services d'appel
-  { path: "/sos-appel", component: SOSCall },
-  { path: "/appel-expatrie", component: ExpatCall },
+  { path: "/sos-appel", component: SOSCall, translated: "sos-call" },
+  { path: "/appel-expatrie", component: ExpatCall, translated: "expat-call" },
 
   // Fournisseurs publics
-  { path: "/providers", component: Providers },
+  { path: "/providers", component: Providers, translated: "providers" },
   { path: "/provider/:id", component: ProviderProfile },
-  { path: "/avocat/:country/:language/:nameId", component: ProviderProfile },
-  { path: "/expatrie/:country/:language/:nameId", component: ProviderProfile },
+  { path: "/avocat/:country/:language/:nameId", component: ProviderProfile, translated: "lawyer" },
+  { path: "/expatrie/:country/:language/:nameId", component: ProviderProfile, translated: "expat" },
 ];
 
 // Protégées (utilisateur)
 const protectedUserRoutes: RouteConfig[] = [
-  { path: "/dashboard", component: Dashboard, protected: true },
-  { path: "/profile/edit", component: ProfileEdit, protected: true },
-  { path: "/call-checkout", component: CallCheckout, protected: true },
+  { path: "/dashboard", component: Dashboard, protected: true, translated: "dashboard" },
+  { path: "/profile/edit", component: ProfileEdit, protected: true, translated: "profile-edit" },
+  { path: "/call-checkout", component: CallCheckout, protected: true, translated: "call-checkout" },
   {
     path: "/call-checkout/:providerId",
     component: CallCheckout,
     protected: true,
+    translated: "call-checkout",
   },
   {
     path: "/booking-request/:providerId",
     component: BookingRequest,
     protected: true,
+    translated: "booking-request",
   },
-  { path: "/booking-request", component: BookingRequest, protected: true },
-  { path: "/payment-success", component: PaymentSuccess, protected: true },
+  { path: "/booking-request", component: BookingRequest, protected: true, translated: "booking-request" },
+  { path: "/payment-success", component: PaymentSuccess, protected: true, translated: "payment-success" },
   {
     path: "/dashboard/messages",
     component: DashboardMessages,
     protected: true,
+    translated: "dashboard-messages",
   },
 ];
 
@@ -307,21 +321,53 @@ const App: React.FC = () => {
       protected: isProtected,
       role,
       alias,
-    } = config;
+      translated,
+    } = config; 
     
     // Add locale prefix to paths - use simple parameter, validation happens in LocaleRouter
     // React Router v6 doesn't support regex in path params, so we use :locale and validate elsewhere
     const localePrefix = `/:locale`;
     
     // Handle root path specially - match both with and without trailing slash
-    let routes: string[];
+    let routes: string[] = [];
+    
     if (path === "/") {
       // For root, create routes that match both /en-us and /en-us/
       routes = [
         `${localePrefix}`,      // Matches /en-us
         `${localePrefix}/`,     // Matches /en-us/
       ];
+    } else if (translated) {
+      // For translated routes, generate all language variants
+      const allSlugs = getAllTranslatedSlugs(translated);
+      
+      // Check if the translated slug contains a slash (nested route like "dashboard/messages")
+      const hasNestedPath = allSlugs.some(slug => slug.includes("/"));
+      
+      if (hasNestedPath) {
+        // For nested routes, replace the entire path
+        // e.g., "/dashboard/messages" with slug "tableau-de-bord/messages" -> "/tableau-de-bord/messages"
+        routes = allSlugs.map(slug => `${localePrefix}/${slug}`);
+      } else {
+        // Extract the pattern after the first segment
+        // e.g., "/avocat/:country/:language/:nameId" -> "/:country/:language/:nameId"
+        // e.g., "/register/lawyer" -> ""
+        const pathMatch = path.match(/^\/[^/]+(\/.*)?$/);
+        const pathPattern = pathMatch && pathMatch[1] ? pathMatch[1] : "";
+        
+        // Generate routes for all translated slugs
+        routes = allSlugs.map(slug => `${localePrefix}/${slug}${pathPattern}`);
+      }
+      
+      // Also include the original path for backward compatibility
+      routes.push(`${localePrefix}${path}`);
+      
+      // Include alias if present
+      if (alias) {
+        routes.push(`${localePrefix}${alias}`);
+      }
     } else {
+      // Regular routes
       routes = [
         `${localePrefix}${path}`,
         ...(alias ? [`${localePrefix}${alias}`] : []),

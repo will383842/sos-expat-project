@@ -1,7 +1,7 @@
 // src/pages/ProviderProfile.tsx
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { parseLocaleFromPath, getLocaleString } from "../utils/localeRoutes";
+import { parseLocaleFromPath, getLocaleString, getTranslatedRouteSlug } from "../multilingual-system";
 import {
   Star,
   MapPin,
@@ -1032,7 +1032,17 @@ const ProviderProfile: React.FC = () => {
     
     try {
       const isLawyer = provider.type === "lawyer";
-      const displayType = isLawyer ? "avocat" : "expatrie";
+      
+      // Extract locale and language from current pathname
+      const currentPathname = location.pathname;
+      const { locale: currentLocale, lang: currentLang } = parseLocaleFromPath(currentPathname);
+      
+      // Use translated route slug based on current language
+      const routeKey = isLawyer ? "lawyer" : "expat";
+      const displayType = currentLang 
+        ? getTranslatedRouteSlug(routeKey, currentLang)
+        : (isLawyer ? "avocat" : "expatrie");
+      
       const countrySlug = safeNormalize(provider.country || "");
       const langSlug =
         provider.mainLanguage ||
@@ -1045,10 +1055,6 @@ const ProviderProfile: React.FC = () => {
           `${provider.firstName || ""}-${provider.lastName || ""}`
         ) ||
         safeNormalize(provider.fullName || "");
-      
-      // Extract locale from current pathname to preserve it
-      const currentPathname = location.pathname;
-      const { locale: currentLocale } = parseLocaleFromPath(currentPathname);
       
       // Build SEO URL with locale prefix if present
       const seoPath = `/${displayType}/${countrySlug}/${langSlug}/${nameSlug}-${provider.id}`;
@@ -1184,9 +1190,16 @@ const ProviderProfile: React.FC = () => {
       const nameSlug =
         provider.slug ||
         safeNormalize(`${provider.firstName}-${provider.lastName}`);
-      // Extract locale from current pathname to preserve it
-      const { locale: currentLocale } = parseLocaleFromPath(location.pathname);
-      const seoPath = `/${isLawyer ? "avocat" : "expatrie"}/${countrySlug}/${langSlug}/${nameSlug}-${provider.id}`;
+      // Extract locale and language from current pathname to preserve it
+      const { locale: currentLocale, lang: currentLang } = parseLocaleFromPath(location.pathname);
+      
+      // Use translated route slug based on current language
+      const routeKey = isLawyer ? "lawyer" : "expat";
+      const displayType = currentLang 
+        ? getTranslatedRouteSlug(routeKey, currentLang)
+        : (isLawyer ? "avocat" : "expatrie");
+      
+      const seoPath = `/${displayType}/${countrySlug}/${langSlug}/${nameSlug}-${provider.id}`;
       const fullSeoPath = currentLocale ? `/${currentLocale}${seoPath}` : seoPath;
       const currentUrl = `${window.location.origin}${fullSeoPath}`;
       const title = `${provider.fullName} - ${

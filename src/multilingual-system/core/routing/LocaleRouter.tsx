@@ -4,13 +4,15 @@
  */
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useApp } from "../../contexts/AppContext";
+import { useApp } from "../../../contexts/AppContext";
 import {
   parseLocaleFromPath,
   getLocaleString,
   hasLocalePrefix,
   getSupportedLocales,
-} from "../../utils/localeRoutes";
+  getRouteKeyFromSlug,
+  getTranslatedRouteSlug,
+} from "./localeRoutes";
 import { useParams } from "react-router-dom";
 
 interface LocaleRouterProps {
@@ -59,12 +61,35 @@ const LocaleRouter: React.FC<LocaleRouterProps> = ({ children }) => {
 
     // If path has locale prefix, extract and update language
     if (hasLocalePrefix(pathname)) {
-      const { lang } = parseLocaleFromPath(pathname);
+      const { lang, pathWithoutLocale } = parseLocaleFromPath(pathname);
       
       // Only update language if it's different - this syncs URL locale with app language
       // This happens when user navigates directly to a URL with a different locale
       if (lang && lang !== language) {
         setLanguage(lang);
+      }
+      
+      // Check if the path contains an old slug that should be translated
+      // e.g., /en-us/sos-appel should redirect to /en-us/emergency-call
+      if (pathWithoutLocale && pathWithoutLocale !== "/") {
+        const pathSegments = pathWithoutLocale.split("/").filter(Boolean);
+        if (pathSegments.length > 0) {
+          const firstSegment = pathSegments[0];
+          const routeKey = getRouteKeyFromSlug(firstSegment);
+          
+          // If this is a known route key slug, check if it matches the current language
+          if (routeKey && lang) {
+            const correctSlug = getTranslatedRouteSlug(routeKey, lang);
+            
+            // If the slug doesn't match the correct translation for this language, redirect
+            if (firstSegment !== correctSlug) {
+              const restOfPath = pathSegments.slice(1).join("/");
+              const newPath = `/${getLocaleString(lang)}/${correctSlug}${restOfPath ? `/${restOfPath}` : ""}`;
+              navigate(newPath, { replace: true });
+              return;
+            }
+          }
+        }
       }
     } else if (pathname === "/") {
       // Root path without locale - redirect to default locale

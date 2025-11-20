@@ -6,7 +6,7 @@ import {
   useParams,
   Link,
 } from "react-router-dom";
-import { useLocaleNavigate } from "../hooks/useLocaleNavigate";
+import { useLocaleNavigate } from "../multilingual-system";
 import {
   Phone,
   CheckCircle,

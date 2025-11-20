@@ -7,7 +7,7 @@ import React, {
   useState,
 } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { getLocaleString, parseLocaleFromPath } from "../../utils/localeRoutes";
+import { getLocaleString, parseLocaleFromPath } from "../../multilingual-system";
 import {
   Menu,
   X,

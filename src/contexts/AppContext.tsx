@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { Service, AppSettings, Notification, EnhancedSettings } from "./types";
 import { ensureCollectionsExist } from "../utils/firestore";
-import { detectUserLanguage, saveLanguagePreference } from "../utils/languageDetection";
+import { detectUserLanguage, saveLanguagePreference } from "../multilingual-system";
 
 // ✅ ADD "es" to the type
 type Language = "fr" | "en" | "es" | "ru" | "de" | "hi" | "pt" | "ch" | "ar";
