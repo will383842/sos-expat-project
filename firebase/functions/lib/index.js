@@ -1818,4 +1818,6 @@ exports.testWebhook = (0, https_1.onRequest)({
         res.status(500).json({ ok: false, error: String(e?.message ?? e) });
     }
 }));
+// Add to your existing index.ts exports
+__exportStar(require("./sitemap"), exports);
 //# sourceMappingURL=index.js.map

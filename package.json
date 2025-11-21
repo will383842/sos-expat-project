@@ -6,14 +6,17 @@
   "scripts": {
     "predev": "node scripts/gen-firebase-config.cjs",
     "dev": "vite",
-    "prebuild": "node scripts/gen-firebase-config.cjs",
+    "prebuild": "node scripts/gen-firebase-config.cjs && node scripts/download-sitemaps.js",
     "build": "tsc -b && vite build",
     "preview": "vite preview --strictPort",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "analyze": "vite build --mode analyze",
     "gen-env": "node scripts/generate-env-files.cjs",
-    "build:force": "vite build"
+    "build:force": "vite build",
+    "download-sitemaps": "node scripts/download-sitemaps.js",
+    "build:with-sitemaps": "npm run download-sitemaps && npm run build",
+    "postbuild": "node scripts/copy-sitemaps-to-dist.js"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

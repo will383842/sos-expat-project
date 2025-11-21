@@ -1,6 +1,7 @@
 {
   "name": "sos-expat-scripts",
   "version": "1.0.0",
+  "type": "module",
   "description": "Scripts Firebase pour SOS Expat Platform",
   "main": "firebase-seed.js",
   "scripts": {
