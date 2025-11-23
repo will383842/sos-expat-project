@@ -1,18 +1,18 @@
-import * as functions from 'firebase-functions';
+import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import * as admin from 'firebase-admin';
 
 const db = admin.firestore();
 
-export const setProviderOffline = functions.https.onCall(async (data, context) => {
+export const setProviderOffline = onCall(async (request) => {
   // Vérifier l'authentification
-  if (!context.auth) {
-    throw new functions.https.HttpsError(
+  if (!request.auth) {
+    throw new HttpsError(
       'unauthenticated',
       'User must be authenticated'
     );
   }
 
-  const userId = context.auth.uid;
+  const userId = request.auth.uid;
   const now = admin.firestore.Timestamp.now();
 
   try {
@@ -21,7 +21,7 @@ export const setProviderOffline = functions.https.onCall(async (data, context) =
     const userData = userDoc.data();
 
     if (!userData) {
-      throw new functions.https.HttpsError('not-found', 'User not found');
+      throw new HttpsError('not-found', 'User not found');
     }
 
     const isProvider = 
@@ -31,7 +31,7 @@ export const setProviderOffline = functions.https.onCall(async (data, context) =
       userData.role === 'expat';
 
     if (!isProvider) {
-      throw new functions.https.HttpsError(
+      throw new HttpsError(
         'permission-denied',
         'Only providers can set offline status'
       );
@@ -68,7 +68,7 @@ export const setProviderOffline = functions.https.onCall(async (data, context) =
     };
   } catch (error) {
     console.error('Error setting provider offline:', error);
-    throw new functions.https.HttpsError(
+    throw new HttpsError(
       'internal',
       'Failed to set offline status'
     );
