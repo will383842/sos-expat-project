@@ -3,7 +3,7 @@
 # ================================
 node_modules/
 **/node_modules/
-package-lock.json
+# package-lock.json → SUPPRIMÉ (ne doit JAMAIS être ignoré)
 
 # ================================
 # Builds / artefacts
@@ -117,8 +117,8 @@ public/firebase-config.js
 !public/firebase-config.example.js
 
 # ================================
-# Lockfiles (user requested to ignore)
+# Lockfiles → SECTION SUPPRIMÉE
 # ================================
-/package-lock.json
-**/package-lock.json
-package-lock.json
+# /package-lock.json → SUPPRIMÉ
+# **/package-lock.json → SUPPRIMÉ
+# package-lock.json → SUPPRIMÉ
