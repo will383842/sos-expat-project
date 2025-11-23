@@ -367,9 +367,14 @@ const createUserDocumentInFirestore = async (
         
         // ===== DISPONIBILITÉ =====
         isActive: true,
-        isOnline: additionalData.isOnline || false,
-        availability: additionalData.availability || 'unavailable',
-        
+        isOnline: false,  // ⚠️ HORS LIGNE PAR DÉFAUT
+        availability: 'offline',  // ⚠️ offline par défaut
+        autoOfflineEnabled: true,  
+        inactivityTimeoutMinutes: 60,  
+        lastActivity: serverTimestamp(),  
+        lastActivityCheck: serverTimestamp(),  
+        lastStatusChange: serverTimestamp(),  
+                
         // ===== VISIBILITÉ & APPROBATION =====
         isVisible: false,
         isVisibleOnMap: false,

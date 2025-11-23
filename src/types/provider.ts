@@ -43,6 +43,11 @@ export interface Provider {
   graduationYear?: string;
   expatriationYear?: string;
   isActive: boolean; // Obligatoire avec fallback
+  lastActivity?: Timestamp;
+  lastActivityCheck?: Timestamp;
+  autoOfflineEnabled?: boolean;
+  inactivityTimeoutMinutes?: number;
+  lastStatusChange?: Timestamp;
 }
 
 /**

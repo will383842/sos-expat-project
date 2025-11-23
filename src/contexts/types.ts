@@ -139,6 +139,12 @@ export interface User {
     browser?: string;
     loginDevice?: string;
     registrationDevice?: string;
+
+    lastActivity?: Date;              
+  lastActivityCheck?: Date;
+  autoOfflineEnabled?: boolean;
+  inactivityTimeoutMinutes?: number;
+  lastStatusChange?: Date;
   };
 
   // Horodatage

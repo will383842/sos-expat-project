@@ -57,6 +57,7 @@ import StripeKYC from "@/components/StripeKyc";
 import IntlPhoneInput from "@/components/forms-data/IntlPhoneInput";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { useForm, Controller } from "react-hook-form";
+import ProviderOnlineManager from '../components/providers/ProviderOnlineManager';
 
 // ===============================
 // 🎨 DESIGN TOKENS (UI only — aucune incidence métier)
@@ -973,6 +974,7 @@ const Dashboard: React.FC = () => {
   // ===============================
   return (
     <Layout>
+      <ProviderOnlineManager>
       {/* ✨ PROFILE COMPLETION ALERT */}
       {user && (user.role === 'lawyer' || user.role === 'expat') && (
         <ProfileStatusAlert user={user} />
@@ -2418,6 +2420,7 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
       </div>
+      </ProviderOnlineManager>
     </Layout>
   );
 };
