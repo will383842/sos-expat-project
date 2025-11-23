@@ -40,7 +40,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.testWebhook = exports.manuallyTriggerCallExecution = exports.getCloudTasksQueueStats = exports.testCloudTasksConnection = exports.getUltraDebugLogs = exports.getSystemHealthStatus = exports.generateSystemDebugReport = exports.scheduledCleanup = exports.scheduledFirestoreExport = exports.stripeWebhook = exports.getStripe = exports.adminBulkUpdateStatus = exports.adminSoftDeleteUser = exports.adminUpdateStatus = exports.executeCallTask = exports.notifyAfterPayment = exports.initializeMessageTemplates = exports.unifiedWebhook = exports.enqueueMessageEvent = exports.providerNoAnswerTwiML = exports.twilioCallWebhook = exports.testTwilioCall = exports.api = exports.createPaymentIntent = exports.createAndScheduleCall = exports.createAndScheduleCallHTTPS = exports.STRIPE_WEBHOOK_SECRET_LIVE = exports.STRIPE_WEBHOOK_SECRET_TEST = exports.STRIPE_MODE = exports.processScheduledTransfers = exports.completeLawyerOnboarding = exports.checkKycStatus = exports.addBankAccount = exports.submitKycData = exports.createCustomAccount = exports.TASKS_AUTH_SECRET = exports.scheduledBackup = exports.createManualBackup = exports.checkStripeAccountStatus = exports.getStripeAccountSession = exports.createStripeAccount = exports.createLawyerStripeAccount = exports.STRIPE_SECRET_KEY_LIVE = exports.STRIPE_SECRET_KEY_TEST = exports.TWILIO_PHONE_NUMBER = exports.TWILIO_AUTH_TOKEN = exports.TWILIO_ACCOUNT_SID = exports.EMAIL_PASS = exports.EMAIL_USER = void 0;
+exports.checkProviderInactivity = exports.testWebhook = exports.manuallyTriggerCallExecution = exports.getCloudTasksQueueStats = exports.testCloudTasksConnection = exports.getUltraDebugLogs = exports.getSystemHealthStatus = exports.generateSystemDebugReport = exports.scheduledCleanup = exports.scheduledFirestoreExport = exports.stripeWebhook = exports.getStripe = exports.adminBulkUpdateStatus = exports.adminSoftDeleteUser = exports.adminUpdateStatus = exports.executeCallTask = exports.notifyAfterPayment = exports.initializeMessageTemplates = exports.unifiedWebhook = exports.enqueueMessageEvent = exports.providerNoAnswerTwiML = exports.twilioCallWebhook = exports.testTwilioCall = exports.api = exports.createPaymentIntent = exports.createAndScheduleCall = exports.createAndScheduleCallHTTPS = exports.STRIPE_WEBHOOK_SECRET_LIVE = exports.STRIPE_WEBHOOK_SECRET_TEST = exports.STRIPE_MODE = exports.processScheduledTransfers = exports.completeLawyerOnboarding = exports.checkKycStatus = exports.addBankAccount = exports.submitKycData = exports.createCustomAccount = exports.TASKS_AUTH_SECRET = exports.scheduledBackup = exports.createManualBackup = exports.checkStripeAccountStatus = exports.getStripeAccountSession = exports.createStripeAccount = exports.createLawyerStripeAccount = exports.STRIPE_SECRET_KEY_LIVE = exports.STRIPE_SECRET_KEY_TEST = exports.TWILIO_PHONE_NUMBER = exports.TWILIO_AUTH_TOKEN = exports.TWILIO_ACCOUNT_SID = exports.EMAIL_PASS = exports.EMAIL_USER = void 0;
+exports.setProviderOffline = exports.updateProviderActivity = void 0;
 // ====== ULTRA DEBUG INITIALIZATION ======
 const ultraDebugLogger_1 = require("./utils/ultraDebugLogger");
 // Tracer tous les imports principaux
@@ -1818,4 +1819,11 @@ exports.testWebhook = (0, https_1.onRequest)({
         res.status(500).json({ ok: false, error: String(e?.message ?? e) });
     }
 }));
+// ========== SYSTÈME EN LIGNE/HORS LIGNE ==========
+var checkProviderInactivity_1 = require("./scheduled/checkProviderInactivity");
+Object.defineProperty(exports, "checkProviderInactivity", { enumerable: true, get: function () { return checkProviderInactivity_1.checkProviderInactivity; } });
+var updateProviderActivity_1 = require("./callables/updateProviderActivity");
+Object.defineProperty(exports, "updateProviderActivity", { enumerable: true, get: function () { return updateProviderActivity_1.updateProviderActivity; } });
+var setProviderOffline_1 = require("./callables/setProviderOffline");
+Object.defineProperty(exports, "setProviderOffline", { enumerable: true, get: function () { return setProviderOffline_1.setProviderOffline; } });
 //# sourceMappingURL=index.js.map

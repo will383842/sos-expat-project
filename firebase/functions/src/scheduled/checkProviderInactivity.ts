@@ -3,14 +3,14 @@ import * as admin from 'firebase-admin';
 
 export const checkProviderInactivity = scheduler.onSchedule(
   {
-    schedule: 'every 10 minutes',
+    schedule: 'every 30 minutes', // ✅ Changé : 30 min au lieu de 15
     timeZone: 'Europe/Paris',
   },
   async () => {
     console.log('🔍 Vérification inactivité prestataires...');
 
     const db = admin.firestore();
-    const tenMinutesAgo = Date.now() - 10 * 60 * 1000;
+    const twoHoursAgo = Date.now() - 120 * 60 * 1000; // ✅ Changé : 2h = 120 minutes
 
     const onlineProvidersSnapshot = await db
       .collection('sos_profiles')
@@ -24,16 +24,18 @@ export const checkProviderInactivity = scheduler.onSchedule(
       const data = doc.data();
       const lastActivity = data.lastActivity?.toMillis?.() || 0;
 
-      if (lastActivity < tenMinutesAgo) {
-        console.log(`⏰ Mise hors ligne : ${doc.id}`);
+      if (lastActivity < twoHoursAgo) { // ✅ Vérification sur 2h
+        console.log(`⏰ Mise hors ligne : ${doc.id} (inactif depuis ${Math.round((Date.now() - lastActivity) / 60000)} minutes)`);
         batch.update(doc.ref, {
           isOnline: false,
+          availability: 'offline',
           updatedAt: admin.firestore.FieldValue.serverTimestamp(),
         });
 
         const userRef = db.collection('users').doc(doc.id);
         batch.update(userRef, {
           isOnline: false,
+          availability: 'offline',
           updatedAt: admin.firestore.FieldValue.serverTimestamp(),
         });
 
@@ -43,9 +45,9 @@ export const checkProviderInactivity = scheduler.onSchedule(
 
     if (count > 0) {
       await batch.commit();
-      console.log(`✅ ${count} prestataires mis hors ligne`);
+      console.log(`✅ ${count} prestataires mis hors ligne pour inactivité >2h`);
     } else {
-      console.log('✅ Aucun prestataire inactif');
+      console.log('✅ Aucun prestataire inactif depuis 2h');
     }
   }
 );

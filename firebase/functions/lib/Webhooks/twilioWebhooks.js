@@ -198,6 +198,111 @@ async function handleCallFailed(sessionId, participantType, body) {
     try {
         console.log(`❌ Appel ${participantType} échoué: ${sessionId}, raison: ${body.CallStatus}`);
         await TwilioCallManager_1.twilioCallManager.updateParticipantStatus(sessionId, participantType, body.CallStatus === 'no-answer' ? 'no_answer' : 'disconnected');
+        // 🔴 FONCTIONNALITÉ BONUS: Mise hors ligne automatique du prestataire sur no-answer
+        // IMPORTANT: On attend la dernière tentative (après tous les retries Twilio)
+        if (participantType === 'provider' && body.CallStatus === 'no-answer') {
+            // Fonction async auto-exécutée pour isolation totale
+            (async () => {
+                try {
+                    console.log(`[BONUS] No-answer détecté pour prestataire, session: ${sessionId}`);
+                    const db = admin.firestore();
+                    const session = await TwilioCallManager_1.twilioCallManager.getCallSession(sessionId);
+                    if (!session) {
+                        console.log(`[BONUS] Session non trouvée: ${sessionId}`);
+                        return;
+                    }
+                    // 🛡️ PROTECTION CRITIQUE: Vérifier que c'est la DERNIÈRE tentative
+                    // Ne pas mettre offline si Twilio va encore réessayer
+                    if (session.status !== 'failed' && session.status !== 'cancelled') {
+                        console.log(`[BONUS] Session status: ${session.status} - Twilio va réessayer, on ne déconnecte pas encore`);
+                        return;
+                    }
+                    console.log(`[BONUS] Session définitivement échouée (status: ${session.status}), on peut mettre offline`);
+                    const providerId = session.metadata?.providerId;
+                    if (!providerId) {
+                        console.log(`[BONUS] ProviderId non trouvé dans session: ${sessionId}`);
+                        return;
+                    }
+                    // Vérifier que le prestataire est bien en ligne avant de le déconnecter
+                    const providerDoc = await db.collection('sos_profiles').doc(providerId).get();
+                    const providerData = providerDoc.data();
+                    if (!providerData?.isOnline) {
+                        console.log(`[BONUS] Prestataire ${providerId} déjà hors ligne, rien à faire`);
+                        return;
+                    }
+                    console.log(`[BONUS] Mise hors ligne du prestataire: ${providerId}`);
+                    // Mettre isOnline à false dans sos_profiles
+                    await db.collection('sos_profiles').doc(providerId).update({
+                        isOnline: false,
+                        availability: 'offline',
+                        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                    });
+                    // Mettre isOnline à false dans users
+                    await db.collection('users').doc(providerId).update({
+                        isOnline: false,
+                        availability: 'offline',
+                        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                    });
+                    // Récupérer la langue préférée pour la notification
+                    const preferredLanguage = providerData?.preferredLanguage || 'fr';
+                    // Messages multilingues
+                    const notificationMessages = {
+                        fr: {
+                            title: 'Vous avez été déconnecté',
+                            message: 'Vous avez été automatiquement déconnecté car vous n\'avez pas répondu à un appel après plusieurs tentatives. Vous pouvez vous reconnecter quand vous êtes disponible.'
+                        },
+                        en: {
+                            title: 'You have been disconnected',
+                            message: 'You have been automatically disconnected because you did not answer a call after multiple attempts. You can reconnect when you are available.'
+                        },
+                        es: {
+                            title: 'Has sido desconectado',
+                            message: 'Has sido desconectado automáticamente porque no respondiste a una llamada después de varios intentos. Puedes reconectarte cuando estés disponible.'
+                        },
+                        de: {
+                            title: 'Sie wurden getrennt',
+                            message: 'Sie wurden automatisch getrennt, weil Sie einen Anruf nach mehreren Versuchen nicht beantwortet haben. Sie können sich wieder verbinden, wenn Sie verfügbar sind.'
+                        },
+                        ru: {
+                            title: 'Вы были отключены',
+                            message: 'Вы были автоматически отключены, потому что не ответили на звонок после нескольких попыток. Вы можете подключиться снова, когда будете доступны.'
+                        },
+                        hi: {
+                            title: 'आपको डिस्कनेक्ट कर दिया गया है',
+                            message: 'कई प्रयासों के बाद कॉल का जवाब न देने के कारण आपको स्वचालित रूप से डिस्कनेक्ट कर दिया गया है। जब आप उपलब्ध हों तो आप फिर से कनेक्ट कर सकते हैं।'
+                        },
+                        pt: {
+                            title: 'Você foi desconectado',
+                            message: 'Você foi automaticamente desconectado porque não atendeu a uma chamada após várias tentativas. Você pode reconectar quando estiver disponível.'
+                        },
+                        ar: {
+                            title: 'تم قطع الاتصال بك',
+                            message: 'تم قطع الاتصال بك تلقائيًا لأنك لم ترد على مكالمة بعد عدة محاولات. يمكنك إعادة الاتصال عندما تكون متاحًا.'
+                        },
+                        ch: {
+                            title: '您已断开连接',
+                            message: '由于您在多次尝试后未接听电话，您已被自动断开连接。当您有空时可以重新连接。'
+                        }
+                    };
+                    const notification = notificationMessages[preferredLanguage] || notificationMessages.fr;
+                    // Créer la notification
+                    await db.collection('notifications').add({
+                        userId: providerId,
+                        type: 'provider_no_answer',
+                        title: notification.title,
+                        message: notification.message,
+                        isRead: false,
+                        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                    });
+                    console.log(`✅ [BONUS] Prestataire ${providerId} mis hors ligne avec succès après échec définitif`);
+                }
+                catch (bonusError) {
+                    // Erreur isolée - n'affecte PAS le flux principal
+                    console.error('⚠️ [BONUS] Erreur mise hors ligne prestataire (fonctionnalité bonus):', bonusError);
+                    // On ne throw PAS l'erreur - le flux principal continue normalement
+                }
+            })(); // Fonction async auto-exécutée et isolée
+        }
         // Déterminer la raison de l'échec pour le traitement approprié
         let failureReason = 'system_error';
         if (body.CallStatus === 'no-answer') {
