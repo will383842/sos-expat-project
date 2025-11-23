@@ -1,4 +1,4 @@
-// src/components/home/ProfileCarousel.tsx - VERSION FINALE (lawyer = isApproved, expat = non banni, exclus admin)
+// src/components/home/ProfileCarousel.tsx - VERSION FINALE avec conversion des langues
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../contexts/AppContext';
@@ -7,6 +7,7 @@ import { collection, query, where, getDocs, limit as fsLimit, onSnapshot } from 
 import { db } from '../../config/firebase';
 import { getDownloadURL, ref } from 'firebase/storage';
 import { storage } from '../../config/firebase';
+import { getCountryName } from '../../utils/formatters';
 import ModernProfileCard from './ModernProfileCard';
 import type { Provider } from '@/types/provider';
 
@@ -89,10 +90,11 @@ const ProfileCarousel: React.FC<ProfileCarouselProps> = ({
       setIsLoading(true);
       setError(null);
 
-      // Requête large (compat) : on filtre finement côté client
       const sosProfilesQuery = query(
         collection(db, 'sos_profiles'),
         where('type', 'in', ['lawyer', 'expat']),
+        where('isApproved', '==', true),
+        where('isVisible', '==', true),
         fsLimit(50)
       );
       const snapshot = await getDocs(sosProfilesQuery);
@@ -110,16 +112,34 @@ const ProfileCarousel: React.FC<ProfileCarouselProps> = ({
           const data = d.data() as any;
           const id = d.id;
 
+          // Extraction prénom/nom
+          const firstName = (data.firstName || '').trim();
+          const lastName = (data.lastName || '').trim();
           const fullName =
             data.fullName ||
-            `${data.firstName || ''} ${data.lastName || ''}`.trim() ||
+            `${firstName} ${lastName}`.trim() ||
             'Expert';
+
+          // Génération du nom public avec initiale
+          const publicDisplayName = firstName && lastName 
+            ? `${firstName} ${lastName.charAt(0)}.`
+            : fullName;
+
+          console.log('🔍 ProfileCarousel - Nom transformé:', publicDisplayName, 'pour', fullName);
 
           const type: 'lawyer' | 'expat' | string =
             data.type === 'lawyer' || data.type === 'expat' ? data.type : 'expat';
 
-          const country: string =
-            data.currentPresenceCountry || data.country || data.currentCountry || 'Monde';
+          // ✅ Extraction du code pays et conversion en nom lisible
+          const countryCode: string =
+            data.currentPresenceCountry || data.country || data.currentCountry || 'FR';
+          const country: string = getCountryName(countryCode, language);
+
+          console.log('🌍 Pays converti:', {
+            code: countryCode,
+            name: country,
+            locale: language
+          });
 
           let avatar: string = data.profilePhoto || data.photoURL || data.avatar || '';
           if (avatar && avatar.startsWith('user_uploads/')) {
@@ -135,10 +155,10 @@ const ProfileCarousel: React.FC<ProfileCarouselProps> = ({
 
           const provider: Provider = {
             id,
-            name: fullName,
+            name: publicDisplayName,
             type,
-            country,
-            languages: Array.isArray(data.languages) ? data.languages : ['Français'],
+            country, // ✅ Pays converti en nom lisible
+            languages: Array.isArray(data.languages) ? data.languages : ['Français'], // Les langues étaient déjà correctes
             specialties: Array.isArray(data.specialties) ? data.specialties : [],
             rating: typeof data.rating === 'number' && data.rating >= 0 && data.rating <= 5 ? data.rating : 4.5,
             reviewCount: typeof data.reviewCount === 'number' && data.reviewCount >= 0 ? data.reviewCount : 0,
@@ -153,15 +173,14 @@ const ProfileCarousel: React.FC<ProfileCarouselProps> = ({
             // Flags pertinents
             isApproved: data.isApproved === true,
             isVisible: data.isVisible !== false,
-            isBanned: data.isBanned === true, // peut être undefined
+            isBanned: data.isBanned === true,
             isActive: data.isActive !== false,
-            isVerified: data.isVerified === true, // gardé pour compat éventuelle
-            // ne pas injecter/écraser role
+            isVerified: data.isVerified === true,
             // @ts-ignore trace interne non typée
             __isAdmin: isAdmin,
           } as Provider & { __isAdmin?: boolean };
 
-          // Règle d'affichage (alignée sur "isApproved" pour les lawyers)
+          // Règle d'affichage
           const hasValidData = provider.name.trim() !== '' && provider.country.trim() !== '';
           const notBanned = data.isBanned !== true;
           const notAdmin = !(provider as any).__isAdmin;
@@ -187,7 +206,7 @@ const ProfileCarousel: React.FC<ProfileCarouselProps> = ({
     } finally {
       setIsLoading(false);
     }
-  }, [pageSize, selectVisibleProviders]);
+  }, [pageSize, selectVisibleProviders, language]);
 
   // Rotation
   const rotateVisibleProviders = useCallback(() => {
@@ -335,11 +354,12 @@ const ProfileCarousel: React.FC<ProfileCarouselProps> = ({
         {displayProviders.map((provider, index) => (
           <div key={`${provider.id}-${rotationIndex}`} className="flex-shrink-0 snap-start">
             <ModernProfileCard
-              provider={provider}
-              onProfileClick={handleProfileClick}
-              isUserConnected={isUserConnected}
-              index={index}
-              language={language}
+  provider={provider}
+  onProfileClick={handleProfileClick}
+  isUserConnected={isUserConnected}
+  index={index}
+  language={language}
+  showSpecialties={false}
             />
           </div>
         ))}

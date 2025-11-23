@@ -1,6 +1,7 @@
 // src/pages/ProviderProfile.tsx
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { parseLocaleFromPath, getLocaleString } from "../utils/localeRoutes";
 import {
   Star,
   MapPin,
@@ -16,6 +17,12 @@ import {
   GraduationCap,
   Briefcase,
   Languages as LanguagesIcon,
+  AlertTriangle,
+  Clock,
+  CheckCircle,
+  XCircle,
+  Sparkles,
+  ArrowLeft,
 } from "lucide-react";
 import {
   doc,
@@ -43,16 +50,55 @@ import {
 import Reviews from "../components/review/Reviews";
 import SEOHead from "../components/layout/SEOHead";
 import { Review } from "../types";
-import { formatLanguages } from "@/i18n";
 
 // 👉 Pricing admin (source de vérité)
 import { usePricingConfig } from "../services/pricingService";
+
+/// Imports des traductions AAA par langue
+import aaaTranslationsFr from '../helper/aaaprofiles/admin_aaa_fr.json';
+import aaaTranslationsEn from '../helper/aaaprofiles/admin_aaa_en.json';
+import aaaTranslationsEs from '../helper/aaaprofiles/admin_aaa_es.json';
+import aaaTranslationsDe from '../helper/aaaprofiles/admin_aaa_de.json';
+import aaaTranslationsPt from '../helper/aaaprofiles/admin_aaa_pt.json';
+import aaaTranslationsRu from '../helper/aaaprofiles/admin_aaa_ru.json';
+import aaaTranslationsZh from '../helper/aaaprofiles/admin_aaa_zh.json';
+import aaaTranslationsAr from '../helper/aaaprofiles/admin_aaa_ar.json';
+import aaaTranslationsHi from '../helper/aaaprofiles/admin_aaa_hi.json';
+import { 
+  getCountryName, 
+  formatLanguages,
+  convertLanguageNamesToCodes
+} from "../utils/formatters";
+
+// ✅ NOUVEAU : Import du système de slugs
+import { 
+  generateSlug, 
+  formatPublicName,
+  slugify 
+} from "../utils/slugGenerator";
+import { useSnippetGenerator } from '../hooks/useSnippetGenerator';
+
+// Mapping des traductions par langue
+const aaaTranslationsMap: Record<string, any> = {
+  fr: aaaTranslationsFr,
+  en: aaaTranslationsEn,
+  es: aaaTranslationsEs,
+  de: aaaTranslationsDe,
+  pt: aaaTranslationsPt,
+  ru: aaaTranslationsRu,
+  zh: aaaTranslationsZh,
+  ar: aaaTranslationsAr,
+  hi: aaaTranslationsHi,
+};
+
 import { FormattedMessage, useIntl } from "react-intl";
+import { getLawyerSpecialityLabel } from "../data/lawyer-specialties";
+import { getExpatHelpTypeLabel } from "../data/expat-help-types";
 
 /* ===================================================================== */
 
 const IMAGE_SIZES = {
-  AVATAR_MOBILE: 112,
+  AVATAR_MOBILE: 80,
   AVATAR_DESKTOP: 128,
   MODAL_MAX_WIDTH: 1200,
   MODAL_MAX_HEIGHT: 800,
@@ -67,105 +113,8 @@ const STORAGE_KEYS = {
   SELECTED_PROVIDER: "selectedProvider",
 } as const;
 
-// i18n constants
-const TEXTS = {
-  fr: {
-    loading: "Chargement du profil...",
-    notFound: "Ce profil prestataire est introuvable. Redirection en cours...",
-    backToExperts: "Retour aux experts",
-    certifiedLawyer: "Avocat certifié",
-    expertExpat: "Expatrié expert",
-    verified: "Vérifié",
-    online: "EN LIGNE",
-    offline: "HORS LIGNE",
-    yearsExperience: "ans d'expérience",
-    yearsAsExpat: "ans d'expatriation",
-    reviews: "avis",
-    share: "Partager : ",
-    copyLink: "Copier le lien",
-    successRate: "Taux de succès",
-    availability: "Disponibilité",
-    completedCalls: "Appels réalisés",
-    bookNow: "RÉSERVER MAINTENANT",
-    unavailable: "NON DISPONIBLE",
-    availableNow: "Expert disponible maintenant !",
-    currentlyOffline: "Expert actuellement hors ligne",
-    securePayment: "Paiement sécurisé • Satisfaction garantie",
-    specialties: "Spécialités",
-    languages: "Langues parlées",
-    educationCertifications: "Formation et certifications",
-    expatExperience: "Expérience d'expatriation",
-    customerReviews: "Avis clients",
-    loadingReviews: "Chargement des avis...",
-    stats: "Statistiques",
-    averageRating: "Note moyenne",
-    information: "Informations",
-    basedIn: "Basé en",
-    speaks: "Parle",
-    onlineNow: "EN LIGNE MAINTENANT",
-    verifiedExpert: "Expert vérifié",
-    linkCopied: "Lien copié !",
-    reportReason: "Veuillez indiquer la raison du signalement :",
-    reportThanks: "Merci pour votre signalement. Notre équipe va l'examiner.",
-    close: "Fermer",
-    photoOf: "Photo de",
-    noSpecialties: "Aucune spécialité renseignée.",
-    yearsAbroad: "ans d'expatriation",
-    in: "en",
-    experience: "Expérience",
-    years: "ans",
-    minutes: "minutes",
-    memberSince: "Inscrit depuis le",
-  },
-  en: {
-    loading: "Loading profile...",
-    notFound: "This provider profile was not found. Redirecting...",
-    backToExperts: "Back to experts",
-    certifiedLawyer: "Certified lawyer",
-    expertExpat: "Expert expat",
-    verified: "Verified",
-    online: "ONLINE",
-    offline: "OFFLINE",
-    yearsExperience: "years experience",
-    yearsAsExpat: "years as expat",
-    reviews: "reviews",
-    share: "Share:",
-    copyLink: "Copy link",
-    successRate: "Success rate",
-    availability: "Availability",
-    completedCalls: "Completed calls",
-    bookNow: "BOOK NOW",
-    unavailable: "UNAVAILABLE",
-    availableNow: "Expert available now!",
-    currentlyOffline: "Expert currently offline",
-    securePayment: "Secure payment • Satisfaction guaranteed",
-    specialties: "Specialties",
-    languages: "Languages",
-    educationCertifications: "Education & Certifications",
-    expatExperience: "Expat experience",
-    customerReviews: "Customer reviews",
-    loadingReviews: "Loading reviews...",
-    stats: "Stats",
-    averageRating: "Average rating",
-    information: "Information",
-    basedIn: "Based in",
-    speaks: "Speaks",
-    onlineNow: "ONLINE NOW",
-    verifiedExpert: "Verified expert",
-    linkCopied: "Link copied!",
-    reportReason: "Please enter a reason:",
-    reportThanks: "Thanks. Our team will review it.",
-    close: "Close",
-    photoOf: "Photo of",
-    noSpecialties: "No specialties provided.",
-    yearsAbroad: "years abroad",
-    in: "in",
-    experience: "Experience",
-    years: "yrs",
-    minutes: "minutes",
-    memberSince: "Member since",
-  },
-} as const;
+// ✅ NOUVEAU : Seuil pour définir un appel réussi (en secondes)
+const SUCCESSFUL_CALL_THRESHOLD_SECONDS = 120; // 2 minutes
 
 type TSLike = FsTimestamp | Date | null | undefined;
 
@@ -175,12 +124,14 @@ interface LocalizedText {
   en?: string;
   [key: string]: string | undefined;
 }
+
 interface Education {
   institution?: string | LocalizedText;
   degree?: string | LocalizedText;
   year?: number;
   [key: string]: unknown;
 }
+
 interface Certification {
   name?: string | LocalizedText;
   issuer?: string | LocalizedText;
@@ -188,7 +139,7 @@ interface Certification {
   [key: string]: unknown;
 }
 
-// ✅ AuthUser ad hoc (n’hérite pas)
+// ✅ AuthUser ad hoc (n'hérite pas)
 type AuthUser = {
   uid?: string;
   id?: string;
@@ -199,6 +150,7 @@ interface LocationState {
   providerData?: Partial<SosProfile>;
   navigationSource?: string;
 }
+
 interface SosProfile {
   uid: string;
   id?: string;
@@ -209,6 +161,8 @@ interface SosProfile {
   slug?: string;
   country: string;
   city?: string;
+  residenceCountry?: string;
+  operatingCountries?: string[];
   languages: string[];
   mainLanguage?: string;
   specialties: string[];
@@ -230,7 +184,6 @@ interface SosProfile {
   isApproved: boolean;
   isVerified: boolean;
   isVisibleOnMap?: boolean;
-  // ❌ Supprimé: price?: number; duration?: number;
   education?: Education | Education[] | LocalizedText;
   certifications?: Certification | Certification[] | LocalizedText;
   lawSchool?: string | LocalizedText;
@@ -246,6 +199,7 @@ interface SosProfile {
   updatedAt?: TSLike;
   lastSeen?: TSLike;
 }
+
 interface RatingDistribution {
   5: number;
   4: number;
@@ -253,12 +207,25 @@ interface RatingDistribution {
   2: number;
   1: number;
 }
+
 interface OnlineStatus {
   isOnline: boolean;
   lastUpdate: Date | null;
   listenerActive: boolean;
   connectionAttempts: number;
 }
+
+// ✅ NOUVEAU : Interface pour les statistiques calculées
+interface ProviderStats {
+  totalCallsReceived: number;
+  successfulCalls: number;
+  successRate: number;
+  averageRating: number;
+  totalReviews: number;
+  completedCalls: number;
+  realReviewsCount: number;
+}
+
 interface RouteParams extends Record<string, string | undefined> {
   id?: string;
   country?: string;
@@ -267,6 +234,12 @@ interface RouteParams extends Record<string, string | undefined> {
   slug?: string;
   profileId?: string;
   name?: string;
+  nameSlug?: string;
+  typeCountry?: string;
+  locale?: string;
+  localeRegion?: string;
+  lang?: string;
+  nameSlugWithUid?: string;
 }
 
 // Utils
@@ -276,14 +249,6 @@ const detectLanguage = (): "fr" | "en" =>
       ? "fr"
       : "en"
     : "en";
-
-const safeNormalize = (v?: string): string =>
-  (v || "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
 
 const getFirstString = (
   val: unknown,
@@ -340,7 +305,8 @@ const toArrayFromAny = (val: unknown, preferred?: string): string[] => {
 
 const pickDescription = (
   p: Partial<SosProfile>,
-  preferredLang?: string
+  preferredLang?: string,
+  intl?: any
 ): string => {
   const chain = [
     getFirstString(p.description, preferredLang),
@@ -350,8 +316,7 @@ const pickDescription = (
   ];
   return (
     chain.find(Boolean) ||
-    TEXTS[preferredLang as "fr" | "en"]?.noSpecialties ||
-    "No description available."
+    (intl ? intl.formatMessage({ id: "providerProfile.noDescriptionAvailable" }) : "")
   );
 };
 
@@ -363,7 +328,19 @@ const toStringFromAny = (
 const isFsTimestamp = (v: unknown): v is FsTimestamp =>
   typeof (v as FsTimestamp | null)?.toDate === "function";
 
-const formatJoinDate = (val: TSLike, lang: "fr" | "en"): string | undefined => {
+const LOCALE_MAPPING: Record<string, string> = {
+  'fr': 'fr-FR',
+  'en': 'en-US',
+  'es': 'es-ES',
+  'de': 'de-DE',
+  'pt': 'pt-PT',
+  'ru': 'ru-RU',
+  'zh': 'zh-CN',
+  'ar': 'ar-SA',
+  'hi': 'hi-IN'
+};
+
+const formatJoinDate = (val: TSLike, langCode: string): string | undefined => {
   if (!val) return undefined;
   const d = isFsTimestamp(val)
     ? val.toDate()
@@ -371,7 +348,9 @@ const formatJoinDate = (val: TSLike, lang: "fr" | "en"): string | undefined => {
       ? val
       : undefined;
   if (!d) return undefined;
-  const fmt = new Intl.DateTimeFormat(lang === "fr" ? "fr-FR" : "en-US", {
+  
+  const locale = LOCALE_MAPPING[langCode] || 'fr-FR';
+  const fmt = new Intl.DateTimeFormat(locale, {
     day: "2-digit",
     month: "long",
     year: "numeric",
@@ -412,28 +391,121 @@ const getAuthUserId = (u: unknown): string | undefined => {
   return uid ?? id;
 };
 
+// ✅ NOUVEAU : Fonction pour formater le nom court (Prénom + Initiale)
+const formatShortName = (provider: SosProfile): string => {
+  const firstName = provider.firstName || "";
+  const lastName = provider.lastName || "";
+  const lastInitial = lastName.charAt(0).toUpperCase();
+  return lastInitial ? `${firstName} ${lastInitial}.` : firstName;
+};
+
+// ✅ CORRIGÉ : Fonction pour calculer les statistiques RÉELLES du prestataire
+const calculateProviderStats = async (providerId: string): Promise<ProviderStats> => {
+  try {
+    // 1. Récupérer tous les appels du prestataire
+    const callSessionsQuery = query(
+      collection(db, "call_sessions"),
+      where("metadata.providerId", "==", providerId)
+    );
+    const callSessionsSnapshot = await getDocs(callSessionsQuery);
+    
+    let totalCallsReceived = 0;
+    let successfulCalls = 0;
+    let completedCalls = 0;
+
+    callSessionsSnapshot.forEach((doc) => {
+      const data = doc.data();
+      totalCallsReceived++;
+      
+      // Vérifier si l'appel est complété
+      if (data.status === "completed" || data.endedAt) {
+        completedCalls++;
+        
+        // Calculer la durée de l'appel
+        const startedAt = data.startedAt?.toDate?.() || data.createdAt?.toDate?.();
+        const endedAt = data.endedAt?.toDate?.();
+        
+        if (startedAt && endedAt) {
+          const durationSeconds = (endedAt.getTime() - startedAt.getTime()) / 1000;
+          
+          // Appel réussi si durée > 2 minutes
+          if (durationSeconds >= SUCCESSFUL_CALL_THRESHOLD_SECONDS) {
+            successfulCalls++;
+          }
+        }
+      }
+    });
+
+    // 2. ✅ CORRIGÉ : Récupérer UNIQUEMENT les reviews RÉELLES (sans commentKey = sans AAA)
+    const reviewsQuery = query(
+      collection(db, "reviews"),
+      where("providerId", "==", providerId)
+    );
+    const reviewsSnapshot = await getDocs(reviewsQuery);
+    
+    let totalRating = 0;
+    let totalReviews = 0;
+    let realReviewsCount = 0;
+
+    reviewsSnapshot.forEach((doc) => {
+      const data = doc.data();
+      
+      // ✅ FILTRER : Ignorer les avis AAA (qui ont un commentKey)
+      const isAAA = data.commentKey !== undefined && data.commentKey !== null;
+      
+      if (!isAAA && typeof data.rating === "number") {
+        totalRating += data.rating;
+        realReviewsCount++;
+        totalReviews++;
+      }
+    });
+
+    // ✅ LOGIQUE : N'afficher une moyenne QUE s'il y a des données réelles
+    const averageRating = realReviewsCount > 0 ? totalRating / realReviewsCount : 0;
+    const successRate = totalCallsReceived > 0 
+      ? Math.round((successfulCalls / totalCallsReceived) * 100) 
+      : 0;
+
+    return {
+      totalCallsReceived,
+      successfulCalls,
+      successRate,
+      averageRating,
+      totalReviews,
+      completedCalls,
+      realReviewsCount,
+    };
+  } catch (error) {
+    console.error("Error calculating provider stats:", error);
+    return {
+      totalCallsReceived: 0,
+      successfulCalls: 0,
+      successRate: 0,
+      averageRating: 0,
+      totalReviews: 0,
+      completedCalls: 0,
+      realReviewsCount: 0,
+    };
+  }
+};
+
 // Component
 const ProviderProfile: React.FC = () => {
   const intl = useIntl();
   const params = useParams<RouteParams>();
-  const {
-    id,
-    country: countryParam,
-    language: langParam,
-    type: typeParam,
-  } = params;
+const {
+  id,
+  country: countryParam,
+  language: langParam,
+  type: typeParam,
+  nameSlug,
+  typeCountry,
+} = params;
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
   const { language } = useApp();
 
-  // const detectedLang = useMemo(
-  //   () =>
-  //     language === "fr" || language === "en"
-  //       ? (language as "fr" | "en")
-  //       : detectLanguage(),
-  //   [language]
-  // );
   const detectedLang = useMemo(
     () =>
       language === "fr" || language === "en"
@@ -441,17 +513,54 @@ const ProviderProfile: React.FC = () => {
         : detectLanguage(),
     [language]
   );
-  const t = useCallback(
-    (key: keyof typeof TEXTS.fr): string =>
-      TEXTS[detectedLang]?.[key] || TEXTS.en[key] || key,
-    [detectedLang]
-  );
-  const preferredLangKey = detectedLang === "fr" ? "fr" : "en";
+
+  const preferredLangKey = useMemo(() => {
+    const validLocales = ['fr', 'en', 'es', 'de', 'pt', 'ru', 'zh', 'ar', 'hi'] as const;
+    type ValidLocale = typeof validLocales[number];
+    
+    if (validLocales.includes(language as ValidLocale)) {
+      return language as ValidLocale;
+    }
+    if (validLocales.includes(detectedLang as ValidLocale)) {
+      return detectedLang as ValidLocale;
+    }
+    return 'en' as ValidLocale;
+  }, [language, detectedLang]);
+
+  const translateAAA = useCallback((key: string): string => {
+    if (!key) return '';
+    
+    try {
+      const keys = key.split('.');
+      const translations = aaaTranslationsMap[preferredLangKey] || aaaTranslationsMap['fr'];
+      let value: any = translations;
+      
+      for (const k of keys) {
+        value = value?.[k];
+      }
+      
+      return typeof value === 'string' ? value : key;
+    } catch {
+      return key;
+    }
+  }, [preferredLangKey]);
 
   const [provider, setProvider] = useState<SosProfile | null>(null);
   const [realProviderId, setRealProviderId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+
+  // ✅ NOUVEAU : État pour les statistiques calculées
+  const [providerStats, setProviderStats] = useState<ProviderStats>({
+    totalCallsReceived: 0,
+    successfulCalls: 0,
+    successRate: 0,
+    averageRating: 0,
+    totalReviews: 0,
+    completedCalls: 0,
+    realReviewsCount: 0,
+  });
+  const [isLoadingStats, setIsLoadingStats] = useState(true);
 
   // 👉 Pricing admin (page AdminPricing -> doc "admin_config/pricing")
   const { pricing } = usePricingConfig();
@@ -507,19 +616,6 @@ const ProviderProfile: React.FC = () => {
   // ======= Prix depuis Admin uniquement (EUR principal + équivalent USD) =======
   const serviceTypeForPricing: "lawyer" | "expat" | undefined = provider?.type;
 
-
-  // const bookingPrice = useMemo(() => {
-  //   if (!pricing || !serviceTypeForPricing) return null;
-  //   const cfg = pricing[serviceTypeForPricing];
-  //   console.log("cfg ===", cfg);
-  //   return {
-  //     eur: cfg.eur.totalAmount,
-  //     usd: cfg.usd.totalAmount,
-  //     duration: cfg.eur.duration, // durée admin
-  //   };
-  // }, [pricing, serviceTypeForPricing]);
-
-  // Reviews loader 
   const bookingPrice = useMemo(() => {
     if (!pricing || !serviceTypeForPricing) return null;
 
@@ -586,11 +682,29 @@ const ProviderProfile: React.FC = () => {
         setIsLoadingReviews(true);
         const candidates = [docId, uid].filter((x): x is string => Boolean(x));
         let providerReviews: Review[] = [];
+        
         for (const pid of candidates) {
           providerReviews = await realLoadReviews(pid);
           if (providerReviews.length) break;
         }
-        setReviews(providerReviews);
+        
+        // ✅ TRADUIRE les avis selon la langue active
+        const translatedReviews = providerReviews.map(review => {
+          const reviewWithKey = review as any;
+          
+          // Si commentKey existe, traduire via translateAAA
+          const translatedComment = reviewWithKey.commentKey 
+            ? translateAAA(reviewWithKey.commentKey)
+            : review.comment;
+          
+          return { 
+            ...review, 
+            comment: translatedComment 
+          };
+        });
+        
+        setReviews(translatedReviews);
+        
         const distribution: RatingDistribution = {
           5: 0,
           4: 0,
@@ -598,13 +712,15 @@ const ProviderProfile: React.FC = () => {
           2: 0,
           1: 0,
         };
-        providerReviews.forEach((r) => {
+        
+        translatedReviews.forEach((r) => {
           const rr = Math.max(
             1,
             Math.min(5, Math.round(r.rating))
           ) as keyof RatingDistribution;
           distribution[rr] += 1;
         });
+        
         setRatingDistribution(distribution);
       } catch (e) {
         console.error("Error loading reviews:", e);
@@ -612,336 +728,229 @@ const ProviderProfile: React.FC = () => {
         setIsLoadingReviews(false);
       }
     },
-    [realLoadReviews]
+    [realLoadReviews, translateAAA]
   );
 
-  // Main data loader
-  useEffect(() => {
-    const loadProviderData = async (): Promise<void> => {
-      setIsLoading(true);
-      setNotFound(false);
+useEffect(() => {
+  const loadProviderData = async (): Promise<void> => {
+    setIsLoading(true);
+    setNotFound(false);
 
-      try {
-        let providerData: SosProfile | null = null;
-        let foundProviderId: string | null = null;
+    try {
+      let providerData: SosProfile | null = null;
+      let foundProviderId: string | null = null;
 
-        const rawIdParam =
-          id ||
-          params.slug ||
-          params.profileId ||
-          params.name ||
-          location.pathname.split("/").pop() ||
-          "";
-        const lastToken = rawIdParam.split("-").pop() || rawIdParam;
-        const slugNoUid = rawIdParam.replace(/-[a-zA-Z0-9]{8,}$/, "");
+      // ✅ ÉTAPE 1 : Collecter TOUS les identifiants possibles
+      const possibleIds = [
+        id,
+        params.slug,
+        params.profileId,
+        params.name,
+        params.nameSlug,
+        params.nameId,
+        params.nameSlugWithUid,
+        location.pathname.split("/").pop(),
+      ].filter((x): x is string => Boolean(x));
 
-        // By ID
+      // ✅ ÉTAPE 2 : Pour chaque ID, extraire l'UID potentiel (dernier segment de 8+ chars)
+      const potentialUids = new Set<string>();
+      
+      for (const rawId of possibleIds) {
+        // Ajouter l'ID brut
+        potentialUids.add(rawId);
+        
+        // Extraire UID si présent (dernier segment après tiret, 8+ chars)
+        const uidMatch = rawId.match(/[a-zA-Z0-9]{8,}$/);
+        if (uidMatch) {
+          potentialUids.add(uidMatch[0]);
+        }
+        
+        // Extraire aussi le dernier token après le dernier tiret
+        const lastToken = rawId.split("-").pop();
+        if (lastToken && lastToken.length >= 8) {
+          potentialUids.add(lastToken);
+        }
+      }
+
+      // ✅ ÉTAPE 3 : Tester chaque UID potentiel
+      for (const testId of potentialUids) {
+        if (providerData) break; // Déjà trouvé
+
+        // Méthode 1 : Par document ID
         try {
-          const ref = doc(db, "sos_profiles", lastToken);
+          const ref = doc(db, "sos_profiles", testId);
           const snap = await getDoc(ref);
           if (snap.exists()) {
             const data = snap.data();
             const normalized = normalizeUserData(data, snap.id);
-            const built: SosProfile = {
+            providerData = {
               ...normalized,
               id: snap.id,
               uid: normalized.uid || snap.id,
               type: (data?.type as "lawyer" | "expat") || "expat",
+              description: pickDescription({ ...normalized, ...data }, preferredLangKey, intl),
+              specialties: toArrayFromAny(data?.specialties, preferredLangKey),
+              helpTypes: toArrayFromAny(data?.helpTypes, preferredLangKey),
+              operatingCountries: toArrayFromAny(data?.operatingCountries, preferredLangKey),
+              residenceCountry: data?.residenceCountry || data?.country,
             } as SosProfile;
-
-            built.description = pickDescription(built, preferredLangKey);
-            built.specialties = toArrayFromAny(
-              data?.specialties,
-              preferredLangKey
-            );
-            built.helpTypes = toArrayFromAny(data?.helpTypes, preferredLangKey);
-
-            providerData = built;
             foundProviderId = snap.id;
-            setOnlineStatus((s) => ({
-              ...s,
-              isOnline: !!data?.isOnline,
-              lastUpdate: new Date(),
-            }));
+            break;
           }
         } catch (e) {
-          console.warn("Provider lookup by ID failed:", e);
+          console.warn('Error searching by doc ID:', testId, e);
         }
 
-        // By uid
-        if (!providerData) {
-          try {
-            const qByUid = query(
-              collection(db, "sos_profiles"),
-              where("uid", "==", lastToken),
-              limit(1)
-            );
-            const qsUid = await getDocs(qByUid);
+        // Méthode 2 : Par champ uid
+        try {
+          const qByUid = query(
+            collection(db, "sos_profiles"),
+            where("uid", "==", testId),
+            where("isActive", "==", true),
+            where("isApproved", "==", true),
+            limit(1)
+          );
+          const qsUid = await getDocs(qByUid);
+          if (!qsUid.empty) {
             const found = qsUid.docs[0];
-            if (found) {
-              const data = found.data();
-              const normalized = normalizeUserData(data, found.id);
-              const built: SosProfile = {
-                ...normalized,
-                id: found.id,
-                uid: normalized.uid || found.id,
-                type: (data?.type as "lawyer" | "expat") || "expat",
-              } as SosProfile;
-
-              built.description = pickDescription(built, preferredLangKey);
-              built.specialties = toArrayFromAny(
-                data?.specialties,
-                preferredLangKey
-              );
-              built.helpTypes = toArrayFromAny(
-                data?.helpTypes,
-                preferredLangKey
-              );
-
-              providerData = built;
-              foundProviderId = found.id;
-              setOnlineStatus((s) => ({
-                ...s,
-                isOnline: !!data?.isOnline,
-                lastUpdate: new Date(),
-              }));
-            }
-          } catch (e) {
-            console.warn("Provider lookup by UID failed:", e);
+            const data = found.data();
+            const normalized = normalizeUserData(data, found.id);
+            providerData = {
+              ...normalized,
+              id: found.id,
+              uid: normalized.uid || found.id,
+              type: (data?.type as "lawyer" | "expat") || "expat",
+              description: pickDescription({ ...normalized, ...data }, preferredLangKey, intl),
+              specialties: toArrayFromAny(data?.specialties, preferredLangKey),
+              helpTypes: toArrayFromAny(data?.helpTypes, preferredLangKey),
+              operatingCountries: toArrayFromAny(data?.operatingCountries, preferredLangKey),
+              residenceCountry: data?.residenceCountry || data?.country,
+            } as SosProfile;
+            foundProviderId = found.id;
+            break;
           }
+        } catch (e) {
+          console.warn('Error searching by uid:', testId, e);
         }
-
-        // SEO fallback
-        if (
-          !providerData &&
-          typeParam &&
-          countryParam &&
-          langParam &&
-          rawIdParam
-        ) {
-          const type =
-            typeParam === "avocat"
-              ? "lawyer"
-              : typeParam === "expatrie"
-                ? "expat"
-                : undefined;
-          if (type) {
-            try {
-              const qRef = query(
-                collection(db, "sos_profiles"),
-                where("type", "==", type),
-                where("isActive", "==", true),
-                limit(50)
-              );
-              const qs = await getDocs(qRef);
-              const match = qs.docs.find((d) => {
-                const data = d.data() || {};
-                const dataSlug = (data.slug as string | undefined) || "";
-                const computedNameSlug = safeNormalize(
-                  `${data.firstName || ""}-${data.lastName || ""}`
-                );
-                return (
-                  dataSlug === slugNoUid ||
-                  (dataSlug && dataSlug.startsWith(slugNoUid)) ||
-                  computedNameSlug === slugNoUid
-                );
-              });
-
-              if (match) {
-                const data = match.data();
-                const normalized = normalizeUserData(data, match.id);
-                const built: SosProfile = {
-                  ...normalized,
-                  id: match.id,
-                  uid: normalized.uid || match.id,
-                  type: (data?.type as "lawyer" | "expat") || "expat",
-                } as SosProfile;
-
-                built.description = pickDescription(built, preferredLangKey);
-                built.specialties = toArrayFromAny(
-                  data?.specialties,
-                  preferredLangKey
-                );
-                built.helpTypes = toArrayFromAny(
-                  data?.helpTypes,
-                  preferredLangKey
-                );
-
-                providerData = built;
-                foundProviderId = match.id;
-                setOnlineStatus((s) => ({
-                  ...s,
-                  isOnline: !!data?.isOnline,
-                  lastUpdate: new Date(),
-                }));
-              }
-            } catch (e) {
-              console.warn("SEO fallback lookup failed:", e);
-            }
-          }
-        }
-
-        // By slug
-        if (!providerData && rawIdParam) {
-          try {
-            const qSlug = query(
-              collection(db, "sos_profiles"),
-              where("slug", "==", slugNoUid),
-              limit(1)
-            );
-            const qsSlug = await getDocs(qSlug);
-            const m = qsSlug.docs[0];
-            if (m) {
-              const data = m.data();
-              const normalized = normalizeUserData(data, m.id);
-              const built: SosProfile = {
-                ...normalized,
-                id: m.id,
-                uid: normalized.uid || m.id,
-                type: (data?.type as "lawyer" | "expat") || "expat",
-              } as SosProfile;
-
-              built.description = pickDescription(built, preferredLangKey);
-              built.specialties = toArrayFromAny(
-                data?.specialties,
-                preferredLangKey
-              );
-              built.helpTypes = toArrayFromAny(
-                data?.helpTypes,
-                preferredLangKey
-              );
-
-              providerData = built;
-              foundProviderId = m.id;
-              setOnlineStatus((s) => ({
-                ...s,
-                isOnline: !!data?.isOnline,
-                lastUpdate: new Date(),
-              }));
-            }
-          } catch (e) {
-            console.warn("Slug lookup failed:", e);
-          }
-        }
-
-        // State fallback
-        if (
-          !providerData &&
-          typeof location.state === "object" &&
-          location.state !== null
-        ) {
-          const state = location.state as LocationState;
-          const navData = state.selectedProvider || state.providerData;
-          if (navData) {
-            const built: SosProfile = {
-              uid: navData.id || "",
-              id: navData.id || "",
-              fullName:
-                navData.fullName ||
-                `${navData.firstName || ""} ${navData.lastName || ""}`.trim(),
-              firstName: navData.firstName || "",
-              lastName: navData.lastName || "",
-              type: navData.type === "lawyer" ? "lawyer" : "expat",
-              country: navData.country || "",
-              languages: navData.languages || ["Français"],
-              specialties: toArrayFromAny(
-                navData.specialties,
-                preferredLangKey
-              ),
-              helpTypes: toArrayFromAny(navData.helpTypes, preferredLangKey),
-              description: navData.description || navData.bio || "",
-              professionalDescription: navData.professionalDescription || "",
-              experienceDescription: navData.experienceDescription || "",
-              motivation: navData.motivation || "",
-              bio: navData.bio,
-              profilePhoto: navData.profilePhoto || navData.avatar,
-              photoURL: navData.photoURL,
-              avatar: navData.avatar,
-              rating: Number(navData.rating) || 0,
-              reviewCount: Number(navData.reviewCount) || 0,
-              yearsOfExperience: Number(navData.yearsOfExperience) || 0,
-              yearsAsExpat: Number(navData.yearsAsExpat) || 0,
-              // ❌ Plus de prix/durée override provider — uniquement admin
-              isOnline: !!navData.isOnline,
-              isActive: true,
-              isApproved: !!navData.isApproved,
-              isVerified: !!navData.isVerified,
-              education: navData.education,
-              lawSchool: navData.lawSchool,
-              graduationYear: navData.graduationYear,
-              certifications: navData.certifications,
-              responseTime: navData.responseTime,
-              successRate:
-                typeof navData.successRate === "number"
-                  ? navData.successRate
-                  : undefined,
-              totalCalls:
-                typeof navData.totalCalls === "number"
-                  ? navData.totalCalls
-                  : undefined,
-            };
-
-            built.description = pickDescription(built, preferredLangKey);
-            providerData = built;
-            foundProviderId = navData.id || "";
-            setOnlineStatus((s) => ({
-              ...s,
-              isOnline: !!navData.isOnline,
-              lastUpdate: new Date(),
-            }));
-          }
-        }
-
-        if (providerData && foundProviderId) {
-          if (!providerData.fullName?.trim()) {
-            providerData.fullName =
-              `${providerData.firstName || ""} ${providerData.lastName || ""}`.trim() ||
-              "Profil SOS";
-          }
-          setProvider(providerData);
-          setRealProviderId(foundProviderId);
-          if (typeof requestIdleCallback !== "undefined") {
-            requestIdleCallback(() => {
-              loadReviews(foundProviderId, providerData.uid);
-            });
-          } else {
-            await loadReviews(foundProviderId, providerData.uid);
-          }
-        } else {
-          setNotFound(true);
-        }
-      } catch (e) {
-        console.error("Error loading provider data:", e);
-        setNotFound(true);
-      } finally {
-        setIsLoading(false);
       }
-    };
 
-    loadProviderData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    id,
-    typeParam,
-    countryParam,
-    langParam,
-    // Removed location.state and location.pathname to prevent infinite loops
-    // The component re-mounts when route changes, so these aren't needed
-    preferredLangKey,
-    // Removed loadReviews as it's stable
-    params.slug,
-    params.profileId,
-    params.name,
-  ]);
+      // ✅ ÉTAPE 4 : Si toujours pas trouvé, chercher par slug
+      if (!providerData && possibleIds.length > 0) {
+        const slugNoUid = possibleIds[0].replace(/-[a-zA-Z0-9]{8,}$/, "");
+        
+        try {
+          const qSlug = query(
+            collection(db, "sos_profiles"),
+            where("slug", "==", slugNoUid),
+            where("isActive", "==", true),
+            where("isApproved", "==", true),
+            limit(1)
+          );
+          const qsSlug = await getDocs(qSlug);
+          if (!qsSlug.empty) {
+            const m = qsSlug.docs[0];
+            const data = m.data();
+            const normalized = normalizeUserData(data, m.id);
+            providerData = {
+              ...normalized,
+              id: m.id,
+              uid: normalized.uid || m.id,
+              type: (data?.type as "lawyer" | "expat") || "expat",
+              description: pickDescription({ ...normalized, ...data }, preferredLangKey, intl),
+              specialties: toArrayFromAny(data?.specialties, preferredLangKey),
+              helpTypes: toArrayFromAny(data?.helpTypes, preferredLangKey),
+              operatingCountries: toArrayFromAny(data?.operatingCountries, preferredLangKey),
+              residenceCountry: data?.residenceCountry || data?.country,
+            } as SosProfile;
+            foundProviderId = m.id;
+          }
+        } catch (e) {
+          console.warn('Error searching by slug:', e);
+        }
+      }
 
-  // Realtime online status
+      // ✅ ÉTAPE 5 : State fallback
+      if (!providerData && location.state) {
+        const state = location.state as LocationState;
+        const navData = state.selectedProvider || state.providerData;
+        if (navData) {
+          providerData = {
+            uid: navData.id || "",
+            id: navData.id || "",
+            fullName: navData.fullName || `${navData.firstName || ""} ${navData.lastName || ""}`.trim(),
+            firstName: navData.firstName || "",
+            lastName: navData.lastName || "",
+            type: navData.type === "lawyer" ? "lawyer" : "expat",
+            country: navData.country || "",
+            languages: navData.languages || ["Français"],
+            specialties: toArrayFromAny(navData.specialties, preferredLangKey),
+            helpTypes: toArrayFromAny(navData.helpTypes, preferredLangKey),
+            description: navData.description || navData.bio || "",
+            profilePhoto: navData.profilePhoto || navData.avatar,
+            rating: Number(navData.rating) || 0,
+            reviewCount: Number(navData.reviewCount) || 0,
+            yearsOfExperience: Number(navData.yearsOfExperience) || 0,
+            isActive: true,
+            isApproved: true,
+            isVerified: !!navData.isVerified,
+            operatingCountries: toArrayFromAny(navData.operatingCountries, preferredLangKey),
+            residenceCountry: navData.residenceCountry || navData.country,
+          } as SosProfile;
+          foundProviderId = navData.id || "";
+        }
+      }
+
+      // ✅ VÉRIFICATION FINALE
+      if (providerData && foundProviderId) {
+        if (providerData.isActive === false || providerData.isApproved === false) {
+          setNotFound(true);
+          setIsLoading(false);
+          return;
+        }
+        
+        if (!providerData.fullName?.trim()) {
+          providerData.fullName = `${providerData.firstName || ""} ${providerData.lastName || ""}`.trim() || 
+            intl.formatMessage({ id: "providerProfile.defaultProfileName" });
+        }
+        
+        setProvider(providerData);
+        setRealProviderId(foundProviderId);
+        
+        // ✅ NOUVEAU : Charger les statistiques réelles
+        setIsLoadingStats(true);
+        const stats = await calculateProviderStats(foundProviderId);
+        setProviderStats(stats);
+        setIsLoadingStats(false);
+        
+        if (typeof requestIdleCallback !== "undefined") {
+          requestIdleCallback(() => loadReviews(foundProviderId, providerData.uid));
+        } else {
+          await loadReviews(foundProviderId, providerData.uid);
+        }
+      } else {
+        setNotFound(true);
+      }
+    } catch (e) {
+      console.error("Error loading provider:", e);
+      setNotFound(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  loadProviderData();
+}, [id, typeParam, countryParam, langParam, preferredLangKey, params.slug, params.profileId, params.name, params.nameSlug, params.nameId]);
+
+  // ✅ Realtime online status + Vérification désinscription
   useEffect(() => {
     if (!realProviderId) return;
+    
     setOnlineStatus((s) => ({
       ...s,
       listenerActive: true,
       connectionAttempts: s.connectionAttempts + 1,
     }));
+    
     const unsub = onSnapshot(
       doc(db, "sos_profiles", realProviderId),
       { includeMetadataChanges: true },
@@ -949,12 +958,25 @@ const ProviderProfile: React.FC = () => {
         if (snap.exists()) {
           const data = snap.data() || {};
           const newIsOnline = !!data.isOnline;
+          
+          // ✅ Vérifier si le provider vient de se désinscrire
+          const isActive = data.isActive !== false;
+          const isApproved = data.isApproved !== false;
+          
+          if (!isActive || !isApproved) {
+            setNotFound(true);
+            setProvider(null);
+            return;
+          }
+          
+          // ✅ Si tout est OK, mettre à jour normalement
           setOnlineStatus((prev) => ({
             ...prev,
             isOnline: newIsOnline,
             lastUpdate: new Date(),
             listenerActive: true,
           }));
+          
           setProvider((prev) =>
             prev
               ? { ...prev, isOnline: newIsOnline, updatedAt: new Date() }
@@ -971,6 +993,7 @@ const ProviderProfile: React.FC = () => {
         }));
       }
     );
+    
     return () => {
       setOnlineStatus((s) => ({ ...s, listenerActive: false }));
       unsub();
@@ -981,7 +1004,6 @@ const ProviderProfile: React.FC = () => {
   useEffect(() => {
     if (!realProviderId) return;
 
-    // Query for active call sessions where this provider is involved
     const activeCallStatuses = [
       "pending",
       "provider_connecting",
@@ -1000,7 +1022,6 @@ const ProviderProfile: React.FC = () => {
     const unsubscribe = onSnapshot(
       callSessionsQuery,
       (snapshot) => {
-        // Provider is on a call if there's at least one active session
         setIsOnCall(!snapshot.empty);
       },
       (error) => {
@@ -1012,9 +1033,16 @@ const ProviderProfile: React.FC = () => {
     return () => {
       unsubscribe();
     };
-  }, [realProviderId]); // Removed 'provider' dependency to prevent listener recreation
+  }, [realProviderId]);
 
-  // Redirect si not found
+  // ✅ Recharger les avis quand la langue change
+  useEffect(() => {
+    if (realProviderId && provider) {
+      loadReviews(realProviderId, provider.uid);
+    }
+  }, [preferredLangKey, realProviderId, provider?.uid, loadReviews]);
+  
+  // ✅ Redirect si not found
   useEffect(() => {
     if (!isLoading && !provider && notFound) {
       const tmo = setTimeout(
@@ -1025,82 +1053,71 @@ const ProviderProfile: React.FC = () => {
     }
   }, [isLoading, provider, notFound, navigate]);
 
-  // SEO
-  const updateSEOMetadata = useCallback(() => {
-    if (!provider || isLoading || seoUpdatedRef.current) return;
+  // ✅ SEO avec nouveau système de slugs
+ const updateSEOMetadata = useCallback(() => {
+  if (!provider || isLoading || seoUpdatedRef.current) return;
+  
+  try {
+    const fullSlug = generateSlug({
+      firstName: provider.firstName || '',
+      lastName: provider.lastName || '',
+      role: provider.type,
+      country: provider.country,
+      languages: provider.languages || ['Français'],
+      specialties: provider.type === 'lawyer' 
+        ? (provider.specialties || [])
+        : (provider.helpTypes || []),
+      locale: language,
+      uid: provider.uid || provider.id || realProviderId || '',
+    });
     
-    try {
-      const isLawyer = provider.type === "lawyer";
-      const displayType = isLawyer ? "avocat" : "expatrie";
-      const countrySlug = safeNormalize(provider.country || "");
-      const langSlug =
-        provider.mainLanguage ||
-        (provider.languages?.[0]
-          ? safeNormalize(provider.languages[0])
-          : "francais");
-      const nameSlug =
-        provider.slug ||
-        safeNormalize(
-          `${provider.firstName || ""}-${provider.lastName || ""}`
-        ) ||
-        safeNormalize(provider.fullName || "");
-      const seoUrl = `/${displayType}/${countrySlug}/${langSlug}/${nameSlug}-${provider.id}`;
-      
-      // Only update URL if it's different AND we haven't already updated it
-      const currentPath = window.location.pathname.replace(/\/$/, '');
-      const targetPath = seoUrl.replace(/\/$/, '');
-      
-      if (currentPath !== targetPath && lastUrlRef.current !== targetPath) {
-        window.history.replaceState(null, "", seoUrl);
-        lastUrlRef.current = targetPath;
+    const seoUrl = `/${fullSlug}`;
+
+    const displayName = formatPublicName(provider);
+    const isLawyer = provider.type === "lawyer";
+    
+    const roleLabel = isLawyer
+      ? intl.formatMessage({ id: "providerProfile.lawyer" })
+      : intl.formatMessage({ id: "providerProfile.expat" });
+    
+    const pageTitle = `${displayName} - ${roleLabel} ${intl.formatMessage({ id: "providerProfile.in" })} ${getCountryName(provider.country, preferredLangKey)} | SOS Expat & Travelers`;
+    
+    document.title = pageTitle;
+
+    const updateOrCreateMeta = (property: string, content: string): void => {
+      let meta = document.querySelector(
+        `meta[property="${property}"]`
+      ) as HTMLMetaElement | null;
+      if (!meta) {
+        meta = document.createElement("meta");
+        meta.setAttribute("property", property);
+        document.head.appendChild(meta);
       }
+      meta.setAttribute("content", content);
+    };
 
-      const pageTitle = `${provider.fullName} - ${
-        isLawyer
-          ? detectedLang === "fr"
-            ? "Avocat"
-            : "Lawyer"
-          : detectedLang === "fr"
-            ? "Expatrié"
-            : "Expat"
-      } ${detectedLang === "fr" ? "en" : "in"} ${provider.country} | SOS Expat & Travelers`;
-      document.title = pageTitle;
+    const ogDesc = pickDescription(provider, preferredLangKey, intl).slice(0, 160);
+    const ogImage =
+      provider.profilePhoto ||
+      provider.photoURL ||
+      provider.avatar ||
+      "/default-avatar.png";
 
-      const updateOrCreateMeta = (property: string, content: string): void => {
-        let meta = document.querySelector(
-          `meta[property="${property}"]`
-        ) as HTMLMetaElement | null;
-        if (!meta) {
-          meta = document.createElement("meta");
-          meta.setAttribute("property", property);
-          document.head.appendChild(meta);
-        }
-        meta.setAttribute("content", content);
-      };
-
-      const ogDesc = pickDescription(provider, preferredLangKey).slice(0, 160);
-      const ogImage =
-        provider.profilePhoto ||
-        provider.photoURL ||
-        provider.avatar ||
-        "/default-avatar.png";
-
-      updateOrCreateMeta("og:title", pageTitle);
-      updateOrCreateMeta("og:description", ogDesc);
-      updateOrCreateMeta("og:image", ogImage);
-      updateOrCreateMeta("og:url", window.location.href);
-      updateOrCreateMeta("og:type", "profile");
-      updateOrCreateMeta(
-        "og:locale",
-        detectedLang === "fr" ? "fr_FR" : "en_US"
-      );
-      
-      // Mark SEO as updated to prevent re-running
-      seoUpdatedRef.current = true;
-    } catch (e) {
-      console.error("Error updating SEO metadata:", e);
-    }
-  }, [provider, isLoading, preferredLangKey, detectedLang]);
+    updateOrCreateMeta("og:title", pageTitle);
+    updateOrCreateMeta("og:description", ogDesc);
+    updateOrCreateMeta("og:image", ogImage);
+    updateOrCreateMeta("og:url", window.location.href);
+    updateOrCreateMeta("og:type", "profile");
+    updateOrCreateMeta(
+      "og:locale",
+      LOCALE_MAPPING[preferredLangKey] || "en_US"
+    );
+    
+    seoUpdatedRef.current = true;
+  } catch (e) {
+    console.error("Error updating SEO metadata:", e);
+  }
+}, [provider, isLoading, preferredLangKey, intl, language]);
 
   useEffect(() => {
     if (provider && !isLoading) {
@@ -1166,27 +1183,29 @@ const ProviderProfile: React.FC = () => {
   const shareProfile = useCallback(
     (platform: "facebook" | "twitter" | "linkedin" | "copy") => {
       if (!provider) return;
+      
+      const fullSlug = generateSlug({
+        firstName: provider.firstName || '',
+        lastName: provider.lastName || '',
+        role: provider.type,
+        country: provider.country,
+        languages: provider.languages || ['Français'],
+        specialties: provider.type === 'lawyer' 
+          ? (provider.specialties || [])
+          : (provider.helpTypes || []),
+        locale: language,
+        uid: provider.uid || provider.id || '',
+      });
+      
+      const currentUrl = `${window.location.origin}/${fullSlug}`;
+      const displayName = formatPublicName(provider);
       const isLawyer = provider.type === "lawyer";
-      const countrySlug = safeNormalize(provider.country);
-      const langSlug =
-        provider.mainLanguage ||
-        (provider.languages?.[0]
-          ? safeNormalize(provider.languages[0])
-          : "francais");
-      const nameSlug =
-        provider.slug ||
-        safeNormalize(`${provider.firstName}-${provider.lastName}`);
-      const seoPath = `/${isLawyer ? "avocat" : "expatrie"}/${countrySlug}/${langSlug}/${nameSlug}-${provider.id}`;
-      const currentUrl = `${window.location.origin}${seoPath}`;
-      const title = `${provider.fullName} - ${
-        isLawyer
-          ? detectedLang === "fr"
-            ? "Avocat"
-            : "Lawyer"
-          : detectedLang === "fr"
-            ? "Expatrié"
-            : "Expat"
-      } ${detectedLang === "fr" ? "en" : "in"} ${provider.country}`;
+      
+      const roleLabel = isLawyer
+        ? intl.formatMessage({ id: "providerProfile.lawyer" })
+        : intl.formatMessage({ id: "providerProfile.expat" });
+      
+      const title = `${displayName} - ${roleLabel} ${intl.formatMessage({ id: "providerProfile.in" })} ${getCountryName(provider.country, preferredLangKey)}`;
 
       switch (platform) {
         case "facebook":
@@ -1213,7 +1232,7 @@ const ProviderProfile: React.FC = () => {
         case "copy":
           if (navigator.clipboard?.writeText) {
             navigator.clipboard.writeText(currentUrl);
-            alert(t("linkCopied"));
+            alert(intl.formatMessage({ id: "providerProfile.linkCopied" }));
           } else {
             const textArea = document.createElement("textarea");
             textArea.value = currentUrl;
@@ -1221,12 +1240,12 @@ const ProviderProfile: React.FC = () => {
             textArea.select();
             document.execCommand("copy");
             document.body.removeChild(textArea);
-            alert(t("linkCopied"));
+            alert(intl.formatMessage({ id: "providerProfile.linkCopied" }));
           }
           break;
       }
     },
-    [provider, detectedLang, t]
+    [provider, intl, language, preferredLangKey]
   );
 
   const handleHelpfulClick = useCallback(
@@ -1257,17 +1276,17 @@ const ProviderProfile: React.FC = () => {
         navigate("/login");
         return;
       }
-      const reason = window.prompt(t("reportReason"));
+      const reason = window.prompt(intl.formatMessage({ id: "providerProfile.reportReason" }));
       if (reason) {
         try {
           await reportReview(reviewId, reason);
-          alert(t("reportThanks"));
+          alert(intl.formatMessage({ id: "providerProfile.reportThanks" }));
         } catch (e) {
           console.error("Error reporting review:", e);
         }
       }
     },
-    [user, navigate, t]
+    [user, navigate, intl]
   );
 
   const renderStars = useCallback((rating?: number) => {
@@ -1278,13 +1297,13 @@ const ProviderProfile: React.FC = () => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
         key={i}
-        size={20}
+        size={16}
         className={
           i < full
-            ? "text-yellow-400 fill-yellow-400"
+            ? "text-yellow-500 fill-yellow-500"
             : i === full && hasHalf
-              ? "text-yellow-400"
-              : "text-gray-300"
+              ? "text-yellow-500"
+              : "text-gray-400"
         }
       />
     ));
@@ -1302,19 +1321,54 @@ const ProviderProfile: React.FC = () => {
   // Computed
   const isLawyer = provider?.type === "lawyer";
   const isExpat = provider?.type === "expat";
+  
   const languagesList = useMemo<string[]>(
     () => (provider?.languages?.length ? provider.languages : ["Français"]),
     [provider?.languages]
   );
+
+  const languageCodes = useMemo(() => {
+    return convertLanguageNamesToCodes(languagesList);
+  }, [languagesList]);
+  
   const mainPhoto: string =
     provider?.profilePhoto ||
     provider?.photoURL ||
     provider?.avatar ||
     "/default-avatar.png";
+  
   const descriptionText = useMemo(
-    () => (provider ? pickDescription(provider, preferredLangKey) : ""),
-    [provider, preferredLangKey]
+    () => (provider ? pickDescription(provider, preferredLangKey, intl) : ""),
+    [provider, preferredLangKey, intl]
   );
+
+  // ✅ NOUVEAU : Vérifier si le prestataire est "nouveau" (pas de données réelles)
+  const isNewProvider = useMemo(() => {
+    return providerStats.completedCalls === 0 && providerStats.realReviewsCount === 0;
+  }, [providerStats]);
+
+  // ✅ NOUVEAU : Générer les snippets optimisés pour Position 0
+  const snippetData = useSnippetGenerator(
+    provider ? {
+      firstName: provider.firstName,
+      lastName: provider.lastName,
+      type: provider.type,
+      country: provider.country,
+      city: provider.city,
+      languages: provider.languages,
+      specialties: provider.specialties || [],
+      helpTypes: provider.helpTypes || [],
+      yearsOfExperience: provider.yearsOfExperience,
+      yearsAsExpat: provider.yearsAsExpat,
+      rating: providerStats.averageRating || provider.rating,
+      reviewCount: providerStats.realReviewsCount || provider.reviewCount,
+      successRate: providerStats.successRate || provider.successRate,
+      totalCalls: providerStats.completedCalls || provider.totalCalls,
+      description: descriptionText
+    } : null,
+    language
+  );
+  
   const educationText = useMemo(() => {
     if (!provider || !isLawyer) return undefined;
     return (
@@ -1322,6 +1376,7 @@ const ProviderProfile: React.FC = () => {
       toStringFromAny(provider.education, preferredLangKey)
     );
   }, [provider, isLawyer, preferredLangKey]);
+  
   const certificationsArray = useMemo(() => {
     if (!provider || !isLawyer) return [];
     const s = toStringFromAny(provider.certifications, preferredLangKey);
@@ -1331,38 +1386,68 @@ const ProviderProfile: React.FC = () => {
       .map((x) => x.trim())
       .filter(Boolean);
   }, [provider, isLawyer, preferredLangKey]);
+  
+  // ✅ Spécialités traduites correctement
   const derivedSpecialties = useMemo(() => {
-    if (!provider) return [];
-    const arr = isLawyer
+    if (!provider) {
+      return [];
+    }
+    
+    const codes = isLawyer
       ? toArrayFromAny(provider.specialties, preferredLangKey)
-      : toArrayFromAny(
-          provider.helpTypes || provider.specialties,
-          preferredLangKey
-        );
-    return arr.map((s) => s.replace(/\s+/g, " ").trim()).filter(Boolean);
+      : toArrayFromAny(provider.helpTypes || provider.specialties, preferredLangKey);
+    
+    const translated = codes.map((code) => {
+      try {
+        const cleanCode = code.trim().toUpperCase();
+        
+        if (isLawyer) {
+          const label = getLawyerSpecialityLabel(cleanCode, preferredLangKey as any);
+          return label !== cleanCode ? label : code;
+        } else {
+          const label = getExpatHelpTypeLabel(cleanCode, preferredLangKey as any);
+          return label !== cleanCode ? label : code;
+        }
+      } catch (e) {
+        return code;
+      }
+    });
+    
+    const result = translated
+      .map((s) => s.replace(/\s+/g, " ").trim())
+      .filter(Boolean);
+    
+    return result;
   }, [provider, isLawyer, preferredLangKey]);
+  
   const joinDateText = useMemo(() => {
     if (!provider) return undefined;
     const formatted = formatJoinDate(
       provider.createdAt || provider.updatedAt || null,
-      detectedLang
+      preferredLangKey
     );
     if (!formatted) return undefined;
-    // return detectedLang === "fr"
-    //   ? `${t("memberSince")} ${formatted}`
-    //   : `${t("memberSince")} ${formatted}`;
-    return detectedLang === "fr"
-      ? `${intl.formatMessage({ id: "providerProfile.memberSince" })} ${formatted}`
-      : `${intl.formatMessage({ id: "providerProfile.memberSince" })} ${formatted}`;
-  }, [provider, detectedLang, t]);
+    return `${intl.formatMessage({ id: "providerProfile.memberSince" })} ${formatted}`;
+  }, [provider, preferredLangKey, intl]);
 
+  // ✅ Variables de traduction
+  const yearsLabel = intl.formatMessage({ id: "providerProfile.years" });
+  const minutesLabel = intl.formatMessage({ id: "providerProfile.minutes" });
+
+  // ✅ CORRIGÉ : structuredData avec preferredLangKey
   const structuredData = useMemo<Record<string, unknown> | undefined>(() => {
     if (!provider) return undefined;
+    const displayName = formatPublicName(provider);
+    
+    const roleLabel = isLawyer
+      ? intl.formatMessage({ id: "providerProfile.attorney" })
+      : intl.formatMessage({ id: "providerProfile.consultant" });
+    
     const data: Record<string, unknown> = {
       "@context": "https://schema.org",
       "@type": isLawyer ? "Attorney" : "Person",
       "@id": `${window.location.origin}${window.location.pathname}`,
-      name: provider.fullName,
+      name: displayName,
       image: {
         "@type": "ImageObject",
         url: mainPhoto,
@@ -1370,14 +1455,11 @@ const ProviderProfile: React.FC = () => {
         height: IMAGE_SIZES.MODAL_MAX_HEIGHT,
       },
       description: descriptionText,
-      address: { "@type": "PostalAddress", addressCountry: provider.country },
-      jobTitle: isLawyer
-        ? detectedLang === "fr"
-          ? "Avocat"
-          : "Attorney"
-        : detectedLang === "fr"
-          ? "Consultant expatrié"
-          : "Expat consultant",
+      address: { 
+        "@type": "PostalAddress", 
+        addressCountry: provider.country 
+      },
+      jobTitle: roleLabel,
       worksFor: {
         "@type": "Organization",
         name: "SOS Expat & Travelers",
@@ -1387,13 +1469,13 @@ const ProviderProfile: React.FC = () => {
         "@type": "Language",
         name: lang,
       })),
-      aggregateRating: {
+      aggregateRating: providerStats.realReviewsCount > 0 ? {
         "@type": "AggregateRating",
-        ratingValue: provider.rating || 0,
-        reviewCount: provider.reviewCount || reviews.length || 0,
+        ratingValue: providerStats.averageRating || 0,
+        reviewCount: providerStats.realReviewsCount || 0,
         bestRating: 5,
         worstRating: 1,
-      },
+      } : undefined,
     };
     return data;
   }, [
@@ -1401,867 +1483,597 @@ const ProviderProfile: React.FC = () => {
     isLawyer,
     mainPhoto,
     descriptionText,
-    detectedLang,
+    intl,
     languagesList,
-    reviews.length,
+    providerStats,
   ]);
 
-  // Loading state
+  // ✅ Loading state
   if (isLoading) {
     return (
       <Layout>
-        {user && provider && getAuthUserId(user) === provider.uid && (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-            <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200">
-              <h3 className="text-sm font-semibold mb-2">
-                Visibilité sur la carte
-              </h3>
-              <p className="text-gray-600 text-sm mb-3">
-                Activez/désactivez votre présence sur la carte. (Visible
-                uniquement par vous)
-              </p>
-            </div>
-          </div>
-        )}
-        <div className="min-h-screen flex items-center justify-center bg-gray-950">
-          <LoadingSpinner size="large" color="red" text={t("loading")} />
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-white to-slate-50">
+          <LoadingSpinner 
+            size="large" 
+            color="red" 
+            text={intl.formatMessage({ id: "providerProfile.loading" })} 
+          />
         </div>
       </Layout>
     );
   }
 
-  // Not found
+  // ✅ Not found - Message amélioré
   if (notFound || !provider) {
     return (
       <Layout>
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
-          <div className="p-8 text-center text-red-600 text-lg">
-            {t("notFound")}
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-white to-slate-50 px-4">
+          <div className="max-w-md mx-auto p-8 text-center">
+            <div className="mb-6">
+              <div className="mx-auto w-24 h-24 bg-gradient-to-br from-red-100 to-red-50 rounded-full flex items-center justify-center shadow-xl">
+                <AlertTriangle className="w-12 h-12 text-red-700" />
+              </div>
+            </div>
+            
+            <h2 className="text-2xl font-bold text-slate-900 mb-3">
+              <FormattedMessage id="providerProfile.notFound" />
+            </h2>
+            <p className="text-slate-700 mb-8 font-medium">
+              <FormattedMessage id="providerProfile.notFoundDescription" />
+            </p>
+            
+            <button
+              onClick={() => navigate("/sos-appel")}
+              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-red-700 to-red-600 text-white rounded-xl hover:from-red-800 hover:to-red-700 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5 font-bold"
+            >
+              <svg 
+                className="w-5 h-5 mr-2" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18" 
+                />
+              </svg>
+              <FormattedMessage id="providerProfile.backToExperts" />
+            </button>
           </div>
         </div>
       </Layout>
     );
   }
+
+  // ✅ CORRIGÉ : Titres SEO avec intl et preferredLangKey
+  const roleLabel = isLawyer
+    ? intl.formatMessage({ id: "providerProfile.lawyer" })
+    : intl.formatMessage({ id: "providerProfile.expat" });
+  
+  const seoTitle = `${formatPublicName(provider)} - ${roleLabel} ${intl.formatMessage({ id: "providerProfile.in" })} ${getCountryName(provider.country, preferredLangKey)} | SOS Expat & Travelers`;
+  
+  const seoDescription = `${intl.formatMessage({ id: "providerProfile.consult" })} ${formatPublicName(provider)}, ${roleLabel.toLowerCase()} ${intl.formatMessage({ id: "providerProfile.frenchSpeaking" })} ${intl.formatMessage({ id: "providerProfile.in" })} ${getCountryName(provider.country, preferredLangKey)}. ${descriptionText.slice(0, 120)}...`;
 
   return (
     <Layout>
       <SEOHead
-        title={`${provider.fullName} - ${isLawyer ? (detectedLang === "fr" ? "Avocat" : "Lawyer") : detectedLang === "fr" ? "Expatrié" : "Expat"} ${detectedLang === "fr" ? "en" : "in"} ${provider.country} | SOS Expat & Travelers`}
-        description={`${detectedLang === "fr" ? "Consultez" : "Consult"} ${provider.fullName}, ${isLawyer ? (detectedLang === "fr" ? "avocat" : "lawyer") : detectedLang === "fr" ? "expatrié" : "expat"} ${detectedLang === "fr" ? "francophone" : "French-speaking"} ${detectedLang === "fr" ? "en" : "in"} ${provider.country}. ${descriptionText.slice(0, 120)}...`}
-        canonicalUrl={`/${isLawyer ? "avocat" : "expatrie"}/${safeNormalize(provider.country)}/${safeNormalize(provider.mainLanguage || languagesList[0] || "francais")}/${safeNormalize(provider.fullName)}-${provider.id}`}
+        title={seoTitle}
+        description={seoDescription}
+        canonicalUrl={`/${generateSlug({
+          firstName: provider.firstName || '',
+          lastName: provider.lastName || '',
+          role: provider.type,
+          country: provider.country,
+          languages: provider.languages || ['Français'],
+          specialties: provider.type === 'lawyer' 
+            ? (provider.specialties || [])
+            : (provider.helpTypes || []),
+          locale: language,
+          uid: provider.uid || provider.id || ''
+        })}`}
         ogImage={mainPhoto}
         ogType="profile"
         structuredData={structuredData}
       />
 
-      {/* SVG defs */}
-      <svg width="0" height="0" className="hidden" aria-hidden="true">
-        <defs>
-          <linearGradient id="half-star" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="50%" stopColor="#FACC15" />
-            <stop offset="50%" stopColor="#D1D5DB" />
-          </linearGradient>
-        </defs>
-      </svg>
+      {/* ✅ NOUVEAU : Snippets JSON-LD pour Position 0 */}
+      {snippetData && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: snippetData.jsonLD }}
+        />
+      )}
 
-      <div className="min-h-screen bg-gray-950">
-        {/* ======= HERO ======= */}
-        <header className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-900 to-black" />
-          <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 via-transparent to-blue-500/10" />
-          <div className="absolute top-1/4 left-1/3 w-[26rem] h-[26rem] bg-gradient-to-r from-red-500/15 to-orange-500/15 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 right-1/3 w-[26rem] h-[26rem] bg-gradient-to-r from-blue-500/15 to-purple-500/15 rounded-full blur-3xl" />
-
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-            <nav className="mb-6">
-              <button
-                onClick={() => navigate("/sos-appel")}
-                className="inline-flex items-center rounded-full bg-white/10 border border-white/20 text-white/90 hover:text-white hover:bg-white/15 backdrop-blur px-4 py-2 transition-colors min-h-[44px]"
-                aria-label={t("backToExperts")}
-              >
-                <span aria-hidden="true">←</span>
-                <span className="ml-2">
-                  {/* {t("backToExperts")} */}
-                  <FormattedMessage id="providerProfile.backToExperts" />
-                </span>
-              </button>
-            </nav>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-              <div className="lg:col-span-2">
-                <div className="flex items-start space-x-4 sm:space-x-6">
-                  {/* Photo */}
-                  <div className="relative flex-shrink-0">
-                    <div className="p-[3px] rounded-full bg-gradient-to-br from-red-400 via-orange-400 to-yellow-300">
-                      <img
-                        src={mainPhoto}
-                        alt={`${t("photoOf")} ${provider.fullName}`}
-                        className="w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-black/20 cursor-pointer"
-                        width={IMAGE_SIZES.AVATAR_MOBILE}
-                        height={IMAGE_SIZES.AVATAR_MOBILE}
-                        style={{ aspectRatio: "1" }}
-                        onClick={() => setShowImageModal(true)}
-                        onError={handleImageError}
-                        loading="eager"
-                        fetchPriority="high"
-                      />
-                    </div>
-                    {/* Online status */}
-                    <div
-                      className={`absolute -bottom-2 -right-2 w-8 h-8 rounded-full border-4 border-black/50 transition-all duration-500 ${onlineStatus.isOnline ? "bg-green-500" : "bg-red-500"}`}
-                      aria-hidden="true"
-                      title={onlineStatus.isOnline ? t("online") : t("offline")}
-                    >
-                      {onlineStatus.isOnline && (
-                        <div className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-75"></div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="flex-1 min-w-0">
-                    <div className="flex flex-wrap items-center gap-2 mb-3">
-                      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black leading-tight bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
-                        {provider.fullName}
-                      </h1>
-
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs sm:text-sm font-semibold border backdrop-blur ${
-                          isLawyer
-                            ? "bg-white/10 border-white/20 text-blue-100"
-                            : "bg-white/10 border-white/20 text-green-100"
-                        }`}
-                      >
-                        {isLawyer ? (
-                          // t("certifiedLawyer")
-                          <FormattedMessage id="providerProfile.certifiedLawyer" />
-                        ) : (
-                          // t("expertExpat")}
-                          <FormattedMessage id="providerProfile.expertExpat" />
-                        )}
-                      </span>
-
-                      {provider.isVerified && (
-                        <span className="inline-flex items-center gap-1 bg-white text-gray-900 text-[10px] sm:text-xs px-2 py-1 rounded-full border border-gray-200">
-                          <Shield size={12} className="text-green-600" />
-                          <span>
-                            {/* {t("verified")} */}
-                            <FormattedMessage id="providerProfile.verified" />
-                          </span>
-                        </span>
-                      )}
-
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs sm:text-sm font-bold transition-all duration-500 border ${
-                          onlineStatus.isOnline
-                            ? "bg-green-500 text-white border-green-300 shadow-lg shadow-green-500/30"
-                            : "bg-red-500 text-white border-red-300"
-                        }`}
-                      >
-                        {/* {onlineStatus.isOnline
-                          ? "🟢 " + t("online")
-                          : "🔴 " + t("offline")} */}
-
-                        {onlineStatus.isOnline
-                          ? `🟢 ${intl.formatMessage({ id: "providerProfile.online" })}`
-                          : `🔴 ${intl.formatMessage({ id: "providerProfile.offline" })}`}
-
-                        {/* {onlineStatus.isOnline
-                          ? "🟢 " +
-                            <FormattedMessage id="providerProfile.online" />
-                          : "🔴 " +
-                          <FormattedMessage id="providerProfile.offline" />
-                        } */}
-                      </span>
-                    </div>
-
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-gray-300 mb-4 text-sm sm:text-base">
-                      <div className="inline-flex items-center gap-1">
-                        <MapPin size={16} className="flex-shrink-0" />
-                        <span>{provider.country}</span>
-                      </div>
-                      <div className="inline-flex items-center gap-1">
-                        {isLawyer ? (
-                          <Briefcase size={16} className="flex-shrink-0" />
-                        ) : (
-                          <Users size={16} className="flex-shrink-0" />
-                        )}
-                        <span>
-                          {isLawyer
-                            ? `${provider.yearsOfExperience || 0} ${intl.formatMessage({ id: "providerProfile.yearsExperience" })}`
-                            : `${provider.yearsAsExpat || provider.yearsOfExperience || 0} ${intl.formatMessage({ id: "providerProfile.yearsAsExpat" })}`}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Rating */}
-                    <div className="inline-flex items-center gap-2 mb-4 rounded-full bg-white/10 border border-white/20 backdrop-blur px-3 py-1.5">
-                      <div
-                        className="flex"
-                        aria-label={`Rating: ${provider.rating || 0} out of 5 stars`}
-                      >
-                        {renderStars(provider.rating)}
-                      </div>
-                      <span className="text-white font-semibold">
-                        {typeof provider.rating === "number"
-                          ? provider.rating.toFixed(1)
-                          : "--"}
-                      </span>
-                      <span className="text-gray-300">
-                        ({provider.reviewCount || reviews.length || 0}{" "}
-                        {/* {t("reviews")} */}
-                        <FormattedMessage id="providerProfile.reviews" />)
-                      </span>
-                    </div>
-
-                    {/* Description */}
-                    <div className="text-gray-200 leading-relaxed">
-                      <p className="mb-2 whitespace-pre-line">
-                        {descriptionText}
-                      </p>
-                      {(isLawyer || isExpat) &&
-                        getFirstString(
-                          provider.motivation,
-                          preferredLangKey
-                        ) && (
-                          <div className="mt-4 pt-4 border-t border-white/10">
-                            <p className="text-gray-200 whitespace-pre-line">
-                              {getFirstString(
-                                provider.motivation,
-                                preferredLangKey
-                              )}
-                            </p>
-                          </div>
-                        )}
-                    </div>
-
-                    {/* Social sharing */}
-                    <div className="flex items-center space-x-3 mt-6">
-                      <span className="text-gray-300">
-                        {/* {t("share")} */}
-                        <FormattedMessage id="providerProfile.share" />
-                      </span>
-                      <button
-                        onClick={() => shareProfile("facebook")}
-                        className="text-white/90 hover:text-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 border border-white/20"
-                        aria-label="Share on Facebook"
-                        title="Facebook"
-                      >
-                        <Facebook size={20} />
-                      </button>
-                      <button
-                        onClick={() => shareProfile("twitter")}
-                        className="text-white/90 hover:text-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 border border-white/20"
-                        aria-label="Share on X"
-                        title="X / Twitter"
-                      >
-                        <Twitter size={20} />
-                      </button>
-                      <button
-                        onClick={() => shareProfile("linkedin")}
-                        className="text-white/90 hover:text-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 border border-white/20"
-                        aria-label="Share on LinkedIn"
-                        title="LinkedIn"
-                      >
-                        <Linkedin size={20} />
-                      </button>
-                      <button
-                        onClick={() => shareProfile("copy")}
-                        className="text-white/90 hover:text-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 border border-white/20"
-                        aria-label={t("copyLink")}
-                        title={t("copyLink")}
-                      >
-                        <Share2 size={20} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* ✅ Booking card - Prix uniquement depuis Admin (EUR principal + équivalent USD) */}
-              <aside className="lg:col-span-1">
-                <div className="group relative bg-white rounded-3xl shadow-2xl p-6 border border-gray-200 transition-all hover:scale-[1.01]">
-                  <div className="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-br from-red-500/5 to-orange-500/5 group-hover:from-red-500/10 group-hover:to-orange-500/10 transition-opacity" />
-                  <div className="relative z-10">
-                    {/* Badge délai d'appel */}
-                    <div className="text-center mb-6">
-                      <div className="inline-flex items-center gap-2 bg-gray-900 text-white rounded-full px-3 py-1 text-xs font-semibold">
-                        <Phone size={14} />
-                        {/* <span>Appel en ~5 min</span> */}
-                        <span>
-                          <FormattedMessage id="callIn5Min" />
-                        </span>
-                      </div>
-
-                      {/* ✅ Prix uniquement depuis admin_config/pricing */}
-                      <div className="mt-4 text-3xl sm:text-4xl font-black text-gray-900">
-                        {bookingPrice ? (
-                          <>
-                            <span className="bg-clip-text">
-                              {formatEUR(bookingPrice.eur)}
-                            </span>{" "}
-                            <span className="text-gray-600">
-                              ({formatUSD(bookingPrice.usd)})
-                            </span>
-                          </>
-                        ) : (
-                          "—"
-                        )}
-
-                        {/* Price section in booking card */}
-                        {/* <div className="mt-4 text-center">
-                          {bookingPrice?.hasDiscount ? (
-                            <div>
-                              <div className="text-gray-500 line-through text-lg">
-                                {formatEUR(bookingPrice.originalEur)}
-                              </div>
-                              <div className="text-3xl sm:text-4xl font-black text-red-600">
-                                {formatEUR(bookingPrice.eur)}
-                              </div>
-                              <div className="text-xs text-green-600 font-semibold mt-1">
-                                Code {bookingPrice.promoCode} appliqué (-
-                                {formatEUR(bookingPrice.discountEur)})
-                              </div>
-                              <div className="text-gray-600 text-sm mt-1">
-                                {formatUSD(bookingPrice.usd)}
-                              </div>
-                            </div>
-                          ) : (
-                            <div>
-                              <div className="text-3xl sm:text-4xl font-black text-gray-900">
-                                {bookingPrice
-                                  ? formatEUR(bookingPrice.eur)
-                                  : "—"}
-                              </div>
-                              <div className="text-gray-600">
-                                {bookingPrice
-                                  ? formatUSD(bookingPrice.usd)
-                                  : "—"}
-                              </div>
-                            </div>
-                          )}
-                          <div className="text-gray-600">
-                            {bookingPrice?.duration
-                              ? `${bookingPrice.duration} ${t("minutes")}`
-                              : "—"}
-                          </div>
-                        </div> */}
-                      </div>
-
-                      <div className="text-gray-600">
-                        {bookingPrice?.duration
-                          ? // ? `${bookingPrice.duration} ${t("minutes")}`
-                            `${bookingPrice.duration} ${intl.formatMessage({ id: "providerProfile.minutes" })}`
-                          : "—"}
-                      </div>
-                    </div>
-
-                    <div className="space-y-4 mb-6">
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600">
-                          {/* {t("successRate")} */}
-                          <FormattedMessage id="providerProfile.successRate" />
-                        </span>
-                        <span className="font-semibold text-gray-900">
-                          {typeof provider.successRate === "number"
-                            ? `${provider.successRate}%`
-                            : "--"}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between text-sm bg-gray-50 p-3 rounded-xl border border-gray-200">
-                        <span className="text-gray-700 font-medium">
-                          {/* {t("availability")} */}
-                          <FormattedMessage id="providerProfile.availability" />
-                        </span>
-                        <span
-                          className={`font-bold text-sm px-3 py-1 rounded-full transition-all duration-500 ${
-                            isOnCall
-                              ? "bg-orange-100 text-orange-800 border border-orange-300"
-                              : onlineStatus.isOnline
-                                ? "bg-green-100 text-green-800 border border-green-300"
-                                : "bg-red-100 text-red-800 border border-red-300"
-                          }`}
-                        >
-                          {isOnCall
-                            ? `📞 ${intl.formatMessage({ id: "providerProfile.alreadyOnCall" })}`
-                            : onlineStatus.isOnline
-                              ? `🟢 ${intl.formatMessage({ id: "providerProfile.online" })}`
-                              : `🔴 ${intl.formatMessage({ id: "providerProfile.offline" })}`}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600">
-                          {/* {t("completedCalls")} */}
-                          <FormattedMessage id="providerProfile.completedCalls" />
-                        </span>
-                        <span className="font-semibold">
-                          {typeof provider.totalCalls === "number"
-                            ? provider.totalCalls
-                            : "--"}
-                        </span>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={handleBookCall}
-                      className={`w-full py-4 px-4 rounded-2xl font-bold text-lg transition-all duration-500 flex items-center justify-center gap-3 min-h-[56px] focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                        onlineStatus.isOnline && !isOnCall
-                          ? "bg-gradient-to-r from-green-600 to-green-500 text-white hover:scale-105 shadow-lg ring-green-600/30"
-                          : "bg-gray-200 text-gray-500 cursor-not-allowed"
-                      }`}
-                      disabled={!onlineStatus.isOnline || isOnCall}
-                      aria-label={
-                        isOnCall
-                          ? intl.formatMessage({ id: "providerProfile.alreadyOnCall" })
-                          : onlineStatus.isOnline
-                            ? intl.formatMessage({ id: "providerProfile.bookNow" })
-                            : intl.formatMessage({ id: "providerProfile.unavailable" })
-                      }
-                    >
-                      <Phone size={24} aria-hidden="true" />
-                      <span className="flex-1">
-                        {isOnCall
-                          ? intl.formatMessage({ id: "providerProfile.alreadyOnCall" })
-                          : onlineStatus.isOnline
-                            ? intl.formatMessage({ id: "providerProfile.bookNow" })
-                            : intl.formatMessage({ id: "providerProfile.unavailable" })}
-                      </span>
-                      {onlineStatus.isOnline && !isOnCall && (
-                        <div className="flex gap-1 w-12" aria-hidden="true">
-                          <div className="w-2 h-2 rounded-full animate-pulse bg-white/80"></div>
-                          <div className="w-2 h-2 rounded-full animate-pulse delay-75 bg-white/80"></div>
-                          <div className="w-2 h-2 rounded-full animate-pulse delay-150 bg-white/80"></div>
-                        </div>
-                      )}
-                    </button>
-
-                    <div className="mt-4 text-center text-sm min-h-[32px] flex items-center justify-center">
-                      {isOnCall ? (
-                        <div className="text-orange-600 font-medium">
-                          📞 <FormattedMessage id="providerProfile.onCallMessage" />
-                        </div>
-                      ) : onlineStatus.isOnline ? (
-                        <div className="text-green-600 font-medium">
-                          ✅ <FormattedMessage id="providerProfile.availableNow" />
-                        </div>
-                      ) : (
-                        <div className="text-red-600">
-                          ❌ <FormattedMessage id="providerProfile.currentlyOffline" />
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="mt-4 text-center">
-                      <div className="inline-flex items-center justify-center gap-2 text-sm text-gray-600 rounded-2xl border border-gray-200 px-4 py-2">
-                        <Shield size={16} aria-hidden="true" />
-                        {/* <span>{t("securePayment")}</span> */}
-                        <span>
-                          <FormattedMessage id="providerProfile.securePayment" />
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </aside>
-            </div>
+      {/* 🎨 DESIGN MOBILE-FIRST OPTIMISÉ ET ÉPURÉ */}
+      <div className="min-h-screen bg-gradient-to-br from-slate-100 via-white to-slate-50 pb-28">
+        
+        {/* ✅ HEADER - Simplifié */}
+        <header className="bg-white border-b-2 border-slate-300 shadow-md sticky top-0 z-40">
+          <div className="max-w-7xl mx-auto px-4 py-3">
+            <button
+              onClick={() => navigate("/sos-appel")}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-900 rounded-xl transition-all font-bold shadow-md hover:shadow-lg"
+              aria-label={intl.formatMessage({ id: "providerProfile.backToExperts" })}
+            >
+              <ArrowLeft size={18} strokeWidth={2.5} />
+              <span className="text-sm"><FormattedMessage id="providerProfile.backToExperts" /></span>
+            </button>
           </div>
         </header>
 
-        {/* ======= MAIN ======= */}
-        <main className="relative bg-gradient-to-b from-white via-rose-50/50 to-white rounded-t-[28px] -mt-6">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-              {/* Main */}
-              <div className="lg:col-span-2 space-y-6 lg:space-y-8">
-                {/* Specialties */}
-                <section className="bg-white rounded-3xl shadow-sm p-6 border border-gray-200">
-                  <h2 className="text-xl font-extrabold text-gray-900 mb-4">
-                    {/* {t("specialties")} */}
-                    <FormattedMessage id="providerProfile.specialties" />
-                  </h2>
-                  {derivedSpecialties.length > 0 ? (
-                    <div className="flex flex-wrap gap-2">
-                      {derivedSpecialties.map((s, i) => (
-                        <span
-                          key={`${s}-${i}`}
-                          className={`px-3 py-2 rounded-full text-sm font-semibold border ${isLawyer ? "bg-blue-50 text-blue-800 border-blue-200" : "bg-green-50 text-green-800 border-green-200"}`}
-                        >
-                          {s}
-                        </span>
-                      ))}
-                    </div>
-                  ) : (
-                    // <div className="text-gray-500">{t("noSpecialties")}</div>
-                    <div className="text-gray-500">
-                      <FormattedMessage id="providerProfile.noSpecialties" />
-                    </div>
-                  )}
-                </section>
-
-                {/* Languages */}
-                <section className="bg-white rounded-3xl shadow-sm p-6 border border-gray-200">
-                  <h2 className="text-xl font-extrabold text-gray-900 mb-4">
-                    {/* {t("languages")} */}
-                    <FormattedMessage id="providerProfile.languages" />
-                  </h2>
-                  <div className="flex flex-wrap gap-2">
-                    {languagesList.map((l, i) => (
-                      <span
-                        key={`${l}-${i}`}
-                        className="px-3 py-2 bg-blue-50 text-blue-800 border border-blue-200 rounded-full text-sm font-semibold inline-flex items-center"
-                      >
-                        <Globe size={14} className="mr-1" aria-hidden="true" />
-                        {formatLanguages([l], detectedLang)}
-                      </span>
-                    ))}
-                  </div>
-                </section>
-
-                {/* Education & Certifications */}
-                {isLawyer &&
-                  (educationText || certificationsArray.length > 0) && (
-                    <section className="bg-white rounded-3xl shadow-sm p-6 border border-gray-200">
-                      <h2 className="text-xl font-extrabold text-gray-900 mb-4">
-                        {/* {t("educationCertifications")} */}
-                        <FormattedMessage id="providerProfile.educationCertifications" />
-                      </h2>
-                      <div className="space-y-3">
-                        {educationText && (
-                          <div className="flex items-start gap-2">
-                            <GraduationCap
-                              size={18}
-                              className="text-blue-600 mt-0.5 flex-shrink-0"
-                              aria-hidden="true"
-                            />
-                            <p className="text-gray-700">
-                              {educationText}
-                              {provider.graduationYear
-                                ? ` (${provider.graduationYear})`
-                                : ""}
-                            </p>
-                          </div>
-                        )}
-                        {certificationsArray.length > 0 &&
-                          certificationsArray.map((cert, i) => (
-                            <div key={i} className="flex items-start gap-2">
-                              <Award
-                                size={16}
-                                className="text-yellow-500 mt-0.5 flex-shrink-0"
-                                aria-hidden="true"
-                              />
-                              <p className="text-gray-700">{cert}</p>
-                            </div>
-                          ))}
-                      </div>
-                    </section>
-                  )}
-
-                {/* Expat experience */}
-                {isExpat && (
-                  <section className="bg-white rounded-3xl shadow-sm p-6 border border-gray-200">
-                    <h2 className="text-xl font-extrabold text-gray-900 mb-4">
-                      {/* {t("expatExperience")} */}
-                      <FormattedMessage id="providerProfile.expatExperience" />
-                    </h2>
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-2">
-                        <Users
-                          size={18}
-                          className="text-green-600 flex-shrink-0"
-                          aria-hidden="true"
-                        />
-                        {/* <p className="text-gray-700">
-                          {provider.yearsAsExpat ||
-                            provider.yearsOfExperience ||
-                            0}{" "}
-                          {t("yearsAbroad")} {t("in")} {provider.country}
-                        </p> */}
-                        <p className="text-gray-700">
-                          {provider.yearsAsExpat ||
-                            provider.yearsOfExperience ||
-                            0}{" "}
-                          {intl.formatMessage({ id: "providerProfile.years" })}{" "}
-                          {intl.formatMessage({ id: "providerProfile.in" })}{" "}
-                          {provider.country}
-                        </p>
-                      </div>
-
-                      {getFirstString(
-                        provider.experienceDescription,
-                        preferredLangKey
-                      ) && (
-                        <p className="text-gray-700 whitespace-pre-line">
-                          {getFirstString(
-                            provider.experienceDescription,
-                            preferredLangKey
-                          )}
-                        </p>
-                      )}
-
-                      {getFirstString(
-                        provider.motivation,
-                        preferredLangKey
-                      ) && (
-                        <p className="text-gray-700 whitespace-pre-line">
-                          {getFirstString(
-                            provider.motivation,
-                            preferredLangKey
-                          )}
-                        </p>
-                      )}
-                    </div>
-                  </section>
-                )}
-
-                {/* Reviews */}
-                <section
-                  className="bg-white rounded-3xl shadow-sm p-6 border border-gray-200"
-                  id="reviews-section"
+        {/* ✅ HERO OPTIMISÉ - Layout vertical épuré */}
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <div className="bg-white rounded-3xl p-5 border-3 border-slate-300 shadow-2xl">
+            
+            {/* Ligne 1 : Photo + Nom + Badges */}
+            <div className="flex items-start gap-4 mb-4">
+              {/* Photo avec status */}
+              <div className="relative flex-shrink-0">
+                <div className="p-[3px] rounded-full bg-gradient-to-br from-red-600 via-orange-500 to-yellow-500 shadow-lg">
+                  <img
+                    src={mainPhoto}
+                    alt={formatShortName(provider)}
+                    className="w-20 h-20 rounded-full object-cover border-3 border-white cursor-pointer"
+                    onClick={() => setShowImageModal(true)}
+                    onError={handleImageError}
+                    loading="eager"
+                    fetchPriority="high"
+                  />
+                </div>
+                <div
+                  className={`absolute -bottom-0.5 -right-0.5 w-6 h-6 rounded-full border-3 border-white shadow-lg ${
+                    onlineStatus.isOnline ? "bg-green-600" : "bg-slate-500"
+                  }`}
+                  title={onlineStatus.isOnline 
+                    ? intl.formatMessage({ id: "providerProfile.online" })
+                    : intl.formatMessage({ id: "providerProfile.offline" })
+                  }
                 >
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-extrabold text-gray-900">
-                      {/* {t("customerReviews")} */}
-                      <FormattedMessage id="providerProfile.customerReviews" />(
-                      {reviews.length || 0})
-                    </h2>
-                    <span className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-yellow-400 to-orange-400 p-[1px]">
-                      <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 border border-yellow-200/70 text-yellow-700 text-sm font-semibold">
-                        <Star className="w-4 h-4" />
-                        <span>
-                          {typeof provider.rating === "number"
-                            ? provider.rating.toFixed(1)
-                            : "—"}
-                          /5
-                        </span>
-                        <Award className="w-4 h-4" />
-                      </span>
-                    </span>
-                  </div>
-
-                  {isLoadingReviews ? (
-                    <div className="text-center py-8">
-                      <div
-                        className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600 mx-auto"
-                        aria-hidden="true"
-                      ></div>
-                      <p className="mt-2 text-gray-500">
-                        {/* {t("loadingReviews")} */}
-                        <FormattedMessage id="providerProfile.loadingReviews" />
-                      </p>
-                    </div>
-                  ) : (
-                    <>
-                      <Reviews
-                        mode="summary"
-                        averageRating={provider.rating || 0}
-                        totalReviews={reviews.length}
-                        ratingDistribution={ratingDistribution}
-                      />
-                      <div className="mt-8">
-                        <Reviews
-                          mode="list"
-                          reviews={reviews}
-                          showControls={!!user}
-                          onHelpfulClick={handleHelpfulClick}
-                          onReportClick={handleReportClick}
-                        />
-                      </div>
-                    </>
+                  {onlineStatus.isOnline && (
+                    <div className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-75"></div>
                   )}
-                </section>
+                </div>
               </div>
 
-              {/* Sidebar */}
-              <aside className="lg:col-span-1">
-                <div className="sticky top-6 space-y-6">
-                  {/* Stats */}
-                  <div className="bg-white rounded-3xl shadow-sm p-6 border border-gray-200">
-                    <h3 className="text-lg font-extrabold text-gray-900 mb-4">
-                      {/* {t("stats")} */}
-                      <FormattedMessage id="providerProfile.stats" />
-                    </h3>
-                    <div className="space-y-3">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">
-                          {/* {t("averageRating")} */}
-                          <FormattedMessage id="providerProfile.averageRating" />
-                        </span>
-                        <span className="font-semibold">
-                          {typeof provider.rating === "number"
-                            ? provider.rating.toFixed(1)
-                            : "--"}
-                          /5
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">
-                          {/* {t("reviews")} */}
-                          <FormattedMessage id="providerProfile.reviews" />
-                        </span>
-                        <span className="font-semibold">{reviews.length}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">
-                          {/* {t("successRate")} */}
-                          <FormattedMessage id="providerProfile.successRate" />
-                        </span>
-                        <span className="font-semibold">
-                          {typeof provider.successRate === "number"
-                            ? `${provider.successRate}%`
-                            : "--"}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">
-                          {/* {t("experience")} */}
-                          <FormattedMessage id="providerProfile.experience" />
-                        </span>
-                        <span className="font-semibold">
-                          {/* {isLawyer
-                            ? `${provider.yearsOfExperience || 0} ${t("years")}`
-                            : `${provider.yearsAsExpat || provider.yearsOfExperience || 0} ${t("years")}`
-                          } */}
-
-                          {isLawyer
-                            ? `${provider.yearsOfExperience || 0} ${intl.formatMessage({ id: "years" })}`
-                            : `${provider.yearsAsExpat || provider.yearsOfExperience || 0} ${intl.formatMessage({ id: "years" })}`}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Info */}
-                  <div className="bg-white rounded-3xl shadow-sm p-6 border border-gray-200">
-                    <h3 className="text-lg font-extrabold text-gray-900 mb-4">
-                      {/* {t("information")} */}
-                      <FormattedMessage id="providerProfile.information" />
-                    </h3>
-                    <div className="space-y-3 text-sm">
-                      <div className="flex items-center gap-2">
-                        <MapPin
-                          size={16}
-                          className="text-gray-400 flex-shrink-0"
-                          aria-hidden="true"
-                        />
-                        <span>
-                          {/* {t("basedIn")} */}
-                          <FormattedMessage id="providerProfile.basedIn" />
-                          {provider.country}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <LanguagesIcon
-                          size={16}
-                          className="text-gray-400 flex-shrink-0"
-                          aria-hidden="true"
-                        />
-                        <span>
-                          {/* {t("speaks")}{" "} */}
-                          <FormattedMessage id="providerProfile.speaks" />
-                          {formatLanguages(languagesList, detectedLang)}
-                        </span>
-                      </div>
-                      {joinDateText && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-gray-600">{joinDateText}</span>
-                        </div>
-                      )}
-                      <div
-                        className={`flex items-center gap-2 p-3 rounded-xl transition-all duration-500 ${onlineStatus.isOnline ? "bg-green-50 border border-green-200" : "bg-red-50 border border-red-200"}`}
-                      >
-                        <div
-                          className={`relative w-6 h-6 rounded-full flex items-center justify-center transition-all duration-500 ${onlineStatus.isOnline ? "bg-green-500" : "bg-red-500"}`}
-                          aria-hidden="true"
-                          title={
-                            onlineStatus.isOnline ? t("online") : t("offline")
-                          }
-                        >
-                          {onlineStatus.isOnline && (
-                            <div className="w-6 h-6 rounded-full bg-green-500 animate-ping opacity-75 absolute"></div>
-                          )}
-                          <div className="w-3 h-3 bg-white rounded-full relative z-10"></div>
-                        </div>
-                        <span
-                          className={`font-bold transition-all duration-500 ${onlineStatus.isOnline ? "text-green-700" : "text-red-700"}`}
-                        >
-                          {
-                            onlineStatus.isOnline ? (
-                              // t("onlineNow")
-                              <FormattedMessage id="providerProfile.onlineNow" />
-                            ) : (
-                              <FormattedMessage id="providerProfile.offline" />
-                            )
-                            // t("offline")
-                          }
-                        </span>
-                      </div>
-                      {provider.isVerified && (
-                        <div className="flex items-center gap-2">
-                          <Shield
-                            size={16}
-                            className="text-gray-400 flex-shrink-0"
-                            aria-hidden="true"
-                          />
-                          <span>
-                            {/* {t("verifiedExpert")} */}
-                            <FormattedMessage id="providerProfile.verifiedExpert" />
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+              {/* Nom + Badges vérifié/nouveau */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <h1 className="text-xl font-black text-slate-900 truncate">
+                    {formatShortName(provider)}
+                  </h1>
+                  {provider.isVerified && (
+                    <Shield size={16} className="text-blue-700 flex-shrink-0" strokeWidth={2.5} />
+                  )}
                 </div>
-              </aside>
+                
+                {isNewProvider && (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-gradient-to-r from-yellow-200 to-orange-200 border border-yellow-400 rounded-full text-xs font-black text-yellow-900">
+                    <Sparkles size={12} strokeWidth={2.5} />
+                    <FormattedMessage id="providerProfile.new" />
+                  </span>
+                )}
+
+                {/* Rating - Compact */}
+                {!isNewProvider && (
+                  <div className="flex items-center gap-1 mt-1.5">
+                    {renderStars(providerStats.averageRating || provider.rating)}
+                    <span className="text-xs font-black text-slate-900 ml-1">
+                      {providerStats.averageRating 
+                        ? providerStats.averageRating.toFixed(1)
+                        : (typeof provider.rating === "number" ? provider.rating.toFixed(1) : "--")}
+                    </span>
+                    <span className="text-xs font-bold text-slate-600">
+                      ({providerStats.realReviewsCount})
+                    </span>
+                  </div>
+                )}
+                {isNewProvider && (
+                  <p className="text-xs font-bold text-slate-600 italic mt-1.5">
+                    <FormattedMessage id="providerProfile.noRatingsYet" />
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Ligne 2 : Spécialités - MAX 2 badges */}
+            {derivedSpecialties.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 mb-3">
+                {derivedSpecialties.slice(0, 2).map((s, i) => (
+                  <span
+                    key={`${s}-${i}`}
+                    className={`px-2.5 py-1 rounded-full text-xs font-bold ${
+                      isLawyer 
+                        ? "bg-blue-100 text-blue-900 border border-blue-300" 
+                        : "bg-green-100 text-green-900 border border-green-300"
+                    }`}
+                  >
+                    {s}
+                  </span>
+                ))}
+                {derivedSpecialties.length > 2 && (
+                  <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-300">
+                    +{derivedSpecialties.length - 2}
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Ligne 3 : Langues - Compact sur une ligne */}
+            <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800 mb-4">
+              <Globe size={14} className="flex-shrink-0 text-blue-700" strokeWidth={2.5} />
+              <span className="truncate">
+                {languageCodes.slice(0, 2).map((code) => formatLanguages([code], preferredLangKey)).join(", ")}
+                {languageCodes.length > 2 && ` +${languageCodes.length - 2}`}
+              </span>
+            </div>
+
+            {/* Ligne 4 : Prix + Statut - Côte à côte */}
+            <div className="flex items-center justify-between gap-3 p-3 bg-slate-50 rounded-xl border-2 border-slate-300">
+              <div className="flex items-baseline gap-2">
+                <div className="text-2xl font-black text-slate-900">
+                  {bookingPrice ? formatEUR(bookingPrice.eur) : "—"}
+                </div>
+                <div className="text-xs font-bold text-slate-700 flex items-center gap-0.5">
+                  <Clock size={12} strokeWidth={2.5} />
+                  {bookingPrice?.duration || 20}{minutesLabel.charAt(0)}
+                </div>
+              </div>
+
+              <div
+                className={`px-3 py-1.5 rounded-lg text-xs font-black shadow-md ${
+                  isOnCall
+                    ? "bg-orange-200 text-orange-900 border border-orange-400"
+                    : onlineStatus.isOnline
+                      ? "bg-green-200 text-green-900 border border-green-400"
+                      : "bg-slate-200 text-slate-700 border border-slate-300"
+                }`}
+              >
+                {isOnCall
+                  ? intl.formatMessage({ id: "providerProfile.onCall" })
+                  : onlineStatus.isOnline
+                    ? intl.formatMessage({ id: "providerProfile.available" })
+                    : intl.formatMessage({ id: "providerProfile.offline" })}
+              </div>
             </div>
           </div>
+        </div>
+
+        {/* ✅ CONTENU PRINCIPAL */}
+        <main className="max-w-7xl mx-auto px-4 space-y-4">
+          
+          {/* Description */}
+          <section className="bg-white rounded-2xl p-5 shadow-lg border-2 border-slate-300">
+            <h2 className="text-base font-black text-slate-900 mb-3">
+              <FormattedMessage id="providerProfile.about" />
+            </h2>
+            <p className="text-slate-800 leading-relaxed whitespace-pre-line text-sm font-medium">
+              {descriptionText}
+            </p>
+          </section>
+
+          {/* Spécialités complètes */}
+          {derivedSpecialties.length > 0 && (
+            <section className="bg-white rounded-2xl p-5 shadow-lg border-2 border-slate-300">
+              <h2 className="text-base font-black text-slate-900 mb-3">
+                <FormattedMessage id="providerProfile.specialties" />
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                {derivedSpecialties.map((s, i) => (
+                  <span
+                    key={`${s}-${i}`}
+                    className={`px-3 py-1.5 rounded-full text-sm font-bold ${
+                      isLawyer 
+                        ? "bg-blue-50 text-blue-900 border border-blue-200" 
+                        : "bg-green-50 text-green-900 border border-green-200"
+                    }`}
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Pays d'intervention */}
+          {provider.operatingCountries && provider.operatingCountries.length > 0 && (
+            <section className="bg-white rounded-2xl p-5 shadow-lg border-2 border-slate-300">
+              <h2 className="text-base font-black text-slate-900 mb-3 flex items-center gap-2">
+                <MapPin size={16} className="text-red-700" strokeWidth={2.5} />
+                <FormattedMessage id="providerProfile.operatingCountries" />
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                {provider.operatingCountries.map((countryCode, index) => (
+                  <span
+                    key={`${countryCode}-${index}`}
+                    className="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-full text-sm font-bold text-slate-800"
+                  >
+                    {getCountryName(countryCode, preferredLangKey)}
+                  </span>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Langues */}
+          <section className="bg-white rounded-2xl p-5 shadow-lg border-2 border-slate-300">
+            <h2 className="text-base font-black text-slate-900 mb-3 flex items-center gap-2">
+              <Globe size={16} className="text-blue-700" strokeWidth={2.5} />
+              <FormattedMessage id="providerProfile.languages" />
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              {languageCodes.map((code, i) => (
+                <span
+                  key={`${code}-${i}`}
+                  className="px-3 py-1.5 bg-blue-50 text-blue-900 border border-blue-200 rounded-full text-sm font-bold"
+                >
+                  {formatLanguages([code], preferredLangKey)}
+                </span>
+              ))}
+            </div>
+          </section>
+
+          {/* Stats */}
+          {!isNewProvider && (
+            <section className="bg-white rounded-2xl p-5 shadow-lg border-2 border-slate-300">
+              <h2 className="text-base font-black text-slate-900 mb-3">
+                <FormattedMessage id="providerProfile.stats" />
+              </h2>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-slate-50 rounded-xl p-3 border border-slate-200">
+                  <div className="text-2xl font-black text-slate-900">
+                    {isLoadingStats ? "..." : `${providerStats.successRate}%`}
+                  </div>
+                  <div className="text-xs font-bold text-slate-700">
+                    <FormattedMessage id="providerProfile.successRate" />
+                  </div>
+                </div>
+                <div className="bg-slate-50 rounded-xl p-3 border border-slate-200">
+                  <div className="text-2xl font-black text-slate-900">
+                    {isLoadingStats ? "..." : providerStats.completedCalls}
+                  </div>
+                  <div className="text-xs font-bold text-slate-700">
+                    <FormattedMessage id="providerProfile.completedCalls" />
+                  </div>
+                </div>
+                <div className="bg-slate-50 rounded-xl p-3 border border-slate-200">
+                  <div className="text-2xl font-black text-slate-900">
+                    {isLawyer
+                      ? `${provider.yearsOfExperience || 0}`
+                      : `${provider.yearsAsExpat || provider.yearsOfExperience || 0}`}
+                  </div>
+                  <div className="text-xs font-bold text-slate-700">
+                    {yearsLabel} <FormattedMessage id="providerProfile.experience" />
+                  </div>
+                </div>
+                <div className="bg-slate-50 rounded-xl p-3 border border-slate-200">
+                  <div className="text-2xl font-black text-slate-900">
+                    {providerStats.averageRating
+                      ? providerStats.averageRating.toFixed(1)
+                      : "--"}
+                  </div>
+                  <div className="text-xs font-bold text-slate-700">
+                    <FormattedMessage id="providerProfile.averageRating" />
+                  </div>
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* Formation */}
+          {isLawyer && (educationText || certificationsArray.length > 0 || provider.graduationYear) && (
+            <section className="bg-white rounded-2xl p-5 shadow-lg border-2 border-slate-300">
+              <h2 className="text-base font-black text-slate-900 mb-3 flex items-center gap-2">
+                <GraduationCap size={16} className="text-blue-700" strokeWidth={2.5} />
+                <FormattedMessage id="providerProfile.education" />
+              </h2>
+              <div className="space-y-2">
+                {educationText && (
+                  <div className="flex items-start gap-2">
+                    <CheckCircle size={16} className="text-green-700 mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                    <div>
+                      <p className="text-sm font-bold text-slate-900">{educationText}</p>
+                      {provider.graduationYear && (
+                        <p className="text-xs font-bold text-slate-700 mt-0.5">
+                          <FormattedMessage id="providerProfile.graduated" /> {provider.graduationYear}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                )}
+                {certificationsArray.length > 0 &&
+                  certificationsArray.map((cert, i) => (
+                    <div key={i} className="flex items-start gap-2">
+                      <Award size={16} className="text-yellow-600 mt-0.5 flex-shrink-0" strokeWidth={2.5} />
+                      <p className="text-sm font-bold text-slate-800">{cert}</p>
+                    </div>
+                  ))}
+              </div>
+            </section>
+          )}
+
+          {/* Reviews */}
+          <section className="bg-white rounded-2xl p-5 shadow-lg border-2 border-slate-300">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-base font-black text-slate-900">
+                <FormattedMessage id="providerProfile.customerReviews" />
+              </h2>
+              {!isNewProvider && (
+                <span className="px-3 py-1 bg-yellow-100 border border-yellow-300 rounded-full text-sm font-black text-yellow-900">
+                  {providerStats.averageRating
+                    ? providerStats.averageRating.toFixed(1)
+                    : "—"}
+                  /5
+                </span>
+              )}
+            </div>
+
+            {isLoadingReviews ? (
+              <div className="text-center py-8">
+                <div className="animate-spin rounded-full h-10 w-10 border-b-3 border-red-700 mx-auto"></div>
+              </div>
+            ) : isNewProvider ? (
+              <div className="text-center py-8 text-slate-700">
+                <Sparkles className="w-12 h-12 mx-auto mb-3 text-yellow-600" strokeWidth={2.5} />
+                <p className="font-black mb-1 text-sm">
+                  <FormattedMessage id="providerProfile.newProviderNoReviews" />
+                </p>
+                <p className="text-xs font-bold">
+                  <FormattedMessage id="providerProfile.beTheFirst" />
+                </p>
+              </div>
+            ) : (
+              <>
+                <Reviews
+                  mode="summary"
+                  averageRating={providerStats.averageRating || 0}
+                  totalReviews={providerStats.realReviewsCount}
+                  ratingDistribution={ratingDistribution}
+                />
+                <div className="mt-4">
+                  <Reviews
+                    mode="list"
+                    reviews={reviews}
+                    showControls={!!user}
+                    onHelpfulClick={handleHelpfulClick}
+                    onReportClick={handleReportClick}
+                  />
+                </div>
+              </>
+            )}
+          </section>
+
+          {/* FAQ */}
+          {snippetData?.snippets?.faqContent && snippetData.snippets.faqContent.length > 0 && (
+            <section className="bg-white rounded-2xl p-5 shadow-lg border-2 border-slate-300">
+              <h2 className="text-base font-black text-slate-900 mb-3">
+                <FormattedMessage id="providerProfile.frequentlyAskedQuestions" />
+              </h2>
+              <div className="space-y-2">
+                {snippetData.snippets.faqContent.map((faq, index) => (
+                  <details 
+                    key={`faq-${index}`}
+                    className="group border border-slate-300 rounded-xl overflow-hidden"
+                  >
+                    <summary className="flex justify-between items-center cursor-pointer list-none p-3 bg-slate-50 hover:bg-slate-100 transition-colors">
+                      <h3 className="text-sm font-black text-slate-900 pr-3">
+                        {faq.question}
+                      </h3>
+                      <svg
+                        className="w-5 h-5 text-slate-700 transition-transform group-open:rotate-180 flex-shrink-0"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2.5}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </summary>
+                    <div className="px-3 py-3 text-sm font-medium text-slate-800 leading-relaxed bg-white border-t border-slate-300">
+                      <p className="whitespace-pre-line">{faq.answer}</p>
+                    </div>
+                  </details>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Partage */}
+          <section className="bg-white rounded-2xl p-5 shadow-lg border-2 border-slate-300">
+            <h3 className="text-sm font-black text-slate-900 mb-3 text-center">
+              <FormattedMessage id="providerProfile.share" />
+            </h3>
+            <div className="flex items-center justify-center gap-2">
+              <button
+                onClick={() => shareProfile("facebook")}
+                className="p-2.5 bg-blue-100 text-blue-700 rounded-xl hover:bg-blue-200 transition-colors border border-blue-300"
+                aria-label="Facebook"
+              >
+                <Facebook size={20} strokeWidth={2} />
+              </button>
+              <button
+                onClick={() => shareProfile("twitter")}
+                className="p-2.5 bg-sky-100 text-sky-700 rounded-xl hover:bg-sky-200 transition-colors border border-sky-300"
+                aria-label="Twitter"
+              >
+                <Twitter size={20} strokeWidth={2} />
+              </button>
+              <button
+                onClick={() => shareProfile("linkedin")}
+                className="p-2.5 bg-blue-100 text-blue-800 rounded-xl hover:bg-blue-200 transition-colors border border-blue-300"
+                aria-label="LinkedIn"
+              >
+                <Linkedin size={20} strokeWidth={2} />
+              </button>
+              <button
+                onClick={() => shareProfile("copy")}
+                className="p-2.5 bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200 transition-colors border border-slate-300"
+                aria-label={intl.formatMessage({ id: "providerProfile.copyLink" })}
+              >
+                <Share2 size={20} strokeWidth={2} />
+              </button>
+            </div>
+          </section>
+
         </main>
+      </div>
+
+      {/* ✅ CTA FLOTTANT (FAB) */}
+      <div className="fixed bottom-0 left-0 right-0 z-45 bg-white border-t-3 border-slate-300 shadow-2xl">
+        <div className="max-w-7xl mx-auto px-4 py-3">
+          <button
+            onClick={handleBookCall}
+            disabled={!onlineStatus.isOnline || isOnCall}
+            className={`w-full py-3.5 rounded-xl font-black text-base transition-all flex items-center justify-center gap-2 shadow-xl ${
+              onlineStatus.isOnline && !isOnCall
+                ? "bg-gradient-to-r from-green-700 to-green-600 text-white hover:shadow-2xl active:scale-[0.98] border-2 border-green-800"
+                : "bg-slate-400 text-slate-700 cursor-not-allowed border-2 border-slate-500"
+            }`}
+          >
+            {onlineStatus.isOnline && !isOnCall ? (
+              <>
+                <Phone size={22} strokeWidth={2.5} />
+                <span>Appeler • {bookingPrice ? formatEUR(bookingPrice.eur) : "—"}</span>
+              </>
+            ) : isOnCall ? (
+              <>
+                <XCircle size={22} strokeWidth={2.5} />
+                <FormattedMessage id="providerProfile.alreadyOnCall" />
+              </>
+            ) : (
+              <>
+                <XCircle size={22} strokeWidth={2.5} />
+                <FormattedMessage id="providerProfile.unavailable" />
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Image modal */}
       {showImageModal && (
         <div
-          className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+          className="fixed inset-0 bg-black/95 flex items-center justify-center z-50 p-4"
           onClick={() => setShowImageModal(false)}
           role="dialog"
           aria-modal="true"
-          aria-labelledby="image-modal-title"
         >
-          <div className="relative max-w-3xl max-h-[90vh] m-4">
-            <h2 id="image-modal-title" className="sr-only">
-              {/* {t("photoOf")} */}
-              <FormattedMessage id="providerProfile.photoOf" />
-              {provider.fullName}
-            </h2>
+          <div className="relative max-w-3xl max-h-[90vh]">
             <img
               src={mainPhoto}
-              alt={`${t("photoOf")} ${provider.fullName}`}
-              className="max-w-full max-h-[90vh] object-contain rounded-xl"
-              style={{
-                maxWidth: IMAGE_SIZES.MODAL_MAX_WIDTH,
-                maxHeight: IMAGE_SIZES.MODAL_MAX_HEIGHT,
-              }}
+              alt={formatPublicName(provider)}
+              className="max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl"
               onError={handleImageError}
               loading="lazy"
-              decoding="async"
             />
             <button
-              className="absolute top-4 right-4 bg-white rounded-full p-2 text-gray-800 hover:bg-gray-200 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center focus:outline-none focus:ring-4 focus:ring-white/50"
+              className="absolute top-4 right-4 bg-white rounded-full p-3 text-slate-900 hover:bg-slate-100 transition-colors shadow-xl"
               onClick={() => setShowImageModal(false)}
-              aria-label={t("close")}
+              aria-label={intl.formatMessage({ id: "providerProfile.close" })}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
+              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>

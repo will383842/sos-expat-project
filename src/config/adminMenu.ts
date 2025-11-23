@@ -123,12 +123,12 @@ export const adminMenuTree: AdminMenuItem[] = [
       },
       // Sous-section : VALIDATION AVOCATS
       {
-        id: 'validation-avocats',
-        label: 'Validation avocats',
-        path: '/admin/approvals/lawyers',
-        icon: UserCheck,
-        badge: '3',
-        description: 'Validation et KYC des avocats'
+        id: 'validation-prestataires',  // ✅ Nouveau ID (optionnel mais recommandé)
+  label: 'Validation prestataires',  // ✅ CHANGEMENT PRINCIPAL
+  path: '/admin/approvals/lawyers',
+  icon: UserCheck,
+  badge: '3',
+  description: 'Validation et KYC des prestataires'
       },
       // Sous-section : KYC PRESTATAIRES
       {

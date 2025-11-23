@@ -45,6 +45,11 @@ export interface User {
   role: UserRole;
   type?: UserRole; // Alias pour compatibilité
   isApproved: boolean;
+  approvalStatus: 'pending' | 'approved' | 'rejected';
+  approvedAt?: Date;
+  approvedBy?: string;
+  rejectionReason?: string;
+  reviewedAt?: Date;
   isActive: boolean;
   isVerified?: boolean;
   isVerifiedEmail?: boolean;

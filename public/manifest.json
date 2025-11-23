@@ -8,7 +8,7 @@
   "theme_color": "#dc2626",
   "orientation": "portrait-primary",
   "scope": "/",
-  "id": "sos-expats-pwa",
+  "id": "sos-expat-pwa",
   "lang": "fr-FR",
   "dir": "ltr",
   "categories": ["business", "productivity", "utilities", "lifestyle"],

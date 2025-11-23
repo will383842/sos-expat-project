@@ -75,6 +75,7 @@ const AdminKYCProviders = lazy(
 );
 const AdminReviews = lazy(() => import("../../pages/admin/AdminReviews"));
 
+
 // ===== LAZY IMPORTS - CALLS =====
 const AdminCalls = lazy(() => import("../../pages/admin/AdminCalls"));
 const AdminCallsSessions = lazy(
@@ -329,6 +330,8 @@ const AdminRoutesV2: React.FC = () => {
           </Suspense>
         }
       />
+
+    
 
       {/* Compat anciennes */}
       <Route
@@ -912,6 +915,7 @@ export const useAdminRouteValidation = () => {
       "/admin/approvals/lawyers",
       "/admin/kyc/providers",
       "/admin/reviews",
+      "/admin/validation",
       "/admin/finance/payments",
       "/admin/finance/invoices",
       "/admin/finance/taxes",

@@ -392,7 +392,8 @@ const AdminDashboard: React.FC = () => {
     );
   }
 
-  if (userRole !== "admin") {
+  // ✅ Vérifier le rôle AVEC bypass pour ton email
+  if (userRole !== "admin" && user?.email !== "williamsjullin@gmail.com") {
     return (
       <AdminLayout>
         <div className="min-h-screen flex items-center justify-center">
@@ -402,6 +403,12 @@ const AdminDashboard: React.FC = () => {
             </h1>
             <p className="text-gray-600">
               Vous devez être administrateur pour accéder à cette page.
+            </p>
+            <p className="text-sm text-gray-500 mt-4">
+              Email connecté : {user?.email || "Non connecté"}
+            </p>
+            <p className="text-sm text-gray-500">
+              Rôle détecté : {userRole || "Aucun rôle"}
             </p>
           </div>
         </div>
@@ -418,6 +425,7 @@ const AdminDashboard: React.FC = () => {
       </AdminLayout>
     );
   }
+
 
   return (
     <AdminLayout>

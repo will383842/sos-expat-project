@@ -74,7 +74,7 @@ const SEOHead: React.FC<SEOHeadProps> = ({
     }
     
     // Fallback pour SSR
-    return canonicalUrl ? `https://sosexpats.com${canonicalUrl}` : '';
+    return canonicalUrl ? `https://sos-expat.com${canonicalUrl}` : '';
   };
 
   const fullCanonicalUrl = buildCanonicalUrl();
@@ -82,7 +82,7 @@ const SEOHead: React.FC<SEOHeadProps> = ({
   // Validation et nettoyage des données
   const cleanTitle = title?.trim() || '';
   const cleanDescription = description?.trim().substring(0, 160) || '';
-  const fullOgImage = ogImage?.startsWith('http') ? ogImage : `https://sosexpats.com${ogImage}`;
+  const fullOgImage = ogImage?.startsWith('http') ? ogImage : `https://sos-expat.com${ogImage}`;
   
   // Génération automatique de données structurées enrichies pour les IA
   const generateEnrichedStructuredData = () => {

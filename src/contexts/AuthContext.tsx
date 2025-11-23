@@ -261,14 +261,32 @@ const createUserDocumentInFirestore = async (
 
   const userRef = doc(db, 'users', firebaseUser.uid);
   
-  // Split displayName into firstName and lastName if not provided
   const { firstName, lastName } = additionalData.firstName && additionalData.lastName 
     ? { firstName: additionalData.firstName, lastName: additionalData.lastName }
     : splitDisplayName(firebaseUser.displayName);
   
   const fullName = additionalData.fullName || `${firstName} ${lastName}`.trim() || firebaseUser.displayName || '';
+
+  const isClientRole = additionalData.role === 'client';
+  const isGoogleProvider = additionalData.provider === 'google.com';
+  const shouldAutoApprove = isClientRole && isGoogleProvider;
+  
+  const approvalFields = shouldAutoApprove 
+    ? {
+        isApproved: true,
+        approvalStatus: 'approved' as const,
+        isVisible: true,
+        verificationStatus: 'verified' as const,
+      }
+    : {
+        isApproved: false,
+        approvalStatus: 'pending' as const,
+        isVisible: false,
+        verificationStatus: 'pending' as const,
+      };
   
   try {
+    // 1️⃣ Créer dans users (tous les utilisateurs)
     await setDoc(userRef, {
       uid: firebaseUser.uid,
       email: firebaseUser.email || null,
@@ -287,28 +305,101 @@ const createUserDocumentInFirestore = async (
       updatedAt: serverTimestamp(),
       lastLoginAt: serverTimestamp(),
       ...additionalData,
+      ...approvalFields,
     });
 
-    // Si c'est un lawyer ou expat, créer aussi le profil SOS
+    // 2️⃣ Si lawyer/expat → créer AUSSI dans sos_profiles avec TOUS les champs
     if (additionalData.role === 'lawyer' || additionalData.role === 'expat') {
       const sosRef = doc(db, 'sos_profiles', firebaseUser.uid);
+      
+      // ✅ COPIER TOUS LES CHAMPS IMPORTANTS
       await setDoc(sosRef, {
+        // ===== IDENTIFIANTS =====
         id: firebaseUser.uid,
-        fullName: additionalData.fullName || `${additionalData.firstName || ''} ${additionalData.lastName || ''}`.trim(),
+        uid: firebaseUser.uid,
+        type: additionalData.role,
+        role: additionalData.role, // Garder aussi 'role' pour compatibilité
+        
+        // ===== IDENTITÉ =====
         email: firebaseUser.email || null,
-        profilePhoto: firebaseUser.photoURL || '/default-avatar.png',
-        rating: 5,
-        reviewCount: 0,
+        emailLower: (firebaseUser.email || '').toLowerCase(),
+        firstName: firstName || '',
+        lastName: lastName || '',
+        fullName: fullName,
+        name: fullName, // Alias utilisé par SOSCall.tsx
+        displayName: fullName,
+        
+        // ===== PHOTO =====
+        profilePhoto: additionalData.profilePhoto || firebaseUser.photoURL || '/default-avatar.png',
+        photoURL: additionalData.profilePhoto || firebaseUser.photoURL || '/default-avatar.png',
+        avatar: additionalData.profilePhoto || firebaseUser.photoURL || '/default-avatar.png',
+        
+        // ===== CONTACT =====
+        phone: additionalData.phone || null,
+        phoneNumber: additionalData.phone || null,
+        phoneCountryCode: additionalData.phoneCountryCode || null,
+        
+        // ===== LOCALISATION =====
+        country: additionalData.country || additionalData.currentCountry || '',
+        currentCountry: additionalData.currentCountry || additionalData.country || '',
+        currentPresenceCountry: additionalData.currentCountry || additionalData.country || '',
+        practiceCountries: additionalData.practiceCountries || [],
+        interventionCountries: additionalData.practiceCountries || [],
+        
+        // ===== LANGUES =====
+        languages: additionalData.languages || additionalData.languagesSpoken || [],
+        languagesSpoken: additionalData.languagesSpoken || additionalData.languages || [],
+        
+        // ===== EXPERTISE =====
+        specialties: additionalData.specialties || [],
+        yearsOfExperience: additionalData.yearsOfExperience || 0,
+        yearsAsExpat: additionalData.yearsAsExpat || additionalData.yearsOfExperience || 0,
+        graduationYear: additionalData.graduationYear || null,
+        education: additionalData.education || [],
+        
+        // ===== DESCRIPTION =====
+        bio: additionalData.bio || additionalData.description || '',
+        description: additionalData.description || additionalData.bio || '',
+        
+        // ===== NOTATION =====
+        rating: additionalData.rating || 4.5,
+        reviewCount: additionalData.reviewCount || 0,
+        
+        // ===== DISPONIBILITÉ =====
         isActive: true,
-        isOnline: false,
-        availability: 'unavailable',
-        isVisible: true,
-        isVisibleOnMap: true,
+        isOnline: additionalData.isOnline || false,
+        availability: additionalData.availability || 'unavailable',
+        
+        // ===== VISIBILITÉ & APPROBATION =====
+        isVisible: false,
+        isVisibleOnMap: false,
+        isApproved: false,
+        approvalStatus: 'pending' as const,
+        verificationStatus: 'pending' as const,
+        status: 'pending' as const,
+        
+        // ===== TARIFICATION (si présent) =====
+        price: additionalData.price || null,
+        duration: additionalData.duration || null,
+        
+        // ===== PRÉFÉRENCES =====
+        preferredLanguage: additionalData.preferredLanguage || 'fr',
+        
+        // ===== TIMESTAMPS =====
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
-        ...additionalData,
+      });
+      
+      console.log('✅ [Auth] Profil créé dans sos_profiles avec tous les champs:', {
+        uid: firebaseUser.uid,
+        type: additionalData.role,
+        specialties: additionalData.specialties?.length || 0,
+        languages: additionalData.languages?.length || 0,
+        countries: additionalData.practiceCountries?.length || 0,
       });
     }
+    
+    console.log('✅ User document created with verificationStatus:', approvalFields.verificationStatus);
   } catch (error) {
     console.error('Erreur création document utilisateur:', error);
     throw error;
@@ -329,6 +420,9 @@ const getUserDocument = async (firebaseUser: FirebaseUser): Promise<User | null>
       emailLower: (firebaseUser.email ?? '').toLowerCase(),
       role: 'client',
       isActive: true,
+      isApproved: false,
+      approvalStatus: 'pending',
+      isVisible: false,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     }, { merge: true });
@@ -357,6 +451,9 @@ const getUserDocument = async (firebaseUser: FirebaseUser): Promise<User | null>
       lastLoginAt: new Date(),
       isVerifiedEmail: firebaseUser.emailVerified,
       isOnline: false,
+      isApproved: false,
+      approvalStatus: 'pending',
+      isVisible: false,
     } as unknown as User;
   }
 
@@ -394,8 +491,7 @@ const writeSosPresence = async (
     availability: isOnline ? 'available' : 'unavailable',
     lastStatusChange: serverTimestamp(),
     updatedAt: serverTimestamp(),
-    isVisible: true,
-    isVisibleOnMap: true,
+    // Ne pas modifier isVisible/isVisibleOnMap ici - c'est géré par l'approbation
   };
 
   try {
@@ -409,6 +505,10 @@ const writeSosPresence = async (
         rating: 5,
         reviewCount: 0,
         isActive: true,
+        isApproved: false,
+        approvalStatus: 'pending',
+        isVisible: false,
+        isVisibleOnMap: false,
         createdAt: serverTimestamp(),
         ...payload,
       },
@@ -512,7 +612,15 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         if (!snap.exists()) {
           await setDoc(
             refUser,
-            { uid, createdAt: serverTimestamp(), updatedAt: serverTimestamp(), isActive: true },
+            { 
+              uid, 
+              createdAt: serverTimestamp(), 
+              updatedAt: serverTimestamp(), 
+              isActive: true,
+              isApproved: false,
+              approvalStatus: 'pending',
+              isVisible: false,
+            },
             { merge: true }
           );
         }
@@ -725,11 +833,14 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         });
       } else {
         // Create new user - only include photo fields if Google provides them
+        // Les clients Google sont auto-approuvés
         const newUserData: any = {
           role: 'client',
           email: googleUser.email || '',
           preferredLanguage: 'fr',
           isApproved: true,
+          approvalStatus: 'approved',
+          isVisible: true,
           isActive: true,
           provider: 'google.com',
           isVerified: googleUser.emailVerified,
@@ -833,11 +944,14 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
           });
         } else {
           // Create new user - only include photo fields if Google provides them
+          // Les clients Google sont auto-approuvés
           const newUserData: any = {
             role: 'client',
             email: googleUser.email || '',
             preferredLanguage: 'fr',
             isApproved: true,
+            approvalStatus: 'approved',
+            isVisible: true,
             isActive: true,
             provider: 'google.com',
             isVerified: googleUser.emailVerified,
@@ -915,6 +1029,13 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         err.code = 'sos/email-linked-to-other';
         throw err;
       }
+console.log('🔍 [Register] Tentative création compte avec:', {
+        email,
+        emailOriginal: userData.email,
+        emailNormalized: normalizeEmail(userData.email || ''),
+        passwordLength: password?.length || 0,
+        role: userData.role,
+      });
 
       const cred = await createUserWithEmailAndPassword(auth, email, password);
 
@@ -925,6 +1046,22 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         finalProfilePhotoURL = userData.profilePhoto;
       }
 
+      // Déterminer l'approbation selon le rôle
+      // Seuls les clients par email sont auto-approuvés
+      // Les lawyers et expats nécessitent une approbation manuelle
+      const isClientRole = userData.role === 'client';
+      const approvalData = isClientRole 
+        ? {
+            isApproved: true,
+            approvalStatus: 'approved' as const,
+            isVisible: true,
+          }
+        : {
+            isApproved: false,
+            approvalStatus: 'pending' as const,
+            isVisible: false,
+          };
+
       try {
         await createUserDocumentInFirestore(cred.user, {
           ...userData,
@@ -934,6 +1071,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
           photoURL: finalProfilePhotoURL,
           avatar: finalProfilePhotoURL,
           provider: 'password',
+          ...approvalData,
         });
       } catch (docErr) {
         try { await deleteUser(cred.user); } catch { /* no-op */ }
@@ -959,6 +1097,8 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         role: userData.role,
         email,
         hasProfilePhoto: !!finalProfilePhotoURL && finalProfilePhotoURL !== '/default-avatar.png',
+        isApproved: approvalData.isApproved,
+        approvalStatus: approvalData.approvalStatus,
         deviceInfo
       });
     } catch (err) {
@@ -1344,6 +1484,11 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     if (!user || !firebaseUser) throw new Error('Utilisateur non connecté');
     if (user.role !== 'lawyer' && user.role !== 'expat') return;
 
+    // Vérifier que l'utilisateur est approuvé avant de pouvoir changer sa disponibilité
+    if (!user.isApproved || user.approvalStatus !== 'approved') {
+      throw new Error('Votre compte doit être approuvé pour modifier votre disponibilité');
+    }
+
     try {
       const isOnline = availability === 'available';
       const now = serverTimestamp();
@@ -1365,8 +1510,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
           availability: isOnline ? 'available' : 'unavailable',
           updatedAt: now,
           lastStatusChange: now,
-          isVisible: true,
-          isVisibleOnMap: true,
+          // isVisible reste inchangé - géré par l'approbation
         },
         { merge: true }
       );

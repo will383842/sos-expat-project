@@ -1,111 +1,280 @@
-// ========================================
-// SpecialtySelect.tsx — Multi-select of lawyer specialties (grouped)
-// ========================================
-import React, { useState, useMemo, useCallback } from 'react';
-import Select, { MultiValue, GroupBase } from 'react-select';
-import { lawyerSpecialitiesData } from '@/data'; // index.ts re-exports the correct file
-import { Locale, getDetectedBrowserLanguage, normalize, getLocalizedLabel, defaultPlaceholderByLocale, makeAdaptiveStyles, SharedOption } from './shared';
+// src/components/forms-data/SpecialtySelect.tsx
+// ✅ FICHIER COMPLET - DÉBUT
+import React, { useMemo } from 'react';
+import Select, { MultiValue, StylesConfig, GroupBase } from 'react-select';
+import {
+  lawyerSpecialitiesData,
+  type LawyerSpecialityGroup,
+  type LawyerSpecialityItem,
+} from '@/data/lawyer-specialties';
 
-export interface SpecialtyOption extends SharedOption {}
+type SupportedLocale = 'fr' | 'en' | 'es' | 'de' | 'pt' | 'ru' | 'ch' | 'ar' | 'hi';
 
-interface SpecialtySelectProps {
-  value?: MultiValue<SpecialtyOption>;
-  onChange: (selectedOptions: MultiValue<SpecialtyOption>) => void;
-  providerLanguages?: string[];
-  highlightShared?: boolean;
-  locale?: Locale;
-  placeholder?: string;
-  className?: string;
-  disabled?: boolean;
+interface OptionType {
+  value: string;
+  label: string;
 }
 
-type GroupedOptions = {
+interface GroupedOption {
   label: string;
-  options: SpecialtyOption[];
-};
+  options: OptionType[];
+}
 
-const SpecialtySelect: React.FC<SpecialtySelectProps> = React.memo(({
+interface SpecialtySelectProps {
+  value: MultiValue<OptionType>;
+  onChange: (newValue: MultiValue<OptionType>) => void;
+  locale?: SupportedLocale;
+  placeholder?: string;
+  isDisabled?: boolean;
+  'aria-label'?: string;
+}
+
+const SpecialtySelect: React.FC<SpecialtySelectProps> = ({
   value,
   onChange,
-  providerLanguages = [],
-  highlightShared = false,
-  locale,
-  placeholder,
-  className = '',
-  disabled = false
+  locale = 'fr',
+  placeholder = 'Sélectionnez vos spécialités...',
+  isDisabled = false,
+  'aria-label': ariaLabel,
 }) => {
-  const [inputValue, setInputValue] = useState('');
-  const currentLocale: Locale = useMemo(() => locale || getDetectedBrowserLanguage(), [locale]);
+  // Fonction pour obtenir le label traduit d'un groupe
+  const getGroupLabel = (group: LawyerSpecialityGroup): string => {
+    const localeMap: Record<SupportedLocale, keyof LawyerSpecialityGroup> = {
+      fr: 'labelFr',
+      en: 'labelEn',
+      es: 'labelEs',
+      de: 'labelDe',
+      pt: 'labelPt',
+      ru: 'labelRu',
+      ch: 'labelZh',
+      ar: 'labelAr',
+      hi: 'labelHi',
+    };
+    const key = localeMap[locale] || 'labelFr';
+    return (group[key] as string) || group.labelFr;
+  };
 
-  // Build grouped options with search filtering
-  const groupedOptions = useMemo<GroupedOptions[]>(() => {
-    const q = normalize(inputValue);
-    return lawyerSpecialitiesData.map(group => {
-      const glabel = getLocalizedLabel(group, currentLocale, group.groupName);
-      const items = group.items
-        .filter(item => {
-          if (!q) return true;
-          const ilabel = getLocalizedLabel(item, currentLocale, item.code);
-          // match against item, group, and code
-          return [ilabel, glabel, item.code].some(f => normalize(f).includes(q));
-        })
-        .map(item => {
-          const ilabel = getLocalizedLabel(item, currentLocale, item.code);
-          return {
-            value: item.code,
-            label: ilabel,
-            isShared: highlightShared && providerLanguages.includes(item.code)
-          } as SpecialtyOption;
-        });
+  // Fonction pour obtenir le label traduit d'une spécialité
+  const getItemLabel = (item: LawyerSpecialityItem): string => {
+    const localeMap: Record<SupportedLocale, keyof LawyerSpecialityItem> = {
+      fr: 'labelFr',
+      en: 'labelEn',
+      es: 'labelEs',
+      de: 'labelDe',
+      pt: 'labelPt',
+      ru: 'labelRu',
+      ch: 'labelZh',
+      ar: 'labelAr',
+      hi: 'labelHi',
+    };
+    const key = localeMap[locale] || 'labelFr';
+    return (item[key] as string) || item.labelFr;
+  };
 
-      return { label: glabel, options: items };
-    }).filter(g => g.options.length > 0);
-  }, [inputValue, currentLocale, highlightShared, providerLanguages]);
+  // Préparer les options groupées
+  const groupedOptions = useMemo((): GroupedOption[] => {
+    return lawyerSpecialitiesData
+      .filter(group => !group.disabled)
+      .map(group => ({
+        label: getGroupLabel(group),
+        options: group.items.map(item => ({
+          value: item.code,
+          label: getItemLabel(item),
+        })),
+      }));
+  }, [locale]);
 
-  // When highlightShared, sort within each group
-  const sortedGroupedOptions = useMemo(() => {
-    if (!highlightShared) return groupedOptions;
-    return groupedOptions.map(g => ({
-      ...g,
-      options: [...g.options].sort((a, b) => (a.isShared === b.isShared) ? 0 : (a.isShared ? -1 : 1))
-    }));
-  }, [groupedOptions, highlightShared]);
+  // Styles personnalisés pour react-select
+  const customStyles: StylesConfig<OptionType, true, GroupBase<OptionType>> = {
+    control: (base, state) => ({
+      ...base,
+      minHeight: '48px',
+      border: 'none',
+      borderRadius: '0.75rem',
+      backgroundColor: 'transparent',
+      boxShadow: 'none',
+      cursor: 'pointer',
+      '&:hover': {
+        backgroundColor: 'transparent',
+      },
+    }),
+    valueContainer: (base) => ({
+      ...base,
+      padding: '8px 12px',
+      gap: '6px',
+      flexWrap: 'wrap',
+    }),
+    placeholder: (base) => ({
+      ...base,
+      color: '#9ca3af',
+      fontSize: '15px',
+      fontWeight: '500',
+    }),
+    input: (base) => ({
+      ...base,
+      margin: '0',
+      padding: '0',
+      color: '#111827',
+      fontSize: '15px',
+      fontWeight: '500',
+    }),
+    menu: (base) => ({
+      ...base,
+      marginTop: '8px',
+      borderRadius: '12px',
+      border: '2px solid #e5e7eb',
+      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+      overflow: 'hidden',
+      zIndex: 9999,
+    }),
+    menuList: (base) => ({
+      ...base,
+      padding: '8px',
+      maxHeight: '320px',
+      '::-webkit-scrollbar': {
+        width: '8px',
+      },
+      '::-webkit-scrollbar-track': {
+        background: '#f1f5f9',
+        borderRadius: '10px',
+      },
+      '::-webkit-scrollbar-thumb': {
+        background: '#cbd5e1',
+        borderRadius: '10px',
+      },
+      '::-webkit-scrollbar-thumb:hover': {
+        background: '#94a3b8',
+      },
+    }),
+    group: (base) => ({
+      ...base,
+      padding: '0',
+      marginBottom: '4px',
+    }),
+    groupHeading: (base) => ({
+      ...base,
+      fontSize: '13px',
+      fontWeight: '700',
+      color: '#4f46e5',
+      textTransform: 'uppercase',
+      letterSpacing: '0.05em',
+      padding: '12px 12px 8px 12px',
+      margin: '0',
+      backgroundColor: '#eef2ff',
+      borderRadius: '8px',
+      marginBottom: '4px',
+    }),
+    option: (base, state) => ({
+      ...base,
+      fontSize: '14px',
+      fontWeight: '500',
+      color: state.isSelected ? '#4f46e5' : '#374151',
+      backgroundColor: state.isSelected
+        ? '#eef2ff'
+        : state.isFocused
+        ? '#f9fafb'
+        : 'transparent',
+      cursor: 'pointer',
+      padding: '10px 12px',
+      borderRadius: '6px',
+      marginBottom: '2px',
+      transition: 'all 0.15s ease',
+      '&:active': {
+        backgroundColor: '#e0e7ff',
+      },
+    }),
+    multiValue: (base) => ({
+      ...base,
+      backgroundColor: '#eef2ff',
+      borderRadius: '6px',
+      border: '1px solid #c7d2fe',
+      padding: '2px 4px',
+    }),
+    multiValueLabel: (base) => ({
+      ...base,
+      color: '#4f46e5',
+      fontSize: '13px',
+      fontWeight: '600',
+      padding: '2px 6px',
+    }),
+    multiValueRemove: (base) => ({
+      ...base,
+      color: '#6366f1',
+      cursor: 'pointer',
+      borderRadius: '4px',
+      transition: 'all 0.15s ease',
+      '&:hover': {
+        backgroundColor: '#c7d2fe',
+        color: '#4338ca',
+      },
+    }),
+    indicatorSeparator: () => ({
+      display: 'none',
+    }),
+    dropdownIndicator: (base) => ({
+      ...base,
+      color: '#6b7280',
+      padding: '8px',
+      transition: 'all 0.2s ease',
+      '&:hover': {
+        color: '#4f46e5',
+      },
+    }),
+    clearIndicator: (base) => ({
+      ...base,
+      color: '#6b7280',
+      padding: '8px',
+      cursor: 'pointer',
+      transition: 'all 0.2s ease',
+      '&:hover': {
+        color: '#ef4444',
+      },
+    }),
+    noOptionsMessage: (base) => ({
+      ...base,
+      fontSize: '14px',
+      color: '#6b7280',
+      padding: '12px',
+    }),
+  };
 
-  const handleInputChange = useCallback((input: string) => {
-    setInputValue(input);
-    return input;
-  }, []);
-
-  const styles = useMemo(() => makeAdaptiveStyles<SpecialtyOption>(!!highlightShared), [highlightShared]);
-  const defaultPlaceholder = useMemo(() => defaultPlaceholderByLocale[currentLocale], [currentLocale]);
-  const noOptionsMessage = useCallback(({ inputValue }: { inputValue: string }) => {
-    return currentLocale === 'fr'
-      ? (inputValue ? `Aucune spécialité trouvée pour "${inputValue}"` : 'Aucune spécialité disponible')
-      : (inputValue ? `No specialty found for "${inputValue}"` : 'No specialties available');
-  }, [currentLocale]);
+  // Messages "Aucune option" traduits
+  const getNoOptionsMessage = () => {
+    const messages: Record<SupportedLocale, string> = {
+      fr: 'Aucune spécialité trouvée',
+      en: 'No specialty found',
+      es: 'No se encontró especialidad',
+      de: 'Keine Fachrichtung gefunden',
+      pt: 'Nenhuma especialidade encontrada',
+      ru: 'Специальность не найдена',
+      ch: '未找到专业',
+      ar: 'لم يتم العثور على تخصص',
+      hi: 'कोई विशेषता नहीं मिली',
+    };
+    return messages[locale] || messages.fr;
+  };
 
   return (
-    <Select<SpecialtyOption, true, GroupBase<SpecialtyOption>>
+    <Select<OptionType, true, GroupBase<OptionType>>
       isMulti
-      options={sortedGroupedOptions}
-      onChange={onChange}
-      onInputChange={handleInputChange}
       value={value}
-      placeholder={placeholder || defaultPlaceholder}
-      className={className}
-      classNamePrefix="react-select"
-      styles={styles}
+      onChange={onChange}
+      options={groupedOptions}
+      styles={customStyles}
+      placeholder={placeholder}
+      isDisabled={isDisabled}
+      isClearable
+      isSearchable
       closeMenuOnSelect={false}
       hideSelectedOptions={false}
-      blurInputOnSelect={false}
-      isSearchable={true}
-      isDisabled={disabled}
-      noOptionsMessage={noOptionsMessage}
-      filterOption={() => true}
+      menuPortalTarget={document.body}
+      menuPosition="fixed"
+      aria-label={ariaLabel}
+      noOptionsMessage={() => getNoOptionsMessage()}
+      classNamePrefix="react-select"
     />
   );
-});
+};
 
-SpecialtySelect.displayName = 'SpecialtySelect';
 export default SpecialtySelect;
-
+// ✅ FICHIER COMPLET - FIN

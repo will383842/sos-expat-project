@@ -60,11 +60,11 @@ interface Language {
 interface NavigationItem {
   path: string;
   labelKey: string;
-  mobileIcon?: string; // emoji (mobile)
-  desktopIcon?: string; // emoji (desktop)
+  mobileIcon?: string;
+  desktopIcon?: string;
+  showInMobileMenu?: boolean;
 }
 
-/** Champs additionnels présents côté Auth/Firestore mais pas forcément dans le type domaine */
 type WithAuthExtras = User & {
   uid?: string;
   displayName?: string;
@@ -92,7 +92,6 @@ const FrenchFlag = memo(() => (
       <div className="w-1/3 h-full bg-white" />
       <div className="w-1/3 h-full bg-red-600" />
     </div>
-    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-lg pointer-events-none" />
   </div>
 ));
 FrenchFlag.displayName = "FrenchFlag";
@@ -123,7 +122,6 @@ const BritishFlag = memo(() => (
       <div className="absolute top-0 left-1/2 w-px h-full bg-red-600 -translate-x-1/2" />
       <div className="absolute left-0 top-1/2 w-full h-px bg-red-600 -translate-y-1/2" />
     </div>
-    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-lg pointer-events-none" />
   </div>
 ));
 BritishFlag.displayName = "BritishFlag";
@@ -139,7 +137,6 @@ const SpanishFlag = memo(() => (
       <div className="w-full h-1/3 bg-yellow-400" />
       <div className="w-full h-1/3 bg-red-600" />
     </div>
-    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-lg pointer-events-none" />
   </div>
 ));
 SpanishFlag.displayName = "SpanishFlag";
@@ -155,7 +152,6 @@ const RussianFlag = memo(() => (
       <div className="w-full h-1/3 bg-blue-600" />
       <div className="w-full h-1/3 bg-red-600" />
     </div>
-    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-lg pointer-events-none" />
   </div>
 ));
 RussianFlag.displayName = "RussianFlag";
@@ -171,7 +167,6 @@ const GermanFlag = memo(() => (
       <div className="w-full h-1/3 bg-red-600" />
       <div className="w-full h-1/3 bg-yellow-400" />
     </div>
-    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-lg pointer-events-none" />
   </div>
 ));
 GermanFlag.displayName = "GermanFlag";
@@ -192,11 +187,9 @@ const IndianFlag = memo(() => (
         </div>
       </div>
       <div className="w-full h-1/3 bg-green-600" />
-       </div>
-    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-lg pointer-events-none" />
+    </div>
   </div>
 ));
-
 IndianFlag.displayName = "IndianFlag";
 
 const ChineseFlag = memo(() => (
@@ -209,23 +202,21 @@ const ChineseFlag = memo(() => (
       <div className="absolute top-0.5 left-0.5 text-yellow-400" style={{ fontSize: "0.5rem" }}>
         ★
       </div>
-      <div className="absolute top-[0.15rem] left-[1.2rem] text-yellow-400 rotate-[20deg]" style={{ fontSize: "0.3rem" }}>
+      <div className="absolute top-[0.15rem] left-[1.2rem] text-yellow-400" style={{ fontSize: "0.3rem" }}>
         ★
       </div>
-      <div className="absolute top-[0.45rem] left-[1.45rem] text-yellow-400 rotate-[10deg]" style={{ fontSize: "0.3rem" }}>
+      <div className="absolute top-[0.45rem] left-[1.45rem] text-yellow-400" style={{ fontSize: "0.3rem" }}>
         ★
       </div>
-      <div className="absolute top-[0.8rem] left-[1.4rem] text-yellow-400 rotate-[5deg]" style={{ fontSize: "0.3rem" }}>
+      <div className="absolute top-[0.8rem] left-[1.4rem] text-yellow-400" style={{ fontSize: "0.3rem" }}>
         ★
       </div>
-      <div className="absolute top-[1.05rem] left-[1.1rem] text-yellow-400 rotate-[25deg]" style={{ fontSize: "0.3rem" }}>
+      <div className="absolute top-[1.05rem] left-[1.1rem] text-yellow-400" style={{ fontSize: "0.3rem" }}>
         ★
       </div>
     </div>
-    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-lg pointer-events-none" />
   </div>
 ));
-
 ChineseFlag.displayName = "ChineseFlag";
 
 const PortugueseFlag = memo(() => (
@@ -240,7 +231,6 @@ const PortugueseFlag = memo(() => (
         <div className="w-2 h-2 bg-yellow-300 rounded-full" />
       </div>
     </div>
-    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-lg pointer-events-none" />
   </div>
 ));
 PortugueseFlag.displayName = "PortugueseFlag";
@@ -255,7 +245,6 @@ const ArabicFlag = memo(() => (
         <div className="w-1/4 h-full bg-red-600"></div>
       </div>
     </div>
-    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-lg pointer-events-none"></div>
   </div>
 ));
 ArabicFlag.displayName = "ArabicFlag";
@@ -276,18 +265,20 @@ const SUPPORTED_LANGUAGES: Language[] = [
 ];
 
 const LEFT_NAVIGATION_ITEMS: NavigationItem[] = [
-  { path: "/", labelKey: "nav.home", mobileIcon: "🏠", desktopIcon: "🏠" },
+  { path: "/", labelKey: "nav.home", mobileIcon: "🏠", desktopIcon: "🏠", showInMobileMenu: true },
   {
     path: "/sos-appel",
     labelKey: "nav.viewProfiles",
     mobileIcon: "👥",
     desktopIcon: "👥",
+    showInMobileMenu: false,
   },
   {
     path: "/testimonials",
     labelKey: "nav.testimonials",
     mobileIcon: "💬",
     desktopIcon: "💬",
+    showInMobileMenu: false,
   },
 ];
 
@@ -297,12 +288,14 @@ const RIGHT_NAVIGATION_ITEMS: NavigationItem[] = [
     labelKey: "nav.howItWorks",
     mobileIcon: "⚡",
     desktopIcon: "⚡",
+    showInMobileMenu: false,
   },
   {
     path: "/pricing",
     labelKey: "nav.pricing",
     mobileIcon: "💎",
     desktopIcon: "💎",
+    showInMobileMenu: true,
   },
 ];
 
@@ -310,6 +303,10 @@ const ALL_NAVIGATION_ITEMS = [
   ...LEFT_NAVIGATION_ITEMS,
   ...RIGHT_NAVIGATION_ITEMS,
 ];
+
+const MOBILE_NAVIGATION_ITEMS = ALL_NAVIGATION_ITEMS.filter(
+  item => item.showInMobileMenu !== false
+);
 
 /** ================================
  *  Hooks
@@ -334,7 +331,7 @@ const useScrolled = () => {
 };
 
 /** ================================
- *  Availability logic (source de vérité = sos_profiles)
+ *  Availability logic
  *  ================================ */
 const useAvailabilityToggle = () => {
   const { user } = useAuth();
@@ -347,13 +344,11 @@ const useAvailabilityToggle = () => {
   const isProvider =
     typedUser?.role === "lawyer" || typedUser?.role === "expat";
 
-  // ID unique (uid Firebase ou id Firestore)
   const userId = useMemo<string | undefined>(() => {
     if (!typedUser) return undefined;
     return typedUser.uid ?? typedUser.id;
   }, [typedUser]);
 
-  // --- Helpers d'écriture ---
   const writeSosProfile = useCallback(
     async (newStatus: boolean) => {
       if (!typedUser || !isProvider || !userId) return;
@@ -368,15 +363,13 @@ const useAvailabilityToggle = () => {
         isVisibleOnMap: true,
       };
 
-      // 1) Update direct (doc id = userId)
       try {
         await updateDoc(sosRef, updateData);
         return;
       } catch {
-        /* pass, on tente la suite */
+        /* pass */
       }
 
-      // 2) S'il n'existe pas, crée/merge
       try {
         const snap = await getDoc(sosRef);
         if (!snap.exists()) {
@@ -398,10 +391,9 @@ const useAvailabilityToggle = () => {
           return;
         }
       } catch {
-        /* pass, on tente la suite */
+        /* pass */
       }
 
-      // 3) Fallback : anciens docs avec id ≠ uid → update tous les docs où uid == userId
       const q = query(
         collection(db, "sos_profiles"),
         where("uid", "==", userId)
@@ -414,7 +406,6 @@ const useAvailabilityToggle = () => {
         return;
       }
 
-      // 4) Dernier recours : créer doc {uid}
       await setDoc(
         sosRef,
         {
@@ -451,18 +442,16 @@ const useAvailabilityToggle = () => {
       try {
         await updateDoc(userRef, payload);
       } catch {
-        // Tentative avec setDoc merge si updateDoc échoue
         try {
           await setDoc(userRef, { uid: userId, ...payload }, { merge: true });
         } catch (e2) {
-          console.warn("Users presence update ignorée (règles/email) :", e2);
+          console.warn("Users presence update ignorée :", e2);
         }
       }
     },
     [typedUser, userId]
   );
 
-  // --- Ecoute temps réel : sos_profiles = source de vérité pour l'UI ---
   useEffect(() => {
     if (!typedUser || !isProvider || !userId) return;
     if (sosSnapshotSubscribed.current) return;
@@ -488,7 +477,6 @@ const useAvailabilityToggle = () => {
     };
   }, [typedUser, isProvider, userId]);
 
-  // Garde en phase avec un éventuel changement externe du user
   useEffect(() => {
     if (typeof typedUser?.isOnline !== "undefined")
       setIsOnline(!!typedUser.isOnline);
@@ -501,14 +489,11 @@ const useAvailabilityToggle = () => {
     setIsUpdating(true);
 
     try {
-      // 1) Écrire d'abord dans sos_profiles (vérité)
       await writeSosProfile(newStatus);
-      // 2) Puis essayer users (best-effort)
       await writeUsersPresenceBestEffort(newStatus);
 
       setIsOnline(newStatus);
 
-      // Broadcast (on émet les DEUX événements pour compatibilité)
       window.dispatchEvent(
         new CustomEvent("availability:changed", {
           detail: { isOnline: newStatus },
@@ -520,7 +505,6 @@ const useAvailabilityToggle = () => {
         })
       );
 
-      // Analytics
       window.gtag?.("event", "online_status_change", {
         event_category: "engagement",
         event_label: newStatus ? "online" : "offline",
@@ -561,7 +545,7 @@ const HeaderAvailabilityToggle = memo(() => {
       }}
       disabled={isUpdating}
       type="button"
-      className={`group flex items-center px-4 py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/50 min-h-[44px] touch-manipulation ${
+      className={`group flex items-center px-4 py-2.5 rounded-xl font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-white/50 min-h-[44px] ${
         isOnline
           ? "bg-green-500 hover:bg-green-600 text-white shadow-lg"
           : "bg-gray-500 hover:bg-gray-600 text-white shadow-lg"
@@ -572,9 +556,9 @@ const HeaderAvailabilityToggle = memo(() => {
       {isUpdating ? (
         <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
       ) : isOnline ? (
-        <Wifi className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform duration-300" />
+        <Wifi className="w-4 h-4 mr-2" />
       ) : (
-        <WifiOff className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform duration-300" />
+        <WifiOff className="w-4 h-4 mr-2" />
       )}
       <span>{isOnline ? `🟢 ${t.online}` : `🔴 ${t.offline}`}</span>
     </button>
@@ -583,7 +567,7 @@ const HeaderAvailabilityToggle = memo(() => {
 HeaderAvailabilityToggle.displayName = "HeaderAvailabilityToggle";
 
 /** ================================
- *  User Avatar (bigger)
+ *  User Avatar
  *  ================================ */
 const UserAvatar = memo<{ user: User | null; size?: "sm" | "md" }>(
   ({ user, size = "md" }) => {
@@ -595,12 +579,10 @@ const UserAvatar = memo<{ user: User | null; size?: "sm" | "md" }>(
     const displayName = u?.firstName || u?.displayName || u?.email || "User";
     const onError = useCallback(() => setImageError(true), []);
 
-    
-
     if (!photoUrl || imageError) {
       return (
         <div
-          className={`${sizeClasses} rounded-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-white font-bold text-base ring-2 ring-white/30 hover:ring-white/60 transition-all duration-300`}
+          className={`${sizeClasses} rounded-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-white font-bold text-base ring-2 ring-white/30`}
           aria-label={`Avatar de ${displayName}`}
         >
           {displayName?.charAt(0).toUpperCase?.()}
@@ -608,13 +590,12 @@ const UserAvatar = memo<{ user: User | null; size?: "sm" | "md" }>(
       );
     }
 
-
     return (
       <div className="relative">
         <img
           src={photoUrl}
           alt={`Avatar de ${displayName}`}
-          className={`${sizeClasses} rounded-full object-cover ring-2 ring-white/30 hover:ring-white/60 transition-all duration-300`}
+          className={`${sizeClasses} rounded-full object-cover ring-2 ring-white/30`}
           onError={onError}
           loading="lazy"
         />
@@ -629,12 +610,11 @@ const UserAvatar = memo<{ user: User | null; size?: "sm" | "md" }>(
 UserAvatar.displayName = "UserAvatar";
 
 /** ================================
- *  Language Dropdown (mobile light/dark)
+ *  Language Dropdown
  *  ================================ */
 const LanguageDropdown = memo<{
   isMobile?: boolean;
-  variant?: "light" | "dark";
-}>(({ isMobile = false, variant = "dark" }) => {
+}>(({ isMobile = false }) => {
   const { language, setLanguage } = useApp();
   const location = useLocation();
   const navigate = useNavigate();
@@ -659,10 +639,8 @@ const LanguageDropdown = memo<{
       setLanguage(langCode);
       setOpen(false);
       
-      // Update the route to reflect the new language
       const { pathname } = location;
       
-      // Skip route update for admin routes
       if (pathname.startsWith("/admin") || pathname.startsWith("/marketing")) {
         window.gtag?.("event", "language_change", {
           event_category: "engagement",
@@ -671,16 +649,13 @@ const LanguageDropdown = memo<{
         return;
       }
       
-      // Get current path without locale
       const { pathWithoutLocale } = parseLocaleFromPath(pathname);
       const newLocale = getLocaleString(langCode);
       
-      // Build new path with new locale
       const newPath = pathWithoutLocale === "/" 
         ? `/${newLocale}` 
         : `/${newLocale}${pathWithoutLocale}`;
       
-      // Navigate to new locale route
       navigate(newPath, { replace: true });
       
       window.gtag?.("event", "language_change", {
@@ -692,43 +667,46 @@ const LanguageDropdown = memo<{
   );
 
   if (isMobile) {
-    const isLight = variant === "light";
     return (
-      <div className="mb-6">
-        <div
-          className={`flex items-center text-sm font-semibold mb-3 ${isLight ? "text-gray-800" : "text-white/90"}`}
+      <div className="relative" ref={ref}>
+        <button
+          onClick={() => setOpen(!open)}
+          className="w-full flex items-center justify-between px-4 py-3 rounded-xl font-medium bg-white/20 backdrop-blur-xl text-white hover:bg-white/30 border border-white/20"
+          aria-expanded={open}
+          aria-label="Sélectionner la langue"
         >
-          <Globe
-            className={`w-4 h-4 mr-2 ${isLight ? "text-gray-700" : "text-white"}`}
+          <div className="flex items-center">
+            <Globe className="w-4 h-4 mr-2 text-white" />
+            <div className="mr-2">{currentLanguage.flag}</div>
+            <span className="text-sm font-semibold">{currentLanguage.nativeName}</span>
+          </div>
+          <ChevronDown
+            className={`w-4 h-4 ${open ? "rotate-180" : ""}`}
           />
-          {language === "fr" ? "Langue" : "Language"}
-        </div>
-        <div className="grid grid-cols-2 gap-3">
-          {SUPPORTED_LANGUAGES.map((lang) => (
-            <button
-              key={lang.code}
-              onClick={() => handleLanguageChange(lang.code)}
-              className={`group relative overflow-hidden px-6 py-4 rounded-2xl transition-all duration-300 focus:outline-none ${
-                language === lang.code
-                  ? isLight
-                    ? "bg-red-600 text-white shadow"
-                    : "bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white shadow-xl scale-105"
-                  : isLight
-                    ? "bg-white border border-gray-300 text-gray-800 hover:bg-gray-50"
-                    : "bg-white/20 backdrop-blur-xl text-white hover:bg-white/30 border border-white/20"
-              }`}
-              aria-label={`Changer la langue vers ${lang.nativeName}`}
-              aria-pressed={language === lang.code}
-            >
-              <div className="relative z-10 flex items-center justify-center">
-                <div className="mr-3 group-hover:scale-110 transition-transform duration-300">
-                  {lang.flag}
-                </div>
-                <span className="font-bold text-sm">{lang.nativeName}</span>
-              </div>
-            </button>
-          ))}
-        </div>
+        </button>
+
+        {open && (
+          <div className="absolute left-0 right-0 mt-2 rounded-xl shadow-2xl py-1 z-50 max-h-60 overflow-y-auto bg-gray-900/95 backdrop-blur-xl border border-white/10">
+            {SUPPORTED_LANGUAGES.map((lang) => (
+              <button
+                key={lang.code}
+                onClick={() => handleLanguageChange(lang.code)}
+                className={`group flex items-center w-full px-4 py-2.5 text-sm ${
+                  language === lang.code
+                    ? "bg-white/20 text-white font-semibold"
+                    : "text-gray-300 hover:bg-white/10"
+                }`}
+                aria-pressed={language === lang.code}
+              >
+                <div className="mr-3">{lang.flag}</div>
+                <span>{lang.nativeName}</span>
+                {language === lang.code && (
+                  <div className="ml-auto w-2 h-2 bg-red-500 rounded-full" aria-label="Langue actuelle" />
+                )}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     );
   }
@@ -737,40 +715,31 @@ const LanguageDropdown = memo<{
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen(!open)}
-        className="group flex items-center space-x-2 text-white hover:text-yellow-200 transition-all duration-300 hover:scale-105 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/50 min-h-[44px] min-w-[44px] justify-center"
+        className="group flex items-center space-x-2 text-white hover:text-yellow-200 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/50 min-h-[44px] min-w-[44px] justify-center"
         aria-expanded={open}
         aria-haspopup="true"
         aria-label="Sélectionner la langue"
       >
-        <div className="group-hover:scale-110 transition-transform duration-300">
-          {currentLanguage.flag}
-        </div>
-        <ChevronDown
-          className={`w-4 h-4 transition-transform duration-300 ${open ? "rotate-180 text-yellow-300" : ""}`}
-        />
+        <div>{currentLanguage.flag}</div>
+        <ChevronDown className={`w-4 h-4 ${open ? "rotate-180 text-yellow-300" : ""}`} />
       </button>
       {open && (
-        <div className="absolute right-0 mt-2 w-48 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl py-2 z-50 border border-gray-100 animate-in slide-in-from-top-2 duration-300">
+        <div className="absolute right-0 mt-2 w-48 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl py-2 z-50 border border-gray-100">
           {SUPPORTED_LANGUAGES.map((lang) => (
             <button
               key={lang.code}
               onClick={() => handleLanguageChange(lang.code)}
-              className={`group flex items-center w-full px-4 py-3 text-sm text-left hover:bg-gray-50 transition-all duration-200 rounded-xl mx-1 focus:outline-none focus:bg-gray-50 ${
+              className={`group flex items-center w-full px-4 py-3 text-sm text-left hover:bg-gray-50 rounded-xl mx-1 focus:outline-none focus:bg-gray-50 ${
                 language === lang.code
                   ? "bg-red-50 text-red-600 font-semibold"
                   : "text-gray-700"
               }`}
               aria-pressed={language === lang.code}
             >
-              <div className="mr-3 group-hover:scale-110 transition-transform duration-300">
-                {lang.flag}
-              </div>
+              <div className="mr-3">{lang.flag}</div>
               <span>{lang.nativeName}</span>
               {language === lang.code && (
-                <div
-                  className="ml-auto w-2 h-2 bg-red-500 rounded-full animate-pulse"
-                  aria-label="Langue actuelle"
-                />
+                <div className="ml-auto w-2 h-2 bg-red-500 rounded-full" aria-label="Langue actuelle" />
               )}
             </button>
           ))}
@@ -786,22 +755,10 @@ LanguageDropdown.displayName = "LanguageDropdown";
  *  ================================ */
 const PWAInstallArea = memo(({ scrolled }: { scrolled: boolean }) => {
   const { language } = useApp();
-  const { install, installed } = usePWAInstall();
-  const [showSlogan, setShowSlogan] = useState(false);
-
-  useEffect(() => {
-    setShowSlogan(true);
-    const cycle = setInterval(() => setShowSlogan((p) => !p), 4000);
-    return () => clearInterval(cycle);
-  }, []);
-
-  const onClick = async () => {
-    await install();
-  };
 
   return (
     <Link to="/" className="flex items-center select-none group" aria-label="Go to home">
-      <div className="relative w-[72px] h-[72px] rounded-2xl overflow-hidden bg-transparent shrink-0 touch-manipulation transition-transform duration-300 group-hover:scale-105">
+      <div className="relative w-[72px] h-[72px] rounded-2xl overflow-hidden bg-transparent shrink-0">
         <img
           src="/icons/icon-72x72.png"
           alt="SOS Expat Logo"
@@ -809,7 +766,7 @@ const PWAInstallArea = memo(({ scrolled }: { scrolled: boolean }) => {
           onError={(e) => {
             const img = e.currentTarget;
             if (img.src.includes('icon-72x72.png')) {
-              img.src = '/sos-logo.jpg'; // Fallback to original logo
+              img.src = '/sos-logo.jpg';
             }
           }}
         />
@@ -818,7 +775,7 @@ const PWAInstallArea = memo(({ scrolled }: { scrolled: boolean }) => {
       <div className="ml-3">
         <div className="flex flex-col leading-tight text-center">
           <span
-            className={`font-extrabold text-sm ${scrolled ? "text-white" : "text-gray-900"} transition-colors duration-300`}
+            className={`font-extrabold text-sm ${scrolled ? "text-white" : "text-gray-900"}`}
           >
             SOS Expat
           </span>
@@ -827,17 +784,6 @@ const PWAInstallArea = memo(({ scrolled }: { scrolled: boolean }) => {
               {language === "fr" ? "d'Ulixai" : "by Ulixai"}
             </span>
           </span>
-        </div>
-
-        <div className="hidden lg:block h-5 overflow-hidden">
-          <div
-            className={`text-xs ${scrolled ? "text-gray-300" : "text-gray-600"} transition-opacity duration-700 ease-in-out ${showSlogan ? "opacity-100" : "opacity-0"}`}
-          >
-            {language === "fr"
-              ? "L'appli qui fait du bien !"
-              : "The feel-good app!"}
-            {installed ? " 🎉" : ""}
-          </div>
         </div>
       </div>
     </Link>
@@ -854,7 +800,7 @@ const PWAIconButton = memo(() => {
   return (
     <Link 
       to="/"
-      className="w-16 h-16 rounded-2xl overflow-hidden bg-transparent focus:outline-none focus:ring-2 focus:ring-red-500/50 touch-manipulation transition-transform duration-300 hover:scale-105"
+      className="w-16 h-16 rounded-2xl overflow-hidden bg-transparent focus:outline-none focus:ring-2 focus:ring-red-500/50"
       aria-label={language === "fr" ? "Retour à l'accueil" : "Go to home"}
     >
       <img
@@ -864,7 +810,7 @@ const PWAIconButton = memo(() => {
         onError={(e) => {
           const img = e.currentTarget;
           if (img.src.includes('icon-72x72.png')) {
-            img.src = '/sos-logo.jpg'; // Fallback to original logo
+            img.src = '/sos-logo.jpg';
           }
         }}
       />
@@ -874,7 +820,7 @@ const PWAIconButton = memo(() => {
 PWAIconButton.displayName = "PWAIconButton";
 
 /** ================================
- *  User Menu (uses navigate on logout)
+ *  User Menu
  *  ================================ */
 const UserMenu = memo<{ isMobile?: boolean; scrolled?: boolean }>(
   ({ isMobile = false, scrolled = false }) => {
@@ -915,77 +861,75 @@ const UserMenu = memo<{ isMobile?: boolean; scrolled?: boolean }>(
       }
     }, [logout, navigate]);
 
+    const t = {
+      login:
+        language === "fr" ? "Connexion"
+        : language === "es" ? "Iniciar sesión"
+        : language === "pt" ? "Entrar"
+        : language === "de" ? "Anmelden"
+        : language === "ru" ? "Войти"
+        : language === "hi" ? "लॉगिन"
+        : language === "ch" ? "登录"
+        : language === "ar" ? "تسجيل الدخول"
+        : "Login",
+        
+      signup:
+        language === "fr" ? "S'inscrire"
+        : language === "es" ? "Registrarse"
+        : language === "pt" ? "Cadastrar-se"
+        : language === "de" ? "Registrieren"
+        : language === "ru" ? "Зарегистрироваться"
+        : language === "hi" ? "साइन अप करें"
+        : language === "ch" ? "报名"
+        : language === "ar" ? "التسجيل"
+        : "Sign up",
+        
+      dashboard:
+        language === "fr" ? "Tableau de bord"
+        : language === "es" ? "Panel de control"
+        : language === "pt" ? "Painel de controle"
+        : language === "de" ? "Dashboard"
+        : language === "ru" ? "Панель управления"
+        : language === "hi" ? "डैशबोर्ड"
+        : language === "ch" ? "仪表板"
+        : language === "ar" ? "لوحة التحكم"
+        : "Dashboard",
+        
+      adminConsole:
+        language === "fr" ? "Console Admin"
+        : language === "es" ? "Consola de Administración"
+        : language === "pt" ? "Console de Administração"
+        : language === "de" ? "Admin-Konsole"
+        : language === "ru" ? "Консоль администратора"
+        : language === "hi" ? "एडमिन कंसोल"
+        : language === "ch" ? "管理控制台"
+        : language === "ar" ? "وحدة التحكم الإدارية"
+        : "Admin Console",
+        
+      logout:
+        language === "fr" ? "Déconnexion"
+        : language === "es" ? "Cerrar sesión"
+        : language === "pt" ? "Sair"
+        : language === "de" ? "Abmelden"
+        : language === "ru" ? "Выйти"
+        : language === "hi" ? "लॉग आउट"
+        : language === "ch" ? "退出"
+        : language === "ar" ? "تسجيل الخروج"
+        : "Logout",
+    };
 
-
-const t = {
-  login:
-    language === "fr" ? "Connexion"
-    : language === "es" ? "Iniciar sesión"
-    : language === "pt" ? "Entrar"
-    : language === "de" ? "Anmelden"
-    : language === "ru" ? "Войти"
-    : language === "hi" ? "लॉगिन"
-    : language === "ch" ? "登录"
-    : language === "ar" ? "تسجيل الدخول"
-    : "Login",
-    
-  signup:
-    language === "fr" ? "S'inscrire"
-    : language === "es" ? "Registrarse"
-    : language === "pt" ? "Cadastrar-se"
-    : language === "de" ? "Registrieren"
-    : language === "ru" ? "Зарегистрироваться"
-    : language === "hi" ? "साइन अप करें"
-    : language === "ch" ? "报名"
-    : language === "ar" ? "التسجيل"
-    : "Sign up",
-    
-  dashboard:
-    language === "fr" ? "Tableau de bord"
-    : language === "es" ? "Panel de control"
-    : language === "pt" ? "Painel de controle"
-    : language === "de" ? "Dashboard"
-    : language === "ru" ? "Панель управления"
-    : language === "hi" ? "डैशबोर्ड"
-    : language === "ch" ? "仪表板"
-    : language === "ar" ? "لوحة التحكم"
-    : "Dashboard",
-    
-  adminConsole:
-    language === "fr" ? "Console Admin"
-    : language === "es" ? "Consola de Administración"
-    : language === "pt" ? "Console de Administração"
-    : language === "de" ? "Admin-Konsole"
-    : language === "ru" ? "Консоль администратора"
-    : language === "hi" ? "एडमिन कंसोल"
-    : language === "ch" ? "管理控制台"
-    : language === "ar" ? "وحدة التحكم الإدارية"
-    : "Admin Console",
-    
-  logout:
-    language === "fr" ? "Déconnexion"
-    : language === "es" ? "Cerrar sesión"
-    : language === "pt" ? "Sair"
-    : language === "de" ? "Abmelden"
-    : language === "ru" ? "Выйти"
-    : language === "hi" ? "लॉग आउट"
-    : language === "ch" ? "退出"
-    : language === "ar" ? "تسجيل الخروج"
-    : "Logout",
-};
-
-
+    // NON CONNECTÉ
     if (!typedUser) {
       const loginBtnDesktop = scrolled
-        ? "group relative p-3 rounded-full hover:bg-white/10 transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50 min-h-[44px] min-w-[44px] flex items-center justify-center"
-        : "group relative p-3 rounded-full hover:bg-gray-100 transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-500/20 min-h-[44px] min-w-[44px] flex items-center justify-center border border-gray-200";
+        ? "group relative p-3 rounded-full hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/50 min-h-[44px] min-w-[44px] flex items-center justify-center"
+        : "group relative p-3 rounded-full hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500/20 min-h-[44px] min-w-[44px] flex items-center justify-center border border-gray-200";
       const loginIconDesktop = scrolled
         ? "w-5 h-5 text-white group-hover:text-yellow-200"
         : "w-5 h-5 text-red-600";
 
       const registerBtnDesktop = scrolled
-        ? "group relative p-3 rounded-full bg-white hover:bg-gray-50 hover:scale-110 transition-all duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500/40 min-h-[44px] min-w-[44px] flex items-center justify-center"
-        : "group relative p-3 rounded-full bg-red-600 hover:bg-red-700 hover:scale-110 transition-all duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500/50 min-h-[44px] min-w-[44px] flex items-center justify-center";
+        ? "group relative p-3 rounded-full bg-white hover:bg-gray-50 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500/40 min-h-[44px] min-w-[44px] flex items-center justify-center"
+        : "group relative p-3 rounded-full bg-red-600 hover:bg-red-700 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500/50 min-h-[44px] min-w-[44px] flex items-center justify-center";
       const registerIconDesktop = scrolled
         ? "w-5 h-5 text-red-600"
         : "w-5 h-5 text-white";
@@ -996,7 +940,7 @@ const t = {
             to="/login"
             className={
               isMobile
-                ? "group flex items-center justify-center w-full bg-white text-red-600 px-6 py-4 rounded-2xl border border-gray-300 hover:bg-gray-50 hover:scale-[1.01] transition-all duration-300 font-semibold min-h-[48px] touch-manipulation"
+                ? "group flex items-center justify-center w-full bg-white text-red-600 px-6 py-3 rounded-xl border border-gray-300 hover:bg-gray-50 font-semibold min-h-[44px]"
                 : loginBtnDesktop
             }
             aria-label={t.login}
@@ -1014,7 +958,7 @@ const t = {
             to="/register"
             className={
               isMobile
-                ? "group flex items-center justify-center w-full bg-red-600 text-white px-6 py-4 rounded-2xl hover:bg-red-700 hover:scale-[1.01] transition-all duration-300 font-bold shadow min-h-[48px] touch-manipulation"
+                ? "group flex items-center justify-center w-full bg-red-600 text-white px-6 py-3 rounded-xl hover:bg-red-700 font-bold shadow min-h-[44px]"
                 : registerBtnDesktop
             }
             aria-label={t.signup}
@@ -1031,86 +975,69 @@ const t = {
         </>
       );
       return isMobile ? (
-        <div className="space-y-4">{authLinks}</div>
+        <div className="flex gap-3">{authLinks}</div>
       ) : (
         <div className="flex items-center space-x-4">{authLinks}</div>
       );
     }
 
+    // CONNECTÉ MOBILE
     if (isMobile) {
-      const mobileContainer = scrolled
-        ? "flex items-center space-x-4 p-4 bg-white/20 backdrop-blur-sm rounded-xl"
-        : "flex items-center space-x-4 p-4 bg-gray-100 border border-gray-200 rounded-xl";
-
-      const nameClass = scrolled
-        ? "font-semibold text-white"
-        : "font-semibold text-gray-900";
-      const roleClass = scrolled
-        ? "text-xs text-white/70 capitalize"
-        : "text-xs text-gray-500 capitalize";
-
-      const adminLinkClass = scrolled
-        ? "flex items-center w-full bg-white/20 backdrop-blur-sm text-white px-4 py-3 rounded-xl hover:bg-white/30 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/50"
-        : "flex items-center w-full bg-white border border-gray-300 text-gray-800 px-4 py-3 rounded-xl hover:bg-gray-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-500/20";
-
-      const dashboardLinkClass = scrolled
-        ? "flex items-center w-full bg-white/20 backdrop-blur-sm text-white px-4 py-4 rounded-xl hover:bg-white/30 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/50 min-h-[48px] touch-manipulation"
-        : "flex items-center w-full bg-gray-100 text-gray-800 px-4 py-4 rounded-xl hover:bg-gray-200 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-500/20 min-h-[48px] touch-manipulation";
-
-      const logoutBtnClass =
-        "flex items-center w-full bg-red-600 text-white px-4 py-4 rounded-xl hover:bg-red-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-400/50 min-h-[48px] touch-manipulation";
-
       return (
-        <div className="space-y-4">
-          <div className={mobileContainer}>
-            <UserAvatar user={typedUser} />
-            <div>
-              <div className={nameClass}>
-                {typedUser.firstName ||
-                  typedUser.displayName ||
-                  typedUser.email}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between p-3 bg-white/20 backdrop-blur-sm rounded-xl">
+            <div className="flex items-center gap-3">
+              <UserAvatar user={typedUser} size="sm" />
+              <div className="min-w-0 flex-1">
+                <div className="font-semibold text-white text-sm truncate">
+                  {typedUser.firstName || typedUser.displayName || typedUser.email}
+                </div>
+                <div className="text-xs text-white/70 capitalize">
+                  {typedUser.role || "Utilisateur"}
+                </div>
               </div>
-              <div className={roleClass}>{typedUser.role || "Utilisateur"}</div>
             </div>
           </div>
 
-          <div className="space-y-3">
+          <div className="grid grid-cols-2 gap-2">
             {typedUser.role === "admin" && (
               <Link
                 to="/admin/dashboard"
-                className={adminLinkClass}
+                className="flex items-center justify-center px-4 py-2.5 rounded-xl text-sm font-medium bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 min-h-[44px]"
                 aria-label={t.adminConsole}
               >
-                <Shield className="w-5 h-5 mr-3" />
-                <span className="font-medium">{t.adminConsole}</span>
+                <Shield className="w-4 h-4 mr-2" />
+                <span>Admin</span>
               </Link>
             )}
             <Link
               to="/dashboard"
-              className={dashboardLinkClass}
+              className="flex items-center justify-center px-4 py-2.5 rounded-xl text-sm font-medium bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 min-h-[44px]"
               aria-label={t.dashboard}
             >
-              <Settings className="w-5 h-5 mr-3" />
-              <span className="font-medium">{t.dashboard}</span>
+              <Settings className="w-4 h-4 mr-2" />
+              <span>{language === "fr" ? "Profil" : "Profile"}</span>
             </Link>
-            <button
-              onClick={handleLogout}
-              className={logoutBtnClass}
-              aria-label={t.logout}
-            >
-              <LogOut className="w-5 h-5 mr-3" />
-              <span className="font-medium">{t.logout}</span>
-            </button>
           </div>
+
+          <button
+            onClick={handleLogout}
+            className="flex items-center justify-center px-4 py-2.5 rounded-xl text-sm font-medium bg-red-600 text-white hover:bg-red-700 w-full min-h-[44px]"
+            aria-label={t.logout}
+          >
+            <LogOut className="w-4 h-4 mr-2" />
+            <span>{t.logout}</span>
+          </button>
         </div>
       );
     }
 
+    // CONNECTÉ DESKTOP
     return (
       <div className="relative" ref={ref}>
         <button
           onClick={() => setOpen(!open)}
-          className={`${scrolled ? "text-white focus:outline-none focus:ring-2 focus:ring-white/50" : "text-black border-black focus:outline-none focus:ring-2 focus:ring-black/50"} group flex items-center space-x-3  transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/50 rounded-full p-2 min-h-[44px] touch-manipulation`}
+          className={`${scrolled ? "text-white" : "text-black"} group flex items-center space-x-3 p-2 rounded-full focus:outline-none focus:ring-2 ${scrolled ? "focus:ring-white/50" : "focus:ring-black/50"} min-h-[44px]`}
           aria-expanded={open}
           aria-haspopup="true"
           aria-label="Menu utilisateur"
@@ -1119,21 +1046,17 @@ const t = {
           <span className="text-sm font-medium hidden md:inline">
             {typedUser.firstName || typedUser.displayName || "User"}
           </span>
-          <ChevronDown
-            className={`w-4 h-4 transition-all duration-300 ${open ? "rotate-180 text-yellow-300" : ""}`}
-          />
+          <ChevronDown className={`w-4 h-4 ${open ? "rotate-180 text-yellow-300" : ""}`} />
         </button>
 
         {open && (
-          <div className="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl py-2 z-50 border border-gray-100 animate-in slide-in-from-top-2 duration-300">
+          <div className="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl py-2 z-50 border border-gray-100">
             <div className="px-4 py-3 border-b border-gray-100 bg-gradient-to-r from-red-50 to-orange-50 rounded-t-2xl">
               <div className="flex items-center space-x-3">
                 <UserAvatar user={typedUser} />
                 <div>
                   <div className="font-semibold text-gray-900">
-                    {typedUser.firstName ||
-                      typedUser.displayName ||
-                      typedUser.email}
+                    {typedUser.firstName || typedUser.displayName || typedUser.email}
                   </div>
                   <div className="text-xs text-gray-500 capitalize">
                     {typedUser.role || "Utilisateur"}
@@ -1146,27 +1069,27 @@ const t = {
               {typedUser.role === "admin" && (
                 <Link
                   to="/admin/dashboard"
-                  className="group flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all duration-200 rounded-xl mx-1 focus:outline-none focus:bg-red-50"
+                  className="group flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-xl mx-1 focus:outline-none focus:bg-red-50"
                   onClick={() => setOpen(false)}
                 >
-                  <Shield className="w-4 h-4 mr-3 group-hover:scale-110 transition-transform duration-300" />
+                  <Shield className="w-4 h-4 mr-3" />
                   {t.adminConsole}
                 </Link>
               )}
               <Link
                 to="/dashboard"
-                className="group flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all duration-200 rounded-xl mx-1 focus:outline-none focus:bg-red-50"
+                className="group flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-xl mx-1 focus:outline-none focus:bg-red-50"
                 onClick={() => setOpen(false)}
               >
-                <Settings className="w-4 h-4 mr-3 group-hover:scale-110 transition-transform duration-300" />
+                <Settings className="w-4 h-4 mr-3" />
                 {t.dashboard}
               </Link>
               <hr className="my-1 border-gray-100" />
               <button
                 onClick={handleLogout}
-                className="group flex items-center w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-all duration-200 rounded-xl mx-1 focus:outline-none focus:bg-red-50"
+                className="group flex items-center w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 rounded-xl mx-1 focus:outline-none focus:bg-red-50"
               >
-                <LogOut className="w-4 h-4 mr-3 group-hover:scale-110 transition-transform duration-300" />
+                <LogOut className="w-4 h-4 mr-3" />
                 {t.logout}
               </button>
             </div>
@@ -1197,75 +1120,85 @@ const Header: React.FC = () => {
     setIsMenuOpen(false);
   }, [location.pathname]);
 
-const getNavigationLabel = useCallback(
-  (labelKey: string): string => {
-    const translations: Record<
-      string,
-      Record<"fr" | "en" | "es" | "pt" | "ru" | "de" | "hi" | "ch" | "ar", string>
-    > = {
-      "nav.home": {
-        fr: "Accueil",
-        en: "Home",
-        es: "Inicio",
-        pt: "Início",
-        ru: "Главная",
-        de: "Startseite",
-        hi: "होम",
-        ch: "家",
-        ar: "الرئيسية"
-      },
-      "nav.viewProfiles": {
-        fr: "Profils aidants",
-        en: "Helper profiles",
-        es: "Perfiles de ayuda",
-        pt: "Perfis de ajudantes",
-        ru: "Профили помощников",
-        de: "Helferprofile",
-        hi: "सहायक प्रोफाइल",
-        ch: "助手资料",
-        ar: "ملفات المساعدين"
-      },
-      "nav.testimonials": {
-        fr: "Avis",
-        en: "Reviews",
-        es: "Reseñas",
-        pt: "Avaliações",
-        ru: "Отзывы",
-        de: "Bewertungen",
-        hi: "समीक्षाएं",
-        ch: "评论",
-        ar: "التقييمات"
-      },
-      "nav.howItWorks": {
-        fr: "Comment ça marche",
-        en: "How it Works",
-        es: "Cómo funciona",
-        pt: "Como funciona",
-        ru: "Как это работает",
-        de: "Wie es funktioniert",
-        hi: "यह कैसे काम करता है",
-        ch: "它是如何运作的",
-        ar: "كيف يعمل"
-      },
-      "nav.pricing": {
-        fr: "Tarifs",
-        en: "Pricing",
-        es: "Precios",
-        pt: "Preços",
-        ru: "Тарифы",
-        de: "Preise",
-        hi: "मूल्य निर्धारण",
-        ch: "定价",
-        ar: "التسعير"
-      },
+  // Bloquer le scroll quand le menu est ouvert
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
     };
+  }, [isMenuOpen]);
 
-    return translations[labelKey]?.[language] || labelKey;
-  },
-  [language]
-);
+  const getNavigationLabel = useCallback(
+    (labelKey: string): string => {
+      const translations: Record<
+        string,
+        Record<"fr" | "en" | "es" | "pt" | "ru" | "de" | "hi" | "ch" | "ar", string>
+      > = {
+        "nav.home": {
+          fr: "Accueil",
+          en: "Home",
+          es: "Inicio",
+          pt: "Início",
+          ru: "Главная",
+          de: "Startseite",
+          hi: "होम",
+          ch: "家",
+          ar: "الرئيسية"
+        },
+        "nav.viewProfiles": {
+          fr: "Profils aidants",
+          en: "Helper profiles",
+          es: "Perfiles de ayuda",
+          pt: "Perfis de ajudantes",
+          ru: "Профили помощников",
+          de: "Helferprofile",
+          hi: "सहायक प्रोफाइल",
+          ch: "助手资料",
+          ar: "ملفات المساعدين"
+        },
+        "nav.testimonials": {
+          fr: "Avis",
+          en: "Reviews",
+          es: "Reseñas",
+          pt: "Avaliações",
+          ru: "Отзывы",
+          de: "Bewertungen",
+          hi: "समीक्षाएं",
+          ch: "评论",
+          ar: "التقييمات"
+        },
+        "nav.howItWorks": {
+          fr: "Comment ça marche",
+          en: "How it Works",
+          es: "Cómo funciona",
+          pt: "Como funciona",
+          ru: "Как это работает",
+          de: "Wie es funktioniert",
+          hi: "यह कैसे काम करता है",
+          ch: "它是如何运作的",
+          ar: "كيف يعمل"
+        },
+        "nav.pricing": {
+          fr: "Tarifs",
+          en: "Pricing",
+          es: "Precios",
+          pt: "Preços",
+          ru: "Тарифы",
+          de: "Preise",
+          hi: "मूल्य निर्धारण",
+          ch: "定价",
+          ar: "التسعير"
+        },
+      };
 
-
+      return translations[labelKey]?.[language] || labelKey;
+    },
+    [language]
+  );
 
   const t = { sosCall: language === "fr" ? "SOS Appel" : "SOS Call" };
 
@@ -1273,29 +1206,28 @@ const getNavigationLabel = useCallback(
 
   return (
     <>
+      {/* Header avec style différent mobile vs desktop */}
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-700 ease-in-out ${
+        className="fixed top-0 left-0 right-0 z-50 md:select-none"
+        role="banner"
+      >
+        {/* Desktop - Style dynamique selon scroll */}
+        <div className={`hidden lg:block ${
           scrolled
             ? "bg-gray-900/95 backdrop-blur-xl shadow-xl"
             : "bg-white border-b border-gray-200"
-        } md:select-none`}
-        role="banner"
-      >
-        {/* Desktop */}
-        <div className="hidden lg:block">
+        }`}>
           <div className="w-full px-6">
             <div className="flex items-center justify-between h-20">
-              {/* Left: PWA area */}
               <PWAInstallArea scrolled={scrolled} />
 
-              {/* Center Navigation with SOS */}
               <div className="flex-1 flex items-center justify-center">
                 <nav className="flex items-center space-x-2">
                   {LEFT_NAVIGATION_ITEMS.slice(0, 2).map((item) => (
                     <Link
                       key={item.path}
                       to={item.path}
-                      className={`flex items-center gap-2.5 px-2 py-2 rounded-lg transition-all duration-300 hover:scale-105 ${
+                      className={`flex items-center gap-2.5 px-2 py-2 rounded-lg ${
                         scrolled ? "hover:bg-white/10" : "hover:bg-gray-100"
                       } ${isActive(item.path) ? (scrolled ? "bg-white/20" : "bg-gray-100") : ""}`}
                       aria-current={isActive(item.path) ? "page" : undefined}
@@ -1316,27 +1248,22 @@ const getNavigationLabel = useCallback(
                     </Link>
                   ))}
 
-                  {/* Central SOS CTA */}
                   <div className="mx-6">
                     <Link
                       to="/sos-appel"
-                      className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-3 py-1 rounded-2xl font-bold transition-all duration-200 hover:scale-105 flex items-center space-x-2 shadow-lg border-2 border-white/20"
+                      className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-3 py-1 rounded-2xl font-bold flex items-center space-x-2 shadow-lg border-2 border-white/20"
                       aria-label={t.sosCall}
                     >
                       <Phone className="size-3 text-white" />
-                      <span className="tracking-wide ">
-                        {t.sosCall.toUpperCase()}
-                      </span>
+                      <span className="tracking-wide">{t.sosCall.toUpperCase()}</span>
                     </Link>
                   </div>
 
-                  {RIGHT_NAVIGATION_ITEMS.concat(
-                    LEFT_NAVIGATION_ITEMS.slice(2)
-                  ).map((item) => (
+                  {RIGHT_NAVIGATION_ITEMS.concat(LEFT_NAVIGATION_ITEMS.slice(2)).map((item) => (
                     <Link
                       key={item.path}
                       to={item.path}
-                      className={`flex items-center gap-2.5 px-2 py-2 rounded-lg transition-all duration-300 hover:scale-105 ${
+                      className={`flex items-center gap-2.5 px-2 py-2 rounded-lg ${
                         scrolled ? "hover:bg-white/10" : "hover:bg-gray-100"
                       } ${isActive(item.path) ? (scrolled ? "bg-white/20" : "bg-gray-100") : ""}`}
                       aria-current={isActive(item.path) ? "page" : undefined}
@@ -1359,7 +1286,6 @@ const getNavigationLabel = useCallback(
                 </nav>
               </div>
 
-              {/* Actions */}
               <div className="flex items-center space-x-4">
                 <HeaderAvailabilityToggle />
                 <LanguageDropdown />
@@ -1377,17 +1303,15 @@ const getNavigationLabel = useCallback(
           </div>
         </div>
 
-        {/* Mobile */}
-        <div className="lg:hidden">
+        {/* Mobile - TOUJOURS NOIR avec ombre */}
+        <div className="lg:hidden bg-gray-900 shadow-xl">
           <div className="px-4 py-3 flex items-center justify-between">
-            {/* LEFT: PWA icon only */}
             <PWAIconButton />
 
-            {/* CENTER: SOS + status indicator */}
             <div className="flex items-center gap-3">
               <Link
                 to="/sos-appel"
-                className="bg-gradient-to-r from-red-600 to-red-700 text-white px-7 py-2.5 rounded-2xl font-bold text-base flex items-center space-x-2 border border-white/20 touch-manipulation"
+                className="bg-gradient-to-r from-red-600 to-red-700 text-white px-7 py-2.5 rounded-2xl font-bold text-base flex items-center space-x-2 border border-white/20"
                 aria-label={t.sosCall}
               >
                 <Phone className="w-4 h-4 text-white" />
@@ -1397,72 +1321,52 @@ const getNavigationLabel = useCallback(
               {isProvider && (
                 <button
                   onClick={() => !isUpdating && toggle()}
-                  className={`relative w-7 h-7 rounded-full border-2 flex items-center justify-center touch-manipulation ${
-                    scrolled ? "border-white/40" : "border-gray-400/50"
-                  }`}
+                  className="relative w-7 h-7 rounded-full border-2 border-white/40 flex items-center justify-center"
                   aria-label={
                     isOnline
-                      ? language === "fr"
-                        ? "Se mettre hors ligne"
-                        : "Go offline"
-                      : language === "fr"
-                        ? "Se mettre en ligne"
-                        : "Go online"
+                      ? language === "fr" ? "Se mettre hors ligne" : "Go offline"
+                      : language === "fr" ? "Se mettre en ligne" : "Go online"
                   }
                 >
                   {isUpdating ? (
-                    <div
-                      className={`w-4 h-4 border-2 rounded-full animate-spin ${scrolled ? "border-white/50 border-t-white" : "border-gray-500/50 border-t-gray-600"}`}
-                    />
+                    <div className="w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin" />
                   ) : (
-                    <span
-                      className={`block w-4 h-4 rounded-full ${isOnline ? "bg-green-500" : "bg-red-500"}`}
-                    />
+                    <span className={`block w-4 h-4 rounded-full ${isOnline ? "bg-green-500" : "bg-red-500"}`} />
                   )}
                 </button>
               )}
             </div>
 
-            {/* RIGHT: hamburger */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className={`p-2 rounded-lg transition-colors duration-200 touch-manipulation ${scrolled ? "hover:bg-white/10 text-white" : "hover:bg-gray-100 text-gray-600"}`}
+              className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
               aria-expanded={isMenuOpen}
               aria-label="Menu de navigation"
             >
-              {isMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
 
+          {/* MENU MOBILE - FOND NOIR OPAQUE */}
           {isMenuOpen && (
             <div
-              className={`border-t transition-colors duration-700 ease-in-out ${scrolled ? "bg-gray-900 border-white/10" : "bg-white border-gray-200"}`}
+              className="fixed inset-x-0 top-[76px] bottom-0 overflow-hidden bg-gray-900"
               role="navigation"
               aria-label="Navigation mobile"
             >
-              <div className="px-4 py-4 space-y-4">
+              <div className="h-full overflow-y-auto overscroll-contain px-4 py-4 space-y-4">
                 <nav className="space-y-2">
-                  {ALL_NAVIGATION_ITEMS.map((item) => (
+                  {MOBILE_NAVIGATION_ITEMS.map((item) => (
                     <Link
                       key={item.path}
                       to={item.path}
-                      className={`flex items-center space-x-3 p-3 rounded-lg transition-all duration-200 touch-manipulation ${
-                        scrolled
-                          ? "hover:bg-white/10 text-gray-300"
-                          : "hover:bg-gray-100 text-gray-700"
-                      } ${location.pathname === item.path ? (scrolled ? "bg-white/10" : "bg-gray-100") : ""}`}
+                      className={`flex items-center space-x-3 p-3 rounded-xl text-gray-300 hover:bg-white/10 ${
+                        location.pathname === item.path ? "bg-white/10" : ""
+                      }`}
                       onClick={() => setIsMenuOpen(false)}
-                      aria-current={
-                        location.pathname === item.path ? "page" : undefined
-                      }
+                      aria-current={location.pathname === item.path ? "page" : undefined}
                     >
-                      {item.mobileIcon && (
-                        <span className="text-xl">{item.mobileIcon}</span>
-                      )}
+                      {item.mobileIcon && <span className="text-xl">{item.mobileIcon}</span>}
                       <span className="font-semibold text-base">
                         {getNavigationLabel(item.labelKey)}
                       </span>
@@ -1470,30 +1374,27 @@ const getNavigationLabel = useCallback(
                   ))}
                 </nav>
 
-                <div
-                  className={`pt-4 border-t ${scrolled ? "border-white/10" : "border-gray-200"}`}
-                >
-                  <LanguageDropdown
-                    isMobile
-                    variant={scrolled ? "dark" : "light"}
-                  />
+                <div className="border-t border-white/10" />
+
+                <div>
+                  <LanguageDropdown isMobile />
                 </div>
 
-                <div
-                  className={`pt-4 border-t ${scrolled ? "border-white/10" : "border-gray-200"}`}
-                >
-                  <UserMenu isMobile scrolled={scrolled} />
+                <div className="border-t border-white/10" />
+
+                <div>
+                  <UserMenu isMobile scrolled={true} />
                 </div>
+
+                <div className="h-8" />
               </div>
             </div>
           )}
         </div>
       </header>
 
-      {/* Spacer */}
       <div className="h-20" aria-hidden="true" />
 
-      {/* Structured Data */}
       {typeof window !== "undefined" && (
         <script
           type="application/ld+json"
@@ -1515,16 +1416,15 @@ const getNavigationLabel = useCallback(
                 availableLanguage: ["French", "English"],
               },
               sameAs: [
-                "https://facebook.com/sosexpats",
-                "https://twitter.com/sosexpats",
-                "https://linkedin.com/company/sosexpats",
+                "https://facebook.com/sos-expat",
+                "https://twitter.com/sos-expat",
+                "https://linkedin.com/company/sos-expat",
               ],
             }),
           }}
         />
       )}
 
-      {/* OpenGraph/Twitter */}
       {typeof window !== "undefined" &&
         (() => {
           const updateMetaTag = (property: string, content: string) => {

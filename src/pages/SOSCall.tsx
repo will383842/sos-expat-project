@@ -33,6 +33,29 @@ import Layout from "../components/layout/Layout";
 import SEOHead from "../components/layout/SEOHead";
 import { useApp } from "../contexts/AppContext";
 import { FormattedMessage, useIntl } from "react-intl";
+// ========================================
+// 🌍 IMPORTS POUR INTERNATIONALISATION
+// ========================================
+import { 
+  countriesData, 
+  getSortedCountries, 
+  type LanguageKey,
+  type CountryData 
+} from '../data/countries';
+
+import { 
+  getCountryName, 
+  formatLanguages,
+  convertLanguageNamesToCodes 
+} from "../utils/formatters";
+
+import { 
+  languagesData, 
+  getLanguageLabel, 
+  type SupportedLocale,
+  type Language 
+} from '../data/languages-spoken';
+
 
 /* =========================
    Types
@@ -149,10 +172,7 @@ const FLAG_MAP: Record<string, string> = {
   Netherlands: "🇳🇱",
 };
 
-const PROFESSION_ICONS: Record<
-  string,
-  { icon: string; bgColor: string; textColor: string }
-> = {
+const PROFESSION_ICONS: Record<string, { icon: string; bgColor: string; textColor: string }> = {
   lawyer: {
     icon: "⚖️",
     bgColor: "bg-slate-100",
@@ -165,60 +185,6 @@ const PROFESSION_ICONS: Record<
   },
 };
 
-// const TRANSLATIONS = {
-//   fr: {
-//     professions: {
-//       lawyer: "Avocat",
-//       expat: "Expat",
-//     },
-//     labels: {
-//       online: "En ligne",
-//       offline: "Hors ligne",
-//       languages: "Langues",
-//       years: "ans",
-//       reviews: "avis",
-//       viewProfile: "Voir le profil",
-//       others: "autres",
-//     },
-//   },
-//   en: {
-//     professions: {
-//       lawyer: "Lawyer",
-//       expat: "Expat",
-//     },
-//     labels: {
-//       online: "Online",
-//       offline: "Offline",
-//       languages: "Languages",
-//       years: "years",
-//       reviews: "reviews",
-//       viewProfile: "View profile",
-//       others: "others",
-//     },
-//   },
-//   es: {
-//     professions: {
-//       lawyer: "Abogado",
-//       expat: "Expatriado",
-//     },
-//     labels: {
-//       online: "En línea",
-//       offline: "Fuera de línea",
-//       languages: "Idiomas",
-//       years: "años",
-//       reviews: "reseñas",
-//       viewProfile: "Ver perfil",
-//       others: "otros",
-//     },
-//   },
-// } as const;
-
-// const getBrowserLanguage = (): "fr" | "en" => {
-//   if (typeof window === "undefined") return "fr";
-//   const browserLang = navigator.language.toLowerCase();
-//   return browserLang.startsWith("fr") ? "fr" : "en";
-// };
-
 const getBrowserLanguage = (): "fr" | "en" | "es" => {
   if (typeof window === "undefined") return "fr";
   const browserLang = navigator.language.toLowerCase();
@@ -227,43 +193,16 @@ const getBrowserLanguage = (): "fr" | "en" | "es" => {
   return "en";
 };
 
-// const getLanguage = (userLanguage?: string): "fr" | "en" => {
-//   if (userLanguage) return userLanguage as "fr" | "en";
-//   return getBrowserLanguage();
-// };
-
 const getLanguage = (userLanguage?: string): "fr" | "en" | "es" => {
   if (userLanguage) return userLanguage as "fr" | "en" | "es";
   return getBrowserLanguage();
 };
 
-// const t = (lang: "fr" | "en" | "es", key: string, subKey?: string): string => {
-//   const translation = TRANSLATIONS[lang] as Record<
-//     string,
-//     Record<string, string> | string
-//   >;
-//   let text: string;
-
-//   if (subKey) {
-//     const section = translation[key];
-//     if (typeof section === "object" && section !== null) {
-//       text = section[subKey] || key;
-//     } else {
-//       text = key;
-//     }
-//   } else {
-//     const value = translation[key];
-//     text = typeof value === "string" ? value : key;
-//   }
-
-//   return text;
-// };
-
 const getProfessionInfo = (type: string) => {
   return PROFESSION_ICONS[type] || PROFESSION_ICONS["expat"];
 };
 
-const getLanguageLabel = (language: string): string => {
+const mapLanguageLabelLocal = (language: string): string => {
   return LANGUAGE_MAP[language] || language;
 };
 
@@ -310,473 +249,123 @@ const slugify = (s: string) =>
     .replace(/^-|-$/g, "");
 
 /* =========================
-   Options filtres
+   🌍 Fonctions de traduction dynamique
 ========================= */
-const countryOptions_fr = [
-  "Afghanistan",
-  "Afrique du Sud",
-  "Albanie",
-  "Algérie",
-  "Allemagne",
-  "Andorre",
-  "Angola",
-  "Arabie Saoudite",
-  "Argentine",
-  "Arménie",
-  "Australie",
-  "Autriche",
-  "Azerbaïdjan",
-  "Bahamas",
-  "Bahreïn",
-  "Bangladesh",
-  "Barbade",
-  "Belgique",
-  "Belize",
-  "Bénin",
-  "Bhoutan",
-  "Biélorussie",
-  "Birmanie",
-  "Bolivie",
-  "Bosnie-Herzégovine",
-  "Botswana",
-  "Brésil",
-  "Brunei",
-  "Bulgarie",
-  "Burkina Faso",
-  "Burundi",
-  "Cambodge",
-  "Cameroun",
-  "Canada",
-  "Cap-Vert",
-  "Chili",
-  "Chine",
-  "Chypre",
-  "Colombie",
-  "Comores",
-  "Congo",
-  "Corée du Nord",
-  "Corée du Sud",
-  "Costa Rica",
-  "Côte d'Ivoire",
-  "Croatie",
-  "Cuba",
-  "Danemark",
-  "Djibouti",
-  "Dominique",
-  "Égypte",
-  "Émirats arabes unis",
-  "Équateur",
-  "Érythrée",
-  "Espagne",
-  "Estonie",
-  "États-Unis",
-  "Éthiopie",
-  "Fidji",
-  "Finlande",
-  "France",
-  "Gabon",
-  "Gambie",
-  "Géorgie",
-  "Ghana",
-  "Grèce",
-  "Grenade",
-  "Guatemala",
-  "Guinée",
-  "Guinée-Bissau",
-  "Guinée équatoriale",
-  "Guyana",
-  "Haïti",
-  "Honduras",
-  "Hongrie",
-  "Îles Cook",
-  "Îles Marshall",
-  "Îles Salomon",
-  "Inde",
-  "Indonésie",
-  "Irak",
-  "Iran",
-  "Irlande",
-  "Islande",
-  "Israël",
-  "Italie",
-  "Jamaïque",
-  "Japon",
-  "Jordanie",
-  "Kazakhstan",
-  "Kenya",
-  "Kirghizistan",
-  "Kiribati",
-  "Koweït",
-  "Laos",
-  "Lesotho",
-  "Lettonie",
-  "Liban",
-  "Liberia",
-  "Libye",
-  "Liechtenstein",
-  "Lituanie",
-  "Luxembourg",
-  "Macédoine du Nord",
-  "Madagascar",
-  "Malaisie",
-  "Malawi",
-  "Maldives",
-  "Mali",
-  "Malte",
-  "Maroc",
-  "Maurice",
-  "Mauritanie",
-  "Mexique",
-  "Micronésie",
-  "Moldavie",
-  "Monaco",
-  "Mongolie",
-  "Monténégro",
-  "Mozambique",
-  "Namibie",
-  "Nauru",
-  "Népal",
-  "Nicaragua",
-  "Niger",
-  "Nigeria",
-  "Niue",
-  "Norvège",
-  "Nouvelle-Zélande",
-  "Oman",
-  "Ouganda",
-  "Ouzbékistan",
-  "Pakistan",
-  "Palaos",
-  "Palestine",
-  "Panama",
-  "Papouasie-Nouvelle-Guinée",
-  "Paraguay",
-  "Pays-Bas",
-  "Pérou",
-  "Philippines",
-  "Pologne",
-  "Portugal",
-  "Qatar",
-  "République centrafricaine",
-  "République démocratique du Congo",
-  "République dominicaine",
-  "République tchèque",
-  "Roumanie",
-  "Royaume-Uni",
-  "Russie",
-  "Rwanda",
-  "Saint-Kitts-et-Nevis",
-  "Saint-Marin",
-  "Saint-Vincent-et-les-Grenadines",
-  "Sainte-Lucie",
-  "Salvador",
-  "Samoa",
-  "São Tomé-et-Principe",
-  "Sénégal",
-  "Serbie",
-  "Seychelles",
-  "Sierra Leone",
-  "Singapour",
-  "Slovaquie",
-  "Slovénie",
-  "Somalie",
-  "Soudan",
-  "Soudan du Sud",
-  "Sri Lanka",
-  "Suède",
-  "Suisse",
-  "Suriname",
-  "Syrie",
-  "Tadjikistan",
-  "Tanzanie",
-  "Tchad",
-  "Thaïlande",
-  "Timor oriental",
-  "Togo",
-  "Tonga",
-  "Trinité-et-Tobago",
-  "Tunisie",
-  "Turkménistan",
-  "Turquie",
-  "Tuvalu",
-  "Ukraine",
-  "Uruguay",
-  "Vanuatu",
-  "Vatican",
-  "Venezuela",
-  "Vietnam",
-  "Yémen",
-  "Zambie",
-  "Zimbabwe",
-];
 
-const countryOptions= [
-  "Afghanistan",
-  "South Africa",
-  "Albania",
-  "Algeria",
-  "Germany",
-  "Andorra",
-  "Angola",
-  "Saudi Arabia",
-  "Argentina",
-  "Armenia",
-  "Australia",
-  "Austria",
-  "Azerbaijan",
-  "Bahamas",
-  "Bahrain",
-  "Bangladesh",
-  "Barbados",
-  "Belgium",
-  "Belize",
-  "Benin",
-  "Bhutan",
-  "Belarus",
-  "Myanmar",
-  "Bolivia",
-  "Bosnia and Herzegovina",
-  "Botswana",
-  "Brazil",
-  "Brunei",
-  "Bulgaria",
-  "Burkina Faso",
-  "Burundi",
-  "Cambodia",
-  "Cameroon",
-  "Canada",
-  "Cabo Verde",
-  "Chile",
-  "China",
-  "Cyprus",
-  "Colombia",
-  "Comoros",
-  "Congo",
-  "North Korea",
-  "South Korea",
-  "Costa Rica",
-  "Côte d'Ivoire",
-  "Croatia",
-  "Cuba",
-  "Denmark",
-  "Djibouti",
-  "Dominica",
-  "Egypt",
-  "United Arab Emirates",
-  "Ecuador",
-  "Eritrea",
-  "Spain",
-  "Estonia",
-  "United States",
-  "Ethiopia",
-  "Fiji",
-  "Finland",
-  "France",
-  "Gabon",
-  "Gambia",
-  "Georgia",
-  "Ghana",
-  "Greece",
-  "Grenada",
-  "Guatemala",
-  "Guinea",
-  "Guinea-Bissau",
-  "Equatorial Guinea",
-  "Guyana",
-  "Haiti",
-  "Honduras",
-  "Hungary",
-  "Cook Islands",
-  "Marshall Islands",
-  "Solomon Islands",
-  "India",
-  "Indonesia",
-  "Iraq",
-  "Iran",
-  "Ireland",
-  "Iceland",
-  "Israel",
-  "Italy",
-  "Jamaica",
-  "Japan",
-  "Jordan",
-  "Kazakhstan",
-  "Kenya",
-  "Kyrgyzstan",
-  "Kiribati",
-  "Kuwait",
-  "Laos",
-  "Lesotho",
-  "Latvia",
-  "Lebanon",
-  "Liberia",
-  "Libya",
-  "Liechtenstein",
-  "Lithuania",
-  "Luxembourg",
-  "North Macedonia",
-  "Madagascar",
-  "Malaysia",
-  "Malawi",
-  "Maldives",
-  "Mali",
-  "Malta",
-  "Morocco",
-  "Mauritius",
-  "Mauritania",
-  "Mexico",
-  "Micronesia",
-  "Moldova",
-  "Monaco",
-  "Mongolia",
-  "Montenegro",
-  "Mozambique",
-  "Namibia",
-  "Nauru",
-  "Nepal",
-  "Netherlands",
-  "New Zealand",
-  "Oman",
-  "Uganda",
-  "Uzbekistan",
-  "Pakistan",
-  "Palau",
-  "Palestine",
-  "Panama",
-  "Papua New Guinea",
-  "Paraguay",
-  "Peru",
-  "Philippines",
-  "Poland",
-  "Portugal",
-  "Qatar",
-  "Central African Republic",
-  "Democratic Republic of the Congo",
-  "Dominican Republic",
-  "Czech Republic",
-  "Romania",
-  "United Kingdom",
-  "Russia",
-  "Rwanda",
-  "Saint Kitts and Nevis",
-  "San Marino",
-  "Saint Vincent and the Grenadines",
-  "Saint Lucia",
-  "El Salvador",
-  "Samoa",
-  "São Tomé and Príncipe",
-  "Senegal",
-  "Serbia",
-  "Seychelles",
-  "Sierra Leone",
-  "Singapore",
-  "Slovakia",
-  "Slovenia",
-  "Somalia",
-  "Sudan",
-  "South Sudan",
-  "Sri Lanka",
-  "Sweden",
-  "Switzerland",
-  "Suriname",
-  "Syria",
-  "Tajikistan",
-  "Tanzania",
-  "Chad",
-  "Thailand",
-  "Timor-Leste",
-  "Togo",
-  "Tonga",
-  "Trinidad and Tobago",
-  "Tunisia",
-  "Turkmenistan",
-  "Turkey",
-  "Tuvalu",
-  "Ukraine",
-  "Uruguay",
-  "Vanuatu",
-  "Vatican City",
-  "Venezuela",
-  "Vietnam",
-  "Yemen",
-  "Zambia",
-  "Zimbabwe",
-];
- 
+/**
+ * Convertit la locale de l'app (fr/en/es/de/pt/ru/hi/ch/ar) 
+ * vers la clé de langue du fichier countries.ts
+ * 
+ * @param locale - Langue de l'interface (ex: "fr", "en", "es")
+ * @returns Clé pour accéder au nom du pays (ex: "nameFr", "nameEn")
+ * 
+ * @example
+ * getCountryLanguageKey("fr") // Returns "nameFr"
+ * getCountryLanguageKey("es") // Returns "nameEs"
+ */
+const getCountryLanguageKey = (locale: string): LanguageKey => {
+  const mapping: Record<string, LanguageKey> = {
+    'fr': 'nameFr',   // Français
+    'en': 'nameEn',   // English
+    'es': 'nameEs',   // Español
+    'de': 'nameDe',   // Deutsch
+    'pt': 'namePt',   // Português
+    'ru': 'nameRu',   // Русский
+    'hi': 'nameFr',   // हिन्दी (fallback sur français si pas dispo)
+    'ch': 'nameZh',   // 中文
+    'zh': 'nameZh',   // 中文 (alias)
+    'ar': 'nameAr',   // العربية
+    'it': 'nameIt',   // Italiano
+    'nl': 'nameNl',   // Nederlands
+  };
+  
+  // Si la langue n'est pas dans la liste, retourne anglais par défaut
+  return mapping[locale.toLowerCase()] || 'nameEn';
+};
 
-// const giveCountryNameAccordingToLang = (lang: string) => {
-//   const country_fr = countryOptions_fr;
-//   const country_en = countryOptions_en;
-//   const country_es= countryOptions_es;
-//   const country_ru = countryOptions_ru;
-//   const country_de = countryOptions_de;
-//   const country_pt = countryOptions_pt;
-//   const country_ch = countryOptions_ch;
-//   const country_ar = countryOptions_;
-//   const country_hi = countryOptions_en;
-// }
+/**
+ * Convertit la locale de l'app vers le format SupportedLocale
+ * utilisé par le fichier languages.ts
+ * 
+ * @param locale - Langue de l'interface
+ * @returns Locale supportée par languages.ts
+ * 
+ * @example
+ * getLanguagesLocale("fr") // Returns "fr"
+ * getLanguagesLocale("zh") // Returns "ch"
+ */
+const getLanguagesLocale = (locale: string): SupportedLocale => {
+  const mapping: Record<string, SupportedLocale> = {
+    'fr': 'fr',
+    'en': 'en',
+    'es': 'es',
+    'de': 'de',
+    'pt': 'pt',
+    'ru': 'ru',
+    'hi': 'hi',
+    'ch': 'ch',
+    'zh': 'ch',  // Chinois zh → ch
+    'ar': 'ar',
+  };
+  
+  return mapping[locale.toLowerCase()] || 'fr';
+};
 
-const languageOptions = [
-  "Français",
-  "Anglais",
-  "Espagnol",
-  "Allemand",
-  "Italien",
-  "Portugais",
-  "Russe",
-  "Chinois",
-  "Japonais",
-  "Coréen",
-  "Arabe",
-  "Hindi",
-  "Thaï",
-  "Néerlandais",
-  "Polonais",
-  "Roumain",
-  "Turc",
-  "Vietnamien",
-  "Suédois",
-  "Norvégien",
-  "Danois",
-  "Finnois",
-  "Tchèque",
-  "Slovaque",
-  "Ukrainien",
-  "Grec",
-  "Hébreu",
-  "Indonésien",
-  "Malais",
-  "Persan",
-  "Ourdou",
-  "Tamoul",
-  "Telugu",
-  "Gujarati",
-  "Bengali",
-  "Punjabi",
-  "Serbe",
-  "Croate",
-  "Bulgarie",
-  "Hongrois",
-  "Letton",
-  "Lituanien",
-  "Estonien",
-  "Slovène",
-  "Albanais",
-  "Islandais",
-  "Irlandais",
-  "Maltais",
-  "Macédonien",
-  "Swahili",
-  "Afrikaans",
-  "Azéri",
-  "Arménien",
-  "Géorgien",
-  "Khmer",
-  "Laotien",
-  "Mongol",
-  "Népalais",
-  "Singhalais",
-];
+/**
+ * Génère la liste complète des 195 pays traduits
+ * dans la langue de l'interface utilisateur
+ * 
+ * @param locale - Langue de l'interface (ex: "fr", "en", "es")
+ * @returns Array des noms de pays traduits, triés par priorité puis alphabétiquement
+ * 
+ * @example
+ * getCountryOptions("fr") 
+ * // Returns ["Royaume-Uni", "France", "Allemagne", ..., "Zimbabwe"]
+ * 
+ * getCountryOptions("en")
+ * // Returns ["United Kingdom", "France", "Germany", ..., "Zimbabwe"]
+ */
+const getCountryOptions = (locale: string): string[] => {
+  // Obtient la clé correcte pour la langue (nameFr, nameEn, etc.)
+  const langKey = getCountryLanguageKey(locale);
+  
+  // Récupère tous les pays triés
+  // getSortedCountries gère déjà :
+  // - Le tri par priorité (top 6 pays en premier)
+  // - Le tri alphabétique
+  return getSortedCountries(langKey)
+    .filter(country => country.code !== 'SEPARATOR')  // Enlève le séparateur visuel
+    .map(country => country[langKey]);  // Extrait juste le nom traduit
+};
+
+/**
+ * Génère la liste complète des langues parlées traduites
+ * dans la langue de l'interface utilisateur
+ * 
+ * @param locale - Langue de l'interface
+ * @returns Array des noms de langues traduits, triés alphabétiquement
+ * 
+ * @example
+ * getLanguageOptions("fr")
+ * // Returns ["Allemand", "Anglais", "Arabe", ..., "Vietnamien"]
+ * 
+ * getLanguageOptions("en")
+ * // Returns ["Arabic", "Chinese", "English", ..., "Vietnamese"]
+ */
+const getLanguageOptions = (locale: string): string[] => {
+  // Convertit vers le format SupportedLocale
+  const supportedLocale = getLanguagesLocale(locale);
+  
+  // Pour chaque langue, récupère son label traduit
+  return languagesData
+    .map(lang => getLanguageLabel(lang, supportedLocale))
+    .sort((a, b) => {
+      // Tri alphabétique dans la locale appropriée
+      // Pour le chinois, utilise 'zh' au lieu de 'ch'
+      const sortLocale = supportedLocale === 'ch' ? 'zh' : supportedLocale;
+      return a.localeCompare(b, sortLocale);
+    });
+};
 
 /* =========================
    ModernProfileCard Component (exact copy)
@@ -824,15 +413,46 @@ const ModernProfileCard: React.FC<{
     setIsHovered(false);
   }, []);
 
+  // ✅ CORRECTION 2: Remplacer formattedLanguages
   const formattedLanguages = useMemo(() => {
-    const mappedLanguages = provider.languages.map((lang) =>
-      getLanguageLabel(lang)
-    );
-    if (mappedLanguages.length <= 3) {
-      return mappedLanguages.join(" • ");
+    if (!provider.languages || provider.languages.length === 0) {
+      return '';
     }
-    return `${mappedLanguages.slice(0, 2).join(" • ")} +${mappedLanguages.length - 2} ${intl.formatMessage({ id: "card.others" })}`;
-  }, [provider.languages, currentLang]);
+    
+    const translatedLanguages = provider.languages
+      .slice(0, 3)
+      .map(langCode => {
+        const lang = languagesData.find(l => l.code.toLowerCase() === langCode.toLowerCase());
+        return lang ? getLanguageLabel(lang, language as SupportedLocale) : langCode;
+      })
+      .filter(name => name !== '');
+    
+    let result = translatedLanguages.join(' • ');
+    if (provider.languages.length > 3) {
+      result += ` +${provider.languages.length - 3}`;
+    }
+    return result;
+  }, [provider.languages, language]);
+
+  // ✅ CORRECTION 3: Ajouter formattedCountries
+  const formattedCountries = useMemo(() => {
+    const countries = provider.interventionCountries && provider.interventionCountries.length > 0
+      ? provider.interventionCountries
+      : provider.country ? [provider.country] : [];
+    
+    if (countries.length === 0) return '';
+    
+    const translatedCountries = countries
+      .slice(0, 2)
+      .map(countryCode => getCountryName(countryCode, language))
+      .filter(name => name !== '');
+    
+    let result = translatedCountries.join(' • ');
+    if (countries.length > 2) {
+      result += ` +${countries.length - 2}`;
+    }
+    return result;
+  }, [provider.interventionCountries, provider.country, language]);
 
   const ariaLabels = useMemo(
     () => ({
@@ -994,46 +614,29 @@ const ModernProfileCard: React.FC<{
                 </span>
               </div>
             </div>
+          </div>
 
-            {/* Nationalité avec drapeau */}
-            {provider.country && (
-              <div className="flex items-center gap-2">
-                <span className="text-lg" aria-hidden="true">
-                  {getCountryFlag(provider.country)}
-                </span>
-                <span className="text-slate-600 text-xs font-medium">
-                  {provider.country}
+          {/* ✅ CORRECTION 5: Remplacer "Informations organisées" */}
+          <div className="space-y-2 h-28 overflow-hidden">
+            {/* Pays d'intervention */}
+            {formattedCountries && (
+              <div className="flex items-start gap-2">
+                <MapPin className="w-3 h-3 text-blue-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                <span className="text-blue-600 text-xs leading-tight">
+                  {formattedCountries}
                 </span>
               </div>
             )}
-          </div>
 
-          {/* Informations organisées - Hauteur fixe avec overflow */}
-          <div className="space-y-2 h-28 overflow-hidden">
-            {/* Pays */}
-            <div className="flex items-center gap-2">
-              <span className="text-lg" aria-hidden="true">
-                {getCountryFlag(provider.country)}
-              </span>
-              <span className="text-blue-600 text-xs font-medium truncate">
-                {provider.country}
-              </span>
-            </div>
-
-            {/* Langues */}
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <Globe className="w-3 h-3 text-indigo-600" aria-hidden="true" />
-                <span className="text-slate-800 font-semibold text-xs">
-                  {/* {t(currentLang, "labels", "languages")} */}
-                </span>
-              </div>
-              <div className="pl-5">
-                <span className="text-indigo-600 text-xs">
+            {/* Langues parlées */}
+            {formattedLanguages && (
+              <div className="flex items-start gap-2">
+                <Globe className="w-3 h-3 text-indigo-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                <span className="text-indigo-600 text-xs leading-tight">
                   {formattedLanguages}
                 </span>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Stats */}
@@ -1155,9 +758,7 @@ const SOSCall: React.FC = () => {
   const [showCustomLanguage, setShowCustomLanguage] = useState<boolean>(false);
 
   // Statut
-  const [statusFilter, setStatusFilter] = useState<
-    "all" | "online" | "offline"
-  >("all");
+  const [statusFilter, setStatusFilter] = useState<"all" | "online" | "offline">("all");
   const [onlineOnly, setOnlineOnly] = useState<boolean>(false);
 
   // Données
@@ -1182,6 +783,38 @@ const SOSCall: React.FC = () => {
   });
 
   const lang = (language as "fr" | "en") || "fr";
+
+  // ========================================
+  // 🌍 GÉNÉRATION DYNAMIQUE DES LISTES TRADUITES
+  // ========================================
+  
+  /**
+   * Liste des 195 pays traduits dans la langue courante
+   * Se met à jour automatiquement quand l'utilisateur change de langue
+   */
+  const countryOptions = useMemo(() => {
+    console.log('🌍 Génération liste pays pour langue:', language || 'fr');
+    return getCountryOptions(language || 'fr');
+  }, [language]);
+  
+  /**
+   * Liste des langues parlées traduites dans la langue courante
+   * Se met à jour automatiquement quand l'utilisateur change de langue
+   */
+  const languageOptions = useMemo(() => {
+    console.log('🗣️ Génération liste langues pour langue:', language || 'fr');
+    return getLanguageOptions(language || 'fr');
+  }, [language]);
+  
+  // Log pour debug : affiche combien d'options sont générées
+  useEffect(() => {
+    console.log('📊 Options générées:', {
+      pays: countryOptions.length,
+      langues: languageOptions.length,
+      langue_interface: language || 'fr'
+    });
+  }, [countryOptions, languageOptions, language]);
+
 
   const cardTranslations = useMemo(
     () => ({
@@ -1247,6 +880,8 @@ const SOSCall: React.FC = () => {
     const sosProfilesQuery = query(
       collection(db, "sos_profiles"),
       where("type", "in", ["lawyer", "expat"]),
+      where("isApproved", "==", true),
+      where("isVisible", "==", true),
       limit(100)
     );
 
@@ -1270,6 +905,13 @@ const SOSCall: React.FC = () => {
             `${data.firstName || ""} ${data.lastName || ""}`.trim() ||
             "Expert";
 
+          // 🆕 Génération du nom public avec initiale pour protéger la vie privée
+          const firstName = data.firstName || "";
+          const lastName = data.lastName || "";
+          const publicDisplayName = firstName && lastName 
+            ? `${firstName} ${lastName.charAt(0)}.`
+            : fullName;
+
           const type: "lawyer" | "expat" =
             data.type === "lawyer" ? "lawyer" : "expat";
 
@@ -1278,7 +920,7 @@ const SOSCall: React.FC = () => {
 
           const provider: Provider = {
             id: docSnap.id,
-            name: fullName,
+            name: publicDisplayName,
             firstName: data.firstName,
             lastName: data.lastName,
             type,
@@ -1457,9 +1099,18 @@ const SOSCall: React.FC = () => {
     custom: string
   ): boolean => {
     if (selected === "all") return true;
-    const normalizedProv = (langs || []).map((l) =>
-      getLanguageLabel(l).toLowerCase()
-    );
+    
+    // Convertir les codes/noms en codes ISO
+    const langCodes = convertLanguageNamesToCodes(langs);
+    
+    // Traduire chaque code selon la langue active
+    const normalizedProv = langCodes.map((code) => {
+      const lang = languagesData.find(l => l.code === code);
+      return lang 
+        ? getLanguageLabel(lang, language as SupportedLocale).toLowerCase()
+        : code.toLowerCase();
+    });
+    
     if (selected === "Autre") {
       if (!custom) return true;
       const needle = custom.toLowerCase();
@@ -1547,7 +1198,6 @@ const SOSCall: React.FC = () => {
           <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
             <div className="inline-flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-full pl-6 pr-3 py-2.5 border border-white/20 mb-7">
               <Phone className="w-5 h-5 text-red-300" />
-              {/* <span className="text-white font-semibold">SOS — appel d'urgence en &lt; 5 minutes</span> */}
               <span className="text-white font-semibold">
                 <FormattedMessage id="sosCall" />
               </span>
@@ -1555,17 +1205,12 @@ const SOSCall: React.FC = () => {
             </div>
 
             <h1 className="text-5xl md:text-7xl font-black text-white leading-tight mb-4">
-              {/* Trouvez un */}
               <FormattedMessage id="sosTagline" />
               <span className="bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500 bg-clip-text text-transparent">
-                {/* expert */} <FormattedMessage id="expert" />{" "}
+                {" "}<FormattedMessage id="expert" />{" "}
               </span>
-              {/* maintenant */}
               <FormattedMessage id="now" />
             </h1>
-            {/* <p className="text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto">
-              Avocats & Expatriés vérifiés • Disponibles 24/7 • <strong>150+ pays</strong>
-            </p> */}
             <p className="text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto">
               <FormattedMessage
                 id="verifiedLawyersExpats"
@@ -1583,10 +1228,6 @@ const SOSCall: React.FC = () => {
           <div className="max-w-7xl mx-auto px-6">
             {/* Titre + Filtres */}
             <div className="text-center mb-8 sm:mb-6">
-              {/* <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-4">
-                {selectedType === 'lawyer' ? 'Avocats disponibles' : selectedType === 'expat' ? 'Expatriés disponibles' : 'Experts disponibles'}
-              </h2> */}
-
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-4">
                 {selectedType === "lawyer" && (
                   <FormattedMessage
@@ -1618,7 +1259,6 @@ const SOSCall: React.FC = () => {
                       className="block text-xs font-semibold text-gray-300 uppercase tracking-wide"
                     >
                       <FormattedMessage id="type" />
-                      {/* Type */}
                     </label>
                     <div className="relative">
                       <select
@@ -1638,9 +1278,6 @@ const SOSCall: React.FC = () => {
                           transition-all appearance-none text-sm
                         "
                       >
-                        {/* <option value="all">Tous</option>
-                        <option value="lawyer">Avocats</option>
-                        <option value="expat">Expatriés</option> */}
                         <option value="all">
                           <FormattedMessage id="filter.all" />
                         </option>
@@ -1665,7 +1302,6 @@ const SOSCall: React.FC = () => {
                       className="block text-xs font-semibold text-gray-300 uppercase tracking-wide"
                     >
                       <FormattedMessage id="country.label" />
-                      {/* Pays */}
                     </label>
                     <div className="relative">
                       <select
@@ -1681,7 +1317,6 @@ const SOSCall: React.FC = () => {
                           transition-all appearance-none text-sm
                         "
                       >
-                        {/* <option value="all">Tous les pays</option> */}
                         <option value="all">
                           <FormattedMessage id="country.allCountries" />
                         </option>
@@ -1690,7 +1325,6 @@ const SOSCall: React.FC = () => {
                             {country}
                           </option>
                         ))}
-                        {/* <option value="Autre">Autre</option> */}
                         <option value="Autre">
                           <FormattedMessage id="country.other" />
                         </option>
@@ -1717,7 +1351,6 @@ const SOSCall: React.FC = () => {
                       htmlFor="language-filter"
                       className="block text-xs font-semibold text-gray-300 uppercase tracking-wide"
                     >
-                      {/* Langue */}
                       <FormattedMessage id="language.label" />
                     </label>
                     <div className="relative">
@@ -1734,7 +1367,6 @@ const SOSCall: React.FC = () => {
                           transition-all appearance-none text-sm
                         "
                       >
-                        {/* <option value="all">Toutes</option> */}
                         <option value="all">
                           <FormattedMessage id="language.all" />
                         </option>
@@ -1746,7 +1378,6 @@ const SOSCall: React.FC = () => {
                         <option value="Autre">
                           <FormattedMessage id="language.other" />
                         </option>
-                        {/* <option value="Autre">Autre</option> */}
                       </select>
                       <ChevronDown
                         className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-300 pointer-events-none"
@@ -1767,7 +1398,6 @@ const SOSCall: React.FC = () => {
                   {/* Statut */}
                   <div className="space-y-1 lg:col-span-2">
                     <label className="block text-xs font-semibold text-gray-300 uppercase tracking-wide">
-                      {/* Statut */}
                       <FormattedMessage id="status.label" />
                     </label>
                     <div className="flex items-center gap-2">
@@ -1782,7 +1412,6 @@ const SOSCall: React.FC = () => {
                         aria-pressed={statusFilter === "all"}
                       >
                         <span className="w-2 h-2 rounded-full bg-gray-300" />
-                        {/* Tous */}
                         <FormattedMessage id="status.all" />
                       </button>
                       <button
@@ -1797,7 +1426,6 @@ const SOSCall: React.FC = () => {
                         title="En ligne"
                       >
                         <Wifi className="w-4 h-4" />
-                        {/* En ligne */}
                         <FormattedMessage id="status.online" />
                       </button>
                       <button
@@ -1812,7 +1440,6 @@ const SOSCall: React.FC = () => {
                         title="Hors ligne"
                       >
                         <WifiOff className="w-4 h-4" />
-                        {/* Hors ligne */}
                         <FormattedMessage id="status.offline" />
                       </button>
                     </div>
@@ -1821,7 +1448,6 @@ const SOSCall: React.FC = () => {
                   {/* Reset */}
                   <div className="space-y-1">
                     <label className="block text-xs font-medium text-transparent">
-                      {/* Action */}
                       <FormattedMessage id="action.label" />
                     </label>
                     <button
@@ -1838,7 +1464,6 @@ const SOSCall: React.FC = () => {
                       }}
                       className="w-full px-3 py-2 border border-white/15 rounded-xl text-gray-100 hover:bg-white/10 active:bg-white/15 transition-colors text-sm font-semibold h-10"
                     >
-                      {/* Réinitialiser */}
                       <FormattedMessage id="action.reset" />
                     </button>
                   </div>
@@ -1848,14 +1473,12 @@ const SOSCall: React.FC = () => {
                   <span className="inline-flex items-center gap-2 rounded-full px-3 py-1 bg-white/10 border border-white/15">
                     <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
                     {filteredProviders.filter((p) => p.isOnline).length}
-                    {/* en ligne */}
                     <span>
                       <FormattedMessage id="status.online" />
                     </span>
                   </span>
                   <span className="mx-2  text-white/30">•</span>
                   {filteredProviders.length}
-                  {/* au total */}
                   <span className="ml-[2px]">
                     <FormattedMessage id="stats.total" />
                   </span>
@@ -1960,7 +1583,6 @@ const SOSCall: React.FC = () => {
                                       : "Page"}{" "}
                     <strong>{page}</strong> / {totalPages} —{" "}
                     {filteredProviders.length}
-                    {/* résultats */}
                     <span className="ml-[2px]">
                       <FormattedMessage id="pagination.results" />
                     </span>
@@ -1979,12 +1601,9 @@ const SOSCall: React.FC = () => {
                     <Search className="w-8 h-8 text-gray-200" />
                   </div>
                   <h3 className="text-xl font-semibold text-white mb-2">
-                    {/* Aucun expert trouvé */}
                     <FormattedMessage id="noResults.title" />
                   </h3>
                   <p className="text-gray-300 mb-6">
-                    {/* Aucun expert ne correspond à vos critères de recherche
-                    actuels. */}
                     <FormattedMessage id="noResults.description" />
                   </p>
                   <button
@@ -2001,7 +1620,6 @@ const SOSCall: React.FC = () => {
                     }}
                     className="px-6 py-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white font-semibold rounded-xl transition-colors"
                   >
-                    {/* Réinitialiser les filtres */}
                     <FormattedMessage id="noResults.resetFilters" />
                   </button>
                 </div>
@@ -2012,7 +1630,6 @@ const SOSCall: React.FC = () => {
             <section className="text-center mt-12 sm:mt-16">
               <div className="rounded-[28px] border border-white/10 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-md p-8 sm:p-12">
                 <h3 className="text-2xl sm:text-3xl font-black text-white mb-3">
-                  {/* Besoin d'aide immédiate ? */}
                   <FormattedMessage id="needImmediateHelp" />
                 </h3>
                 <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
@@ -2023,14 +1640,12 @@ const SOSCall: React.FC = () => {
                       strong: (chunks) => <strong>{chunks}</strong>,
                     }}
                   />
-                  {/* Plus de 200 experts vérifiés disponibles dans <strong>150+ pays</strong> pour vous accompagner. */}
                 </p>
                 <button
                   onClick={() => navigate("/sos-appel")}
                   className="inline-flex items-center gap-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-0.5"
                 >
                   <Phone className="w-5 h-5" />
-                  {/* Trouver un expert */}
                   <FormattedMessage id="findExpert" />
                 </button>
               </div>
@@ -2101,7 +1716,6 @@ const Pagination: React.FC<{
       >
         <ChevronLeft className="w-4 h-4" />
         <span className="hidden sm:inline">
-          {/* Précédent */}
           <FormattedMessage id="pagination.previous" />
         </span>
       </button>
@@ -2135,7 +1749,6 @@ const Pagination: React.FC<{
         aria-label="Page suivante"
       >
         <span className="hidden sm:inline">
-          {/* Suivant */}
           <FormattedMessage id="pagination.next" />
         </span>
         <ChevronRight className="w-4 h-4" />

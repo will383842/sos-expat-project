@@ -826,8 +826,8 @@ const useSEO = (meta: {
     updateMeta("og:image:height", "630", true);
 
     updateMeta("twitter:card", "summary_large_image");
-    updateMeta("twitter:site", "@sosexpats");
-    updateMeta("twitter:creator", "@sosexpats");
+    updateMeta("twitter:site", "@sos-expat");
+    updateMeta("twitter:creator", "@sos-expat");
     updateMeta("twitter:title", meta.ogTitle);
     updateMeta("twitter:description", meta.ogDescription);
     updateMeta("twitter:image", meta.twitterImagePath);

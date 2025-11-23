@@ -92,7 +92,7 @@ export const submitKycData = onCall<KycData>(async (request) => {
     const account = await stripe.accounts.update(accountId, {
       business_profile: {
         mcc: "7399",
-        url: "https://sosexpat.com",
+        url: "https://sos-expat.com",
       },
       individual: {
         first_name: firstName,

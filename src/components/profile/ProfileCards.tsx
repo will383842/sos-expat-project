@@ -5,6 +5,8 @@ import { collection, query, onSnapshot, limit, where, orderBy } from 'firebase/f
 import { db } from '../../config/firebase';
 import { useApp } from '../../contexts/AppContext';
 import { getCountryCoordinates } from '../../utils/countryCoordinates';
+import { getCountryName } from '../../utils/formatters';
+import { languagesData, type SupportedLocale } from '../../data/languages-spoken';
 
 // Enhanced types for 2025 standards with AI-friendly structure
 interface FirebaseDocumentSnapshot {
@@ -121,24 +123,112 @@ const LANGUAGE_OPTIONS = [
   'Thaï', 'Tibétain', 'Turc', 'Turkmen', 'Ukrainien', 'Vietnamien', 'Gallois'
 ];
 
-// Language mapping function
-const getLanguageLabel = (lang: string): string => {
-  const languageMap: { [key: string]: string } = {
-    'Français': 'Français', 'French': 'Français',
-    'Anglais': 'Anglais', 'English': 'Anglais',
-    'Espagnol': 'Espagnol', 'Spanish': 'Espagnol', 'Español': 'Espagnol',
-    'Allemand': 'Allemand', 'German': 'Allemand', 'Deutsch': 'Allemand',
-    'Italien': 'Italien', 'Italian': 'Italien', 'Italiano': 'Italien',
-    'Portugais': 'Portugais', 'Portuguese': 'Portugais', 'Português': 'Portugais',
-    'Russe': 'Russe', 'Russian': 'Russe', 'Русский': 'Russe',
-    'Chinois': 'Chinois', 'Chinese': 'Chinois', '中文': 'Chinois',
-    'Japonais': 'Japonais', 'Japanese': 'Japonais', '日本語': 'Japonais',
-    'Coréen': 'Coréen', 'Korean': 'Coréen', '한국어': 'Coréen',
-    'Arabe': 'Arabe', 'Arabic': 'Arabe', 'العربية': 'Arabe',
-    'Hindi': 'Hindi', 'हिन्दी': 'Hindi',
-    'Thaï': 'Thaï', 'Thai': 'Thaï', 'ไทย': 'Thaï'
-  };
-  return languageMap[lang] || lang;
+// Mapping complet des codes ISO 639-1 vers noms de langues
+const LANGUAGE_CODE_TO_NAME: Record<string, { fr: string; en: string }> = {
+  'fr': { fr: 'Français', en: 'French' },
+  'en': { fr: 'Anglais', en: 'English' },
+  'es': { fr: 'Espagnol', en: 'Spanish' },
+  'de': { fr: 'Allemand', en: 'German' },
+  'it': { fr: 'Italien', en: 'Italian' },
+  'pt': { fr: 'Portugais', en: 'Portuguese' },
+  'ru': { fr: 'Russe', en: 'Russian' },
+  'zh': { fr: 'Chinois', en: 'Chinese' },
+  'ja': { fr: 'Japonais', en: 'Japanese' },
+  'ko': { fr: 'Coréen', en: 'Korean' },
+  'ar': { fr: 'Arabe', en: 'Arabic' },
+  'hi': { fr: 'Hindi', en: 'Hindi' },
+  'nl': { fr: 'Néerlandais', en: 'Dutch' },
+  'pl': { fr: 'Polonais', en: 'Polish' },
+  'tr': { fr: 'Turc', en: 'Turkish' },
+  'sv': { fr: 'Suédois', en: 'Swedish' },
+  'no': { fr: 'Norvégien', en: 'Norwegian' },
+  'da': { fr: 'Danois', en: 'Danish' },
+  'fi': { fr: 'Finnois', en: 'Finnish' },
+  'cs': { fr: 'Tchèque', en: 'Czech' },
+  'el': { fr: 'Grec', en: 'Greek' },
+  'he': { fr: 'Hébreu', en: 'Hebrew' },
+  'th': { fr: 'Thaï', en: 'Thai' },
+  'vi': { fr: 'Vietnamien', en: 'Vietnamese' },
+  'id': { fr: 'Indonésien', en: 'Indonesian' },
+  'ms': { fr: 'Malais', en: 'Malay' },
+  'sq': { fr: 'Albanais', en: 'Albanian' },
+  'ta': { fr: 'Tamoul', en: 'Tamil' },
+  'te': { fr: 'Telugu', en: 'Telugu' },
+  'ur': { fr: 'Ourdou', en: 'Urdu' },
+  'fa': { fr: 'Persan', en: 'Persian' },
+  'uk': { fr: 'Ukrainien', en: 'Ukrainian' },
+  'ro': { fr: 'Roumain', en: 'Romanian' },
+  'hu': { fr: 'Hongrois', en: 'Hungarian' },
+  'bg': { fr: 'Bulgare', en: 'Bulgarian' },
+  'sr': { fr: 'Serbe', en: 'Serbian' },
+  'hr': { fr: 'Croate', en: 'Croatian' },
+  'sk': { fr: 'Slovaque', en: 'Slovak' },
+  'sl': { fr: 'Slovène', en: 'Slovenian' },
+  'lt': { fr: 'Lituanien', en: 'Lithuanian' },
+  'lv': { fr: 'Letton', en: 'Latvian' },
+  'et': { fr: 'Estonien', en: 'Estonian' },
+  'ca': { fr: 'Catalan', en: 'Catalan' },
+  'eu': { fr: 'Basque', en: 'Basque' },
+  'ga': { fr: 'Irlandais', en: 'Irish' },
+  'is': { fr: 'Islandais', en: 'Icelandic' },
+  'mt': { fr: 'Maltais', en: 'Maltese' },
+  'cy': { fr: 'Gallois', en: 'Welsh' },
+  'af': { fr: 'Afrikaans', en: 'Afrikaans' },
+  'sw': { fr: 'Swahili', en: 'Swahili' },
+  'am': { fr: 'Amharique', en: 'Amharic' },
+  'bn': { fr: 'Bengali', en: 'Bengali' },
+  'gu': { fr: 'Gujarati', en: 'Gujarati' },
+  'kn': { fr: 'Kannada', en: 'Kannada' },
+  'ml': { fr: 'Malayalam', en: 'Malayalam' },
+  'mr': { fr: 'Marathi', en: 'Marathi' },
+  'pa': { fr: 'Punjabi', en: 'Punjabi' },
+  'si': { fr: 'Singhalais', en: 'Sinhala' },
+  'km': { fr: 'Khmer', en: 'Khmer' },
+  'lo': { fr: 'Lao', en: 'Lao' },
+  'my': { fr: 'Birman', en: 'Burmese' },
+  'ka': { fr: 'Géorgien', en: 'Georgian' },
+  'hy': { fr: 'Arménien', en: 'Armenian' },
+  'az': { fr: 'Azéri', en: 'Azerbaijani' },
+  'kk': { fr: 'Kazakh', en: 'Kazakh' },
+  'ky': { fr: 'Kirghize', en: 'Kyrgyz' },
+  'tg': { fr: 'Tadjik', en: 'Tajik' },
+  'tk': { fr: 'Turkmen', en: 'Turkmen' },
+  'uz': { fr: 'Ouzbek', en: 'Uzbek' },
+  'mn': { fr: 'Mongol', en: 'Mongolian' },
+  'bo': { fr: 'Tibétain', en: 'Tibetan' },
+  'ne': { fr: 'Népalais', en: 'Nepali' },
+  'ps': { fr: 'Pachto', en: 'Pashto' },
+  'be': { fr: 'Biélorusse', en: 'Belarusian' },
+  'bs': { fr: 'Bosniaque', en: 'Bosnian' },
+  'mk': { fr: 'Macédonien', en: 'Macedonian' },
+  'lb': { fr: 'Luxembourgeois', en: 'Luxembourgish' },
+};
+
+// Fonction utilitaire pour convertir code langue -> nom lisible
+const getLanguageLabel = (langCode: string, locale: SupportedLocale = 'fr'): string => {
+  if (!langCode) return '';
+  
+  const normalized = langCode.trim().toLowerCase();
+  
+  // Si c'est déjà un nom complet (plus de 3 caractères), le retourner
+  if (normalized.length > 3) {
+    return langCode.charAt(0).toUpperCase() + langCode.slice(1);
+  }
+  
+  // Chercher dans le mapping des codes ISO
+  const langMapping = LANGUAGE_CODE_TO_NAME[normalized];
+  if (langMapping) {
+    return langMapping[locale === 'fr' ? 'fr' : 'en'];
+  }
+  
+  // Chercher dans languagesData en fallback
+  const langData = languagesData.find(lang => lang.code?.toLowerCase() === normalized);
+  if (langData) {
+    return langData[locale] || langData.fr || langData.en;
+  }
+  
+  // Dernier fallback : retourner le code en majuscule
+  return langCode.toUpperCase();
 };
 
 // Text truncation utility
@@ -262,6 +352,15 @@ const ProfileCards: React.FC<ProfileCardsProps> = ({
       const languages = Array.isArray(data.languages) && data.languages.length > 0 
         ? data.languages.filter((lang: unknown) => typeof lang === 'string' && lang.trim().length > 0)
         : [language === 'fr' ? 'Français' : 'English'];
+      
+      console.log('🔍 transformFirestoreDoc - Langues:', {
+        docId: doc.id,
+        fullName,
+        rawLanguages: data.languages,
+        isArray: Array.isArray(data.languages),
+        filteredLanguages: languages,
+        languagesLength: languages.length,
+      });
         
       const specialties = Array.isArray(data.specialties) 
         ? data.specialties.filter((spec: unknown) => typeof spec === 'string' && spec.trim().length > 0)
@@ -275,13 +374,19 @@ const ProfileCards: React.FC<ProfileCardsProps> = ({
       const createdAt = data.createdAt?.toMillis ? data.createdAt.toMillis() : (data.createdAt || Date.now());
       const updatedAt = data.updatedAt?.toMillis ? data.updatedAt.toMillis() : (data.updatedAt || Date.now());
       
-      // AI-optimized provider object with rich metadata
-      const provider: Provider = {
-        id: doc.id,
-        name: fullName,
-        fullName,
-        firstName: firstName || fullName.split(' ')[0] || '',
-        lastName: lastName || fullName.split(' ').slice(1).join(' ') || '',
+
+      // Génération du nom public avec initiale pour protéger la vie privée
+const publicDisplayName = firstName && lastName 
+  ? `${firstName} ${lastName.charAt(0)}.`
+  : fullName;
+
+// AI-optimized provider object with rich metadata
+const provider: Provider = {
+  id: doc.id,
+  name: publicDisplayName,
+  fullName,
+  firstName: firstName || fullName.split(' ')[0] || '',
+  lastName: lastName || fullName.split(' ').slice(1).join(' ') || '',
         type: typeRaw,
         country,
         countryCode: String(data.countryCode || '').trim(),
@@ -313,6 +418,13 @@ const ProfileCards: React.FC<ProfileCardsProps> = ({
         certifications: Object.freeze(certifications),
         slug: String(data.slug || fullName.toLowerCase().replace(/[^a-z0-9]+/g, '-')),
       };
+      
+      console.log('✅ Provider créé:', {
+        id: provider.id,
+        name: provider.name,
+        languages: provider.languages,
+        languagesCount: provider.languages.length,
+      });
       
       return provider;
       
@@ -403,16 +515,15 @@ const ProfileCards: React.FC<ProfileCardsProps> = ({
     }
     
     let filtered = [...providers];
-    // Règle globale d’affichage (alignée Home & SOS Call)
-// - Avocats : isApproved === true obligatoire
-// - Expats : pas d’approval requis
+// Règle globale d'affichage (alignée Home & SOS Call)
+// - Tous : isApproved === true obligatoire
 // - Exclus : admin + bannis + non visibles
 filtered = filtered.filter(p => {
   const notAdmin = (p.role ?? '') !== 'admin' && p.isAdmin !== true;
   const notBanned = p.isBanned !== true;
   const visible = p.isVisible !== false;
-  const lawyerRule = p.type !== 'lawyer' || p.isApproved === true;
-  return notAdmin && notBanned && visible && lawyerRule;
+  const approved = p.isApproved === true;
+  return notAdmin && notBanned && visible && approved;
 });
     // Base filters with AI-friendly logic
     if (filter === 'providers-only') {
@@ -740,13 +851,15 @@ filtered = filtered.filter(p => {
   }, [mode, filteredProviders, currentPage, itemsPerPage]);
 
   // Enhanced provider card with multiple styles
-  const ProviderCard = React.memo(({ 
-    provider, 
-    isCarousel = false 
-  }: { 
-    provider: Provider; 
-    isCarousel?: boolean; 
-  }) => {
+    const ProviderCard = React.memo(({ 
+  provider, 
+  isCarousel = false 
+}: { 
+  provider: Provider; 
+  isCarousel?: boolean; 
+}) => {
+  const { language = 'fr' } = useApp();
+  
     const cardSchema = useMemo(() => ({
       "@context": "https://schema.org",
       "@type": provider.type === 'lawyer' ? "LegalService" : "Service",
@@ -865,7 +978,8 @@ filtered = filtered.filter(p => {
               </div>
             </div>
 
-            <div className="space-y-4 flex-1">
+<div className="space-y-4 flex-1">
+              {/* 🗣️ LANGUES PARLÉES */}
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
@@ -874,22 +988,29 @@ filtered = filtered.filter(p => {
                   <span className="text-sm font-semibold text-gray-700">Langues parlées</span>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {provider.languages.slice(0, isCarousel ? 2 : 3).map((lang, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 text-sm font-medium rounded-full border border-blue-200/50"
-                    >
-                      {getLanguageLabel(lang)}
-                    </span>
-                  ))}
-                  {provider.languages.length > (isCarousel ? 2 : 3) && (
+                  {provider.languages && provider.languages.length > 0 ? (
+                    provider.languages.slice(0, isCarousel ? 2 : 3).map((lang, index) => (
+                      <span
+                        key={index}
+                        className="px-3 py-1 bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 text-sm font-medium rounded-full border border-blue-200/50"
+                      >
+                        {getLanguageLabel(lang, language as SupportedLocale)}
+                      </span>
+                    ))
+                  ) : (
                     <span className="px-3 py-1 bg-gray-100 text-gray-600 text-sm rounded-full">
+                      Non spécifié
+                    </span>
+                  )}
+                  {provider.languages && provider.languages.length > (isCarousel ? 2 : 3) && (
+                    <span className="px-3 py-1 bg-gray-100 text-gray-600 text-sm font-medium rounded-full">
                       +{provider.languages.length - (isCarousel ? 2 : 3)}
                     </span>
                   )}
                 </div>
               </div>
 
+              {/* 🌍 PAYS D'INTERVENTION (UNE SEULE FOIS !) */}
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
@@ -898,35 +1019,9 @@ filtered = filtered.filter(p => {
                   <span className="text-sm font-semibold text-gray-700">Pays d'intervention</span>
                 </div>
                 <div className="inline-flex items-center px-3 py-1 bg-gradient-to-r from-green-50 to-green-100 text-green-700 text-sm font-medium rounded-full border border-green-200/50">
-                  🌍 {provider.country}
+                  🌍 {getCountryName(provider.country, language)}
                 </div>
               </div>
-
-              {provider.description && (
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center">
-                      <span className="text-sm">📋</span>
-                    </div>
-                    <span className="text-sm font-semibold text-gray-700">Présentation</span>
-                  </div>
-                  <p className="text-sm text-gray-600 leading-relaxed" itemProp="description">
-                    {truncatedDescription}
-                  </p>
-                  {isTruncated && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleViewProfile(provider);
-                      }}
-                      className="text-sm text-red-600 hover:text-red-700 font-medium mt-1 hover:underline transition-colors inline-flex items-center gap-1"
-                    >
-                      Lire la suite
-                      <span className="text-xs">→</span>
-                    </button>
-                  )}
-                </div>
-              )}
             </div>
 
             <div className="mt-auto pt-4">
@@ -1023,7 +1118,7 @@ filtered = filtered.filter(p => {
           
           <div className="flex items-center gap-2 mb-3" itemProp="areaServed">
             <MapPin size={16} className="text-gray-500" aria-hidden="true" />
-            <span className="text-gray-600">{provider.country}</span>
+            <span className="text-gray-600">{getCountryName(provider.country, language)}</span>
           </div>
           
           <div className="flex items-center gap-2 mb-4" itemProp="aggregateRating" itemScope itemType="http://schema.org/AggregateRating">
@@ -1039,7 +1134,7 @@ filtered = filtered.filter(p => {
             {provider.languages.slice(0, 3).map((lang, index) => (
               <span key={index} className="inline-flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm">
                 <Globe size={12} aria-hidden="true" />
-                {getLanguageLabel(lang)}
+                {getLanguageLabel(lang, language as SupportedLocale)}
               </span>
             ))}
             {provider.languages.length > 3 && (
@@ -1306,7 +1401,7 @@ filtered = filtered.filter(p => {
           >
             <option value="all">Toutes les langues</option>
             {availableLanguages.map(lang => (
-              <option key={lang} value={lang}>{getLanguageLabel(lang)}</option>
+              <option key={lang} value={lang}>{getLanguageLabel(lang, language as SupportedLocale)}</option>
             ))}
           </select>
 
@@ -1760,4 +1855,3 @@ filtered = filtered.filter(p => {
 ProfileCards.displayName = 'ProfileCards';
 
 export default React.memo(ProfileCards);
-

@@ -1,139 +1,1229 @@
 // ========================================
 // src/data/lawyer-specialities.ts — Catégories & spécialités juridiques
-// - Groupes et items fournis par le métier
-// - 10 langues (initialisées en FR; à traduire si besoin)
-// - Codes stables (UPPER_SNAKE), ordre conservé
+// Traduit dans 9 langues : FR, EN, ES, DE, PT, RU, ZH, AR, HI
 // ========================================
 
 export interface LawyerSpecialityItem {
   code: string;
-  labelFr: string; labelEn: string; labelEs: string; labelDe: string; labelPt: string;
-  labelZh: string; labelAr: string; labelRu: string; labelIt: string; labelNl: string;
+  labelFr: string;
+  labelEn: string;
+  labelEs: string;
+  labelDe: string;
+  labelPt: string;
+  labelRu: string;
+  labelZh: string;
+  labelAr: string;
+  labelHi: string;
 }
 
 export interface LawyerSpecialityGroup {
   code: string;
-  labelFr: string; labelEn: string; labelEs: string; labelDe: string; labelPt: string;
-  labelZh: string; labelAr: string; labelRu: string; labelIt: string; labelNl: string;
+  labelFr: string;
+  labelEn: string;
+  labelEs: string;
+  labelDe: string;
+  labelPt: string;
+  labelRu: string;
+  labelZh: string;
+  labelAr: string;
+  labelHi: string;
   items: LawyerSpecialityItem[];
   priority?: number;
   disabled?: boolean;
 }
 
 export const lawyerSpecialitiesData: LawyerSpecialityGroup[] = [
-  { code: "URG", labelFr: "Urgences", labelEn: "Urgences", labelEs: "Urgences", labelDe: "Urgences", labelPt: "Urgences", labelZh: "Urgences", labelAr: "Urgences", labelRu: "Urgences", labelIt: "Urgences", labelNl: "Urgences", items: [
-      { code: "URG_ASSISTANCE_PENALE_INTERNATIONALE", labelFr: "Assistance pénale internationale", labelEn: "Assistance pénale internationale", labelEs: "Assistance pénale internationale", labelDe: "Assistance pénale internationale", labelPt: "Assistance pénale internationale", labelZh: "Assistance pénale internationale", labelAr: "Assistance pénale internationale", labelRu: "Assistance pénale internationale", labelIt: "Assistance pénale internationale", labelNl: "Assistance pénale internationale" },
-      { code: "URG_ACCIDENTS_RESPONSABILITE_CIVILE", labelFr: "Accidents et responsabilité civile", labelEn: "Accidents et responsabilité civile", labelEs: "Accidents et responsabilité civile", labelDe: "Accidents et responsabilité civile", labelPt: "Accidents et responsabilité civile", labelZh: "Accidents et responsabilité civile", labelAr: "Accidents et responsabilité civile", labelRu: "Accidents et responsabilité civile", labelIt: "Accidents et responsabilité civile", labelNl: "Accidents et responsabilité civile" },
-      { code: "URG_RAPATRIEMENT_URGENCE", labelFr: "Rapatriement d'urgence", labelEn: "Rapatriement d'urgence", labelEs: "Rapatriement d'urgence", labelDe: "Rapatriement d'urgence", labelPt: "Rapatriement d'urgence", labelZh: "Rapatriement d'urgence", labelAr: "Rapatriement d'urgence", labelRu: "Rapatriement d'urgence", labelIt: "Rapatriement d'urgence", labelNl: "Rapatriement d'urgence" }
-  ] },
-  { code: "CUR", labelFr: "Services courants", labelEn: "Services courants", labelEs: "Services courants", labelDe: "Services courants", labelPt: "Services courants", labelZh: "Services courants", labelAr: "Services courants", labelRu: "Services courants", labelIt: "Services courants", labelNl: "Services courants", items: [
-      { code: "CUR_TRADUCTIONS_LEGALISATIONS", labelFr: "Traductions et légalisations", labelEn: "Traductions et légalisations", labelEs: "Traductions et légalisations", labelDe: "Traductions et légalisations", labelPt: "Traductions et légalisations", labelZh: "Traductions et légalisations", labelAr: "Traductions et légalisations", labelRu: "Traductions et légalisations", labelIt: "Traductions et légalisations", labelNl: "Traductions et légalisations" },
-      { code: "CUR_RECLAMATIONS_LITIGES_MINEURS", labelFr: "Réclamations et litiges mineurs", labelEn: "Réclamations et litiges mineurs", labelEs: "Réclamations et litiges mineurs", labelDe: "Réclamations et litiges mineurs", labelPt: "Réclamations et litiges mineurs", labelZh: "Réclamations et litiges mineurs", labelAr: "Réclamations et litiges mineurs", labelRu: "Réclamations et litiges mineurs", labelIt: "Réclamations et litiges mineurs", labelNl: "Réclamations et litiges mineurs" },
-      { code: "CUR_DEMARCHES_ADMINISTRATIVES", labelFr: "Démarches administratives", labelEn: "Démarches administratives", labelEs: "Démarches administratives", labelDe: "Démarches administratives", labelPt: "Démarches administratives", labelZh: "Démarches administratives", labelAr: "Démarches administratives", labelRu: "Démarches administratives", labelIt: "Démarches administratives", labelNl: "Démarches administratives" }
-  ] },
-  { code: "IMMI", labelFr: "Immigration et travail", labelEn: "Immigration et travail", labelEs: "Immigration et travail", labelDe: "Immigration et travail", labelPt: "Immigration et travail", labelZh: "Immigration et travail", labelAr: "Immigration et travail", labelRu: "Immigration et travail", labelIt: "Immigration et travail", labelNl: "Immigration et travail", items: [
-      { code: "IMMI_VISAS_PERMIS_SEJOUR", labelFr: "Visas et permis de séjour", labelEn: "Visas et permis de séjour", labelEs: "Visas et permis de séjour", labelDe: "Visas et permis de séjour", labelPt: "Visas et permis de séjour", labelZh: "Visas et permis de séjour", labelAr: "Visas et permis de séjour", labelRu: "Visas et permis de séjour", labelIt: "Visas et permis de séjour", labelNl: "Visas et permis de séjour" },
-      { code: "IMMI_CONTRATS_TRAVAIL_INTERNATIONAL", labelFr: "Contrats de travail international", labelEn: "Contrats de travail international", labelEs: "Contrats de travail international", labelDe: "Contrats de travail international", labelPt: "Contrats de travail international", labelZh: "Contrats de travail international", labelAr: "Contrats de travail international", labelRu: "Contrats de travail international", labelIt: "Contrats de travail international", labelNl: "Contrats de travail international" },
-      { code: "IMMI_NATURALISATION", labelFr: "Naturalisation", labelEn: "Naturalisation", labelEs: "Naturalisation", labelDe: "Naturalisation", labelPt: "Naturalisation", labelZh: "Naturalisation", labelAr: "Naturalisation", labelRu: "Naturalisation", labelIt: "Naturalisation", labelNl: "Naturalisation" }
-  ] },
-  { code: "IMMO", labelFr: "Immobilier", labelEn: "Immobilier", labelEs: "Immobilier", labelDe: "Immobilier", labelPt: "Immobilier", labelZh: "Immobilier", labelAr: "Immobilier", labelRu: "Immobilier", labelIt: "Immobilier", labelNl: "Immobilier", items: [
-      { code: "IMMO_ACHAT_VENTE", labelFr: "Achat/vente à l'étranger", labelEn: "Achat/vente à l'étranger", labelEs: "Achat/vente à l'étranger", labelDe: "Achat/vente à l'étranger", labelPt: "Achat/vente à l'étranger", labelZh: "Achat/vente à l'étranger", labelAr: "Achat/vente à l'étranger", labelRu: "Achat/vente à l'étranger", labelIt: "Achat/vente à l'étranger", labelNl: "Achat/vente à l'étranger" },
-      { code: "IMMO_LOCATION_BAUX", labelFr: "Location et baux", labelEn: "Location et baux", labelEs: "Location et baux", labelDe: "Location et baux", labelPt: "Location et baux", labelZh: "Location et baux", labelAr: "Location et baux", labelRu: "Location et baux", labelIt: "Location et baux", labelNl: "Location et baux" },
-      { code: "IMMO_LITIGES_IMMOBILIERS", labelFr: "Litiges immobiliers", labelEn: "Litiges immobiliers", labelEs: "Litiges immobiliers", labelDe: "Litiges immobiliers", labelPt: "Litiges immobiliers", labelZh: "Litiges immobiliers", labelAr: "Litiges immobiliers", labelRu: "Litiges immobiliers", labelIt: "Litiges immobiliers", labelNl: "Litiges immobiliers" }
-  ] },
-  { code: "FISC", labelFr: "Fiscalité", labelEn: "Fiscalité", labelEs: "Fiscalité", labelDe: "Fiscalité", labelPt: "Fiscalité", labelZh: "Fiscalité", labelAr: "Fiscalité", labelRu: "Fiscalité", labelIt: "Fiscalité", labelNl: "Fiscalité", items: [
-      { code: "FISC_DECLARATIONS_INTERNATIONALES", labelFr: "Déclarations fiscales internationales", labelEn: "Déclarations fiscales internationales", labelEs: "Déclarations fiscales internationales", labelDe: "Déclarations fiscales internationales", labelPt: "Déclarations fiscales internationales", labelZh: "Déclarations fiscales internationales", labelAr: "Déclarations fiscales internationales", labelRu: "Déclarations fiscales internationales", labelIt: "Déclarations fiscales internationales", labelNl: "Déclarations fiscales internationales" },
-      { code: "FISC_DOUBLE_IMPOSITION", labelFr: "Double imposition", labelEn: "Double imposition", labelEs: "Double imposition", labelDe: "Double imposition", labelPt: "Double imposition", labelZh: "Double imposition", labelAr: "Double imposition", labelRu: "Double imposition", labelIt: "Double imposition", labelNl: "Double imposition" },
-      { code: "FISC_OPTIMISATION_EXPATRIES", labelFr: "Optimisation fiscale expatriés", labelEn: "Optimisation fiscale expatriés", labelEs: "Optimisation fiscale expatriés", labelDe: "Optimisation fiscale expatriés", labelPt: "Optimisation fiscale expatriés", labelZh: "Optimisation fiscale expatriés", labelAr: "Optimisation fiscale expatriés", labelRu: "Optimisation fiscale expatriés", labelIt: "Optimisation fiscale expatriés", labelNl: "Optimisation fiscale expatriés" }
-  ] },
-  { code: "FAM", labelFr: "Famille", labelEn: "Famille", labelEs: "Famille", labelDe: "Famille", labelPt: "Famille", labelZh: "Famille", labelAr: "Famille", labelRu: "Famille", labelIt: "Famille", labelNl: "Famille", items: [
-      { code: "FAM_MARIAGE_DIVORCE", labelFr: "Mariage/divorce international", labelEn: "Mariage/divorce international", labelEs: "Mariage/divorce international", labelDe: "Mariage/divorce international", labelPt: "Mariage/divorce international", labelZh: "Mariage/divorce international", labelAr: "Mariage/divorce international", labelRu: "Mariage/divorce international", labelIt: "Mariage/divorce international", labelNl: "Mariage/divorce international" },
-      { code: "FAM_GARDE_ENFANTS_TRANSFRONTALIERE", labelFr: "Garde d'enfants transfrontalière", labelEn: "Garde d'enfants transfrontalière", labelEs: "Garde d'enfants transfrontalière", labelDe: "Garde d'enfants transfrontalière", labelPt: "Garde d'enfants transfrontalière", labelZh: "Garde d'enfants transfrontalière", labelAr: "Garde d'enfants transfrontalière", labelRu: "Garde d'enfants transfrontalière", labelIt: "Garde d'enfants transfrontalière", labelNl: "Garde d'enfants transfrontalière" },
-      { code: "FAM_SCOLARITE_INTERNATIONALE", labelFr: "Scolarité internationale", labelEn: "Scolarité internationale", labelEs: "Scolarité internationale", labelDe: "Scolarité internationale", labelPt: "Scolarité internationale", labelZh: "Scolarité internationale", labelAr: "Scolarité internationale", labelRu: "Scolarité internationale", labelIt: "Scolarité internationale", labelNl: "Scolarité internationale" }
-  ] },
-  { code: "PATR", labelFr: "Patrimoine", labelEn: "Patrimoine", labelEs: "Patrimoine", labelDe: "Patrimoine", labelPt: "Patrimoine", labelZh: "Patrimoine", labelAr: "Patrimoine", labelRu: "Patrimoine", labelIt: "Patrimoine", labelNl: "Patrimoine", items: [
-      { code: "PATR_SUCCESSIONS_INTERNATIONALES", labelFr: "Successions internationales", labelEn: "Successions internationales", labelEs: "Successions internationales", labelDe: "Successions internationales", labelPt: "Successions internationales", labelZh: "Successions internationales", labelAr: "Successions internationales", labelRu: "Successions internationales", labelIt: "Successions internationales", labelNl: "Successions internationales" },
-      { code: "PATR_GESTION_PATRIMOINE", labelFr: "Gestion de patrimoine", labelEn: "Gestion de patrimoine", labelEs: "Gestion de patrimoine", labelDe: "Gestion de patrimoine", labelPt: "Gestion de patrimoine", labelZh: "Gestion de patrimoine", labelAr: "Gestion de patrimoine", labelRu: "Gestion de patrimoine", labelIt: "Gestion de patrimoine", labelNl: "Gestion de patrimoine" },
-      { code: "PATR_TESTAMENTS", labelFr: "Testaments", labelEn: "Testaments", labelEs: "Testaments", labelDe: "Testaments", labelPt: "Testaments", labelZh: "Testaments", labelAr: "Testaments", labelRu: "Testaments", labelIt: "Testaments", labelNl: "Testaments" }
-  ] },
-  { code: "ENTR", labelFr: "Entreprise", labelEn: "Entreprise", labelEs: "Entreprise", labelDe: "Entreprise", labelPt: "Entreprise", labelZh: "Entreprise", labelAr: "Entreprise", labelRu: "Entreprise", labelIt: "Entreprise", labelNl: "Entreprise", items: [
-      { code: "ENTR_CREATION_ENTREPRISE_ETRANGER", labelFr: "Création d'entreprise à l'étranger", labelEn: "Création d'entreprise à l'étranger", labelEs: "Création d'entreprise à l'étranger", labelDe: "Création d'entreprise à l'étranger", labelPt: "Création d'entreprise à l'étranger", labelZh: "Création d'entreprise à l'étranger", labelAr: "Création d'entreprise à l'étranger", labelRu: "Création d'entreprise à l'étranger", labelIt: "Création d'entreprise à l'étranger", labelNl: "Création d'entreprise à l'étranger" },
-      { code: "ENTR_INVESTISSEMENTS", labelFr: "Investissements", labelEn: "Investissements", labelEs: "Investissements", labelDe: "Investissements", labelPt: "Investissements", labelZh: "Investissements", labelAr: "Investissements", labelRu: "Investissements", labelIt: "Investissements", labelNl: "Investissements" },
-      { code: "ENTR_IMPORT_EXPORT", labelFr: "Import/export", labelEn: "Import/export", labelEs: "Import/export", labelDe: "Import/export", labelPt: "Import/export", labelZh: "Import/export", labelAr: "Import/export", labelRu: "Import/export", labelIt: "Import/export", labelNl: "Import/export" }
-  ] },
-  { code: "ASSU", labelFr: "Assurances et protection", labelEn: "Assurances et protection", labelEs: "Assurances et protection", labelDe: "Assurances et protection", labelPt: "Assurances et protection", labelZh: "Assurances et protection", labelAr: "Assurances et protection", labelRu: "Assurances et protection", labelIt: "Assurances et protection", labelNl: "Assurances et protection", items: [
-      { code: "ASSU_ASSURANCES_INTERNATIONALES", labelFr: "Assurances internationales", labelEn: "Assurances internationales", labelEs: "Assurances internationales", labelDe: "Assurances internationales", labelPt: "Assurances internationales", labelZh: "Assurances internationales", labelAr: "Assurances internationales", labelRu: "Assurances internationales", labelIt: "Assurances internationales", labelNl: "Assurances internationales" },
-      { code: "ASSU_PROTECTION_DONNEES", labelFr: "Protection des données", labelEn: "Protection des données", labelEs: "Protection des données", labelDe: "Protection des données", labelPt: "Protection des données", labelZh: "Protection des données", labelAr: "Protection des données", labelRu: "Protection des données", labelIt: "Protection des données", labelNl: "Protection des données" },
-      { code: "ASSU_CONTENTIEUX_ADMINISTRATIFS", labelFr: "Contentieux administratifs", labelEn: "Contentieux administratifs", labelEs: "Contentieux administratifs", labelDe: "Contentieux administratifs", labelPt: "Contentieux administratifs", labelZh: "Contentieux administratifs", labelAr: "Contentieux administratifs", labelRu: "Contentieux administratifs", labelIt: "Contentieux administratifs", labelNl: "Contentieux administratifs" }
-  ] },
-  { code: "CONS", labelFr: "Consommation et services", labelEn: "Consommation et services", labelEs: "Consommation et services", labelDe: "Consommation et services", labelPt: "Consommation et services", labelZh: "Consommation et services", labelAr: "Consommation et services", labelRu: "Consommation et services", labelIt: "Consommation et services", labelNl: "Consommation et services", items: [
-      { code: "CONS_ACHATS_DEFECTUEUX_ETRANGER", labelFr: "Achats défectueux à l'étranger", labelEn: "Achats défectueux à l'étranger", labelEs: "Achats défectueux à l'étranger", labelDe: "Achats défectueux à l'étranger", labelPt: "Achats défectueux à l'étranger", labelZh: "Achats défectueux à l'étranger", labelAr: "Achats défectueux à l'étranger", labelRu: "Achats défectueux à l'étranger", labelIt: "Achats défectueux à l'étranger", labelNl: "Achats défectueux à l'étranger" },
-      { code: "CONS_SERVICES_NON_CONFORMES", labelFr: "Services non conformes", labelEn: "Services non conformes", labelEs: "Services non conformes", labelDe: "Services non conformes", labelPt: "Services non conformes", labelZh: "Services non conformes", labelAr: "Services non conformes", labelRu: "Services non conformes", labelIt: "Services non conformes", labelNl: "Services non conformes" },
-      { code: "CONS_ECOMMERCE_INTERNATIONAL", labelFr: "E-commerce international", labelEn: "E-commerce international", labelEs: "E-commerce international", labelDe: "E-commerce international", labelPt: "E-commerce international", labelZh: "E-commerce international", labelAr: "E-commerce international", labelRu: "E-commerce international", labelIt: "E-commerce international", labelNl: "E-commerce international" }
-  ] },
-  { code: "BANK", labelFr: "Banque et finance", labelEn: "Banque et finance", labelEs: "Banque et finance", labelDe: "Banque et finance", labelPt: "Banque et finance", labelZh: "Banque et finance", labelAr: "Banque et finance", labelRu: "Banque et finance", labelIt: "Banque et finance", labelNl: "Banque et finance", items: [
-      { code: "BANK_PROBLEMES_COMPTES_BANCAIRES", labelFr: "Problèmes de comptes bancaires", labelEn: "Problèmes de comptes bancaires", labelEs: "Problèmes de comptes bancaires", labelDe: "Problèmes de comptes bancaires", labelPt: "Problèmes de comptes bancaires", labelZh: "Problèmes de comptes bancaires", labelAr: "Problèmes de comptes bancaires", labelRu: "Problèmes de comptes bancaires", labelIt: "Problèmes de comptes bancaires", labelNl: "Problèmes de comptes bancaires" },
-      { code: "BANK_VIREMENTS_CREDITS", labelFr: "Virements et crédits", labelEn: "Virements et crédits", labelEs: "Virements et crédits", labelDe: "Virements et crédits", labelPt: "Virements et crédits", labelZh: "Virements et crédits", labelAr: "Virements et crédits", labelRu: "Virements et crédits", labelIt: "Virements et crédits", labelNl: "Virements et crédits" },
-      { code: "BANK_SERVICES_FINANCIERS", labelFr: "Services financiers", labelEn: "Services financiers", labelEs: "Services financiers", labelDe: "Services financiers", labelPt: "Services financiers", labelZh: "Services financiers", labelAr: "Services financiers", labelRu: "Services financiers", labelIt: "Services financiers", labelNl: "Services financiers" }
-  ] },
-  { code: "ARGT", labelFr: "Problèmes d'argent", labelEn: "Problèmes d'argent", labelEs: "Problèmes d'argent", labelDe: "Problèmes d'argent", labelPt: "Problèmes d'argent", labelZh: "Problèmes d'argent", labelAr: "Problèmes d'argent", labelRu: "Problèmes d'argent", labelIt: "Problèmes d'argent", labelNl: "Problèmes d'argent", items: [
-      { code: "ARGT_RETARDS_SALAIRE_IMPAYES", labelFr: "Retards de salaire et impayés", labelEn: "Retards de salaire et impayés", labelEs: "Retards de salaire et impayés", labelDe: "Retards de salaire et impayés", labelPt: "Retards de salaire et impayés", labelZh: "Retards de salaire et impayés", labelAr: "Retards de salaire et impayés", labelRu: "Retards de salaire et impayés", labelIt: "Retards de salaire et impayés", labelNl: "Retards de salaire et impayés" },
-      { code: "ARGT_ARNAQUES_ESCROQUERIES", labelFr: "Arnaques et escroqueries financières", labelEn: "Arnaques et escroqueries financières", labelEs: "Arnaques et escroqueries financières", labelDe: "Arnaques et escroqueries financières", labelPt: "Arnaques et escroqueries financières", labelZh: "Arnaques et escroqueries financières", labelAr: "Arnaques et escroqueries financières", labelRu: "Arnaques et escroqueries financières", labelIt: "Arnaques et escroqueries financières", labelNl: "Arnaques et escroqueries financières" },
-      { code: "ARGT_SURENDETTEMENT_PLANS", labelFr: "Surendettement et plans de remboursement", labelEn: "Surendettement et plans de remboursement", labelEs: "Surendettement et plans de remboursement", labelDe: "Surendettement et plans de remboursement", labelPt: "Surendettement et plans de remboursement", labelZh: "Surendettement et plans de remboursement", labelAr: "Surendettement et plans de remboursement", labelRu: "Surendettement et plans de remboursement", labelIt: "Surendettement et plans de remboursement", labelNl: "Surendettement et plans de remboursement" },
-      { code: "ARGT_FRAIS_BANCAIRES_ABUSIFS", labelFr: "Frais bancaires abusifs", labelEn: "Frais bancaires abusifs", labelEs: "Frais bancaires abusifs", labelDe: "Frais bancaires abusifs", labelPt: "Frais bancaires abusifs", labelZh: "Frais bancaires abusifs", labelAr: "Frais bancaires abusifs", labelRu: "Frais bancaires abusifs", labelIt: "Frais bancaires abusifs", labelNl: "Frais bancaires abusifs" },
-      { code: "ARGT_LITIGES_ETABLISSEMENTS_CREDIT", labelFr: "Litiges avec établissements de crédit", labelEn: "Litiges avec établissements de crédit", labelEs: "Litiges avec établissements de crédit", labelDe: "Litiges avec établissements de crédit", labelPt: "Litiges avec établissements de crédit", labelZh: "Litiges avec établissements de crédit", labelAr: "Litiges avec établissements de crédit", labelRu: "Litiges avec établissements de crédit", labelIt: "Litiges avec établissements de crédit", labelNl: "Litiges avec établissements de crédit" }
-  ] },
-  { code: "RELA", labelFr: "Problèmes relationnels", labelEn: "Problèmes relationnels", labelEs: "Problèmes relationnels", labelDe: "Problèmes relationnels", labelPt: "Problèmes relationnels", labelZh: "Problèmes relationnels", labelAr: "Problèmes relationnels", labelRu: "Problèmes relationnels", labelIt: "Problèmes relationnels", labelNl: "Problèmes relationnels", items: [
-      { code: "RELA_CONFLITS_VOISINAGE", labelFr: "Conflits de voisinage", labelEn: "Conflits de voisinage", labelEs: "Conflits de voisinage", labelDe: "Conflits de voisinage", labelPt: "Conflits de voisinage", labelZh: "Conflits de voisinage", labelAr: "Conflits de voisinage", labelRu: "Conflits de voisinage", labelIt: "Conflits de voisinage", labelNl: "Conflits de voisinage" },
-      { code: "RELA_CONFLITS_TRAVAIL", labelFr: "Conflits au travail", labelEn: "Conflits au travail", labelEs: "Conflits au travail", labelDe: "Conflits au travail", labelPt: "Conflits au travail", labelZh: "Conflits au travail", labelAr: "Conflits au travail", labelRu: "Conflits au travail", labelIt: "Conflits au travail", labelNl: "Conflits au travail" },
-      { code: "RELA_CONFLITS_FAMILIAUX", labelFr: "Conflits familiaux", labelEn: "Conflits familiaux", labelEs: "Conflits familiaux", labelDe: "Conflits familiaux", labelPt: "Conflits familiaux", labelZh: "Conflits familiaux", labelAr: "Conflits familiaux", labelRu: "Conflits familiaux", labelIt: "Conflits familiaux", labelNl: "Conflits familiaux" },
-      { code: "RELA_MEDIATION_RESOLUTION_AMIABLE", labelFr: "Médiation et résolution amiable", labelEn: "Médiation et résolution amiable", labelEs: "Médiation et résolution amiable", labelDe: "Médiation et résolution amiable", labelPt: "Médiation et résolution amiable", labelZh: "Médiation et résolution amiable", labelAr: "Médiation et résolution amiable", labelRu: "Médiation et résolution amiable", labelIt: "Médiation et résolution amiable", labelNl: "Médiation et résolution amiable" },
-      { code: "RELA_DIFFAMATION_REPUTATION", labelFr: "Diffamation et atteinte à la réputation", labelEn: "Diffamation et atteinte à la réputation", labelEs: "Diffamation et atteinte à la réputation", labelDe: "Diffamation et atteinte à la réputation", labelPt: "Diffamation et atteinte à la réputation", labelZh: "Diffamation et atteinte à la réputation", labelAr: "Diffamation et atteinte à la réputation", labelRu: "Diffamation et atteinte à la réputation", labelIt: "Diffamation et atteinte à la réputation", labelNl: "Diffamation et atteinte à la réputation" }
-  ] },
-  { code: "TRAN", labelFr: "Transport", labelEn: "Transport", labelEs: "Transport", labelDe: "Transport", labelPt: "Transport", labelZh: "Transport", labelAr: "Transport", labelRu: "Transport", labelIt: "Transport", labelNl: "Transport", items: [
-      { code: "TRAN_PROBLEMES_AERIENS", labelFr: "Problèmes aériens", labelEn: "Problèmes aériens", labelEs: "Problèmes aériens", labelDe: "Problèmes aériens", labelPt: "Problèmes aériens", labelZh: "Problèmes aériens", labelAr: "Problèmes aériens", labelRu: "Problèmes aériens", labelIt: "Problèmes aériens", labelNl: "Problèmes aériens" },
-      { code: "TRAN_BAGAGES_PERDUS_ENDOMMAGES", labelFr: "Bagages perdus/endommagés", labelEn: "Bagages perdus/endommagés", labelEs: "Bagages perdus/endommagés", labelDe: "Bagages perdus/endommagés", labelPt: "Bagages perdus/endommagés", labelZh: "Bagages perdus/endommagés", labelAr: "Bagages perdus/endommagés", labelRu: "Bagages perdus/endommagés", labelIt: "Bagages perdus/endommagés", labelNl: "Bagages perdus/endommagés" },
-      { code: "TRAN_ACCIDENTS_TRANSPORT", labelFr: "Accidents de transport", labelEn: "Accidents de transport", labelEs: "Accidents de transport", labelDe: "Accidents de transport", labelPt: "Accidents de transport", labelZh: "Accidents de transport", labelAr: "Accidents de transport", labelRu: "Accidents de transport", labelIt: "Accidents de transport", labelNl: "Accidents de transport" }
-  ] },
-  { code: "SANT", labelFr: "Santé", labelEn: "Santé", labelEs: "Santé", labelDe: "Santé", labelPt: "Santé", labelZh: "Santé", labelAr: "Santé", labelRu: "Santé", labelIt: "Santé", labelNl: "Santé", items: [
-      { code: "SANT_ERREURS_MEDICALES", labelFr: "Erreurs médicales", labelEn: "Erreurs médicales", labelEs: "Erreurs médicales", labelDe: "Erreurs médicales", labelPt: "Erreurs médicales", labelZh: "Erreurs médicales", labelAr: "Erreurs médicales", labelRu: "Erreurs médicales", labelIt: "Erreurs médicales", labelNl: "Erreurs médicales" },
-      { code: "SANT_REMBOURSEMENTS_SOINS", labelFr: "Remboursements de soins", labelEn: "Remboursements de soins", labelEs: "Remboursements de soins", labelDe: "Remboursements de soins", labelPt: "Remboursements de soins", labelZh: "Remboursements de soins", labelAr: "Remboursements de soins", labelRu: "Remboursements de soins", labelIt: "Remboursements de soins", labelNl: "Remboursements de soins" },
-      { code: "SANT_DROIT_MEDICAL", labelFr: "Droit médical", labelEn: "Droit médical", labelEs: "Droit médical", labelDe: "Droit médical", labelPt: "Droit médical", labelZh: "Droit médical", labelAr: "Droit médical", labelRu: "Droit médical", labelIt: "Droit médical", labelNl: "Droit médical" }
-  ] },
-  { code: "NUM", labelFr: "Numérique", labelEn: "Numérique", labelEs: "Numérique", labelDe: "Numérique", labelPt: "Numérique", labelZh: "Numérique", labelAr: "Numérique", labelRu: "Numérique", labelIt: "Numérique", labelNl: "Numérique", items: [
-      { code: "NUM_CYBERCRIMINALITE", labelFr: "Cybercriminalité", labelEn: "Cybercriminalité", labelEs: "Cybercriminalité", labelDe: "Cybercriminalité", labelPt: "Cybercriminalité", labelZh: "Cybercriminalité", labelAr: "Cybercriminalité", labelRu: "Cybercriminalité", labelIt: "Cybercriminalité", labelNl: "Cybercriminalité" },
-      { code: "NUM_CONTRATS_EN_LIGNE", labelFr: "Contrats en ligne", labelEn: "Contrats en ligne", labelEs: "Contrats en ligne", labelDe: "Contrats en ligne", labelPt: "Contrats en ligne", labelZh: "Contrats en ligne", labelAr: "Contrats en ligne", labelRu: "Contrats en ligne", labelIt: "Contrats en ligne", labelNl: "Contrats en ligne" },
-      { code: "NUM_PROTECTION_NUMERIQUE", labelFr: "Protection numérique", labelEn: "Protection numérique", labelEs: "Protection numérique", labelDe: "Protection numérique", labelPt: "Protection numérique", labelZh: "Protection numérique", labelAr: "Protection numérique", labelRu: "Protection numérique", labelIt: "Protection numérique", labelNl: "Protection numérique" }
-  ] },
-  { code: "VIO", labelFr: "Violences et discriminations", labelEn: "Violences et discriminations", labelEs: "Violences et discriminations", labelDe: "Violences et discriminations", labelPt: "Violences et discriminations", labelZh: "Violences et discriminations", labelAr: "Violences et discriminations", labelRu: "Violences et discriminations", labelIt: "Violences et discriminations", labelNl: "Violences et discriminations", items: [
-      { code: "VIO_HARCELEMENT", labelFr: "Harcèlement", labelEn: "Harcèlement", labelEs: "Harcèlement", labelDe: "Harcèlement", labelPt: "Harcèlement", labelZh: "Harcèlement", labelAr: "Harcèlement", labelRu: "Harcèlement", labelIt: "Harcèlement", labelNl: "Harcèlement" },
-      { code: "VIO_VIOLENCES_DOMESTIQUES", labelFr: "Violences domestiques", labelEn: "Violences domestiques", labelEs: "Violences domestiques", labelDe: "Violences domestiques", labelPt: "Violences domestiques", labelZh: "Violences domestiques", labelAr: "Violences domestiques", labelRu: "Violences domestiques", labelIt: "Violences domestiques", labelNl: "Violences domestiques" },
-      { code: "VIO_DISCRIMINATIONS", labelFr: "Discriminations", labelEn: "Discriminations", labelEs: "Discriminations", labelDe: "Discriminations", labelPt: "Discriminations", labelZh: "Discriminations", labelAr: "Discriminations", labelRu: "Discriminations", labelIt: "Discriminations", labelNl: "Discriminations" }
-  ] },
-  { code: "IP", labelFr: "Propriété intellectuelle", labelEn: "Propriété intellectuelle", labelEs: "Propriété intellectuelle", labelDe: "Propriété intellectuelle", labelPt: "Propriété intellectuelle", labelZh: "Propriété intellectuelle", labelAr: "Propriété intellectuelle", labelRu: "Propriété intellectuelle", labelIt: "Propriété intellectuelle", labelNl: "Propriété intellectuelle", items: [
-      { code: "IP_CONTREFACONS", labelFr: "Contrefaçons", labelEn: "Contrefaçons", labelEs: "Contrefaçons", labelDe: "Contrefaçons", labelPt: "Contrefaçons", labelZh: "Contrefaçons", labelAr: "Contrefaçons", labelRu: "Contrefaçons", labelIt: "Contrefaçons", labelNl: "Contrefaçons" },
-      { code: "IP_BREVETS_MARQUES", labelFr: "Brevets et marques", labelEn: "Brevets et marques", labelEs: "Brevets et marques", labelDe: "Brevets et marques", labelPt: "Brevets et marques", labelZh: "Brevets et marques", labelAr: "Brevets et marques", labelRu: "Brevets et marques", labelIt: "Brevets et marques", labelNl: "Brevets et marques" },
-      { code: "IP_DROITS_AUTEUR", labelFr: "Droits d'auteur", labelEn: "Droits d'auteur", labelEs: "Droits d'auteur", labelDe: "Droits d'auteur", labelPt: "Droits d'auteur", labelZh: "Droits d'auteur", labelAr: "Droits d'auteur", labelRu: "Droits d'auteur", labelIt: "Droits d'auteur", labelNl: "Droits d'auteur" }
-  ] },
-  { code: "ENV", labelFr: "Environnement", labelEn: "Environnement", labelEs: "Environnement", labelDe: "Environnement", labelPt: "Environnement", labelZh: "Environnement", labelAr: "Environnement", labelRu: "Environnement", labelIt: "Environnement", labelNl: "Environnement", items: [
-      { code: "ENV_NUISANCES", labelFr: "Nuisances", labelEn: "Nuisances", labelEs: "Nuisances", labelDe: "Nuisances", labelPt: "Nuisances", labelZh: "Nuisances", labelAr: "Nuisances", labelRu: "Nuisances", labelIt: "Nuisances", labelNl: "Nuisances" },
-      { code: "ENV_PERMIS_CONSTRUIRE", labelFr: "Permis de construire", labelEn: "Permis de construire", labelEs: "Permis de construire", labelDe: "Permis de construire", labelPt: "Permis de construire", labelZh: "Permis de construire", labelAr: "Permis de construire", labelRu: "Permis de construire", labelIt: "Permis de construire", labelNl: "Permis de construire" },
-      { code: "ENV_DROIT_URBANISME", labelFr: "Droit de l'urbanisme", labelEn: "Droit de l'urbanisme", labelEs: "Droit de l'urbanisme", labelDe: "Droit de l'urbanisme", labelPt: "Droit de l'urbanisme", labelZh: "Droit de l'urbanisme", labelAr: "Droit de l'urbanisme", labelRu: "Droit de l'urbanisme", labelIt: "Droit de l'urbanisme", labelNl: "Droit de l'urbanisme" }
-  ] },
-  { code: "RET", labelFr: "Retour en France", labelEn: "Retour en France", labelEs: "Retour en France", labelDe: "Retour en France", labelPt: "Retour en France", labelZh: "Retour en France", labelAr: "Retour en France", labelRu: "Retour en France", labelIt: "Retour en France", labelNl: "Retour en France", items: [
-      { code: "RET_RAPATRIEMENT_BIENS", labelFr: "Rapatriement de biens", labelEn: "Rapatriement de biens", labelEs: "Rapatriement de biens", labelDe: "Rapatriement de biens", labelPt: "Rapatriement de biens", labelZh: "Rapatriement de biens", labelAr: "Rapatriement de biens", labelRu: "Rapatriement de biens", labelIt: "Rapatriement de biens", labelNl: "Rapatriement de biens" },
-      { code: "RET_REINTEGRATION_FISCALE_SOCIALE", labelFr: "Réintégration fiscale et sociale", labelEn: "Réintégration fiscale et sociale", labelEs: "Réintégration fiscale et sociale", labelDe: "Réintégration fiscale et sociale", labelPt: "Réintégration fiscale et sociale", labelZh: "Réintégration fiscale et sociale", labelAr: "Réintégration fiscale et sociale", labelRu: "Réintégration fiscale et sociale", labelIt: "Réintégration fiscale et sociale", labelNl: "Réintégration fiscale et sociale" }
-  ] },
-  { code: "OTH", labelFr: "Autre", labelEn: "Autre", labelEs: "Autre", labelDe: "Autre", labelPt: "Autre", labelZh: "Autre", labelAr: "Autre", labelRu: "Autre", labelIt: "Autre", labelNl: "Autre", items: [
-      { code: "OTH_PRECISER_BESOIN", labelFr: "Précisez votre besoin", labelEn: "Précisez votre besoin", labelEs: "Précisez votre besoin", labelDe: "Précisez votre besoin", labelPt: "Précisez votre besoin", labelZh: "Précisez votre besoin", labelAr: "Précisez votre besoin", labelRu: "Précisez votre besoin", labelIt: "Précisez votre besoin", labelNl: "Précisez votre besoin" }
-  ] },
+  // ========================================
+  // URGENCES
+  // ========================================
+  { 
+    code: "URG",
+    labelFr: "Urgences",
+    labelEn: "Emergencies",
+    labelEs: "Emergencias",
+    labelDe: "Notfälle",
+    labelPt: "Emergências",
+    labelRu: "Срочные случаи",
+    labelZh: "紧急情况",
+    labelAr: "حالات الطوارئ",
+    labelHi: "आपातकाल",
+    items: [
+      {
+        code: "URG_ASSISTANCE_PENALE_INTERNATIONALE",
+        labelFr: "Assistance pénale internationale",
+        labelEn: "International criminal assistance",
+        labelEs: "Asistencia penal internacional",
+        labelDe: "Internationale Strafrechtshilfe",
+        labelPt: "Assistência penal internacional",
+        labelRu: "Международная уголовная помощь",
+        labelZh: "国际刑事援助",
+        labelAr: "المساعدة الجنائية الدولية",
+        labelHi: "अंतर्राष्ट्रीय आपराधिक सहायता"
+      },
+      {
+        code: "URG_ACCIDENTS_RESPONSABILITE_CIVILE",
+        labelFr: "Accidents et responsabilité civile",
+        labelEn: "Accidents and civil liability",
+        labelEs: "Accidentes y responsabilidad civil",
+        labelDe: "Unfälle und Haftpflicht",
+        labelPt: "Acidentes e responsabilidade civil",
+        labelRu: "Несчастные случаи и гражданская ответственность",
+        labelZh: "事故和民事责任",
+        labelAr: "الحوادث والمسؤولية المدنية",
+        labelHi: "दुर्घटनाएं और नागरिक दायित्व"
+      },
+      {
+        code: "URG_RAPATRIEMENT_URGENCE",
+        labelFr: "Rapatriement d'urgence",
+        labelEn: "Emergency repatriation",
+        labelEs: "Repatriación de emergencia",
+        labelDe: "Notfall-Rückführung",
+        labelPt: "Repatriação de emergência",
+        labelRu: "Экстренная репатриация",
+        labelZh: "紧急遣返",
+        labelAr: "الإعادة الطارئة إلى الوطن",
+        labelHi: "आपातकालीन प्रत्यावर्तन"
+      }
+    ]
+  },
+
+  // ========================================
+  // SERVICES COURANTS
+  // ========================================
+  {
+    code: "CUR",
+    labelFr: "Services courants",
+    labelEn: "Current services",
+    labelEs: "Servicios corrientes",
+    labelDe: "Laufende Dienstleistungen",
+    labelPt: "Serviços correntes",
+    labelRu: "Текущие услуги",
+    labelZh: "日常服务",
+    labelAr: "الخدمات الجارية",
+    labelHi: "वर्तमान सेवाएं",
+    items: [
+      {
+        code: "CUR_TRADUCTIONS_LEGALISATIONS",
+        labelFr: "Traductions et légalisations",
+        labelEn: "Translations and legalizations",
+        labelEs: "Traducciones y legalizaciones",
+        labelDe: "Übersetzungen und Beglaubigungen",
+        labelPt: "Traduções e legalizações",
+        labelRu: "Переводы и легализация",
+        labelZh: "翻译和公证",
+        labelAr: "الترجمات والتصديقات",
+        labelHi: "अनुवाद और वैधीकरण"
+      },
+      {
+        code: "CUR_RECLAMATIONS_LITIGES_MINEURS",
+        labelFr: "Réclamations et litiges mineurs",
+        labelEn: "Claims and minor disputes",
+        labelEs: "Reclamaciones y litigios menores",
+        labelDe: "Beschwerden und kleinere Streitigkeiten",
+        labelPt: "Reclamações e litígios menores",
+        labelRu: "Претензии и мелкие споры",
+        labelZh: "索赔和小额纠纷",
+        labelAr: "المطالبات والنزاعات الصغيرة",
+        labelHi: "दावे और छोटे विवाद"
+      },
+      {
+        code: "CUR_DEMARCHES_ADMINISTRATIVES",
+        labelFr: "Démarches administratives",
+        labelEn: "Administrative procedures",
+        labelEs: "Trámites administrativos",
+        labelDe: "Verwaltungsverfahren",
+        labelPt: "Procedimentos administrativos",
+        labelRu: "Административные процедуры",
+        labelZh: "行政手续",
+        labelAr: "الإجراءات الإدارية",
+        labelHi: "प्रशासनिक प्रक्रियाएं"
+      }
+    ]
+  },
+
+  // ========================================
+  // IMMIGRATION ET TRAVAIL
+  // ========================================
+  {
+    code: "IMMI",
+    labelFr: "Immigration et travail",
+    labelEn: "Immigration and work",
+    labelEs: "Inmigración y trabajo",
+    labelDe: "Einwanderung und Arbeit",
+    labelPt: "Imigração e trabalho",
+    labelRu: "Иммиграция и работа",
+    labelZh: "移民和工作",
+    labelAr: "الهجرة والعمل",
+    labelHi: "आप्रवासन और कार्य",
+    items: [
+      {
+        code: "IMMI_VISAS_PERMIS_SEJOUR",
+        labelFr: "Visas et permis de séjour",
+        labelEn: "Visas and residence permits",
+        labelEs: "Visados y permisos de residencia",
+        labelDe: "Visa und Aufenthaltsgenehmigungen",
+        labelPt: "Vistos e autorizações de residência",
+        labelRu: "Визы и вид на жительство",
+        labelZh: "签证和居留许可",
+        labelAr: "التأشيرات وتصاريح الإقامة",
+        labelHi: "वीज़ा और निवास परमिट"
+      },
+      {
+        code: "IMMI_CONTRATS_TRAVAIL_INTERNATIONAL",
+        labelFr: "Contrats de travail international",
+        labelEn: "International employment contracts",
+        labelEs: "Contratos de trabajo internacional",
+        labelDe: "Internationale Arbeitsverträge",
+        labelPt: "Contratos de trabalho internacional",
+        labelRu: "Международные трудовые договоры",
+        labelZh: "国际劳动合同",
+        labelAr: "عقود العمل الدولية",
+        labelHi: "अंतर्राष्ट्रीय रोजगार अनुबंध"
+      },
+      {
+        code: "IMMI_NATURALISATION",
+        labelFr: "Naturalisation",
+        labelEn: "Naturalization",
+        labelEs: "Naturalización",
+        labelDe: "Einbürgerung",
+        labelPt: "Naturalização",
+        labelRu: "Натурализация",
+        labelZh: "入籍",
+        labelAr: "التجنس",
+        labelHi: "नागरिकता प्राप्ति"
+      }
+    ]
+  },
+
+  // ========================================
+  // IMMOBILIER
+  // ========================================
+  {
+    code: "IMMO",
+    labelFr: "Immobilier",
+    labelEn: "Real estate",
+    labelEs: "Inmobiliario",
+    labelDe: "Immobilien",
+    labelPt: "Imobiliário",
+    labelRu: "Недвижимость",
+    labelZh: "房地产",
+    labelAr: "العقارات",
+    labelHi: "अचल संपत्ति",
+    items: [
+      {
+        code: "IMMO_ACHAT_VENTE",
+        labelFr: "Achat/vente à l'étranger",
+        labelEn: "Purchase/sale abroad",
+        labelEs: "Compra/venta en el extranjero",
+        labelDe: "Kauf/Verkauf im Ausland",
+        labelPt: "Compra/venda no estrangeiro",
+        labelRu: "Покупка/продажа за границей",
+        labelZh: "境外买卖",
+        labelAr: "الشراء/البيع في الخارج",
+        labelHi: "विदेश में खरीद/बिक्री"
+      },
+      {
+        code: "IMMO_LOCATION_BAUX",
+        labelFr: "Location et baux",
+        labelEn: "Rental and leases",
+        labelEs: "Alquiler y arrendamientos",
+        labelDe: "Vermietung und Pachtverträge",
+        labelPt: "Arrendamento e locações",
+        labelRu: "Аренда и договоры аренды",
+        labelZh: "租赁和租约",
+        labelAr: "الإيجار والعقود",
+        labelHi: "किराया और पट्टे"
+      },
+      {
+        code: "IMMO_LITIGES_IMMOBILIERS",
+        labelFr: "Litiges immobiliers",
+        labelEn: "Real estate disputes",
+        labelEs: "Litigios inmobiliarios",
+        labelDe: "Immobilienstreitigkeiten",
+        labelPt: "Litígios imobiliários",
+        labelRu: "Споры по недвижимости",
+        labelZh: "房地产纠纷",
+        labelAr: "نزاعات العقارات",
+        labelHi: "अचल संपत्ति विवाद"
+      }
+    ]
+  },
+
+  // ========================================
+  // FISCALITÉ
+  // ========================================
+  {
+    code: "FISC",
+    labelFr: "Fiscalité",
+    labelEn: "Taxation",
+    labelEs: "Fiscalidad",
+    labelDe: "Besteuerung",
+    labelPt: "Fiscalidade",
+    labelRu: "Налогообложение",
+    labelZh: "税务",
+    labelAr: "الضرائب",
+    labelHi: "कराधान",
+    items: [
+      {
+        code: "FISC_DECLARATIONS_INTERNATIONALES",
+        labelFr: "Déclarations fiscales internationales",
+        labelEn: "International tax returns",
+        labelEs: "Declaraciones fiscales internacionales",
+        labelDe: "Internationale Steuererklärungen",
+        labelPt: "Declarações fiscais internacionais",
+        labelRu: "Международные налоговые декларации",
+        labelZh: "国际税务申报",
+        labelAr: "الإقرارات الضريبية الدولية",
+        labelHi: "अंतर्राष्ट्रीय कर रिटर्न"
+      },
+      {
+        code: "FISC_DOUBLE_IMPOSITION",
+        labelFr: "Double imposition",
+        labelEn: "Double taxation",
+        labelEs: "Doble imposición",
+        labelDe: "Doppelbesteuerung",
+        labelPt: "Dupla tributação",
+        labelRu: "Двойное налогообложение",
+        labelZh: "双重征税",
+        labelAr: "الازدواج الضريبي",
+        labelHi: "दोहरा कराधान"
+      },
+      {
+        code: "FISC_OPTIMISATION_EXPATRIES",
+        labelFr: "Optimisation fiscale expatriés",
+        labelEn: "Expat tax optimization",
+        labelEs: "Optimización fiscal expatriados",
+        labelDe: "Steueroptimierung für Expatriates",
+        labelPt: "Otimização fiscal expatriados",
+        labelRu: "Налоговая оптимизация для экспатов",
+        labelZh: "外派人员税务优化",
+        labelAr: "تحسين الضرائب للمغتربين",
+        labelHi: "प्रवासी कर अनुकूलन"
+      }
+    ]
+  },
+
+  // ========================================
+  // FAMILLE
+  // ========================================
+  {
+    code: "FAM",
+    labelFr: "Famille",
+    labelEn: "Family",
+    labelEs: "Familia",
+    labelDe: "Familie",
+    labelPt: "Família",
+    labelRu: "Семья",
+    labelZh: "家庭",
+    labelAr: "الأسرة",
+    labelHi: "परिवार",
+    items: [
+      {
+        code: "FAM_MARIAGE_DIVORCE",
+        labelFr: "Mariage/divorce international",
+        labelEn: "International marriage/divorce",
+        labelEs: "Matrimonio/divorcio internacional",
+        labelDe: "Internationale Ehe/Scheidung",
+        labelPt: "Casamento/divórcio internacional",
+        labelRu: "Международный брак/развод",
+        labelZh: "国际婚姻/离婚",
+        labelAr: "الزواج/الطلاق الدولي",
+        labelHi: "अंतर्राष्ट्रीय विवाह/तलाक"
+      },
+      {
+        code: "FAM_GARDE_ENFANTS_TRANSFRONTALIERE",
+        labelFr: "Garde d'enfants transfrontalière",
+        labelEn: "Cross-border child custody",
+        labelEs: "Custodia de niños transfronteriza",
+        labelDe: "Grenzüberschreitendes Sorgerecht",
+        labelPt: "Guarda de crianças transfronteiriça",
+        labelRu: "Трансграничная опека над детьми",
+        labelZh: "跨境儿童监护",
+        labelAr: "حضانة الأطفال عبر الحدود",
+        labelHi: "सीमा-पार बाल हिरासत"
+      },
+      {
+        code: "FAM_SCOLARITE_INTERNATIONALE",
+        labelFr: "Scolarité internationale",
+        labelEn: "International schooling",
+        labelEs: "Escolaridad internacional",
+        labelDe: "Internationale Schulbildung",
+        labelPt: "Escolaridade internacional",
+        labelRu: "Международное обучение",
+        labelZh: "国际教育",
+        labelAr: "التعليم الدولي",
+        labelHi: "अंतर्राष्ट्रीय शिक्षा"
+      }
+    ]
+  },
+
+  // ========================================
+  // PATRIMOINE
+  // ========================================
+  {
+    code: "PATR",
+    labelFr: "Patrimoine",
+    labelEn: "Wealth management",
+    labelEs: "Patrimonio",
+    labelDe: "Vermögensverwaltung",
+    labelPt: "Patrimônio",
+    labelRu: "Управление активами",
+    labelZh: "财富管理",
+    labelAr: "إدارة الثروات",
+    labelHi: "संपत्ति प्रबंधन",
+    items: [
+      {
+        code: "PATR_SUCCESSIONS_INTERNATIONALES",
+        labelFr: "Successions internationales",
+        labelEn: "International inheritance",
+        labelEs: "Sucesiones internacionales",
+        labelDe: "Internationale Erbschaften",
+        labelPt: "Sucessões internacionais",
+        labelRu: "Международное наследство",
+        labelZh: "国际继承",
+        labelAr: "الميراث الدولي",
+        labelHi: "अंतर्राष्ट्रीय उत्तराधिकार"
+      },
+      {
+        code: "PATR_GESTION_PATRIMOINE",
+        labelFr: "Gestion de patrimoine",
+        labelEn: "Wealth management",
+        labelEs: "Gestión patrimonial",
+        labelDe: "Vermögensverwaltung",
+        labelPt: "Gestão patrimonial",
+        labelRu: "Управление капиталом",
+        labelZh: "资产管理",
+        labelAr: "إدارة الأصول",
+        labelHi: "संपत्ति प्रबंधन"
+      },
+      {
+        code: "PATR_TESTAMENTS",
+        labelFr: "Testaments",
+        labelEn: "Wills",
+        labelEs: "Testamentos",
+        labelDe: "Testamente",
+        labelPt: "Testamentos",
+        labelRu: "Завещания",
+        labelZh: "遗嘱",
+        labelAr: "الوصايا",
+        labelHi: "वसीयत"
+      }
+    ]
+  },
+
+  // ========================================
+  // ENTREPRISE
+  // ========================================
+  {
+    code: "ENTR",
+    labelFr: "Entreprise",
+    labelEn: "Business",
+    labelEs: "Empresa",
+    labelDe: "Unternehmen",
+    labelPt: "Empresa",
+    labelRu: "Бизнес",
+    labelZh: "企业",
+    labelAr: "الأعمال",
+    labelHi: "व्यवसाय",
+    items: [
+      {
+        code: "ENTR_CREATION_ENTREPRISE_ETRANGER",
+        labelFr: "Création d'entreprise à l'étranger",
+        labelEn: "Business creation abroad",
+        labelEs: "Creación de empresa en el extranjero",
+        labelDe: "Unternehmensgründung im Ausland",
+        labelPt: "Criação de empresa no estrangeiro",
+        labelRu: "Создание бизнеса за границей",
+        labelZh: "境外创业",
+        labelAr: "إنشاء شركة في الخارج",
+        labelHi: "विदेश में व्यवसाय निर्माण"
+      },
+      {
+        code: "ENTR_INVESTISSEMENTS",
+        labelFr: "Investissements",
+        labelEn: "Investments",
+        labelEs: "Inversiones",
+        labelDe: "Investitionen",
+        labelPt: "Investimentos",
+        labelRu: "Инвестиции",
+        labelZh: "投资",
+        labelAr: "الاستثمارات",
+        labelHi: "निवेश"
+      },
+      {
+        code: "ENTR_IMPORT_EXPORT",
+        labelFr: "Import/export",
+        labelEn: "Import/export",
+        labelEs: "Importación/exportación",
+        labelDe: "Import/Export",
+        labelPt: "Importação/exportação",
+        labelRu: "Импорт/экспорт",
+        labelZh: "进出口",
+        labelAr: "الاستيراد/التصدير",
+        labelHi: "आयात/निर्यात"
+      }
+    ]
+  },
+
+  // ========================================
+  // ASSURANCES ET PROTECTION
+  // ========================================
+  {
+    code: "ASSU",
+    labelFr: "Assurances et protection",
+    labelEn: "Insurance and protection",
+    labelEs: "Seguros y protección",
+    labelDe: "Versicherung und Schutz",
+    labelPt: "Seguros e proteção",
+    labelRu: "Страхование и защита",
+    labelZh: "保险和保护",
+    labelAr: "التأمين والحماية",
+    labelHi: "बीमा और सुरक्षा",
+    items: [
+      {
+        code: "ASSU_ASSURANCES_INTERNATIONALES",
+        labelFr: "Assurances internationales",
+        labelEn: "International insurance",
+        labelEs: "Seguros internacionales",
+        labelDe: "Internationale Versicherungen",
+        labelPt: "Seguros internacionais",
+        labelRu: "Международное страхование",
+        labelZh: "国际保险",
+        labelAr: "التأمين الدولي",
+        labelHi: "अंतर्राष्ट्रीय बीमा"
+      },
+      {
+        code: "ASSU_PROTECTION_DONNEES",
+        labelFr: "Protection des données",
+        labelEn: "Data protection",
+        labelEs: "Protección de datos",
+        labelDe: "Datenschutz",
+        labelPt: "Proteção de dados",
+        labelRu: "Защита данных",
+        labelZh: "数据保护",
+        labelAr: "حماية البيانات",
+        labelHi: "डेटा सुरक्षा"
+      },
+      {
+        code: "ASSU_CONTENTIEUX_ADMINISTRATIFS",
+        labelFr: "Contentieux administratifs",
+        labelEn: "Administrative litigation",
+        labelEs: "Litigios administrativos",
+        labelDe: "Verwaltungsstreitigkeiten",
+        labelPt: "Contencioso administrativo",
+        labelRu: "Административные споры",
+        labelZh: "行政诉讼",
+        labelAr: "النزاعات الإدارية",
+        labelHi: "प्रशासनिक मुकदमेबाजी"
+      }
+    ]
+  },
+
+  // ========================================
+  // CONSOMMATION ET SERVICES
+  // ========================================
+  {
+    code: "CONS",
+    labelFr: "Consommation et services",
+    labelEn: "Consumer and services",
+    labelEs: "Consumo y servicios",
+    labelDe: "Verbrauch und Dienstleistungen",
+    labelPt: "Consumo e serviços",
+    labelRu: "Потребление и услуги",
+    labelZh: "消费和服务",
+    labelAr: "الاستهلاك والخدمات",
+    labelHi: "उपभोग और सेवाएं",
+    items: [
+      {
+        code: "CONS_ACHATS_DEFECTUEUX_ETRANGER",
+        labelFr: "Achats défectueux à l'étranger",
+        labelEn: "Defective purchases abroad",
+        labelEs: "Compras defectuosas en el extranjero",
+        labelDe: "Fehlerhafte Käufe im Ausland",
+        labelPt: "Compras defeituosas no estrangeiro",
+        labelRu: "Дефектные покупки за границей",
+        labelZh: "境外有缺陷的购买",
+        labelAr: "مشتريات معيبة في الخارج",
+        labelHi: "विदेश में दोषपूर्ण खरीदारी"
+      },
+      {
+        code: "CONS_SERVICES_NON_CONFORMES",
+        labelFr: "Services non conformes",
+        labelEn: "Non-compliant services",
+        labelEs: "Servicios no conformes",
+        labelDe: "Nicht konforme Dienstleistungen",
+        labelPt: "Serviços não conformes",
+        labelRu: "Несоответствующие услуги",
+        labelZh: "不合规服务",
+        labelAr: "خدمات غير مطابقة",
+        labelHi: "गैर-अनुपालक सेवाएं"
+      },
+      {
+        code: "CONS_ECOMMERCE_INTERNATIONAL",
+        labelFr: "E-commerce international",
+        labelEn: "International e-commerce",
+        labelEs: "Comercio electrónico internacional",
+        labelDe: "Internationaler E-Commerce",
+        labelPt: "Comércio eletrônico internacional",
+        labelRu: "Международная электронная коммерция",
+        labelZh: "国际电子商务",
+        labelAr: "التجارة الإلكترونية الدولية",
+        labelHi: "अंतर्राष्ट्रीय ई-कॉमर्स"
+      }
+    ]
+  },
+
+  // ========================================
+  // BANQUE ET FINANCE
+  // ========================================
+  {
+    code: "BANK",
+    labelFr: "Banque et finance",
+    labelEn: "Banking and finance",
+    labelEs: "Banca y finanzas",
+    labelDe: "Bank- und Finanzwesen",
+    labelPt: "Banco e finanças",
+    labelRu: "Банковское дело и финансы",
+    labelZh: "银行和金融",
+    labelAr: "الخدمات المصرفية والمالية",
+    labelHi: "बैंकिंग और वित्त",
+    items: [
+      {
+        code: "BANK_PROBLEMES_COMPTES_BANCAIRES",
+        labelFr: "Problèmes de comptes bancaires",
+        labelEn: "Bank account issues",
+        labelEs: "Problemas de cuentas bancarias",
+        labelDe: "Probleme mit Bankkonten",
+        labelPt: "Problemas de contas bancárias",
+        labelRu: "Проблемы с банковскими счетами",
+        labelZh: "银行账户问题",
+        labelAr: "مشاكل الحسابات المصرفية",
+        labelHi: "बैंक खाते की समस्याएं"
+      },
+      {
+        code: "BANK_VIREMENTS_CREDITS",
+        labelFr: "Virements et crédits",
+        labelEn: "Transfers and credits",
+        labelEs: "Transferencias y créditos",
+        labelDe: "Überweisungen und Kredite",
+        labelPt: "Transferências e créditos",
+        labelRu: "Переводы и кредиты",
+        labelZh: "转账和信贷",
+        labelAr: "التحويلات والقروض",
+        labelHi: "स्थानांतरण और ऋण"
+      },
+      {
+        code: "BANK_SERVICES_FINANCIERS",
+        labelFr: "Services financiers",
+        labelEn: "Financial services",
+        labelEs: "Servicios financieros",
+        labelDe: "Finanzdienstleistungen",
+        labelPt: "Serviços financeiros",
+        labelRu: "Финансовые услуги",
+        labelZh: "金融服务",
+        labelAr: "الخدمات المالية",
+        labelHi: "वित्तीय सेवाएं"
+      }
+    ]
+  },
+
+  // ========================================
+  // PROBLÈMES D'ARGENT
+  // ========================================
+  {
+    code: "ARGT",
+    labelFr: "Problèmes d'argent",
+    labelEn: "Money problems",
+    labelEs: "Problemas de dinero",
+    labelDe: "Geldprobleme",
+    labelPt: "Problemas de dinheiro",
+    labelRu: "Денежные проблемы",
+    labelZh: "资金问题",
+    labelAr: "مشاكل مالية",
+    labelHi: "धन की समस्याएं",
+    items: [
+      {
+        code: "ARGT_RETARDS_SALAIRE_IMPAYES",
+        labelFr: "Retards de salaire et impayés",
+        labelEn: "Salary delays and unpaid wages",
+        labelEs: "Retrasos salariales e impagos",
+        labelDe: "Gehaltsverzögerungen und unbezahlte Löhne",
+        labelPt: "Atrasos salariais e não pagos",
+        labelRu: "Задержки зарплаты и невыплаты",
+        labelZh: "工资延迟和未付",
+        labelAr: "تأخير الرواتب والأجور غير المدفوعة",
+        labelHi: "वेतन में देरी और अवैतनिक मजदूरी"
+      },
+      {
+        code: "ARGT_ARNAQUES_ESCROQUERIES",
+        labelFr: "Arnaques et escroqueries financières",
+        labelEn: "Scams and financial fraud",
+        labelEs: "Estafas y fraudes financieros",
+        labelDe: "Betrug und Finanzbetrug",
+        labelPt: "Fraudes e golpes financeiros",
+        labelRu: "Мошенничество и финансовые махинации",
+        labelZh: "诈骗和金融欺诈",
+        labelAr: "عمليات الاحتيال المالي",
+        labelHi: "घोटाले और वित्तीय धोखाधड़ी"
+      },
+      {
+        code: "ARGT_SURENDETTEMENT_PLANS",
+        labelFr: "Surendettement et plans de remboursement",
+        labelEn: "Over-indebtedness and repayment plans",
+        labelEs: "Sobreendeudamiento y planes de pago",
+        labelDe: "Überschuldung und Rückzahlungspläne",
+        labelPt: "Superendividamento e planos de pagamento",
+        labelRu: "Чрезмерная задолженность и планы погашения",
+        labelZh: "过度负债和还款计划",
+        labelAr: "الإفراط في المديونية وخطط السداد",
+        labelHi: "अत्यधिक ऋणग्रस्तता और पुनर्भुगतान योजनाएं"
+      },
+      {
+        code: "ARGT_FRAIS_BANCAIRES_ABUSIFS",
+        labelFr: "Frais bancaires abusifs",
+        labelEn: "Excessive bank fees",
+        labelEs: "Comisiones bancarias abusivas",
+        labelDe: "Überhöhte Bankgebühren",
+        labelPt: "Taxas bancárias abusivas",
+        labelRu: "Чрезмерные банковские сборы",
+        labelZh: "过高的银行费用",
+        labelAr: "رسوم مصرفية مفرطة",
+        labelHi: "अत्यधिक बैंक शुल्क"
+      },
+      {
+        code: "ARGT_LITIGES_ETABLISSEMENTS_CREDIT",
+        labelFr: "Litiges avec établissements de crédit",
+        labelEn: "Disputes with credit institutions",
+        labelEs: "Litigios con entidades de crédito",
+        labelDe: "Streitigkeiten mit Kreditinstituten",
+        labelPt: "Litígios com instituições de crédito",
+        labelRu: "Споры с кредитными учреждениями",
+        labelZh: "与信贷机构的纠纷",
+        labelAr: "نزاعات مع مؤسسات الائتمان",
+        labelHi: "ऋण संस्थानों के साथ विवाद"
+      }
+    ]
+  },
+
+  // ========================================
+  // PROBLÈMES RELATIONNELS
+  // ========================================
+  {
+    code: "RELA",
+    labelFr: "Problèmes relationnels",
+    labelEn: "Relationship problems",
+    labelEs: "Problemas relacionales",
+    labelDe: "Beziehungsprobleme",
+    labelPt: "Problemas relacionais",
+    labelRu: "Проблемы в отношениях",
+    labelZh: "关系问题",
+    labelAr: "مشاكل العلاقات",
+    labelHi: "संबंध समस्याएं",
+    items: [
+      {
+        code: "RELA_CONFLITS_VOISINAGE",
+        labelFr: "Conflits de voisinage",
+        labelEn: "Neighborhood disputes",
+        labelEs: "Conflictos vecinales",
+        labelDe: "Nachbarschaftskonflikte",
+        labelPt: "Conflitos de vizinhança",
+        labelRu: "Споры с соседями",
+        labelZh: "邻里纠纷",
+        labelAr: "نزاعات الجيرة",
+        labelHi: "पड़ोसी विवाद"
+      },
+      {
+        code: "RELA_CONFLITS_TRAVAIL",
+        labelFr: "Conflits au travail",
+        labelEn: "Workplace conflicts",
+        labelEs: "Conflictos laborales",
+        labelDe: "Konflikte am Arbeitsplatz",
+        labelPt: "Conflitos no trabalho",
+        labelRu: "Конфликты на работе",
+        labelZh: "工作场所冲突",
+        labelAr: "صراعات العمل",
+        labelHi: "कार्यस्थल संघर्ष"
+      },
+      {
+        code: "RELA_CONFLITS_FAMILIAUX",
+        labelFr: "Conflits familiaux",
+        labelEn: "Family conflicts",
+        labelEs: "Conflictos familiares",
+        labelDe: "Familienkonflikte",
+        labelPt: "Conflitos familiares",
+        labelRu: "Семейные конфликты",
+        labelZh: "家庭冲突",
+        labelAr: "صراعات عائلية",
+        labelHi: "पारिवारिक संघर्ष"
+      },
+      {
+        code: "RELA_MEDIATION_RESOLUTION_AMIABLE",
+        labelFr: "Médiation et résolution amiable",
+        labelEn: "Mediation and amicable resolution",
+        labelEs: "Mediación y resolución amistosa",
+        labelDe: "Mediation und gütliche Einigung",
+        labelPt: "Mediação e resolução amigável",
+        labelRu: "Посредничество и мирное урегулирование",
+        labelZh: "调解和友好解决",
+        labelAr: "الوساطة والتسوية الودية",
+        labelHi: "मध्यस्थता और सौहार्दपूर्ण समाधान"
+      },
+      {
+        code: "RELA_DIFFAMATION_REPUTATION",
+        labelFr: "Diffamation et atteinte à la réputation",
+        labelEn: "Defamation and reputation damage",
+        labelEs: "Difamación y daño a la reputación",
+        labelDe: "Verleumdung und Rufschädigung",
+        labelPt: "Difamação e dano à reputação",
+        labelRu: "Клевета и ущерб репутации",
+        labelZh: "诽谤和声誉损害",
+        labelAr: "التشهير والإضرار بالسمعة",
+        labelHi: "मानहानि और प्रतिष्ठा क्षति"
+      }
+    ]
+  },
+
+  // ========================================
+  // TRANSPORT
+  // ========================================
+  {
+    code: "TRAN",
+    labelFr: "Transport",
+    labelEn: "Transport",
+    labelEs: "Transporte",
+    labelDe: "Transport",
+    labelPt: "Transporte",
+    labelRu: "Транспорт",
+    labelZh: "交通运输",
+    labelAr: "النقل",
+    labelHi: "परिवहन",
+    items: [
+      {
+        code: "TRAN_PROBLEMES_AERIENS",
+        labelFr: "Problèmes aériens",
+        labelEn: "Flight problems",
+        labelEs: "Problemas aéreos",
+        labelDe: "Flugprobleme",
+        labelPt: "Problemas aéreos",
+        labelRu: "Проблемы с авиарейсами",
+        labelZh: "航班问题",
+        labelAr: "مشاكل الطيران",
+        labelHi: "उड़ान की समस्याएं"
+      },
+      {
+        code: "TRAN_BAGAGES_PERDUS_ENDOMMAGES",
+        labelFr: "Bagages perdus/endommagés",
+        labelEn: "Lost/damaged luggage",
+        labelEs: "Equipaje perdido/dañado",
+        labelDe: "Verlorenes/beschädigtes Gepäck",
+        labelPt: "Bagagem perdida/danificada",
+        labelRu: "Утерянный/поврежденный багаж",
+        labelZh: "行李丢失/损坏",
+        labelAr: "أمتعة مفقودة/تالفة",
+        labelHi: "खोया/क्षतिग्रस्त सामान"
+      },
+      {
+        code: "TRAN_ACCIDENTS_TRANSPORT",
+        labelFr: "Accidents de transport",
+        labelEn: "Transport accidents",
+        labelEs: "Accidentes de transporte",
+        labelDe: "Transportunfälle",
+        labelPt: "Acidentes de transporte",
+        labelRu: "Транспортные происшествия",
+        labelZh: "交通事故",
+        labelAr: "حوادث النقل",
+        labelHi: "परिवहन दुर्घटनाएं"
+      }
+    ]
+  },
+
+  // ========================================
+  // SANTÉ
+  // ========================================
+  {
+    code: "SANT",
+    labelFr: "Santé",
+    labelEn: "Health",
+    labelEs: "Salud",
+    labelDe: "Gesundheit",
+    labelPt: "Saúde",
+    labelRu: "Здоровье",
+    labelZh: "健康",
+    labelAr: "الصحة",
+    labelHi: "स्वास्थ्य",
+    items: [
+      {
+        code: "SANT_ERREURS_MEDICALES",
+        labelFr: "Erreurs médicales",
+        labelEn: "Medical errors",
+        labelEs: "Errores médicos",
+        labelDe: "Medizinische Fehler",
+        labelPt: "Erros médicos",
+        labelRu: "Медицинские ошибки",
+        labelZh: "医疗错误",
+        labelAr: "الأخطاء الطبية",
+        labelHi: "चिकित्सा त्रुटियां"
+      },
+      {
+        code: "SANT_REMBOURSEMENTS_SOINS",
+        labelFr: "Remboursements de soins",
+        labelEn: "Healthcare reimbursements",
+        labelEs: "Reembolsos de atención médica",
+        labelDe: "Erstattung von Gesundheitskosten",
+        labelPt: "Reembolsos de cuidados de saúde",
+        labelRu: "Возмещение медицинских расходов",
+        labelZh: "医疗费用报销",
+        labelAr: "تعويضات الرعاية الصحية",
+        labelHi: "स्वास्थ्य देखभाल प्रतिपूर्ति"
+      },
+      {
+        code: "SANT_DROIT_MEDICAL",
+        labelFr: "Droit médical",
+        labelEn: "Medical law",
+        labelEs: "Derecho médico",
+        labelDe: "Medizinrecht",
+        labelPt: "Direito médico",
+        labelRu: "Медицинское право",
+        labelZh: "医疗法",
+        labelAr: "القانون الطبي",
+        labelHi: "चिकित्सा कानून"
+      }
+    ]
+  },
+
+  // ========================================
+  // NUMÉRIQUE
+  // ========================================
+  {
+    code: "NUM",
+    labelFr: "Numérique",
+    labelEn: "Digital",
+    labelEs: "Digital",
+    labelDe: "Digital",
+    labelPt: "Digital",
+    labelRu: "Цифровой",
+    labelZh: "数字",
+    labelAr: "رقمي",
+    labelHi: "डिजिटल",
+    items: [
+      {
+        code: "NUM_CYBERCRIMINALITE",
+        labelFr: "Cybercriminalité",
+        labelEn: "Cybercrime",
+        labelEs: "Ciberdelincuencia",
+        labelDe: "Cyberkriminalität",
+        labelPt: "Cibercrime",
+        labelRu: "Киберпреступность",
+        labelZh: "网络犯罪",
+        labelAr: "الجرائم الإلكترونية",
+        labelHi: "साइबर अपराध"
+      },
+      {
+        code: "NUM_CONTRATS_EN_LIGNE",
+        labelFr: "Contrats en ligne",
+        labelEn: "Online contracts",
+        labelEs: "Contratos en línea",
+        labelDe: "Online-Verträge",
+        labelPt: "Contratos online",
+        labelRu: "Онлайн-контракты",
+        labelZh: "在线合同",
+        labelAr: "العقود عبر الإنترنت",
+        labelHi: "ऑनलाइन अनुबंध"
+      },
+      {
+        code: "NUM_PROTECTION_NUMERIQUE",
+        labelFr: "Protection numérique",
+        labelEn: "Digital protection",
+        labelEs: "Protección digital",
+        labelDe: "Digitaler Schutz",
+        labelPt: "Proteção digital",
+        labelRu: "Цифровая защита",
+        labelZh: "数字保护",
+        labelAr: "الحماية الرقمية",
+        labelHi: "डिजिटल सुरक्षा"
+      }
+    ]
+  },
+
+  // ========================================
+  // VIOLENCES ET DISCRIMINATIONS
+  // ========================================
+  {
+    code: "VIO",
+    labelFr: "Violences et discriminations",
+    labelEn: "Violence and discrimination",
+    labelEs: "Violencia y discriminación",
+    labelDe: "Gewalt und Diskriminierung",
+    labelPt: "Violência e discriminação",
+    labelRu: "Насилие и дискриминация",
+    labelZh: "暴力和歧视",
+    labelAr: "العنف والتمييز",
+    labelHi: "हिंसा और भेदभाव",
+    items: [
+      {
+        code: "VIO_HARCELEMENT",
+        labelFr: "Harcèlement",
+        labelEn: "Harassment",
+        labelEs: "Acoso",
+        labelDe: "Belästigung",
+        labelPt: "Assédio",
+        labelRu: "Преследование",
+        labelZh: "骚扰",
+        labelAr: "المضايقة",
+        labelHi: "उत्पीड़न"
+      },
+      {
+        code: "VIO_VIOLENCES_DOMESTIQUES",
+        labelFr: "Violences domestiques",
+        labelEn: "Domestic violence",
+        labelEs: "Violencia doméstica",
+        labelDe: "Häusliche Gewalt",
+        labelPt: "Violência doméstica",
+        labelRu: "Домашнее насилие",
+        labelZh: "家庭暴力",
+        labelAr: "العنف المنزلي",
+        labelHi: "घरेलू हिंसा"
+      },
+      {
+        code: "VIO_DISCRIMINATIONS",
+        labelFr: "Discriminations",
+        labelEn: "Discrimination",
+        labelEs: "Discriminación",
+        labelDe: "Diskriminierung",
+        labelPt: "Discriminação",
+        labelRu: "Дискриминация",
+        labelZh: "歧视",
+        labelAr: "التمييز",
+        labelHi: "भेदभाव"
+      }
+    ]
+  },
+
+  // ========================================
+  // PROPRIÉTÉ INTELLECTUELLE
+  // ========================================
+  {
+    code: "IP",
+    labelFr: "Propriété intellectuelle",
+    labelEn: "Intellectual property",
+    labelEs: "Propiedad intelectual",
+    labelDe: "Geistiges Eigentum",
+    labelPt: "Propriedade intelectual",
+    labelRu: "Интеллектуальная собственность",
+    labelZh: "知识产权",
+    labelAr: "الملكية الفكرية",
+    labelHi: "बौद्धिक संपदा",
+    items: [
+      {
+        code: "IP_CONTREFACONS",
+        labelFr: "Contrefaçons",
+        labelEn: "Counterfeiting",
+        labelEs: "Falsificaciones",
+        labelDe: "Fälschungen",
+        labelPt: "Contrafações",
+        labelRu: "Подделки",
+        labelZh: "假冒",
+        labelAr: "التزييف",
+        labelHi: "जालसाजी"
+      },
+      {
+        code: "IP_BREVETS_MARQUES",
+        labelFr: "Brevets et marques",
+        labelEn: "Patents and trademarks",
+        labelEs: "Patentes y marcas",
+        labelDe: "Patente und Marken",
+        labelPt: "Patentes e marcas",
+        labelRu: "Патенты и товарные знаки",
+        labelZh: "专利和商标",
+        labelAr: "براءات الاختراع والعلامات التجارية",
+        labelHi: "पेटेंट और ट्रेडमार्क"
+      },
+      {
+        code: "IP_DROITS_AUTEUR",
+        labelFr: "Droits d'auteur",
+        labelEn: "Copyrights",
+        labelEs: "Derechos de autor",
+        labelDe: "Urheberrechte",
+        labelPt: "Direitos autorais",
+        labelRu: "Авторские права",
+        labelZh: "版权",
+        labelAr: "حقوق النشر",
+        labelHi: "कॉपीराइट"
+      }
+    ]
+  },
+
+  // ========================================
+  // ENVIRONNEMENT
+  // ========================================
+  {
+    code: "ENV",
+    labelFr: "Environnement",
+    labelEn: "Environment",
+    labelEs: "Medio ambiente",
+    labelDe: "Umwelt",
+    labelPt: "Meio ambiente",
+    labelRu: "Окружающая среда",
+    labelZh: "环境",
+    labelAr: "البيئة",
+    labelHi: "पर्यावरण",
+    items: [
+      {
+        code: "ENV_NUISANCES",
+        labelFr: "Nuisances",
+        labelEn: "Nuisances",
+        labelEs: "Molestias",
+        labelDe: "Belästigungen",
+        labelPt: "Incômodos",
+        labelRu: "Неудобства",
+        labelZh: "滋扰",
+        labelAr: "المضايقات",
+        labelHi: "उपद्रव"
+      },
+      {
+        code: "ENV_PERMIS_CONSTRUIRE",
+        labelFr: "Permis de construire",
+        labelEn: "Building permits",
+        labelEs: "Permisos de construcción",
+        labelDe: "Baugenehmigungen",
+        labelPt: "Licenças de construção",
+        labelRu: "Разрешения на строительство",
+        labelZh: "建筑许可",
+        labelAr: "تصاريح البناء",
+        labelHi: "निर्माण परमिट"
+      },
+      {
+        code: "ENV_DROIT_URBANISME",
+        labelFr: "Droit de l'urbanisme",
+        labelEn: "Urban planning law",
+        labelEs: "Derecho urbanístico",
+        labelDe: "Städtebaurecht",
+        labelPt: "Direito urbanístico",
+        labelRu: "Градостроительное право",
+        labelZh: "城市规划法",
+        labelAr: "قانون التخطيط العمراني",
+        labelHi: "शहरी नियोजन कानून"
+      }
+    ]
+  },
+
+  // ========================================
+  // RETOUR EN FRANCE
+  // ========================================
+  {
+    code: "RET",
+    labelFr: "Retour en France",
+    labelEn: "Return to France",
+    labelEs: "Regreso a Francia",
+    labelDe: "Rückkehr nach Frankreich",
+    labelPt: "Retorno à França",
+    labelRu: "Возвращение во Францию",
+    labelZh: "返回法国",
+    labelAr: "العودة إلى فرنسا",
+    labelHi: "फ्रांस में वापसी",
+    items: [
+      {
+        code: "RET_RAPATRIEMENT_BIENS",
+        labelFr: "Rapatriement de biens",
+        labelEn: "Repatriation of goods",
+        labelEs: "Repatriación de bienes",
+        labelDe: "Rückführung von Gütern",
+        labelPt: "Repatriação de bens",
+        labelRu: "Репатриация имущества",
+        labelZh: "财产遣返",
+        labelAr: "إعادة الممتلكات",
+        labelHi: "संपत्ति की प्रत्यावर्तन"
+      },
+      {
+        code: "RET_REINTEGRATION_FISCALE_SOCIALE",
+        labelFr: "Réintégration fiscale et sociale",
+        labelEn: "Fiscal and social reintegration",
+        labelEs: "Reintegración fiscal y social",
+        labelDe: "Steuerliche und soziale Wiedereingliederung",
+        labelPt: "Reintegração fiscal e social",
+        labelRu: "Налоговая и социальная реинтеграция",
+        labelZh: "财税和社会重新融入",
+        labelAr: "إعادة الإدماج المالي والاجتماعي",
+        labelHi: "राजकोषीय और सामाजिक पुन: एकीकरण"
+      }
+    ]
+  },
+
+  // ========================================
+  // AUTRE
+  // ========================================
+  {
+    code: "OTH",
+    labelFr: "Autre",
+    labelEn: "Other",
+    labelEs: "Otro",
+    labelDe: "Andere",
+    labelPt: "Outro",
+    labelRu: "Другое",
+    labelZh: "其他",
+    labelAr: "أخرى",
+    labelHi: "अन्य",
+    items: [
+      {
+        code: "OTH_PRECISER_BESOIN",
+        labelFr: "Précisez votre besoin",
+        labelEn: "Specify your need",
+        labelEs: "Especifique su necesidad",
+        labelDe: "Geben Sie Ihren Bedarf an",
+        labelPt: "Especifique sua necessidade",
+        labelRu: "Укажите вашу потребность",
+        labelZh: "说明您的需求",
+        labelAr: "حدد احتياجك",
+        labelHi: "अपनी आवश्यकता बताएं"
+      }
+    ]
+  },
 ];
 
-// Helpers
+// ========================================
+// FONCTIONS UTILITAIRES
+// ========================================
+
+/**
+ * Aplatit la structure pour obtenir toutes les spécialités avec leur groupe
+ */
 export const flattenLawyerSpecialities = () =>
-  lawyerSpecialitiesData.flatMap(g => g.items.map(i => ({ ...i, groupCode: g.code })));
+  lawyerSpecialitiesData.flatMap(g => 
+    g.items.map(i => ({ ...i, groupCode: g.code }))
+  );
+
+/**
+ * Obtient le label d'un groupe dans une langue donnée
+ */
+export const getLawyerGroupLabel = (
+  groupCode: string,
+  locale: 'fr' | 'en' | 'es' | 'de' | 'pt' | 'ru' | 'zh' | 'ar' | 'hi' = 'fr'
+): string => {
+  const group = lawyerSpecialitiesData.find(g => g.code === groupCode);
+  if (!group) return groupCode;
+  
+  const labelKey = `label${locale.charAt(0).toUpperCase() + locale.slice(1)}` as keyof LawyerSpecialityGroup;
+  return group[labelKey] as string || group.labelFr;
+};
+
+/**
+ * Obtient le label d'une spécialité dans une langue donnée
+ */
+export const getLawyerSpecialityLabel = (
+  itemCode: string,
+  locale: 'fr' | 'en' | 'es' | 'de' | 'pt' | 'ru' | 'zh' | 'ar' | 'hi' = 'fr'
+): string => {
+  const allItems = flattenLawyerSpecialities();
+  const item = allItems.find(i => i.code === itemCode);
+  if (!item) return itemCode;
+  
+  const labelKey = `label${locale.charAt(0).toUpperCase() + locale.slice(1)}` as keyof LawyerSpecialityItem;
+  return item[labelKey] as string || item.labelFr;
+};
+
+// ========================================
+// TYPES TYPESCRIPT
+// ========================================
 
 export type LawyerSpecialityCode = typeof lawyerSpecialitiesData[number]['items'][number]['code'];
 export type LawyerSpecialityGroupCode = typeof lawyerSpecialitiesData[number]['code'];
-
-

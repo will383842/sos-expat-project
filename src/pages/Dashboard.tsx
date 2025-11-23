@@ -29,6 +29,7 @@ import UserInvoices from "../components/dashboard/UserInvoices";
 import DashboardMessages from "../components/dashboard/DashboardMessages";
 import ImageUploader from "../components/common/ImageUploader";
 import MultiLanguageSelect from "../components/forms-data/MultiLanguageSelect";
+import ProfileStatusAlert from "../components/common/ProfileStatusAlert";
 
 import { useAuth } from "../contexts/AuthContext";
 import { useApp } from "../contexts/AppContext";
@@ -972,6 +973,11 @@ const Dashboard: React.FC = () => {
   // ===============================
   return (
     <Layout>
+      {/* ✨ PROFILE COMPLETION ALERT */}
+      {user && (user.role === 'lawyer' || user.role === 'expat') && (
+        <ProfileStatusAlert user={user} />
+      )}
+
       {/* ========================================== */}
       {/* LOADING STATE (while fetching user data) */}
       {/* ========================================== */}

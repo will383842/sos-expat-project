@@ -1,15 +1,15 @@
 {
   "version": 1,
   "app": "SOS Expat",
-  "schema": "sosexpat.message.template/v1",
+  "schema": "sos-expat.message.template/v1",
   "locale": "fr-FR",
   "defaults": {
-    "from_email": "SOS Expat <no-reply@sosexpat.app>",
-    "reply_to": "Support SOS Expat <support@sosexpat.app>",
+    "from_email": "SOS Expat <no-reply@sos-expat.app>",
+    "reply_to": "Support SOS Expat <support@sos-expat.app>",
     "sms_sender_id": "SOSXPAT",
     "push_icon": "ic_notification",
     "push_channel_id": "general",
-    "deeplink_base": "sosexpat://"
+    "deeplink_base": "sos-expat://"
   },
   "templates": [
     {
@@ -35,7 +35,7 @@
       "push": {
         "title": "Bienvenue !",
         "body": "Complète ton profil pour des matchs ultra-rapides ✨",
-        "deeplink": "sosexpat://profile"
+        "deeplink": "sos-expat://profile"
       },
       "inapp": {
         "title": "Bienvenue 👋",
@@ -66,7 +66,7 @@
       "push": {
         "title": "Compte prestataire créé",
         "body": "Ajoute domaines & dispo pour être visible ✨",
-        "deeplink": "sosexpat://provider/profile"
+        "deeplink": "sos-expat://provider/profile"
       },
       "inapp": {
         "title": "Hello pro 👋",
@@ -97,7 +97,7 @@
       "push": {
         "title": "Presque fini 😎",
         "body": "Complète ton profil (1 min) et on s'occupe du reste.",
-        "deeplink": "sosexpat://profile"
+        "deeplink": "sos-expat://profile"
       }
     },
     {
@@ -120,7 +120,7 @@
       "push": {
         "title": "Un petit boost ? ✨",
         "body": "Complète ton profil pro et brille sur SOS Expat.",
-        "deeplink": "sosexpat://provider/profile"
+        "deeplink": "sos-expat://provider/profile"
       }
     },
     {
@@ -143,7 +143,7 @@
       "push": {
         "title": "Demande enregistrée",
         "body": "On s'occupe de toi ⏳",
-        "deeplink": "sosexpat://requests/{request.id}"
+        "deeplink": "sos-expat://requests/{request.id}"
       },
       "inapp": {
         "title": "En cours de vérification",
@@ -195,7 +195,7 @@
       "push": {
         "title": "Action requise",
         "body": "Ajoute les infos manquantes (1 min ⏱️)",
-        "deeplink": "sosexpat://requests/{request.id}/edit"
+        "deeplink": "sos-expat://requests/{request.id}/edit"
       },
       "inapp": {
         "title": "À peaufiner ✍️",
@@ -226,7 +226,7 @@
       "push": {
         "title": "Demande validée",
         "body": "Let's go 🚀",
-        "deeplink": "sosexpat://checkout/{request.id}"
+        "deeplink": "sos-expat://checkout/{request.id}"
       },
       "inapp": {
         "title": "Go time 🎉",
@@ -278,7 +278,7 @@
       "push": {
         "title": "Paiement confirmé",
         "body": "Chat prêt. Let's chat 💬",
-        "deeplink": "sosexpat://requests/{request.id}"
+        "deeplink": "sos-expat://requests/{request.id}"
       },
       "inapp": {
         "title": "Merci ✨",
@@ -338,7 +338,7 @@
       "push": {
         "title": "Ça se rapproche ✨",
         "body": "Ton prestataire est en route vers le chat.",
-        "deeplink": "sosexpat://messages"
+        "deeplink": "sos-expat://messages"
       },
       "inapp": {
         "title": "On connecte les points 🤝",
@@ -369,7 +369,7 @@
       "push": {
         "title": "Nouveau client 🎉",
         "body": "Ouvre le chat et dis bonjour 💬",
-        "deeplink": "sosexpat://provider/messages/{thread.id}"
+        "deeplink": "sos-expat://provider/messages/{thread.id}"
       },
       "inapp": {
         "title": "Client confirmé",
@@ -407,7 +407,7 @@
       "push": {
         "title": "Nouveau message 💬",
         "body": "Message de {{provider.firstName}} — à toi de jouer 😉",
-        "deeplink": "sosexpat://messages/{thread.id}"
+        "deeplink": "sos-expat://messages/{thread.id}"
       },
       "inapp": {
         "title": "Nouveau message",
@@ -433,7 +433,7 @@
       "push": {
         "title": "Message de {{client.firstName}} 💬",
         "body": "Un petit mot t'attend.",
-        "deeplink": "sosexpat://provider/messages/{thread.id}"
+        "deeplink": "sos-expat://provider/messages/{thread.id}"
       },
       "inapp": {
         "title": "Nouveau message",
@@ -482,7 +482,7 @@
       "push": {
         "title": "Demande terminée",
         "body": "Note ton prestataire ✨",
-        "deeplink": "sosexpat://reviews/new?requestId={request.id}"
+        "deeplink": "sos-expat://reviews/new?requestId={request.id}"
       },
       "inapp": {
         "title": "Merci 🙏",
@@ -513,7 +513,7 @@
       "push": {
         "title": "Demande terminée",
         "body": "Ta performance a été mise à jour.",
-        "deeplink": "sosexpat://provider/stats"
+        "deeplink": "sos-expat://provider/stats"
       },
       "inapp": {
         "title": "Nice job 👏",
@@ -544,7 +544,7 @@
       "push": {
         "title": "Besoin d'aide ?",
         "body": "On a des bons plans pour la suite 😉",
-        "deeplink": "sosexpat://services"
+        "deeplink": "sos-expat://services"
       }
     },
     {
@@ -597,7 +597,7 @@
       "push": {
         "title": "Bilan dispo 📈",
         "body": "Tes stats du mois sont prêtes.",
-        "deeplink": "sosexpat://provider/stats?period=month"
+        "deeplink": "sos-expat://provider/stats?period=month"
       },
       "inapp": {
         "title": "Bilan mensuel",

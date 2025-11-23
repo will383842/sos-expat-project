@@ -1,48 +1,354 @@
 // ========================================
 // src/data/expat-help-types.ts — Types d'aide pour expatriés
 // - Liste plate (catégories), ordre métier conservé
-// - 10 langues (initialisées en FR; à traduire si besoin)
+// - 9 langues : FR, EN, ES, DE, PT, RU, ZH, AR, HI
 // - Codes stables (UPPER_SNAKE)
 // - "AUTRE_PRECISER" a un flag requiresDetails = true
 // ========================================
 
 export interface ExpatHelpType {
   code: string;
-  labelFr: string; labelEn: string; labelEs: string; labelDe: string; labelPt: string;
-  labelZh: string; labelAr: string; labelRu: string; labelIt: string; labelNl: string;
-  requiresDetails?: boolean; // ex: pour "Autre (précisez)"
+  labelFr: string;
+  labelEn: string;
+  labelEs: string;
+  labelDe: string;
+  labelPt: string;
+  labelRu: string;
+  labelZh: string;
+  labelAr: string;
+  labelHi: string;
+  requiresDetails?: boolean;
   priority?: number;
   disabled?: boolean;
 }
 
 export const expatHelpTypesData: ExpatHelpType[] = [
-  { code: "INSTALLATION", labelFr: "S'installer", labelEn: "S'installer", labelEs: "S'installer", labelDe: "S'installer", labelPt: "S'installer", labelZh: "S'installer", labelAr: "S'installer", labelRu: "S'installer", labelIt: "S'installer", labelNl: "S'installer" },
-  { code: "DEMARCHES_ADMINISTRATIVES", labelFr: "Démarches administratives", labelEn: "Démarches administratives", labelEs: "Démarches administratives", labelDe: "Démarches administratives", labelPt: "Démarches administratives", labelZh: "Démarches administratives", labelAr: "Démarches administratives", labelRu: "Démarches administratives", labelIt: "Démarches administratives", labelNl: "Démarches administratives" },
-  { code: "RECHERCHE_LOGEMENT", labelFr: "Recherche de logement", labelEn: "Recherche de logement", labelEs: "Recherche de logement", labelDe: "Recherche de logement", labelPt: "Recherche de logement", labelZh: "Recherche de logement", labelAr: "Recherche de logement", labelRu: "Recherche de logement", labelIt: "Recherche de logement", labelNl: "Recherche de logement" },
-  { code: "OUVERTURE_COMPTE_BANCAIRE", labelFr: "Ouverture de compte bancaire", labelEn: "Ouverture de compte bancaire", labelEs: "Ouverture de compte bancaire", labelDe: "Ouverture de compte bancaire", labelPt: "Ouverture de compte bancaire", labelZh: "Ouverture de compte bancaire", labelAr: "Ouverture de compte bancaire", labelRu: "Ouverture de compte bancaire", labelIt: "Ouverture de compte bancaire", labelNl: "Ouverture de compte bancaire" },
-  { code: "SYSTEME_SANTE", labelFr: "Système de santé", labelEn: "Système de santé", labelEs: "Système de santé", labelDe: "Système de santé", labelPt: "Système de santé", labelZh: "Système de santé", labelAr: "Système de santé", labelRu: "Système de santé", labelIt: "Système de santé", labelNl: "Système de santé" },
-  { code: "EDUCATION_ECOLES", labelFr: "Éducation et écoles", labelEn: "Éducation et écoles", labelEs: "Éducation et écoles", labelDe: "Éducation et écoles", labelPt: "Éducation et écoles", labelZh: "Éducation et écoles", labelAr: "Éducation et écoles", labelRu: "Éducation et écoles", labelIt: "Éducation et écoles", labelNl: "Éducation et écoles" },
-  { code: "TRANSPORT", labelFr: "Transport", labelEn: "Transport", labelEs: "Transport", labelDe: "Transport", labelPt: "Transport", labelZh: "Transport", labelAr: "Transport", labelRu: "Transport", labelIt: "Transport", labelNl: "Transport" },
-  { code: "RECHERCHE_EMPLOI", labelFr: "Recherche d'emploi", labelEn: "Recherche d'emploi", labelEs: "Recherche d'emploi", labelDe: "Recherche d'emploi", labelPt: "Recherche d'emploi", labelZh: "Recherche d'emploi", labelAr: "Recherche d'emploi", labelRu: "Recherche d'emploi", labelIt: "Recherche d'emploi", labelNl: "Recherche d'emploi" },
-  { code: "CREATION_ENTREPRISE", labelFr: "Création d'entreprise", labelEn: "Création d'entreprise", labelEs: "Création d'entreprise", labelDe: "Création d'entreprise", labelPt: "Création d'entreprise", labelZh: "Création d'entreprise", labelAr: "Création d'entreprise", labelRu: "Création d'entreprise", labelIt: "Création d'entreprise", labelNl: "Création d'entreprise" },
-  { code: "FISCALITE_LOCALE", labelFr: "Fiscalité locale", labelEn: "Fiscalité locale", labelEs: "Fiscalité locale", labelDe: "Fiscalité locale", labelPt: "Fiscalité locale", labelZh: "Fiscalité locale", labelAr: "Fiscalité locale", labelRu: "Fiscalité locale", labelIt: "Fiscalité locale", labelNl: "Fiscalité locale" },
-  { code: "CULTURE_INTEGRATION", labelFr: "Culture et intégration", labelEn: "Culture et intégration", labelEs: "Culture et intégration", labelDe: "Culture et intégration", labelPt: "Culture et intégration", labelZh: "Culture et intégration", labelAr: "Culture et intégration", labelRu: "Culture et intégration", labelIt: "Culture et intégration", labelNl: "Culture et intégration" },
-  { code: "VISA_IMMIGRATION", labelFr: "Visa et immigration", labelEn: "Visa et immigration", labelEs: "Visa et immigration", labelDe: "Visa et immigration", labelPt: "Visa et immigration", labelZh: "Visa et immigration", labelAr: "Visa et immigration", labelRu: "Visa et immigration", labelIt: "Visa et immigration", labelNl: "Visa et immigration" },
-  { code: "ASSURANCES", labelFr: "Assurances", labelEn: "Assurances", labelEs: "Assurances", labelDe: "Assurances", labelPt: "Assurances", labelZh: "Assurances", labelAr: "Assurances", labelRu: "Assurances", labelIt: "Assurances", labelNl: "Assurances" },
-  { code: "TELEPHONE_INTERNET", labelFr: "Téléphone et internet", labelEn: "Téléphone et internet", labelEs: "Téléphone et internet", labelDe: "Téléphone et internet", labelPt: "Téléphone et internet", labelZh: "Téléphone et internet", labelAr: "Téléphone et internet", labelRu: "Téléphone et internet", labelIt: "Téléphone et internet", labelNl: "Téléphone et internet" },
-  { code: "ALIMENTATION_COURSES", labelFr: "Alimentation et courses", labelEn: "Alimentation et courses", labelEs: "Alimentation et courses", labelDe: "Alimentation et courses", labelPt: "Alimentation et courses", labelZh: "Alimentation et courses", labelAr: "Alimentation et courses", labelRu: "Alimentation et courses", labelIt: "Alimentation et courses", labelNl: "Alimentation et courses" },
-  { code: "LOISIRS_SORTIES", labelFr: "Loisirs et sorties", labelEn: "Loisirs et sorties", labelEs: "Loisirs et sorties", labelDe: "Loisirs et sorties", labelPt: "Loisirs et sorties", labelZh: "Loisirs et sorties", labelAr: "Loisirs et sorties", labelRu: "Loisirs et sorties", labelIt: "Loisirs et sorties", labelNl: "Loisirs et sorties" },
-  { code: "SPORTS_ACTIVITES", labelFr: "Sports et activités", labelEn: "Sports et activités", labelEs: "Sports et activités", labelDe: "Sports et activités", labelPt: "Sports et activités", labelZh: "Sports et activités", labelAr: "Sports et activités", labelRu: "Sports et activités", labelIt: "Sports et activités", labelNl: "Sports et activités" },
-  { code: "SECURITE", labelFr: "Sécurité", labelEn: "Sécurité", labelEs: "Sécurité", labelDe: "Sécurité", labelPt: "Sécurité", labelZh: "Sécurité", labelAr: "Sécurité", labelRu: "Sécurité", labelIt: "Sécurité", labelNl: "Sécurité" },
-  { code: "URGENCES", labelFr: "Urgences", labelEn: "Urgences", labelEs: "Urgences", labelDe: "Urgences", labelPt: "Urgences", labelZh: "Urgences", labelAr: "Urgences", labelRu: "Urgences", labelIt: "Urgences", labelNl: "Urgences" },
-  { code: "PROBLEMES_ARGENT", labelFr: "Problèmes d'argent", labelEn: "Problèmes d'argent", labelEs: "Problèmes d'argent", labelDe: "Problèmes d'argent", labelPt: "Problèmes d'argent", labelZh: "Problèmes d'argent", labelAr: "Problèmes d'argent", labelRu: "Problèmes d'argent", labelIt: "Problèmes d'argent", labelNl: "Problèmes d'argent" },
-  { code: "PROBLEMES_RELATIONNELS", labelFr: "Problèmes relationnels", labelEn: "Problèmes relationnels", labelEs: "Problèmes relationnels", labelDe: "Problèmes relationnels", labelPt: "Problèmes relationnels", labelZh: "Problèmes relationnels", labelAr: "Problèmes relationnels", labelRu: "Problèmes relationnels", labelIt: "Problèmes relationnels", labelNl: "Problèmes relationnels" },
-  { code: "PROBLEMES_DIVERS", labelFr: "Problèmes divers", labelEn: "Problèmes divers", labelEs: "Problèmes divers", labelDe: "Problèmes divers", labelPt: "Problèmes divers", labelZh: "Problèmes divers", labelAr: "Problèmes divers", labelRu: "Problèmes divers", labelIt: "Problèmes divers", labelNl: "Problèmes divers" },
-  { code: "PARTIR_OU_RENTRER", labelFr: "Partir ou rentrer", labelEn: "Partir ou rentrer", labelEs: "Partir ou rentrer", labelDe: "Partir ou rentrer", labelPt: "Partir ou rentrer", labelZh: "Partir ou rentrer", labelAr: "Partir ou rentrer", labelRu: "Partir ou rentrer", labelIt: "Partir ou rentrer", labelNl: "Partir ou rentrer" },
-  { code: "AUTRE_PRECISER", labelFr: "Autre (précisez)", labelEn: "Autre (précisez)", labelEs: "Autre (précisez)", labelDe: "Autre (précisez)", labelPt: "Autre (précisez)", labelZh: "Autre (précisez)", labelAr: "Autre (précisez)", labelRu: "Autre (précisez)", labelIt: "Autre (précisez)", labelNl: "Autre (précisez)", requiresDetails: true },
+  {
+    code: "INSTALLATION",
+    labelFr: "S'installer",
+    labelEn: "Settling in",
+    labelEs: "Instalarse",
+    labelDe: "Sich niederlassen",
+    labelPt: "Instalar-se",
+    labelRu: "Обустройство",
+    labelZh: "定居",
+    labelAr: "الاستقرار",
+    labelHi: "बसना"
+  },
+  {
+    code: "DEMARCHES_ADMINISTRATIVES",
+    labelFr: "Démarches administratives",
+    labelEn: "Administrative procedures",
+    labelEs: "Trámites administrativos",
+    labelDe: "Verwaltungsverfahren",
+    labelPt: "Procedimentos administrativos",
+    labelRu: "Административные процедуры",
+    labelZh: "行政手续",
+    labelAr: "الإجراءات الإدارية",
+    labelHi: "प्रशासनिक प्रक्रियाएं"
+  },
+  {
+    code: "RECHERCHE_LOGEMENT",
+    labelFr: "Recherche de logement",
+    labelEn: "Housing search",
+    labelEs: "Búsqueda de vivienda",
+    labelDe: "Wohnungssuche",
+    labelPt: "Procura de habitação",
+    labelRu: "Поиск жилья",
+    labelZh: "寻找住房",
+    labelAr: "البحث عن سكن",
+    labelHi: "आवास खोज"
+  },
+  {
+    code: "OUVERTURE_COMPTE_BANCAIRE",
+    labelFr: "Ouverture de compte bancaire",
+    labelEn: "Bank account opening",
+    labelEs: "Apertura de cuenta bancaria",
+    labelDe: "Kontoeröffnung",
+    labelPt: "Abertura de conta bancária",
+    labelRu: "Открытие банковского счета",
+    labelZh: "开设银行账户",
+    labelAr: "فتح حساب مصرفي",
+    labelHi: "बैंक खाता खोलना"
+  },
+  {
+    code: "SYSTEME_SANTE",
+    labelFr: "Système de santé",
+    labelEn: "Healthcare system",
+    labelEs: "Sistema de salud",
+    labelDe: "Gesundheitssystem",
+    labelPt: "Sistema de saúde",
+    labelRu: "Система здравоохранения",
+    labelZh: "医疗系统",
+    labelAr: "نظام الرعاية الصحية",
+    labelHi: "स्वास्थ्य प्रणाली"
+  },
+  {
+    code: "EDUCATION_ECOLES",
+    labelFr: "Éducation et écoles",
+    labelEn: "Education and schools",
+    labelEs: "Educación y escuelas",
+    labelDe: "Bildung und Schulen",
+    labelPt: "Educação e escolas",
+    labelRu: "Образование и школы",
+    labelZh: "教育和学校",
+    labelAr: "التعليم والمدارس",
+    labelHi: "शिक्षा और विद्यालय"
+  },
+  {
+    code: "TRANSPORT",
+    labelFr: "Transport",
+    labelEn: "Transportation",
+    labelEs: "Transporte",
+    labelDe: "Transport",
+    labelPt: "Transporte",
+    labelRu: "Транспорт",
+    labelZh: "交通",
+    labelAr: "النقل",
+    labelHi: "परिवहन"
+  },
+  {
+    code: "RECHERCHE_EMPLOI",
+    labelFr: "Recherche d'emploi",
+    labelEn: "Job search",
+    labelEs: "Búsqueda de empleo",
+    labelDe: "Jobsuche",
+    labelPt: "Procura de emprego",
+    labelRu: "Поиск работы",
+    labelZh: "求职",
+    labelAr: "البحث عن عمل",
+    labelHi: "नौकरी खोज"
+  },
+  {
+    code: "CREATION_ENTREPRISE",
+    labelFr: "Création d'entreprise",
+    labelEn: "Business creation",
+    labelEs: "Creación de empresa",
+    labelDe: "Unternehmensgründung",
+    labelPt: "Criação de empresa",
+    labelRu: "Создание бизнеса",
+    labelZh: "创业",
+    labelAr: "إنشاء شركة",
+    labelHi: "व्यवसाय निर्माण"
+  },
+  {
+    code: "FISCALITE_LOCALE",
+    labelFr: "Fiscalité locale",
+    labelEn: "Local taxation",
+    labelEs: "Fiscalidad local",
+    labelDe: "Lokale Besteuerung",
+    labelPt: "Fiscalidade local",
+    labelRu: "Местное налогообложение",
+    labelZh: "地方税务",
+    labelAr: "الضرائب المحلية",
+    labelHi: "स्थानीय कराधान"
+  },
+  {
+    code: "CULTURE_INTEGRATION",
+    labelFr: "Culture et intégration",
+    labelEn: "Culture and integration",
+    labelEs: "Cultura e integración",
+    labelDe: "Kultur und Integration",
+    labelPt: "Cultura e integração",
+    labelRu: "Культура и интеграция",
+    labelZh: "文化和融入",
+    labelAr: "الثقافة والاندماج",
+    labelHi: "संस्कृति और एकीकरण"
+  },
+  {
+    code: "VISA_IMMIGRATION",
+    labelFr: "Visa et immigration",
+    labelEn: "Visa and immigration",
+    labelEs: "Visa e inmigración",
+    labelDe: "Visum und Einwanderung",
+    labelPt: "Visto e imigração",
+    labelRu: "Виза и иммиграция",
+    labelZh: "签证和移民",
+    labelAr: "التأشيرة والهجرة",
+    labelHi: "वीजा और आप्रवासन"
+  },
+  {
+    code: "ASSURANCES",
+    labelFr: "Assurances",
+    labelEn: "Insurance",
+    labelEs: "Seguros",
+    labelDe: "Versicherungen",
+    labelPt: "Seguros",
+    labelRu: "Страхование",
+    labelZh: "保险",
+    labelAr: "التأمين",
+    labelHi: "बीमा"
+  },
+  {
+    code: "TELEPHONE_INTERNET",
+    labelFr: "Téléphone et internet",
+    labelEn: "Phone and internet",
+    labelEs: "Teléfono e internet",
+    labelDe: "Telefon und Internet",
+    labelPt: "Telefone e internet",
+    labelRu: "Телефон и интернет",
+    labelZh: "电话和互联网",
+    labelAr: "الهاتف والإنترنت",
+    labelHi: "फोन और इंटरनेट"
+  },
+  {
+    code: "ALIMENTATION_COURSES",
+    labelFr: "Alimentation et courses",
+    labelEn: "Food and shopping",
+    labelEs: "Alimentación y compras",
+    labelDe: "Lebensmittel und Einkaufen",
+    labelPt: "Alimentação e compras",
+    labelRu: "Питание и покупки",
+    labelZh: "食品和购物",
+    labelAr: "الطعام والتسوق",
+    labelHi: "भोजन और खरीदारी"
+  },
+  {
+    code: "LOISIRS_SORTIES",
+    labelFr: "Loisirs et sorties",
+    labelEn: "Leisure and outings",
+    labelEs: "Ocio y salidas",
+    labelDe: "Freizeit und Ausgehen",
+    labelPt: "Lazer e saídas",
+    labelRu: "Досуг и развлечения",
+    labelZh: "休闲和外出",
+    labelAr: "الترفيه والخروج",
+    labelHi: "मनोरंजन और बाहर जाना"
+  },
+  {
+    code: "SPORTS_ACTIVITES",
+    labelFr: "Sports et activités",
+    labelEn: "Sports and activities",
+    labelEs: "Deportes y actividades",
+    labelDe: "Sport und Aktivitäten",
+    labelPt: "Desportos e atividades",
+    labelRu: "Спорт и занятия",
+    labelZh: "运动和活动",
+    labelAr: "الرياضة والأنشطة",
+    labelHi: "खेल और गतिविधियां"
+  },
+  {
+    code: "SECURITE",
+    labelFr: "Sécurité",
+    labelEn: "Security",
+    labelEs: "Seguridad",
+    labelDe: "Sicherheit",
+    labelPt: "Segurança",
+    labelRu: "Безопасность",
+    labelZh: "安全",
+    labelAr: "الأمن",
+    labelHi: "सुरक्षा"
+  },
+  {
+    code: "URGENCES",
+    labelFr: "Urgences",
+    labelEn: "Emergencies",
+    labelEs: "Emergencias",
+    labelDe: "Notfälle",
+    labelPt: "Emergências",
+    labelRu: "Срочные случаи",
+    labelZh: "紧急情况",
+    labelAr: "حالات الطوارئ",
+    labelHi: "आपातकाल"
+  },
+  {
+    code: "PROBLEMES_ARGENT",
+    labelFr: "Problèmes d'argent",
+    labelEn: "Money problems",
+    labelEs: "Problemas de dinero",
+    labelDe: "Geldprobleme",
+    labelPt: "Problemas de dinheiro",
+    labelRu: "Денежные проблемы",
+    labelZh: "资金问题",
+    labelAr: "مشاكل مالية",
+    labelHi: "धन की समस्याएं"
+  },
+  {
+    code: "PROBLEMES_RELATIONNELS",
+    labelFr: "Problèmes relationnels",
+    labelEn: "Relationship problems",
+    labelEs: "Problemas relacionales",
+    labelDe: "Beziehungsprobleme",
+    labelPt: "Problemas relacionais",
+    labelRu: "Проблемы в отношениях",
+    labelZh: "关系问题",
+    labelAr: "مشاكل العلاقات",
+    labelHi: "संबंध समस्याएं"
+  },
+  {
+    code: "PROBLEMES_DIVERS",
+    labelFr: "Problèmes divers",
+    labelEn: "Various problems",
+    labelEs: "Problemas diversos",
+    labelDe: "Verschiedene Probleme",
+    labelPt: "Problemas diversos",
+    labelRu: "Различные проблемы",
+    labelZh: "各种问题",
+    labelAr: "مشاكل متنوعة",
+    labelHi: "विभिन्न समस्याएं"
+  },
+  {
+    code: "PARTIR_OU_RENTRER",
+    labelFr: "Partir ou rentrer",
+    labelEn: "Leaving or returning",
+    labelEs: "Salir o volver",
+    labelDe: "Abreisen oder zurückkehren",
+    labelPt: "Partir ou voltar",
+    labelRu: "Уезд или возвращение",
+    labelZh: "离开或返回",
+    labelAr: "المغادرة أو العودة",
+    labelHi: "जाना या लौटना"
+  },
+  {
+    code: "AUTRE_PRECISER",
+    labelFr: "Autre (précisez)",
+    labelEn: "Other (specify)",
+    labelEs: "Otro (especificar)",
+    labelDe: "Andere (angeben)",
+    labelPt: "Outro (especificar)",
+    labelRu: "Другое (уточните)",
+    labelZh: "其他（请说明）",
+    labelAr: "أخرى (حدد)",
+    labelHi: "अन्य (निर्दिष्ट करें)",
+    requiresDetails: true
+  }
 ];
 
-// Helpers
+// ========================================
+// FONCTIONS UTILITAIRES
+// ========================================
+
+/**
+ * Obtient le label d'un type d'aide dans une langue donnée
+ */
+export const getExpatHelpTypeLabel = (
+  code: string,
+  locale: 'fr' | 'en' | 'es' | 'de' | 'pt' | 'ru' | 'zh' | 'ar' | 'hi' = 'fr'
+): string => {
+  const item = expatHelpTypesData.find(t => t.code === code);
+  if (!item) return code;
+  
+  const labelKey = `label${locale.charAt(0).toUpperCase() + locale.slice(1)}` as keyof ExpatHelpType;
+  return item[labelKey] as string || item.labelFr;
+};
+
+/**
+ * Obtient tous les types d'aide traduits dans une langue donnée
+ */
+export const getExpatHelpTypesForLocale = (
+  locale: 'fr' | 'en' | 'es' | 'de' | 'pt' | 'ru' | 'zh' | 'ar' | 'hi' = 'fr'
+) => {
+  return expatHelpTypesData.map(item => ({
+    code: item.code,
+    label: getExpatHelpTypeLabel(item.code, locale),
+    requiresDetails: item.requiresDetails
+  }));
+};
+
+// ========================================
+// TYPES TYPESCRIPT
+// ========================================
+
 export type ExpatHelpTypeCode = typeof expatHelpTypesData[number]['code'];
 
 export const getExpatHelpType = (code: ExpatHelpTypeCode) =>
@@ -52,4 +358,3 @@ export const EXPAT_HELP_TYPES_STATS = {
   total: expatHelpTypesData.filter(t => !t.disabled).length,
   requiresDetails: expatHelpTypesData.filter(t => t.requiresDetails && !t.disabled).map(t => t.code)
 } as const;
-

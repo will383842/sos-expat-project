@@ -1,5 +1,5 @@
-// App.tsx
-import React, { useEffect, Suspense, lazy, useState } from "react";
+// App.tsx - VERSION CORRIGÉE
+import React, { useEffect, Suspense, lazy } from "react";
 import { IntlProvider } from "react-intl";
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { Helmet, HelmetProvider } from "react-helmet-async";
@@ -21,7 +21,7 @@ import deMessages from "./helper/de.json";
 import hiMessages from "./helper/hi.json";
 import ptMessages from "./helper/pt.json";
 import chMessages from "./helper/ch.json";
-import arMessages from './helper/ar.json';
+import arMessages from "./helper/ar.json";
 import { useApp } from "./contexts/AppContext";
 import LocaleRouter from "./components/routing/LocaleRouter";
 import { getLocaleString, parseLocaleFromPath } from "./utils/localeRoutes";
@@ -88,26 +88,32 @@ const FAQ = lazy(() => import("./pages/FAQ"));
 const Contact = lazy(() => import("./pages/Contact"));
 const HowItWorks = lazy(() => import("./pages/HowItWorks"));
 
+// Auth admin
+const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+
 // -------------------------------------------
-// Laguage config
+// Language config
 // -------------------------------------------
+import { aaaProfilesTranslations, mergeAaaTranslations } from "./helper/aaaprofiles";
+
 const messages = {
-  en: enMessages,
-  es: esMessages,
-  fr: frMessages,
-  ru: ruMessages,
-  de: deMessages,
-  hi: hiMessages,
-  pt: ptMessages,
-  ch: chMessages,
-  ar: arMessages,
+  en: mergeAaaTranslations(enMessages, aaaProfilesTranslations.en),
+  es: mergeAaaTranslations(esMessages, aaaProfilesTranslations.es),
+  fr: mergeAaaTranslations(frMessages, aaaProfilesTranslations.fr),
+  ru: mergeAaaTranslations(ruMessages, aaaProfilesTranslations.ru),
+  de: mergeAaaTranslations(deMessages, aaaProfilesTranslations.de),
+  hi: mergeAaaTranslations(hiMessages, aaaProfilesTranslations.hi),
+  pt: mergeAaaTranslations(ptMessages, aaaProfilesTranslations.pt),
+  ch: mergeAaaTranslations(chMessages, aaaProfilesTranslations.zh),
+  ar: mergeAaaTranslations(arMessages, aaaProfilesTranslations.ar),
 };
 
 // --------------------------------------------
 // Routes config
 // --------------------------------------------
 
-// Publiques (sans EmailVerification)
+// Publiques
 const routeConfigs: RouteConfig[] = [
   { path: "/", component: Home, preload: true },
   { path: "/login", component: Login, preload: true },
@@ -116,19 +122,12 @@ const routeConfigs: RouteConfig[] = [
   { path: "/register/lawyer", component: RegisterLawyer },
   { path: "/register/expat", component: RegisterExpat },
   { path: "/password-reset", component: PasswordReset },
-
-  // Tarifs (alias FR/EN)
   { path: "/tarifs", component: Pricing, alias: "/pricing", preload: true },
-
-  // Contact & aide
   { path: "/contact", component: Contact },
   { path: "/how-it-works", component: HowItWorks },
   { path: "/faq", component: FAQ },
   { path: "/centre-aide", component: HelpCenter },
-
-  // Témoignages
   { path: "/testimonials", component: Testimonials, alias: "/temoignages" },
-  // New SEO-friendly URL format: /testimonials/country/language/review-type-urgently
   {
     path: "/testimonials/:country/:language/:reviewType",
     component: TestimonialDetail,
@@ -137,8 +136,6 @@ const routeConfigs: RouteConfig[] = [
     path: "/temoignages/:country/:language/:reviewType",
     component: TestimonialDetail,
   },
-
-  // Légal / info (alias FR/EN)
   { path: "/terms-clients", component: TermsClients, alias: "/cgu-clients" },
   { path: "/terms-lawyers", component: TermsLawyers, alias: "/cgu-avocats" },
   { path: "/terms-expats", component: TermsExpats, alias: "/cgu-expatries" },
@@ -151,19 +148,15 @@ const routeConfigs: RouteConfig[] = [
   { path: "/consumers", component: Consumers, alias: "/consommateurs" },
   { path: "/statut-service", component: ServiceStatus },
   { path: "/seo", component: SEO, alias: "/referencement" },
-
-  // Services d'appel
   { path: "/sos-appel", component: SOSCall },
   { path: "/appel-expatrie", component: ExpatCall },
-
-  // Fournisseurs publics
   { path: "/providers", component: Providers },
   { path: "/provider/:id", component: ProviderProfile },
   { path: "/avocat/:country/:language/:nameId", component: ProviderProfile },
   { path: "/expatrie/:country/:language/:nameId", component: ProviderProfile },
 ];
 
-// Protégées (utilisateur)
+// Protégées
 const protectedUserRoutes: RouteConfig[] = [
   { path: "/dashboard", component: Dashboard, protected: true },
   { path: "/profile/edit", component: ProfileEdit, protected: true },
@@ -191,19 +184,14 @@ const protectedUserRoutes: RouteConfig[] = [
 // SEO par défaut
 // --------------------------------------------
 const DefaultHelmet: React.FC<{ pathname: string }> = ({ pathname }) => {
-  // Remove locale prefix from pathname for metadata lookup
   const { pathWithoutLocale } = parseLocaleFromPath(pathname);
   const pathForMetadata = pathWithoutLocale === "/" ? "/" : pathWithoutLocale;
-  
-  const getPageMetadata = (path: string) => {
-    const metaMap: Record<
-      string,
-      { title: string; description: string; lang: string }
-    > = {
+
+  const getPageMetadata = (path: string): { title: string; description: string; lang: string } => {
+    const metaMap: Record<string, { title: string; description: string; lang: string }> = {
       "/": {
         title: "Accueil - Consultation Juridique Expatriés",
-        description:
-          "Service de consultation juridique pour expatriés francophones",
+        description: "Service de consultation juridique pour expatriés francophones",
         lang: "fr",
       },
       "/login": {
@@ -223,50 +211,46 @@ const DefaultHelmet: React.FC<{ pathname: string }> = ({ pathname }) => {
       },
       "/testimonials": {
         title: "Témoignages Clients - Consultation Juridique Expatriés",
-        description:
-          "Découvrez les témoignages de nos clients expatriés et avocats partout dans le monde",
+        description: "Découvrez les témoignages de nos clients expatriés et avocats partout dans le monde",
         lang: "fr",
       },
       "/temoignages": {
         title: "Témoignages Clients - Consultation Juridique Expatriés",
-        description:
-          "Découvrez les témoignages de nos clients expatriés et avocats partout dans le monde",
+        description: "Découvrez les témoignages de nos clients expatriés et avocats partout dans le monde",
         lang: "fr",
       },
     };
 
-    return (
-      metaMap[path] || {
-        title: "Consultation Juridique Expatriés",
-        description: "Service de consultation juridique pour expatriés",
-        lang: "fr",
-      }
-    );
+    return metaMap[path] || {
+      title: "Consultation Juridique Expatriés",
+      description: "Service de consultation juridique pour expatriés",
+      lang: "fr",
+    };
   };
 
   const metadata = getPageMetadata(pathForMetadata);
+  
   return (
     <Helmet>
       <html lang={metadata.lang} />
       <title>{metadata.title}</title>
       <meta name="description" content={metadata.description} />
-      <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1, shrink-to-fit=no"
-      />
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
       <meta name="theme-color" content="#000000" />
     </Helmet>
   );
 };
 
-type Locale = "en" | "es" | "fr" | "de" | "ru" | "pt" | "hi" | "ch" | "ar"; // --------------------------------------------
+type Locale = "en" | "es" | "fr" | "de" | "ru" | "pt" | "hi" | "ch" | "ar";
+
+// --------------------------------------------
 // App
 // --------------------------------------------
 const App: React.FC = () => {
   const location = useLocation();
   const { language } = useApp();
   const { isMobile } = useDeviceDetection();
-  const [locale, setLocale] = useState<Locale>("es"); // Default to French since your site is French
+  const locale = (language as Locale) || "en";
 
   // SW + perf
   useEffect(() => {
@@ -282,25 +266,19 @@ const App: React.FC = () => {
   // Préchargement light
   useEffect(() => {
     if (!isMobile) {
-      const preloadableRoutes = [
-        ...routeConfigs,
-        ...protectedUserRoutes,
-      ].filter((r) => r.preload);
+      const preloadableRoutes = [...routeConfigs, ...protectedUserRoutes].filter(
+        (r) => r.preload
+      );
       if (preloadableRoutes.length > 0) {
         setTimeout(() => {
-          // Intentionnellement vide : certains bundlers n'exposent pas _payload
+          // Intentionnellement vide
         }, 2000);
       }
     }
   }, [isMobile]);
 
-  useEffect(() => {
-    console.log("language", language);
-    setLocale(language);
-  }, [language]);
-
-
-  const renderRoute = (config: RouteConfig, index: number) => {
+  // ✅ CORRECTION : Fonction renderRoute simplifiée sans boucle infinie
+  const renderRoute = React.useCallback((config: RouteConfig, index: number) => {
     const {
       path,
       component: Component,
@@ -308,65 +286,98 @@ const App: React.FC = () => {
       role,
       alias,
     } = config;
-    
-    // Add locale prefix to paths - use simple parameter, validation happens in LocaleRouter
-    // React Router v6 doesn't support regex in path params, so we use :locale and validate elsewhere
+
     const localePrefix = `/:locale`;
-    
-    // Handle root path specially - match both with and without trailing slash
-    let routes: string[];
+    const routes: { path: string; key: string }[] = [];
+
+    // Handle root path specially
     if (path === "/") {
-      // For root, create routes that match both /en-us and /en-us/
-      routes = [
-        `${localePrefix}`,      // Matches /en-us
-        `${localePrefix}/`,     // Matches /en-us/
-      ];
+      routes.push(
+        { path: localePrefix, key: `${index}-0-root` },
+        { path: `${localePrefix}/`, key: `${index}-1-root-slash` }
+      );
     } else {
-      routes = [
-        `${localePrefix}${path}`,
-        ...(alias ? [`${localePrefix}${alias}`] : []),
-      ];
+      routes.push({ path: `${localePrefix}${path}`, key: `${index}-0-${path}` });
+      if (alias) {
+        routes.push({ path: `${localePrefix}${alias}`, key: `${index}-1-${alias}` });
+      }
     }
 
-    return routes.map((routePath, i) => {
-      // Debug: log route paths in development
-      if (process.env.NODE_ENV === 'development' && path === "/") {
-        console.log(`[Route] Registering locale route: ${routePath}`);
-      }
-      
-      return (
-        <Route
-          key={`${index}-${i}-${routePath}`}
-          path={routePath}
-          element={
-            isProtected ? (
-              <ProtectedRoute allowedRoles={role}>
-                <Component />
-              </ProtectedRoute>
-            ) : (
+    return routes.map(({ path: routePath, key }) => (
+      <Route
+        key={key}
+        path={routePath}
+        element={
+          isProtected ? (
+            <ProtectedRoute allowedRoles={role}>
               <Component />
-            )
-          }
-        />
-      );
-    });
-  };
+            </ProtectedRoute>
+          ) : (
+            <Component />
+          )
+        }
+      />
+    ));
+  }, []);
 
   return (
     <HelmetProvider>
-      <IntlProvider locale={locale} messages={messages[locale]} defaultLocale="fr" >
+      <IntlProvider
+        locale={locale}
+        messages={messages[locale]}
+        defaultLocale="fr"
+      >
         <LocaleRouter>
-          <div className={`App ${isMobile ? "mobile-layout" : "desktop-layout"}`}>
+          <div
+            className={`App ${
+              isMobile ? "mobile-layout" : "desktop-layout"
+            }`}
+          >
             <DefaultHelmet pathname={location.pathname} />
-            <Suspense fallback={<LoadingSpinner size="large" color="red" />}>
-              {/* Routes de l'app */}
+            <Suspense
+              fallback={<LoadingSpinner size="large" color="red" />}
+            >
               <Routes>
-                {/* Root redirect to locale */}
+                {/* ✅ CORRECTION : Root redirect to locale */}
                 <Route
                   path="/"
-                  element={<Navigate to={`/${getLocaleString(language)}`} replace />}
+                  element={
+                    <Navigate
+                      to={`/${getLocaleString(language)}`}
+                      replace
+                    />
+                  }
                 />
-                
+
+                {/* ✅ NOUVEAU : Catch-all pour les routes sans locale */}
+                <Route
+                  path="/register/client"
+                  element={
+                    <Navigate
+                      to={`/${getLocaleString(language)}/register/client`}
+                      replace
+                    />
+                  }
+                />
+                <Route
+                  path="/register/lawyer"
+                  element={
+                    <Navigate
+                      to={`/${getLocaleString(language)}/register/lawyer`}
+                      replace
+                    />
+                  }
+                />
+                <Route
+                  path="/register/expat"
+                  element={
+                    <Navigate
+                      to={`/${getLocaleString(language)}/register/expat`}
+                      replace
+                    />
+                  }
+                />
+
                 {/* Payment success route without locale (backward compatibility) */}
                 <Route
                   path="/payment-success"
@@ -376,45 +387,105 @@ const App: React.FC = () => {
                     </ProtectedRoute>
                   }
                 />
-                
-                {/* Routes with locale prefix - Home route first for root locale path */}
+
+                {/* Routes with locale prefix */}
                 {routeConfigs
                   .sort((a, b) => {
-                    // Put root path first
                     if (a.path === "/") return -1;
                     if (b.path === "/") return 1;
                     return 0;
                   })
                   .map((cfg, i) => renderRoute(cfg, i))}
-                {protectedUserRoutes.map((cfg, i) => renderRoute(cfg, i + 1000))}
+                {protectedUserRoutes.map((cfg, i) =>
+                  renderRoute(cfg, i + 1000)
+                )}
 
-                {/* Admin routes - no locale prefix */}
+                {/* ADMIN routes */}
+                <Route
+                  path="/admin/login"
+                  element={
+                    <Suspense
+                      fallback={
+                        <LoadingSpinner size="large" color="red" />
+                      }
+                    >
+                      <AdminLogin />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/admin/dashboard"
+                  element={
+                    <Suspense
+                      fallback={
+                        <LoadingSpinner size="large" color="red" />
+                      }
+                    >
+                      <AdminDashboard />
+                    </Suspense>
+                  }
+                />
                 <Route
                   path="/admin"
-                  element={<Navigate to="/admin/dashboard" replace />}
+                  element={
+                    <Navigate to="/admin/dashboard" replace />
+                  }
                 />
                 <Route path="/admin/*" element={<AdminRoutesV2 />} />
 
-              {/* Marketing & Communication */}
-              <Route
-                path="marketing/templates-emails"
-                element={<TemplatesEmails />}
-              />
-              <Route
-                path="marketing/notifications"
-                element={<NotificationsRouting />}
-              />
-              <Route
-                path="marketing/delivrabilite"
-                element={<DelivrabiliteLogs />}
-              />
-              <Route
-                path="marketing/messages-temps-reel"
-                element={<MessagesTempsReel />}
-              />
-              </Routes>
+                {/* Marketing & Communication */}
+                <Route
+                  path="marketing/templates-emails"
+                  element={<TemplatesEmails />}
+                />
+                <Route
+                  path="marketing/notifications"
+                  element={<NotificationsRouting />}
+                />
+                <Route
+                  path="marketing/delivrabilite"
+                  element={<DelivrabiliteLogs />}
+                />
+                <Route
+                  path="marketing/messages-temps-reel"
+                  element={<MessagesTempsReel />}
+                />
 
-              {/* Routes admin gérées par AdminRoutesV2 */}
+                {/* ✅ ROUTES PROFILS - TOUS LES FORMATS POSSIBLES */}
+                
+                {/* Format legacy: /provider/:id */}
+                <Route path="/provider/:id" element={<ProviderProfile />} />
+                <Route path="/:locale/provider/:id" element={<ProviderProfile />} />
+                
+                {/* Format court: /:locale/:typeCountry/:nameSlug */}
+                <Route 
+                  path="/:locale/:typeCountry/:nameSlug" 
+                  element={<ProviderProfile />} 
+                />
+                
+                {/* Format complet généré par generateSlug: /:localeRegion/:lang/:typeCountry/:nameSlug */}
+                <Route 
+                  path="/:localeRegion/:lang/:typeCountry/:nameSlug" 
+                  element={<ProviderProfile />} 
+                />
+                
+                <Route 
+                  path="/:localeRegion/:type/:country/:language/:nameSlugWithUid" 
+                  element={<ProviderProfile />} 
+                />
+                
+                {/* Format legacy: /avocat/:country/:language/:nameId */}
+                <Route 
+                  path="/avocat/:country/:language/:nameId" 
+                  element={<ProviderProfile />} 
+                />
+                
+                {/* Format legacy: /expatrie/:country/:language/:nameId */}
+                <Route 
+                  path="/expatrie/:country/:language/:nameId" 
+                  element={<ProviderProfile />} 
+                />
+              </Routes>
             </Suspense>
           </div>
         </LocaleRouter>

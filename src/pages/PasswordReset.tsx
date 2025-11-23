@@ -488,9 +488,9 @@ const PasswordReset: React.FC = () => {
         "url": window.location.origin,
         "logo": `${window.location.origin}/sos-logo.jpg`,
         "sameAs": [
-          "https://www.facebook.com/sosexpats",
-          "https://www.linkedin.com/company/sosexpats",
-          "https://twitter.com/sosexpats"
+          "https://www.facebook.com/sos-expat",
+          "https://www.linkedin.com/company/sos-expat",
+          "https://twitter.com/sos-expat"
         ]
       },
       "publisher": {
@@ -585,8 +585,8 @@ const PasswordReset: React.FC = () => {
     
     // Twitter Cards with i18n
     updateMetaTag('twitter:card', 'summary_large_image');
-    updateMetaTag('twitter:site', '@sosexpats');
-    updateMetaTag('twitter:creator', '@sosexpats');
+    updateMetaTag('twitter:site', '@sos-expat');
+    updateMetaTag('twitter:creator', '@sos-expat');
     updateMetaTag('twitter:title', metaData.ogTitle);
     updateMetaTag('twitter:description', metaData.ogDescription);
     updateMetaTag('twitter:image', `${window.location.origin}/images/twitter-password-reset-${currentLang}.jpg`);

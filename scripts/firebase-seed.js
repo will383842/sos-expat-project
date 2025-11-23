@@ -63,7 +63,7 @@ const MOBILE_FIRST_CONFIG = {
       description: "Connect with verified lawyers and expat experts worldwide. Get instant legal advice and expatriation support in multiple languages.",
       keywords: "expat support, legal advice, immigration lawyer, international law, expatriation",
       author: "SOS Expat Team",
-      canonical: "https://sosexpats.com",
+      canonical: "https://sos-expat.com",
       robots: "index, follow",
       language: "fr-FR",
       region: "FR"
