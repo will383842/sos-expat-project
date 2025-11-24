@@ -24,36 +24,7 @@ import {
 } from "../../utils/formatters";
 
 // Types
-interface Provider {
-  id: string;
-  name: string;
-  type:
-    | "lawyer"
-    | "expat"
-    | "accountant"
-    | "notary"
-    | "tax_consultant"
-    | "real_estate"
-    | "translator"
-    | "hr_consultant"
-    | "financial_advisor"
-    | "insurance_broker";
-  country: string;
-  nationality?: string;
-  languages: string[];
-  specialties: string[];
-  practiceCountries?: string[]; // Pays d'intervention
-  rating: number;
-  reviewCount: number;
-  yearsOfExperience: number;
-  isOnline: boolean;
-  avatar: string;
-  profilePhoto?: string;
-  description: string;
-  price: number;
-  duration: number;
-  isApproved?: boolean;
-}
+import type { Provider } from '@/types/provider';
 
 interface ModernProfileCardProps {
   provider: Provider;
@@ -589,4 +560,5 @@ export const ModernProfileCard = React.memo<ModernProfileCardProps>(
 ModernProfileCard.displayName = "ModernProfileCard";
 
 export default ModernProfileCard;
-export type { Provider, ModernProfileCardProps };
+export type { ModernProfileCardProps };
+export type { Provider } from '@/types/provider';

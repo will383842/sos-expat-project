@@ -279,7 +279,7 @@ const RegisterLawyer: React.FC = () => {
     profilePhoto: "",
     bio: "",
     educations: [""],
-    availability: "available",
+    availability: "offline",
     acceptTerms: false,
   };
 
@@ -473,9 +473,9 @@ const RegisterLawyer: React.FC = () => {
     };
 
     // Injection du JSON-LD
-    let scriptTag = document.querySelector('script[type="application/ld+json"]');
+    let scriptTag = document.querySelector('script[type="application/ld+json"]') as HTMLScriptElement | null;
     if (!scriptTag) {
-      scriptTag = document.createElement("script");
+      scriptTag = document.createElement("script") as HTMLScriptElement;
       scriptTag.type = "application/ld+json";
       document.head.appendChild(scriptTag);
     }
@@ -733,17 +733,17 @@ const RegisterLawyer: React.FC = () => {
         languages: languageCodes,
         languagesSpoken: languageCodes,
         specialties: form.specialties,
-        education: sanitizedEducations,
+        education: sanitizedEducations.join(', '),
         yearsOfExperience: Math.max(0, Math.min(60, form.yearsOfExperience)),
         graduationYear: Math.max(1980, Math.min(new Date().getFullYear(), form.graduationYear)),
         bio: sanitizeString(form.bio),
         description: sanitizeString(form.bio),
         availability: form.availability,
-        isOnline: form.availability === "available",
+        isOnline: false,  // ✅ Toujours hors ligne à la création
         isApproved: false,
         isVisible: false,
         isActive: true,
-        approvalStatus: 'pending',
+        approvalStatus: 'pending' as const,
         verificationStatus: 'pending',
         status: 'pending',
 

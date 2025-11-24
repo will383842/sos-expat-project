@@ -32,9 +32,10 @@ import { db } from '../../config/firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import { User } from '../../contexts/types';
 
-interface PendingProfile extends User {
+interface PendingProfile extends Omit<User, 'createdAt' | 'approvalStatus'> {
   id: string;
   createdAt: Timestamp;
+  approvalStatus: 'pending' | 'approved' | 'rejected';
 }
 
 type FilterType = 'all' | 'lawyer' | 'expat';

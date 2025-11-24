@@ -1,11 +1,12 @@
 // src/contexts/types.ts
+import { Timestamp } from 'firebase/firestore';
 
 // ===============================
 // TYPES DE BASE POUR L'APPLICATION
 // ===============================
 
 // Langues supportées par l'application
-export type SupportedLanguage = "fr" | "en" | "es";
+export type SupportedLanguage = "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt" | "ch" | "ar";
 
 // Rôles d'utilisateur dans l'application
 export type UserRole = "client" | "lawyer" | "expat" | "admin";
@@ -46,10 +47,8 @@ export interface User {
   type?: UserRole; // Alias pour compatibilité
   isApproved: boolean;
   approvalStatus: 'pending' | 'approved' | 'rejected';
-  approvedAt?: Date;
   approvedBy?: string;
   rejectionReason?: string;
-  reviewedAt?: Date;
   isActive: boolean;
   isVerified?: boolean;
   isVerifiedEmail?: boolean;
@@ -59,8 +58,8 @@ export interface User {
 
   stripeAccountId?: string;
   kycStatus?:
-  | "not_started"
-  | "in_progress"
+    | "not_started"
+    | "in_progress"
     | "incomplete"
     | "under_review"
     | "verified"
@@ -139,19 +138,20 @@ export interface User {
     browser?: string;
     loginDevice?: string;
     registrationDevice?: string;
-
-    lastActivity?: Date;              
-  lastActivityCheck?: Date;
-  autoOfflineEnabled?: boolean;
-  inactivityTimeoutMinutes?: number;
-  lastStatusChange?: Date;
+    lastActivity?: Date;
+    lastActivityCheck?: Date;
+    autoOfflineEnabled?: boolean;
+    inactivityTimeoutMinutes?: number;
+    lastStatusChange?: Date;
   };
 
-  // Horodatage
-  createdAt?: Date;
-  updatedAt?: Date;
-  lastLoginAt?: Date;
-  lastSeenAt?: Date;
+  // Horodatage (une seule déclaration avec support Date et Timestamp)
+  createdAt?: Date | Timestamp;
+  updatedAt?: Date | Timestamp;
+  approvedAt?: Date | Timestamp;
+  reviewedAt?: Date | Timestamp;
+  lastLoginAt?: Date | Timestamp;
+  lastSeenAt?: Date | Timestamp;
   registrationDate?: string;
 
   // Motivation (pour expatriés)
@@ -336,8 +336,8 @@ export interface Provider {
   isOnline: boolean;
 
   // Dates
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: Date | Timestamp;
+  updatedAt?: Date | Timestamp;
 }
 
 // ===============================

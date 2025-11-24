@@ -202,7 +202,11 @@ export const normalizeUserData = (
     interventionCountries: Array.isArray(userData?.interventionCountries)
       ? (userData.interventionCountries as string[])
       : [],
-    certifications: userData?.certifications as string | undefined,
+    certifications: Array.isArray(userData?.certifications)
+  ? (userData.certifications as string[])
+  : typeof userData?.certifications === 'string'
+    ? [userData.certifications]
+    : undefined,
     education: userData?.education as string | string[] | undefined,
     lawSchool: userData?.lawSchool as string | undefined,
     graduationYear: truthy(userData?.graduationYear)
@@ -235,7 +239,8 @@ export const normalizeUserData = (
     slug: userData?.slug as string | undefined,
     countrySlug: userData?.countrySlug as string | undefined,
     photoURL: userData?.photoURL as string | undefined,
-  } as User;
+    approvalStatus: (userData?.approvalStatus as 'pending' | 'approved' | 'rejected') || 'pending',
+  } as unknown as User;
 };
 
 // ========================= Collections bootstrapping =========================
@@ -665,8 +670,8 @@ export const getUserCallSessions = async (
       const clientParticipant = asDict(participants.client || {});
       const providerParticipant = asDict(participants.provider || {});
       
-      const createdAt = metadata.createdAt?.toDate?.() || new Date();
-      const updatedAt = metadata.updatedAt?.toDate?.() || new Date();
+      const createdAt = toDate(metadata.createdAt) || new Date();
+      const updatedAt = toDate(metadata.updatedAt) || new Date();
       
       return {
         id: docSnap.id,

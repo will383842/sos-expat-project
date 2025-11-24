@@ -782,7 +782,7 @@ const SOSCall: React.FC = () => {
     }
   });
 
-  const lang = (language as "fr" | "en") || "fr";
+ const lang = (language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "ch" | "pt" | "ar") || "fr";
 
   // ========================================
   // 🌍 GÉNÉRATION DYNAMIQUE DES LISTES TRADUITES

@@ -470,7 +470,7 @@ async function fetchFromProvider(provider: GeoAPIProvider): Promise<string | nul
       }
     } else {
       const data = await response.json();
-      countryCode = provider.getCountryCode(data);
+      countryCode = await provider.getCountryCode(data);
     }
     
     if (countryCode && typeof countryCode === 'string') {

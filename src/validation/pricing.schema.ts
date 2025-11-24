@@ -75,7 +75,7 @@ export const pricingNodeSchema = z
         path: ["totalAmount"],
       });
     }
-  }) satisfies z.ZodType<PricingNode>;
+  });
 
 /** Nœud d’override (tous les champs optionnels) */
 export const pricingOverrideNodeSchema = z
@@ -117,7 +117,7 @@ export const pricingOverrideNodeSchema = z
         });
       }
     }
-  }) satisfies z.ZodType<PricingOverrideNode>;
+  });
 
 /* =========================
    Schéma du document global
@@ -160,7 +160,7 @@ export const pricingDocSchema = z
     updatedBy: z.string().optional(),
   })
   // Validation transversale optionnelle (ex: rien d'autre à imposer ici)
-  .strict() satisfies z.ZodType<PricingDoc>;
+  .strict();
 
 /* =========================
    API de validation (helpers)

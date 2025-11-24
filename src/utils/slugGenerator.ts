@@ -874,5 +874,4 @@ export {
   COUNTRY_TRANSLATIONS,
   ROLE_TRANSLATIONS,
   COUNTRY_TO_ISO_CODE,
-  type ValidLocale,
 };

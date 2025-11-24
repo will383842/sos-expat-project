@@ -1204,7 +1204,15 @@ console.log('🔍 [Register] Tentative création compte avec:', {
     if (!user) return { date: null, device: null };
     const deviceType = deviceInfo.type;
     const os = deviceInfo.os;
-    return { date: user.lastLoginAt || null, device: `${deviceType} (${os})` };
+    let lastLogin: Date | null = null;
+    if (user.lastLoginAt) {
+      if (user.lastLoginAt instanceof Date) {
+        lastLogin = user.lastLoginAt;
+      } else if (typeof (user.lastLoginAt as any).toDate === 'function') {
+        lastLogin = (user.lastLoginAt as Timestamp).toDate();
+      }
+    }
+    return { date: lastLogin, device: `${deviceType} (${os})` };
   }, [user, deviceInfo]);
 
   const updateUserProfile = useCallback(async (updates: Partial<User>): Promise<void> => {

@@ -83,6 +83,9 @@ interface CreateUserData {
   languagesSpoken: string[];
   phone?: string;
   isApproved: boolean;
+  approvalStatus?: 'pending' | 'approved' | 'rejected';
+  verificationStatus?: string;
+  status?: string;
   createdAt: FieldValue;
 }
 
@@ -575,9 +578,9 @@ const RegisterClient: React.FC = () => {
     };
 
     // Injection du JSON-LD
-    let scriptTag = document.querySelector('script[type="application/ld+json"]#register-client-jsonld');
+    let scriptTag = document.querySelector('script[type="application/ld+json"]#register-client-jsonld') as HTMLScriptElement | null;
     if (!scriptTag) {
-      scriptTag = document.createElement("script");
+      scriptTag = document.createElement("script") as HTMLScriptElement;
       scriptTag.type = "application/ld+json";
       scriptTag.id = "register-client-jsonld";
       document.head.appendChild(scriptTag);
@@ -1227,8 +1230,6 @@ const RegisterClient: React.FC = () => {
                       onChange={handleLanguagesChange}
                       locale={currentLang}
                       placeholder={intl.formatMessage({ id: "registerClient.help.languagesPlaceholder" })}
-                      inputId="languages-select"
-                      aria-label={intl.formatMessage({ id: "registerClient.fields.languagesSpoken" })}
                     />
                   </div>
                 </Suspense>

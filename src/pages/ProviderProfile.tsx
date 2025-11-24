@@ -304,7 +304,7 @@ const toArrayFromAny = (val: unknown, preferred?: string): string[] => {
 };
 
 const pickDescription = (
-  p: Partial<SosProfile>,
+  p: any,
   preferredLang?: string,
   intl?: any
 ): string => {
@@ -793,7 +793,7 @@ useEffect(() => {
               helpTypes: toArrayFromAny(data?.helpTypes, preferredLangKey),
               operatingCountries: toArrayFromAny(data?.operatingCountries, preferredLangKey),
               residenceCountry: data?.residenceCountry || data?.country,
-            } as SosProfile;
+            } as unknown as SosProfile;
             foundProviderId = snap.id;
             break;
           }
@@ -825,7 +825,7 @@ useEffect(() => {
               helpTypes: toArrayFromAny(data?.helpTypes, preferredLangKey),
               operatingCountries: toArrayFromAny(data?.operatingCountries, preferredLangKey),
               residenceCountry: data?.residenceCountry || data?.country,
-            } as SosProfile;
+            } as unknown as SosProfile;
             foundProviderId = found.id;
             break;
           }
@@ -861,7 +861,7 @@ useEffect(() => {
               helpTypes: toArrayFromAny(data?.helpTypes, preferredLangKey),
               operatingCountries: toArrayFromAny(data?.operatingCountries, preferredLangKey),
               residenceCountry: data?.residenceCountry || data?.country,
-            } as SosProfile;
+            } as unknown as SosProfile;
             foundProviderId = m.id;
           }
         } catch (e) {
@@ -895,7 +895,7 @@ useEffect(() => {
             isVerified: !!navData.isVerified,
             operatingCountries: toArrayFromAny(navData.operatingCountries, preferredLangKey),
             residenceCountry: navData.residenceCountry || navData.country,
-          } as SosProfile;
+          } as unknown as SosProfile;
           foundProviderId = navData.id || "";
         }
       }
@@ -1068,7 +1068,6 @@ useEffect(() => {
         ? (provider.specialties || [])
         : (provider.helpTypes || []),
       locale: language,
-      uid: provider.uid || provider.id || realProviderId || '',
     });
     
     const seoUrl = `/${fullSlug}`;
@@ -1194,7 +1193,6 @@ useEffect(() => {
           ? (provider.specialties || [])
           : (provider.helpTypes || []),
         locale: language,
-        uid: provider.uid || provider.id || '',
       });
       
       const currentUrl = `${window.location.origin}/${fullSlug}`;
@@ -1571,8 +1569,8 @@ useEffect(() => {
             ? (provider.specialties || [])
             : (provider.helpTypes || []),
           locale: language,
-          uid: provider.uid || provider.id || ''
-        })}`}
+          })}`}
+
         ogImage={mainPhoto}
         ogType="profile"
         structuredData={structuredData}

@@ -636,7 +636,7 @@ const AdminReviews: React.FC = () => {
       const all = snap.docs.map((d) => {
         const data = d.data() as DocumentData;
         const created: Date = typeof data.createdAt?.toDate === 'function' ? data.createdAt.toDate() : new Date();
-        return { createdAt: created } as Pick<Review, 'createdAt'>;
+        return { createdAt: created };
       });
       const rows: ChartRow[] = Array.from({ length: 12 }).map((_, m) => {
         const row: ChartRow = { month: monthLabel(m, lang) };
@@ -669,7 +669,7 @@ const AdminReviews: React.FC = () => {
       const all = snap.docs.map((d) => {
         const data = d.data() as DocumentData;
         const created: Date = typeof data.createdAt?.toDate === 'function' ? data.createdAt.toDate() : new Date();
-        return { createdAt: created, rating: Number(data.rating) || 0 } as Pick<Review, 'createdAt' | 'rating'>;
+        return { createdAt: created, rating: Number(data.rating) || 0 };
       });
       const rows: StackedRow[] = Array.from({ length: 12 }).map((_, m) => ({
         month: monthLabel(m, lang), '1': 0, '2': 0, '3': 0, '4': 0, '5': 0
@@ -678,7 +678,8 @@ const AdminReviews: React.FC = () => {
         if (createdAt.getFullYear() !== currentYear) return;
         const m = createdAt.getMonth();
         const bucket = Math.max(1, Math.min(5, Math.round(rating))) as 1 | 2 | 3 | 4 | 5;
-        rows[m][String(bucket) as keyof StackedRow] += 1;
+        const bucketKey = String(bucket) as '1' | '2' | '3' | '4' | '5';
+rows[m][bucketKey] += 1;
       });
       setStackedData(rows);
     } catch (err) {

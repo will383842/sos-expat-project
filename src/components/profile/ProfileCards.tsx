@@ -224,7 +224,8 @@ const getLanguageLabel = (langCode: string, locale: SupportedLocale = 'fr'): str
   // Chercher dans languagesData en fallback
   const langData = languagesData.find(lang => lang.code?.toLowerCase() === normalized);
   if (langData) {
-    return langData[locale] || langData.fr || langData.en;
+    const data = langData as unknown as Record<string, string>;
+    return data[locale] || data['fr'] || data['en'] || '';
   }
   
   // Dernier fallback : retourner le code en majuscule

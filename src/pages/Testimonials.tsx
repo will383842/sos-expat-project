@@ -208,9 +208,6 @@ const createCountrySlug = (country: string): string => {
     
     // Portuguese country names (Português)
     Tailândia: "thailand",
-    Canadá: "canada",
-    "Reino Unido": "united-kingdom",
-    "Estados Unidos": "united-states",
     Alemanha: "germany",
     França: "france",
     Espanha: "spain",

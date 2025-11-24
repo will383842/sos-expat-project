@@ -584,6 +584,7 @@ interface ImageUploaderProps {
   locale?: Locale;
   hideNativeFileLabel?: boolean;
   isRegistration?: boolean;
+  alt?: string;
 }
 
 const ImageUploader: React.FC<ImageUploaderProps> = ({

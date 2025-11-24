@@ -703,8 +703,8 @@ const Dashboard: React.FC = () => {
         text: language === "fr" ? "Échoué" : "Failed",
       },
     };
-    const config = statusConfig[status];
-    // return <span >{config.text}</span>;
+   const config = statusConfig[status];
+    return <span className={config.className}>{config.text}</span>;
   };
 
   // Palette alignée Home (fallback si rôle non défini)

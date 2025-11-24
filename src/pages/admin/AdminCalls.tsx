@@ -409,12 +409,28 @@ const CallDurationTimer: React.FC<{ startTime?: Timestamp; isActive: boolean }> 
   );
 };
 
+// Badge pour le type d'appel
+const getCallTypeBadge = (providerType: 'lawyer' | 'expat') => {
+  if (providerType === 'lawyer') {
+    return (
+      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+        ⚖️ Avocat
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+      🌍 Expatrié
+    </span>
+  );
+};
+
 const MetricsCard: React.FC<{
   title: string;
   value: string | number;
   change?: number;
   changeLabel?: string;
-  icon: React.ComponentType<{ size: number; className?: string }>;
+  icon: React.ComponentType<{ size?: number | string; className?: string }>;
   color: string;
   isLoading?: boolean;
 }> = ({ title, value, change, changeLabel, icon: Icon, color, isLoading = false }) => (

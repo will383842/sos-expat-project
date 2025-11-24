@@ -277,7 +277,7 @@ const RegisterExpat: React.FC = () => {
     yearsAsExpat: 0,
     profilePhoto: "",
     bio: "",
-    availability: "available",
+    availability: "offline" as const,
     acceptTerms: false,
   };
 
@@ -456,9 +456,9 @@ const RegisterExpat: React.FC = () => {
       ]
     };
 
-    let scriptTag = document.querySelector('script[type="application/ld+json"]');
+    let scriptTag = document.querySelector('script[type="application/ld+json"]') as HTMLScriptElement | null;
     if (!scriptTag) {
-      scriptTag = document.createElement("script");
+      scriptTag = document.createElement("script") as HTMLScriptElement;
       scriptTag.type = "application/ld+json";
       document.head.appendChild(scriptTag);
     }
@@ -711,12 +711,12 @@ const RegisterExpat: React.FC = () => {
         yearsAsExpat: Math.max(1, Math.min(60, form.yearsAsExpat)),
         bio: sanitizeString(form.bio),
         description: sanitizeString(form.bio),
-        availability: form.availability,
-        isOnline: form.availability === "available",
+        availability: "offline" as const,
+        isOnline: false,  // ✅ Toujours hors ligne à la création
         isApproved: false,
         isVisible: false,
         isActive: true,
-        approvalStatus: 'pending',
+        approvalStatus: 'pending' as const,
         verificationStatus: 'pending',
         status: 'pending',
         preferredLanguage: form.preferredLanguage,

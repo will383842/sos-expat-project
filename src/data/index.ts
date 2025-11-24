@@ -5,8 +5,7 @@
 
 export * from './countries';
 export * from './nationalities';
-export * from './phone-codes';
 export * from './languages-spoken';
 export * from './lawyer-specialties';
 export * from './expat-help-types';
-
+export * from './phone-codes';

@@ -1,5 +1,13 @@
 // src/data/profile-photos.ts
-import type { AaaPhoto } from '../pages/admin/AdminAaaProfiles';
+
+// Type défini localement pour éviter import circulaire
+export interface AaaPhoto {
+  url: string;
+  role: 'lawyer' | 'expat';
+  gender: 'male' | 'female';
+  countries?: string[];
+  weight?: number;
+}
 
 // Exemple minimal â€” complÃ¨te avec tes URLs DALLÂ·E / libres de droits
 export const PROFILE_PHOTOS: AaaPhoto[] = [

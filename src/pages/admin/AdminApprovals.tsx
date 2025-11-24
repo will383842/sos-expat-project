@@ -42,13 +42,13 @@ import { User } from '../../contexts/types';
 import AdminLayout from '../../components/admin/AdminLayout';
 import Modal from '../../components/common/Modal';
 
-interface PendingProfile extends User {
+interface PendingProfile extends Omit<User, 'createdAt' | 'approvalStatus'> {
   id: string;
   createdAt: Timestamp;
   approvedAt?: Timestamp;
   rejectedAt?: Timestamp;
   reviewedAt?: Timestamp;
-  approvalStatus?: 'pending' | 'approved' | 'rejected';
+  approvalStatus: 'pending' | 'approved' | 'rejected';
   verificationStatus?: 'pending' | 'approved' | 'rejected';
   status?: 'active' | 'suspended' | 'pending' | 'banned';
   rejectionReason?: string;

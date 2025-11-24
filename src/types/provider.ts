@@ -1,12 +1,25 @@
 // src/types/provider.ts
+import { Timestamp } from 'firebase/firestore';
+
+// Types de prestataires disponibles
+export type ProviderType = 
+  | 'lawyer' 
+  | 'expat' 
+  | 'accountant' 
+  | 'notary' 
+  | 'tax_consultant' 
+  | 'real_estate' 
+  | 'translator' 
+  | 'hr_consultant' 
+  | 'financial_advisor' 
+  | 'insurance_broker';
 
 // Interface Provider unifiée pour assurer la cohérence entre tous les composants
-// Basée sur l'interface originale de Providers.tsx + extensions pour tous les autres fichiers
 export interface Provider {
   // Champs obligatoires de base (présents dans Providers.tsx original)
   id: string;
   name: string;
-  type: 'lawyer' | 'expat';
+ type: ProviderType;
   country: string;
   languages: string[];
   specialties: string[];
@@ -17,15 +30,15 @@ export interface Provider {
   avatar: string;
   description: string;
   price: number;
-  isVisible: boolean;
-  isApproved: boolean;
-  isBanned: boolean;
+  isVisible?: boolean;
+  isApproved?: boolean;
+  isBanned?: boolean;
 
   // Champs étendus pour compatibilité avec les autres composants
   fullName?: string;
   firstName?: string;
   lastName?: string;
-  role: 'lawyer' | 'expat'; // Alias de type pour compatibilité
+  role?: ProviderType; // Alias de type pour compatibilité (optionnel)
   currentCountry?: string;
   currentPresenceCountry?: string;
   profilePhoto?: string;
@@ -42,12 +55,14 @@ export interface Provider {
   yearsAsExpat?: number;
   graduationYear?: string;
   expatriationYear?: string;
-  isActive: boolean; // Obligatoire avec fallback
+  isActive?: boolean;
   lastActivity?: Timestamp;
   lastActivityCheck?: Timestamp;
   autoOfflineEnabled?: boolean;
   inactivityTimeoutMinutes?: number;
   lastStatusChange?: Timestamp;
+  nationality?: string;
+  practiceCountries?: string[]; // Pays d'intervention
 }
 
 /**

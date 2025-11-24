@@ -20,9 +20,11 @@ const SendToContact: React.FC = () => {
     try {
       await updateContactMessageStatus(email, {
         status: result.success ? 'sent' : 'error',
-        replyMessage: adminReply,
-        respondedAt: new Date().toISOString(),
-        error: result.error || '',
+        adminReply: adminReply,
+        repliedAt: new Date(),
+        replyStatus: result.success ? 'success' : 'error',
+        replyError: result.error || '',
+        isReplied: result.success,
       });
 
       setStatus(result.success ? '✅ Message envoyé avec succès' : `❌ Erreur : ${result.error}`);

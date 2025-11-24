@@ -154,7 +154,8 @@ export const measurePerformance = (): Metrics | undefined => {
       try {
         // Largest Contentful Paint (LCP)
         const lcpObserver = new PerformanceObserver((list) => {
-          const lastEntry = list.getEntries().at(-1) as PerformanceEntry | undefined;
+          const entries = list.getEntries();
+const lastEntry = entries[entries.length - 1] as PerformanceEntry | undefined;
           if (lastEntry && typeof lastEntry.startTime === "number") {
             metrics.webVitals.LCP = Math.round(lastEntry.startTime);
           }

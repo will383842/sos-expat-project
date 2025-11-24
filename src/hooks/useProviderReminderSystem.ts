@@ -73,7 +73,11 @@ export const useProviderReminderSystem = ({
         (!reminderState.lastSoundPlayed ||
           now.getTime() - reminderState.lastSoundPlayed.getTime() >= toMs(PROVIDER_ACTIVITY_CONFIG.SOUND_INTERVAL_MINUTES))
       ) {
-        playAvailabilityReminder('sound', preferredLanguage);
+        playAvailabilityReminder('sound', {
+          enableSound: preferences.soundEnabled,
+          enableVoice: preferences.voiceEnabled,
+          enableModal: preferences.modalEnabled,
+        });
         setReminderState(prev => ({ ...prev, lastSoundPlayed: now }));
       }
 
@@ -83,7 +87,11 @@ export const useProviderReminderSystem = ({
         (!reminderState.lastVoicePlayed ||
           now.getTime() - reminderState.lastVoicePlayed.getTime() >= toMs(PROVIDER_ACTIVITY_CONFIG.VOICE_INTERVAL_MINUTES))
       ) {
-        playAvailabilityReminder('voice', preferredLanguage);
+        playAvailabilityReminder('voice', {
+          enableSound: preferences.soundEnabled,
+          enableVoice: preferences.voiceEnabled,
+          enableModal: preferences.modalEnabled,
+        });
         setReminderState(prev => ({ ...prev, lastVoicePlayed: now }));
       }
 

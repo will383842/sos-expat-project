@@ -6,12 +6,14 @@ import { parsePhoneNumberFromString } from "libphonenumber-js";
 interface IntlPhoneInputProps {
   value?: string;
   onChange: (value: string) => void;
+  onBlur?: () => void;
   defaultCountry?: string;
   placeholder?: string;
   className?: string;
   disabled?: boolean;
   name?: string;
   id?: string;
+  inputProps?: Record<string, unknown>;
   "aria-required"?: boolean;
   "aria-invalid"?: boolean;
   "aria-describedby"?: string;
@@ -29,12 +31,14 @@ const normalizeCountry = (country?: string): string => {
 const IntlPhoneInput: React.FC<IntlPhoneInputProps> = ({
   value,
   onChange,
+  onBlur,
   defaultCountry = "fr",
   placeholder,
   className = "",
   disabled = false,
   name,
   id,
+  inputProps: externalInputProps,
   "aria-required": ariaRequired,
   "aria-invalid": ariaInvalid,
   "aria-describedby": ariaDescribedBy,
@@ -102,9 +106,11 @@ const IntlPhoneInput: React.FC<IntlPhoneInputProps> = ({
           id,
           autoComplete: "tel",
           onKeyDown: handleKeyDown,
+          onBlur,
           "aria-required": ariaRequired,
           "aria-invalid": ariaInvalid,
           "aria-describedby": ariaDescribedBy,
+          ...externalInputProps,
         }}
         // ✅ Utilise uniquement les classes CSS (pas de styles inline)
         containerClass="react-tel-input"
