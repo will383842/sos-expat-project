@@ -28,6 +28,16 @@ const LocaleRouter: React.FC<LocaleRouterProps> = ({ children }) => {
   useEffect(() => {
     const { pathname } = location;
     
+    // CRITICAL: Decode URL to handle Unicode characters (Hindi, Chinese, Arabic, Russian)
+    // Browser may encode Unicode in pathname, so we need to decode it
+    let decodedPathname: string;
+    try {
+      decodedPathname = decodeURIComponent(pathname);
+    } catch (e) {
+      // If decoding fails (invalid encoding), use original
+      decodedPathname = pathname;
+    }
+    
     // Skip locale handling for admin routes, marketing routes, and payment-success (backward compatibility)
     if (
       pathname.startsWith("/admin") ||
@@ -43,25 +53,25 @@ const LocaleRouter: React.FC<LocaleRouterProps> = ({ children }) => {
       if (!supportedLocales.includes(params.locale)) {
         // Invalid locale - redirect to valid one
         const locale = getLocaleString(language);
-        const { pathWithoutLocale } = parseLocaleFromPath(pathname);
+        const { pathWithoutLocale } = parseLocaleFromPath(decodedPathname);
         navigate(`/${locale}${pathWithoutLocale}`, { replace: true });
         return;
       }
     }
 
     // If path doesn't have locale prefix and is not root, redirect to add it
-    if (!hasLocalePrefix(pathname) && pathname !== "/") {
+    if (!hasLocalePrefix(decodedPathname) && decodedPathname !== "/") {
       const locale = getLocaleString(language);
-      const newPath = `/${locale}${pathname}`;
-      if (newPath !== pathname) {
+      const newPath = `/${locale}${decodedPathname}`;
+      if (newPath !== decodedPathname) {
         navigate(newPath, { replace: true });
       }
       return;
     }
 
     // If path has locale prefix, extract and update language
-    if (hasLocalePrefix(pathname)) {
-      const { lang, pathWithoutLocale } = parseLocaleFromPath(pathname);
+    if (hasLocalePrefix(decodedPathname)) {
+      const { lang, pathWithoutLocale } = parseLocaleFromPath(decodedPathname);
       
       // Only update language if it's different - this syncs URL locale with app language
       // This happens when user navigates directly to a URL with a different locale
@@ -71,6 +81,7 @@ const LocaleRouter: React.FC<LocaleRouterProps> = ({ children }) => {
       
       // Check if the path contains an old slug that should be translated
       // e.g., /en-us/sos-appel should redirect to /en-us/emergency-call
+      // e.g., /en-us/आपात-कॉल should redirect to /en-us/emergency-call (Hindi to English)
       if (pathWithoutLocale && pathWithoutLocale !== "/") {
         const pathSegments = pathWithoutLocale.split("/").filter(Boolean);
         if (pathSegments.length > 0) {
@@ -91,7 +102,7 @@ const LocaleRouter: React.FC<LocaleRouterProps> = ({ children }) => {
           }
         }
       }
-    } else if (pathname === "/") {
+    } else if (decodedPathname === "/") {
       // Root path without locale - redirect to default locale
       const locale = getLocaleString(language);
       navigate(`/${locale}`, { replace: true });

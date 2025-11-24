@@ -7,7 +7,7 @@ import React, {
   useState,
 } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { getLocaleString, parseLocaleFromPath } from "../../multilingual-system";
+import { getLocaleString, parseLocaleFromPath, getRouteKeyFromSlug, getTranslatedRouteSlug } from "../../multilingual-system";
 import {
   Menu,
   X,
@@ -660,6 +660,16 @@ const LanguageDropdown = memo<{
       setOpen(false);
       
       // Update the route to reflect the new language
+      // CRITICAL: Decode URL to handle Unicode characters (Hindi, Chinese, Arabic, Russian)
+      // Browser may encode Unicode in pathname, so we need to decode it
+      let decodedPathname: string;
+      try {
+        decodedPathname = decodeURIComponent(location.pathname);
+      } catch (e) {
+        // If decoding fails (invalid encoding), use original
+        decodedPathname = location.pathname;
+      }
+      
       const { pathname } = location;
       
       // Skip route update for admin routes
@@ -671,17 +681,37 @@ const LanguageDropdown = memo<{
         return;
       }
       
-      // Get current path without locale
-      const { pathWithoutLocale } = parseLocaleFromPath(pathname);
+      // Get current path without locale - use DECODED pathname for Unicode support
+      const { pathWithoutLocale } = parseLocaleFromPath(decodedPathname);
       const newLocale = getLocaleString(langCode);
       
-      // Build new path with new locale
-      const newPath = pathWithoutLocale === "/" 
-        ? `/${newLocale}` 
-        : `/${newLocale}${pathWithoutLocale}`;
+      // Translate the slug if it's a translatable route
+      let translatedPath = pathWithoutLocale;
+      if (pathWithoutLocale && pathWithoutLocale !== "/") {
+        const pathSegments = pathWithoutLocale.split("/").filter(Boolean);
+        if (pathSegments.length > 0) {
+          const firstSegment = pathSegments[0];
+          // Now getRouteKeyFromSlug should work with Unicode characters (Hindi, Chinese, Arabic, Russian)
+          const routeKey = getRouteKeyFromSlug(firstSegment);
+          
+          // If this is a known route key slug, translate it to the new language
+          if (routeKey) {
+            const translatedSlug = getTranslatedRouteSlug(routeKey, langCode);
+            const restOfPath = pathSegments.slice(1).join("/");
+            translatedPath = `/${translatedSlug}${restOfPath ? `/${restOfPath}` : ""}`;
+          }
+        }
+      }
       
-      // Navigate to new locale route
-      navigate(newPath, { replace: true });
+      // Build new path with new locale and translated slug
+      const newPath = translatedPath === "/" 
+        ? `/${newLocale}` 
+        : `/${newLocale}${translatedPath}`;
+      
+      // Only navigate if the path actually changed
+      if (newPath !== decodedPathname) {
+        navigate(newPath, { replace: true });
+      }
       
       window.gtag?.("event", "language_change", {
         event_category: "engagement",

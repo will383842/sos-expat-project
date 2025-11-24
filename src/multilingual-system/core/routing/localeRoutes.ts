@@ -521,11 +521,33 @@ export function getAllTranslatedSlugs(routeKey: RouteKey): string[] {
  * @returns The route key if found, null otherwise
  */
 export function getRouteKeyFromSlug(slug: string): RouteKey | null {
+  // Normalize the slug - try decoding if it's URL-encoded
+  // This handles cases where Unicode characters (Hindi, Chinese, Arabic, Russian) might be encoded
+  let normalizedSlug = slug;
+  
+  try {
+    // Try to decode URL-encoded characters
+    const decoded = decodeURIComponent(slug);
+    // Only use decoded if it's different (was actually encoded)
+    if (decoded !== slug) {
+      normalizedSlug = decoded;
+    }
+  } catch {
+    // If decoding fails, slug might not be encoded, use as-is
+    normalizedSlug = slug;
+  }
+  
+  // Search through all route translations
   for (const [key, translations] of Object.entries(ROUTE_TRANSLATIONS)) {
-    if (Object.values(translations).includes(slug)) {
+    const translationValues = Object.values(translations);
+    
+    // Check both original slug and normalized (decoded) slug
+    // This handles both encoded and unencoded Unicode characters
+    if (translationValues.includes(slug) || translationValues.includes(normalizedSlug)) {
       return key as RouteKey;
     }
   }
+  
   return null;
 }
 

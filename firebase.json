@@ -48,6 +48,14 @@
         }
       },
       {
+        "source": "/sitemap_index.xml",
+        "destination": "/sitemaps/global/sitemap-index.xml"
+      },
+      {
+        "source": "/sitemap_index.xml.gz",
+        "destination": "/sitemaps/global/sitemap-index.xml.gz"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
@@ -68,10 +76,9 @@
         ]
       },
       {
-        "source": "/sitemaps/*.xml.gz",
+        "source": "/sitemap_index.xml",
         "headers": [
-          { "key": "Content-Type", "value": "application/xml" },
-          { "key": "Content-Encoding", "value": "gzip" },
+          { "key": "Content-Type", "value": "application/xml; charset=utf-8" },
           { "key": "Cache-Control", "value": "public, max-age=3600" }
         ]
       },
