@@ -1,23 +1,40 @@
+# Robots.txt pour SOS-Expat.com
+# https://sos-expat.com
+
 User-agent: *
 Allow: /
 
-# Sitemaps
+# Pages à ne pas indexer
+Disallow: /dashboard
+Disallow: /profile/edit
+Disallow: /call-checkout
+Disallow: /booking-request
+Disallow: /payment-success
+Disallow: /admin
+Disallow: /api/
+Disallow: /_next/
+Disallow: /assets/
+
+# Fichiers statiques autorisés
+Allow: /assets/*.css
+Allow: /assets/*.js
+Allow: /assets/*.png
+Allow: /assets/*.jpg
+Allow: /assets/*.svg
+Allow: /assets/*.woff2
+
+# Sitemap
 Sitemap: https://sos-expat.com/sitemap.xml
-Sitemap: https://sos-expat.com/sitemap-lawyers.xml
-Sitemap: https://sos-expat.com/sitemap-expats.xml
 
-# Disallow admin pages
-Disallow: /admin/
-Disallow: /admin/login
-Disallow: /admin-direct
-Disallow: /test-production
+# Délai entre requêtes (pour ne pas surcharger le serveur)
+Crawl-delay: 1
 
-# Allow profile pages for SEO
-Allow: /avocat/
-Allow: /expatrie/
+# Règles spécifiques pour Googlebot
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
 
-# Allow country pages
-Allow: /pays/
-
-# Allow language pages
-Allow: /langue/
+# Règles spécifiques pour Bingbot
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1

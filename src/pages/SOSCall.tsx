@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import {
   Phone,
   Star,
@@ -16,6 +17,11 @@ import {
   Globe,
   Users,
   Zap,
+  HelpCircle,
+  Shield,
+  Clock,
+  MessageCircle,
+  CheckCircle,
 } from "lucide-react";
 import {
   collection,
@@ -30,9 +36,9 @@ import {
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import Layout from "../components/layout/Layout";
-import SEOHead from "../components/layout/SEOHead";
 import { useApp } from "../contexts/AppContext";
 import { FormattedMessage, useIntl } from "react-intl";
+
 // ========================================
 // 🌍 IMPORTS POUR INTERNATIONALISATION
 // ========================================
@@ -112,8 +118,13 @@ interface RawProfile extends DocumentData {
   profilePhoto?: string;
 }
 
+interface FAQItem {
+  questionKey: string;
+  answerKey: string;
+}
+
 /* =========================
-   Utils identiques à ModernProfileCard
+   Constants
 ========================= */
 const CARD_DIMENSIONS = {
   width: 320,
@@ -121,6 +132,51 @@ const CARD_DIMENSIONS = {
   imageHeight: 288,
   contentHeight: 232,
 } as const;
+
+const PAGE_SIZE = 9;
+const BASE_URL = "https://sos-expat.com";
+const PAGE_PATH = "/sos-appel";
+
+// ========================================
+// 🔍 SEO CONSTANTS - URLS et LOCALES
+// ========================================
+
+// URLs des réseaux sociaux (constantes, jamais traduites)
+const SOCIAL_URLS = {
+  facebook: "https://www.facebook.com/sosexpat",
+  linkedin: "https://www.linkedin.com/company/sosexpat",
+  twitter: "https://twitter.com/sosexpat",
+  instagram: "https://www.instagram.com/sosexpat",
+} as const;
+
+// Mapping correct og:locale pour chaque langue
+const OG_LOCALES: Record<string, string> = {
+  fr: "fr_FR",
+  en: "en_US",
+  es: "es_ES",
+  de: "de_DE",
+  pt: "pt_BR",
+  ru: "ru_RU",
+  zh: "zh_CN",
+  ar: "ar_SA",
+  hi: "hi_IN",
+  ch: "zh_CN",
+};
+
+// Langues supportées pour hreflang
+const SUPPORTED_LANGUAGES = ['fr', 'en', 'es', 'de', 'pt', 'ru', 'zh', 'ar', 'hi'] as const;
+
+// 8 FAQ pour Featured Snippet (Position 0)
+const FAQ_ITEMS: FAQItem[] = [
+  { questionKey: "sosCall.faq.q1", answerKey: "sosCall.faq.a1" },
+  { questionKey: "sosCall.faq.q2", answerKey: "sosCall.faq.a2" },
+  { questionKey: "sosCall.faq.q3", answerKey: "sosCall.faq.a3" },
+  { questionKey: "sosCall.faq.q4", answerKey: "sosCall.faq.a4" },
+  { questionKey: "sosCall.faq.q5", answerKey: "sosCall.faq.a5" },
+  { questionKey: "sosCall.faq.q6", answerKey: "sosCall.faq.a6" },
+  { questionKey: "sosCall.faq.q7", answerKey: "sosCall.faq.a7" },
+  { questionKey: "sosCall.faq.q8", answerKey: "sosCall.faq.a8" },
+];
 
 const LANGUAGE_MAP: Record<string, string> = {
   Français: "Français",
@@ -185,6 +241,9 @@ const PROFESSION_ICONS: Record<string, { icon: string; bgColor: string; textColo
   },
 };
 
+/* =========================
+   Utils
+========================= */
 const getBrowserLanguage = (): "fr" | "en" | "es" => {
   if (typeof window === "undefined") return "fr";
   const browserLang = navigator.language.toLowerCase();
@@ -251,49 +310,24 @@ const slugify = (s: string) =>
 /* =========================
    🌍 Fonctions de traduction dynamique
 ========================= */
-
-/**
- * Convertit la locale de l'app (fr/en/es/de/pt/ru/hi/ch/ar) 
- * vers la clé de langue du fichier countries.ts
- * 
- * @param locale - Langue de l'interface (ex: "fr", "en", "es")
- * @returns Clé pour accéder au nom du pays (ex: "nameFr", "nameEn")
- * 
- * @example
- * getCountryLanguageKey("fr") // Returns "nameFr"
- * getCountryLanguageKey("es") // Returns "nameEs"
- */
 const getCountryLanguageKey = (locale: string): LanguageKey => {
   const mapping: Record<string, LanguageKey> = {
-    'fr': 'nameFr',   // Français
-    'en': 'nameEn',   // English
-    'es': 'nameEs',   // Español
-    'de': 'nameDe',   // Deutsch
-    'pt': 'namePt',   // Português
-    'ru': 'nameRu',   // Русский
-    'hi': 'nameFr',   // हिन्दी (fallback sur français si pas dispo)
-    'ch': 'nameZh',   // 中文
-    'zh': 'nameZh',   // 中文 (alias)
-    'ar': 'nameAr',   // العربية
-    'it': 'nameIt',   // Italiano
-    'nl': 'nameNl',   // Nederlands
+    'fr': 'nameFr',
+    'en': 'nameEn',
+    'es': 'nameEs',
+    'de': 'nameDe',
+    'pt': 'namePt',
+    'ru': 'nameRu',
+    'hi': 'nameFr',
+    'ch': 'nameZh',
+    'zh': 'nameZh',
+    'ar': 'nameAr',
+    'it': 'nameIt',
+    'nl': 'nameNl',
   };
-  
-  // Si la langue n'est pas dans la liste, retourne anglais par défaut
   return mapping[locale.toLowerCase()] || 'nameEn';
 };
 
-/**
- * Convertit la locale de l'app vers le format SupportedLocale
- * utilisé par le fichier languages.ts
- * 
- * @param locale - Langue de l'interface
- * @returns Locale supportée par languages.ts
- * 
- * @example
- * getLanguagesLocale("fr") // Returns "fr"
- * getLanguagesLocale("zh") // Returns "ch"
- */
 const getLanguagesLocale = (locale: string): SupportedLocale => {
   const mapping: Record<string, SupportedLocale> = {
     'fr': 'fr',
@@ -304,71 +338,285 @@ const getLanguagesLocale = (locale: string): SupportedLocale => {
     'ru': 'ru',
     'hi': 'hi',
     'ch': 'ch',
-    'zh': 'ch',  // Chinois zh → ch
+    'zh': 'ch',
     'ar': 'ar',
   };
-  
   return mapping[locale.toLowerCase()] || 'fr';
 };
 
-/**
- * Génère la liste complète des 195 pays traduits
- * dans la langue de l'interface utilisateur
- * 
- * @param locale - Langue de l'interface (ex: "fr", "en", "es")
- * @returns Array des noms de pays traduits, triés par priorité puis alphabétiquement
- * 
- * @example
- * getCountryOptions("fr") 
- * // Returns ["Royaume-Uni", "France", "Allemagne", ..., "Zimbabwe"]
- * 
- * getCountryOptions("en")
- * // Returns ["United Kingdom", "France", "Germany", ..., "Zimbabwe"]
- */
 const getCountryOptions = (locale: string): string[] => {
-  // Obtient la clé correcte pour la langue (nameFr, nameEn, etc.)
   const langKey = getCountryLanguageKey(locale);
-  
-  // Récupère tous les pays triés
-  // getSortedCountries gère déjà :
-  // - Le tri par priorité (top 6 pays en premier)
-  // - Le tri alphabétique
   return getSortedCountries(langKey)
-    .filter(country => country.code !== 'SEPARATOR')  // Enlève le séparateur visuel
-    .map(country => country[langKey]);  // Extrait juste le nom traduit
+    .filter(country => country.code !== 'SEPARATOR')
+    .map(country => country[langKey]);
 };
 
-/**
- * Génère la liste complète des langues parlées traduites
- * dans la langue de l'interface utilisateur
- * 
- * @param locale - Langue de l'interface
- * @returns Array des noms de langues traduits, triés alphabétiquement
- * 
- * @example
- * getLanguageOptions("fr")
- * // Returns ["Allemand", "Anglais", "Arabe", ..., "Vietnamien"]
- * 
- * getLanguageOptions("en")
- * // Returns ["Arabic", "Chinese", "English", ..., "Vietnamese"]
- */
 const getLanguageOptions = (locale: string): string[] => {
-  // Convertit vers le format SupportedLocale
   const supportedLocale = getLanguagesLocale(locale);
-  
-  // Pour chaque langue, récupère son label traduit
   return languagesData
     .map(lang => getLanguageLabel(lang, supportedLocale))
     .sort((a, b) => {
-      // Tri alphabétique dans la locale appropriée
-      // Pour le chinois, utilise 'zh' au lieu de 'ch'
       const sortLocale = supportedLocale === 'ch' ? 'zh' : supportedLocale;
       return a.localeCompare(b, sortLocale);
     });
 };
 
 /* =========================
-   ModernProfileCard Component (exact copy)
+   🔍 JSON-LD Schema Generator (SEO)
+========================= */
+const generateAllSchemas = (
+  intl: ReturnType<typeof useIntl>,
+  providers: Provider[],
+  selectedType: string,
+  onlineCount: number,
+  currentLang: string  // Ajout de la langue courante
+) => {
+  // URL localisée de la page courante
+  const localizedPageUrl = `${BASE_URL}/${currentLang}${PAGE_PATH}`;
+  
+  // 1. Organization Schema (URLs constantes, non localisées)
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": `${BASE_URL}/#organization`,
+    name: "SOS Expat",
+    url: BASE_URL,
+    logo: {
+      "@type": "ImageObject",
+      url: `${BASE_URL}/logo.png`,
+      width: 512,
+      height: 512,
+    },
+    description: intl.formatMessage({ id: "sosCall.seo.organizationDescription" }),
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: intl.formatMessage({ id: "sosCall.seo.contactType" }),
+      availableLanguage: ["French", "English", "Spanish", "German", "Portuguese", "Russian", "Chinese", "Arabic", "Hindi"],
+    },
+    sameAs: Object.values(SOCIAL_URLS),
+  };
+
+  // 2. WebSite Schema
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${BASE_URL}/#website`,
+    url: BASE_URL,
+    name: "SOS Expat",
+    description: intl.formatMessage({ id: "sosCall.seo.websiteDescription" }),
+    publisher: { "@id": `${BASE_URL}/#organization` },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${BASE_URL}/search?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+    inLanguage: intl.locale,
+  };
+
+  // 3. Service Schema
+  const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": `${BASE_URL}${PAGE_PATH}/#service`,
+    name: intl.formatMessage({ id: "sosCall.seo.serviceName" }),
+    description: intl.formatMessage({ id: "sosCall.seo.serviceDescription" }),
+    provider: { "@id": `${BASE_URL}/#organization` },
+    serviceType: intl.formatMessage({ id: "sosCall.seo.serviceType" }),
+    areaServed: {
+      "@type": "Place",
+      name: intl.formatMessage({ id: "sosCall.seo.areaServed" }),
+    },
+    audience: {
+      "@type": "Audience",
+      audienceType: intl.formatMessage({ id: "sosCall.seo.audienceType" }),
+    },
+    availableChannel: {
+      "@type": "ServiceChannel",
+      serviceUrl: `${BASE_URL}${PAGE_PATH}`,
+      servicePhone: "+33 1 XX XX XX XX",
+      availableLanguage: ["French", "English", "Spanish", "German", "Portuguese", "Russian", "Chinese", "Arabic", "Hindi"],
+    },
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: intl.formatMessage({ id: "sosCall.seo.offerCatalogName" }),
+      itemListElement: [
+        {
+          "@type": "Offer",
+          itemOffered: {
+            "@type": "Service",
+            name: intl.formatMessage({ id: "sosCall.seo.lawyerServiceName" }),
+            description: intl.formatMessage({ id: "sosCall.seo.lawyerServiceDescription" }),
+          },
+          priceSpecification: {
+            "@type": "PriceSpecification",
+            price: "49",
+            priceCurrency: "EUR",
+            unitText: intl.formatMessage({ id: "sosCall.seo.priceUnit" }),
+          },
+        },
+        {
+          "@type": "Offer",
+          itemOffered: {
+            "@type": "Service",
+            name: intl.formatMessage({ id: "sosCall.seo.expatServiceName" }),
+            description: intl.formatMessage({ id: "sosCall.seo.expatServiceDescription" }),
+          },
+          priceSpecification: {
+            "@type": "PriceSpecification",
+            price: "19",
+            priceCurrency: "EUR",
+            unitText: intl.formatMessage({ id: "sosCall.seo.priceUnit" }),
+          },
+        },
+      ],
+    },
+    aggregateRating: providers.length > 0 ? {
+      "@type": "AggregateRating",
+      ratingValue: (providers.reduce((sum, p) => sum + p.rating, 0) / providers.length).toFixed(1),
+      reviewCount: providers.reduce((sum, p) => sum + p.reviewCount, 0),
+      bestRating: 5,
+      worstRating: 1,
+    } : undefined,
+  };
+
+  // 4. WebPage Schema (URL localisée)
+  const webPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": `${BASE_URL}${PAGE_PATH}/#webpage`,
+    url: localizedPageUrl,
+    name: intl.formatMessage({ id: "sosCall.seo.pageTitle" }),
+    description: intl.formatMessage({ id: "sosCall.seo.pageDescription" }),
+    isPartOf: { "@id": `${BASE_URL}/#website` },
+    about: { "@id": `${BASE_URL}${PAGE_PATH}/#service` },
+    primaryImageOfPage: {
+      "@type": "ImageObject",
+      url: `${BASE_URL}/og-image-sos-call.jpg`,
+      width: 1200,
+      height: 630,
+    },
+    breadcrumb: { "@id": `${BASE_URL}${PAGE_PATH}/#breadcrumb` },
+    inLanguage: intl.locale,
+    datePublished: "2024-01-01T00:00:00+00:00",
+    dateModified: new Date().toISOString(),
+  };
+
+  // 5. BreadcrumbList Schema (URLs localisées)
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "@id": `${BASE_URL}${PAGE_PATH}/#breadcrumb`,
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: intl.formatMessage({ id: "sosCall.seo.breadcrumb.home" }),
+        item: `${BASE_URL}/${currentLang}`,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: intl.formatMessage({ id: "sosCall.seo.breadcrumb.sosCall" }),
+        item: localizedPageUrl,
+      },
+    ],
+  };
+
+  // 6. FAQPage Schema (8 questions pour Featured Snippet)
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": `${BASE_URL}${PAGE_PATH}/#faq`,
+    mainEntity: FAQ_ITEMS.map((faq) => ({
+      "@type": "Question",
+      name: intl.formatMessage({ id: faq.questionKey }),
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: intl.formatMessage({ id: faq.answerKey }),
+      },
+    })),
+  };
+
+  // 7. ItemList Schema (liste des prestataires)
+  const itemListSchema = providers.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "@id": `${BASE_URL}${PAGE_PATH}/#providers`,
+    name: intl.formatMessage({ id: "sosCall.seo.providerListName" }),
+    description: intl.formatMessage({ id: "sosCall.seo.providerListDescription" }),
+    numberOfItems: providers.length,
+    itemListElement: providers.slice(0, 10).map((provider, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "Person",
+        "@id": `${BASE_URL}/prestataire/${provider.id}`,
+        name: provider.name,
+        jobTitle: provider.type === "lawyer" 
+          ? intl.formatMessage({ id: "sosCall.profession.lawyer" })
+          : intl.formatMessage({ id: "sosCall.profession.expat" }),
+        image: provider.avatar || `${BASE_URL}/default-avatar.png`,
+        worksFor: { "@id": `${BASE_URL}/#organization` },
+        knowsLanguage: provider.languages,
+        workLocation: {
+          "@type": "Place",
+          name: provider.country,
+        },
+        aggregateRating: {
+          "@type": "AggregateRating",
+          ratingValue: provider.rating.toFixed(1),
+          reviewCount: provider.reviewCount,
+          bestRating: 5,
+          worstRating: 1,
+        },
+      },
+    })),
+  } : null;
+
+  // 8. ProfessionalService Schema
+  const professionalServiceSchema = {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "@id": `${BASE_URL}${PAGE_PATH}/#professional-service`,
+    name: intl.formatMessage({ id: "sosCall.seo.professionalServiceName" }),
+    description: intl.formatMessage({ id: "sosCall.seo.professionalServiceDescription" }),
+    url: `${BASE_URL}${PAGE_PATH}`,
+    telephone: "+33 1 XX XX XX XX",
+    priceRange: "€€",
+    openingHoursSpecification: {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+      opens: "00:00",
+      closes: "23:59",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: 48.8566,
+      longitude: 2.3522,
+    },
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: "FR",
+    },
+  };
+
+  return [
+    organizationSchema,
+    websiteSchema,
+    serviceSchema,
+    webPageSchema,
+    breadcrumbSchema,
+    faqSchema,
+    itemListSchema,
+    professionalServiceSchema,
+  ].filter(Boolean);
+};
+
+/* =========================
+   ModernProfileCard Component
 ========================= */
 const ModernProfileCard: React.FC<{
   provider: Provider;
@@ -388,7 +636,7 @@ const ModernProfileCard: React.FC<{
     [provider.type]
   );
 
-  const handleImageError = React.useCallback(
+  const handleImageError = useCallback(
     (e: React.SyntheticEvent<HTMLImageElement>) => {
       const target = e.currentTarget;
       if (target.src !== "/default-avatar.png" && !imageError) {
@@ -399,21 +647,20 @@ const ModernProfileCard: React.FC<{
     [imageError]
   );
 
-  const handleClick = React.useCallback(() => {
+  const handleClick = useCallback(() => {
     onProfileClick(provider);
   }, [provider, onProfileClick]);
 
-  const handleMouseEnter = React.useCallback(() => {
+  const handleMouseEnter = useCallback(() => {
     if (window.matchMedia("(hover: hover)").matches) {
       setIsHovered(true);
     }
   }, []);
 
-  const handleMouseLeave = React.useCallback(() => {
+  const handleMouseLeave = useCallback(() => {
     setIsHovered(false);
   }, []);
 
-  // ✅ CORRECTION 2: Remplacer formattedLanguages
   const formattedLanguages = useMemo(() => {
     if (!provider.languages || provider.languages.length === 0) {
       return '';
@@ -434,7 +681,6 @@ const ModernProfileCard: React.FC<{
     return result;
   }, [provider.languages, language]);
 
-  // ✅ CORRECTION 3: Ajouter formattedCountries
   const formattedCountries = useMemo(() => {
     const countries = provider.interventionCountries && provider.interventionCountries.length > 0
       ? provider.interventionCountries
@@ -457,23 +703,23 @@ const ModernProfileCard: React.FC<{
   const ariaLabels = useMemo(
     () => ({
       card: intl.formatMessage(
-        { id: "card.aria.profileCard" },
+        { id: "sosCall.card.ariaProfileCard" },
         { name: provider.name }
       ),
       status: intl.formatMessage(
-        { id: "card.aria.onlineStatus" },
+        { id: "sosCall.card.ariaOnlineStatus" },
         {
           status: provider.isOnline
-            ? intl.formatMessage({ id: "card.online" })
-            : intl.formatMessage({ id: "card.offline" }),
+            ? intl.formatMessage({ id: "sosCall.status.online" })
+            : intl.formatMessage({ id: "sosCall.status.offline" }),
         }
       ),
       rating: intl.formatMessage(
-        { id: "card.aria.rating" },
+        { id: "sosCall.card.ariaRating" },
         { rating: provider.rating.toFixed(1) }
       ),
       viewProfile: intl.formatMessage(
-        { id: "card.aria.viewProfileAction" },
+        { id: "sosCall.card.ariaViewProfileAction" },
         { name: provider.name }
       ),
     }),
@@ -486,7 +732,8 @@ const ModernProfileCard: React.FC<{
         className={`
           relative bg-white rounded-2xl overflow-hidden cursor-pointer
           transition-all duration-300 ease-out border-2 shadow-lg
-          w-80 h-[520px] sm:w-80 md:w-80
+          w-[calc(100vw-2rem)] max-w-[320px] h-[520px]
+          sm:w-80 md:w-80
           ${statusColors.border} ${statusColors.shadow} ${statusColors.borderShadow}
           ${isHovered ? `scale-[1.02] ${statusColors.glow} shadow-xl` : ""}
           focus:outline-none focus:ring-4 focus:ring-blue-500/50
@@ -502,20 +749,25 @@ const ModernProfileCard: React.FC<{
           }
         }}
         tabIndex={0}
-        role="button"
+        role="article"
         aria-label={ariaLabels.card}
+        itemScope
+        itemType="https://schema.org/Person"
         style={{
           animationDelay: `${index * 100}ms`,
         }}
       >
-        {/* Header avec photo et statut - Dimensions explicites pour éviter layout shift */}
+        {/* Header avec photo et statut */}
         <div
           className="relative overflow-hidden bg-slate-100"
           style={{ height: `${CARD_DIMENSIONS.imageHeight}px` }}
         >
           <img
             src={provider.avatar || "/default-avatar.png"}
-            alt={`Photo de profil de ${provider.name}`}
+            alt={intl.formatMessage(
+              { id: "sosCall.card.imageAlt" },
+              { name: provider.name }
+            )}
             className={`
               w-full h-full object-cover transition-all duration-300
               ${imageLoaded ? "opacity-100" : "opacity-0"}
@@ -527,20 +779,23 @@ const ModernProfileCard: React.FC<{
             decoding="async"
             width={CARD_DIMENSIONS.width}
             height={CARD_DIMENSIONS.imageHeight}
+            itemProp="image"
           />
 
-          {/* Overlay gradient amélioré */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+          {/* Overlay gradient */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" aria-hidden="true" />
 
-          {/* Statut en ligne - Taille tactile optimisée */}
+          {/* Statut en ligne */}
           <div className="absolute top-3 left-3">
             <div
               className={`
                 inline-flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium
                 backdrop-blur-sm border shadow-sm transition-colors
                 ${statusColors.badge}
-                min-h-[36px]
+                min-h-[44px]
               `}
+              role="status"
+              aria-live="polite"
               aria-label={ariaLabels.status}
             >
               {provider.isOnline ? (
@@ -550,52 +805,59 @@ const ModernProfileCard: React.FC<{
               )}
               <span>
                 {provider.isOnline
-                  ? intl.formatMessage({ id: "card.online" })
-                  : intl.formatMessage({ id: "card.offline" })}
+                  ? intl.formatMessage({ id: "sosCall.status.online" })
+                  : intl.formatMessage({ id: "sosCall.status.offline" })}
               </span>
             </div>
           </div>
 
-          {/* Badge métier avec contraste amélioré */}
+          {/* Badge métier */}
           <div className="absolute top-3 right-3">
             <div
               className={`
               inline-flex items-center gap-2 px-3 py-2 rounded-full 
               backdrop-blur-sm border shadow-sm border-white/30
               ${professionInfo.bgColor} ${professionInfo.textColor}
-              min-h-[36px]
+              min-h-[44px]
             `}
             >
-              <span className="text-sm font-medium">
+              <span className="text-sm font-medium" itemProp="jobTitle">
                 <span aria-hidden="true">{professionInfo.icon}</span>{" "}
-                {intl.formatMessage({
-                  id:
+                <FormattedMessage
+                  id={
                     provider.type === "lawyer"
-                      ? "profession.lawyer"
-                      : "profession.expat",
-                })}
+                      ? "sosCall.profession.lawyer"
+                      : "sosCall.profession.expat"
+                  }
+                />
               </span>
             </div>
           </div>
 
-          {/* Note avec accessibilité améliorée */}
+          {/* Note */}
           <div className="absolute bottom-3 right-3">
             <div
               className="flex items-center gap-1 px-3 py-2 rounded-lg bg-white/95 backdrop-blur-sm border border-slate-200 shadow-sm"
               aria-label={ariaLabels.rating}
+              itemProp="aggregateRating"
+              itemScope
+              itemType="https://schema.org/AggregateRating"
             >
               <Star
                 className="w-4 h-4 text-amber-500 fill-current"
                 aria-hidden="true"
               />
-              <span className="text-slate-800 text-sm font-medium">
+              <span className="text-slate-800 text-sm font-medium" itemProp="ratingValue">
                 {provider.rating.toFixed(1)}
               </span>
+              <meta itemProp="bestRating" content="5" />
+              <meta itemProp="worstRating" content="1" />
+              <meta itemProp="reviewCount" content={String(provider.reviewCount)} />
             </div>
           </div>
         </div>
 
-        {/* Contenu principal - Hauteur fixe pour éviter layout shift */}
+        {/* Contenu principal */}
         <div
           className="p-3 flex flex-col"
           style={{ height: `${CARD_DIMENSIONS.contentHeight}px` }}
@@ -603,26 +865,26 @@ const ModernProfileCard: React.FC<{
           {/* Nom et expérience */}
           <div className="space-y-2 mb-3">
             <div className="flex items-center justify-between gap-2">
-              <h3 className="text-lg font-bold text-slate-800 truncate flex-1">
+              <h3 className="text-lg font-bold text-slate-800 truncate flex-1" itemProp="name">
                 {provider.name}
               </h3>
               <div className="flex items-center gap-1 px-2 py-1 rounded-md bg-teal-50 border border-teal-200 flex-shrink-0">
                 <Zap className="w-3 h-3 text-teal-600" aria-hidden="true" />
                 <span className="text-teal-600 text-xs font-medium">
                   {provider.yearsOfExperience}{" "}
-                  {intl.formatMessage({ id: "card.years" })}
+                  <FormattedMessage id="sosCall.card.years" />
                 </span>
               </div>
             </div>
           </div>
 
-          {/* ✅ CORRECTION 5: Remplacer "Informations organisées" */}
+          {/* Informations */}
           <div className="space-y-2 h-28 overflow-hidden">
             {/* Pays d'intervention */}
             {formattedCountries && (
               <div className="flex items-start gap-2">
                 <MapPin className="w-3 h-3 text-blue-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                <span className="text-blue-600 text-xs leading-tight">
+                <span className="text-blue-600 text-xs leading-tight" itemProp="workLocation">
                   {formattedCountries}
                 </span>
               </div>
@@ -632,7 +894,7 @@ const ModernProfileCard: React.FC<{
             {formattedLanguages && (
               <div className="flex items-start gap-2">
                 <Globe className="w-3 h-3 text-indigo-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                <span className="text-indigo-600 text-xs leading-tight">
+                <span className="text-indigo-600 text-xs leading-tight" itemProp="knowsLanguage">
                   {formattedLanguages}
                 </span>
               </div>
@@ -645,20 +907,21 @@ const ModernProfileCard: React.FC<{
               <Users className="w-3 h-3 text-amber-600" aria-hidden="true" />
               <span className="text-amber-600 text-xs font-medium">
                 {provider.reviewCount}{" "}
-                {intl.formatMessage({ id: "card.reviews" })}
+                <FormattedMessage id="sosCall.card.reviews" />
               </span>
             </div>
             <div className="text-slate-500 text-xs">
-              {intl.formatMessage({
-                id:
+              <FormattedMessage
+                id={
                   provider.type === "lawyer"
-                    ? "profession.lawyer"
-                    : "profession.expat",
-              })}
+                    ? "sosCall.profession.lawyer"
+                    : "sosCall.profession.expat"
+                }
+              />
             </div>
           </div>
 
-          {/* Bouton CTA - Taille tactile optimisée */}
+          {/* Bouton CTA */}
           <div className="mt-3">
             <button
               className={`
@@ -683,7 +946,7 @@ const ModernProfileCard: React.FC<{
             >
               <Eye className="w-4 h-4" aria-hidden="true" />
               <span className="font-bold">
-                {intl.formatMessage({ id: "card.viewProfile" })}
+                <FormattedMessage id="sosCall.card.viewProfile" />
               </span>
               <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </button>
@@ -691,7 +954,6 @@ const ModernProfileCard: React.FC<{
         </div>
       </article>
 
-      {/* Styles optimisés avec prefers-reduced-motion */}
       <style>{`
         article {
           animation: slideInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -720,7 +982,6 @@ const ModernProfileCard: React.FC<{
           }
         }
         
-        /* Optimisation focus pour navigation clavier */
         article:focus-visible {
           outline: 2px solid #3b82f6;
           outline-offset: 2px;
@@ -731,6 +992,232 @@ const ModernProfileCard: React.FC<{
 });
 
 ModernProfileCard.displayName = "ModernProfileCard";
+
+/* =========================
+   FAQ Section Component
+========================= */
+const FAQSection: React.FC<{ intl: ReturnType<typeof useIntl> }> = React.memo(({ intl }) => {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  return (
+    <section 
+      className="py-12 sm:py-16 lg:py-20 bg-gray-900"
+      aria-labelledby="faq-heading"
+      itemScope
+      itemType="https://schema.org/FAQPage"
+    >
+      <div className="max-w-4xl mx-auto px-4 sm:px-6">
+        <div className="text-center mb-8 sm:mb-12">
+          <h2 
+            id="faq-heading"
+            className="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-4"
+          >
+            <FormattedMessage id="sosCall.faq.title" />
+          </h2>
+          <p className="text-gray-300 text-base sm:text-lg max-w-2xl mx-auto">
+            <FormattedMessage id="sosCall.faq.subtitle" />
+          </p>
+        </div>
+
+        <div className="space-y-3 sm:space-y-4" role="list" aria-label={intl.formatMessage({ id: "sosCall.faq.listAriaLabel" })}>
+          {FAQ_ITEMS.map((faq, index) => (
+            <div
+              key={index}
+              className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm overflow-hidden"
+              itemScope
+              itemProp="mainEntity"
+              itemType="https://schema.org/Question"
+              role="listitem"
+            >
+              <button
+                className="w-full px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between text-left min-h-[56px]"
+                onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                aria-expanded={openIndex === index}
+                aria-controls={`faq-answer-${index}`}
+                id={`faq-question-${index}`}
+              >
+                <span className="font-semibold text-white text-sm sm:text-base pr-4" itemProp="name">
+                  <FormattedMessage id={faq.questionKey} />
+                </span>
+                <ChevronDown 
+                  className={`w-5 h-5 text-gray-400 flex-shrink-0 transition-transform duration-300 ${openIndex === index ? 'rotate-180 text-red-400' : ''}`}
+                  aria-hidden="true"
+                />
+              </button>
+              <div
+                id={`faq-answer-${index}`}
+                className={`overflow-hidden transition-all duration-300 ${openIndex === index ? 'max-h-96' : 'max-h-0'}`}
+                itemScope
+                itemProp="acceptedAnswer"
+                itemType="https://schema.org/Answer"
+                role="region"
+                aria-labelledby={`faq-question-${index}`}
+                aria-hidden={openIndex !== index}
+              >
+                <div className="px-4 sm:px-6 pb-4 sm:pb-5">
+                  <p className="text-gray-300 text-sm sm:text-base leading-relaxed" itemProp="text">
+                    <FormattedMessage id={faq.answerKey} />
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+});
+
+FAQSection.displayName = "FAQSection";
+
+/* =========================
+   Trust Badges Component
+========================= */
+const TrustBadges: React.FC<{ intl: ReturnType<typeof useIntl> }> = React.memo(({ intl }) => (
+  <section 
+    className="py-8 sm:py-12 bg-gray-900/50"
+    aria-labelledby="trust-heading"
+  >
+    <h2 id="trust-heading" className="sr-only">
+      <FormattedMessage id="sosCall.trust.srTitle" />
+    </h2>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
+        {[
+          { icon: Shield, key: "verified" },
+          { icon: Clock, key: "available" },
+          { icon: Globe, key: "countries" },
+          { icon: MessageCircle, key: "languages" },
+        ].map(({ icon: Icon, key }) => (
+          <div 
+            key={key}
+            className="flex flex-col items-center text-center p-3 sm:p-6 rounded-2xl bg-white/5 border border-white/10"
+          >
+            <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br from-red-500/20 to-orange-500/20 flex items-center justify-center mb-2 sm:mb-3">
+              <Icon className="w-5 h-5 sm:w-7 sm:h-7 text-red-400" aria-hidden="true" />
+            </div>
+            <span className="text-white font-bold text-xs sm:text-base">
+              <FormattedMessage id={`sosCall.trust.${key}.title`} />
+            </span>
+            <span className="text-gray-400 text-[10px] sm:text-sm mt-1">
+              <FormattedMessage id={`sosCall.trust.${key}.description`} />
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+));
+
+TrustBadges.displayName = "TrustBadges";
+
+/* =========================
+   Pagination component
+========================= */
+const Pagination: React.FC<{
+  page: number;
+  totalPages: number;
+  onChange: (p: number) => void;
+  intl: ReturnType<typeof useIntl>;
+}> = React.memo(({ page, totalPages, onChange, intl }) => {
+  if (totalPages <= 1) return null;
+
+  const go = useCallback((p: number) => {
+    const np = Math.min(totalPages, Math.max(1, p));
+    if (np !== page) onChange(np);
+  }, [page, totalPages, onChange]);
+
+  const makePages = useMemo((): Array<number | "ellipsis"> => {
+    const pages: Array<number | "ellipsis"> = [];
+    const add = (n: number) => pages.push(n);
+
+    const windowSize = 1;
+    add(1);
+    for (let i = page - windowSize; i <= page + windowSize; i++) {
+      if (i > 1 && i < totalPages) add(i);
+    }
+    if (totalPages > 1) add(totalPages);
+
+    const sorted = Array.from(new Set(pages)).sort((a, b) =>
+      typeof a === "number" && typeof b === "number" ? a - b : 0
+    );
+
+    const withEllipses: Array<number | "ellipsis"> = [];
+    for (let i = 0; i < sorted.length; i++) {
+      const cur = sorted[i] as number;
+      const prev = sorted[i - 1] as number | undefined;
+      if (
+        i > 0 &&
+        prev !== undefined &&
+        typeof prev === "number" &&
+        cur - prev > 1
+      ) {
+        withEllipses.push("ellipsis");
+      }
+      withEllipses.push(cur);
+    }
+    return withEllipses;
+  }, [page, totalPages]);
+
+  return (
+    <nav 
+      className="inline-flex items-center gap-1" 
+      aria-label={intl.formatMessage({ id: "sosCall.pagination.ariaLabel" })}
+      role="navigation"
+    >
+      <button
+        onClick={() => go(page - 1)}
+        className="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white hover:bg-white/15 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+        disabled={page <= 1}
+        aria-label={intl.formatMessage({ id: "sosCall.pagination.previousAriaLabel" })}
+      >
+        <ChevronLeft className="w-4 h-4" aria-hidden="true" />
+        <span className="hidden sm:inline">
+          <FormattedMessage id="sosCall.pagination.previous" />
+        </span>
+      </button>
+
+      {makePages.map((it, idx) =>
+        it === "ellipsis" ? (
+          <span key={`el-${idx}`} className="px-2 text-gray-300" aria-hidden="true">
+            …
+          </span>
+        ) : (
+          <button
+            key={`p-${it}`}
+            onClick={() => go(it)}
+            aria-current={it === page ? "page" : undefined}
+            aria-label={intl.formatMessage(
+              { id: "sosCall.pagination.pageAriaLabel" },
+              { page: it }
+            )}
+            className={`w-10 h-10 sm:w-9 sm:h-9 rounded-xl border text-sm font-semibold transition min-h-[44px] ${
+              it === page
+                ? "bg-white/20 text-white border-white/30"
+                : "bg-white/10 text-gray-200 border-white/20 hover:bg-white/15"
+            }`}
+          >
+            {it}
+          </button>
+        )
+      )}
+
+      <button
+        onClick={() => go(page + 1)}
+        className="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white hover:bg-white/15 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+        disabled={page >= totalPages}
+        aria-label={intl.formatMessage({ id: "sosCall.pagination.nextAriaLabel" })}
+      >
+        <span className="hidden sm:inline">
+          <FormattedMessage id="sosCall.pagination.next" />
+        </span>
+        <ChevronRight className="w-4 h-4" aria-hidden="true" />
+      </button>
+    </nav>
+  );
+});
+
+Pagination.displayName = "Pagination";
 
 /* =========================
    Composant principal
@@ -767,7 +1254,6 @@ const SOSCall: React.FC = () => {
   const [filteredProviders, setFilteredProviders] = useState<Provider[]>([]);
 
   // Pagination & favoris
-  const PAGE_SIZE = 9;
   const [page, setPage] = useState<number>(1);
   const [favorites, setFavorites] = useState<Set<string>>(() => {
     try {
@@ -782,92 +1268,16 @@ const SOSCall: React.FC = () => {
     }
   });
 
- const lang = (language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "ch" | "pt" | "ar") || "fr";
+  const lang = (language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "ch" | "pt" | "ar") || "fr";
 
-  // ========================================
-  // 🌍 GÉNÉRATION DYNAMIQUE DES LISTES TRADUITES
-  // ========================================
-  
-  /**
-   * Liste des 195 pays traduits dans la langue courante
-   * Se met à jour automatiquement quand l'utilisateur change de langue
-   */
+  // Listes traduites dynamiquement
   const countryOptions = useMemo(() => {
-    console.log('🌍 Génération liste pays pour langue:', language || 'fr');
     return getCountryOptions(language || 'fr');
   }, [language]);
   
-  /**
-   * Liste des langues parlées traduites dans la langue courante
-   * Se met à jour automatiquement quand l'utilisateur change de langue
-   */
   const languageOptions = useMemo(() => {
-    console.log('🗣️ Génération liste langues pour langue:', language || 'fr');
     return getLanguageOptions(language || 'fr');
   }, [language]);
-  
-  // Log pour debug : affiche combien d'options sont générées
-  useEffect(() => {
-    console.log('📊 Options générées:', {
-      pays: countryOptions.length,
-      langues: languageOptions.length,
-      langue_interface: language || 'fr'
-    });
-  }, [countryOptions, languageOptions, language]);
-
-
-  const cardTranslations = useMemo(
-    () => ({
-      fr: {
-        lawyer: "Avocat",
-        expat: "Expatrié",
-        languages: "Langues",
-        about: "À propos",
-        readMore: "Lire plus",
-        online: "En ligne",
-        offline: "Hors ligne",
-        contactNow: "Contacter maintenant",
-        viewProfile: "Voir le profil",
-        years: "ans",
-        rating: "Note",
-        country: "Pays",
-        experience: "Années",
-      },
-      en: {
-        lawyer: "Lawyer",
-        expat: "Expat",
-        languages: "Languages",
-        about: "About",
-        readMore: "Read more",
-        online: "Online",
-        offline: "Offline",
-        contactNow: "Contact now",
-        viewProfile: "View profile",
-        years: "years",
-        rating: "Rating",
-        country: "Country",
-        experience: "Years",
-      },
-      es: {
-        lawyer: "Abogado",
-        expat: "Expatriado",
-        languages: "Idiomas",
-        about: "Acerca de",
-        readMore: "Leer más",
-        online: "En línea",
-        offline: "Fuera de línea",
-        contactNow: "Contactar ahora",
-        viewProfile: "Ver perfil",
-        years: "años",
-        rating: "Calificación",
-        country: "País",
-        experience: "Años",
-      },
-    }),
-    []
-  );
-
-  const tt = cardTranslations[lang];
 
   // Charger providers
   useEffect(() => {
@@ -905,7 +1315,6 @@ const SOSCall: React.FC = () => {
             `${data.firstName || ""} ${data.lastName || ""}`.trim() ||
             "Expert";
 
-          // 🆕 Génération du nom public avec initiale pour protéger la vie privée
           const firstName = data.firstName || "";
           const lastName = data.lastName || "";
           const publicDisplayName = firstName && lastName 
@@ -1100,10 +1509,8 @@ const SOSCall: React.FC = () => {
   ): boolean => {
     if (selected === "all") return true;
     
-    // Convertir les codes/noms en codes ISO
     const langCodes = convertLanguageNamesToCodes(langs);
     
-    // Traduire chaque code selon la langue active
     const normalizedProv = langCodes.map((code) => {
       const lang = languagesData.find(l => l.code === code);
       return lang 
@@ -1121,20 +1528,32 @@ const SOSCall: React.FC = () => {
   };
 
   // Handlers filtres
-  const handleCountryChange = (value: string) => {
+  const handleCountryChange = useCallback((value: string) => {
     setSelectedCountry(value);
     setShowCustomCountry(value === "Autre");
     if (value !== "Autre") setCustomCountry("");
-  };
+  }, []);
 
-  const handleLanguageChange = (value: string) => {
+  const handleLanguageChange = useCallback((value: string) => {
     setSelectedLanguage(value);
     setShowCustomLanguage(value === "Autre");
     if (value !== "Autre") setCustomLanguage("");
-  };
+  }, []);
+
+  const resetFilters = useCallback(() => {
+    setSelectedType("all");
+    setSelectedCountry("all");
+    setSelectedLanguage("all");
+    setCustomCountry("");
+    setCustomLanguage("");
+    setShowCustomCountry(false);
+    setShowCustomLanguage(false);
+    setStatusFilter("all");
+    setOnlineOnly(false);
+  }, []);
 
   // Navigation
-  const handleProviderClick = (provider: Provider) => {
+  const handleProviderClick = useCallback((provider: Provider) => {
     const typeSlug = provider.type === "lawyer" ? "avocat" : "expatrie";
     const countrySlug = slugify(provider.country);
     const nameSlug = slugify(provider.name);
@@ -1150,10 +1569,10 @@ const SOSCall: React.FC = () => {
         state: { selectedProvider: provider, navigationSource: "sos_call" },
       });
     }
-  };
+  }, [location.pathname, navigate]);
 
   // Favoris
-  const toggleFavorite = (id: string) => {
+  const toggleFavorite = useCallback((id: string) => {
     setFavorites((prev) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
@@ -1165,100 +1584,218 @@ const SOSCall: React.FC = () => {
       }
       return next;
     });
-  };
+  }, []);
+
+  // ========================================
+  // 🔍 SEO - Génération des données structurées
+  // ========================================
+  
+  // Canonical URL avec langue courante
+  const canonicalUrl = `${BASE_URL}/${lang}${PAGE_PATH}`;
+  const onlineCount = filteredProviders.filter((p) => p.isOnline).length;
+  
+  const jsonLdSchemas = useMemo(() => 
+    generateAllSchemas(intl, filteredProviders, selectedType, onlineCount, lang),
+    [intl, filteredProviders, selectedType, onlineCount, lang]
+  );
+
+  const seoTitle = intl.formatMessage({ 
+    id: selectedType === "lawyer" 
+      ? "sosCall.seo.title.lawyer" 
+      : selectedType === "expat" 
+        ? "sosCall.seo.title.expat" 
+        : "sosCall.seo.title.all" 
+  });
+  
+  const seoDescription = intl.formatMessage({ 
+    id: selectedType === "lawyer" 
+      ? "sosCall.seo.description.lawyer" 
+      : selectedType === "expat" 
+        ? "sosCall.seo.description.expat" 
+        : "sosCall.seo.description.all" 
+  });
+
+  const seoKeywords = intl.formatMessage({ id: "sosCall.seo.keywords" });
+
+  // Hreflang pour toutes les langues supportées (cohérent avec canonical)
+  const hreflangLinks = SUPPORTED_LANGUAGES.map(langCode => ({
+    hreflang: langCode === 'zh' ? 'zh-Hans' : langCode,
+    href: `${BASE_URL}/${langCode}${PAGE_PATH}`,
+  }));
 
   return (
     <Layout>
-      <SEOHead
-        title={`${
-          selectedType === "lawyer"
-            ? "Avocats"
-            : selectedType === "expat"
-              ? "Expatriés"
-              : "Experts"
-        } disponibles | SOS Expat & Travelers`}
-        description={`Trouvez un ${
-          selectedType === "lawyer"
-            ? "avocat"
-            : selectedType === "expat"
-              ? "expatrié"
-              : "expert"
-        } vérifié disponible immédiatement. Consultation en ligne 24h/24, 7j/7 dans plus de 150 pays.`}
-        canonicalUrl="/sos-appel"
-      />
+      {/* ========================================
+          🔍 SEO HEAD - Tout intégré directement
+      ======================================== */}
+      <Helmet>
+        {/* Balises essentielles */}
+        <html lang={lang} dir={lang === 'ar' ? 'rtl' : 'ltr'} />
+        <title>{seoTitle}</title>
+        <meta name="description" content={seoDescription} />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
+        <meta charSet="utf-8" />
+        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+        
+        {/* Robots & Indexation */}
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+        <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1" />
+        <meta name="bingbot" content="index, follow" />
+        
+        {/* Mots-clés sémantiques */}
+        <meta name="keywords" content={seoKeywords} />
+        <meta name="author" content="SOS Expat" />
+        <meta name="publisher" content="SOS Expat" />
+        
+        {/* URL Canonique */}
+        <link rel="canonical" href={canonicalUrl} />
+        
+        {/* Hreflang pour internationalisation (9 langues) */}
+        {hreflangLinks.map((link) => (
+          <link
+            key={link.hreflang}
+            rel="alternate"
+            hrefLang={link.hreflang}
+            href={link.href}
+          />
+        ))}
+        <link rel="alternate" hrefLang="x-default" href={`${BASE_URL}/en${PAGE_PATH}`} />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content={seoTitle} />
+        <meta property="og:description" content={seoDescription} />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="SOS Expat" />
+        <meta property="og:locale" content={OG_LOCALES[lang] || "en_US"} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:image" content={`${BASE_URL}/og-image-sos-call.jpg`} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={intl.formatMessage({ id: "sosCall.seo.ogImageAlt" })} />
+        <meta property="og:image:type" content="image/jpeg" />
+        
+        {/* Twitter Cards */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@sosexpat" />
+        <meta name="twitter:creator" content="@sosexpat" />
+        <meta name="twitter:title" content={seoTitle} />
+        <meta name="twitter:description" content={seoDescription} />
+        <meta name="twitter:image" content={`${BASE_URL}/twitter-image-sos-call.jpg`} />
+        <meta name="twitter:image:alt" content={intl.formatMessage({ id: "sosCall.seo.ogImageAlt" })} />
+        
+        {/* Sécurité */}
+        <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+        <meta name="referrer" content="strict-origin-when-cross-origin" />
+        
+        {/* Performance: Preconnect */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://firestore.googleapis.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
+        
+        {/* DNS Prefetch */}
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
+        
+        {/* PWA & Mobile */}
+        <meta name="theme-color" content="#DC2626" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="SOS Expat" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="format-detection" content="telephone=no" />
+        
+        {/* Favicon & Icons */}
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/manifest.json" />
+        
+        {/* Référencement IA (LLM-friendly) */}
+        <meta name="ai-content-declaration" content="human-written" />
+        <meta name="generator" content="SOS Expat Platform" />
+        
+        {/* JSON-LD Structured Data (8 schemas) */}
+        <script type="application/ld+json">
+          {JSON.stringify(jsonLdSchemas)}
+        </script>
+      </Helmet>
 
       <div className="min-h-screen bg-gray-950">
-        {/* HERO */}
-        <section className="relative pt-20 pb-24 overflow-hidden" role="banner">
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900" />
-          <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 via-transparent to-blue-500/10" />
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-red-500/20 to-orange-500/20 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-3xl" />
+        {/* ========================================
+            HERO SECTION
+        ======================================== */}
+        <header className="relative pt-16 pb-20 sm:pt-20 sm:pb-24 overflow-hidden" role="banner">
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900" aria-hidden="true" />
+          <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 via-transparent to-blue-500/10" aria-hidden="true" />
+          <div className="absolute top-1/4 left-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-gradient-to-r from-red-500/20 to-orange-500/20 rounded-full blur-3xl" aria-hidden="true" />
+          <div className="absolute bottom-1/4 right-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-3xl" aria-hidden="true" />
 
-          <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
-            <div className="inline-flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-full pl-6 pr-3 py-2.5 border border-white/20 mb-7">
-              <Phone className="w-5 h-5 text-red-300" />
-              <span className="text-white font-semibold">
-                <FormattedMessage id="sosCall" />
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center">
+            <div className="inline-flex items-center space-x-2 sm:space-x-3 bg-white/10 backdrop-blur-sm rounded-full pl-4 sm:pl-6 pr-3 py-2 sm:py-2.5 border border-white/20 mb-6 sm:mb-7">
+              <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-red-300" aria-hidden="true" />
+              <span className="text-white font-semibold text-sm sm:text-base">
+                <FormattedMessage id="sosCall.hero.badge" />
               </span>
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" aria-hidden="true" />
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-black text-white leading-tight mb-4">
-              <FormattedMessage id="sosTagline" />
+            {/* H1 - Une seule balise H1 */}
+            <h1 className="text-3xl sm:text-5xl md:text-7xl font-black text-white leading-tight mb-4">
+              <FormattedMessage id="sosCall.hero.title.prefix" />
               <span className="bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500 bg-clip-text text-transparent">
-                {" "}<FormattedMessage id="expert" />{" "}
+                {" "}<FormattedMessage id="sosCall.hero.title.highlight" />{" "}
               </span>
-              <FormattedMessage id="now" />
+              <FormattedMessage id="sosCall.hero.title.suffix" />
             </h1>
-            <p className="text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto">
-              <FormattedMessage
-                id="verifiedLawyersExpats"
-                defaultMessage="Verified Lawyers & Expats • Available 24/7 • <strong>150+ countries</strong>"
+            <p className="text-base sm:text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto px-4">
+              <FormattedMessage 
+                id="sosCall.hero.subtitle"
                 values={{
-                  strong: (chunks) => <strong>{chunks}</strong>,
+                  strong: (chunks) => <strong className="text-white">{chunks}</strong>,
                 }}
               />
             </p>
           </div>
-        </section>
+        </header>
 
-        {/* CONTENU */}
-        <main className="py-8 sm:py-12 lg:py-16">
-          <div className="max-w-7xl mx-auto px-6">
+        {/* Trust Badges */}
+        <TrustBadges intl={intl} />
+
+        {/* ========================================
+            MAIN CONTENT
+        ======================================== */}
+        <main className="py-8 sm:py-12 lg:py-16" id="experts" role="main">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
             {/* Titre + Filtres */}
-            <div className="text-center mb-8 sm:mb-6">
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-4">
+            <div className="text-center mb-6 sm:mb-8">
+              <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-black text-white mb-4">
                 {selectedType === "lawyer" && (
-                  <FormattedMessage
-                    id="availableLawyers"
-                    defaultMessage="Available Lawyers"
-                  />
+                  <FormattedMessage id="sosCall.experts.title.lawyer" />
                 )}
                 {selectedType === "expat" && (
-                  <FormattedMessage
-                    id="availableExpats"
-                    defaultMessage="Available Expats"
-                  />
+                  <FormattedMessage id="sosCall.experts.title.expat" />
                 )}
                 {selectedType !== "lawyer" && selectedType !== "expat" && (
-                  <FormattedMessage
-                    id="availableExperts"
-                    defaultMessage="Experts available"
-                  />
+                  <FormattedMessage id="sosCall.experts.title.all" />
                 )}
               </h2>
 
               {/* FILTRES */}
-              <div className="rounded-[28px] border border-white/10 bg-white/5 backdrop-blur-md p-4 sm:p-6 max-w-6xl mx-auto">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+              <div 
+                className="rounded-2xl sm:rounded-[28px] border border-white/10 bg-white/5 backdrop-blur-md p-4 sm:p-6 max-w-6xl mx-auto"
+                role="search"
+                aria-label={intl.formatMessage({ id: "sosCall.filters.ariaLabel" })}
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 sm:gap-4">
                   {/* Type */}
                   <div className="space-y-1">
                     <label
                       htmlFor="expert-type"
                       className="block text-xs font-semibold text-gray-300 uppercase tracking-wide"
                     >
-                      <FormattedMessage id="type" />
+                      <FormattedMessage id="sosCall.filters.type.label" />
                     </label>
                     <div className="relative">
                       <select
@@ -1269,30 +1806,27 @@ const SOSCall: React.FC = () => {
                             e.target.value as "all" | "lawyer" | "expat"
                           )
                         }
-                        className="
-                          w-full px-3 py-2
-                          bg-white text-gray-900
-                          border border-gray-300 rounded-xl
-                          dark:bg-white/10 dark:text-white dark:border-white/20
-                          focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent
-                          transition-all appearance-none text-sm
-                        "
+                        className="w-full px-3 py-3 sm:py-2 bg-white/10 text-white border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent transition-all appearance-none text-sm min-h-[44px]"
+                        aria-describedby="type-filter-description"
                       >
                         <option value="all">
-                          <FormattedMessage id="filter.all" />
+                          {intl.formatMessage({ id: "sosCall.filters.type.all" })}
                         </option>
                         <option value="lawyer">
-                          <FormattedMessage id="filter.lawyer" />
+                          {intl.formatMessage({ id: "sosCall.filters.type.lawyer" })}
                         </option>
                         <option value="expat">
-                          <FormattedMessage id="filter.expat" />
+                          {intl.formatMessage({ id: "sosCall.filters.type.expat" })}
                         </option>
                       </select>
                       <ChevronDown
-                        className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-300 pointer-events-none"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 pointer-events-none"
                         aria-hidden="true"
                       />
                     </div>
+                    <span id="type-filter-description" className="sr-only">
+                      <FormattedMessage id="sosCall.filters.type.srDescription" />
+                    </span>
                   </div>
 
                   {/* Pays */}
@@ -1301,24 +1835,17 @@ const SOSCall: React.FC = () => {
                       htmlFor="country-filter"
                       className="block text-xs font-semibold text-gray-300 uppercase tracking-wide"
                     >
-                      <FormattedMessage id="country.label" />
+                      <FormattedMessage id="sosCall.filters.country.label" />
                     </label>
                     <div className="relative">
                       <select
                         id="country-filter"
                         value={selectedCountry}
                         onChange={(e) => handleCountryChange(e.target.value)}
-                        className="
-                          w-full px-3 py-2
-                          bg-white text-gray-900
-                          border border-gray-300 rounded-xl
-                          dark:bg-white/10 dark:text-white dark:border-white/20
-                          focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent
-                          transition-all appearance-none text-sm
-                        "
+                        className="w-full px-3 py-3 sm:py-2 bg-white/10 text-white border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent transition-all appearance-none text-sm min-h-[44px]"
                       >
                         <option value="all">
-                          <FormattedMessage id="country.allCountries" />
+                          {intl.formatMessage({ id: "sosCall.filters.country.all" })}
                         </option>
                         {countryOptions.map((country) => (
                           <option key={country} value={country}>
@@ -1326,21 +1853,22 @@ const SOSCall: React.FC = () => {
                           </option>
                         ))}
                         <option value="Autre">
-                          <FormattedMessage id="country.other" />
+                          {intl.formatMessage({ id: "sosCall.filters.country.other" })}
                         </option>
                       </select>
                       <ChevronDown
-                        className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-300 pointer-events-none"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 pointer-events-none"
                         aria-hidden="true"
                       />
                     </div>
                     {showCustomCountry && (
                       <input
                         type="text"
-                        placeholder="Nom du pays"
+                        placeholder={intl.formatMessage({ id: "sosCall.filters.country.placeholder" })}
                         value={customCountry}
                         onChange={(e) => setCustomCountry(e.target.value)}
-                        className="w-full px-3 py-2 bg-white/10 border border-white/15 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/60 focus:border-transparent transition-all text-sm text-white placeholder:text-gray-400 mt-2"
+                        className="w-full px-3 py-3 sm:py-2 bg-white/10 border border-white/15 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/60 focus:border-transparent transition-all text-sm text-white placeholder:text-gray-400 mt-2 min-h-[44px]"
+                        aria-label={intl.formatMessage({ id: "sosCall.filters.country.customAriaLabel" })}
                       />
                     )}
                   </div>
@@ -1351,136 +1879,132 @@ const SOSCall: React.FC = () => {
                       htmlFor="language-filter"
                       className="block text-xs font-semibold text-gray-300 uppercase tracking-wide"
                     >
-                      <FormattedMessage id="language.label" />
+                      <FormattedMessage id="sosCall.filters.language.label" />
                     </label>
                     <div className="relative">
                       <select
                         id="language-filter"
                         value={selectedLanguage}
                         onChange={(e) => handleLanguageChange(e.target.value)}
-                        className="
-                          w-full px-3 py-2
-                          bg-white text-gray-900
-                          border border-gray-300 rounded-xl
-                          dark:bg-white/10 dark:text-white dark:border-white/20
-                          focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent
-                          transition-all appearance-none text-sm
-                        "
+                        className="w-full px-3 py-3 sm:py-2 bg-white/10 text-white border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent transition-all appearance-none text-sm min-h-[44px]"
                       >
                         <option value="all">
-                          <FormattedMessage id="language.all" />
+                          {intl.formatMessage({ id: "sosCall.filters.language.all" })}
                         </option>
-                        {languageOptions.map((lang) => (
-                          <option key={lang} value={lang}>
-                            {lang}
+                        {languageOptions.map((langOption) => (
+                          <option key={langOption} value={langOption}>
+                            {langOption}
                           </option>
                         ))}
                         <option value="Autre">
-                          <FormattedMessage id="language.other" />
+                          {intl.formatMessage({ id: "sosCall.filters.language.other" })}
                         </option>
                       </select>
                       <ChevronDown
-                        className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-300 pointer-events-none"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 pointer-events-none"
                         aria-hidden="true"
                       />
                     </div>
                     {showCustomLanguage && (
                       <input
                         type="text"
-                        placeholder="Langue"
+                        placeholder={intl.formatMessage({ id: "sosCall.filters.language.placeholder" })}
                         value={customLanguage}
                         onChange={(e) => setCustomLanguage(e.target.value)}
-                        className="w-full px-3 py-2 bg-white/10 border border-white/15 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/60 focus:border-transparent transition-all text-sm text-white placeholder:text-gray-400 mt-2"
+                        className="w-full px-3 py-3 sm:py-2 bg-white/10 border border-white/15 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/60 focus:border-transparent transition-all text-sm text-white placeholder:text-gray-400 mt-2 min-h-[44px]"
+                        aria-label={intl.formatMessage({ id: "sosCall.filters.language.customAriaLabel" })}
                       />
                     )}
                   </div>
 
                   {/* Statut */}
-                  <div className="space-y-1 lg:col-span-2">
+                  <div className="space-y-1 sm:col-span-2 lg:col-span-2">
                     <label className="block text-xs font-semibold text-gray-300 uppercase tracking-wide">
-                      <FormattedMessage id="status.label" />
+                      <FormattedMessage id="sosCall.filters.status.label" />
                     </label>
-                    <div className="flex items-center gap-2">
+                    <div 
+                      className="flex items-center gap-2"
+                      role="group"
+                      aria-label={intl.formatMessage({ id: "sosCall.filters.status.ariaLabel" })}
+                    >
                       <button
                         type="button"
                         onClick={() => setStatusFilter("all")}
-                        className={`flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl border transition ${
+                        className={`flex-1 inline-flex items-center justify-center gap-2 px-3 py-3 sm:py-2 rounded-xl border transition min-h-[44px] ${
                           statusFilter === "all"
                             ? "bg-white/20 text-white border-white/30"
                             : "bg-white/10 text-gray-200 border-white/20 hover:bg-white/15"
                         }`}
                         aria-pressed={statusFilter === "all"}
                       >
-                        <span className="w-2 h-2 rounded-full bg-gray-300" />
-                        <FormattedMessage id="status.all" />
+                        <span className="w-2 h-2 rounded-full bg-gray-300" aria-hidden="true" />
+                        <span className="text-sm">
+                          <FormattedMessage id="sosCall.filters.status.all" />
+                        </span>
                       </button>
                       <button
                         type="button"
                         onClick={() => setStatusFilter("online")}
-                        className={`flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl border transition ${
+                        className={`flex-1 inline-flex items-center justify-center gap-2 px-3 py-3 sm:py-2 rounded-xl border transition min-h-[44px] ${
                           statusFilter === "online"
                             ? "bg-white/20 text-white border-white/30"
                             : "bg-white/10 text-gray-200 border-white/20 hover:bg-white/15"
                         }`}
                         aria-pressed={statusFilter === "online"}
-                        title="En ligne"
+                        aria-label={intl.formatMessage({ id: "sosCall.filters.status.onlineAriaLabel" })}
                       >
-                        <Wifi className="w-4 h-4" />
-                        <FormattedMessage id="status.online" />
+                        <Wifi className="w-4 h-4" aria-hidden="true" />
+                        <span className="text-sm">
+                          <FormattedMessage id="sosCall.filters.status.online" />
+                        </span>
                       </button>
                       <button
                         type="button"
                         onClick={() => setStatusFilter("offline")}
-                        className={`flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl border transition ${
+                        className={`flex-1 inline-flex items-center justify-center gap-2 px-3 py-3 sm:py-2 rounded-xl border transition min-h-[44px] ${
                           statusFilter === "offline"
                             ? "bg-white/20 text-white border-white/30"
                             : "bg-white/10 text-gray-200 border-white/20 hover:bg-white/15"
                         }`}
                         aria-pressed={statusFilter === "offline"}
-                        title="Hors ligne"
+                        aria-label={intl.formatMessage({ id: "sosCall.filters.status.offlineAriaLabel" })}
                       >
-                        <WifiOff className="w-4 h-4" />
-                        <FormattedMessage id="status.offline" />
+                        <WifiOff className="w-4 h-4" aria-hidden="true" />
+                        <span className="text-sm">
+                          <FormattedMessage id="sosCall.filters.status.offline" />
+                        </span>
                       </button>
                     </div>
                   </div>
 
                   {/* Reset */}
                   <div className="space-y-1">
-                    <label className="block text-xs font-medium text-transparent">
-                      <FormattedMessage id="action.label" />
+                    <label className="block text-xs font-medium text-transparent select-none" aria-hidden="true">
+                      <FormattedMessage id="sosCall.filters.action.label" />
                     </label>
                     <button
-                      onClick={() => {
-                        setSelectedType("all");
-                        setSelectedCountry("all");
-                        setSelectedLanguage("all");
-                        setCustomCountry("");
-                        setCustomLanguage("");
-                        setShowCustomCountry(false);
-                        setShowCustomLanguage(false);
-                        setStatusFilter("all");
-                        setOnlineOnly(false);
-                      }}
-                      className="w-full px-3 py-2 border border-white/15 rounded-xl text-gray-100 hover:bg-white/10 active:bg-white/15 transition-colors text-sm font-semibold h-10"
+                      onClick={resetFilters}
+                      className="w-full px-3 py-3 sm:py-2 border border-white/15 rounded-xl text-gray-100 hover:bg-white/10 active:bg-white/15 transition-colors text-sm font-semibold min-h-[44px]"
+                      aria-label={intl.formatMessage({ id: "sosCall.filters.action.resetAriaLabel" })}
                     >
-                      <FormattedMessage id="action.reset" />
+                      <FormattedMessage id="sosCall.filters.action.reset" />
                     </button>
                   </div>
                 </div>
 
-                <div className="mt-4 text-center text-xs text-gray-300">
+                {/* Stats */}
+                <div className="mt-4 text-center text-xs text-gray-300" role="status" aria-live="polite">
                   <span className="inline-flex items-center gap-2 rounded-full px-3 py-1 bg-white/10 border border-white/15">
-                    <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                    {filteredProviders.filter((p) => p.isOnline).length}
+                    <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" aria-hidden="true" />
+                    {onlineCount}
                     <span>
-                      <FormattedMessage id="status.online" />
+                      <FormattedMessage id="sosCall.stats.online" />
                     </span>
                   </span>
-                  <span className="mx-2  text-white/30">•</span>
+                  <span className="mx-2 text-white/30" aria-hidden="true">•</span>
                   {filteredProviders.length}
-                  <span className="ml-[2px]">
-                    <FormattedMessage id="stats.total" />
+                  <span className="ml-1">
+                    <FormattedMessage id="sosCall.stats.total" />
                   </span>
                 </div>
               </div>
@@ -1493,19 +2017,26 @@ const SOSCall: React.FC = () => {
                   page={page}
                   totalPages={totalPages}
                   onChange={setPage}
+                  intl={intl}
                 />
               </div>
             )}
 
             {/* Skeletons */}
             {isLoadingProviders ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div 
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
+                aria-label={intl.formatMessage({ id: "sosCall.loading.ariaLabel" })}
+                aria-busy="true"
+              >
                 {Array.from({ length: PAGE_SIZE }).map((_, index) => (
                   <div
                     key={`sk-${index}`}
-                    className="bg-white/5 rounded-[28px] border border-white/10 overflow-hidden animate-pulse"
+                    className="bg-white/5 rounded-2xl sm:rounded-[28px] border border-white/10 overflow-hidden animate-pulse"
+                    role="article"
+                    aria-label={intl.formatMessage({ id: "sosCall.loading.cardAriaLabel" })}
                   >
-                    <div className="w-full h-80 bg-white/10" />
+                    <div className="w-full h-72 sm:h-80 bg-white/10" />
                     <div className="p-4 space-y-3">
                       <div className="h-4 bg-white/10 rounded w-3/4" />
                       <div className="h-3 bg-white/10 rounded w-1/2" />
@@ -1516,13 +2047,15 @@ const SOSCall: React.FC = () => {
               </div>
             ) : filteredProviders.length > 0 ? (
               <>
-                {/* DESIGN EXACT DE ModernProfileCard - MOBILE FIRST */}
-
                 {/* Version Mobile - Scroll horizontal */}
                 <div className="md:hidden">
-                  <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
+                  <div 
+                    className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4"
+                    role="list"
+                    aria-label={intl.formatMessage({ id: "sosCall.providerList.mobileAriaLabel" })}
+                  >
                     {paginatedProviders.map((provider, index) => (
-                      <div key={provider.id} className="snap-start">
+                      <div key={provider.id} className="snap-start flex-shrink-0" role="listitem">
                         <ModernProfileCard
                           provider={provider}
                           onProfileClick={handleProviderClick}
@@ -1536,224 +2069,111 @@ const SOSCall: React.FC = () => {
                 </div>
 
                 {/* Version Desktop - Grille */}
-                <div className="hidden md:grid md:grid-cols-2 xl:grid-cols-3 gap-8">
+                <div 
+                  className="hidden md:grid md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8 justify-items-center"
+                  role="list"
+                  aria-label={intl.formatMessage({ id: "sosCall.providerList.desktopAriaLabel" })}
+                >
                   {paginatedProviders.map((provider, index) => (
-                    <ModernProfileCard
-                      key={provider.id}
-                      provider={provider}
-                      onProfileClick={handleProviderClick}
-                      index={index}
-                      language={language}
-                      intl={intl}
-                    />
+                    <div key={provider.id} role="listitem">
+                      <ModernProfileCard
+                        provider={provider}
+                        onProfileClick={handleProviderClick}
+                        index={index}
+                        language={language}
+                        intl={intl}
+                      />
+                    </div>
                   ))}
                 </div>
 
-                <style>{`
-                  .scrollbar-hide {
-                    scrollbar-width: none;
-                    -ms-overflow-style: none;
-                  }
-                  .scrollbar-hide::-webkit-scrollbar {
-                    display: none;
-                  }
-                `}</style>
-
                 {/* Pagination (bas) */}
-                <div className="flex items-center justify-between mt-8">
-                  <div className="text-sm text-gray-300">
-                    {lang === "en"
-                      ? "Page"
-                      : lang === "es"
-                        ? "Página"
-                        : lang === "fr"
-                          ? "Page"
-                          : lang === "de"
-                            ? "Seite"
-                            : lang === "ru"
-                              ? "Страница"
-                              : lang === "hi"
-                                ? "पृष्ठ"
-                                : lang === "ch"
-                                  ? "页面"
-                                  : lang === "pt"
-                                    ? "Página"
-                                    : lang === "ar"
-                                      ? "صفحة"
-                                      : "Page"}{" "}
+                <div className="flex flex-col sm:flex-row items-center justify-between mt-8 gap-4">
+                  <div className="text-sm text-gray-300" role="status">
+                    <FormattedMessage id="sosCall.pagination.page" />{" "}
                     <strong>{page}</strong> / {totalPages} —{" "}
                     {filteredProviders.length}
-                    <span className="ml-[2px]">
-                      <FormattedMessage id="pagination.results" />
+                    <span className="ml-1">
+                      <FormattedMessage id="sosCall.pagination.results" />
                     </span>
                   </div>
                   <Pagination
                     page={page}
                     totalPages={totalPages}
                     onChange={setPage}
+                    intl={intl}
                   />
                 </div>
               </>
             ) : (
-              <div className="text-center py-16">
-                <div className="rounded-[28px] border border-white/10 bg-white/5 backdrop-blur-md p-8 sm:p-12 max-w-md mx-auto">
-                  <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Search className="w-8 h-8 text-gray-200" />
+              <div className="text-center py-12 sm:py-16" role="status" aria-live="polite">
+                <div className="rounded-2xl sm:rounded-[28px] border border-white/10 bg-white/5 backdrop-blur-md p-6 sm:p-12 max-w-md mx-auto">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Search className="w-7 h-7 sm:w-8 sm:h-8 text-gray-200" aria-hidden="true" />
                   </div>
-                  <h3 className="text-xl font-semibold text-white mb-2">
-                    <FormattedMessage id="noResults.title" />
+                  <h3 className="text-lg sm:text-xl font-semibold text-white mb-2">
+                    <FormattedMessage id="sosCall.noResults.title" />
                   </h3>
-                  <p className="text-gray-300 mb-6">
-                    <FormattedMessage id="noResults.description" />
+                  <p className="text-gray-300 mb-6 text-sm sm:text-base">
+                    <FormattedMessage id="sosCall.noResults.description" />
                   </p>
                   <button
-                    onClick={() => {
-                      setSelectedType("all");
-                      setSelectedCountry("all");
-                      setSelectedLanguage("all");
-                      setCustomCountry("");
-                      setCustomLanguage("");
-                      setShowCustomCountry(false);
-                      setShowCustomLanguage(false);
-                      setStatusFilter("all");
-                      setOnlineOnly(false);
-                    }}
-                    className="px-6 py-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white font-semibold rounded-xl transition-colors"
+                    onClick={resetFilters}
+                    className="px-6 py-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white font-semibold rounded-xl transition-colors min-h-[48px]"
                   >
-                    <FormattedMessage id="noResults.resetFilters" />
+                    <FormattedMessage id="sosCall.noResults.resetButton" />
                   </button>
                 </div>
               </div>
             )}
 
-            {/* CTA */}
-            <section className="text-center mt-12 sm:mt-16">
-              <div className="rounded-[28px] border border-white/10 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-md p-8 sm:p-12">
-                <h3 className="text-2xl sm:text-3xl font-black text-white mb-3">
-                  <FormattedMessage id="needImmediateHelp" />
+            {/* CTA Section */}
+            <section className="text-center mt-12 sm:mt-16" aria-labelledby="cta-heading">
+              <div className="rounded-2xl sm:rounded-[28px] border border-white/10 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-md p-6 sm:p-12">
+                <h3 id="cta-heading" className="text-xl sm:text-2xl lg:text-3xl font-black text-white mb-3">
+                  <FormattedMessage id="sosCall.cta.title" />
                 </h3>
-                <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
-                  <FormattedMessage
-                    id="verifiedExpertsAvailable"
-                    defaultMessage="Over 200 verified experts available in <strong>150+ countries</strong> to assist you."
+                <p className="text-base sm:text-lg text-gray-300 mb-6 sm:mb-8 max-w-2xl mx-auto">
+                  <FormattedMessage 
+                    id="sosCall.cta.description"
                     values={{
-                      strong: (chunks) => <strong>{chunks}</strong>,
+                      strong: (chunks) => <strong className="text-white">{chunks}</strong>,
                     }}
                   />
                 </p>
                 <button
                   onClick={() => navigate("/sos-appel")}
-                  className="inline-flex items-center gap-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-0.5 min-h-[52px]"
+                  aria-label={intl.formatMessage({ id: "sosCall.cta.buttonAriaLabel" })}
                 >
-                  <Phone className="w-5 h-5" />
-                  <FormattedMessage id="findExpert" />
+                  <Phone className="w-5 h-5" aria-hidden="true" />
+                  <FormattedMessage id="sosCall.cta.button" />
                 </button>
               </div>
             </section>
           </div>
         </main>
+
+        {/* FAQ Section (8 questions pour Featured Snippet) */}
+        <FAQSection intl={intl} />
       </div>
+
+      {/* Global Styles */}
+      <style>{`
+        .scrollbar-hide {
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        
+        select option {
+          background-color: #1f2937;
+          color: white;
+        }
+      `}</style>
     </Layout>
-  );
-};
-
-/* =========================
-   Pagination component
-========================= */
-const Pagination: React.FC<{
-  page: number;
-  totalPages: number;
-  onChange: (p: number) => void;
-}> = ({ page, totalPages, onChange }) => {
-  if (totalPages <= 1) return null;
-
-  const go = (p: number) => {
-    const np = Math.min(totalPages, Math.max(1, p));
-    if (np !== page) onChange(np);
-  };
-
-  const makePages = (): Array<number | "ellipsis"> => {
-    const pages: Array<number | "ellipsis"> = [];
-    const add = (n: number) => pages.push(n);
-
-    const windowSize = 1;
-    add(1);
-    for (let i = page - windowSize; i <= page + windowSize; i++) {
-      if (i > 1 && i < totalPages) add(i);
-    }
-    if (totalPages > 1) add(totalPages);
-
-    const sorted = Array.from(new Set(pages)).sort((a, b) =>
-      typeof a === "number" && typeof b === "number" ? a - b : 0
-    );
-
-    const withEllipses: Array<number | "ellipsis"> = [];
-    for (let i = 0; i < sorted.length; i++) {
-      const cur = sorted[i] as number;
-      const prev = sorted[i - 1] as number | undefined;
-      if (
-        i > 0 &&
-        prev !== undefined &&
-        typeof prev === "number" &&
-        cur - prev > 1
-      ) {
-        withEllipses.push("ellipsis");
-      }
-      withEllipses.push(cur);
-    }
-    return withEllipses;
-  };
-
-  const items = makePages();
-
-  return (
-    <nav className="inline-flex items-center gap-1" aria-label="Pagination">
-      <button
-        onClick={() => go(page - 1)}
-        className="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white hover:bg-white/15 disabled:opacity-50 disabled:cursor-not-allowed"
-        disabled={page <= 1}
-        aria-label="Page précédente"
-      >
-        <ChevronLeft className="w-4 h-4" />
-        <span className="hidden sm:inline">
-          <FormattedMessage id="pagination.previous" />
-        </span>
-      </button>
-
-      {items.map((it, idx) =>
-        it === "ellipsis" ? (
-          <span key={`el-${idx}`} className="px-2 text-gray-300">
-            …
-          </span>
-        ) : (
-          <button
-            key={`p-${it}`}
-            onClick={() => go(it)}
-            aria-current={it === page ? "page" : undefined}
-            className={`w-9 h-9 rounded-xl border text-sm font-semibold transition ${
-              it === page
-                ? "bg-white/20 text-white border-white/30"
-                : "bg-white/10 text-gray-200 border-white/20 hover:bg-white/15"
-            }`}
-            title={`Aller à la page ${it}`}
-          >
-            {it}
-          </button>
-        )
-      )}
-
-      <button
-        onClick={() => go(page + 1)}
-        className="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white hover:bg-white/15 disabled:opacity-50 disabled:cursor-not-allowed"
-        disabled={page >= totalPages}
-        aria-label="Page suivante"
-      >
-        <span className="hidden sm:inline">
-          <FormattedMessage id="pagination.next" />
-        </span>
-        <ChevronRight className="w-4 h-4" />
-      </button>
-    </nav>
   );
 };
 

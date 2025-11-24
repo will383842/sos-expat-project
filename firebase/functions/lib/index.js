@@ -41,7 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkProviderInactivity = exports.testWebhook = exports.manuallyTriggerCallExecution = exports.getCloudTasksQueueStats = exports.testCloudTasksConnection = exports.getUltraDebugLogs = exports.getSystemHealthStatus = exports.generateSystemDebugReport = exports.scheduledCleanup = exports.scheduledFirestoreExport = exports.stripeWebhook = exports.getStripe = exports.adminBulkUpdateStatus = exports.adminSoftDeleteUser = exports.adminUpdateStatus = exports.executeCallTask = exports.notifyAfterPayment = exports.initializeMessageTemplates = exports.unifiedWebhook = exports.enqueueMessageEvent = exports.providerNoAnswerTwiML = exports.twilioCallWebhook = exports.testTwilioCall = exports.api = exports.createPaymentIntent = exports.createAndScheduleCall = exports.createAndScheduleCallHTTPS = exports.STRIPE_WEBHOOK_SECRET_LIVE = exports.STRIPE_WEBHOOK_SECRET_TEST = exports.STRIPE_MODE = exports.processScheduledTransfers = exports.completeLawyerOnboarding = exports.checkKycStatus = exports.addBankAccount = exports.submitKycData = exports.createCustomAccount = exports.TASKS_AUTH_SECRET = exports.scheduledBackup = exports.createManualBackup = exports.checkStripeAccountStatus = exports.getStripeAccountSession = exports.createStripeAccount = exports.createLawyerStripeAccount = exports.STRIPE_SECRET_KEY_LIVE = exports.STRIPE_SECRET_KEY_TEST = exports.TWILIO_PHONE_NUMBER = exports.TWILIO_AUTH_TOKEN = exports.TWILIO_ACCOUNT_SID = exports.EMAIL_PASS = exports.EMAIL_USER = void 0;
-exports.setProviderOffline = exports.updateProviderActivity = void 0;
+exports.sitemapProfiles = exports.setProviderOffline = exports.updateProviderActivity = void 0;
 // ====== ULTRA DEBUG INITIALIZATION ======
 const ultraDebugLogger_1 = require("./utils/ultraDebugLogger");
 // Tracer tous les imports principaux
@@ -1826,4 +1826,66 @@ var updateProviderActivity_1 = require("./callables/updateProviderActivity");
 Object.defineProperty(exports, "updateProviderActivity", { enumerable: true, get: function () { return updateProviderActivity_1.updateProviderActivity; } });
 var setProviderOffline_1 = require("./callables/setProviderOffline");
 Object.defineProperty(exports, "setProviderOffline", { enumerable: true, get: function () { return setProviderOffline_1.setProviderOffline; } });
+// ========================================
+// 🗺️ SEO - SITEMAP DYNAMIQUE DES PROFILS
+// ========================================
+const SITE_URL = 'https://sos-expat.com';
+const LANGUAGES = ['fr', 'en', 'de', 'es', 'pt', 'ru', 'zh', 'ar', 'hi'];
+exports.sitemapProfiles = (0, https_1.onRequest)({
+    region: 'europe-west1',
+    memory: '256MiB',
+    timeoutSeconds: 60,
+    maxInstances: 5,
+    minInstances: 0,
+}, async (_req, res) => {
+    try {
+        const database = initializeFirebase();
+        // Récupère tous les profils visibles et approuvés
+        const snapshot = await database.collection('users')
+            .where('isVisible', '==', true)
+            .where('isApproved', '==', true)
+            .get();
+        const today = new Date().toISOString().split('T')[0];
+        let xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+`;
+        snapshot.docs.forEach(doc => {
+            const profile = doc.data();
+            if (profile.slug) {
+                // URL principale
+                xml += `  <url>
+    <loc>${SITE_URL}/${profile.slug}</loc>
+`;
+                // Hreflang pour chaque langue
+                LANGUAGES.forEach(lang => {
+                    // Extrait le type et le reste du slug
+                    const slugParts = profile.slug.split('/');
+                    if (slugParts.length >= 2) {
+                        const langSlug = lang === 'fr'
+                            ? profile.slug
+                            : `${lang}/${slugParts.slice(1).join('/')}`;
+                        xml += `    <xhtml:link rel="alternate" hreflang="${lang}" href="${SITE_URL}/${langSlug}"/>
+`;
+                    }
+                });
+                xml += `    <xhtml:link rel="alternate" hreflang="x-default" href="${SITE_URL}/${profile.slug}"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>${today}</lastmod>
+  </url>
+`;
+            }
+        });
+        xml += `</urlset>`;
+        res.set('Content-Type', 'application/xml; charset=utf-8');
+        res.set('Cache-Control', 'public, max-age=3600'); // Cache 1h
+        res.status(200).send(xml);
+        console.log(`✅ Sitemap generated with ${snapshot.docs.length} profiles`);
+    }
+    catch (error) {
+        console.error('❌ Sitemap error:', error);
+        res.status(500).send('Error generating sitemap');
+    }
+});
 //# sourceMappingURL=index.js.map

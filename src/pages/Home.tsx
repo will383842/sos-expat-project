@@ -39,6 +39,37 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { useApp } from "../contexts/AppContext";
 
 /* ================================
+   CONSTANTES SEO (NE PAS TRADUIRE)
+   ================================ */
+const SEO_CONSTANTS = {
+  SITE_NAME: "SOS Expat",
+  BASE_URL: "https://sos-urgently.com",
+  LOGO_URL: "https://sos-urgently.com/sos-logo.jpg",
+  OG_IMAGE_URL: "https://sos-urgently.com/og-image.jpg",
+  TWITTER_HANDLE: "@sosexpat",
+  SOCIAL: {
+    facebook: "https://facebook.com/sosexpat",
+    linkedin: "https://linkedin.com/company/sosexpat",
+    twitter: "https://twitter.com/sosexpat",
+  },
+} as const;
+
+const OG_LOCALES: Record<string, string> = {
+  fr: "fr_FR",
+  en: "en_US",
+  es: "es_ES",
+  de: "de_DE",
+  pt: "pt_BR",
+  ru: "ru_RU",
+  zh: "zh_CN",
+  ch: "zh_CN",
+  ar: "ar_SA",
+  hi: "hi_IN",
+};
+
+const SUPPORTED_LANGS = ["fr", "en", "es", "de", "pt", "ru", "zh", "ar", "hi"] as const;
+
+/* ================================
    Types
    ================================ */
 interface Stat {
@@ -374,6 +405,10 @@ const OptimizedHomePage: React.FC = () => {
   const intl = useIntl();
   const { language } = useApp();
 
+  // ======= URL Construction =======
+  const currentPath = "/";
+  const canonicalUrl = `${SEO_CONSTANTS.BASE_URL}/${language}${currentPath === "/" ? "" : currentPath}`;
+
   const stats: Stat[] = useMemo(() => [
     {
       valueKey: "stats.value.expatriates",
@@ -395,7 +430,7 @@ const OptimizedHomePage: React.FC = () => {
     },
   ], []);
 
-  // ======= SEO Meta Data - Toutes les clés de traduction =======
+  // ======= SEO Meta Data - Clés de traduction UNIQUEMENT pour le contenu =======
   const seoData = useMemo(() => ({
     title: intl.formatMessage({ id: "seo.home.title" }),
     description: intl.formatMessage({ id: "seo.home.description" }),
@@ -404,59 +439,69 @@ const OptimizedHomePage: React.FC = () => {
     ogDescription: intl.formatMessage({ id: "seo.home.ogDescription" }),
     twitterTitle: intl.formatMessage({ id: "seo.home.twitterTitle" }),
     twitterDescription: intl.formatMessage({ id: "seo.home.twitterDescription" }),
-    siteName: intl.formatMessage({ id: "seo.siteName" }),
-    author: intl.formatMessage({ id: "seo.author" }),
-    canonical: intl.formatMessage({ id: "seo.canonical" }),
-    ogImage: intl.formatMessage({ id: "seo.ogImage" }),
-    twitterImage: intl.formatMessage({ id: "seo.twitterImage" }),
-    logo: intl.formatMessage({ id: "seo.logo" }),
   }), [intl]);
 
-  // ======= JSON-LD Schema.org - Toutes les clés de traduction =======
+  // ======= JSON-LD Schema.org - URLs CONSTANTES =======
   const jsonLdOrganization = useMemo(() => ({
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": intl.formatMessage({ id: "schema.org.name" }),
-    "url": intl.formatMessage({ id: "schema.org.url" }),
-    "logo": seoData.logo,
-    "description": seoData.description,
-    "sameAs": [
-      intl.formatMessage({ id: "schema.social.facebook" }),
-      intl.formatMessage({ id: "schema.social.linkedin" }),
-      intl.formatMessage({ id: "schema.social.twitter" })
-    ],
+    "@id": `${SEO_CONSTANTS.BASE_URL}/#organization`,
+    "name": SEO_CONSTANTS.SITE_NAME,
+    "url": SEO_CONSTANTS.BASE_URL,
+    "logo": {
+      "@type": "ImageObject",
+      "url": SEO_CONSTANTS.LOGO_URL,
+      "width": 512,
+      "height": 512,
+    },
+    "description": intl.formatMessage({ id: "seo.home.description" }),
+    "sameAs": Object.values(SEO_CONSTANTS.SOCIAL),
     "contactPoint": {
       "@type": "ContactPoint",
       "contactType": intl.formatMessage({ id: "schema.contactType" }),
-      "availableLanguage": intl.formatMessage({ id: "schema.availableLanguages" }).split(","),
-      "areaServed": intl.formatMessage({ id: "schema.areaServed" })
-    }
-  }), [intl, seoData]);
+      "availableLanguage": ["French", "English", "Spanish", "German", "Portuguese", "Russian", "Chinese", "Arabic", "Hindi"],
+      "areaServed": "Worldwide",
+    },
+    "knowsAbout": [
+      "Expatriation",
+      "Legal assistance",
+      "Immigration",
+      "Relocation",
+      "International law",
+    ],
+  }), [intl]);
 
   const jsonLdWebSite = useMemo(() => ({
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": intl.formatMessage({ id: "schema.org.name" }),
-    "url": intl.formatMessage({ id: "schema.org.url" }),
+    "@id": `${SEO_CONSTANTS.BASE_URL}/#website`,
+    "name": SEO_CONSTANTS.SITE_NAME,
+    "url": SEO_CONSTANTS.BASE_URL,
+    "inLanguage": language,
     "potentialAction": {
       "@type": "SearchAction",
-      "target": intl.formatMessage({ id: "schema.searchTarget" }),
-      "query-input": "required name=search_term_string"
-    }
-  }), [intl]);
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": `${SEO_CONSTANTS.BASE_URL}/recherche?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+  }), [language]);
 
   const jsonLdService = useMemo(() => ({
     "@context": "https://schema.org",
     "@type": "Service",
-    "serviceType": intl.formatMessage({ id: "schema.serviceType" }),
+    "@id": `${SEO_CONSTANTS.BASE_URL}/#service`,
+    "name": intl.formatMessage({ id: "schema.serviceType" }),
     "provider": {
       "@type": "Organization",
-      "name": intl.formatMessage({ id: "schema.org.name" })
+      "@id": `${SEO_CONSTANTS.BASE_URL}/#organization`,
     },
     "areaServed": {
       "@type": "Place",
-      "name": intl.formatMessage({ id: "schema.areaServedPlace" })
+      "name": "Worldwide",
     },
+    "serviceType": "Expatriate Assistance",
     "hasOfferCatalog": {
       "@type": "OfferCatalog",
       "name": intl.formatMessage({ id: "schema.offerCatalogName" }),
@@ -465,18 +510,18 @@ const OptimizedHomePage: React.FC = () => {
           "@type": "Offer",
           "itemOffered": {
             "@type": "Service",
-            "name": intl.formatMessage({ id: "schema.lawyerService" })
-          }
+            "name": intl.formatMessage({ id: "schema.lawyerService" }),
+          },
         },
         {
           "@type": "Offer",
           "itemOffered": {
             "@type": "Service",
-            "name": intl.formatMessage({ id: "schema.expatService" })
-          }
-        }
-      ]
-    }
+            "name": intl.formatMessage({ id: "schema.expatService" }),
+          },
+        },
+      ],
+    },
   }), [intl]);
 
   const jsonLdFAQ = useMemo(() => ({
@@ -488,26 +533,26 @@ const OptimizedHomePage: React.FC = () => {
         "name": intl.formatMessage({ id: "faq.question1" }),
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": intl.formatMessage({ id: "faq.answer1" })
-        }
+          "text": intl.formatMessage({ id: "faq.answer1" }),
+        },
       },
       {
         "@type": "Question",
         "name": intl.formatMessage({ id: "faq.question2" }),
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": intl.formatMessage({ id: "faq.answer2" })
-        }
+          "text": intl.formatMessage({ id: "faq.answer2" }),
+        },
       },
       {
         "@type": "Question",
         "name": intl.formatMessage({ id: "faq.question3" }),
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": intl.formatMessage({ id: "faq.answer3" })
-        }
-      }
-    ]
+          "text": intl.formatMessage({ id: "faq.answer3" }),
+        },
+      },
+    ],
   }), [intl]);
 
   const jsonLdBreadcrumb = useMemo(() => ({
@@ -518,45 +563,57 @@ const OptimizedHomePage: React.FC = () => {
         "@type": "ListItem",
         "position": 1,
         "name": intl.formatMessage({ id: "breadcrumb.home" }),
-        "item": intl.formatMessage({ id: "schema.org.url" })
-      }
-    ]
-  }), [intl]);
+        "item": canonicalUrl,
+      },
+    ],
+  }), [intl, canonicalUrl]);
 
   // ======= JSON-LD pour IA (Speakable, HowTo) =======
   const jsonLdSpeakable = useMemo(() => ({
     "@context": "https://schema.org",
     "@type": "WebPage",
+    "@id": `${canonicalUrl}#webpage`,
+    "url": canonicalUrl,
+    "name": seoData.title,
+    "description": seoData.description,
+    "isPartOf": {
+      "@id": `${SEO_CONSTANTS.BASE_URL}/#website`,
+    },
+    "about": {
+      "@id": `${SEO_CONSTANTS.BASE_URL}/#organization`,
+    },
     "speakable": {
       "@type": "SpeakableSpecification",
-      "cssSelector": ["#main-heading", "#experts-heading", "#pricing-heading"]
+      "cssSelector": ["#main-heading", "#experts-heading", "#pricing-heading"],
     },
-    "name": seoData.title,
-    "description": seoData.description
-  }), [seoData]);
+  }), [canonicalUrl, seoData]);
 
   const jsonLdHowTo = useMemo(() => ({
     "@context": "https://schema.org",
     "@type": "HowTo",
     "name": intl.formatMessage({ id: "howto.name" }),
     "description": intl.formatMessage({ id: "howto.description" }),
+    "totalTime": "PT5M",
     "step": [
       {
         "@type": "HowToStep",
+        "position": 1,
         "name": intl.formatMessage({ id: "howto.step1.name" }),
-        "text": intl.formatMessage({ id: "howto.step1.text" })
+        "text": intl.formatMessage({ id: "howto.step1.text" }),
       },
       {
         "@type": "HowToStep",
+        "position": 2,
         "name": intl.formatMessage({ id: "howto.step2.name" }),
-        "text": intl.formatMessage({ id: "howto.step2.text" })
+        "text": intl.formatMessage({ id: "howto.step2.text" }),
       },
       {
         "@type": "HowToStep",
+        "position": 3,
         "name": intl.formatMessage({ id: "howto.step3.name" }),
-        "text": intl.formatMessage({ id: "howto.step3.text" })
-      }
-    ]
+        "text": intl.formatMessage({ id: "howto.step3.text" }),
+      },
+    ],
   }), [intl]);
 
   // ======= Pricing dynamique =======
@@ -1011,61 +1068,81 @@ const OptimizedHomePage: React.FC = () => {
 
   return (
     <Layout>
-      {/* ================= SEO HEAD - 100% clés de traduction ================= */}
+      {/* ================= SEO HEAD - CORRIGÉ ================= */}
       <Helmet>
+        {/* Base */}
         <html lang={language} />
         <title>{seoData.title}</title>
         <meta name="title" content={seoData.title} />
         <meta name="description" content={seoData.description} />
         <meta name="keywords" content={seoData.keywords} />
+        <meta name="author" content={SEO_CONSTANTS.SITE_NAME} />
+        
+        {/* Robots */}
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-        <meta name="author" content={seoData.author} />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+        
+        {/* Viewport & charset */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
+        
+        {/* Autres meta */}
         <meta name="language" content={language} />
         <meta name="revisit-after" content="7 days" />
         <meta name="rating" content="general" />
         <meta name="distribution" content="global" />
         
-        <link rel="canonical" href={seoData.canonical} />
-        <link rel="alternate" hrefLang="fr" href={`${seoData.canonical}/fr`} />
-        <link rel="alternate" hrefLang="en" href={`${seoData.canonical}/en`} />
-        <link rel="alternate" hrefLang="de" href={`${seoData.canonical}/de`} />
-        <link rel="alternate" hrefLang="es" href={`${seoData.canonical}/es`} />
-        <link rel="alternate" hrefLang="pt" href={`${seoData.canonical}/pt`} />
-        <link rel="alternate" hrefLang="ru" href={`${seoData.canonical}/ru`} />
-        <link rel="alternate" hrefLang="zh" href={`${seoData.canonical}/zh`} />
-        <link rel="alternate" hrefLang="ar" href={`${seoData.canonical}/ar`} />
-        <link rel="alternate" hrefLang="hi" href={`${seoData.canonical}/hi`} />
-        <link rel="alternate" hrefLang="x-default" href={seoData.canonical} />
+        {/* Canonical - CONSTRUIT DYNAMIQUEMENT */}
+        <link rel="canonical" href={canonicalUrl} />
+        
+        {/* Hreflang - URLs CONSTANTES */}
+        {SUPPORTED_LANGS.map((lang) => (
+          <link
+            key={lang}
+            rel="alternate"
+            hrefLang={lang}
+            href={`${SEO_CONSTANTS.BASE_URL}/${lang}`}
+          />
+        ))}
+        <link rel="alternate" hrefLang="x-default" href={SEO_CONSTANTS.BASE_URL} />
 
+        {/* Open Graph - URLs CONSTANTES */}
         <meta property="og:type" content="website" />
-        <meta property="og:url" content={seoData.canonical} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:site_name" content={SEO_CONSTANTS.SITE_NAME} />
         <meta property="og:title" content={seoData.ogTitle} />
         <meta property="og:description" content={seoData.ogDescription} />
-        <meta property="og:image" content={seoData.ogImage} />
+        <meta property="og:image" content={SEO_CONSTANTS.OG_IMAGE_URL} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
-        <meta property="og:locale" content={language === "fr" ? "fr_FR" : "en_US"} />
-        <meta property="og:site_name" content={seoData.siteName} />
+        <meta property="og:image:alt" content={seoData.ogTitle} />
+        <meta property="og:locale" content={OG_LOCALES[language] || "en_US"} />
+        {/* OG Locale alternates */}
+        {SUPPORTED_LANGS.filter(l => l !== language).map((lang) => (
+          <meta key={lang} property="og:locale:alternate" content={OG_LOCALES[lang]} />
+        ))}
 
+        {/* Twitter Cards - URLs CONSTANTES */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content={seoData.canonical} />
+        <meta name="twitter:url" content={canonicalUrl} />
         <meta name="twitter:title" content={seoData.twitterTitle} />
         <meta name="twitter:description" content={seoData.twitterDescription} />
-        <meta name="twitter:image" content={seoData.twitterImage} />
-        <meta name="twitter:site" content="@sosexpat" />
-        <meta name="twitter:creator" content="@sosexpat" />
+        <meta name="twitter:image" content={SEO_CONSTANTS.OG_IMAGE_URL} />
+        <meta name="twitter:site" content={SEO_CONSTANTS.TWITTER_HANDLE} />
+        <meta name="twitter:creator" content={SEO_CONSTANTS.TWITTER_HANDLE} />
 
+        {/* Security */}
         <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
         <meta httpEquiv="X-Frame-Options" content="SAMEORIGIN" />
         <meta name="referrer" content="strict-origin-when-cross-origin" />
 
+        {/* Preconnect */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://images.unsplash.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 
+        {/* JSON-LD Schema.org */}
         <script type="application/ld+json">
           {JSON.stringify(jsonLdOrganization)}
         </script>

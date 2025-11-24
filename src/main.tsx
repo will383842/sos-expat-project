@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import { hydrateRoot, createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 import { setupGlobalErrorLogging } from './utils/logging';
@@ -46,13 +46,13 @@ const resources = {
           goOffline: "Se rendre indisponible"
         },
         errors: {
-          notApproved: "Votre profil n'est pas encore approuv�.",
-          updateFailed: "�chec de la mise � jour de votre statut.",
+          notApproved: "Votre profil n'est pas encore approuvé.",
+          updateFailed: "Échec de la mise à jour de votre statut.",
           syncFailed: "Erreur de synchronisation du statut."
         }
       },
       common: {
-        refresh: "Rafra�chir"
+        refresh: "Rafraîchir"
       }
     }
   }
@@ -71,11 +71,11 @@ i18n
 
 export default i18n;
 
-
 // Initialiser la capture d'erreurs globale
 setupGlobalErrorLogging();
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+// Composant racine
+const RootApp = (
   <React.StrictMode>
     <HelmetProvider>
       <AuthProvider>
@@ -89,5 +89,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   </React.StrictMode>
 );
 
+const container = document.getElementById('root')!;
 
-
+// Si la page a été pre-rendue par react-snap, hydrater au lieu de render
+if (container.hasChildNodes()) {
+  hydrateRoot(container, RootApp);
+} else {
+  createRoot(container).render(RootApp);
+}
