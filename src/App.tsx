@@ -23,15 +23,16 @@ import ptMessages from "./helper/pt.json";
 import chMessages from "./helper/ch.json";
 import arMessages from './helper/ar.json';
 import { useApp } from "./contexts/AppContext";
-import { 
+import {
   LocaleRouter,
-  getLocaleString, 
+  getLocaleString,
   parseLocaleFromPath,
   getTranslatedRouteSlug,
   getAllTranslatedSlugs,
   getRouteKeyFromSlug,
   type RouteKey,
 } from "./multilingual-system";
+import HreflangLinks from "./multilingual-system/components/HrefLang/HreflangLinks";
 
 // --------------------------------------------
 // Types
@@ -39,8 +40,8 @@ import {
 interface RouteConfig {
   path: string;
   component:
-    | React.LazyExoticComponent<React.ComponentType<Record<string, unknown>>>
-    | React.ComponentType<Record<string, unknown>>;
+  | React.LazyExoticComponent<React.ComponentType<Record<string, unknown>>>
+  | React.ComponentType<Record<string, unknown>>;
   protected?: boolean;
   role?: string;
   alias?: string;
@@ -208,7 +209,7 @@ const DefaultHelmet: React.FC<{ pathname: string }> = ({ pathname }) => {
   // Remove locale prefix from pathname for metadata lookup
   const { pathWithoutLocale } = parseLocaleFromPath(pathname);
   const pathForMetadata = pathWithoutLocale === "/" ? "/" : pathWithoutLocale;
-  
+
   const getPageMetadata = (path: string) => {
     const metaMap: Record<
       string,
@@ -281,6 +282,8 @@ const App: React.FC = () => {
   const { language } = useApp();
   const { isMobile } = useDeviceDetection();
   const [locale, setLocale] = useState<Locale>("es"); // Default to French since your site is French
+  console.log("Current locale:", locale);
+
 
   // SW + perf
   useEffect(() => {
@@ -322,15 +325,15 @@ const App: React.FC = () => {
       role,
       alias,
       translated,
-    } = config; 
-    
+    } = config;
+
     // Add locale prefix to paths - use simple parameter, validation happens in LocaleRouter
     // React Router v6 doesn't support regex in path params, so we use :locale and validate elsewhere
     const localePrefix = `/:locale`;
-    
+
     // Handle root path specially - match both with and without trailing slash
     let routes: string[] = [];
-    
+
     if (path === "/") {
       // For root, create routes that match both /en-us and /en-us/
       routes = [
@@ -340,10 +343,10 @@ const App: React.FC = () => {
     } else if (translated) {
       // For translated routes, generate all language variants
       const allSlugs = getAllTranslatedSlugs(translated);
-      
+
       // Check if the translated slug contains a slash (nested route like "dashboard/messages")
       const hasNestedPath = allSlugs.some(slug => slug.includes("/"));
-      
+
       if (hasNestedPath) {
         // For nested routes, replace the entire path
         // e.g., "/dashboard/messages" with slug "tableau-de-bord/messages" -> "/tableau-de-bord/messages"
@@ -354,14 +357,14 @@ const App: React.FC = () => {
         // e.g., "/register/lawyer" -> ""
         const pathMatch = path.match(/^\/[^/]+(\/.*)?$/);
         const pathPattern = pathMatch && pathMatch[1] ? pathMatch[1] : "";
-        
+
         // Generate routes for all translated slugs
         routes = allSlugs.map(slug => `${localePrefix}/${slug}${pathPattern}`);
       }
-      
+
       // Also include the original path for backward compatibility
       routes.push(`${localePrefix}${path}`);
-      
+
       // Include alias if present
       if (alias) {
         routes.push(`${localePrefix}${alias}`);
@@ -379,7 +382,7 @@ const App: React.FC = () => {
       if (process.env.NODE_ENV === 'development' && path === "/") {
         console.log(`[Route] Registering locale route: ${routePath}`);
       }
-      
+
       return (
         <Route
           key={`${index}-${i}-${routePath}`}
@@ -404,6 +407,9 @@ const App: React.FC = () => {
         <LocaleRouter>
           <div className={`App ${isMobile ? "mobile-layout" : "desktop-layout"}`}>
             <DefaultHelmet pathname={location.pathname} />
+
+            {/* Dynamically generate hreflang links for all locales */}
+            <HreflangLinks pathname={location.pathname} />
             <Suspense fallback={<LoadingSpinner size="large" color="red" />}>
               {/* Routes de l'app */}
               <Routes>
@@ -412,7 +418,7 @@ const App: React.FC = () => {
                   path="/"
                   element={<Navigate to={`/${getLocaleString(language)}`} replace />}
                 />
-                
+
                 {/* Payment success route without locale (backward compatibility) */}
                 <Route
                   path="/payment-success"
@@ -422,7 +428,7 @@ const App: React.FC = () => {
                     </ProtectedRoute>
                   }
                 />
-                
+
                 {/* Routes with locale prefix - Home route first for root locale path */}
                 {routeConfigs
                   .sort((a, b) => {
@@ -441,23 +447,23 @@ const App: React.FC = () => {
                 />
                 <Route path="/admin/*" element={<AdminRoutesV2 />} />
 
-              {/* Marketing & Communication */}
-              <Route
-                path="marketing/templates-emails"
-                element={<TemplatesEmails />}
-              />
-              <Route
-                path="marketing/notifications"
-                element={<NotificationsRouting />}
-              />
-              <Route
-                path="marketing/delivrabilite"
-                element={<DelivrabiliteLogs />}
-              />
-              <Route
-                path="marketing/messages-temps-reel"
-                element={<MessagesTempsReel />}
-              />
+                {/* Marketing & Communication */}
+                <Route
+                  path="marketing/templates-emails"
+                  element={<TemplatesEmails />}
+                />
+                <Route
+                  path="marketing/notifications"
+                  element={<NotificationsRouting />}
+                />
+                <Route
+                  path="marketing/delivrabilite"
+                  element={<DelivrabiliteLogs />}
+                />
+                <Route
+                  path="marketing/messages-temps-reel"
+                  element={<MessagesTempsReel />}
+                />
               </Routes>
 
               {/* Routes admin gérées par AdminRoutesV2 */}
