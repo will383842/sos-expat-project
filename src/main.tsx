@@ -76,7 +76,8 @@ setupGlobalErrorLogging();
 
 // Composant racine
 const RootApp = (
-  <React.StrictMode>
+  // StrictMode désactivé temporairement - cause des AbortError avec Firebase
+  // <React.StrictMode>
     <HelmetProvider>
       <AuthProvider>
         <AppProvider>
@@ -86,7 +87,7 @@ const RootApp = (
         </AppProvider>
       </AuthProvider>
     </HelmetProvider>
-  </React.StrictMode>
+  // </React.StrictMode>
 );
 
 const container = document.getElementById('root')!;

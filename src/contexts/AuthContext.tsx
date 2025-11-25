@@ -309,6 +309,13 @@ const createUserDocumentInFirestore = async (
     });
 
     // 2️⃣ Si lawyer/expat → créer AUSSI dans sos_profiles avec TOUS les champs
+console.log('🔍 [DEBUG] additionalData complet:', JSON.stringify(additionalData, null, 2));
+console.log('🔍 [DEBUG] additionalData.role:', additionalData.role);
+console.log('🔍 [DEBUG] typeof additionalData.role:', typeof additionalData.role);
+console.log('🔍 [DEBUG] role === lawyer ?', additionalData.role === 'lawyer');
+console.log('🔍 [DEBUG] role === expat ?', additionalData.role === 'expat');
+
+    // 2️⃣ Si lawyer/expat → créer AUSSI dans sos_profiles avec TOUS les champs
     if (additionalData.role === 'lawyer' || additionalData.role === 'expat') {
       const sosRef = doc(db, 'sos_profiles', firebaseUser.uid);
       
@@ -689,7 +696,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       subscribed.current = false;
       unsubUser?.();
     };
-  }, [authUser?.uid, authUser?.emailVerified]);
+  }, [authUser?.uid]);
 
   /* ============================
      Méthodes d'auth (useCallback)

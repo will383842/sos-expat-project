@@ -11,8 +11,8 @@
   "seo.author": "SOS Expat - Ulixai",
   "seo.canonical": "https://sos-expat.com",
   "seo.ogImage": "https://sos-expat.com/og-image.jpg",
-  "seo.twitterImage": "https://sos-expat.com/twitter-image.jpg",
-  "seo.logo": "https://sos-expat.com/sos-logo.jpg",
+  "seo.twitterImage": "https://sos-expat.com/twitter-image.png",
+  "seo.logo": "https://sos-expat.com/sos-logo.webp",
   "seo.defaultTitle": "Assistance Expatriés Mondiale 24/7",
   "seo.defaultDescription": "SOS Urgently - Votre partenaire de confiance pour l'assistance aux expatriés dans le monde entier. Services d'urgence disponibles 24h/24, 7j/7 dans plus de 190 pays. Avocats, conseils juridiques, visa, relocation.",
   "seo.organizationDescription": "Plateforme internationale d'assistance aux expatriés offrant des services d'urgence 24/7 dans plus de 190 pays.",
@@ -1255,7 +1255,7 @@
 
 
 
-  
+
   "contact.message": "Votre message",
   "contact.firstNamePlaceholder": "Comment doit‑on vous appeler ? 😊",
   "contact.lastNamePlaceholder": "Votre nom de famille...",

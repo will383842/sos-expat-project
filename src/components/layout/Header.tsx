@@ -896,7 +896,7 @@ const PWAInstallArea = memo<PWAInstallAreaProps>(function PWAInstallArea({
           onError={(e) => {
             const img = e.currentTarget;
             if (img.src.includes("icon-72x72.png")) {
-              img.src = "/sos-logo.jpg";
+              img.src = "/sos-logo.webp";
             }
           }}
         />
@@ -941,7 +941,7 @@ const PWAIconButton = memo(function PWAIconButton() {
         onError={(e) => {
           const img = e.currentTarget;
           if (img.src.includes("icon-72x72.png")) {
-            img.src = "/sos-logo.jpg";
+            img.src = "/sos-logo.webp";
           }
         }}
       />

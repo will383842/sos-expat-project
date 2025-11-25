@@ -2416,7 +2416,7 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({
           "@id": `${window.location.origin}#organization`,
           name: "SOS Expats",
           url: window.location.origin,
-          logo: `${window.location.origin}/sos-logo.jpg`,
+          logo: `${window.location.origin}/sos-logo.webp`,
         },
         publisher: { "@id": `${window.location.origin}#organization` },
       } as Record<string, unknown>,

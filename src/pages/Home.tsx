@@ -44,7 +44,7 @@ import { useApp } from "../contexts/AppContext";
 const SEO_CONSTANTS = {
   SITE_NAME: "SOS Expat",
   BASE_URL: "https://sos-urgently.com",
-  LOGO_URL: "https://sos-urgently.com/sos-logo.jpg",
+  LOGO_URL: "https://sos-urgently.com/sos-logo.webp",
   OG_IMAGE_URL: "https://sos-urgently.com/og-image.jpg",
   TWITTER_HANDLE: "@sosexpat",
   SOCIAL: {

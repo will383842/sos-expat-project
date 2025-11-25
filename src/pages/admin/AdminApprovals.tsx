@@ -58,11 +58,18 @@ type FilterType = 'all' | 'lawyer' | 'expat';
 type SortType = 'recent' | 'oldest' | 'name';
 type StatusTab = 'pending' | 'approved' | 'rejected';
 
-const AdminApprovals: React.FC = () => {
+
+  const AdminApprovals: React.FC = () => {
   const { t } = useTranslation();
   const { user: currentUser } = useAuth();
-  const [profiles, setProfiles] = useState<PendingProfile[]>([]);
+  
+  // 🔍 DEBUG - À SUPPRIMER APRÈS
+  console.log('🔍 AdminApprovals - currentUser:', currentUser);
+  console.log('🔍 AdminApprovals - role:', currentUser?.role);
+  console.log('🔍 AdminApprovals - uid:', currentUser?.uid);
+  
   const [loading, setLoading] = useState(true);
+  const [profiles, setProfiles] = useState<PendingProfile[]>([]);
   const [filter, setFilter] = useState<FilterType>('all');
   const [sortBy, setSortBy] = useState<SortType>('recent');
   const [statusTab, setStatusTab] = useState<StatusTab>('pending');

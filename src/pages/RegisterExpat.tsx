@@ -1,8 +1,9 @@
 // src/pages/RegisterExpat.tsx
-// VERSION ULTRA-OPTIMISÉE - SEO + PERFORMANCE + SÉCURITÉ
+// VERSION ULTRA-OPTIMISÉE - SEO + PERFORMANCE + SÉCURITÉ + ANTI-BOT
 // ✅ SEO: JSON-LD, Schema.org, Open Graph, Twitter Cards, Canonical
 // ✅ PERFORMANCE: Lazy loading, mise en cache, optimisation bundle
 // ✅ SÉCURITÉ: Input sanitization, validation stricte
+// ✅ ANTI-BOT: reCAPTCHA v3, Honeypot, Time check, Fingerprint
 // ✅ ACCESSIBILITÉ: ARIA labels, balises sémantiques, navigation clavier
 // ✅ i18n: 100% clés de traduction, zéro texte en dur
 
@@ -30,6 +31,7 @@ import {
   ArrowRight,
   HelpCircle,
   Loader2,
+  Shield,
 } from "lucide-react";
 import Layout from "../components/layout/Layout";
 import Button from "../components/common/Button";
@@ -47,6 +49,143 @@ import '../styles/multi-language-select.css';
 // Lazy imports pour optimisation du bundle
 const ImageUploader = lazy(() => import("../components/common/ImageUploader"));
 const MultiLanguageSelect = lazy(() => import("../components/forms-data/MultiLanguageSelect"));
+
+// ============================================================================
+// 🔐 CONFIGURATION RECAPTCHA v3 + ANTI-BOT
+// ============================================================================
+// ⚠️ IMPORTANT: Remplacez par votre clé de site reCAPTCHA v3
+// Obtenir une clé: https://www.google.com/recaptcha/admin/create
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || "6LcXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+
+// Temps minimum pour remplir le formulaire (en secondes)
+const MIN_FORM_FILL_TIME = 15;
+
+// Déclaration TypeScript pour grecaptcha
+declare global {
+  interface Window {
+    grecaptcha: {
+      ready: (callback: () => void) => Promise<void>;
+      execute: (siteKey: string, options: { action: string }) => Promise<string>;
+    };
+  }
+}
+
+// 🤖 HOOK ANTI-BOT - reCAPTCHA v3 + Honeypot + Time Check + Behavior Tracking
+const useAntiBot = () => {
+  const formStartTime = useRef<number>(Date.now());
+  const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
+  const [honeypotValue, setHoneypotValue] = useState("");
+  const [mouseMovements, setMouseMovements] = useState(0);
+  const [keystrokes, setKeystrokes] = useState(0);
+
+  // Charger le script reCAPTCHA v3
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !window.grecaptcha) {
+      const script = document.createElement('script');
+      script.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`;
+      script.async = true;
+      script.defer = true;
+      script.onload = () => {
+        console.log('✅ reCAPTCHA v3 chargé');
+        setRecaptchaLoaded(true);
+      };
+      script.onerror = () => {
+        console.warn('⚠️ Erreur chargement reCAPTCHA');
+      };
+      document.head.appendChild(script);
+    } else if (window.grecaptcha) {
+      setRecaptchaLoaded(true);
+    }
+  }, []);
+
+  // Tracker les mouvements de souris (les bots n'en ont généralement pas)
+  useEffect(() => {
+    const handleMouseMove = () => {
+      setMouseMovements(prev => prev + 1);
+    };
+    
+    const handleKeyDown = () => {
+      setKeystrokes(prev => prev + 1);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
+  // Exécuter la vérification reCAPTCHA
+  const executeRecaptcha = useCallback(async (action: string): Promise<string | null> => {
+    if (!recaptchaLoaded || !window.grecaptcha) {
+      console.warn('⚠️ reCAPTCHA non disponible');
+      return null;
+    }
+
+    try {
+      await window.grecaptcha.ready(() => {});
+      const token = await window.grecaptcha.execute(RECAPTCHA_SITE_KEY, { action });
+      return token;
+    } catch (error) {
+      console.error('❌ Erreur reCAPTCHA:', error);
+      return null;
+    }
+  }, [recaptchaLoaded]);
+
+  // Vérifier si c'est probablement un bot
+  const validateHuman = useCallback(async (): Promise<{
+    isValid: boolean;
+    reason?: string;
+    recaptchaToken?: string | null;
+  }> => {
+    const timeSpent = (Date.now() - formStartTime.current) / 1000;
+
+    // 1. Vérifier le honeypot (champ caché)
+    if (honeypotValue) {
+      console.warn('🤖 Bot détecté: Honeypot rempli');
+      return { isValid: false, reason: 'honeypot' };
+    }
+
+    // 2. Vérifier le temps de remplissage
+    if (timeSpent < MIN_FORM_FILL_TIME) {
+      console.warn(`🤖 Bot détecté: Formulaire rempli trop vite (${timeSpent.toFixed(1)}s < ${MIN_FORM_FILL_TIME}s)`);
+      return { isValid: false, reason: 'too_fast' };
+    }
+
+    // 3. Vérifier les mouvements de souris (avertissement seulement)
+    if (mouseMovements < 10) {
+      console.warn(`🤖 Comportement suspect: Peu de mouvements souris (${mouseMovements})`);
+    }
+
+    // 4. Vérifier les frappes clavier (avertissement seulement)
+    if (keystrokes < 20) {
+      console.warn(`🤖 Comportement suspect: Peu de frappes clavier (${keystrokes})`);
+    }
+
+    // 5. Exécuter reCAPTCHA v3
+    const recaptchaToken = await executeRecaptcha('register_expat');
+
+    return { 
+      isValid: true, 
+      recaptchaToken,
+    };
+  }, [honeypotValue, mouseMovements, keystrokes, executeRecaptcha]);
+
+  return {
+    honeypotValue,
+    setHoneypotValue,
+    validateHuman,
+    recaptchaLoaded,
+    formStartTime: formStartTime.current,
+    stats: {
+      mouseMovements,
+      keystrokes,
+      timeSpent: Math.floor((Date.now() - formStartTime.current) / 1000),
+    }
+  };
+};
 
 // Constants
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -262,6 +401,13 @@ const RegisterExpat: React.FC = () => {
   const { language } = useApp();
   const lang = language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt" | "ch" | "ar";
 
+  // 🤖 Hook Anti-Bot
+  const { honeypotValue, setHoneypotValue, validateHuman, recaptchaLoaded, stats } = useAntiBot();
+
+  // ✅ FIX: Ref pour tracker si la navigation a eu lieu (évite le saut de page)
+  const hasNavigatedRef = useRef(false);
+  const isMountedRef = useRef(true);
+
   const initial: ExpatFormData = {
     firstName: "",
     lastName: "",
@@ -288,11 +434,22 @@ const RegisterExpat: React.FC = () => {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCustomHelp, setShowCustomHelp] = useState(false);
+  
+  // 🤖 State pour erreur anti-bot
+  const [botError, setBotError] = useState<string>("");
 
   const fieldRefs = {
     firstName: useRef<HTMLInputElement | null>(null),
     email: useRef<HTMLInputElement | null>(null),
   };
+
+  // ✅ FIX: Cleanup pour éviter les memory leaks et les updates après unmount
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   // 🔍 SEO PERFECTIONNÉ
   useEffect(() => {
@@ -661,8 +818,16 @@ const RegisterExpat: React.FC = () => {
     return Object.keys(e).length === 0;
   }, [form, selectedLanguages, intl]);
 
+  // ✅ FIX: handleSubmit corrigé pour éviter le saut de page + 🤖 Anti-Bot
   const handleSubmit = useCallback(async (ev: React.FormEvent) => {
     ev.preventDefault();
+    
+    // ✅ FIX: Empêcher les soumissions multiples et après navigation
+    if (isSubmitting || hasNavigatedRef.current) return;
+    
+    // 🤖 Reset erreur bot
+    setBotError("");
+    
     setTouched({ 
       firstName: true, 
       lastName: true, 
@@ -676,11 +841,25 @@ const RegisterExpat: React.FC = () => {
       acceptTerms: true 
     });
     
-    if (isSubmitting) return;
     setIsSubmitting(true);
     
-    if (!validateAll()) {
+    // 🤖 ÉTAPE 1: Validation Anti-Bot
+    const botCheck = await validateHuman();
+    if (!botCheck.isValid) {
+      const errorMessages: Record<string, string> = {
+        honeypot: "Une erreur de validation s'est produite. Veuillez réessayer.",
+        too_fast: "Veuillez prendre le temps de remplir correctement le formulaire.",
+      };
+      setBotError(errorMessages[botCheck.reason || ''] || "Erreur de validation.");
       setIsSubmitting(false);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    
+    if (!validateAll()) {
+      if (isMountedRef.current) {
+        setIsSubmitting(false);
+      }
       return;
     }
     
@@ -720,6 +899,15 @@ const RegisterExpat: React.FC = () => {
         verificationStatus: 'pending',
         status: 'pending',
         preferredLanguage: form.preferredLanguage,
+        // 🔐 Données anti-bot (pour analyse côté serveur)
+        _securityMeta: {
+          recaptchaToken: botCheck.recaptchaToken,
+          formFillTime: stats.timeSpent,
+          mouseMovements: stats.mouseMovements,
+          keystrokes: stats.keystrokes,
+          userAgent: navigator.userAgent,
+          timestamp: Date.now(),
+        },
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -730,23 +918,45 @@ const RegisterExpat: React.FC = () => {
       const functions = getFunctions(undefined, "europe-west1");
       const createStripeAccount = httpsCallable(functions, "createStripeAccount");
       
-      await createStripeAccount({
-        email: sanitizeEmail(form.email),
-        currentCountry: getCountryCode(form.currentCountry),
-        firstName: sanitizeString(form.firstName),
-        lastName: sanitizeString(form.lastName),
-        userType: "expat",
-      });
-      
-      navigate(redirect, {
-        replace: true,
-        state: {
-          message: intl.formatMessage({ id: "registerExpat.success.registered" }),
-          type: "success",
-        },
-      });
+      try {
+        await createStripeAccount({
+          email: sanitizeEmail(form.email),
+          currentCountry: getCountryCode(form.currentPresenceCountry),
+          firstName: sanitizeString(form.firstName),
+          lastName: sanitizeString(form.lastName),
+          userType: "expat",
+        });
+        
+        // ✅ Succès complet - inscription + Stripe
+        hasNavigatedRef.current = true;
+        
+        navigate(redirect, {
+          replace: true,
+          state: {
+            message: intl.formatMessage({ id: "registerExpat.success.registered" }),
+            type: "success",
+          },
+        });
+      } catch (stripeError: unknown) {
+        // ✅ Erreur Stripe MAIS inscription Firebase réussie - on redirige quand même
+        console.error('⚠️ [RegisterExpat] Erreur Stripe (compte utilisateur créé):', stripeError);
+        
+        hasNavigatedRef.current = true;
+        
+        // On redirige vers le dashboard avec un message d'avertissement
+        navigate(redirect, {
+          replace: true,
+          state: {
+            message: "Votre compte a été créé avec succès ! La configuration des paiements sera finalisée ultérieurement par notre équipe.",
+            type: "warning",
+          },
+        });
+      }
     } catch (err: unknown) {
       console.error('❌ [RegisterExpat] Erreur inscription:', err);
+      
+      // ✅ FIX: Vérifier si le composant est toujours monté avant de mettre à jour l'état
+      if (!isMountedRef.current || hasNavigatedRef.current) return;
       
       let msg = intl.formatMessage({ id: "registerExpat.errors.generic" });
       
@@ -769,11 +979,11 @@ const RegisterExpat: React.FC = () => {
       }
       
       setFieldErrors((prev) => ({ ...prev, general: msg }));
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } finally {
       setIsSubmitting(false);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  }, [isSubmitting, validateAll, register, form, selectedLanguages, navigate, redirect, intl]);
+    // ✅ FIX: Pas de finally avec setIsSubmitting(false) pour éviter le re-render après navigation
+  }, [isSubmitting, validateAll, validateHuman, register, form, selectedLanguages, navigate, redirect, intl, stats]);
 
   const canSubmit = useMemo(() => {
     const phoneNumber = parsePhoneNumberFromString(form.phone);
@@ -835,6 +1045,12 @@ const RegisterExpat: React.FC = () => {
               <FormattedMessage id="registerExpat.ui.heroSubtitle" />
             </p>
             
+            {/* 🔐 Badge sécurité reCAPTCHA */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 border border-green-200 rounded-full text-sm text-green-700 mb-4">
+              <Shield className="w-4 h-4" aria-hidden="true" />
+              <span>Formulaire sécurisé par reCAPTCHA</span>
+            </div>
+            
             <div className="text-sm text-gray-600">
               <FormattedMessage id="registerExpat.ui.already" />{" "}
               <Link 
@@ -850,7 +1066,8 @@ const RegisterExpat: React.FC = () => {
 
         {/* 📝 FORMULAIRE PRINCIPAL */}
         <main className="max-w-2xl mx-auto px-4 py-8">
-          {fieldErrors.general && (
+          {/* Erreur générale ou bot */}
+          {(fieldErrors.general || botError) && (
             <div 
               className="mb-6 rounded-xl border-2 border-red-300 bg-red-50 p-5 shadow-lg" 
               role="alert"
@@ -859,13 +1076,46 @@ const RegisterExpat: React.FC = () => {
               <div className="flex">
                 <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0" aria-hidden="true" />
                 <div className="ml-3">
-                  <p className="text-sm font-semibold text-red-900">{fieldErrors.general}</p>
+                  <p className="text-sm font-semibold text-red-900">{botError || fieldErrors.general}</p>
                 </div>
               </div>
             </div>
           )}
 
           <form onSubmit={handleSubmit} noValidate className="space-y-8">
+            {/* 🍯 HONEYPOT - Champs cachés pour piéger les bots */}
+            <div 
+              style={{ 
+                position: 'absolute', 
+                left: '-9999px', 
+                top: '-9999px',
+                opacity: 0,
+                height: 0,
+                overflow: 'hidden',
+                pointerEvents: 'none',
+              }}
+              aria-hidden="true"
+            >
+              <label htmlFor="website_url">Website URL (leave empty)</label>
+              <input
+                type="text"
+                id="website_url"
+                name="website_url"
+                tabIndex={-1}
+                autoComplete="off"
+                value={honeypotValue}
+                onChange={(e) => setHoneypotValue(e.target.value)}
+              />
+              <label htmlFor="phone_confirm">Phone Confirm (leave empty)</label>
+              <input
+                type="text"
+                id="phone_confirm"
+                name="phone_confirm"
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
+
             {/* ========================================================================= */}
             {/* 👤 SECTION 1: IDENTITÉ */}
             {/* ========================================================================= */}
@@ -1736,6 +1986,19 @@ const RegisterExpat: React.FC = () => {
                   </span>
                 )}
               </Button>
+              
+              {/* 🔐 Mention reCAPTCHA */}
+              <p className="mt-4 text-xs text-gray-500 text-center">
+                Ce site est protégé par reCAPTCHA et les{" "}
+                <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:underline">
+                  règles de confidentialité
+                </a>{" "}
+                et{" "}
+                <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:underline">
+                  conditions d'utilisation
+                </a>{" "}
+                de Google s'appliquent.
+              </p>
             </section>
           </form>
 

@@ -311,7 +311,9 @@ export function detectCountryFromTimezone(): string | null {
     
     if (timezone && TIMEZONE_TO_COUNTRY[timezone]) {
       const countryCode = TIMEZONE_TO_COUNTRY[timezone];
-      console.log(`[Language] Detected from timezone: ${timezone} → ${countryCode}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[Language] Detected from timezone: ${timezone} → ${countryCode}`);
+      }
       return countryCode;
     }
     
@@ -357,7 +359,9 @@ export function getCachedGeoData(): string | null {
     
     // Check if cache is still valid (within 24 hours)
     if (now - data.timestamp < GEO_CACHE_DURATION) {
-      console.log(`[Language] Using cached geolocation: ${data.countryCode}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[Language] Using cached geolocation: ${data.countryCode}`);
+      }
       return data.countryCode;
     }
     
@@ -474,7 +478,9 @@ async function fetchFromProvider(provider: GeoAPIProvider): Promise<string | nul
     }
     
     if (countryCode && typeof countryCode === 'string') {
-      console.log(`[Language] Successfully detected from ${provider.name}: ${countryCode}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[Language] Successfully detected from ${provider.name}: ${countryCode}`);
+      }
       return countryCode;
     }
     
@@ -501,7 +507,9 @@ export async function detectLanguageFromLocation(): Promise<Language | null> {
     // This works for ~80% of users and requires ZERO external requests!
     const timezoneCountryCode = detectCountryFromTimezone();
     if (timezoneCountryCode && COUNTRY_TO_LANGUAGE[timezoneCountryCode]) {
-      console.log(`[Language] Using timezone detection (no API needed): ${timezoneCountryCode} → ${COUNTRY_TO_LANGUAGE[timezoneCountryCode]}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[Language] Using timezone detection (no API needed): ${timezoneCountryCode} → ${COUNTRY_TO_LANGUAGE[timezoneCountryCode]}`);
+      }
       // Cache timezone result too for consistency
       cacheGeoData(timezoneCountryCode);
       return COUNTRY_TO_LANGUAGE[timezoneCountryCode];
@@ -525,7 +533,9 @@ export async function detectLanguageFromLocation(): Promise<Language | null> {
         
         // Map country code to language
         if (COUNTRY_TO_LANGUAGE[countryCode]) {
-          console.log(`[Language] Detected from API: ${countryCode} → ${COUNTRY_TO_LANGUAGE[countryCode]}`);
+          if (process.env.NODE_ENV === 'development') {
+            console.log(`[Language] Detected from API: ${countryCode} → ${COUNTRY_TO_LANGUAGE[countryCode]}`);
+          }
           return COUNTRY_TO_LANGUAGE[countryCode];
         }
       }
@@ -558,14 +568,18 @@ export function detectLanguageFromBrowser(): Language | null {
     for (const lang of languages) {
       const code = lang.substring(0, 2).toLowerCase();
       if (BROWSER_LANG_MAP[code]) {
-        console.log(`[Language] Detected from browser: ${lang} → ${BROWSER_LANG_MAP[code]}`);
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`[Language] Detected from browser: ${lang} → ${BROWSER_LANG_MAP[code]}`);
+        }
         return BROWSER_LANG_MAP[code];
       }
     }
     
     return null;
   } catch (error) {
-    console.warn('[Language] Browser detection failed:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('[Language] Browser detection failed:', error);
+    }
     return null;
   }
 }
@@ -579,13 +593,17 @@ export function getSavedLanguage(): Language | null {
     const validLanguages: Language[] = ['fr', 'en', 'es', 'ru', 'de', 'hi', 'pt', 'ch', 'ar'];
     
     if (saved && validLanguages.includes(saved as Language)) {
-      console.log(`[Language] Using saved preference: ${saved}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[Language] Using saved preference: ${saved}`);
+      }
       return saved as Language;
     }
     
     return null;
   } catch (error) {
-    console.warn('[Language] Could not read saved language:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('[Language] Could not read saved language:', error);
+    }
     return null;
   }
 }
@@ -617,7 +635,9 @@ export async function detectUserLanguage(defaultLang: Language = 'fr'): Promise<
   }
   
   // Priority 4: Default fallback
-  console.log(`[Language] Using default: ${defaultLang}`);
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`[Language] Using default: ${defaultLang}`);
+  }
   return defaultLang;
 }
 
@@ -627,9 +647,12 @@ export async function detectUserLanguage(defaultLang: Language = 'fr'): Promise<
 export function saveLanguagePreference(lang: Language): void {
   try {
     localStorage.setItem('sos_language', lang);
-    console.log(`[Language] Saved user preference: ${lang}`);
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[Language] Saved user preference: ${lang}`);
+    }
   } catch (error) {
-    console.warn('[Language] Could not save language preference:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('[Language] Could not save language preference:', error);
+    }
   }
 }
-

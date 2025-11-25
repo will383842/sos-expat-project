@@ -433,7 +433,8 @@ const Dashboard: React.FC = () => {
   
   // ✅ Track if user data is ready (for KYC component fix)
   const [userDataReady, setUserDataReady] = useState<boolean>(false);
-  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+const [kycRefreshAttempted, setKycRefreshAttempted] = useState<boolean>(false);
 
   // data
   const [currentStatus, setCurrentStatus] = useState<boolean>(
@@ -523,41 +524,49 @@ const Dashboard: React.FC = () => {
     console.log(user, " : this is the user .");
   }, [user, navigate]);
 
-  // ✅ Force refresh user data on mount for lawyer/expat (fixes KYC loading issue after signup)
-  useEffect(() => {
-    const checkAndRefreshUserData = async () => {
-      if (!user) {
-        setUserDataReady(false);
-        return;
-      }
+// ✅ Force refresh user data on mount for lawyer/expat (fixes KYC loading issue after signup)
+// ⚠️ Limited to ONE attempt to prevent infinite loops
+useEffect(() => {
+  const checkAndRefreshUserData = async () => {
+    if (!user) {
+      setUserDataReady(false);
+      return;
+    }
 
-      // If user is lawyer or expat, ensure KYC fields are loaded
-      if (user.role === "lawyer" || user.role === "expat") {
-        // Check if KYC fields are missing (happens right after signup)
-        const missingKycData = 
-          user.kycStatus === undefined || 
-          user.stripeOnboardingComplete === undefined ||
-          user.chargesEnabled === undefined;
+    // If user is lawyer or expat, ensure KYC fields are loaded
+    if (user.role === "lawyer" || user.role === "expat") {
+      // Check if KYC fields are missing (happens right after signup)
+      const missingKycData = 
+        user.kycStatus === undefined || 
+        user.stripeOnboardingComplete === undefined ||
+        user.chargesEnabled === undefined;
 
-        if (missingKycData && !isRefreshing) {
-          console.log("🔄 KYC data missing, refreshing user...");
-          setIsRefreshing(true);
-          try {
-            await refreshUser();
-          } catch (error) {
-            console.error("Error refreshing user:", error);
-          } finally {
-            setIsRefreshing(false);
-          }
+      // ✅ Only attempt refresh ONCE to prevent infinite loop
+      if (missingKycData && !kycRefreshAttempted && !isRefreshing) {
+        console.log("🔄 KYC data missing, refreshing user (one-time attempt)...");
+        setKycRefreshAttempted(true); // ← Mark as attempted BEFORE async call
+        setIsRefreshing(true);
+        try {
+          await refreshUser();
+          console.log("✅ User data refreshed");
+        } catch (error) {
+          console.error("❌ Error refreshing user:", error);
+        } finally {
+          setIsRefreshing(false);
         }
+      } else if (missingKycData && kycRefreshAttempted) {
+        // KYC data still missing after refresh - this is expected for new signups
+        // The user needs to complete Stripe onboarding
+        console.log("ℹ️ KYC data still missing after refresh - awaiting Stripe onboarding");
       }
-      
-      // Mark as ready after check/refresh
-      setUserDataReady(true);
-    };
+    }
+    
+    // Mark as ready after check/refresh
+    setUserDataReady(true);
+  };
 
-    checkAndRefreshUserData();
-  }, [user?.uid, user?.role]); // Trigger when user ID or role changes
+  checkAndRefreshUserData();
+}, [user?.uid, user?.role, kycRefreshAttempted]); // ← Added kycRefreshAttempted to deps
 
   // Status en temps réel (priorité = sos_profiles, fallback = users)
 

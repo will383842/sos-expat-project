@@ -8,4 +8,12 @@
     <loc>https://europe-west1-sos-urgently-ac307.cloudfunctions.net/sitemapProfiles</loc>
     <lastmod>2025-11-24</lastmod>
   </sitemap>
+  <sitemap>
+    <loc>https://europe-west1-sos-urgently-ac307.cloudfunctions.net/sitemapBlog</loc>
+    <lastmod>2025-11-24</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://europe-west1-sos-urgently-ac307.cloudfunctions.net/sitemapLanding</loc>
+    <lastmod>2025-11-24</lastmod>
+  </sitemap>
 </sitemapindex>

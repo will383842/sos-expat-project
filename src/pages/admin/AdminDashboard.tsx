@@ -1,5 +1,12 @@
-// src/pages/admin/AdminDashboard.tsx - VERSION NETTOYÉE
-import React, { useState, useEffect, useCallback } from "react";
+// src/pages/admin/AdminDashboard.tsx - VERSION CORRIGÉE ABORTERROR
+// =============================================================================
+// CHANGEMENTS :
+// 1. ✅ Ajout d'un ref `mountedRef` pour tracker si le composant est monté
+// 2. ✅ Vérification du flag avant chaque setState après une opération async
+// 3. ✅ Cleanup propre dans le useEffect
+// =============================================================================
+
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Phone,
@@ -108,6 +115,11 @@ const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
+  // ==========================================================================
+  // ✅ CORRECTION 1: Ref pour tracker si le composant est monté
+  // ==========================================================================
+  const mountedRef = useRef<boolean>(true);
+
   // extraction sûre de l'ID et du rôle pour éviter any
   const userId =
     typeof (user as { id?: unknown } | null)?.id === "string"
@@ -167,13 +179,28 @@ const AdminDashboard: React.FC = () => {
     throw new Error("Service de notification non disponible");
   };
 
-  // Load platform statistics
+  // ==========================================================================
+  // ✅ CORRECTION 2: loadStats avec vérification du flag mounted
+  // ==========================================================================
   const loadStats = useCallback(async (): Promise<void> => {
     if (!user) return;
 
     try {
       const callsSnapshot = await getDocs(collection(db, "calls"));
+      
+      // ✅ Vérifier si toujours monté AVANT de continuer
+      if (!mountedRef.current) {
+        console.log('[AdminDashboard] loadStats: component unmounted, aborting');
+        return;
+      }
+
       const paymentsSnapshot = await getDocs(collection(db, "payments"));
+      
+      // ✅ Vérifier à nouveau après la 2ème requête
+      if (!mountedRef.current) {
+        console.log('[AdminDashboard] loadStats: component unmounted, aborting');
+        return;
+      }
 
       let totalCalls = 0;
       let successfulCalls = 0;
@@ -201,6 +228,9 @@ const AdminDashboard: React.FC = () => {
           providerRevenue += providerAmount;
       });
 
+      // ✅ Vérifier une dernière fois avant setState
+      if (!mountedRef.current) return;
+
       setStats({
         totalCalls,
         successfulCalls,
@@ -209,17 +239,35 @@ const AdminDashboard: React.FC = () => {
         providerRevenue,
       });
     } catch (error) {
+      // ✅ Ignorer les erreurs si le composant est démonté
+      if (!mountedRef.current) return;
+      
+      // ✅ Ignorer les AbortError silencieusement
+      if (error instanceof Error && 
+          (error.name === 'AbortError' || error.message.includes('aborted'))) {
+        console.log('[AdminDashboard] loadStats: request aborted (normal during unmount)');
+        return;
+      }
+      
       console.error("Error loading stats:", error);
     }
   }, [user]);
 
-  // Load admin settings (SIMPLIFIÉ - sans commission)
+  // ==========================================================================
+  // ✅ CORRECTION 3: loadAdminData avec vérification du flag mounted
+  // ==========================================================================
   const loadAdminData = useCallback(async (): Promise<void> => {
     if (!user) return;
 
     try {
       const settingsRef = doc(db, "admin_settings", "main");
       const settingsDoc = await getDoc(settingsRef);
+
+      // ✅ Vérifier si toujours monté après getDoc
+      if (!mountedRef.current) {
+        console.log('[AdminDashboard] loadAdminData: component unmounted, aborting');
+        return;
+      }
 
       if (settingsDoc.exists()) {
         const data = settingsDoc.data() as Record<string, unknown>;
@@ -228,6 +276,9 @@ const AdminDashboard: React.FC = () => {
           string,
           unknown
         >;
+        
+        // ✅ Vérifier avant setState
+        if (!mountedRef.current) return;
         setSettings(normalizeAdminSettings(cleanSettings));
 
         // Si sosCommission existait, marquer pour migration
@@ -250,23 +301,53 @@ const AdminDashboard: React.FC = () => {
           },
           createdAt: serverTimestamp(),
         };
+        
         await setDoc(settingsRef, defaultSettings);
+        
+        // ✅ Vérifier après setDoc
+        if (!mountedRef.current) return;
         setSettings(defaultSettings);
       }
 
+      // ✅ loadStats vérifie aussi mountedRef en interne
       await loadStats();
+      
     } catch (error) {
+      // ✅ Ignorer les erreurs si le composant est démonté
+      if (!mountedRef.current) return;
+      
+      // ✅ Ignorer les AbortError silencieusement
+      if (error instanceof Error && 
+          (error.name === 'AbortError' || error.message.includes('aborted'))) {
+        console.log('[AdminDashboard] loadAdminData: request aborted (normal during unmount)');
+        return;
+      }
+      
       console.error("Error loading admin data:", error);
     } finally {
-      setIsLoading(false);
+      // ✅ Vérifier avant le setState final
+      if (mountedRef.current) {
+        setIsLoading(false);
+      }
     }
   }, [user, loadStats]);
 
-  // Chargement des données au montage du composant
+  // ==========================================================================
+  // ✅ CORRECTION 4: useEffect avec cleanup propre
+  // ==========================================================================
   useEffect(() => {
+    // ✅ Marquer comme monté au début
+    mountedRef.current = true;
+    
     if (user) {
       void loadAdminData();
     }
+
+    // ✅ Cleanup: marquer comme démonté
+    return () => {
+      console.log('[AdminDashboard] Component unmounting, setting mountedRef to false');
+      mountedRef.current = false;
+    };
   }, [user, loadAdminData]);
 
   // Handle settings change (SIMPLIFIÉ)
@@ -302,12 +383,18 @@ const AdminDashboard: React.FC = () => {
         updatedAt: serverTimestamp(),
         updatedBy: userId,
       });
+      
+      // ✅ Vérifier avant setState
+      if (!mountedRef.current) return;
       alert("✅ Paramètres sauvegardés avec succès !");
     } catch (error) {
+      if (!mountedRef.current) return;
       console.error("Error saving settings:", error);
       alert("❌ Erreur lors de la sauvegarde");
     } finally {
-      setIsSaving(false);
+      if (mountedRef.current) {
+        setIsSaving(false);
+      }
     }
   };
 
@@ -316,7 +403,10 @@ const AdminDashboard: React.FC = () => {
     setIsCheckingIntegrity(true);
     try {
       const report = await validateDataIntegrity();
-      // Type assertion pour corriger le type des fixes
+      
+      // ✅ Vérifier avant setState
+      if (!mountedRef.current) return;
+      
       const typedReport: IntegrityReport = {
         isValid: report.isValid,
         issues: report.issues,
@@ -325,10 +415,13 @@ const AdminDashboard: React.FC = () => {
       setIntegrityReport(typedReport);
       setShowIntegrityModal(true);
     } catch (error) {
+      if (!mountedRef.current) return;
       console.error("Error checking integrity:", error);
       alert("❌ Erreur lors de la vérification d'intégrité");
     } finally {
-      setIsCheckingIntegrity(false);
+      if (mountedRef.current) {
+        setIsCheckingIntegrity(false);
+      }
     }
   };
 
@@ -345,16 +438,23 @@ const AdminDashboard: React.FC = () => {
     setIsCleaningData(true);
     try {
       const success = await cleanupObsoleteData();
+      
+      // ✅ Vérifier avant setState/alert
+      if (!mountedRef.current) return;
+      
       if (success) {
         alert("✅ Nettoyage des données terminé avec succès");
       } else {
         alert("❌ Erreur lors du nettoyage des données");
       }
     } catch (error) {
+      if (!mountedRef.current) return;
       console.error("Error cleaning data:", error);
       alert("❌ Erreur lors du nettoyage des données");
     } finally {
-      setIsCleaningData(false);
+      if (mountedRef.current) {
+        setIsCleaningData(false);
+      }
     }
   };
 
@@ -370,14 +470,20 @@ const AdminDashboard: React.FC = () => {
         prompt("Entrez l'ID du prestataire pour le test:") ||
         "test-provider-id";
       await invokeTestNotification(testProviderId);
+      
+      // ✅ Vérifier avant alert
+      if (!mountedRef.current) return;
       alert("✅ Test de notification envoyé avec succès !");
     } catch (error) {
+      if (!mountedRef.current) return;
       console.error("Erreur lors du test de notification:", error);
       const errorMessage =
         error instanceof Error ? error.message : "Erreur inconnue";
       alert(`❌ Erreur lors du test de notification: ${errorMessage}`);
     } finally {
-      setIsTestingNotifications(false);
+      if (mountedRef.current) {
+        setIsTestingNotifications(false);
+      }
     }
   };
 

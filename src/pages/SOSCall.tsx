@@ -1680,7 +1680,7 @@ const SOSCall: React.FC = () => {
         <meta name="twitter:creator" content="@sosexpat" />
         <meta name="twitter:title" content={seoTitle} />
         <meta name="twitter:description" content={seoDescription} />
-        <meta name="twitter:image" content={`${BASE_URL}/twitter-image-sos-call.jpg`} />
+        <meta name="twitter:image" content={`${BASE_URL}/twitter-image-sos-call.png`} />
         <meta name="twitter:image:alt" content={intl.formatMessage({ id: "sosCall.seo.ogImageAlt" })} />
         
         {/* Sécurité */}

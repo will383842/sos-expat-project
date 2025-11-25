@@ -100,7 +100,7 @@ export const baseTemplate = (
   <meta property="twitter:url" content="${appUrl}">
   <meta property="twitter:title" content="${t.title} - ${t.subtitle}">
   <meta property="twitter:description" content="Votre compagnon de voyage pour explorer le monde en toute sécurité">
-  <meta property="twitter:image" content="https://sos-expat.app/assets/twitter-image.jpg">
+  <meta property="twitter:image" content="https://sos-expat.app/assets/twitter-image.png">
   <meta name="twitter:creator" content="@sos-expat">
   
   <!-- Structured Data for AI/ChatGPT -->

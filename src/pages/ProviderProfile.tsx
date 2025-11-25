@@ -1,4 +1,4 @@
-// src/pages/ProviderProfile.tsx - VERSION OPTIMISÉE
+// src/pages/ProviderProfile.tsx - VERSION FUSIONNÉE COMPLÈTE
 import React, { useState, useEffect, useCallback, useMemo, useRef, lazy, Suspense } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { parseLocaleFromPath, getLocaleString } from "../utils/localeRoutes";
@@ -26,6 +26,7 @@ import {
   TrendingUp,
   User,
   HelpCircle,
+  X,
 } from "lucide-react";
 import {
   doc,
@@ -104,7 +105,7 @@ import { getExpatHelpTypeLabel } from "../data/expat-help-types";
 /* ===================================================================== */
 
 const IMAGE_SIZES = {
-  AVATAR_MOBILE: 80,
+  AVATAR_MOBILE: 96,
   AVATAR_DESKTOP: 128,
   MODAL_MAX_WIDTH: 1200,
   MODAL_MAX_HEIGHT: 800,
@@ -123,7 +124,7 @@ const STORAGE_KEYS = {
 
 const SUCCESSFUL_CALL_THRESHOLD_SECONDS = 120; // 2 minutes
 
-// ✅ NOUVEAU : Cache configuration
+// ✅ Cache configuration
 const CACHE_CONFIG = {
   PROFILE_TTL: 5 * 60 * 1000, // 5 minutes
   STATS_TTL: 2 * 60 * 1000, // 2 minutes
@@ -267,6 +268,14 @@ const detectLanguage = (): "fr" | "en" =>
       ? "fr"
       : "en"
     : "en";
+
+const safeNormalize = (v?: string): string =>
+  (v || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 
 const getFirstString = (
   val: unknown,
@@ -428,14 +437,14 @@ const formatShortName = (provider: SosProfile): string => {
   return lastInitial ? `${firstName} ${lastInitial}.` : firstName;
 };
 
-// ✅ NOUVEAU : Fonction de sanitization pour sécurité
+// ✅ Fonction de sanitization pour sécurité
 const sanitizeHTML = (html: string): string => {
   const tempDiv = document.createElement('div');
   tempDiv.textContent = html;
   return tempDiv.innerHTML;
 };
 
-// ✅ NOUVEAU : Cache simple en mémoire
+// ✅ Cache simple en mémoire
 class SimpleCache {
   private cache = new Map<string, { data: any; timestamp: number }>();
 
@@ -556,6 +565,8 @@ const calculateProviderStats = async (providerId: string): Promise<ProviderStats
   }
 };
 
+
+
 /* ===================================================================== */
 /* COMPOSANT PRINCIPAL                                                   */
 /* ===================================================================== */
@@ -657,8 +668,6 @@ const ProviderProfile: React.FC = () => {
 
   const seoUpdatedRef = useRef(false);
   const lastUrlRef = useRef<string>('');
-
-  // ✅ NOUVEAU : Ref pour éviter les re-renders inutiles
   const providerLoadedRef = useRef(false);
 
   useEffect(() => {
@@ -729,7 +738,6 @@ const ProviderProfile: React.FC = () => {
 
   const realLoadReviews = useCallback(
     async (providerId: string): Promise<Review[]> => {
-      // ✅ Vérifier le cache d'abord
       const cacheKey = `reviews_${providerId}`;
       const cached = cache.get<Review[]>(cacheKey);
       if (cached) return cached;
@@ -738,7 +746,6 @@ const ProviderProfile: React.FC = () => {
         const arr = await getProviderReviews(providerId);
         const reviews = Array.isArray(arr) ? arr : [];
         
-        // ✅ Mettre en cache
         cache.set(cacheKey, reviews, CACHE_CONFIG.REVIEWS_TTL);
         
         return reviews;
@@ -804,7 +811,6 @@ const ProviderProfile: React.FC = () => {
 
   useEffect(() => {
     const loadProviderData = async (): Promise<void> => {
-      // ✅ Éviter les chargements multiples
       if (providerLoadedRef.current) return;
       
       setIsLoading(true);
@@ -850,7 +856,6 @@ const ProviderProfile: React.FC = () => {
             if (snap.exists()) {
               const data = snap.data();
               const normalized = normalizeUserData(data, snap.id);
-              // Extraire les propriétés pour éviter les conflits de type
               const { type: _type, education: _education, ...restNormalized } = normalized as any;
               const safeType: "lawyer" | "expat" = (data?.type === "lawyer" || data?.type === "expat") ? data.type : "expat";
               const safeProvider = { ...restNormalized, type: safeType, ...data };
@@ -886,7 +891,6 @@ const ProviderProfile: React.FC = () => {
               const found = qsUid.docs[0];
               const data = found.data();
               const normalized = normalizeUserData(data, found.id);
-              // Extraire les propriétés pour éviter les conflits de type
               const { type: _type, education: _education, ...restNormalized } = normalized as any;
               const safeType: "lawyer" | "expat" = (data?.type === "lawyer" || data?.type === "expat") ? data.type : "expat";
               const safeProvider = { ...restNormalized, type: safeType, ...data };
@@ -926,7 +930,6 @@ const ProviderProfile: React.FC = () => {
               const m = qsSlug.docs[0];
               const data = m.data();
               const normalized = normalizeUserData(data, m.id);
-              // Extraire les propriétés pour éviter les conflits de type
               const { type: _type, education: _education, ...restNormalized } = normalized as any;
               const safeType: "lawyer" | "expat" = (data?.type === "lawyer" || data?.type === "expat") ? data.type : "expat";
               const safeProvider = { ...restNormalized, type: safeType, ...data };
@@ -1154,7 +1157,6 @@ const ProviderProfile: React.FC = () => {
       
       document.title = pageTitle;
 
-      // Helper pour meta[property]
       const updateOrCreateMeta = (property: string, content: string): void => {
         let meta = document.querySelector(
           `meta[property="${property}"]`
@@ -1167,7 +1169,6 @@ const ProviderProfile: React.FC = () => {
         meta.setAttribute("content", content);
       };
 
-      // Helper pour meta[name]
       const updateOrCreateMetaName = (name: string, content: string): void => {
         let meta = document.querySelector(
           `meta[name="${name}"]`
@@ -1200,7 +1201,7 @@ const ProviderProfile: React.FC = () => {
         OG_LOCALE_MAPPING[preferredLangKey] || "en_US"
       );
 
-      // ✅ Twitter Card (AJOUTÉ)
+      // ✅ Twitter Card
       updateOrCreateMetaName("twitter:card", "summary_large_image");
       updateOrCreateMetaName("twitter:site", "@SOSExpat");
       updateOrCreateMetaName("twitter:creator", "@SOSExpat");
@@ -1209,21 +1210,19 @@ const ProviderProfile: React.FC = () => {
       updateOrCreateMetaName("twitter:image", fullImageUrl);
       updateOrCreateMetaName("twitter:image:alt", ogDesc);
 
-      // ✅ Robots (AJOUTÉ)
+      // ✅ Robots
       updateOrCreateMetaName("robots", "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1");
       
-      // ✅ Mobile (AJOUTÉ)
+      // ✅ Mobile
       updateOrCreateMetaName("format-detection", "telephone=yes");
 
-      // ✅ Hreflang pour SEO international (AJOUTÉ)
+      // ✅ Hreflang pour SEO international
       const SUPPORTED_LANGS = ['fr', 'en', 'es', 'de', 'pt', 'ru', 'zh', 'ar', 'hi'];
       const baseUrl = window.location.origin;
       const pathWithoutLang = window.location.pathname.replace(/^\/(fr|en|es|de|pt|ru|zh|ar|hi)/, '');
       
-      // Supprimer anciens hreflang
       document.querySelectorAll('link[rel="alternate"][hreflang]').forEach(el => el.remove());
       
-      // Ajouter nouveaux hreflang
       SUPPORTED_LANGS.forEach(lang => {
         const link = document.createElement('link');
         link.rel = 'alternate';
@@ -1232,7 +1231,6 @@ const ProviderProfile: React.FC = () => {
         document.head.appendChild(link);
       });
       
-      // x-default pour la version par défaut
       const xDefaultLink = document.createElement('link');
       xDefaultLink.rel = 'alternate';
       xDefaultLink.hreflang = 'x-default';
@@ -1421,12 +1419,12 @@ const ProviderProfile: React.FC = () => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
         key={i}
-        size={16}
+        size={18}
         className={
           i < full
-            ? "text-yellow-500 fill-yellow-500"
+            ? "text-yellow-400 fill-yellow-400"
             : i === full && hasHalf
-              ? "text-yellow-500"
+              ? "text-yellow-400"
               : "text-gray-400"
         }
         aria-hidden="true"
@@ -1554,7 +1552,7 @@ const ProviderProfile: React.FC = () => {
   const yearsLabel = intl.formatMessage({ id: "providerProfile.years" });
   const minutesLabel = intl.formatMessage({ id: "providerProfile.minutes" });
 
-  // ✅ NOUVEAU : Structured Data enrichi avec plus de détails
+  // ✅ Structured Data enrichi
   const structuredData = useMemo<Record<string, unknown> | undefined>(() => {
     if (!provider) return undefined;
     const displayName = formatPublicName(provider);
@@ -1620,7 +1618,7 @@ const ProviderProfile: React.FC = () => {
     yearsLabel,
   ]);
 
-  // ✅ NOUVEAU : BreadcrumbList Schema
+  // ✅ BreadcrumbList Schema
   const breadcrumbSchema = useMemo(() => {
     if (!provider) return null;
     
@@ -1650,7 +1648,7 @@ const ProviderProfile: React.FC = () => {
     };
   }, [provider, intl]);
 
-  // ✅ NOUVEAU : FAQPage Schema
+  // ✅ FAQPage Schema
   const faqSchema = useMemo(() => {
     if (!snippetData?.snippets?.faqContent || snippetData.snippets.faqContent.length === 0) {
       return null;
@@ -1670,24 +1668,11 @@ const ProviderProfile: React.FC = () => {
     };
   }, [snippetData]);
 
-  // ✅ NOUVEAU : Mots-clés sémantiques pour H1 (traduits)
-  const h1SemanticKeywords = useMemo(() => {
-    if (!provider) return '';
-    
-    const roleKeyword = isLawyer 
-      ? intl.formatMessage({ id: "providerProfile.lawyer", defaultMessage: "Avocat" })
-      : intl.formatMessage({ id: "providerProfile.expat", defaultMessage: "Assistant expatrié" });
-    const mainSpecialty = derivedSpecialties[0] || '';
-    const mainLanguage = languagesList[0] || '';
-    const countryName = getCountryName(provider.country, preferredLangKey);
-    
-    return `${roleKeyword} ${mainSpecialty} ${mainLanguage} ${countryName}`.trim();
-  }, [provider, isLawyer, derivedSpecialties, languagesList, preferredLangKey, intl]);
-
+  // ✅ Loading state
   if (isLoading) {
     return (
       <Layout>
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-white to-slate-50">
+        <div className="min-h-screen flex items-center justify-center bg-gray-950">
           <LoadingSpinner 
             size="large" 
             color="red" 
@@ -1698,27 +1683,28 @@ const ProviderProfile: React.FC = () => {
     );
   }
 
+  // ✅ Not found state
   if (notFound || !provider) {
     return (
       <Layout>
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-white to-slate-50 px-4">
+        <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4">
           <div className="max-w-md mx-auto p-8 text-center">
             <div className="mb-6">
-              <div className="mx-auto w-24 h-24 bg-gradient-to-br from-red-100 to-red-50 rounded-full flex items-center justify-center shadow-xl">
-                <AlertTriangle className="w-12 h-12 text-red-700" aria-hidden="true" />
+              <div className="mx-auto w-24 h-24 bg-gradient-to-br from-red-500/20 to-red-600/20 rounded-full flex items-center justify-center border border-red-500/30">
+                <AlertTriangle className="w-12 h-12 text-red-500" aria-hidden="true" />
               </div>
             </div>
             
-            <h1 className="text-2xl font-bold text-slate-900 mb-3">
+            <h1 className="text-2xl font-bold text-white mb-3">
               <FormattedMessage id="providerProfile.notFound" />
             </h1>
-            <p className="text-slate-700 mb-8 font-medium">
+            <p className="text-gray-400 mb-8">
               <FormattedMessage id="providerProfile.notFoundDescription" />
             </p>
             
             <button
               onClick={() => navigate("/sos-appel")}
-              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-red-700 to-red-600 text-white rounded-xl hover:from-red-800 hover:to-red-700 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5 font-bold focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2"
+              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-red-600 to-red-500 text-white rounded-xl hover:from-red-500 hover:to-red-400 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 font-semibold focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-950"
               aria-label={intl.formatMessage({ id: "providerProfile.backToExperts" })}
             >
               <ArrowLeft className="w-5 h-5 mr-2" aria-hidden="true" />
@@ -1761,7 +1747,7 @@ const ProviderProfile: React.FC = () => {
         structuredData={structuredData}
       />
 
-      {/* ✅ Snippets JSON-LD optimisés */}
+      {/* ✅ Snippets JSON-LD */}
       {snippetData && (
         <script
           type="application/ld+json"
@@ -1785,529 +1771,809 @@ const ProviderProfile: React.FC = () => {
         />
       )}
 
-      {/* ✅ Preconnect optimisés pour performance */}
+      {/* SVG defs pour dégradé étoiles */}
+      <svg width="0" height="0" className="hidden" aria-hidden="true">
+        <defs>
+          <linearGradient id="half-star" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="50%" stopColor="#FACC15" />
+            <stop offset="50%" stopColor="#6B7280" />
+          </linearGradient>
+        </defs>
+      </svg>
+
+      {/* Preconnect optimisés */}
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link rel="preconnect" href="https://firestore.googleapis.com" />
-      <link rel="preconnect" href="https://www.google-analytics.com" />
-      <link rel="preconnect" href="https://www.googletagmanager.com" />
-      
-      {/* DNS Prefetch pour partage social */}
-      <link rel="dns-prefetch" href="https://www.facebook.com" />
-      <link rel="dns-prefetch" href="https://twitter.com" />
-      <link rel="dns-prefetch" href="https://api.whatsapp.com" />
-      <link rel="dns-prefetch" href="https://www.linkedin.com" />
-      <link rel="dns-prefetch" href="https://t.me" />
 
-      <div className="min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 pb-28">
+      <div className="min-h-screen bg-gray-950 pb-24 lg:pb-8">
         
-        {/* ✅ HEADER avec navigation accessible */}
-        <header className="bg-gradient-to-r from-red-700 via-red-600 to-orange-600 border-b-4 border-red-800 shadow-xl sticky top-0 z-40">
-          <nav className="max-w-7xl mx-auto px-4 py-3" aria-label={intl.formatMessage({ id: "providerProfile.mainNavigation", defaultMessage: "Navigation principale" })}>
-            <button
-              onClick={() => navigate("/sos-appel")}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-xl transition-all font-bold shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-red-700 backdrop-blur-sm"
-              aria-label={intl.formatMessage({ id: "providerProfile.backToExperts" })}
-            >
-              <ArrowLeft size={18} strokeWidth={2.5} aria-hidden="true" />
-              <span className="text-sm"><FormattedMessage id="providerProfile.backToExperts" /></span>
-            </button>
-          </nav>
-        </header>
+        {/* ========================================== */}
+        {/* HERO SECTION - DARK DESIGN                */}
+        {/* ========================================== */}
+        <header className="relative overflow-hidden">
+          {/* Background gradients */}
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-900 to-black" />
+          <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 via-transparent to-blue-500/10" />
+          <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-gradient-to-r from-red-500/15 to-orange-500/15 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 right-1/3 w-96 h-96 bg-gradient-to-r from-blue-500/15 to-purple-500/15 rounded-full blur-3xl" />
 
-        {/* ✅ HERO avec H1 sémantique optimisé */}
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <article className="bg-white rounded-3xl p-5 border-2 border-red-200 shadow-2xl ring-1 ring-red-100">
-            
-            {/* ✅ H1 SÉMANTIQUE avec mots-clés (pays, spécialité, langue) */}
+          <div className="relative z-10 max-w-7xl mx-auto px-4 py-6 lg:py-10">
+            {/* Navigation */}
+            <nav className="mb-6">
+              <button
+                onClick={() => navigate("/sos-appel")}
+                className="inline-flex items-center rounded-full bg-white/10 border border-white/20 text-white/90 hover:text-white hover:bg-white/15 backdrop-blur-sm px-4 py-2 transition-all min-h-[44px] text-sm font-medium"
+                aria-label={intl.formatMessage({ id: "providerProfile.backToExperts" })}
+              >
+                <ArrowLeft size={18} className="mr-2" aria-hidden="true" />
+                <FormattedMessage id="providerProfile.backToExperts" />
+              </button>
+            </nav>
+
+            {/* H1 sémantique caché pour SEO */}
             <h1 className="sr-only">
               {formatPublicName(provider)} - {roleLabel} {derivedSpecialties[0] || ''} {languagesList[0] || ''} {intl.formatMessage({ id: "providerProfile.in" })} {getCountryName(provider.country, preferredLangKey)}
             </h1>
 
-            {/* Photo + Nom + Badges */}
-            <div className="flex items-start gap-4 mb-4">
-              <div className="relative flex-shrink-0">
-                <div className="p-[3px] rounded-full bg-gradient-to-br from-red-600 via-orange-500 to-yellow-500 shadow-lg">
-                  <img
-                    src={mainPhoto}
-                    alt={intl.formatMessage(
-                      { id: "providerProfile.profilePhotoAlt", defaultMessage: "Photo de profil de {name}, {role} en {country}" },
-                      { name: formatShortName(provider), role: roleLabel, country: getCountryName(provider.country, preferredLangKey) }
-                    )}
-                    className="w-20 h-20 rounded-full object-cover border-3 border-white cursor-pointer"
-                    onClick={() => setShowImageModal(true)}
-                    onError={handleImageError}
-                    loading="eager"
-                    fetchPriority="high"
-                    width={IMAGE_SIZES.AVATAR_MOBILE}
-                    height={IMAGE_SIZES.AVATAR_MOBILE}
-                  />
-                </div>
-                <div
-                  className={`absolute -bottom-0.5 -right-0.5 w-6 h-6 rounded-full border-3 border-white shadow-lg ${
-                    onlineStatus.isOnline ? "bg-green-600" : "bg-slate-500"
-                  }`}
-                  title={onlineStatus.isOnline 
-                    ? intl.formatMessage({ id: "providerProfile.online" })
-                    : intl.formatMessage({ id: "providerProfile.offline" })
-                  }
-                  aria-label={onlineStatus.isOnline 
-                    ? intl.formatMessage({ id: "providerProfile.online" })
-                    : intl.formatMessage({ id: "providerProfile.offline" })
-                  }
-                >
-                  {onlineStatus.isOnline && (
-                    <span className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-75" aria-hidden="true"></span>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1.5">
-                  <h2 className="text-xl font-black text-slate-900 truncate">
-                    {formatShortName(provider)}
-                  </h2>
-                  {provider.isVerified && (
-                    <span 
-                      aria-label={intl.formatMessage({ id: "providerProfile.verifiedProfile", defaultMessage: "Profil vérifié" })}
-                      title={intl.formatMessage({ id: "providerProfile.verifiedProfile", defaultMessage: "Profil vérifié" })}
-                      role="img"
-                    >
-                      <Shield 
-                        size={16} 
-                        className="text-blue-700 flex-shrink-0" 
-                        strokeWidth={2.5}
-                        aria-hidden="true"
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+              {/* ===== COLONNE GAUCHE: Infos principales ===== */}
+              <div className="lg:col-span-2">
+                <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
+                  {/* Photo de profil */}
+                  <div className="relative flex-shrink-0">
+                    <div className="p-[3px] rounded-full bg-gradient-to-br from-red-400 via-orange-400 to-yellow-300">
+                      <img
+                        src={mainPhoto}
+                        alt={intl.formatMessage(
+                          { id: "providerProfile.profilePhotoAlt", defaultMessage: "Photo de profil de {name}" },
+                          { name: formatShortName(provider) }
+                        )}
+                        className="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 rounded-full object-cover border-4 border-black/30 cursor-pointer hover:scale-105 transition-transform"
+                        width={IMAGE_SIZES.AVATAR_MOBILE}
+                        height={IMAGE_SIZES.AVATAR_MOBILE}
+                        onClick={() => setShowImageModal(true)}
+                        onError={handleImageError}
+                        loading="eager"
+                        fetchPriority="high"
                       />
-                    </span>
-                  )}
-                </div>
-                
-                {isNewProvider && (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-gradient-to-r from-yellow-200 to-orange-200 border border-yellow-400 rounded-full text-xs font-black text-yellow-900">
-                    <Sparkles size={12} strokeWidth={2.5} aria-hidden="true" />
-                    <FormattedMessage id="providerProfile.new" />
-                  </span>
-                )}
-
-                {!isNewProvider && (
-                  <div className="flex items-center gap-1 mt-1.5" role="img" aria-label={intl.formatMessage({ id: "providerProfile.averageRatingAria", defaultMessage: "Note moyenne : {rating} étoiles sur 5" }, { rating: providerStats.averageRating ? providerStats.averageRating.toFixed(1) : '--' })}>
-                    {renderStars(providerStats.averageRating || provider.rating)}
-                    <span className="text-xs font-black text-slate-900 ml-1">
-                      {providerStats.averageRating 
-                        ? providerStats.averageRating.toFixed(1)
-                        : (typeof provider.rating === "number" ? provider.rating.toFixed(1) : "--")}
-                    </span>
-                    <span className="text-xs font-bold text-slate-600">
-                      ({providerStats.realReviewsCount})
-                    </span>
-                  </div>
-                )}
-                {isNewProvider && (
-                  <p className="text-xs font-bold text-slate-600 italic mt-1.5">
-                    <FormattedMessage id="providerProfile.noRatingsYet" />
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* Spécialités */}
-            {derivedSpecialties.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 mb-3" role="list" aria-label={intl.formatMessage({ id: "providerProfile.specialtiesList", defaultMessage: "Spécialités" })}>
-                {derivedSpecialties.slice(0, 2).map((s, i) => (
-                  <span
-                    key={`${s}-${i}`}
-                    role="listitem"
-                    className={`px-2.5 py-1 rounded-full text-xs font-bold ${
-                      isLawyer 
-                        ? "bg-blue-100 text-blue-900 border border-blue-300" 
-                        : "bg-green-100 text-green-900 border border-green-300"
-                    }`}
-                  >
-                    {s}
-                  </span>
-                ))}
-                {derivedSpecialties.length > 2 && (
-                  <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-300">
-                    +{derivedSpecialties.length - 2}
-                  </span>
-                )}
-              </div>
-            )}
-
-            {/* Langues */}
-            <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800 mb-4">
-              <Globe size={14} className="flex-shrink-0 text-blue-700" strokeWidth={2.5} aria-hidden="true" />
-              <span className="truncate">
-                {languageCodes.slice(0, 2).map((code) => formatLanguages([code], preferredLangKey)).join(", ")}
-                {languageCodes.length > 2 && ` +${languageCodes.length - 2}`}
-              </span>
-            </div>
-
-            {/* Prix + Statut */}
-            <div className="flex items-center justify-between gap-3 p-3 bg-slate-50 rounded-xl border-2 border-slate-300">
-              <div className="flex items-baseline gap-2">
-                <div className="text-2xl font-black text-slate-900" aria-label={`Prix: ${bookingPrice ? formatEUR(bookingPrice.eur) : "—"}`}>
-                  {bookingPrice ? formatEUR(bookingPrice.eur) : "—"}
-                </div>
-                <div className="text-xs font-bold text-slate-700 flex items-center gap-0.5" aria-label={`Durée: ${bookingPrice?.duration || 20} minutes`}>
-                  <Clock size={12} strokeWidth={2.5} aria-hidden="true" />
-                  {bookingPrice?.duration || 20}{minutesLabel.charAt(0)}
-                </div>
-              </div>
-
-              <div
-                className={`px-3 py-1.5 rounded-lg text-xs font-black shadow-md ${
-                  isOnCall
-                    ? "bg-orange-200 text-orange-900 border border-orange-400"
-                    : onlineStatus.isOnline
-                      ? "bg-green-200 text-green-900 border border-green-400"
-                      : "bg-slate-200 text-slate-700 border border-slate-300"
-                }`}
-                aria-label={
-                  isOnCall
-                    ? intl.formatMessage({ id: "providerProfile.onCall" })
-                    : onlineStatus.isOnline
-                      ? intl.formatMessage({ id: "providerProfile.available" })
-                      : intl.formatMessage({ id: "providerProfile.offline" })
-                }
-              >
-                {isOnCall
-                  ? intl.formatMessage({ id: "providerProfile.onCall" })
-                  : onlineStatus.isOnline
-                    ? intl.formatMessage({ id: "providerProfile.available" })
-                    : intl.formatMessage({ id: "providerProfile.offline" })}
-              </div>
-            </div>
-          </article>
-        </div>
-
-        {/* ✅ CONTENU PRINCIPAL avec hiérarchie H2-H6 */}
-        <main className="max-w-7xl mx-auto px-4 space-y-4">
-          
-          {/* ✅ H2: Description */}
-          <section className="bg-gradient-to-br from-white to-orange-50 rounded-2xl p-5 shadow-lg border-2 border-orange-200 ring-1 ring-orange-100" aria-labelledby="about-heading">
-            <h2 id="about-heading" className="text-base font-black text-orange-900 mb-3 flex items-center gap-2">
-              <span className="w-8 h-8 rounded-full bg-gradient-to-br from-red-500 to-orange-600 flex items-center justify-center">
-                <User size={16} className="text-white" strokeWidth={2.5} aria-hidden="true" />
-              </span>
-              <FormattedMessage id="providerProfile.about" />
-            </h2>
-            <p className="text-gray-800 leading-relaxed whitespace-pre-line text-sm font-medium">
-              {descriptionText}
-            </p>
-          </section>
-
-          {/* ✅ H3: Spécialités */}
-          {derivedSpecialties.length > 0 && (
-            <section className="bg-gradient-to-br from-white to-blue-50 rounded-2xl p-5 shadow-lg border-2 border-blue-200 ring-1 ring-blue-100" aria-labelledby="specialties-heading">
-              <h3 id="specialties-heading" className="text-base font-black text-blue-900 mb-3 flex items-center gap-2">
-                <span className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
-                  <Briefcase size={16} className="text-white" strokeWidth={2.5} aria-hidden="true" />
-                </span>
-                <FormattedMessage id="providerProfile.specialties" />
-              </h3>
-              <div className="flex flex-wrap gap-2" role="list">
-                {derivedSpecialties.map((s, i) => (
-                  <span
-                    key={`${s}-${i}`}
-                    role="listitem"
-                    className={`px-3 py-1.5 rounded-full text-sm font-bold shadow-sm ${
-                      isLawyer 
-                        ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white" 
-                        : "bg-gradient-to-r from-emerald-500 to-teal-600 text-white"
-                    }`}
-                  >
-                    {s}
-                  </span>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {/* ✅ H3: Pays d'intervention */}
-          {provider.operatingCountries && provider.operatingCountries.length > 0 && (
-            <section className="bg-gradient-to-br from-white to-red-50 rounded-2xl p-5 shadow-lg border-2 border-red-200 ring-1 ring-red-100" aria-labelledby="countries-heading">
-              <h3 id="countries-heading" className="text-base font-black text-red-900 mb-3 flex items-center gap-2">
-                <span className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center">
-                  <MapPin size={16} className="text-white" strokeWidth={2.5} aria-hidden="true" />
-                </span>
-                <FormattedMessage id="providerProfile.operatingCountries" />
-              </h3>
-              <div className="flex flex-wrap gap-2" role="list">
-                {provider.operatingCountries.map((countryCode, index) => (
-                  <span
-                    key={`${countryCode}-${index}`}
-                    role="listitem"
-                    className="px-3 py-1.5 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-full text-sm font-bold shadow-sm"
-                  >
-                    {getCountryName(countryCode, preferredLangKey)}
-                  </span>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {/* ✅ H3: Langues */}
-          <section className="bg-gradient-to-br from-white to-purple-50 rounded-2xl p-5 shadow-lg border-2 border-purple-200 ring-1 ring-purple-100" aria-labelledby="languages-heading">
-            <h3 id="languages-heading" className="text-base font-black text-purple-900 mb-3 flex items-center gap-2">
-              <span className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center">
-                <Globe size={16} className="text-white" strokeWidth={2.5} aria-hidden="true" />
-              </span>
-              <FormattedMessage id="providerProfile.languages" />
-            </h3>
-            <div className="flex flex-wrap gap-2" role="list">
-              {languageCodes.map((code, i) => (
-                <span
-                  key={`${code}-${i}`}
-                  role="listitem"
-                  className="px-3 py-1.5 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-full text-sm font-bold shadow-sm"
-                >
-                  {formatLanguages([code], preferredLangKey)}
-                </span>
-              ))}
-            </div>
-          </section>
-
-          {/* ✅ H3: Statistiques */}
-          {!isNewProvider && (
-            <section className="bg-gradient-to-br from-white to-emerald-50 rounded-2xl p-5 shadow-lg border-2 border-emerald-200 ring-1 ring-emerald-100" aria-labelledby="stats-heading">
-              <h3 id="stats-heading" className="text-base font-black text-emerald-900 mb-3 flex items-center gap-2">
-                <span className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center">
-                  <TrendingUp size={16} className="text-white" strokeWidth={2.5} aria-hidden="true" />
-                </span>
-                <FormattedMessage id="providerProfile.stats" />
-              </h3>
-              <div className="grid grid-cols-2 gap-3" role="list">
-                <div className="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl p-4 shadow-md" role="listitem">
-                  <div className="text-3xl font-black text-white" aria-label={intl.formatMessage({ id: "providerProfile.successRateAria", defaultMessage: "Taux de réussite : {rate}%" }, { rate: isLoadingStats ? "..." : providerStats.successRate })}>
-                    {isLoadingStats ? "..." : `${providerStats.successRate}%`}
-                  </div>
-                  <div className="text-xs font-bold text-emerald-100">
-                    <FormattedMessage id="providerProfile.successRate" />
-                  </div>
-                </div>
-                <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl p-4 shadow-md" role="listitem">
-                  <div className="text-3xl font-black text-white" aria-label={intl.formatMessage({ id: "providerProfile.completedCallsAria", defaultMessage: "Appels complétés : {count}" }, { count: isLoadingStats ? "..." : providerStats.completedCalls })}>
-                    {isLoadingStats ? "..." : providerStats.completedCalls}
-                  </div>
-                  <div className="text-xs font-bold text-blue-100">
-                    <FormattedMessage id="providerProfile.completedCalls" />
-                  </div>
-                </div>
-                <div className="bg-slate-50 rounded-xl p-3 border border-slate-200" role="listitem">
-                  <div className="text-2xl font-black text-slate-900" aria-label={`Années d'expérience: ${isLawyer ? (provider.yearsOfExperience || 0) : (provider.yearsAsExpat || provider.yearsOfExperience || 0)}`}>
-                    {isLawyer
-                      ? `${provider.yearsOfExperience || 0}`
-                      : `${provider.yearsAsExpat || provider.yearsOfExperience || 0}`}
-                  </div>
-                  <div className="text-xs font-bold text-slate-700">
-                    {yearsLabel} <FormattedMessage id="providerProfile.experience" />
-                  </div>
-                </div>
-                <div className="bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl p-4 shadow-md" role="listitem">
-                  <div className="text-3xl font-black text-white" aria-label={`Note moyenne: ${providerStats.averageRating ? providerStats.averageRating.toFixed(1) : "--"}`}>
-                    {providerStats.averageRating
-                      ? providerStats.averageRating.toFixed(1)
-                      : "--"}
-                  </div>
-                  <div className="text-xs font-bold text-amber-100">
-                    <FormattedMessage id="providerProfile.averageRating" />
-                  </div>
-                </div>
-              </div>
-            </section>
-          )}
-
-          {/* ✅ H3: Formation */}
-          {isLawyer && (educationText || certificationsArray.length > 0 || provider.graduationYear) && (
-            <section className="bg-gradient-to-br from-white to-indigo-50 rounded-2xl p-5 shadow-lg border-2 border-indigo-200 ring-1 ring-indigo-100" aria-labelledby="education-heading">
-              <h3 id="education-heading" className="text-base font-black text-indigo-900 mb-3 flex items-center gap-2">
-                <span className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center">
-                  <GraduationCap size={16} className="text-white" strokeWidth={2.5} aria-hidden="true" />
-                </span>
-                <FormattedMessage id="providerProfile.education" />
-              </h3>
-              <div className="space-y-2" role="list">
-                {educationText && (
-                  <div className="flex items-start gap-2" role="listitem">
-                    <CheckCircle size={16} className="text-emerald-600 mt-0.5 flex-shrink-0" strokeWidth={2.5} aria-hidden="true" />
-                    <div>
-                      <p className="text-sm font-bold text-indigo-900">{educationText}</p>
-                      {provider.graduationYear && (
-                        <p className="text-xs font-bold text-indigo-700 mt-0.5">
-                          <FormattedMessage id="providerProfile.graduated" /> {provider.graduationYear}
-                        </p>
+                    </div>
+                    {/* Online status indicator */}
+                    <div
+                      className={`absolute -bottom-1 -right-1 w-7 h-7 rounded-full border-4 border-gray-900 transition-all duration-500 ${
+                        onlineStatus.isOnline ? "bg-green-500" : "bg-red-500"
+                      }`}
+                      title={onlineStatus.isOnline 
+                        ? intl.formatMessage({ id: "providerProfile.online" })
+                        : intl.formatMessage({ id: "providerProfile.offline" })
+                      }
+                    >
+                      {onlineStatus.isOnline && (
+                        <span className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-75" aria-hidden="true"></span>
                       )}
                     </div>
                   </div>
-                )}
-                {certificationsArray.length > 0 &&
-                  certificationsArray.map((cert, i) => (
-                    <div key={i} className="flex items-start gap-2" role="listitem">
-                      <Award size={16} className="text-amber-500 mt-0.5 flex-shrink-0" strokeWidth={2.5} aria-hidden="true" />
-                      <p className="text-sm font-bold text-slate-800">{cert}</p>
-                    </div>
-                  ))}
-              </div>
-            </section>
-          )}
 
-          {/* ✅ H2: Avis clients avec lazy loading */}
-          <section className="bg-gradient-to-br from-white to-amber-50 rounded-2xl p-5 shadow-lg border-2 border-amber-200 ring-1 ring-amber-100" aria-labelledby="reviews-heading">
-            <div className="flex items-center justify-between mb-4">
-              <h2 id="reviews-heading" className="text-base font-black text-amber-900 flex items-center gap-2">
-                <span className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
-                  <Star size={16} className="text-white fill-white" strokeWidth={2.5} aria-hidden="true" />
-                </span>
-                <FormattedMessage id="providerProfile.customerReviews" />
-              </h2>
-              {!isNewProvider && (
-                <span className="px-3 py-1.5 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full text-sm font-black text-white shadow-md" aria-label={`Note globale: ${providerStats.averageRating ? providerStats.averageRating.toFixed(1) : "—"} sur 5`}>
-                  ⭐ {providerStats.averageRating
-                    ? providerStats.averageRating.toFixed(1)
-                    : "—"}
-                  /5
-                </span>
-              )}
-            </div>
+                  {/* Informations textuelles */}
+                  <div className="flex-1 min-w-0">
+                    {/* Nom + Badges */}
+                    <div className="flex flex-wrap items-center gap-2 mb-3">
+                      <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black leading-tight bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
+                        {formatShortName(provider)}
+                      </h2>
 
-            {isLoadingReviews ? (
-              <div className="text-center py-8">
-                <div className="animate-spin rounded-full h-10 w-10 border-b-3 border-red-700 mx-auto" role="status" aria-label={intl.formatMessage({ id: "providerProfile.loadingReviews", defaultMessage: "Chargement des avis" })}></div>
-              </div>
-            ) : isNewProvider ? (
-              <div className="text-center py-8 text-slate-700">
-                <Sparkles className="w-12 h-12 mx-auto mb-3 text-yellow-600" strokeWidth={2.5} aria-hidden="true" />
-                <p className="font-black mb-1 text-sm">
-                  <FormattedMessage id="providerProfile.newProviderNoReviews" />
-                </p>
-                <p className="text-xs font-bold">
-                  <FormattedMessage id="providerProfile.beTheFirst" />
-                </p>
-              </div>
-            ) : (
-              <Suspense fallback={
-                <div className="text-center py-8">
-                  <div className="animate-spin rounded-full h-10 w-10 border-b-3 border-red-700 mx-auto" role="status" aria-label={intl.formatMessage({ id: "providerProfile.loadingReviews", defaultMessage: "Chargement des avis" })}></div>
-                </div>
-              }>
-                <Reviews
-                  mode="summary"
-                  averageRating={providerStats.averageRating || 0}
-                  totalReviews={providerStats.realReviewsCount}
-                  ratingDistribution={ratingDistribution}
-                />
-                <div className="mt-4">
-                  <Reviews
-                    mode="list"
-                    reviews={reviews}
-                    showControls={!!user}
-                    onHelpfulClick={handleHelpfulClick}
-                    onReportClick={handleReportClick}
-                  />
-                </div>
-              </Suspense>
-            )}
-          </section>
-
-          {/* ✅ H3: FAQ avec structure accessible */}
-          {snippetData?.snippets?.faqContent && snippetData.snippets.faqContent.length > 0 && (
-            <section className="bg-gradient-to-br from-white to-cyan-50 rounded-2xl p-5 shadow-lg border-2 border-cyan-200 ring-1 ring-cyan-100" aria-labelledby="faq-heading">
-              <h3 id="faq-heading" className="text-base font-black text-cyan-900 mb-3 flex items-center gap-2">
-                <span className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center">
-                  <HelpCircle size={16} className="text-white" strokeWidth={2.5} aria-hidden="true" />
-                </span>
-                <FormattedMessage id="providerProfile.frequentlyAskedQuestions" />
-              </h3>
-              <div className="space-y-2" role="list">
-                {snippetData.snippets.faqContent.map((faq, index) => (
-                  <details 
-                    key={`faq-${index}`}
-                    className="group border border-cyan-200 rounded-xl overflow-hidden bg-white"
-                    role="listitem"
-                  >
-                    <summary className="flex justify-between items-center cursor-pointer list-none p-3 bg-cyan-50 hover:bg-cyan-100 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-600 focus:ring-inset">
-                      <h4 className="text-sm font-black text-cyan-900 pr-3">
-                        {faq.question}
-                      </h4>
-                      <svg
-                        className="w-5 h-5 text-cyan-700 transition-transform group-open:rotate-180 flex-shrink-0"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2.5}
-                        aria-hidden="true"
+                      {/* Badge type */}
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs sm:text-sm font-semibold border backdrop-blur-sm ${
+                          isLawyer
+                            ? "bg-blue-500/20 border-blue-400/30 text-blue-200"
+                            : "bg-green-500/20 border-green-400/30 text-green-200"
+                        }`}
                       >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </summary>
-                    <div className="px-3 py-3 text-sm font-medium text-gray-800 leading-relaxed bg-white border-t border-cyan-200">
-                      <p className="whitespace-pre-line">{faq.answer}</p>
+                        {isLawyer ? (
+                          <FormattedMessage id="providerProfile.certifiedLawyer" />
+                        ) : (
+                          <FormattedMessage id="providerProfile.expertExpat" />
+                        )}
+                      </span>
+
+                      {/* Badge vérifié */}
+                      {provider.isVerified && (
+                        <span className="inline-flex items-center gap-1 bg-white text-gray-900 text-xs px-2.5 py-1 rounded-full border border-gray-200 font-medium">
+                          <Shield size={14} className="text-green-600" />
+                          <FormattedMessage id="providerProfile.verified" />
+                        </span>
+                      )}
+
+                      {/* Badge nouveau */}
+                      {isNewProvider && (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 border border-yellow-400/30 rounded-full text-xs font-bold text-yellow-300">
+                          <Sparkles size={12} />
+                          <FormattedMessage id="providerProfile.new" />
+                        </span>
+                      )}
+
+                      {/* Badge statut en ligne */}
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs sm:text-sm font-bold transition-all duration-500 border ${
+                          onlineStatus.isOnline
+                            ? "bg-green-500/20 text-green-300 border-green-400/30 shadow-lg shadow-green-500/20"
+                            : "bg-red-500/20 text-red-300 border-red-400/30"
+                        }`}
+                      >
+                        {onlineStatus.isOnline
+                          ? `🟢 ${intl.formatMessage({ id: "providerProfile.online" })}`
+                          : `🔴 ${intl.formatMessage({ id: "providerProfile.offline" })}`}
+                      </span>
                     </div>
-                  </details>
-                ))}
+
+                    {/* Localisation et expérience */}
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-gray-300 mb-4 text-sm">
+                      <div className="inline-flex items-center gap-1.5">
+                        <MapPin size={16} className="text-red-400 flex-shrink-0" />
+                        <span>{getCountryName(provider.country, preferredLangKey)}</span>
+                      </div>
+                      <div className="inline-flex items-center gap-1.5">
+                        {isLawyer ? (
+                          <Briefcase size={16} className="text-blue-400 flex-shrink-0" />
+                        ) : (
+                          <Users size={16} className="text-green-400 flex-shrink-0" />
+                        )}
+                        <span>
+                          {isLawyer
+                            ? `${provider.yearsOfExperience || 0} ${intl.formatMessage({ id: "providerProfile.yearsExperience" })}`
+                            : `${provider.yearsAsExpat || provider.yearsOfExperience || 0} ${intl.formatMessage({ id: "providerProfile.yearsAsExpat" })}`}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Rating */}
+                    {!isNewProvider && (
+                      <div className="inline-flex items-center gap-2 mb-4 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm px-3 py-1.5">
+                        <div className="flex" aria-label={`Rating: ${providerStats.averageRating || 0} out of 5 stars`}>
+                          {renderStars(providerStats.averageRating || provider.rating)}
+                        </div>
+                        <span className="text-white font-semibold">
+                          {providerStats.averageRating 
+                            ? providerStats.averageRating.toFixed(1)
+                            : (typeof provider.rating === "number" ? provider.rating.toFixed(1) : "--")}
+                        </span>
+                        <span className="text-gray-400">
+                          ({providerStats.realReviewsCount} <FormattedMessage id="providerProfile.reviews" />)
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Description courte */}
+                    <p className="text-gray-200 leading-relaxed text-sm sm:text-base line-clamp-3 lg:line-clamp-4">
+                      {descriptionText}
+                    </p>
+
+                    {/* Social sharing */}
+                    <div className="flex items-center gap-3 mt-5">
+                      <span className="text-gray-400 text-sm">
+                        <FormattedMessage id="providerProfile.share" />
+                      </span>
+                      <button
+                        onClick={() => shareProfile("facebook")}
+                        className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white/90 hover:text-white transition-all"
+                        aria-label="Share on Facebook"
+                      >
+                        <Facebook size={18} />
+                      </button>
+                      <button
+                        onClick={() => shareProfile("twitter")}
+                        className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white/90 hover:text-white transition-all"
+                        aria-label="Share on X"
+                      >
+                        <Twitter size={18} />
+                      </button>
+                      <button
+                        onClick={() => shareProfile("linkedin")}
+                        className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white/90 hover:text-white transition-all"
+                        aria-label="Share on LinkedIn"
+                      >
+                        <Linkedin size={18} />
+                      </button>
+                      <button
+                        onClick={() => shareProfile("copy")}
+                        className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white/90 hover:text-white transition-all"
+                        aria-label={intl.formatMessage({ id: "providerProfile.copyLink" })}
+                      >
+                        <Share2 size={18} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </section>
-          )}
 
-          {/* ✅ H3: Partage */}
-          <section className="bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 rounded-2xl p-5 shadow-lg border-2 border-purple-200 ring-1 ring-purple-100" aria-labelledby="share-heading">
-            <h3 id="share-heading" className="text-sm font-black text-purple-900 mb-3 text-center flex items-center justify-center gap-2">
-              <Share2 size={16} className="text-purple-600" strokeWidth={2.5} aria-hidden="true" />
-              <FormattedMessage id="providerProfile.share" />
-            </h3>
-            <div className="flex items-center justify-center gap-3" role="group" aria-label={intl.formatMessage({ id: "providerProfile.shareButtons", defaultMessage: "Boutons de partage" })}>
-              <button
-                onClick={() => shareProfile("facebook")}
-                className="p-3 bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-xl hover:from-blue-600 hover:to-blue-800 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                aria-label={intl.formatMessage({ id: "providerProfile.shareOnFacebook", defaultMessage: "Partager sur Facebook" })}
-              >
-                <Facebook size={22} strokeWidth={2} aria-hidden="true" />
-              </button>
-              <button
-                onClick={() => shareProfile("twitter")}
-                className="p-3 bg-gradient-to-br from-sky-400 to-sky-600 text-white rounded-xl hover:from-sky-500 hover:to-sky-700 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
-                aria-label={intl.formatMessage({ id: "providerProfile.shareOnTwitter", defaultMessage: "Partager sur X (Twitter)" })}
-              >
-                <Twitter size={22} strokeWidth={2} aria-hidden="true" />
-              </button>
-              <button
-                onClick={() => shareProfile("linkedin")}
-                className="p-3 bg-gradient-to-br from-blue-600 to-blue-800 text-white rounded-xl hover:from-blue-700 hover:to-blue-900 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
-                aria-label={intl.formatMessage({ id: "providerProfile.shareOnLinkedIn", defaultMessage: "Partager sur LinkedIn" })}
-              >
-                <Linkedin size={22} strokeWidth={2} aria-hidden="true" />
-              </button>
-              <button
-                onClick={() => shareProfile("copy")}
-                className="p-3 bg-gradient-to-br from-gray-500 to-gray-700 text-white rounded-xl hover:from-gray-600 hover:to-gray-800 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-                aria-label={intl.formatMessage({ id: "providerProfile.copyProfileLink", defaultMessage: "Copier le lien du profil" })}
-              >
-                <Share2 size={22} strokeWidth={2} aria-hidden="true" />
-              </button>
+              {/* ===== COLONNE DROITE: Booking card ===== */}
+              <aside className="lg:col-span-1">
+                <div className="group relative bg-white rounded-3xl shadow-2xl p-5 sm:p-6 border border-gray-200 transition-all hover:scale-[1.01] hover:shadow-red-500/10">
+                  {/* Overlay gradient */}
+                  <div className="pointer-events-none absolute inset-0 rounded-3xl bg-gradient-to-br from-red-500/5 to-orange-500/5 group-hover:from-red-500/10 group-hover:to-orange-500/10 transition-opacity" />
+                  
+                  <div className="relative z-10">
+                    {/* Badge délai d'appel */}
+                    <div className="text-center mb-5">
+                      <div className="inline-flex items-center gap-2 bg-gray-900 text-white rounded-full px-3 py-1.5 text-xs font-semibold">
+                        <Phone size={14} />
+                        <span><FormattedMessage id="callIn5Min" /></span>
+                      </div>
+
+                      {/* Prix */}
+                      <div className="mt-4">
+                        {bookingPrice?.hasDiscount ? (
+                          <>
+                            <div className="text-gray-400 line-through text-lg">
+                              {formatEUR(bookingPrice.originalEur)}
+                            </div>
+                            <div className="text-3xl sm:text-4xl font-black text-red-600">
+                              {formatEUR(bookingPrice.eur)}
+                            </div>
+                            <div className="text-xs text-green-600 font-semibold mt-1">
+                              Code {bookingPrice.promoCode} (-{formatEUR(bookingPrice.discountEur)})
+                            </div>
+                          </>
+                        ) : (
+                          <div className="text-3xl sm:text-4xl font-black text-gray-900">
+                            {bookingPrice ? formatEUR(bookingPrice.eur) : "—"}
+                          </div>
+                        )}
+                        <div className="text-gray-500 text-sm mt-1">
+                          {bookingPrice ? `(${formatUSD(bookingPrice.usd)})` : ""}
+                        </div>
+                      </div>
+
+                      <div className="text-gray-600 text-sm mt-1 flex items-center justify-center gap-1">
+                        <Clock size={14} />
+                        {bookingPrice?.duration
+                          ? `${bookingPrice.duration} ${intl.formatMessage({ id: "providerProfile.minutes" })}`
+                          : "—"}
+                      </div>
+                    </div>
+
+                    {/* Stats rapides */}
+                    <div className="space-y-3 mb-5">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-600">
+                          <FormattedMessage id="providerProfile.successRate" />
+                        </span>
+                        <span className="font-semibold text-gray-900">
+                          {isLoadingStats ? "..." : `${providerStats.successRate}%`}
+                        </span>
+                      </div>
+                      
+                      <div className="flex items-center justify-between text-sm bg-gray-50 p-3 rounded-xl border border-gray-200">
+                        <span className="text-gray-700 font-medium">
+                          <FormattedMessage id="providerProfile.availability" />
+                        </span>
+                        <span
+                          className={`font-bold text-xs px-2.5 py-1 rounded-full transition-all ${
+                            isOnCall
+                              ? "bg-orange-100 text-orange-800 border border-orange-300"
+                              : onlineStatus.isOnline
+                                ? "bg-green-100 text-green-800 border border-green-300"
+                                : "bg-red-100 text-red-800 border border-red-300"
+                          }`}
+                        >
+                          {isOnCall
+                            ? `📞 ${intl.formatMessage({ id: "providerProfile.alreadyOnCall" })}`
+                            : onlineStatus.isOnline
+                              ? `🟢 ${intl.formatMessage({ id: "providerProfile.online" })}`
+                              : `🔴 ${intl.formatMessage({ id: "providerProfile.offline" })}`}
+                        </span>
+                      </div>
+                      
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-600">
+                          <FormattedMessage id="providerProfile.completedCalls" />
+                        </span>
+                        <span className="font-semibold">
+                          {isLoadingStats ? "..." : providerStats.completedCalls}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* CTA Button - Desktop only (mobile has fixed bottom) */}
+                    <button
+                      onClick={handleBookCall}
+                      disabled={!onlineStatus.isOnline || isOnCall}
+                      className={`hidden lg:flex w-full py-4 px-4 rounded-2xl font-bold text-lg transition-all duration-300 items-center justify-center gap-3 min-h-[56px] focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                        onlineStatus.isOnline && !isOnCall
+                          ? "bg-gradient-to-r from-green-600 to-green-500 text-white hover:from-green-500 hover:to-green-400 hover:scale-[1.02] shadow-lg shadow-green-500/30 focus:ring-green-500"
+                          : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                      }`}
+                      aria-label={
+                        isOnCall
+                          ? intl.formatMessage({ id: "providerProfile.alreadyOnCall" })
+                          : onlineStatus.isOnline
+                            ? intl.formatMessage({ id: "providerProfile.bookNow" })
+                            : intl.formatMessage({ id: "providerProfile.unavailable" })
+                      }
+                    >
+                      <Phone size={22} aria-hidden="true" />
+                      <span>
+                        {isOnCall
+                          ? intl.formatMessage({ id: "providerProfile.alreadyOnCall" })
+                          : onlineStatus.isOnline
+                            ? intl.formatMessage({ id: "providerProfile.bookNow" })
+                            : intl.formatMessage({ id: "providerProfile.unavailable" })}
+                      </span>
+                      {onlineStatus.isOnline && !isOnCall && (
+                        <div className="flex gap-1" aria-hidden="true">
+                          <div className="w-2 h-2 rounded-full animate-pulse bg-white/80"></div>
+                          <div className="w-2 h-2 rounded-full animate-pulse delay-75 bg-white/80"></div>
+                          <div className="w-2 h-2 rounded-full animate-pulse delay-150 bg-white/80"></div>
+                        </div>
+                      )}
+                    </button>
+
+                    {/* Message de statut */}
+                    <div className="mt-3 text-center text-sm hidden lg:block">
+                      {isOnCall ? (
+                        <div className="text-orange-600 font-medium">
+                          📞 <FormattedMessage id="providerProfile.onCallMessage" />
+                        </div>
+                      ) : onlineStatus.isOnline ? (
+                        <div className="text-green-600 font-medium">
+                          ✅ <FormattedMessage id="providerProfile.availableNow" />
+                        </div>
+                      ) : (
+                        <div className="text-red-600">
+                          ❌ <FormattedMessage id="providerProfile.currentlyOffline" />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Badge sécurité */}
+                    <div className="mt-4 text-center">
+                      <div className="inline-flex items-center justify-center gap-2 text-xs text-gray-600 rounded-full border border-gray-200 px-3 py-1.5">
+                        <Shield size={14} aria-hidden="true" />
+                        <FormattedMessage id="providerProfile.securePayment" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </aside>
             </div>
-          </section>
+          </div>
+        </header>
 
+        {/* ========================================== */}
+        {/* MAIN CONTENT - WHITE/LIGHT SECTION        */}
+        {/* ========================================== */}
+        <main className="relative bg-gradient-to-b from-white via-gray-50 to-white rounded-t-[32px] -mt-4">
+          <div className="max-w-7xl mx-auto px-4 py-8 lg:py-12">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+              
+              {/* ===== COLONNE PRINCIPALE ===== */}
+              <div className="lg:col-span-2 space-y-6">
+                
+                {/* Section Description complète */}
+                <section className="bg-white rounded-2xl shadow-sm p-5 sm:p-6 border border-gray-200">
+                  <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <User size={20} className="text-red-500" />
+                    <FormattedMessage id="providerProfile.about" />
+                  </h3>
+                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                    {descriptionText}
+                  </p>
+                  
+                  {/* Motivation si présente */}
+                  {getFirstString(provider.motivation, preferredLangKey) && (
+                    <div className="mt-4 pt-4 border-t border-gray-100">
+                      <p className="text-gray-600 whitespace-pre-line italic">
+                        {getFirstString(provider.motivation, preferredLangKey)}
+                      </p>
+                    </div>
+                  )}
+                </section>
+
+                {/* Section Spécialités */}
+                <section className="bg-white rounded-2xl shadow-sm p-5 sm:p-6 border border-gray-200">
+                  <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <Briefcase size={20} className={isLawyer ? "text-blue-500" : "text-green-500"} />
+                    <FormattedMessage id="providerProfile.specialties" />
+                  </h3>
+                  {derivedSpecialties.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {derivedSpecialties.map((s, i) => (
+                        <span
+                          key={`${s}-${i}`}
+                          className={`px-3 py-1.5 rounded-full text-sm font-medium border ${
+                            isLawyer 
+                              ? "bg-blue-50 text-blue-700 border-blue-200" 
+                              : "bg-green-50 text-green-700 border-green-200"
+                          }`}
+                        >
+                          {s}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-gray-500">
+                      <FormattedMessage id="providerProfile.noSpecialties" />
+                    </p>
+                  )}
+                </section>
+
+                {/* Section Pays d'intervention */}
+                {provider.operatingCountries && provider.operatingCountries.length > 0 && (
+                  <section className="bg-white rounded-2xl shadow-sm p-5 sm:p-6 border border-gray-200">
+                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                      <MapPin size={20} className="text-red-500" />
+                      <FormattedMessage id="providerProfile.operatingCountries" />
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      {provider.operatingCountries.map((countryCode, index) => (
+                        <span
+                          key={`${countryCode}-${index}`}
+                          className="px-3 py-1.5 bg-red-50 text-red-700 border border-red-200 rounded-full text-sm font-medium"
+                        >
+                          {getCountryName(countryCode, preferredLangKey)}
+                        </span>
+                      ))}
+                    </div>
+                  </section>
+                )}
+
+                {/* Section Langues */}
+                <section className="bg-white rounded-2xl shadow-sm p-5 sm:p-6 border border-gray-200">
+                  <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <Globe size={20} className="text-purple-500" />
+                    <FormattedMessage id="providerProfile.languages" />
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {languageCodes.map((code, i) => (
+                      <span
+                        key={`${code}-${i}`}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 text-purple-700 border border-purple-200 rounded-full text-sm font-medium"
+                      >
+                        <LanguagesIcon size={14} />
+                        {formatLanguages([code], preferredLangKey)}
+                      </span>
+                    ))}
+                  </div>
+                </section>
+
+                {/* Section Formation (avocats uniquement) */}
+                {isLawyer && (educationText || certificationsArray.length > 0) && (
+                  <section className="bg-white rounded-2xl shadow-sm p-5 sm:p-6 border border-gray-200">
+                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                      <GraduationCap size={20} className="text-indigo-500" />
+                      <FormattedMessage id="providerProfile.educationCertifications" />
+                    </h3>
+                    <div className="space-y-3">
+                      {educationText && (
+                        <div className="flex items-start gap-3">
+                          <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
+                            <GraduationCap size={16} className="text-indigo-600" />
+                          </div>
+                          <div>
+                            <p className="text-gray-800 font-medium">{educationText}</p>
+                            {provider.graduationYear && (
+                              <p className="text-gray-500 text-sm mt-0.5">
+                                <FormattedMessage id="providerProfile.graduated" /> {provider.graduationYear}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                      {certificationsArray.map((cert, i) => (
+                        <div key={i} className="flex items-start gap-3">
+                          <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
+                            <Award size={16} className="text-amber-600" />
+                          </div>
+                          <p className="text-gray-700">{cert}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                )}
+
+                {/* Section Expérience expatrié */}
+                {isExpat && (
+                  <section className="bg-white rounded-2xl shadow-sm p-5 sm:p-6 border border-gray-200">
+                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                      <Users size={20} className="text-green-500" />
+                      <FormattedMessage id="providerProfile.expatExperience" />
+                    </h3>
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                          <MapPin size={18} className="text-green-600" />
+                        </div>
+                        <p className="text-gray-700">
+                          {provider.yearsAsExpat || provider.yearsOfExperience || 0}{" "}
+                          {intl.formatMessage({ id: "providerProfile.yearsAbroad" })}{" "}
+                          {intl.formatMessage({ id: "providerProfile.in" })}{" "}
+                          {getCountryName(provider.country, preferredLangKey)}
+                        </p>
+                      </div>
+                      
+                      {getFirstString(provider.experienceDescription, preferredLangKey) && (
+                        <p className="text-gray-600 pl-13">
+                          {getFirstString(provider.experienceDescription, preferredLangKey)}
+                        </p>
+                      )}
+                    </div>
+                  </section>
+                )}
+
+                {/* Section Avis clients */}
+                <section className="bg-white rounded-2xl shadow-sm p-5 sm:p-6 border border-gray-200" id="reviews-section">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                      <Star size={20} className="text-yellow-500" />
+                      <FormattedMessage id="providerProfile.customerReviews" />
+                      <span className="text-gray-500 font-normal">({providerStats.realReviewsCount})</span>
+                    </h3>
+                    
+                    {!isNewProvider && (
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-yellow-400 to-orange-400 px-3 py-1.5 text-sm font-bold text-white shadow-sm">
+                        <Star className="w-4 h-4 fill-white" />
+                        {providerStats.averageRating ? providerStats.averageRating.toFixed(1) : "—"}/5
+                      </span>
+                    )}
+                  </div>
+
+                  {isLoadingReviews ? (
+                    <div className="text-center py-8">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600 mx-auto" />
+                      <p className="mt-2 text-gray-500 text-sm">
+                        <FormattedMessage id="providerProfile.loadingReviews" />
+                      </p>
+                    </div>
+                  ) : isNewProvider ? (
+                    <div className="text-center py-8">
+                      <Sparkles className="w-12 h-12 mx-auto mb-3 text-yellow-500" />
+                      <p className="font-semibold text-gray-800 mb-1">
+                        <FormattedMessage id="providerProfile.newProviderNoReviews" />
+                      </p>
+                      <p className="text-gray-500 text-sm">
+                        <FormattedMessage id="providerProfile.beTheFirst" />
+                      </p>
+                    </div>
+                  ) : (
+                    <Suspense fallback={
+                      <div className="text-center py-8">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600 mx-auto" />
+                      </div>
+                    }>
+                      <Reviews
+                        mode="summary"
+                        averageRating={providerStats.averageRating || 0}
+                        totalReviews={providerStats.realReviewsCount}
+                        ratingDistribution={ratingDistribution}
+                      />
+                      <div className="mt-6">
+                        <Reviews
+                          mode="list"
+                          reviews={reviews}
+                          showControls={!!user}
+                          onHelpfulClick={handleHelpfulClick}
+                          onReportClick={handleReportClick}
+                        />
+                      </div>
+                    </Suspense>
+                  )}
+                </section>
+
+                {/* Section FAQ */}
+                {snippetData?.snippets?.faqContent && snippetData.snippets.faqContent.length > 0 && (
+                  <section className="bg-white rounded-2xl shadow-sm p-5 sm:p-6 border border-gray-200">
+                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                      <HelpCircle size={20} className="text-cyan-500" />
+                      <FormattedMessage id="providerProfile.frequentlyAskedQuestions" />
+                    </h3>
+                    <div className="space-y-2">
+                      {snippetData.snippets.faqContent.map((faq, index) => (
+                        <details 
+                          key={`faq-${index}`}
+                          className="group border border-gray-200 rounded-xl overflow-hidden"
+                        >
+                          <summary className="flex justify-between items-center cursor-pointer list-none p-4 bg-gray-50 hover:bg-gray-100 transition-colors">
+                            <span className="text-sm font-semibold text-gray-800 pr-4">
+                              {faq.question}
+                            </span>
+                            <svg
+                              className="w-5 h-5 text-gray-500 transition-transform group-open:rotate-180 flex-shrink-0"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={2}
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </summary>
+                          <div className="px-4 py-3 text-sm text-gray-600 leading-relaxed bg-white border-t border-gray-100">
+                            {faq.answer}
+                          </div>
+                        </details>
+                      ))}
+                    </div>
+                  </section>
+                )}
+              </div>
+
+              {/* ===== SIDEBAR DROITE ===== */}
+              <aside className="lg:col-span-1">
+                <div className="sticky top-6 space-y-6">
+                  
+                  {/* Statistiques */}
+                  <div className="bg-white rounded-2xl shadow-sm p-5 border border-gray-200">
+                    <h4 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
+                      <TrendingUp size={18} className="text-emerald-500" />
+                      <FormattedMessage id="providerProfile.stats" />
+                    </h4>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600 text-sm">
+                          <FormattedMessage id="providerProfile.averageRating" />
+                        </span>
+                        <span className="font-semibold text-gray-900">
+                          {providerStats.averageRating ? providerStats.averageRating.toFixed(1) : "--"}/5
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600 text-sm">
+                          <FormattedMessage id="providerProfile.reviews" />
+                        </span>
+                        <span className="font-semibold text-gray-900">
+                          {providerStats.realReviewsCount}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600 text-sm">
+                          <FormattedMessage id="providerProfile.successRate" />
+                        </span>
+                        <span className="font-semibold text-gray-900">
+                          {isLoadingStats ? "..." : `${providerStats.successRate}%`}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600 text-sm">
+                          <FormattedMessage id="providerProfile.completedCalls" />
+                        </span>
+                        <span className="font-semibold text-gray-900">
+                          {isLoadingStats ? "..." : providerStats.completedCalls}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600 text-sm">
+                          <FormattedMessage id="providerProfile.experience" />
+                        </span>
+                        <span className="font-semibold text-gray-900">
+                          {isLawyer
+                            ? `${provider.yearsOfExperience || 0} ${yearsLabel}`
+                            : `${provider.yearsAsExpat || provider.yearsOfExperience || 0} ${yearsLabel}`}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Informations */}
+                  <div className="bg-white rounded-2xl shadow-sm p-5 border border-gray-200">
+                    <h4 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
+                      <User size={18} className="text-gray-500" />
+                      <FormattedMessage id="providerProfile.information" />
+                    </h4>
+                    <div className="space-y-3 text-sm">
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <MapPin size={16} className="text-gray-400 flex-shrink-0" />
+                        <span>
+                          <FormattedMessage id="providerProfile.basedIn" />{" "}
+                          {getCountryName(provider.country, preferredLangKey)}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <LanguagesIcon size={16} className="text-gray-400 flex-shrink-0" />
+                        <span>
+                          <FormattedMessage id="providerProfile.speaks" />{" "}
+                          {formatLanguages(languageCodes, preferredLangKey)}
+                        </span>
+                      </div>
+                      {joinDateText && (
+                        <div className="flex items-center gap-2 text-gray-500 text-xs">
+                          <Clock size={14} className="text-gray-400 flex-shrink-0" />
+                          <span>{joinDateText}</span>
+                        </div>
+                      )}
+                      
+                      {/* Statut en ligne avec animation */}
+                      <div
+                        className={`flex items-center gap-2 p-3 rounded-xl mt-2 transition-all ${
+                          onlineStatus.isOnline 
+                            ? "bg-green-50 border border-green-200" 
+                            : "bg-gray-50 border border-gray-200"
+                        }`}
+                      >
+                        <div
+                          className={`relative w-5 h-5 rounded-full flex items-center justify-center ${
+                            onlineStatus.isOnline ? "bg-green-500" : "bg-gray-400"
+                          }`}
+                        >
+                          {onlineStatus.isOnline && (
+                            <div className="absolute w-5 h-5 rounded-full bg-green-500 animate-ping opacity-75" />
+                          )}
+                          <div className="w-2 h-2 bg-white rounded-full relative z-10" />
+                        </div>
+                        <span className={`font-semibold text-sm ${
+                          onlineStatus.isOnline ? "text-green-700" : "text-gray-600"
+                        }`}>
+                          {onlineStatus.isOnline ? (
+                            <FormattedMessage id="providerProfile.onlineNow" />
+                          ) : (
+                            <FormattedMessage id="providerProfile.offline" />
+                          )}
+                        </span>
+                      </div>
+
+                      {/* Badge vérifié */}
+                      {provider.isVerified && (
+                        <div className="flex items-center gap-2 text-gray-600 pt-2">
+                          <Shield size={16} className="text-green-500 flex-shrink-0" />
+                          <span className="font-medium">
+                            <FormattedMessage id="providerProfile.verifiedExpert" />
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </aside>
+            </div>
+          </div>
         </main>
       </div>
 
-      {/* ✅ CTA FLOTTANT (FAB) accessible */}
-      <div className="fixed bottom-0 left-0 right-0 z-45 bg-gradient-to-r from-red-700 via-red-600 to-orange-600 border-t-4 border-red-800 shadow-2xl">
-        <div className="max-w-7xl mx-auto px-4 py-3">
+      {/* ========================================== */}
+      {/* CTA FLOTTANT MOBILE - TOUJOURS VISIBLE    */}
+      {/* ========================================== */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white/95 backdrop-blur-md border-t border-gray-200 shadow-[0_-4px_20px_rgba(0,0,0,0.1)]">
+        <div className="px-4 py-3 safe-area-inset-bottom">
+          {/* Info prix + statut */}
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <span className="text-xl font-bold text-gray-900">
+                {bookingPrice ? formatEUR(bookingPrice.eur) : "—"}
+              </span>
+              <span className="text-gray-500 text-sm">
+                / {bookingPrice?.duration || 20}{minutesLabel.charAt(0)}
+              </span>
+            </div>
+            <div
+              className={`px-2.5 py-1 rounded-full text-xs font-bold ${
+                isOnCall
+                  ? "bg-orange-100 text-orange-700"
+                  : onlineStatus.isOnline
+                    ? "bg-green-100 text-green-700"
+                    : "bg-gray-100 text-gray-600"
+              }`}
+            >
+              {isOnCall
+                ? intl.formatMessage({ id: "providerProfile.onCall" })
+                : onlineStatus.isOnline
+                  ? intl.formatMessage({ id: "providerProfile.available" })
+                  : intl.formatMessage({ id: "providerProfile.offline" })}
+            </div>
+          </div>
+
+          {/* Bouton CTA */}
           <button
             onClick={handleBookCall}
             disabled={!onlineStatus.isOnline || isOnCall}
-            className={`w-full py-4 rounded-xl font-black text-lg transition-all flex items-center justify-center gap-3 shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+            className={`w-full py-3.5 rounded-xl font-bold text-base transition-all flex items-center justify-center gap-2 ${
               onlineStatus.isOnline && !isOnCall
-                ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-400 hover:to-emerald-500 hover:shadow-2xl active:scale-[0.98] border-2 border-green-400 focus:ring-green-400 animate-pulse"
-                : "bg-white/20 text-white/70 cursor-not-allowed border-2 border-white/30"
+                ? "bg-gradient-to-r from-green-600 to-green-500 text-white shadow-lg shadow-green-500/30 active:scale-[0.98]"
+                : "bg-gray-200 text-gray-500 cursor-not-allowed"
             }`}
             aria-label={
               onlineStatus.isOnline && !isOnCall
                 ? intl.formatMessage(
-                    { id: "providerProfile.callAriaLabel", defaultMessage: "Appeler {name} pour {price}" },
-                    { name: formatShortName(provider), price: bookingPrice ? formatEUR(bookingPrice.eur) : "—" }
+                    { id: "providerProfile.callAriaLabel", defaultMessage: "Appeler {name}" },
+                    { name: formatShortName(provider) }
                   )
                 : isOnCall
                   ? intl.formatMessage({ id: "providerProfile.alreadyOnCall" })
@@ -2316,22 +2582,17 @@ const ProviderProfile: React.FC = () => {
           >
             {onlineStatus.isOnline && !isOnCall ? (
               <>
-                <Phone size={22} strokeWidth={2.5} aria-hidden="true" />
-                <span>
-                  <FormattedMessage 
-                    id="providerProfile.callButton" 
-                    defaultMessage="Appeler"
-                  /> • {bookingPrice ? formatEUR(bookingPrice.eur) : "—"}
-                </span>
+                <Phone size={20} />
+                <span><FormattedMessage id="providerProfile.callButton" defaultMessage="Appeler maintenant" /></span>
               </>
             ) : isOnCall ? (
               <>
-                <XCircle size={22} strokeWidth={2.5} aria-hidden="true" />
+                <XCircle size={20} />
                 <FormattedMessage id="providerProfile.alreadyOnCall" />
               </>
             ) : (
               <>
-                <XCircle size={22} strokeWidth={2.5} aria-hidden="true" />
+                <XCircle size={20} />
                 <FormattedMessage id="providerProfile.unavailable" />
               </>
             )}
@@ -2339,10 +2600,12 @@ const ProviderProfile: React.FC = () => {
         </div>
       </div>
 
-      {/* ✅ Modal image accessible */}
+      {/* ========================================== */}
+      {/* MODAL IMAGE                               */}
+      {/* ========================================== */}
       {showImageModal && (
         <div
-          className="fixed inset-0 bg-black/95 flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4"
           onClick={() => setShowImageModal(false)}
           onKeyDown={(e) => {
             if (e.key === 'Escape') setShowImageModal(false);
@@ -2356,20 +2619,21 @@ const ProviderProfile: React.FC = () => {
             <img
               src={mainPhoto}
               alt={intl.formatMessage({ id: "providerProfile.fullPhotoAlt", defaultMessage: "Photo complète de {name}" }, { name: formatPublicName(provider) })}
-              className="max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl"
+              className="max-w-full max-h-[90vh] object-contain rounded-2xl"
               onError={handleImageError}
               loading="lazy"
               width={IMAGE_SIZES.MODAL_MAX_WIDTH}
               height={IMAGE_SIZES.MODAL_MAX_HEIGHT}
             />
             <button
-              className="absolute top-4 right-4 bg-white rounded-full p-3 text-slate-900 hover:bg-slate-100 transition-colors shadow-xl focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black"
-              onClick={() => setShowImageModal(false)}
+              className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full p-2.5 text-gray-800 hover:bg-white transition-colors shadow-lg focus:outline-none focus:ring-2 focus:ring-white"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowImageModal(false);
+              }}
               aria-label={intl.formatMessage({ id: "providerProfile.close" })}
             >
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <X size={24} />
             </button>
           </div>
         </div>

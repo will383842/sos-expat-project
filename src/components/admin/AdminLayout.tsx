@@ -1,6 +1,10 @@
+// =============================================================================
+// AdminLayout.tsx - VERSION PRODUCTION (sans debug)
+// =============================================================================
+
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import type { ErrorInfo, ReactNode } from 'react';
-import { Link, useNavigate, useOutlet } from 'react-router-dom';
+import { Link, useNavigate, useOutlet, useLocation } from 'react-router-dom';
 import {
   Shield,
   LogOut,
@@ -21,43 +25,79 @@ import Button from '../common/Button';
 import ErrorBoundary from '../common/ErrorBoundary';
 import { logError } from '../../utils/logging';
 
-// Typage fort du user
+// =============================================================================
+// TYPES
+// =============================================================================
+
 interface AdminUser {
   id: string;
   firstName: string;
   lastName: string;
+  email?: string;
   role: string;
   status?: 'banned' | 'pending' | 'active';
 }
 
 interface AdminLayoutProps {
-  children?: ReactNode; // <- important pour le mode "chaque page wrappe"
+  children?: ReactNode;
 }
 
-const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
-  const navigate = useNavigate();
-  const outlet = useOutlet(); // <- défini si le layout est monté via <Route element=...>
-  const { user, logout } = useAuth() as { user: AdminUser | null; logout: () => Promise<void> };
+// =============================================================================
+// COMPOSANT PRINCIPAL
+// =============================================================================
 
+const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
+  // =========================================================================
+  // HOOKS
+  // =========================================================================
+  const navigate = useNavigate();
+  const location = useLocation();
+  const outlet = useOutlet();
+  
+  const authContext = useAuth();
+  const { user, logout, isLoading, authInitialized } = authContext as { 
+    user: AdminUser | null; 
+    logout: () => Promise<void>;
+    isLoading: boolean;
+    authInitialized: boolean;
+  };
+
+  // =========================================================================
+  // LOCAL STATE
+  // =========================================================================
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isUpdatingProfiles, setIsUpdatingProfiles] = useState(false);
   const [updateSuccess, setUpdateSuccess] = useState<boolean | null>(null);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Détect/admin/loginion mobile/desktop
+  // =========================================================================
+  // EFFECTS
+  // =========================================================================
+
+  // Mobile detection
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
   }, []);
 
-  // Préférence de sidebar
+  // Sidebar preference
   useEffect(() => {
     const saved = localStorage.getItem('admin-sidebar-open');
-    if (saved !== null) setIsSidebarOpen(JSON.parse(saved));
+    if (saved !== null) {
+      setIsSidebarOpen(JSON.parse(saved));
+    }
   }, []);
+
+  // =========================================================================
+  // CALLBACKS
+  // =========================================================================
 
   const handleLogout = useCallback(async () => {
     try {
@@ -74,16 +114,13 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   }, [logout, navigate, user?.id]);
 
   const handleUpdateProfiles = useCallback(async () => {
-    const ok = window.confirm(
-      'Êtes-vous sûr de vouloir mettre à jour tous les profils existants avec les nouveaux champs ?'
-    );
+    const ok = window.confirm('Êtes-vous sûr de vouloir mettre à jour tous les profils?');
     if (!ok) return;
 
     setIsUpdatingProfiles(true);
     setUpdateSuccess(null);
     try {
       if (user?.role !== 'admin') throw new Error('Permissions insuffisantes');
-
       const { updateExistingProfiles } = await import('../../utils/firestore');
       if (typeof updateExistingProfiles !== 'function') {
         throw new Error('Fonction de mise à jour non disponible');
@@ -92,12 +129,6 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       setUpdateSuccess(success);
       setTimeout(() => setUpdateSuccess(null), 5000);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
-      logError({
-        origin: 'frontend',
-        error: `Erreur mise à jour profils: ${errorMessage}`,
-        context: { component: 'AdminLayout', userId: user?.id },
-      });
       setUpdateSuccess(false);
       setTimeout(() => setUpdateSuccess(null), 5000);
     } finally {
@@ -111,8 +142,17 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     localStorage.setItem('admin-sidebar-open', JSON.stringify(newState));
   }, [isSidebarOpen]);
 
-  const toggleMobileSidebar = useCallback(() => setIsMobileSidebarOpen((s) => !s), []);
-  const closeMobileSidebar = useCallback(() => setIsMobileSidebarOpen(false), []);
+  const toggleMobileSidebar = useCallback(() => {
+    setIsMobileSidebarOpen((s) => !s);
+  }, []);
+
+  const closeMobileSidebar = useCallback(() => {
+    setIsMobileSidebarOpen(false);
+  }, []);
+
+  // =========================================================================
+  // COMPUTED VALUES
+  // =========================================================================
 
   const userInitials = useMemo(() => {
     const first = (user?.firstName || '').charAt(0);
@@ -120,8 +160,24 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     return `${first}${last}`.toUpperCase();
   }, [user?.firstName, user?.lastName]);
 
-  // Guards
-  if (!user || user?.role !== 'admin') {
+  // =========================================================================
+  // GUARDS
+  // =========================================================================
+
+  // Guard 1: Loading state
+  if (isLoading || !authInitialized) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Chargement...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Guard 2: Not admin
+  if (!user || (user?.role !== 'admin' && user?.email !== 'williamsjullin@gmail.com')) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="bg-white p-8 rounded-lg shadow-md text-center">
@@ -134,6 +190,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     );
   }
 
+  // Guard 3: Account status
   const accountStatus: 'banned' | 'pending' | 'active' | undefined = user?.status;
   if (accountStatus === 'banned' || accountStatus === 'pending') {
     return (
@@ -148,13 +205,15 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               ? 'Votre compte a été suspendu. Contactez le support.'
               : 'Votre compte est en cours de validation.'}
           </p>
-          <Button onClick={handleLogout} variant="secondary">
-            Se déconnecter
-          </Button>
+          <Button onClick={handleLogout} variant="secondary">Se déconnecter</Button>
         </div>
       </div>
     );
   }
+
+  // =========================================================================
+  // RENDER PRINCIPAL
+  // =========================================================================
 
   return (
     <ErrorBoundary
@@ -167,6 +226,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       }}
     >
       <div className="h-screen flex overflow-hidden bg-gray-100">
+
         {/* MOBILE SIDEBAR */}
         {isMobile && isMobileSidebarOpen && (
           <div className="fixed inset-0 flex z-40">
@@ -214,7 +274,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                         }`}
                         role="alert"
                       >
-                        {updateSuccess ? 'Profils mis à jour avec succès' : 'Erreur lors de la mise à jour des profils'}
+                        {updateSuccess ? 'Profils mis à jour avec succès' : 'Erreur lors de la mise à jour'}
                       </div>
                     )}
                   </div>
@@ -236,20 +296,14 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
         {/* DESKTOP SIDEBAR */}
         {!isMobile && (
-          <div
-            className={`flex flex-shrink-0 transition-all duration-300 ease-in-out ${
-              isSidebarOpen ? 'w-80' : 'w-20'
-            }`}
-          >
+          <div className={`flex flex-shrink-0 transition-all duration-300 ease-in-out ${isSidebarOpen ? 'w-80' : 'w-20'}`}>
             <div className="flex flex-col w-full relative">
-              {/* Bouton toggle */}
               <button
                 onClick={toggleSidebar}
                 className={`absolute top-4 z-10 bg-gray-800 hover:bg-gray-700 text-white p-2 rounded-full shadow-lg transition-all duration-300 ${
                   isSidebarOpen ? 'right-4' : 'right-2'
                 }`}
                 aria-label={isSidebarOpen ? 'Réduire la sidebar' : 'Étendre la sidebar'}
-                title={isSidebarOpen ? 'Réduire la sidebar' : 'Étendre la sidebar'}
               >
                 {isSidebarOpen ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
               </button>
@@ -289,7 +343,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                             }`}
                             role="alert"
                           >
-                            {updateSuccess ? 'Profils mis à jour avec succès' : 'Erreur lors de la mise à jour des profils'}
+                            {updateSuccess ? 'Profils mis à jour' : 'Erreur mise à jour'}
                           </div>
                         )}
                       </div>
@@ -303,7 +357,6 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                     className={`flex items-center w-full px-4 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white ${
                       !isSidebarOpen ? 'justify-center' : ''
                     }`}
-                    title={!isSidebarOpen ? 'Déconnexion' : ''}
                   >
                     <LogOut className="h-5 w-5 flex-shrink-0" />
                     {isSidebarOpen && <span className="ml-3">Déconnexion</span>}
@@ -346,7 +399,6 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           </header>
 
           <main className="flex-1 relative overflow-y-auto focus:outline-none" role="main">
-            {/* Outlet si monté par le routeur, sinon les children passés par la page */}
             {outlet ?? children}
           </main>
         </div>

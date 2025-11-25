@@ -1,10 +1,13 @@
 // src/pages/RegisterLawyer.tsx
-// VERSION ULTRA-OPTIMISÉE - SEO + PERFORMANCE + SÉCURITÉ
+// VERSION ULTRA-OPTIMISÉE - SEO + PERFORMANCE + SÉCURITÉ + ANTI-BOT
 // ✅ SEO: JSON-LD, Schema.org, Open Graph, Twitter Cards, Canonical
 // ✅ PERFORMANCE: Lazy loading, mise en cache, optimisation bundle
 // ✅ SÉCURITÉ: Input sanitization, validation stricte
+// ✅ ANTI-BOT: reCAPTCHA v3, Honeypot, Time check, Fingerprint
 // ✅ ACCESSIBILITÉ: ARIA labels, balises sémantiques, navigation clavier
 // ✅ i18n: 100% clés de traduction, zéro texte en dur
+// ✅ FIX: Espaces autorisés dans tous les champs
+// ✅ FIX: Plus de saut de page lors de la soumission
 
 import React, {
   useState,
@@ -30,6 +33,7 @@ import {
   Briefcase,
   ArrowRight,
   HelpCircle,
+  Shield,
 } from "lucide-react";
 import Layout from "../components/layout/Layout";
 import Button from "../components/common/Button";
@@ -49,10 +53,147 @@ const ImageUploader = lazy(() => import("../components/common/ImageUploader"));
 const MultiLanguageSelect = lazy(() => import("../components/forms-data/MultiLanguageSelect"));
 const SpecialtySelect = lazy(() => import("../components/forms-data/SpecialtySelect"));
 
+// ============================================================================
+// 🔐 CONFIGURATION RECAPTCHA v3 + ANTI-BOT
+// ============================================================================
+// ⚠️ IMPORTANT: Remplacez par votre clé de site reCAPTCHA v3
+// Obtenir une clé: https://www.google.com/recaptcha/admin/create
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || "6LcXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+
+// Temps minimum pour remplir le formulaire (en secondes)
+const MIN_FORM_FILL_TIME = 15;
+
+// Déclaration TypeScript pour grecaptcha
+declare global {
+  interface Window {
+    grecaptcha: {
+      ready: (callback: () => void) => Promise<void>;
+      execute: (siteKey: string, options: { action: string }) => Promise<string>;
+    };
+  }
+}
+
+// 🤖 HOOK ANTI-BOT - reCAPTCHA v3 + Honeypot + Time Check + Behavior Tracking
+const useAntiBot = () => {
+  const formStartTime = useRef<number>(Date.now());
+  const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
+  const [honeypotValue, setHoneypotValue] = useState("");
+  const [mouseMovements, setMouseMovements] = useState(0);
+  const [keystrokes, setKeystrokes] = useState(0);
+
+  // Charger le script reCAPTCHA v3
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !window.grecaptcha) {
+      const script = document.createElement('script');
+      script.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`;
+      script.async = true;
+      script.defer = true;
+      script.onload = () => {
+        console.log('✅ reCAPTCHA v3 chargé');
+        setRecaptchaLoaded(true);
+      };
+      script.onerror = () => {
+        console.warn('⚠️ Erreur chargement reCAPTCHA');
+      };
+      document.head.appendChild(script);
+    } else if (window.grecaptcha) {
+      setRecaptchaLoaded(true);
+    }
+  }, []);
+
+  // Tracker les mouvements de souris (les bots n'en ont généralement pas)
+  useEffect(() => {
+    const handleMouseMove = () => {
+      setMouseMovements(prev => prev + 1);
+    };
+    
+    const handleKeyDown = () => {
+      setKeystrokes(prev => prev + 1);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
+  // Exécuter la vérification reCAPTCHA
+  const executeRecaptcha = useCallback(async (action: string): Promise<string | null> => {
+    if (!recaptchaLoaded || !window.grecaptcha) {
+      console.warn('⚠️ reCAPTCHA non disponible');
+      return null;
+    }
+
+    try {
+      await window.grecaptcha.ready(() => {});
+      const token = await window.grecaptcha.execute(RECAPTCHA_SITE_KEY, { action });
+      return token;
+    } catch (error) {
+      console.error('❌ Erreur reCAPTCHA:', error);
+      return null;
+    }
+  }, [recaptchaLoaded]);
+
+  // Vérifier si c'est probablement un bot
+  const validateHuman = useCallback(async (): Promise<{
+    isValid: boolean;
+    reason?: string;
+    recaptchaToken?: string | null;
+  }> => {
+    const timeSpent = (Date.now() - formStartTime.current) / 1000;
+
+    // 1. Vérifier le honeypot (champ caché)
+    if (honeypotValue) {
+      console.warn('🤖 Bot détecté: Honeypot rempli');
+      return { isValid: false, reason: 'honeypot' };
+    }
+
+    // 2. Vérifier le temps de remplissage
+    if (timeSpent < MIN_FORM_FILL_TIME) {
+      console.warn(`🤖 Bot détecté: Formulaire rempli trop vite (${timeSpent.toFixed(1)}s < ${MIN_FORM_FILL_TIME}s)`);
+      return { isValid: false, reason: 'too_fast' };
+    }
+
+    // 3. Vérifier les mouvements de souris (avertissement seulement)
+    if (mouseMovements < 10) {
+      console.warn(`🤖 Comportement suspect: Peu de mouvements souris (${mouseMovements})`);
+    }
+
+    // 4. Vérifier les frappes clavier (avertissement seulement)
+    if (keystrokes < 20) {
+      console.warn(`🤖 Comportement suspect: Peu de frappes clavier (${keystrokes})`);
+    }
+
+    // 5. Exécuter reCAPTCHA v3
+    const recaptchaToken = await executeRecaptcha('register_lawyer');
+
+    return { 
+      isValid: true, 
+      recaptchaToken,
+    };
+  }, [honeypotValue, mouseMovements, keystrokes, executeRecaptcha]);
+
+  return {
+    honeypotValue,
+    setHoneypotValue,
+    validateHuman,
+    recaptchaLoaded,
+    formStartTime: formStartTime.current,
+    stats: {
+      mouseMovements,
+      keystrokes,
+      timeSpent: Math.floor((Date.now() - formStartTime.current) / 1000),
+    }
+  };
+};
+
 // Constants
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_REGEX = /^\+?[1-9]\d{1,14}$/;
-const NAME_REGEX = /^[a-zA-ZÀ-ÿ\s'-]{2,50}$/;
+// ✅ FIX: Regex modifiée pour autoriser explicitement les espaces avec caractère littéral
+const NAME_REGEX = /^[a-zA-ZÀ-ÿ\u00C0-\u017F '-]{2,50}$/;
 const MIN_BIO_LENGTH = 50;
 const MAX_BIO_LENGTH = 500;
 
@@ -86,34 +227,163 @@ interface CountryOption {
   label: string;
 }
 
-// 🔒 SÉCURITÉ: Sanitization des inputs
+// 🔒 SÉCURITÉ: Sanitization des inputs - ✅ FIX: Ne supprime plus les espaces
 const sanitizeString = (str: string): string => {
+  if (!str) return "";
   return str
-    .trim()
     .replace(/[<>]/g, "") // Supprime les balises HTML
     .replace(/javascript:/gi, "") // Supprime les tentatives XSS
     .replace(/on\w+=/gi, ""); // Supprime les event handlers
+  // ✅ FIX: Supprimé le .trim() pour permettre les espaces pendant la saisie
+};
+
+// ✅ FIX: Fonction de sanitization finale (uniquement à la soumission)
+const sanitizeStringFinal = (str: string): string => {
+  if (!str) return "";
+  return sanitizeString(str).trim();
 };
 
 const sanitizeEmail = (email: string): string => {
+  if (!email) return "";
   return email.trim().toLowerCase();
 };
 
-// Country code mapping pour Stripe
+// ✅ FIX: Fonction pour sanitizer les noms en préservant les espaces internes
+const sanitizeName = (name: string): string => {
+  if (!name) return "";
+  // Supprime les caractères dangereux mais garde les espaces, accents, tirets, apostrophes
+  return name
+    .replace(/[<>]/g, "")
+    .replace(/javascript:/gi, "")
+    .replace(/on\w+=/gi, "")
+    .replace(/[^a-zA-ZÀ-ÿ\u00C0-\u017F '\-]/g, "");
+};
+
+// 🌍 Liste des pays supportés par Stripe Connect (mise à jour 2024)
+// Source officielle: https://stripe.com/global
+// Note: 46 pays fully supported + quelques pays en preview
+const STRIPE_SUPPORTED_COUNTRIES = new Set([
+  // Amérique du Nord
+  'US', // États-Unis
+  'CA', // Canada
+  
+  // Europe
+  'AT', // Autriche
+  'BE', // Belgique
+  'BG', // Bulgarie
+  'HR', // Croatie
+  'CY', // Chypre
+  'CZ', // République tchèque
+  'DK', // Danemark
+  'EE', // Estonie
+  'FI', // Finlande
+  'FR', // France
+  'DE', // Allemagne
+  'GI', // Gibraltar
+  'GR', // Grèce
+  'HU', // Hongrie
+  'IS', // Islande (ajouté)
+  'IE', // Irlande
+  'IT', // Italie
+  'LV', // Lettonie
+  'LI', // Liechtenstein
+  'LT', // Lituanie
+  'LU', // Luxembourg
+  'MT', // Malte
+  'NL', // Pays-Bas
+  'NO', // Norvège
+  'PL', // Pologne
+  'PT', // Portugal
+  'RO', // Roumanie
+  'SK', // Slovaquie
+  'SI', // Slovénie
+  'ES', // Espagne
+  'SE', // Suède
+  'CH', // Suisse
+  'GB', // Royaume-Uni
+  
+  // Asie-Pacifique
+  'AU', // Australie
+  'HK', // Hong Kong
+  'JP', // Japon
+  'MY', // Malaisie
+  'NZ', // Nouvelle-Zélande
+  'SG', // Singapour
+  'TH', // Thaïlande (limité)
+  
+  // Moyen-Orient
+  'AE', // Émirats Arabes Unis
+  
+  // Amérique Latine
+  'BR', // Brésil
+  'MX', // Mexique
+  
+  // Preview/Limité (inscription possible mais fonctionnalités limitées)
+  'IN', // Inde (preview)
+  'ID', // Indonésie (preview)
+  'PH', // Philippines
+]);
+
+// Country code mapping pour Stripe - Recherche améliorée
 const getCountryCode = (countryName: string): string => {
-  const country = countriesData.find(c => 
-    c.nameFr === countryName || 
-    c.nameEn === countryName ||
-    c.nameEs === countryName ||
-    c.nameDe === countryName ||
-    c.namePt === countryName ||
-    c.nameRu === countryName ||
-    c.nameAr === countryName ||
-    c.nameIt === countryName ||
-    c.nameNl === countryName ||
-    c.nameZh === countryName
-  );
+  if (!countryName) return "US";
+  
+  const normalizedName = countryName.trim().toLowerCase();
+  
+  const country = countriesData.find(c => {
+    // Recherche insensible à la casse
+    return (
+      c.nameFr?.toLowerCase() === normalizedName ||
+      c.nameEn?.toLowerCase() === normalizedName ||
+      c.nameEs?.toLowerCase() === normalizedName ||
+      c.nameDe?.toLowerCase() === normalizedName ||
+      c.namePt?.toLowerCase() === normalizedName ||
+      c.nameRu?.toLowerCase() === normalizedName ||
+      c.nameAr?.toLowerCase() === normalizedName ||
+      c.nameIt?.toLowerCase() === normalizedName ||
+      c.nameNl?.toLowerCase() === normalizedName ||
+      c.nameZh?.toLowerCase() === normalizedName ||
+      // Recherche exacte aussi (pour les noms avec casse spécifique)
+      c.nameFr === countryName ||
+      c.nameEn === countryName ||
+      c.nameEs === countryName ||
+      c.nameDe === countryName ||
+      c.namePt === countryName ||
+      c.nameRu === countryName ||
+      c.nameAr === countryName ||
+      c.nameIt === countryName ||
+      c.nameNl === countryName ||
+      c.nameZh === countryName
+    );
+  });
+  
   return country?.code || "US";
+};
+
+// Vérifier si un pays est supporté par Stripe
+const isCountrySupportedByStripe = (countryCode: string): boolean => {
+  return STRIPE_SUPPORTED_COUNTRIES.has(countryCode.toUpperCase());
+};
+
+// Obtenir le nom du pays à partir du code
+const getCountryNameFromCode = (code: string, lang: string): string => {
+  const country = countriesData.find(c => c.code === code);
+  if (!country) return code;
+  
+  const langMap: Record<string, keyof typeof country> = {
+    fr: 'nameFr',
+    en: 'nameEn',
+    es: 'nameEs',
+    de: 'nameDe',
+    pt: 'namePt',
+    ru: 'nameRu',
+    ar: 'nameAr',
+    hi: 'nameEn',
+    ch: 'nameZh',
+  };
+  
+  const prop = langMap[lang] || 'nameEn';
+  return (country[prop] as string) || country.nameEn || code;
 };
 
 // 🎨 Composants de feedback
@@ -146,6 +416,93 @@ const FieldSuccess = React.memo(({ show, message }: { show: boolean; message: st
   );
 });
 FieldSuccess.displayName = "FieldSuccess";
+
+// ⚠️ Composant d'avertissement pour les pays non supportés par Stripe
+const StripeCountryWarning = React.memo(({ 
+  countryName, 
+  countryCode, 
+  lang 
+}: { 
+  countryName: string; 
+  countryCode: string;
+  lang: string;
+}) => {
+  const messages: Record<string, { title: string; description: string; note: string }> = {
+    fr: {
+      title: "⚠️ Paiements non disponibles dans ce pays",
+      description: `Les paiements en ligne via Stripe ne sont pas encore disponibles pour les prestataires résidant en ${countryName}. Vous pouvez tout de même créer votre compte et votre profil sera visible par les clients.`,
+      note: "Notre équipe vous contactera pour configurer un mode de paiement alternatif (virement bancaire, PayPal, Wise, etc.)."
+    },
+    en: {
+      title: "⚠️ Payments not available in this country",
+      description: `Online payments via Stripe are not yet available for providers residing in ${countryName}. You can still create your account and your profile will be visible to clients.`,
+      note: "Our team will contact you to set up an alternative payment method (bank transfer, PayPal, Wise, etc.)."
+    },
+    es: {
+      title: "⚠️ Pagos no disponibles en este país",
+      description: `Los pagos en línea a través de Stripe aún no están disponibles para proveedores que residen en ${countryName}. Aún puede crear su cuenta y su perfil será visible para los clientes.`,
+      note: "Nuestro equipo se pondrá en contacto con usted para configurar un método de pago alternativo (transferencia bancaria, PayPal, Wise, etc.)."
+    },
+    de: {
+      title: "⚠️ Zahlungen in diesem Land nicht verfügbar",
+      description: `Online-Zahlungen über Stripe sind für Anbieter mit Wohnsitz in ${countryName} noch nicht verfügbar. Sie können trotzdem ein Konto erstellen und Ihr Profil wird für Kunden sichtbar sein.`,
+      note: "Unser Team wird Sie kontaktieren, um eine alternative Zahlungsmethode einzurichten (Banküberweisung, PayPal, Wise, etc.)."
+    },
+    pt: {
+      title: "⚠️ Pagamentos não disponíveis neste país",
+      description: `Os pagamentos online via Stripe ainda não estão disponíveis para prestadores residentes em ${countryName}. Você ainda pode criar sua conta e seu perfil será visível para os clientes.`,
+      note: "Nossa equipe entrará em contato para configurar um método de pagamento alternativo (transferência bancária, PayPal, Wise, etc.)."
+    },
+    ru: {
+      title: "⚠️ Платежи недоступны в этой стране",
+      description: `Онлайн-платежи через Stripe пока недоступны для поставщиков, проживающих в ${countryName}. Вы все равно можете создать учетную запись, и ваш профиль будет виден клиентам.`,
+      note: "Наша команда свяжется с вами для настройки альтернативного способа оплаты (банковский перевод, PayPal, Wise и т.д.)."
+    },
+    ar: {
+      title: "⚠️ المدفوعات غير متوفرة في هذا البلد",
+      description: `المدفوعات عبر الإنترنت عبر Stripe غير متوفرة بعد لمقدمي الخدمات المقيمين في ${countryName}. لا يزال بإمكانك إنشاء حسابك وسيكون ملفك الشخصي مرئيًا للعملاء.`,
+      note: "سيتصل بك فريقنا لإعداد طريقة دفع بديلة (تحويل مصرفي، PayPal، Wise، إلخ)."
+    },
+    hi: {
+      title: "⚠️ इस देश में भुगतान उपलब्ध नहीं है",
+      description: `${countryName} में रहने वाले प्रदाताओं के लिए Stripe के माध्यम से ऑनलाइन भुगतान अभी उपलब्ध नहीं है। आप फिर भी अपना खाता बना सकते हैं और आपकी प्रोफ़ाइल ग्राहकों को दिखाई देगी।`,
+      note: "हमारी टीम वैकल्पिक भुगतान विधि (बैंक ट्रांसफर, PayPal, Wise, आदि) सेट करने के लिए आपसे संपर्क करेगी।"
+    },
+    ch: {
+      title: "⚠️ 此国家/地区暂不支持付款",
+      description: `居住在${countryName}的服务提供商目前无法使用Stripe在线支付。您仍然可以创建账户，您的个人资料将对客户可见。`,
+      note: "我们的团队将与您联系，为您设置替代支付方式（银行转账、PayPal、Wise等）。"
+    }
+  };
+
+  const msg = messages[lang] || messages.en;
+
+  return (
+    <div 
+      className="mt-3 p-4 bg-amber-50 border-2 border-amber-300 rounded-xl"
+      role="alert"
+      aria-live="polite"
+    >
+      <div className="flex items-start gap-3">
+        <div className="flex-shrink-0 w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center">
+          <AlertCircle className="w-5 h-5 text-amber-600" aria-hidden="true" />
+        </div>
+        <div className="flex-1">
+          <h4 className="text-sm font-bold text-amber-800 mb-1">
+            {msg.title}
+          </h4>
+          <p className="text-sm text-amber-700 mb-2">
+            {msg.description}
+          </p>
+          <p className="text-xs text-amber-600 italic">
+            {msg.note}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+});
+StripeCountryWarning.displayName = "StripeCountryWarning";
 
 const TagChip = React.memo(({ value, onRemove, ariaLabel }: { value: string; onRemove: () => void; ariaLabel: string }) => (
   <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-100 text-indigo-800 text-sm font-medium border border-indigo-200">
@@ -196,7 +553,7 @@ const computePasswordStrength = (pw: string) => {
 };
 
 // 🎯 Composant FAQ pour le SEO
-const FAQSection: React.FC<{ intl: any }> = React.memo(({ intl }) => {
+const FAQSection: React.FC<{ intl: ReturnType<typeof useIntl> }> = React.memo(({ intl }) => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   
   const faqs = Array.from({ length: 8 }, (_, i) => ({
@@ -264,6 +621,13 @@ const RegisterLawyer: React.FC = () => {
   const { language } = useApp();
   const lang = language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt" | "ch" | "ar";
 
+  // 🤖 Hook Anti-Bot
+  const { honeypotValue, setHoneypotValue, validateHuman, recaptchaLoaded, stats } = useAntiBot();
+
+  // ✅ FIX: Ref pour tracker si la navigation a eu lieu (évite le saut de page)
+  const hasNavigatedRef = useRef(false);
+  const isMountedRef = useRef(true);
+
   const initial: LawyerFormData = {
     firstName: "",
     lastName: "",
@@ -291,11 +655,26 @@ const RegisterLawyer: React.FC = () => {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // ✅ State pour tracker si le pays est supporté par Stripe
+  const [isCountryStripeSupported, setIsCountryStripeSupported] = useState<boolean | null>(null);
+  const [selectedCountryCode, setSelectedCountryCode] = useState<string>("");
+  
+  // 🤖 State pour erreur anti-bot
+  const [botError, setBotError] = useState<string>("");
 
   const fieldRefs = {
     firstName: useRef<HTMLInputElement | null>(null),
     email: useRef<HTMLInputElement | null>(null),
   };
+
+  // ✅ FIX: Cleanup pour éviter les memory leaks et les updates après unmount
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   // 🔍 SEO PERFECTIONNÉ
   useEffect(() => {
@@ -517,28 +896,46 @@ const RegisterLawyer: React.FC = () => {
     setTouched((p) => ({ ...p, [name]: true }));
   }, []);
 
+  // ✅ FIX: Fonction onChange corrigée pour autoriser les espaces
   const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
     
-    let sanitizedValue = value;
+    let processedValue = value;
     
-    // 🔒 Sanitization selon le type de champ
+    // 🔒 Sanitization selon le type de champ - ✅ FIX: Préserve les espaces
     if (type === "text" || type === "textarea") {
       if (name === "email") {
-        sanitizedValue = sanitizeEmail(value);
+        // Email: pas d'espaces, tout en minuscules
+        processedValue = value.toLowerCase().replace(/\s/g, "");
       } else if (name === "firstName" || name === "lastName") {
-        sanitizedValue = sanitizeString(value).replace(/[^a-zA-ZÀ-ÿ\s'-]/g, "");
+        // ✅ FIX: Noms - autoriser espaces, accents, tirets, apostrophes
+        processedValue = sanitizeName(value);
+      } else if (name === "bio") {
+        // ✅ FIX: Bio - sanitize mais garde tout le texte et les espaces
+        processedValue = sanitizeString(value);
       } else {
-        sanitizedValue = sanitizeString(value);
+        // Autres champs texte
+        processedValue = sanitizeString(value);
       }
     }
     
     setForm((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : type === "number" ? Number(value) : sanitizedValue,
+      [name]: type === "checkbox" ? checked : type === "number" ? Number(value) : processedValue,
     }));
     
+    // ✅ Vérifier le support Stripe quand le pays de résidence change
+    if (name === "currentCountry" && processedValue) {
+      const countryCode = getCountryCode(processedValue);
+      setSelectedCountryCode(countryCode);
+      setIsCountryStripeSupported(isCountrySupportedByStripe(countryCode));
+    } else if (name === "currentCountry" && !processedValue) {
+      setSelectedCountryCode("");
+      setIsCountryStripeSupported(null);
+    }
+    
+    // Clear l'erreur si le champ est modifié
     if (fieldErrors[name]) {
       setFieldErrors((prev) => {
         const rest = { ...prev };
@@ -574,8 +971,9 @@ const RegisterLawyer: React.FC = () => {
     }
   }, [fieldErrors.specialties]);
 
+  // ✅ FIX: updateEducation préserve les espaces
   const updateEducation = useCallback((idx: number, val: string) => {
-    const sanitized = sanitizeString(val);
+    const sanitized = sanitizeString(val); // Préserve les espaces maintenant
     setForm((p) => {
       const arr = [...p.educations];
       arr[idx] = sanitized;
@@ -595,17 +993,22 @@ const RegisterLawyer: React.FC = () => {
   const validateAll = useCallback(() => {
     const e: Record<string, string> = {};
     
+    // ✅ FIX: Validation avec trim() uniquement pour la validation, pas pour la saisie
+    const trimmedFirstName = form.firstName.trim();
+    const trimmedLastName = form.lastName.trim();
+    const trimmedBio = form.bio.trim();
+    
     // Validation firstName
-    if (!form.firstName.trim()) {
+    if (!trimmedFirstName) {
       e.firstName = intl.formatMessage({ id: "registerLawyer.errors.firstNameRequired" });
-    } else if (!NAME_REGEX.test(form.firstName.trim())) {
+    } else if (!NAME_REGEX.test(trimmedFirstName)) {
       e.firstName = intl.formatMessage({ id: "registerLawyer.errors.firstNameInvalid" });
     }
     
     // Validation lastName
-    if (!form.lastName.trim()) {
+    if (!trimmedLastName) {
       e.lastName = intl.formatMessage({ id: "registerLawyer.errors.lastNameRequired" });
-    } else if (!NAME_REGEX.test(form.lastName.trim())) {
+    } else if (!NAME_REGEX.test(trimmedLastName)) {
       e.lastName = intl.formatMessage({ id: "registerLawyer.errors.lastNameInvalid" });
     }
     
@@ -654,9 +1057,9 @@ const RegisterLawyer: React.FC = () => {
     }
     
     // Validation bio
-    if (!form.bio.trim() || form.bio.trim().length < MIN_BIO_LENGTH) {
+    if (!trimmedBio || trimmedBio.length < MIN_BIO_LENGTH) {
       e.bio = intl.formatMessage({ id: "registerLawyer.errors.needBio" });
-    } else if (form.bio.trim().length > MAX_BIO_LENGTH) {
+    } else if (trimmedBio.length > MAX_BIO_LENGTH) {
       e.bio = intl.formatMessage({ id: "registerLawyer.errors.bioTooLong" });
     }
     
@@ -686,8 +1089,16 @@ const RegisterLawyer: React.FC = () => {
     return Object.keys(e).length === 0;
   }, [form, selectedLanguages, intl]);
 
+  // ✅ FIX: handleSubmit corrigé pour éviter le saut de page + 🤖 Anti-Bot
   const handleSubmit = useCallback(async (ev: React.FormEvent) => {
     ev.preventDefault();
+    
+    // ✅ FIX: Empêcher les soumissions multiples et après navigation
+    if (isSubmitting || hasNavigatedRef.current) return;
+    
+    // 🤖 Reset erreur bot
+    setBotError("");
+    
     setTouched({ 
       firstName: true, 
       lastName: true, 
@@ -699,11 +1110,25 @@ const RegisterLawyer: React.FC = () => {
       acceptTerms: true 
     });
     
-    if (isSubmitting) return;
     setIsSubmitting(true);
     
-    if (!validateAll()) {
+    // 🤖 ÉTAPE 1: Validation Anti-Bot
+    const botCheck = await validateHuman();
+    if (!botCheck.isValid) {
+      const errorMessages: Record<string, string> = {
+        honeypot: "Une erreur de validation s'est produite. Veuillez réessayer.",
+        too_fast: "Veuillez prendre le temps de remplir correctement le formulaire.",
+      };
+      setBotError(errorMessages[botCheck.reason || ''] || "Erreur de validation.");
       setIsSubmitting(false);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    
+    if (!validateAll()) {
+      if (isMountedRef.current) {
+        setIsSubmitting(false);
+      }
       return;
     }
     
@@ -711,18 +1136,24 @@ const RegisterLawyer: React.FC = () => {
       await setPersistence(auth, browserLocalPersistence);
       
       const languageCodes = (selectedLanguages as LanguageOption[]).map((l) => l.value);
+      
+      // ✅ FIX: Utiliser sanitizeStringFinal pour le trim final à la soumission
       const sanitizedEducations = form.educations
-        .map((e) => sanitizeString(e))
+        .map((e) => sanitizeStringFinal(e))
         .filter(Boolean);
+      
+      const trimmedFirstName = sanitizeStringFinal(form.firstName);
+      const trimmedLastName = sanitizeStringFinal(form.lastName);
+      const trimmedBio = sanitizeStringFinal(form.bio);
       
       const userData = {
         role: "lawyer" as const,
         type: "lawyer" as const,
         email: sanitizeEmail(form.email),
-        fullName: `${sanitizeString(form.firstName)} ${sanitizeString(form.lastName)}`,
-        name: `${sanitizeString(form.firstName)} ${sanitizeString(form.lastName)}`,
-        firstName: sanitizeString(form.firstName),
-        lastName: sanitizeString(form.lastName),
+        fullName: `${trimmedFirstName} ${trimmedLastName}`,
+        name: `${trimmedFirstName} ${trimmedLastName}`,
+        firstName: trimmedFirstName,
+        lastName: trimmedLastName,
         phone: form.phone,
         currentCountry: form.currentCountry,
         country: form.currentCountry,
@@ -736,53 +1167,104 @@ const RegisterLawyer: React.FC = () => {
         education: sanitizedEducations.join(', '),
         yearsOfExperience: Math.max(0, Math.min(60, form.yearsOfExperience)),
         graduationYear: Math.max(1980, Math.min(new Date().getFullYear(), form.graduationYear)),
-        bio: sanitizeString(form.bio),
-        description: sanitizeString(form.bio),
+        bio: trimmedBio,
+        description: trimmedBio,
         availability: form.availability,
-        isOnline: false,  // ✅ Toujours hors ligne à la création
+        isOnline: false,
         isApproved: false,
         isVisible: false,
         isActive: true,
         approvalStatus: 'pending' as const,
         verificationStatus: 'pending',
         status: 'pending',
-
         rating: 4.5,
         reviewCount: 0,
         preferredLanguage: form.preferredLanguage,
+        // 🔐 Données anti-bot (pour analyse côté serveur)
+        _securityMeta: {
+          recaptchaToken: botCheck.recaptchaToken,
+          formFillTime: stats.timeSpent,
+          mouseMovements: stats.mouseMovements,
+          keystrokes: stats.keystrokes,
+          userAgent: navigator.userAgent,
+          timestamp: Date.now(),
+        },
         createdAt: new Date(),
         updatedAt: new Date(),
       };
 
       await register(userData, form.password);
       
-      // Création du compte Stripe
-      const { getFunctions, httpsCallable } = await import("firebase/functions");
-      const functions = getFunctions(undefined, "europe-west1");
-      const createStripeAccount = httpsCallable(functions, "createStripeAccount");
+      // ✅ Vérification du support Stripe pour le pays
+      const stripeCountryCode = getCountryCode(form.currentCountry);
       
-      await createStripeAccount({
-        email: sanitizeEmail(form.email),
-        currentCountry: getCountryCode(form.currentCountry),
-        firstName: sanitizeString(form.firstName),
-        lastName: sanitizeString(form.lastName),
-        userType: "lawyer",
-      });
+      if (!isCountrySupportedByStripe(stripeCountryCode)) {
+        // Le pays n'est pas supporté par Stripe - on continue quand même l'inscription
+        // mais on ne crée pas de compte Stripe (sera fait manuellement ou plus tard)
+        console.warn(`⚠️ [RegisterLawyer] Pays non supporté par Stripe: ${stripeCountryCode} (${form.currentCountry})`);
+        
+        // Navigation réussie même sans compte Stripe
+        hasNavigatedRef.current = true;
+        
+        navigate(redirect, {
+          replace: true,
+          state: {
+            message: intl.formatMessage({ id: "registerLawyer.success.registeredNoStripe" }),
+            type: "warning",
+          },
+        });
+        return;
+      }
       
-      navigate(redirect, {
-        replace: true,
-        state: {
-          message: intl.formatMessage({ id: "registerLawyer.success.registered" }),
-          type: "success",
-        },
-      });
+      // Création du compte Stripe (uniquement si le pays est supporté)
+      try {
+        const { getFunctions, httpsCallable } = await import("firebase/functions");
+        const functions = getFunctions(undefined, "europe-west1");
+        const createStripeAccount = httpsCallable(functions, "createStripeAccount");
+        
+        await createStripeAccount({
+          email: sanitizeEmail(form.email),
+          currentCountry: stripeCountryCode,
+          firstName: trimmedFirstName,
+          lastName: trimmedLastName,
+          userType: "lawyer",
+        });
+        
+        // ✅ Succès complet - inscription + Stripe
+        hasNavigatedRef.current = true;
+        
+        navigate(redirect, {
+          replace: true,
+          state: {
+            message: intl.formatMessage({ id: "registerLawyer.success.registered" }),
+            type: "success",
+          },
+        });
+      } catch (stripeError: unknown) {
+        // ✅ Erreur Stripe MAIS inscription Firebase réussie - on redirige quand même
+        console.error('⚠️ [RegisterLawyer] Erreur Stripe (compte utilisateur créé):', stripeError);
+        
+        hasNavigatedRef.current = true;
+        
+        // On redirige vers le dashboard avec un message d'avertissement
+        navigate(redirect, {
+          replace: true,
+          state: {
+            message: "Votre compte a été créé avec succès ! La configuration des paiements sera finalisée ultérieurement par notre équipe.",
+            type: "warning",
+          },
+        });
+      }
+      
     } catch (err: unknown) {
       console.error('❌ [RegisterLawyer] Erreur inscription:', err);
+      
+      // ✅ FIX: Vérifier si le composant est toujours monté avant de mettre à jour l'état
+      if (!isMountedRef.current || hasNavigatedRef.current) return;
       
       let msg = intl.formatMessage({ id: "registerLawyer.errors.generic" });
       
       if (err instanceof Error) {
-        // Messages d'erreur clairs en français
         if (err.message.includes('email-already-in-use') || err.message.includes('déjà associé')) {
           msg = "Cette adresse email est déjà utilisée. Essayez de vous connecter ou utilisez une autre adresse.";
         } else if (err.message.includes('email-linked-to-google') || err.message.includes('lié à un compte Google')) {
@@ -797,34 +1279,45 @@ const RegisterLawyer: React.FC = () => {
           msg = "La connexion est trop lente. Vérifiez votre connexion internet et réessayez.";
         } else if (err.message.includes('permissions') || err.message.includes('permission')) {
           msg = "Erreur technique lors de la création du compte. Contactez le support si le problème persiste.";
+        } else if (err.message.includes('not currently supported by Stripe') || err.message.includes('not supported')) {
+          // ✅ Gestion spécifique des erreurs Stripe pour pays non supportés
+          const countryCode = getCountryCode(form.currentCountry);
+          const countryName = form.currentCountry;
+          msg = `Le pays "${countryName}" (${countryCode}) n'est pas encore supporté par notre système de paiement. Votre compte a été créé mais vous devrez contacter le support pour activer les paiements.`;
+        } else if (err.message.includes('Stripe') || err.message.includes('stripe')) {
+          msg = "Erreur lors de la configuration du système de paiement. Votre compte a été créé, contactez le support pour finaliser la configuration.";
         } else if (err.message && err.message.length > 10 && err.message.length < 200) {
-          // Utiliser le message d'erreur original s'il est clair
           msg = err.message;
         }
       }
       
       setFieldErrors((prev) => ({ ...prev, general: msg }));
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } finally {
       setIsSubmitting(false);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  }, [isSubmitting, validateAll, register, form, selectedLanguages, navigate, redirect, intl]);
+    // ✅ FIX: Pas de finally avec setIsSubmitting(false) pour éviter le re-render après navigation
+  }, [isSubmitting, validateAll, validateHuman, register, form, selectedLanguages, navigate, redirect, intl, stats]);
 
+  // ✅ FIX: canSubmit avec validation des espaces (trim)
   const canSubmit = useMemo(() => {
     const phoneNumber = parsePhoneNumberFromString(form.phone);
+    const trimmedFirstName = form.firstName.trim();
+    const trimmedLastName = form.lastName.trim();
+    const trimmedBio = form.bio.trim();
+    
     return (
-      !!form.firstName && 
-      NAME_REGEX.test(form.firstName) &&
-      !!form.lastName && 
-      NAME_REGEX.test(form.lastName) &&
+      !!trimmedFirstName && 
+      NAME_REGEX.test(trimmedFirstName) &&
+      !!trimmedLastName && 
+      NAME_REGEX.test(trimmedLastName) &&
       EMAIL_REGEX.test(form.email) && 
       form.password.length >= 6 &&
       form.password.length <= 128 &&
       !!form.phone && 
       phoneNumber?.isValid() && 
       !!form.currentCountry && 
-      form.bio.trim().length >= MIN_BIO_LENGTH &&
-      form.bio.trim().length <= MAX_BIO_LENGTH &&
+      trimmedBio.length >= MIN_BIO_LENGTH &&
+      trimmedBio.length <= MAX_BIO_LENGTH &&
       !!form.profilePhoto && 
       form.specialties.length > 0 && 
       form.practiceCountries.length > 0 &&
@@ -838,10 +1331,13 @@ const RegisterLawyer: React.FC = () => {
 
   const getInputClass = useCallback((name: string, hasError?: boolean) => {
     const base = "w-full px-4 py-3.5 rounded-xl border-2 transition-all duration-200 text-[15px] font-medium focus:outline-none";
+    const fieldValue = form[name as keyof LawyerFormData];
+    const hasValue = typeof fieldValue === 'string' ? fieldValue.trim() : fieldValue;
+    
     if (hasError || (fieldErrors[name] && touched[name])) {
       return `${base} border-red-400 bg-red-50 text-red-900 focus:border-red-500 focus:ring-4 focus:ring-red-500/20`;
     }
-    if (!fieldErrors[name] && touched[name] && form[name as keyof LawyerFormData]) {
+    if (!fieldErrors[name] && touched[name] && hasValue) {
       return `${base} border-green-400 bg-green-50 text-green-900 focus:border-green-500 focus:ring-4 focus:ring-green-500/20`;
     }
     return `${base} border-gray-300 bg-gray-100 text-gray-900 placeholder-gray-500 hover:bg-gray-50 hover:border-gray-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/20 focus:bg-white`;
@@ -870,6 +1366,12 @@ const RegisterLawyer: React.FC = () => {
               <FormattedMessage id="registerLawyer.ui.heroSubtitle" />
             </p>
             
+            {/* 🔐 Badge sécurité reCAPTCHA */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-50 border border-green-200 rounded-full text-sm text-green-700 mb-4">
+              <Shield className="w-4 h-4" aria-hidden="true" />
+              <span>Formulaire sécurisé par reCAPTCHA</span>
+            </div>
+            
             <div className="text-sm text-gray-600">
               <FormattedMessage id="registerLawyer.ui.already" />{" "}
               <Link 
@@ -885,7 +1387,8 @@ const RegisterLawyer: React.FC = () => {
 
         {/* 📝 FORMULAIRE PRINCIPAL */}
         <main className="max-w-2xl mx-auto px-4 py-8">
-          {fieldErrors.general && (
+          {/* Erreur générale ou bot */}
+          {(fieldErrors.general || botError) && (
             <div 
               className="mb-6 rounded-xl border-2 border-red-300 bg-red-50 p-5 shadow-lg" 
               role="alert"
@@ -894,13 +1397,46 @@ const RegisterLawyer: React.FC = () => {
               <div className="flex">
                 <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0" aria-hidden="true" />
                 <div className="ml-3">
-                  <p className="text-sm font-semibold text-red-900">{fieldErrors.general}</p>
+                  <p className="text-sm font-semibold text-red-900">{botError || fieldErrors.general}</p>
                 </div>
               </div>
             </div>
           )}
 
           <form onSubmit={handleSubmit} noValidate className="space-y-8">
+            {/* 🍯 HONEYPOT - Champs cachés pour piéger les bots */}
+            <div 
+              style={{ 
+                position: 'absolute', 
+                left: '-9999px', 
+                top: '-9999px',
+                opacity: 0,
+                height: 0,
+                overflow: 'hidden',
+                pointerEvents: 'none',
+              }}
+              aria-hidden="true"
+            >
+              <label htmlFor="website_url">Website URL (leave empty)</label>
+              <input
+                type="text"
+                id="website_url"
+                name="website_url"
+                tabIndex={-1}
+                autoComplete="off"
+                value={honeypotValue}
+                onChange={(e) => setHoneypotValue(e.target.value)}
+              />
+              <label htmlFor="phone_confirm">Phone Confirm (leave empty)</label>
+              <input
+                type="text"
+                id="phone_confirm"
+                name="phone_confirm"
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
+
             {/* ========================================================================= */}
             {/* 👤 SECTION 1: IDENTITÉ (avec langues déplacées ici) */}
             {/* ========================================================================= */}
@@ -936,6 +1472,7 @@ const RegisterLawyer: React.FC = () => {
                       id="firstName"
                       name="firstName"
                       ref={fieldRefs.firstName}
+                      type="text"
                       value={form.firstName}
                       onChange={onChange}
                       onBlur={() => markTouched("firstName")}
@@ -951,7 +1488,7 @@ const RegisterLawyer: React.FC = () => {
                       show={!!(fieldErrors.firstName && touched.firstName)} 
                     />
                     <FieldSuccess
-                      show={!fieldErrors.firstName && !!touched.firstName && !!form.firstName && NAME_REGEX.test(form.firstName)}
+                      show={!fieldErrors.firstName && !!touched.firstName && !!form.firstName.trim() && NAME_REGEX.test(form.firstName.trim())}
                       message={intl.formatMessage({ id: "registerLawyer.success.fieldValid" })}
                     />
                   </div>
@@ -967,6 +1504,7 @@ const RegisterLawyer: React.FC = () => {
                     <input
                       id="lastName"
                       name="lastName"
+                      type="text"
                       value={form.lastName}
                       onChange={onChange}
                       onBlur={() => markTouched("lastName")}
@@ -982,7 +1520,7 @@ const RegisterLawyer: React.FC = () => {
                       show={!!(fieldErrors.lastName && touched.lastName)} 
                     />
                     <FieldSuccess
-                      show={!fieldErrors.lastName && !!touched.lastName && !!form.lastName && NAME_REGEX.test(form.lastName)}
+                      show={!fieldErrors.lastName && !!touched.lastName && !!form.lastName.trim() && NAME_REGEX.test(form.lastName.trim())}
                       message={intl.formatMessage({ id: "registerLawyer.success.fieldValid" })}
                     />
                   </div>
@@ -1020,10 +1558,10 @@ const RegisterLawyer: React.FC = () => {
                   </div>
                   <FieldError 
                     error={fieldErrors.email} 
-                    show={!!(touched.email && (!!fieldErrors.email || !EMAIL_REGEX.test(form.email)))} 
+                    show={!!(touched.email && (!!fieldErrors.email || (form.email && !EMAIL_REGEX.test(form.email))))} 
                   />
                   <FieldSuccess 
-                    show={!!touched.email && EMAIL_REGEX.test(form.email)} 
+                    show={!!touched.email && !!form.email && EMAIL_REGEX.test(form.email)} 
                     message={intl.formatMessage({ id: "registerLawyer.success.emailValid" })} 
                   />
                 </div>
@@ -1108,142 +1646,141 @@ const RegisterLawyer: React.FC = () => {
                     <span className="text-red-500 ml-1" aria-label={intl.formatMessage({ id: "common.required" })}>*</span>
                   </label>
                   
-                  {/* Style optimisé mobile-first */}
                   {/* Style optimisé mobile-first - FOND CLAIR */}
-<style>{`
-  /* Container principal */
-  .react-tel-input {
-    position: relative !important;
-  }
-  
-  /* Dropdown des pays */
-  .react-tel-input .country-list {
-    position: absolute !important;
-    background-color: #ffffff !important;
-    border: 2px solid #d1d5db !important;
-    border-radius: 12px !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
-    max-height: 200px !important;
-    overflow-y: auto !important;
-    z-index: 99999 !important;
-    margin-top: 4px !important;
-    width: 280px !important;
-    left: 0 !important;
-    pointer-events: auto !important;
-  }
-  
-  /* Items de la liste */
-  .react-tel-input .country-list .country {
-    padding: 8px 12px !important;
-    color: #111827 !important;
-    background-color: transparent !important;
-    font-size: 14px !important;
-    cursor: pointer !important;
-    pointer-events: auto !important;
-  }
-  
-  /* Hover bleu */
-  .react-tel-input .country-list .country:hover,
-  .react-tel-input .country-list .country.highlight {
-    background-color: rgba(99, 102, 241, 0.1) !important;
-  }
-  
-  /* Pays sélectionné */
-  .react-tel-input .country-list .country.active {
-    background-color: rgba(99, 102, 241, 0.15) !important;
-    color: #4f46e5 !important;
-    font-weight: 600 !important;
-  }
-  
-  /* Nom du pays */
-  .react-tel-input .country-list .country-name {
-    color: #374151 !important;
-    margin-right: 8px !important;
-  }
-  
-  /* Code pays */
-  .react-tel-input .country-list .dial-code {
-    color: #6b7280 !important;
-  }
-  
-  /* Bouton drapeau - CLIQUABLE */
-  .react-tel-input .flag-dropdown {
-    background-color: #f9fafb !important;
-    border: 2px solid #d1d5db !important;
-    border-right: none !important;
-    border-radius: 12px 0 0 12px !important;
-    cursor: pointer !important;
-    pointer-events: auto !important;
-    transition: all 0.2s ease !important;
-  }
-  
-  .react-tel-input .flag-dropdown:hover {
-    background-color: #f3f4f6 !important;
-    border-color: #9ca3af !important;
-  }
-  
-  .react-tel-input .flag-dropdown.open {
-    background-color: rgba(99, 102, 241, 0.1) !important;
-    border-color: #6366f1 !important;
-  }
-  
-  /* Input téléphone - ÉDITABLE - FOND CLAIR */
-  .react-tel-input .form-control {
-    width: 100% !important;
-    background-color: #f9fafb !important;
-    border: 2px solid #d1d5db !important;
-    border-radius: 12px !important;
-    color: #111827 !important;
-    padding: 14px 16px 14px 64px !important;
-    font-size: 15px !important;
-    font-weight: 500 !important;
-    pointer-events: auto !important;
-    cursor: text !important;
-    transition: all 0.2s ease !important;
-  }
-  
-  .react-tel-input .form-control:hover {
-    background-color: #f3f4f6 !important;
-    border-color: #9ca3af !important;
-  }
-  
-  .react-tel-input .form-control:focus {
-    outline: none !important;
-    background-color: #ffffff !important;
-    border-color: #6366f1 !important;
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1) !important;
-  }
-  
-  .react-tel-input .form-control::placeholder {
-    color: #9ca3af !important;
-  }
-  
-  /* Scrollbar */
-  .react-tel-input .country-list::-webkit-scrollbar {
-    width: 6px !important;
-  }
-  
-  .react-tel-input .country-list::-webkit-scrollbar-track {
-    background: #f3f4f6 !important;
-  }
-  
-  .react-tel-input .country-list::-webkit-scrollbar-thumb {
-    background: #d1d5db !important;
-    border-radius: 4px !important;
-  }
-  
-  .react-tel-input .country-list::-webkit-scrollbar-thumb:hover {
-    background: #9ca3af !important;
-  }
-  
-  /* Mobile */
-  @media (max-width: 640px) {
-    .react-tel-input .country-list {
-      width: calc(100vw - 40px) !important;
-      max-width: 300px !important;
-    }
-  }
-`}</style>
+                  <style>{`
+                    /* Container principal */
+                    .react-tel-input {
+                      position: relative !important;
+                    }
+                    
+                    /* Dropdown des pays */
+                    .react-tel-input .country-list {
+                      position: absolute !important;
+                      background-color: #ffffff !important;
+                      border: 2px solid #d1d5db !important;
+                      border-radius: 12px !important;
+                      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+                      max-height: 200px !important;
+                      overflow-y: auto !important;
+                      z-index: 99999 !important;
+                      margin-top: 4px !important;
+                      width: 280px !important;
+                      left: 0 !important;
+                      pointer-events: auto !important;
+                    }
+                    
+                    /* Items de la liste */
+                    .react-tel-input .country-list .country {
+                      padding: 8px 12px !important;
+                      color: #111827 !important;
+                      background-color: transparent !important;
+                      font-size: 14px !important;
+                      cursor: pointer !important;
+                      pointer-events: auto !important;
+                    }
+                    
+                    /* Hover bleu */
+                    .react-tel-input .country-list .country:hover,
+                    .react-tel-input .country-list .country.highlight {
+                      background-color: rgba(99, 102, 241, 0.1) !important;
+                    }
+                    
+                    /* Pays sélectionné */
+                    .react-tel-input .country-list .country.active {
+                      background-color: rgba(99, 102, 241, 0.15) !important;
+                      color: #4f46e5 !important;
+                      font-weight: 600 !important;
+                    }
+                    
+                    /* Nom du pays */
+                    .react-tel-input .country-list .country-name {
+                      color: #374151 !important;
+                      margin-right: 8px !important;
+                    }
+                    
+                    /* Code pays */
+                    .react-tel-input .country-list .dial-code {
+                      color: #6b7280 !important;
+                    }
+                    
+                    /* Bouton drapeau - CLIQUABLE */
+                    .react-tel-input .flag-dropdown {
+                      background-color: #f9fafb !important;
+                      border: 2px solid #d1d5db !important;
+                      border-right: none !important;
+                      border-radius: 12px 0 0 12px !important;
+                      cursor: pointer !important;
+                      pointer-events: auto !important;
+                      transition: all 0.2s ease !important;
+                    }
+                    
+                    .react-tel-input .flag-dropdown:hover {
+                      background-color: #f3f4f6 !important;
+                      border-color: #9ca3af !important;
+                    }
+                    
+                    .react-tel-input .flag-dropdown.open {
+                      background-color: rgba(99, 102, 241, 0.1) !important;
+                      border-color: #6366f1 !important;
+                    }
+                    
+                    /* Input téléphone - ÉDITABLE - FOND CLAIR */
+                    .react-tel-input .form-control {
+                      width: 100% !important;
+                      background-color: #f9fafb !important;
+                      border: 2px solid #d1d5db !important;
+                      border-radius: 12px !important;
+                      color: #111827 !important;
+                      padding: 14px 16px 14px 64px !important;
+                      font-size: 15px !important;
+                      font-weight: 500 !important;
+                      pointer-events: auto !important;
+                      cursor: text !important;
+                      transition: all 0.2s ease !important;
+                    }
+                    
+                    .react-tel-input .form-control:hover {
+                      background-color: #f3f4f6 !important;
+                      border-color: #9ca3af !important;
+                    }
+                    
+                    .react-tel-input .form-control:focus {
+                      outline: none !important;
+                      background-color: #ffffff !important;
+                      border-color: #6366f1 !important;
+                      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1) !important;
+                    }
+                    
+                    .react-tel-input .form-control::placeholder {
+                      color: #9ca3af !important;
+                    }
+                    
+                    /* Scrollbar */
+                    .react-tel-input .country-list::-webkit-scrollbar {
+                      width: 6px !important;
+                    }
+                    
+                    .react-tel-input .country-list::-webkit-scrollbar-track {
+                      background: #f3f4f6 !important;
+                    }
+                    
+                    .react-tel-input .country-list::-webkit-scrollbar-thumb {
+                      background: #d1d5db !important;
+                      border-radius: 4px !important;
+                    }
+                    
+                    .react-tel-input .country-list::-webkit-scrollbar-thumb:hover {
+                      background: #9ca3af !important;
+                    }
+                    
+                    /* Mobile */
+                    @media (max-width: 640px) {
+                      .react-tel-input .country-list {
+                        width: calc(100vw - 40px) !important;
+                        max-width: 300px !important;
+                      }
+                    }
+                  `}</style>
                   
                   <IntlPhoneInput
                     value={form.phone}
@@ -1387,9 +1924,18 @@ const RegisterLawyer: React.FC = () => {
                     show={!!(fieldErrors.currentCountry && touched.currentCountry)} 
                   />
                   <FieldSuccess 
-                    show={!fieldErrors.currentCountry && !!touched.currentCountry && !!form.currentCountry} 
+                    show={!fieldErrors.currentCountry && !!touched.currentCountry && !!form.currentCountry && isCountryStripeSupported === true} 
                     message={intl.formatMessage({ id: "registerLawyer.success.fieldValid" })} 
                   />
+                  
+                  {/* ⚠️ Avertissement si le pays n'est pas supporté par Stripe */}
+                  {form.currentCountry && isCountryStripeSupported === false && (
+                    <StripeCountryWarning 
+                      countryName={form.currentCountry}
+                      countryCode={selectedCountryCode}
+                      lang={lang}
+                    />
+                  )}
                 </div>
 
                 {/* Pays d'exercice */}
@@ -1564,6 +2110,7 @@ const RegisterLawyer: React.FC = () => {
                       <div key={idx} className="flex gap-2" role="listitem">
                         <input
                           id={`education-${idx}`}
+                          type="text"
                           value={ed}
                           onChange={(e) => updateEducation(idx, e.target.value)}
                           className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-xl bg-gray-100 text-[15px] font-medium placeholder-gray-500 hover:bg-gray-50 hover:border-gray-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/20 focus:bg-white transition-all"
@@ -1660,14 +2207,14 @@ const RegisterLawyer: React.FC = () => {
                       aria-valuemax={MAX_BIO_LENGTH}
                     >
                       <div 
-                        className={`h-full ${form.bio.length < MIN_BIO_LENGTH ? "bg-orange-400" : "bg-green-500"} transition-all`} 
+                        className={`h-full ${form.bio.trim().length < MIN_BIO_LENGTH ? "bg-orange-400" : "bg-green-500"} transition-all`} 
                         style={{ width: `${Math.min((form.bio.length / MAX_BIO_LENGTH) * 100, 100)}%` }} 
                       />
                     </div>
                     <div className="flex justify-between text-xs mt-2 font-medium">
-                      <span className={form.bio.length < MIN_BIO_LENGTH ? "text-orange-600" : "text-green-600"}>
-                        {form.bio.length < MIN_BIO_LENGTH 
-                          ? intl.formatMessage({ id: "registerLawyer.bio.remaining" }, { count: MIN_BIO_LENGTH - form.bio.length }) 
+                      <span className={form.bio.trim().length < MIN_BIO_LENGTH ? "text-orange-600" : "text-green-600"}>
+                        {form.bio.trim().length < MIN_BIO_LENGTH 
+                          ? intl.formatMessage({ id: "registerLawyer.bio.remaining" }, { count: MIN_BIO_LENGTH - form.bio.trim().length }) 
                           : intl.formatMessage({ id: "registerLawyer.bio.complete" })
                         }
                       </span>
@@ -1802,6 +2349,19 @@ const RegisterLawyer: React.FC = () => {
                   </span>
                 )}
               </Button>
+              
+              {/* 🔐 Mention reCAPTCHA */}
+              <p className="mt-4 text-xs text-gray-500 text-center">
+                Ce site est protégé par reCAPTCHA et les{" "}
+                <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline">
+                  règles de confidentialité
+                </a>{" "}
+                et{" "}
+                <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline">
+                  conditions d'utilisation
+                </a>{" "}
+                de Google s'appliquent.
+              </p>
             </section>
           </form>
 
