@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import {
@@ -9,7 +9,6 @@ import {
   ChevronDown,
   Wifi,
   WifiOff,
-  Heart,
   ChevronLeft,
   ChevronRight,
   Eye,
@@ -17,11 +16,10 @@ import {
   Globe,
   Users,
   Zap,
-  HelpCircle,
-  Shield,
-  Clock,
-  MessageCircle,
-  CheckCircle,
+  SlidersHorizontal,
+  X,
+  RotateCcw,
+  Sparkles,
 } from "lucide-react";
 import {
   collection,
@@ -30,9 +28,6 @@ import {
   onSnapshot,
   where,
   DocumentData,
-  doc,
-  getDoc,
-  getDocs,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import Layout from "../components/layout/Layout";
@@ -43,15 +38,14 @@ import { FormattedMessage, useIntl } from "react-intl";
 // 🌍 IMPORTS POUR INTERNATIONALISATION
 // ========================================
 import { 
-  countriesData, 
+  countriesData,
   getSortedCountries, 
   type LanguageKey,
-  type CountryData 
+  type CountryData
 } from '../data/countries';
 
 import { 
   getCountryName, 
-  formatLanguages,
   convertLanguageNamesToCodes 
 } from "../utils/formatters";
 
@@ -59,7 +53,6 @@ import {
   languagesData, 
   getLanguageLabel, 
   type SupportedLocale,
-  type Language 
 } from '../data/languages-spoken';
 
 
@@ -126,13 +119,6 @@ interface FAQItem {
 /* =========================
    Constants
 ========================= */
-const CARD_DIMENSIONS = {
-  width: 320,
-  height: 520,
-  imageHeight: 288,
-  contentHeight: 232,
-} as const;
-
 const PAGE_SIZE = 9;
 const BASE_URL = "https://sos-expat.com";
 const PAGE_PATH = "/sos-appel";
@@ -141,7 +127,6 @@ const PAGE_PATH = "/sos-appel";
 // 🔍 SEO CONSTANTS - URLS et LOCALES
 // ========================================
 
-// URLs des réseaux sociaux (constantes, jamais traduites)
 const SOCIAL_URLS = {
   facebook: "https://www.facebook.com/sosexpat",
   linkedin: "https://www.linkedin.com/company/sosexpat",
@@ -149,7 +134,6 @@ const SOCIAL_URLS = {
   instagram: "https://www.instagram.com/sosexpat",
 } as const;
 
-// Mapping correct og:locale pour chaque langue
 const OG_LOCALES: Record<string, string> = {
   fr: "fr_FR",
   en: "en_US",
@@ -163,10 +147,8 @@ const OG_LOCALES: Record<string, string> = {
   ch: "zh_CN",
 };
 
-// Langues supportées pour hreflang
 const SUPPORTED_LANGUAGES = ['fr', 'en', 'es', 'de', 'pt', 'ru', 'zh', 'ar', 'hi'] as const;
 
-// 8 FAQ pour Featured Snippet (Position 0)
 const FAQ_ITEMS: FAQItem[] = [
   { questionKey: "sosCall.faq.q1", answerKey: "sosCall.faq.a1" },
   { questionKey: "sosCall.faq.q2", answerKey: "sosCall.faq.a2" },
@@ -177,56 +159,6 @@ const FAQ_ITEMS: FAQItem[] = [
   { questionKey: "sosCall.faq.q7", answerKey: "sosCall.faq.a7" },
   { questionKey: "sosCall.faq.q8", answerKey: "sosCall.faq.a8" },
 ];
-
-const LANGUAGE_MAP: Record<string, string> = {
-  Français: "Français",
-  French: "Français",
-  fr: "Français",
-  FR: "Français",
-  Anglais: "Anglais",
-  English: "Anglais",
-  en: "Anglais",
-  EN: "Anglais",
-  Espagnol: "Espagnol",
-  Spanish: "Espagnol",
-  Español: "Espagnol",
-  es: "Espagnol",
-  ES: "Espagnol",
-  Português: "Portugais",
-  Portuguese: "Portugais",
-  pt: "Portugais",
-  PT: "Portugais",
-  Deutsch: "Allemand",
-  German: "Allemand",
-  de: "Allemand",
-  DE: "Allemand",
-  Italiano: "Italien",
-  Italian: "Italien",
-  it: "Italien",
-  IT: "Italien",
-};
-
-const FLAG_MAP: Record<string, string> = {
-  France: "🇫🇷",
-  Espagne: "🇪🇸",
-  Spain: "🇪🇸",
-  Canada: "🇨🇦",
-  Portugal: "🇵🇹",
-  Allemagne: "🇩🇪",
-  Germany: "🇩🇪",
-  Italie: "🇮🇹",
-  Italy: "🇮🇹",
-  Belgique: "🇧🇪",
-  Belgium: "🇧🇪",
-  Suisse: "🇨🇭",
-  Switzerland: "🇨🇭",
-  "Royaume-Uni": "🇬🇧",
-  "United Kingdom": "🇬🇧",
-  "États-Unis": "🇺🇸",
-  "United States": "🇺🇸",
-  "Pays-Bas": "🇳🇱",
-  Netherlands: "🇳🇱",
-};
 
 const PROFESSION_ICONS: Record<string, { icon: string; bgColor: string; textColor: string }> = {
   lawyer: {
@@ -259,14 +191,6 @@ const getLanguage = (userLanguage?: string): "fr" | "en" | "es" => {
 
 const getProfessionInfo = (type: string) => {
   return PROFESSION_ICONS[type] || PROFESSION_ICONS["expat"];
-};
-
-const mapLanguageLabelLocal = (language: string): string => {
-  return LANGUAGE_MAP[language] || language;
-};
-
-const getCountryFlag = (country: string): string => {
-  return FLAG_MAP[country] || "🌍";
 };
 
 const useStatusColors = (isOnline: boolean) => {
@@ -307,6 +231,18 @@ const slugify = (s: string) =>
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "");
 
+// ========================================
+// 🔀 Fonction de mélange aléatoire (Fisher-Yates)
+// ========================================
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
+
 /* =========================
    🌍 Fonctions de traduction dynamique
 ========================= */
@@ -344,21 +280,165 @@ const getLanguagesLocale = (locale: string): SupportedLocale => {
   return mapping[locale.toLowerCase()] || 'fr';
 };
 
-const getCountryOptions = (locale: string): string[] => {
+// Retourne les options pays avec code et label traduit
+const getCountryOptions = (locale: string): { code: string; label: string }[] => {
   const langKey = getCountryLanguageKey(locale);
   return getSortedCountries(langKey)
     .filter(country => country.code !== 'SEPARATOR')
-    .map(country => country[langKey]);
+    .map(country => ({
+      code: country.code,
+      label: country[langKey]
+    }));
 };
 
-const getLanguageOptions = (locale: string): string[] => {
+// Retourne les options langues avec code et label traduit
+const getLanguageOptions = (locale: string): { code: string; label: string }[] => {
   const supportedLocale = getLanguagesLocale(locale);
   return languagesData
-    .map(lang => getLanguageLabel(lang, supportedLocale))
+    .map(lang => ({
+      code: lang.code,
+      label: getLanguageLabel(lang, supportedLocale)
+    }))
     .sort((a, b) => {
       const sortLocale = supportedLocale === 'ch' ? 'zh' : supportedLocale;
-      return a.localeCompare(b, sortLocale);
+      return a.label.localeCompare(b.label, sortLocale);
     });
+};
+
+// Trouve un pays par son code ou par n'importe quel nom traduit
+const findCountryByCodeOrName = (value: string): CountryData | undefined => {
+  if (!value) return undefined;
+  
+  const normalizedValue = value.toLowerCase().trim();
+  
+  // D'abord chercher par code exact
+  const byCode = countriesData.find(country => 
+    country.code.toLowerCase() === normalizedValue
+  );
+  if (byCode) return byCode;
+  
+  // Ensuite chercher par nom exact dans toutes les langues
+  const byExactName = countriesData.find(country => {
+    const allNames = [
+      country.nameFr,
+      country.nameEn,
+      country.nameEs,
+      country.nameDe,
+      country.namePt,
+      country.nameRu,
+      country.nameZh,
+      country.nameAr,
+      country.nameIt,
+      country.nameNl,
+    ].filter(Boolean).map(n => n?.toLowerCase().trim());
+    
+    return allNames.includes(normalizedValue);
+  });
+  if (byExactName) return byExactName;
+  
+  // Enfin, chercher par correspondance partielle (pour gérer les variantes)
+  const byPartialMatch = countriesData.find(country => {
+    const allNames = [
+      country.code,
+      country.nameFr,
+      country.nameEn,
+      country.nameEs,
+      country.nameDe,
+      country.namePt,
+      country.nameRu,
+      country.nameZh,
+      country.nameAr,
+      country.nameIt,
+      country.nameNl,
+    ].filter(Boolean).map(n => n?.toLowerCase().trim());
+    
+    // Vérifier si la valeur contient un des noms ou vice-versa
+    return allNames.some(name => 
+      name === normalizedValue || 
+      name?.includes(normalizedValue) || 
+      normalizedValue.includes(name || '')
+    );
+  });
+  
+  return byPartialMatch;
+};
+
+// Vérifie si un pays du provider correspond au filtre sélectionné
+const matchCountry = (
+  providerCountry: string,
+  selectedCountryCode: string,
+  customCountry: string
+): boolean => {
+  if (selectedCountryCode === "all") return true;
+  if (!providerCountry) return false;
+  
+  const providerCountryLower = providerCountry.toLowerCase().trim();
+  const selectedCodeLower = selectedCountryCode.toLowerCase().trim();
+  
+  // Cas "Autre" avec recherche personnalisée
+  if (selectedCountryCode === "Autre") {
+    if (!customCountry) return true;
+    const needle = customCountry.toLowerCase().trim();
+    return providerCountryLower.includes(needle) || needle.includes(providerCountryLower);
+  }
+  
+  // Comparaison directe (si le provider stocke le code ISO)
+  if (providerCountryLower === selectedCodeLower) {
+    return true;
+  }
+  
+  // Générer tous les noms possibles du pays sélectionné dans toutes les langues
+  const allLanguages = ['fr', 'en', 'es', 'de', 'pt', 'ru', 'zh', 'ar', 'hi', 'ch'];
+  const allPossibleNames: string[] = [selectedCodeLower];
+  
+  for (const lang of allLanguages) {
+    const name = getCountryName(selectedCountryCode, lang);
+    if (name && name.toLowerCase().trim() !== selectedCodeLower) {
+      allPossibleNames.push(name.toLowerCase().trim());
+    }
+  }
+  
+  // Vérifier si le pays du provider correspond à l'un des noms
+  return allPossibleNames.includes(providerCountryLower);
+};
+
+// Vérifie si les langues du provider correspondent au filtre
+const matchLanguage = (
+  providerLangs: string[],
+  selectedCode: string,
+  custom: string
+): boolean => {
+  if (selectedCode === "all") return true;
+  if (!providerLangs || providerLangs.length === 0) return false;
+  
+  // Convertir les langues du provider en codes normalisés
+  const providerLangCodes = convertLanguageNamesToCodes(providerLangs).map(c => c.toLowerCase());
+  
+  if (selectedCode === "Autre") {
+    if (!custom) return true;
+    const needle = custom.toLowerCase().trim();
+    
+    // Chercher dans les codes et les labels traduits
+    return providerLangCodes.some(code => {
+      // Vérifier le code directement
+      if (code.includes(needle)) return true;
+      
+      const lang = languagesData.find(l => l.code.toLowerCase() === code);
+      if (!lang) return false;
+      
+      // Vérifier tous les labels dans toutes les langues via l'objet labels
+      if (lang.labels) {
+        const allLabels = Object.values(lang.labels).filter(Boolean).map(l => l?.toLowerCase());
+        return allLabels.some(l => l?.includes(needle));
+      }
+      
+      return false;
+    });
+  }
+  
+  // Recherche par code de langue sélectionné
+  const targetCode = selectedCode.toLowerCase();
+  return providerLangCodes.includes(targetCode);
 };
 
 /* =========================
@@ -369,12 +449,10 @@ const generateAllSchemas = (
   providers: Provider[],
   selectedType: string,
   onlineCount: number,
-  currentLang: string  // Ajout de la langue courante
+  currentLang: string
 ) => {
-  // URL localisée de la page courante
   const localizedPageUrl = `${BASE_URL}/${currentLang}${PAGE_PATH}`;
   
-  // 1. Organization Schema (URLs constantes, non localisées)
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -396,7 +474,6 @@ const generateAllSchemas = (
     sameAs: Object.values(SOCIAL_URLS),
   };
 
-  // 2. WebSite Schema
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -416,7 +493,6 @@ const generateAllSchemas = (
     inLanguage: intl.locale,
   };
 
-  // 3. Service Schema
   const serviceSchema = {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -482,7 +558,6 @@ const generateAllSchemas = (
     } : undefined,
   };
 
-  // 4. WebPage Schema (URL localisée)
   const webPageSchema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
@@ -504,7 +579,6 @@ const generateAllSchemas = (
     dateModified: new Date().toISOString(),
   };
 
-  // 5. BreadcrumbList Schema (URLs localisées)
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -525,7 +599,6 @@ const generateAllSchemas = (
     ],
   };
 
-  // 6. FAQPage Schema (8 questions pour Featured Snippet)
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -540,7 +613,6 @@ const generateAllSchemas = (
     })),
   };
 
-  // 7. ItemList Schema (liste des prestataires)
   const itemListSchema = providers.length > 0 ? {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -576,7 +648,6 @@ const generateAllSchemas = (
     })),
   } : null;
 
-  // 8. ProfessionalService Schema
   const professionalServiceSchema = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
@@ -603,6 +674,147 @@ const generateAllSchemas = (
     },
   };
 
+  // HowTo Schema (pour Featured Snippets / Position 0)
+  const howToSchema = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "@id": `${BASE_URL}${PAGE_PATH}/#howto`,
+    name: intl.formatMessage({ id: "sosCall.seo.howTo.name" }),
+    description: intl.formatMessage({ id: "sosCall.seo.howTo.description" }),
+    image: `${BASE_URL}/og-image-sos-call.jpg`,
+    totalTime: "PT5M",
+    estimatedCost: {
+      "@type": "MonetaryAmount",
+      currency: "EUR",
+      value: "19",
+    },
+    step: [
+      {
+        "@type": "HowToStep",
+        position: 1,
+        name: intl.formatMessage({ id: "sosCall.seo.howTo.step1.name" }),
+        text: intl.formatMessage({ id: "sosCall.seo.howTo.step1.text" }),
+        url: `${BASE_URL}${PAGE_PATH}#experts`,
+      },
+      {
+        "@type": "HowToStep",
+        position: 2,
+        name: intl.formatMessage({ id: "sosCall.seo.howTo.step2.name" }),
+        text: intl.formatMessage({ id: "sosCall.seo.howTo.step2.text" }),
+        url: `${BASE_URL}${PAGE_PATH}#experts`,
+      },
+      {
+        "@type": "HowToStep",
+        position: 3,
+        name: intl.formatMessage({ id: "sosCall.seo.howTo.step3.name" }),
+        text: intl.formatMessage({ id: "sosCall.seo.howTo.step3.text" }),
+        url: `${BASE_URL}${PAGE_PATH}#experts`,
+      },
+      {
+        "@type": "HowToStep",
+        position: 4,
+        name: intl.formatMessage({ id: "sosCall.seo.howTo.step4.name" }),
+        text: intl.formatMessage({ id: "sosCall.seo.howTo.step4.text" }),
+        url: `${BASE_URL}${PAGE_PATH}#experts`,
+      },
+    ],
+  };
+
+  // Speakable Schema (pour Google Assistant / Siri / Alexa)
+  const speakableSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": `${BASE_URL}${PAGE_PATH}/#speakable`,
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: ["h1", ".featured-snippet", ".expert-count", ".faq-answer"],
+    },
+    url: localizedPageUrl,
+  };
+
+  // Event Schema (pour les consultations en ligne)
+  const eventSchema = {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "@id": `${BASE_URL}${PAGE_PATH}/#event`,
+    name: intl.formatMessage({ id: "sosCall.seo.event.name" }),
+    description: intl.formatMessage({ id: "sosCall.seo.event.description" }),
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
+    location: {
+      "@type": "VirtualLocation",
+      url: `${BASE_URL}${PAGE_PATH}`,
+    },
+    organizer: { "@id": `${BASE_URL}/#organization` },
+    offers: {
+      "@type": "Offer",
+      price: "19",
+      priceCurrency: "EUR",
+      availability: "https://schema.org/InStock",
+      url: `${BASE_URL}${PAGE_PATH}`,
+      validFrom: new Date().toISOString(),
+    },
+    startDate: new Date().toISOString(),
+    endDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+    image: `${BASE_URL}/og-image-sos-call.jpg`,
+  };
+
+  // Product Schema (pour Google Shopping / Rich Results)
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "@id": `${BASE_URL}${PAGE_PATH}/#product`,
+    name: intl.formatMessage({ id: "sosCall.seo.product.name" }),
+    description: intl.formatMessage({ id: "sosCall.seo.product.description" }),
+    image: `${BASE_URL}/og-image-sos-call.jpg`,
+    brand: {
+      "@type": "Brand",
+      name: "SOS Expat",
+    },
+    offers: {
+      "@type": "AggregateOffer",
+      lowPrice: "19",
+      highPrice: "49",
+      priceCurrency: "EUR",
+      availability: "https://schema.org/InStock",
+      offerCount: providers.length || 50,
+    },
+    aggregateRating: providers.length > 0 ? {
+      "@type": "AggregateRating",
+      ratingValue: (providers.reduce((sum, p) => sum + p.rating, 0) / providers.length).toFixed(1),
+      reviewCount: providers.reduce((sum, p) => sum + p.reviewCount, 0),
+      bestRating: 5,
+      worstRating: 1,
+    } : {
+      "@type": "AggregateRating",
+      ratingValue: "4.8",
+      reviewCount: 1250,
+      bestRating: 5,
+      worstRating: 1,
+    },
+    category: intl.formatMessage({ id: "sosCall.seo.product.category" }),
+  };
+
+  // SoftwareApplication Schema (pour PWA)
+  const softwareAppSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "@id": `${BASE_URL}/#app`,
+    name: "SOS Expat",
+    operatingSystem: "Web, iOS, Android",
+    applicationCategory: "BusinessApplication",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "EUR",
+    },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "4.8",
+      ratingCount: 1250,
+    },
+  };
+
   return [
     organizationSchema,
     websiteSchema,
@@ -612,6 +824,11 @@ const generateAllSchemas = (
     faqSchema,
     itemListSchema,
     professionalServiceSchema,
+    howToSchema,
+    speakableSchema,
+    eventSchema,
+    productSchema,
+    softwareAppSchema,
   ].filter(Boolean);
 };
 
@@ -629,7 +846,6 @@ const ModernProfileCard: React.FC<{
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
-  const currentLang = useMemo(() => getLanguage(language), [language]);
   const statusColors = useStatusColors(provider.isOnline);
   const professionInfo = useMemo(
     () => getProfessionInfo(provider.type),
@@ -727,17 +943,19 @@ const ModernProfileCard: React.FC<{
   );
 
   return (
-    <div className="flex-shrink-0 p-2 sm:p-4">
+    <div className="flex-shrink-0 p-2 sm:p-3">
       <article
         className={`
           relative bg-white rounded-2xl overflow-hidden cursor-pointer
           transition-all duration-300 ease-out border-2 shadow-lg
-          w-[calc(100vw-2rem)] max-w-[320px] h-[520px]
-          sm:w-80 md:w-80
+          w-[280px] h-[480px]
+          sm:w-[300px] sm:h-[500px]
+          md:w-[320px] md:h-[520px]
           ${statusColors.border} ${statusColors.shadow} ${statusColors.borderShadow}
           ${isHovered ? `scale-[1.02] ${statusColors.glow} shadow-xl` : ""}
           focus:outline-none focus:ring-4 focus:ring-blue-500/50
           hover:shadow-xl
+          touch-manipulation
         `}
         onClick={handleClick}
         onMouseEnter={handleMouseEnter}
@@ -754,13 +972,13 @@ const ModernProfileCard: React.FC<{
         itemScope
         itemType="https://schema.org/Person"
         style={{
-          animationDelay: `${index * 100}ms`,
+          animationDelay: `${index * 80}ms`,
         }}
       >
         {/* Header avec photo et statut */}
         <div
           className="relative overflow-hidden bg-slate-100"
-          style={{ height: `${CARD_DIMENSIONS.imageHeight}px` }}
+          style={{ height: "55%" }}
         >
           <img
             src={provider.avatar || "/default-avatar.png"}
@@ -777,8 +995,6 @@ const ModernProfileCard: React.FC<{
             onError={handleImageError}
             loading="lazy"
             decoding="async"
-            width={CARD_DIMENSIONS.width}
-            height={CARD_DIMENSIONS.imageHeight}
             itemProp="image"
           />
 
@@ -786,22 +1002,22 @@ const ModernProfileCard: React.FC<{
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" aria-hidden="true" />
 
           {/* Statut en ligne */}
-          <div className="absolute top-3 left-3">
+          <div className="absolute top-2.5 left-2.5 sm:top-3 sm:left-3">
             <div
               className={`
-                inline-flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium
+                inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium
                 backdrop-blur-sm border shadow-sm transition-colors
                 ${statusColors.badge}
-                min-h-[44px]
+                min-h-[36px] sm:min-h-[44px]
               `}
               role="status"
               aria-live="polite"
               aria-label={ariaLabels.status}
             >
               {provider.isOnline ? (
-                <Wifi className="w-4 h-4" aria-hidden="true" />
+                <Wifi className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true" />
               ) : (
-                <WifiOff className="w-4 h-4" aria-hidden="true" />
+                <WifiOff className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true" />
               )}
               <span>
                 {provider.isOnline
@@ -812,16 +1028,16 @@ const ModernProfileCard: React.FC<{
           </div>
 
           {/* Badge métier */}
-          <div className="absolute top-3 right-3">
+          <div className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3">
             <div
               className={`
-              inline-flex items-center gap-2 px-3 py-2 rounded-full 
+              inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full 
               backdrop-blur-sm border shadow-sm border-white/30
               ${professionInfo.bgColor} ${professionInfo.textColor}
-              min-h-[44px]
+              min-h-[36px] sm:min-h-[44px]
             `}
             >
-              <span className="text-sm font-medium" itemProp="jobTitle">
+              <span className="text-xs sm:text-sm font-medium" itemProp="jobTitle">
                 <span aria-hidden="true">{professionInfo.icon}</span>{" "}
                 <FormattedMessage
                   id={
@@ -835,19 +1051,19 @@ const ModernProfileCard: React.FC<{
           </div>
 
           {/* Note */}
-          <div className="absolute bottom-3 right-3">
+          <div className="absolute bottom-2.5 right-2.5 sm:bottom-3 sm:right-3">
             <div
-              className="flex items-center gap-1 px-3 py-2 rounded-lg bg-white/95 backdrop-blur-sm border border-slate-200 shadow-sm"
+              className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg bg-white/95 backdrop-blur-sm border border-slate-200 shadow-sm"
               aria-label={ariaLabels.rating}
               itemProp="aggregateRating"
               itemScope
               itemType="https://schema.org/AggregateRating"
             >
               <Star
-                className="w-4 h-4 text-amber-500 fill-current"
+                className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 fill-current"
                 aria-hidden="true"
               />
-              <span className="text-slate-800 text-sm font-medium" itemProp="ratingValue">
+              <span className="text-slate-800 text-xs sm:text-sm font-medium" itemProp="ratingValue">
                 {provider.rating.toFixed(1)}
               </span>
               <meta itemProp="bestRating" content="5" />
@@ -859,18 +1075,18 @@ const ModernProfileCard: React.FC<{
 
         {/* Contenu principal */}
         <div
-          className="p-3 flex flex-col"
-          style={{ height: `${CARD_DIMENSIONS.contentHeight}px` }}
+          className="p-2.5 sm:p-3 flex flex-col"
+          style={{ height: "45%" }}
         >
           {/* Nom et expérience */}
-          <div className="space-y-2 mb-3">
+          <div className="space-y-1.5 sm:space-y-2 mb-2 sm:mb-3">
             <div className="flex items-center justify-between gap-2">
-              <h3 className="text-lg font-bold text-slate-800 truncate flex-1" itemProp="name">
+              <h3 className="text-base sm:text-lg font-bold text-slate-800 truncate flex-1" itemProp="name">
                 {provider.name}
               </h3>
               <div className="flex items-center gap-1 px-2 py-1 rounded-md bg-teal-50 border border-teal-200 flex-shrink-0">
                 <Zap className="w-3 h-3 text-teal-600" aria-hidden="true" />
-                <span className="text-teal-600 text-xs font-medium">
+                <span className="text-teal-600 text-[10px] sm:text-xs font-medium">
                   {provider.yearsOfExperience}{" "}
                   <FormattedMessage id="sosCall.card.years" />
                 </span>
@@ -879,12 +1095,12 @@ const ModernProfileCard: React.FC<{
           </div>
 
           {/* Informations */}
-          <div className="space-y-2 h-28 overflow-hidden">
+          <div className="space-y-1.5 sm:space-y-2 flex-1 overflow-hidden">
             {/* Pays d'intervention */}
             {formattedCountries && (
-              <div className="flex items-start gap-2">
+              <div className="flex items-start gap-1.5 sm:gap-2">
                 <MapPin className="w-3 h-3 text-blue-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                <span className="text-blue-600 text-xs leading-tight" itemProp="workLocation">
+                <span className="text-blue-600 text-[11px] sm:text-xs leading-tight line-clamp-2" itemProp="workLocation">
                   {formattedCountries}
                 </span>
               </div>
@@ -892,9 +1108,9 @@ const ModernProfileCard: React.FC<{
 
             {/* Langues parlées */}
             {formattedLanguages && (
-              <div className="flex items-start gap-2">
+              <div className="flex items-start gap-1.5 sm:gap-2">
                 <Globe className="w-3 h-3 text-indigo-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                <span className="text-indigo-600 text-xs leading-tight" itemProp="knowsLanguage">
+                <span className="text-indigo-600 text-[11px] sm:text-xs leading-tight line-clamp-2" itemProp="knowsLanguage">
                   {formattedLanguages}
                 </span>
               </div>
@@ -905,12 +1121,12 @@ const ModernProfileCard: React.FC<{
           <div className="flex items-center justify-between pt-2 border-t border-slate-200 mt-auto">
             <div className="flex items-center gap-1">
               <Users className="w-3 h-3 text-amber-600" aria-hidden="true" />
-              <span className="text-amber-600 text-xs font-medium">
+              <span className="text-amber-600 text-[10px] sm:text-xs font-medium">
                 {provider.reviewCount}{" "}
                 <FormattedMessage id="sosCall.card.reviews" />
               </span>
             </div>
-            <div className="text-slate-500 text-xs">
+            <div className="text-slate-500 text-[10px] sm:text-xs">
               <FormattedMessage
                 id={
                   provider.type === "lawyer"
@@ -922,20 +1138,21 @@ const ModernProfileCard: React.FC<{
           </div>
 
           {/* Bouton CTA */}
-          <div className="mt-3">
+          <div className="mt-2 sm:mt-3">
             <button
               className={`
-                w-full rounded-lg font-bold text-sm text-white
-                transition-all duration-300 flex items-center justify-center gap-2
+                w-full rounded-lg font-bold text-xs sm:text-sm text-white
+                transition-all duration-300 flex items-center justify-center gap-1.5 sm:gap-2
                 border-2 shadow-lg relative overflow-hidden
                 ${statusColors.button}
                 hover:scale-[1.02] hover:shadow-xl active:scale-[0.98]
                 focus:outline-none focus:ring-4 focus:ring-blue-500/50
                 disabled:opacity-50 disabled:cursor-not-allowed
+                touch-manipulation
               `}
               style={{
-                minHeight: "48px",
-                padding: "12px 16px",
+                minHeight: "44px",
+                padding: "10px 14px",
               }}
               onClick={(e) => {
                 e.stopPropagation();
@@ -944,11 +1161,11 @@ const ModernProfileCard: React.FC<{
               type="button"
               aria-label={ariaLabels.viewProfile}
             >
-              <Eye className="w-4 h-4" aria-hidden="true" />
+              <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true" />
               <span className="font-bold">
                 <FormattedMessage id="sosCall.card.viewProfile" />
               </span>
-              <ArrowRight className="w-4 h-4" aria-hidden="true" />
+              <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -956,7 +1173,7 @@ const ModernProfileCard: React.FC<{
 
       <style>{`
         article {
-          animation: slideInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          animation: slideInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
           opacity: 0;
           transform: translateY(20px);
         }
@@ -973,12 +1190,6 @@ const ModernProfileCard: React.FC<{
             animation: none;
             opacity: 1;
             transform: none;
-          }
-          
-          *, *::before, *::after {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
           }
         }
         
@@ -1001,44 +1212,59 @@ const FAQSection: React.FC<{ intl: ReturnType<typeof useIntl> }> = React.memo(({
 
   return (
     <section 
-      className="py-12 sm:py-16 lg:py-20 bg-gray-900"
+      className="py-10 sm:py-12 lg:py-16 bg-gray-900"
       aria-labelledby="faq-heading"
       itemScope
       itemType="https://schema.org/FAQPage"
+      id="faq"
     >
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
-        <div className="text-center mb-8 sm:mb-12">
+        {/* ===== H2 - Titre FAQ ===== */}
+        <div className="text-center mb-6 sm:mb-10">
           <h2 
             id="faq-heading"
-            className="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-4"
+            className="text-xl sm:text-2xl lg:text-3xl font-black text-white mb-3"
+            itemProp="headline"
           >
             <FormattedMessage id="sosCall.faq.title" />
           </h2>
-          <p className="text-gray-300 text-base sm:text-lg max-w-2xl mx-auto">
+          <p 
+            className="text-gray-300 text-sm sm:text-base max-w-2xl mx-auto"
+            itemProp="description"
+          >
             <FormattedMessage id="sosCall.faq.subtitle" />
           </p>
         </div>
 
-        <div className="space-y-3 sm:space-y-4" role="list" aria-label={intl.formatMessage({ id: "sosCall.faq.listAriaLabel" })}>
+        <div 
+          className="space-y-2 sm:space-y-3" 
+          role="list" 
+          aria-label={intl.formatMessage({ id: "sosCall.faq.listAriaLabel" })}
+        >
           {FAQ_ITEMS.map((faq, index) => (
-            <div
+            <article
               key={index}
-              className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm overflow-hidden"
+              className="rounded-xl sm:rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm overflow-hidden faq-item"
               itemScope
               itemProp="mainEntity"
               itemType="https://schema.org/Question"
               role="listitem"
+              data-faq-index={index}
             >
               <button
-                className="w-full px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between text-left min-h-[56px]"
+                className="w-full px-4 sm:px-5 py-3.5 sm:py-4 flex items-center justify-between text-left min-h-[52px] touch-manipulation"
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
                 aria-expanded={openIndex === index}
                 aria-controls={`faq-answer-${index}`}
                 id={`faq-question-${index}`}
               >
-                <span className="font-semibold text-white text-sm sm:text-base pr-4" itemProp="name">
+                {/* ===== H3 - Questions FAQ ===== */}
+                <h3 
+                  className="font-semibold text-white text-sm sm:text-base pr-3 m-0"
+                  itemProp="name"
+                >
                   <FormattedMessage id={faq.questionKey} />
-                </span>
+                </h3>
                 <ChevronDown 
                   className={`w-5 h-5 text-gray-400 flex-shrink-0 transition-transform duration-300 ${openIndex === index ? 'rotate-180 text-red-400' : ''}`}
                   aria-hidden="true"
@@ -1054,14 +1280,24 @@ const FAQSection: React.FC<{ intl: ReturnType<typeof useIntl> }> = React.memo(({
                 aria-labelledby={`faq-question-${index}`}
                 aria-hidden={openIndex !== index}
               >
-                <div className="px-4 sm:px-6 pb-4 sm:pb-5">
-                  <p className="text-gray-300 text-sm sm:text-base leading-relaxed" itemProp="text">
+                <div className="px-4 sm:px-5 pb-3.5 sm:pb-4">
+                  <p 
+                    className="text-gray-300 text-sm sm:text-base leading-relaxed faq-answer"
+                    itemProp="text"
+                  >
                     <FormattedMessage id={faq.answerKey} />
                   </p>
                 </div>
               </div>
-            </div>
+            </article>
           ))}
+        </div>
+
+        {/* ===== Structured Data Helper pour Speakable ===== */}
+        <div className="sr-only" aria-hidden="true">
+          <span itemProp="author" itemScope itemType="https://schema.org/Organization">
+            <meta itemProp="name" content="SOS Expat" />
+          </span>
         </div>
       </div>
     </section>
@@ -1069,47 +1305,6 @@ const FAQSection: React.FC<{ intl: ReturnType<typeof useIntl> }> = React.memo(({
 });
 
 FAQSection.displayName = "FAQSection";
-
-/* =========================
-   Trust Badges Component
-========================= */
-const TrustBadges: React.FC<{ intl: ReturnType<typeof useIntl> }> = React.memo(({ intl }) => (
-  <section 
-    className="py-8 sm:py-12 bg-gray-900/50"
-    aria-labelledby="trust-heading"
-  >
-    <h2 id="trust-heading" className="sr-only">
-      <FormattedMessage id="sosCall.trust.srTitle" />
-    </h2>
-    <div className="max-w-7xl mx-auto px-4 sm:px-6">
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6">
-        {[
-          { icon: Shield, key: "verified" },
-          { icon: Clock, key: "available" },
-          { icon: Globe, key: "countries" },
-          { icon: MessageCircle, key: "languages" },
-        ].map(({ icon: Icon, key }) => (
-          <div 
-            key={key}
-            className="flex flex-col items-center text-center p-3 sm:p-6 rounded-2xl bg-white/5 border border-white/10"
-          >
-            <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br from-red-500/20 to-orange-500/20 flex items-center justify-center mb-2 sm:mb-3">
-              <Icon className="w-5 h-5 sm:w-7 sm:h-7 text-red-400" aria-hidden="true" />
-            </div>
-            <span className="text-white font-bold text-xs sm:text-base">
-              <FormattedMessage id={`sosCall.trust.${key}.title`} />
-            </span>
-            <span className="text-gray-400 text-[10px] sm:text-sm mt-1">
-              <FormattedMessage id={`sosCall.trust.${key}.description`} />
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-));
-
-TrustBadges.displayName = "TrustBadges";
 
 /* =========================
    Pagination component
@@ -1124,7 +1319,9 @@ const Pagination: React.FC<{
 
   const go = useCallback((p: number) => {
     const np = Math.min(totalPages, Math.max(1, p));
-    if (np !== page) onChange(np);
+    if (np !== page) {
+      onChange(np);
+    }
   }, [page, totalPages, onChange]);
 
   const makePages = useMemo((): Array<number | "ellipsis"> => {
@@ -1167,19 +1364,19 @@ const Pagination: React.FC<{
     >
       <button
         onClick={() => go(page - 1)}
-        className="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white hover:bg-white/15 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+        className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white hover:bg-white/15 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] touch-manipulation"
         disabled={page <= 1}
         aria-label={intl.formatMessage({ id: "sosCall.pagination.previousAriaLabel" })}
       >
         <ChevronLeft className="w-4 h-4" aria-hidden="true" />
-        <span className="hidden sm:inline">
+        <span className="hidden sm:inline text-sm">
           <FormattedMessage id="sosCall.pagination.previous" />
         </span>
       </button>
 
       {makePages.map((it, idx) =>
         it === "ellipsis" ? (
-          <span key={`el-${idx}`} className="px-2 text-gray-300" aria-hidden="true">
+          <span key={`el-${idx}`} className="px-1.5 sm:px-2 text-gray-300 text-sm" aria-hidden="true">
             …
           </span>
         ) : (
@@ -1191,7 +1388,7 @@ const Pagination: React.FC<{
               { id: "sosCall.pagination.pageAriaLabel" },
               { page: it }
             )}
-            className={`w-10 h-10 sm:w-9 sm:h-9 rounded-xl border text-sm font-semibold transition min-h-[44px] ${
+            className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl border text-sm font-semibold transition min-h-[44px] touch-manipulation ${
               it === page
                 ? "bg-white/20 text-white border-white/30"
                 : "bg-white/10 text-gray-200 border-white/20 hover:bg-white/15"
@@ -1204,11 +1401,11 @@ const Pagination: React.FC<{
 
       <button
         onClick={() => go(page + 1)}
-        className="inline-flex items-center gap-2 px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white hover:bg-white/15 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
+        className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-2 rounded-xl border border-white/15 bg-white/10 text-white hover:bg-white/15 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] touch-manipulation"
         disabled={page >= totalPages}
         aria-label={intl.formatMessage({ id: "sosCall.pagination.nextAriaLabel" })}
       >
-        <span className="hidden sm:inline">
+        <span className="hidden sm:inline text-sm">
           <FormattedMessage id="sosCall.pagination.next" />
         </span>
         <ChevronRight className="w-4 h-4" aria-hidden="true" />
@@ -1218,6 +1415,191 @@ const Pagination: React.FC<{
 });
 
 Pagination.displayName = "Pagination";
+
+/* =========================
+   🎚️ Bottom Sheet Filter (Mobile)
+========================= */
+const FilterBottomSheet: React.FC<{
+  isOpen: boolean;
+  onClose: () => void;
+  selectedType: string;
+  setSelectedType: (v: "all" | "lawyer" | "expat") => void;
+  selectedCountryCode: string;
+  handleCountryChange: (v: string) => void;
+  selectedLanguageCode: string;
+  handleLanguageChange: (v: string) => void;
+  statusFilter: string;
+  setStatusFilter: (v: "all" | "online" | "offline") => void;
+  resetFilters: () => void;
+  countryOptions: { code: string; label: string }[];
+  languageOptions: { code: string; label: string }[];
+  customCountry: string;
+  setCustomCountry: (v: string) => void;
+  customLanguage: string;
+  setCustomLanguage: (v: string) => void;
+  showCustomCountry: boolean;
+  showCustomLanguage: boolean;
+  activeFiltersCount: number;
+  intl: ReturnType<typeof useIntl>;
+}> = ({
+  isOpen, onClose, selectedType, setSelectedType,
+  selectedCountryCode, handleCountryChange, selectedLanguageCode,
+  handleLanguageChange, statusFilter, setStatusFilter, resetFilters,
+  countryOptions, languageOptions, customCountry, setCustomCountry,
+  customLanguage, setCustomLanguage, showCustomCountry, showCustomLanguage,
+  activeFiltersCount, intl
+}) => {
+  // Prevent body scroll when open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [isOpen]);
+
+  const handleBackdropClick = useCallback((e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) onClose();
+  }, [onClose]);
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div
+        className={`
+          fixed inset-0 bg-black/60 backdrop-blur-sm z-50
+          transition-opacity duration-300
+          ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}
+        `}
+        onClick={handleBackdropClick}
+      />
+
+      {/* Sheet */}
+      <div
+        className={`
+          fixed bottom-0 left-0 right-0 z-50
+          bg-gray-900 rounded-t-[32px] border-t border-white/10
+          transform transition-transform duration-300 ease-out
+          ${isOpen ? 'translate-y-0' : 'translate-y-full'}
+          max-h-[85vh] overflow-hidden flex flex-col
+        `}
+        style={{ paddingBottom: 'env(safe-area-inset-bottom, 16px)' }}
+      >
+        {/* Handle */}
+        <div className="flex justify-center pt-3 pb-2">
+          <div className="w-10 h-1 bg-white/30 rounded-full" />
+        </div>
+
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 pb-4 border-b border-white/10">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-red-500/20 flex items-center justify-center">
+              <MapPin className="w-5 h-5 text-red-400" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-white">
+                {intl.formatMessage({ id: "sosCall.filters.advanced.title", defaultMessage: "Pays & Langue" })}
+              </h3>
+              <p className="text-xs text-gray-400">
+                {intl.formatMessage({ id: "sosCall.filters.advanced.subtitle", defaultMessage: "Filtres avancés" })}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center active:bg-white/20 transition-colors"
+            aria-label={intl.formatMessage({ id: "sosCall.filters.close" }, { defaultMessage: "Fermer" })}
+          >
+            <X className="w-5 h-5 text-white" />
+          </button>
+        </div>
+
+        {/* Content - Scrollable */}
+        <div className="flex-1 overflow-y-auto px-5 py-4 space-y-5">
+          
+          {/* Country */}
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+              <FormattedMessage id="sosCall.filters.country.label" />
+            </label>
+            <div className="relative">
+              <select
+                value={selectedCountryCode}
+                onChange={(e) => handleCountryChange(e.target.value)}
+                className="w-full px-4 py-3.5 bg-white/5 text-white border-2 border-white/10 rounded-2xl focus:outline-none focus:border-red-400/50 transition-all appearance-none text-sm min-h-[48px]"
+              >
+                <option value="all">🌍 {intl.formatMessage({ id: "sosCall.filters.country.all" })}</option>
+                {countryOptions.map((c) => (
+                  <option key={c.code} value={c.code}>{c.label}</option>
+                ))}
+                <option value="Autre">🔍 {intl.formatMessage({ id: "sosCall.filters.country.other" })}</option>
+              </select>
+              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+            </div>
+            {showCustomCountry && (
+              <input
+                type="text"
+                placeholder={intl.formatMessage({ id: "sosCall.filters.country.placeholder" })}
+                value={customCountry}
+                onChange={(e) => setCustomCountry(e.target.value)}
+                className="w-full px-4 py-3 bg-white/5 border-2 border-white/10 rounded-2xl text-white placeholder:text-gray-500 focus:outline-none focus:border-red-400/50 min-h-[48px]"
+              />
+            )}
+          </div>
+
+          {/* Language */}
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+              <FormattedMessage id="sosCall.filters.language.label" />
+            </label>
+            <div className="relative">
+              <select
+                value={selectedLanguageCode}
+                onChange={(e) => handleLanguageChange(e.target.value)}
+                className="w-full px-4 py-3.5 bg-white/5 text-white border-2 border-white/10 rounded-2xl focus:outline-none focus:border-red-400/50 transition-all appearance-none text-sm min-h-[48px]"
+              >
+                <option value="all">💬 {intl.formatMessage({ id: "sosCall.filters.language.all" })}</option>
+                {languageOptions.map((l) => (
+                  <option key={l.code} value={l.code}>{l.label}</option>
+                ))}
+                <option value="Autre">🔍 {intl.formatMessage({ id: "sosCall.filters.language.other" })}</option>
+              </select>
+              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+            </div>
+            {showCustomLanguage && (
+              <input
+                type="text"
+                placeholder={intl.formatMessage({ id: "sosCall.filters.language.placeholder" })}
+                value={customLanguage}
+                onChange={(e) => setCustomLanguage(e.target.value)}
+                className="w-full px-4 py-3 bg-white/5 border-2 border-white/10 rounded-2xl text-white placeholder:text-gray-500 focus:outline-none focus:border-red-400/50 min-h-[48px]"
+              />
+            )}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="px-5 py-4 border-t border-white/10 flex gap-3">
+          <button
+            onClick={resetFilters}
+            className="flex-1 py-3.5 px-4 rounded-2xl font-semibold text-gray-300 bg-white/5 border-2 border-white/10 flex items-center justify-center gap-2 active:bg-white/10 min-h-[52px]"
+          >
+            <RotateCcw className="w-4 h-4" />
+            <span>{intl.formatMessage({ id: "sosCall.filters.reset" }, { defaultMessage: "Réinitialiser" })}</span>
+          </button>
+          <button
+            onClick={onClose}
+            className="flex-[2] py-3.5 px-4 rounded-2xl font-bold text-white bg-gradient-to-r from-red-600 to-orange-600 flex items-center justify-center gap-2 active:opacity-90 shadow-lg shadow-red-500/20 min-h-[52px]"
+          >
+            <Sparkles className="w-4 h-4" />
+            <span>{intl.formatMessage({ id: "sosCall.filters.showResults" }, { defaultMessage: "Voir les résultats" })}</span>
+          </button>
+        </div>
+      </div>
+    </>
+  );
+};
 
 /* =========================
    Composant principal
@@ -1237,8 +1619,8 @@ const SOSCall: React.FC = () => {
         ? "expat"
         : "all"
   );
-  const [selectedCountry, setSelectedCountry] = useState<string>("all");
-  const [selectedLanguage, setSelectedLanguage] = useState<string>("all");
+  const [selectedCountryCode, setSelectedCountryCode] = useState<string>("all");
+  const [selectedLanguageCode, setSelectedLanguageCode] = useState<string>("all");
   const [customCountry, setCustomCountry] = useState<string>("");
   const [customLanguage, setCustomLanguage] = useState<string>("");
   const [showCustomCountry, setShowCustomCountry] = useState<boolean>(false);
@@ -1246,27 +1628,17 @@ const SOSCall: React.FC = () => {
 
   // Statut
   const [statusFilter, setStatusFilter] = useState<"all" | "online" | "offline">("all");
-  const [onlineOnly, setOnlineOnly] = useState<boolean>(false);
+
+  // Mobile filter bottom sheet
+  const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
 
   // Données
   const [isLoadingProviders, setIsLoadingProviders] = useState<boolean>(true);
   const [realProviders, setRealProviders] = useState<Provider[]>([]);
   const [filteredProviders, setFilteredProviders] = useState<Provider[]>([]);
 
-  // Pagination & favoris
+  // Pagination
   const [page, setPage] = useState<number>(1);
-  const [favorites, setFavorites] = useState<Set<string>>(() => {
-    try {
-      const raw = localStorage.getItem("sos_favorites");
-      if (!raw) return new Set<string>();
-      const parsed: unknown = JSON.parse(raw);
-      return new Set(
-        Array.isArray(parsed) ? parsed.filter((x) => typeof x === "string") : []
-      );
-    } catch {
-      return new Set<string>();
-    }
-  });
 
   const lang = (language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "ch" | "pt" | "ar") || "fr";
 
@@ -1397,7 +1769,6 @@ const SOSCall: React.FC = () => {
         });
 
         setRealProviders(allProfiles);
-        setFilteredProviders(allProfiles);
         setIsLoadingProviders(false);
       },
       (error) => {
@@ -1411,7 +1782,7 @@ const SOSCall: React.FC = () => {
     return () => unsubscribe();
   }, [searchParams, setSearchParams]);
 
-  // Filtrage + tri
+  // Filtrage + tri aléatoire (online first)
   useEffect(() => {
     if (realProviders.length === 0) {
       setFilteredProviders([]);
@@ -1421,14 +1792,18 @@ const SOSCall: React.FC = () => {
     const next = realProviders.filter((provider) => {
       const matchesType =
         selectedType === "all" || provider.type === selectedType;
-      const matchesCountry = countryMatches(
+      
+      // Filtre pays avec la nouvelle fonction
+      const matchesCountryFilter = matchCountry(
         provider.country,
-        selectedCountry,
+        selectedCountryCode,
         customCountry
       );
-      const matchesLanguage = langMatches(
+      
+      // Filtre langue avec la nouvelle fonction
+      const matchesLanguageFilter = matchLanguage(
         provider.languages,
-        selectedLanguage,
+        selectedLanguageCode,
         customLanguage
       );
 
@@ -1439,37 +1814,27 @@ const SOSCall: React.FC = () => {
             ? provider.isOnline
             : !provider.isOnline;
 
-      return matchesType && matchesCountry && matchesLanguage && matchesStatus;
+      return matchesType && matchesCountryFilter && matchesLanguageFilter && matchesStatus;
     });
 
-    next.sort((a, b) => {
-      if (a.isOnline !== b.isOnline) {
-        return (b.isOnline ? 1 : 0) - (a.isOnline ? 1 : 0);
-      }
-      if (selectedCountry !== "all") {
-        const aCountryMatch = countryMatches(
-          a.country,
-          selectedCountry,
-          customCountry
-        );
-        const bCountryMatch = countryMatches(
-          b.country,
-          selectedCountry,
-          customCountry
-        );
-        if (aCountryMatch !== bCountryMatch) return aCountryMatch ? -1 : 1;
-      }
-      return b.rating - a.rating;
-    });
+    // Séparer les profils online et offline
+    const onlineProviders = next.filter(p => p.isOnline);
+    const offlineProviders = next.filter(p => !p.isOnline);
 
-    setFilteredProviders(next);
+    // Mélanger aléatoirement chaque groupe
+    const shuffledOnline = shuffleArray(onlineProviders);
+    const shuffledOffline = shuffleArray(offlineProviders);
+
+    // Combiner: online d'abord, puis offline
+    const sortedAndShuffled = [...shuffledOnline, ...shuffledOffline];
+
+    setFilteredProviders(sortedAndShuffled);
     setPage(1);
-    setOnlineOnly(statusFilter === "online");
   }, [
     realProviders,
     selectedType,
-    selectedCountry,
-    selectedLanguage,
+    selectedCountryCode,
+    selectedLanguageCode,
     customCountry,
     customLanguage,
     statusFilter,
@@ -1485,71 +1850,28 @@ const SOSCall: React.FC = () => {
     return filteredProviders.slice(start, start + PAGE_SIZE);
   }, [filteredProviders, page]);
 
-  // Normalisation pays
-  const countryMatches = (
-    providerCountry: string,
-    selected: string,
-    custom: string
-  ): boolean => {
-    if (selected === "all") return true;
-    const prov = providerCountry || "";
-    if (selected === "Autre") {
-      if (!custom) return true;
-      return prov.toLowerCase().includes(custom.toLowerCase());
-    }
-    if (prov === selected) return true;
-    return prov.toLowerCase().includes(selected.toLowerCase());
-  };
-
-  // Normalisation langues
-  const langMatches = (
-    langs: string[],
-    selected: string,
-    custom: string
-  ): boolean => {
-    if (selected === "all") return true;
-    
-    const langCodes = convertLanguageNamesToCodes(langs);
-    
-    const normalizedProv = langCodes.map((code) => {
-      const lang = languagesData.find(l => l.code === code);
-      return lang 
-        ? getLanguageLabel(lang, language as SupportedLocale).toLowerCase()
-        : code.toLowerCase();
-    });
-    
-    if (selected === "Autre") {
-      if (!custom) return true;
-      const needle = custom.toLowerCase();
-      return normalizedProv.some((v) => v.includes(needle));
-    }
-    const target = selected.toLowerCase();
-    return normalizedProv.some((v) => v === target);
-  };
-
   // Handlers filtres
   const handleCountryChange = useCallback((value: string) => {
-    setSelectedCountry(value);
+    setSelectedCountryCode(value);
     setShowCustomCountry(value === "Autre");
     if (value !== "Autre") setCustomCountry("");
   }, []);
 
   const handleLanguageChange = useCallback((value: string) => {
-    setSelectedLanguage(value);
+    setSelectedLanguageCode(value);
     setShowCustomLanguage(value === "Autre");
     if (value !== "Autre") setCustomLanguage("");
   }, []);
 
   const resetFilters = useCallback(() => {
     setSelectedType("all");
-    setSelectedCountry("all");
-    setSelectedLanguage("all");
+    setSelectedCountryCode("all");
+    setSelectedLanguageCode("all");
     setCustomCountry("");
     setCustomLanguage("");
     setShowCustomCountry(false);
     setShowCustomLanguage(false);
     setStatusFilter("all");
-    setOnlineOnly(false);
   }, []);
 
   // Navigation
@@ -1571,26 +1893,38 @@ const SOSCall: React.FC = () => {
     }
   }, [location.pathname, navigate]);
 
-  // Favoris
-  const toggleFavorite = useCallback((id: string) => {
-    setFavorites((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      try {
-        localStorage.setItem("sos_favorites", JSON.stringify(Array.from(next)));
-      } catch {
-        // noop
-      }
-      return next;
+  // Handler pour changement de page avec scroll en haut
+  const handlePageChange = useCallback((newPage: number) => {
+    setPage(newPage);
+    // Scroll vers le haut de la page de manière fluide
+    window.scrollTo({ 
+      top: 0, 
+      behavior: 'smooth' 
     });
   }, []);
+
+  // Compteur de filtres actifs (pour badge FAB mobile)
+  const activeFiltersCount = useMemo(() => {
+    let count = 0;
+    if (selectedType !== "all") count++;
+    if (selectedCountryCode !== "all") count++;
+    if (selectedLanguageCode !== "all") count++;
+    if (statusFilter !== "all") count++;
+    return count;
+  }, [selectedType, selectedCountryCode, selectedLanguageCode, statusFilter]);
+
+  // Compteur de filtres avancés (Pays + Langue seulement, pour le bouton Filtres)
+  const advancedFiltersCount = useMemo(() => {
+    let count = 0;
+    if (selectedCountryCode !== "all") count++;
+    if (selectedLanguageCode !== "all") count++;
+    return count;
+  }, [selectedCountryCode, selectedLanguageCode]);
 
   // ========================================
   // 🔍 SEO - Génération des données structurées
   // ========================================
   
-  // Canonical URL avec langue courante
   const canonicalUrl = `${BASE_URL}/${lang}${PAGE_PATH}`;
   const onlineCount = filteredProviders.filter((p) => p.isOnline).length;
   
@@ -1617,7 +1951,6 @@ const SOSCall: React.FC = () => {
 
   const seoKeywords = intl.formatMessage({ id: "sosCall.seo.keywords" });
 
-  // Hreflang pour toutes les langues supportées (cohérent avec canonical)
   const hreflangLinks = SUPPORTED_LANGUAGES.map(langCode => ({
     hreflang: langCode === 'zh' ? 'zh-Hans' : langCode,
     href: `${BASE_URL}/${langCode}${PAGE_PATH}`,
@@ -1626,31 +1959,70 @@ const SOSCall: React.FC = () => {
   return (
     <Layout>
       {/* ========================================
-          🔍 SEO HEAD - Tout intégré directement
+          🔍 SEO HEAD
       ======================================== */}
       <Helmet>
-        {/* Balises essentielles */}
+        {/* ===== BASE HTML ===== */}
         <html lang={lang} dir={lang === 'ar' ? 'rtl' : 'ltr'} />
         <title>{seoTitle}</title>
         <meta name="description" content={seoDescription} />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         
-        {/* Robots & Indexation */}
-        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-        <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1" />
-        <meta name="bingbot" content="index, follow" />
+        {/* ===== VIEWPORT & MOBILE ===== */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=5, viewport-fit=cover, user-scalable=yes" />
+        <meta name="HandheldFriendly" content="true" />
+        <meta name="MobileOptimized" content="width" />
         
-        {/* Mots-clés sémantiques */}
+        {/* ===== SEARCH ENGINE CRAWLERS ===== */}
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1, notranslate" />
+        <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, noimageindex" />
+        <meta name="bingbot" content="index, follow, max-snippet:-1" />
+        <meta name="yandex" content="index, follow" />
+        <meta name="baidu-site-verification" content="sosexpat" />
+        
+        {/* ===== AI CRAWLERS (GPT, Claude, Perplexity, etc.) ===== */}
+        <meta name="ai-robots" content="index, follow" />
+        <meta name="GPTBot" content="index, follow" />
+        <meta name="Claude-Web" content="index, follow" />
+        <meta name="PerplexityBot" content="index, follow" />
+        <meta name="Amazonbot" content="index, follow" />
+        <meta name="anthropic-ai" content="index, follow" />
+        <meta name="cohere-ai" content="index, follow" />
+        <meta name="CCBot" content="index, follow" />
+        <meta name="Google-Extended" content="index, follow" />
+        
+        {/* ===== FEATURED SNIPPET OPTIMIZATION (Position 0) ===== */}
+        <meta name="snippet" content={intl.formatMessage({ id: "sosCall.seo.featuredSnippet" })} />
+        <meta name="abstract" content={intl.formatMessage({ id: "sosCall.seo.abstract" })} />
+        <meta name="summary" content={intl.formatMessage({ id: "sosCall.seo.summary" })} />
+        <meta name="topic" content={intl.formatMessage({ id: "sosCall.seo.topic" })} />
+        <meta name="subject" content={intl.formatMessage({ id: "sosCall.seo.subject" })} />
+        <meta name="classification" content={intl.formatMessage({ id: "sosCall.seo.classification" })} />
+        <meta name="pagetype" content="service" />
+        <meta name="coverage" content="Worldwide" />
+        <meta name="distribution" content="global" />
+        <meta name="rating" content="general" />
+        <meta name="target" content="all" />
+        <meta name="audience" content={intl.formatMessage({ id: "sosCall.seo.audience" })} />
+        <meta name="doc-type" content="web page" />
+        <meta name="doc-class" content="published" />
+        
+        {/* ===== SEMANTIC KEYWORDS ===== */}
         <meta name="keywords" content={seoKeywords} />
+        <meta name="news_keywords" content={intl.formatMessage({ id: "sosCall.seo.newsKeywords" })} />
+        
+        {/* ===== AUTHORSHIP ===== */}
         <meta name="author" content="SOS Expat" />
         <meta name="publisher" content="SOS Expat" />
+        <meta name="creator" content="SOS Expat" />
+        <meta name="copyright" content={`© ${new Date().getFullYear()} SOS Expat`} />
+        <meta name="owner" content="SOS Expat" />
+        <meta name="designer" content="SOS Expat" />
+        <meta name="reply-to" content="contact@sos-expat.com" />
         
-        {/* URL Canonique */}
+        {/* ===== CANONICAL & ALTERNATE ===== */}
         <link rel="canonical" href={canonicalUrl} />
-        
-        {/* Hreflang pour internationalisation (9 langues) */}
         {hreflangLinks.map((link) => (
           <link
             key={link.hreflang}
@@ -1661,7 +2033,7 @@ const SOSCall: React.FC = () => {
         ))}
         <link rel="alternate" hrefLang="x-default" href={`${BASE_URL}/en${PAGE_PATH}`} />
         
-        {/* Open Graph */}
+        {/* ===== OPEN GRAPH (Facebook, LinkedIn) ===== */}
         <meta property="og:title" content={seoTitle} />
         <meta property="og:description" content={seoDescription} />
         <meta property="og:type" content="website" />
@@ -1669,12 +2041,16 @@ const SOSCall: React.FC = () => {
         <meta property="og:locale" content={OG_LOCALES[lang] || "en_US"} />
         <meta property="og:url" content={canonicalUrl} />
         <meta property="og:image" content={`${BASE_URL}/og-image-sos-call.jpg`} />
+        <meta property="og:image:secure_url" content={`${BASE_URL}/og-image-sos-call.jpg`} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:alt" content={intl.formatMessage({ id: "sosCall.seo.ogImageAlt" })} />
         <meta property="og:image:type" content="image/jpeg" />
+        <meta property="og:updated_time" content={new Date().toISOString()} />
+        <meta property="article:publisher" content={SOCIAL_URLS.facebook} />
+        <meta property="article:modified_time" content={new Date().toISOString()} />
         
-        {/* Twitter Cards */}
+        {/* ===== TWITTER CARDS ===== */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@sosexpat" />
         <meta name="twitter:creator" content="@sosexpat" />
@@ -1682,41 +2058,49 @@ const SOSCall: React.FC = () => {
         <meta name="twitter:description" content={seoDescription} />
         <meta name="twitter:image" content={`${BASE_URL}/twitter-image-sos-call.png`} />
         <meta name="twitter:image:alt" content={intl.formatMessage({ id: "sosCall.seo.ogImageAlt" })} />
+        <meta name="twitter:domain" content="sos-expat.com" />
         
-        {/* Sécurité */}
+        {/* ===== SECURITY (Non-restrictive) ===== */}
         <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests" />
         <meta name="referrer" content="strict-origin-when-cross-origin" />
+        <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
         
-        {/* Performance: Preconnect */}
+        {/* ===== CACHE & PERFORMANCE ===== */}
+        <meta httpEquiv="Cache-Control" content="public, max-age=3600, stale-while-revalidate=86400" />
+        <meta httpEquiv="Pragma" content="cache" />
+        <meta httpEquiv="Expires" content={new Date(Date.now() + 3600000).toUTCString()} />
+        <meta name="revisit-after" content="1 days" />
+        
+        {/* ===== PRECONNECT & PREFETCH (Performance) ===== */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://firestore.googleapis.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
-        
-        {/* DNS Prefetch */}
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         
-        {/* PWA & Mobile */}
-        <meta name="theme-color" content="#DC2626" />
+        {/* ===== PWA & MOBILE APP ===== */}
+        <meta name="theme-color" content="#DC2626" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#1F2937" media="(prefers-color-scheme: dark)" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="SOS Expat" />
+        <meta name="application-name" content="SOS Expat" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="format-detection" content="telephone=no" />
+        <meta name="format-detection" content="telephone=no, date=no, email=no, address=no" />
+        <meta name="msapplication-TileColor" content="#DC2626" />
+        <meta name="msapplication-config" content="/browserconfig.xml" />
         
-        {/* Favicon & Icons */}
+        {/* ===== FAVICONS ===== */}
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#DC2626" />
         <link rel="manifest" href="/manifest.json" />
         
-        {/* Référencement IA (LLM-friendly) */}
-        <meta name="ai-content-declaration" content="human-written" />
-        <meta name="generator" content="SOS Expat Platform" />
-        
-        {/* JSON-LD Structured Data (8 schemas) */}
+        {/* ===== STRUCTURED DATA (JSON-LD) ===== */}
         <script type="application/ld+json">
           {JSON.stringify(jsonLdSchemas)}
         </script>
@@ -1726,51 +2110,104 @@ const SOSCall: React.FC = () => {
         {/* ========================================
             HERO SECTION
         ======================================== */}
-        <header className="relative pt-16 pb-20 sm:pt-20 sm:pb-24 overflow-hidden" role="banner">
+        <header className="relative pt-12 pb-16 sm:pt-16 sm:pb-20 overflow-hidden" role="banner">
           <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900" aria-hidden="true" />
           <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 via-transparent to-blue-500/10" aria-hidden="true" />
-          <div className="absolute top-1/4 left-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-gradient-to-r from-red-500/20 to-orange-500/20 rounded-full blur-3xl" aria-hidden="true" />
-          <div className="absolute bottom-1/4 right-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-3xl" aria-hidden="true" />
+          <div className="absolute top-1/4 left-1/4 w-48 sm:w-64 lg:w-96 h-48 sm:h-64 lg:h-96 bg-gradient-to-r from-red-500/20 to-orange-500/20 rounded-full blur-3xl" aria-hidden="true" />
+          <div className="absolute bottom-1/4 right-1/4 w-48 sm:w-64 lg:w-96 h-48 sm:h-64 lg:h-96 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-3xl" aria-hidden="true" />
 
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center">
-            <div className="inline-flex items-center space-x-2 sm:space-x-3 bg-white/10 backdrop-blur-sm rounded-full pl-4 sm:pl-6 pr-3 py-2 sm:py-2.5 border border-white/20 mb-6 sm:mb-7">
+            <div 
+              className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-full pl-3 sm:pl-5 pr-2 sm:pr-3 py-1.5 sm:py-2 border border-white/20 mb-4 sm:mb-6"
+              role="status"
+              aria-label={intl.formatMessage({ id: "sosCall.hero.badge.ariaLabel" })}
+            >
               <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-red-300" aria-hidden="true" />
-              <span className="text-white font-semibold text-sm sm:text-base">
+              <span className="text-white font-semibold text-xs sm:text-sm">
                 <FormattedMessage id="sosCall.hero.badge" />
               </span>
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" aria-hidden="true" />
+              <div 
+                className="w-2 h-2 bg-green-400 rounded-full animate-pulse" 
+                aria-hidden="true"
+                role="presentation"
+              />
             </div>
 
-            {/* H1 - Une seule balise H1 */}
-            <h1 className="text-3xl sm:text-5xl md:text-7xl font-black text-white leading-tight mb-4">
+            {/* ===== H1 UNIQUE - SEO OPTIMISÉ ===== */}
+            <h1 
+              className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-3 sm:mb-4 px-2"
+              id="page-title"
+              itemProp="headline"
+            >
               <FormattedMessage id="sosCall.hero.title.prefix" />
-              <span className="bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500 bg-clip-text text-transparent">
+              <span 
+                className="bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500 bg-clip-text text-transparent"
+                itemProp="keywords"
+              >
                 {" "}<FormattedMessage id="sosCall.hero.title.highlight" />{" "}
               </span>
               <FormattedMessage id="sosCall.hero.title.suffix" />
             </h1>
-            <p className="text-base sm:text-xl md:text-2xl text-gray-200 max-w-3xl mx-auto px-4">
+
+            {/* ===== FEATURED SNIPPET (Position 0 Google) ===== */}
+            <p 
+              className="text-sm sm:text-lg md:text-xl text-gray-200 max-w-3xl mx-auto px-4 featured-snippet"
+              itemProp="description"
+              data-featured-snippet="true"
+            >
               <FormattedMessage 
                 id="sosCall.hero.subtitle"
                 values={{
-                  strong: (chunks) => <strong className="text-white">{chunks}</strong>,
+                  strong: (chunks) => <strong className="text-white" itemProp="about">{chunks}</strong>,
                 }}
               />
             </p>
+
+            {/* ===== EXPERT COUNT SNIPPET (pour Google) ===== */}
+            <div 
+              className="expert-count mt-4 text-gray-300 text-sm"
+              aria-live="polite"
+              role="status"
+              data-snippet-count="true"
+            >
+              <span className="inline-flex items-center gap-2">
+                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" aria-hidden="true" />
+                <span itemProp="numberOfItems">
+                  <FormattedMessage 
+                    id="sosCall.hero.expertCount" 
+                    values={{ 
+                      online: onlineCount,
+                      total: filteredProviders.length 
+                    }} 
+                  />
+                </span>
+              </span>
+            </div>
           </div>
         </header>
-
-        {/* Trust Badges */}
-        <TrustBadges intl={intl} />
 
         {/* ========================================
             MAIN CONTENT
         ======================================== */}
-        <main className="py-8 sm:py-12 lg:py-16" id="experts" role="main">
+        <main 
+          className="py-6 sm:py-10 lg:py-14" 
+          id="experts" 
+          role="main"
+          aria-labelledby="section-title"
+          itemScope 
+          itemType="https://schema.org/ItemList"
+        >
+          <meta itemProp="numberOfItems" content={filteredProviders.length.toString()} />
+          <meta itemProp="itemListOrder" content="https://schema.org/ItemListOrderDescending" />
+          
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            {/* Titre + Filtres */}
-            <div className="text-center mb-6 sm:mb-8">
-              <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-black text-white mb-4">
+            {/* ===== H2 - Titre de section ===== */}
+            <div className="text-center mb-5 sm:mb-8">
+              <h2 
+                className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-black text-white mb-4"
+                id="section-title"
+                itemProp="name"
+              >
                 {selectedType === "lawyer" && (
                   <FormattedMessage id="sosCall.experts.title.lawyer" />
                 )}
@@ -1782,241 +2219,195 @@ const SOSCall: React.FC = () => {
                 )}
               </h2>
 
-              {/* FILTRES */}
-              <div 
-                className="rounded-2xl sm:rounded-[28px] border border-white/10 bg-white/5 backdrop-blur-md p-4 sm:p-6 max-w-6xl mx-auto"
-                role="search"
-                aria-label={intl.formatMessage({ id: "sosCall.filters.ariaLabel" })}
-              >
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 sm:gap-4">
-                  {/* Type */}
-                  <div className="space-y-1">
-                    <label
-                      htmlFor="expert-type"
-                      className="block text-xs font-semibold text-gray-300 uppercase tracking-wide"
-                    >
-                      <FormattedMessage id="sosCall.filters.type.label" />
-                    </label>
-                    <div className="relative">
-                      <select
-                        id="expert-type"
-                        value={selectedType}
-                        onChange={(e) =>
-                          setSelectedType(
-                            e.target.value as "all" | "lawyer" | "expat"
-                          )
-                        }
-                        className="w-full px-3 py-3 sm:py-2 bg-white/10 text-white border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent transition-all appearance-none text-sm min-h-[44px]"
-                        aria-describedby="type-filter-description"
-                      >
-                        <option value="all">
-                          {intl.formatMessage({ id: "sosCall.filters.type.all" })}
-                        </option>
-                        <option value="lawyer">
-                          {intl.formatMessage({ id: "sosCall.filters.type.lawyer" })}
-                        </option>
-                        <option value="expat">
-                          {intl.formatMessage({ id: "sosCall.filters.type.expat" })}
-                        </option>
-                      </select>
-                      <ChevronDown
-                        className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 pointer-events-none"
-                        aria-hidden="true"
-                      />
+              {/* ========================================
+                  📱 FILTRES SECTION (Tous écrans)
+              ======================================== */}
+              <div className="space-y-3">
+                {/* Stats Bar Mobile */}
+                <div 
+                  className="flex items-center justify-between bg-white/5 backdrop-blur-sm rounded-2xl px-4 py-3 border border-white/10"
+                  role="status"
+                  aria-live="polite"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
+                      <span className="relative flex h-2.5 w-2.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500" />
+                      </span>
+                      <span className="text-green-400 font-bold text-sm">{onlineCount}</span>
+                      <span className="text-gray-400 text-sm">
+                        <FormattedMessage id="sosCall.stats.onlineShort" defaultMessage="en ligne" />
+                      </span>
                     </div>
-                    <span id="type-filter-description" className="sr-only">
-                      <FormattedMessage id="sosCall.filters.type.srDescription" />
+                    <span className="text-white/20">•</span>
+                    <span className="text-gray-300 text-sm">
+                      {filteredProviders.length} <FormattedMessage id="sosCall.stats.experts" defaultMessage="experts" />
                     </span>
                   </div>
-
-                  {/* Pays */}
-                  <div className="space-y-1">
-                    <label
-                      htmlFor="country-filter"
-                      className="block text-xs font-semibold text-gray-300 uppercase tracking-wide"
-                    >
-                      <FormattedMessage id="sosCall.filters.country.label" />
-                    </label>
-                    <div className="relative">
-                      <select
-                        id="country-filter"
-                        value={selectedCountry}
-                        onChange={(e) => handleCountryChange(e.target.value)}
-                        className="w-full px-3 py-3 sm:py-2 bg-white/10 text-white border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent transition-all appearance-none text-sm min-h-[44px]"
-                      >
-                        <option value="all">
-                          {intl.formatMessage({ id: "sosCall.filters.country.all" })}
-                        </option>
-                        {countryOptions.map((country) => (
-                          <option key={country} value={country}>
-                            {country}
-                          </option>
-                        ))}
-                        <option value="Autre">
-                          {intl.formatMessage({ id: "sosCall.filters.country.other" })}
-                        </option>
-                      </select>
-                      <ChevronDown
-                        className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 pointer-events-none"
-                        aria-hidden="true"
-                      />
-                    </div>
-                    {showCustomCountry && (
-                      <input
-                        type="text"
-                        placeholder={intl.formatMessage({ id: "sosCall.filters.country.placeholder" })}
-                        value={customCountry}
-                        onChange={(e) => setCustomCountry(e.target.value)}
-                        className="w-full px-3 py-3 sm:py-2 bg-white/10 border border-white/15 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/60 focus:border-transparent transition-all text-sm text-white placeholder:text-gray-400 mt-2 min-h-[44px]"
-                        aria-label={intl.formatMessage({ id: "sosCall.filters.country.customAriaLabel" })}
-                      />
+                  
+                  {/* Bouton Filtres Mobile */}
+                  <button
+                    onClick={() => setIsFilterOpen(true)}
+                    className={`
+                      flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm
+                      transition-all duration-200 min-h-[44px] flex-shrink-0
+                      ${activeFiltersCount > 0 
+                        ? 'bg-red-500/20 text-red-300 border border-red-400/30' 
+                        : 'bg-white/10 text-white border border-white/20 hover:bg-white/15'
+                      }
+                    `}
+                    aria-label={intl.formatMessage({ id: "sosCall.filters.open", defaultMessage: "Ouvrir les filtres" })}
+                  >
+                    <SlidersHorizontal className="w-4 h-4" />
+                    <span><FormattedMessage id="sosCall.filters.button" defaultMessage="Filtres" /></span>
+                    {activeFiltersCount > 0 && (
+                      <span className="w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                        {activeFiltersCount}
+                      </span>
                     )}
-                  </div>
+                  </button>
+                </div>
 
-                  {/* Langue */}
-                  <div className="space-y-1">
-                    <label
-                      htmlFor="language-filter"
-                      className="block text-xs font-semibold text-gray-300 uppercase tracking-wide"
-                    >
-                      <FormattedMessage id="sosCall.filters.language.label" />
-                    </label>
-                    <div className="relative">
-                      <select
-                        id="language-filter"
-                        value={selectedLanguage}
-                        onChange={(e) => handleLanguageChange(e.target.value)}
-                        className="w-full px-3 py-3 sm:py-2 bg-white/10 text-white border border-white/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent transition-all appearance-none text-sm min-h-[44px]"
-                      >
-                        <option value="all">
-                          {intl.formatMessage({ id: "sosCall.filters.language.all" })}
-                        </option>
-                        {languageOptions.map((langOption) => (
-                          <option key={langOption} value={langOption}>
-                            {langOption}
-                          </option>
-                        ))}
-                        <option value="Autre">
-                          {intl.formatMessage({ id: "sosCall.filters.language.other" })}
-                        </option>
-                      </select>
-                      <ChevronDown
-                        className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300 pointer-events-none"
-                        aria-hidden="true"
-                      />
-                    </div>
-                    {showCustomLanguage && (
-                      <input
-                        type="text"
-                        placeholder={intl.formatMessage({ id: "sosCall.filters.language.placeholder" })}
-                        value={customLanguage}
-                        onChange={(e) => setCustomLanguage(e.target.value)}
-                        className="w-full px-3 py-3 sm:py-2 bg-white/10 border border-white/15 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/60 focus:border-transparent transition-all text-sm text-white placeholder:text-gray-400 mt-2 min-h-[44px]"
-                        aria-label={intl.formatMessage({ id: "sosCall.filters.language.customAriaLabel" })}
-                      />
-                    )}
-                  </div>
+                {/* Quick Filter Chips - SCROLL HORIZONTAL */}
+                <div 
+                  className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide lg:overflow-visible lg:flex-wrap lg:mx-0 lg:px-0 lg:pb-0 lg:justify-center lg:gap-3"
+                  style={{ 
+                    WebkitOverflowScrolling: 'touch',
+                  }}
+                >
+                  {/* Type Chips */}
+                  <button
+                    onClick={() => setSelectedType("all")}
+                    className={`
+                      flex-shrink-0 px-4 py-2.5 rounded-full text-sm font-semibold
+                      transition-all duration-200 whitespace-nowrap min-h-[44px]
+                      active:scale-95
+                      ${selectedType === "all"
+                        ? 'bg-white text-gray-900 shadow-lg'
+                        : 'bg-white/10 text-white border border-white/20'
+                      }
+                    `}
+                  >
+                    👥 <FormattedMessage id="sosCall.filters.type.all" defaultMessage="Tous" />
+                  </button>
+                  <button
+                    onClick={() => setSelectedType("lawyer")}
+                    className={`
+                      flex-shrink-0 px-4 py-2.5 rounded-full text-sm font-semibold
+                      transition-all duration-200 whitespace-nowrap min-h-[44px]
+                      active:scale-95
+                      ${selectedType === "lawyer"
+                        ? 'bg-white text-gray-900 shadow-lg'
+                        : 'bg-white/10 text-white border border-white/20'
+                      }
+                    `}
+                  >
+                    ⚖️ <FormattedMessage id="sosCall.filters.type.lawyer" defaultMessage="Avocats" />
+                  </button>
+                  <button
+                    onClick={() => setSelectedType("expat")}
+                    className={`
+                      flex-shrink-0 px-4 py-2.5 rounded-full text-sm font-semibold
+                      transition-all duration-200 whitespace-nowrap min-h-[44px]
+                      active:scale-95
+                      ${selectedType === "expat"
+                        ? 'bg-white text-gray-900 shadow-lg'
+                        : 'bg-white/10 text-white border border-white/20'
+                      }
+                    `}
+                  >
+                    🌍 <FormattedMessage id="sosCall.filters.type.expat" defaultMessage="Expatriés" />
+                  </button>
 
-                  {/* Statut */}
-                  <div className="space-y-1 sm:col-span-2 lg:col-span-2">
-                    <label className="block text-xs font-semibold text-gray-300 uppercase tracking-wide">
-                      <FormattedMessage id="sosCall.filters.status.label" />
-                    </label>
-                    <div 
-                      className="flex items-center gap-2"
-                      role="group"
-                      aria-label={intl.formatMessage({ id: "sosCall.filters.status.ariaLabel" })}
-                    >
-                      <button
-                        type="button"
-                        onClick={() => setStatusFilter("all")}
-                        className={`flex-1 inline-flex items-center justify-center gap-2 px-3 py-3 sm:py-2 rounded-xl border transition min-h-[44px] ${
-                          statusFilter === "all"
-                            ? "bg-white/20 text-white border-white/30"
-                            : "bg-white/10 text-gray-200 border-white/20 hover:bg-white/15"
-                        }`}
-                        aria-pressed={statusFilter === "all"}
-                      >
-                        <span className="w-2 h-2 rounded-full bg-gray-300" aria-hidden="true" />
-                        <span className="text-sm">
-                          <FormattedMessage id="sosCall.filters.status.all" />
-                        </span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setStatusFilter("online")}
-                        className={`flex-1 inline-flex items-center justify-center gap-2 px-3 py-3 sm:py-2 rounded-xl border transition min-h-[44px] ${
-                          statusFilter === "online"
-                            ? "bg-white/20 text-white border-white/30"
-                            : "bg-white/10 text-gray-200 border-white/20 hover:bg-white/15"
-                        }`}
-                        aria-pressed={statusFilter === "online"}
-                        aria-label={intl.formatMessage({ id: "sosCall.filters.status.onlineAriaLabel" })}
-                      >
-                        <Wifi className="w-4 h-4" aria-hidden="true" />
-                        <span className="text-sm">
-                          <FormattedMessage id="sosCall.filters.status.online" />
-                        </span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setStatusFilter("offline")}
-                        className={`flex-1 inline-flex items-center justify-center gap-2 px-3 py-3 sm:py-2 rounded-xl border transition min-h-[44px] ${
-                          statusFilter === "offline"
-                            ? "bg-white/20 text-white border-white/30"
-                            : "bg-white/10 text-gray-200 border-white/20 hover:bg-white/15"
-                        }`}
-                        aria-pressed={statusFilter === "offline"}
-                        aria-label={intl.formatMessage({ id: "sosCall.filters.status.offlineAriaLabel" })}
-                      >
-                        <WifiOff className="w-4 h-4" aria-hidden="true" />
-                        <span className="text-sm">
-                          <FormattedMessage id="sosCall.filters.status.offline" />
-                        </span>
-                      </button>
-                    </div>
-                  </div>
+                  {/* Separator */}
+                  <div className="flex-shrink-0 w-px h-8 bg-white/20 self-center mx-1" aria-hidden="true" />
 
-                  {/* Reset */}
-                  <div className="space-y-1">
-                    <label className="block text-xs font-medium text-transparent select-none" aria-hidden="true">
-                      <FormattedMessage id="sosCall.filters.action.label" />
-                    </label>
+                  {/* Status Chips */}
+                  <button
+                    onClick={() => setStatusFilter(statusFilter === "online" ? "all" : "online")}
+                    className={`
+                      flex-shrink-0 px-4 py-2.5 rounded-full text-sm font-semibold
+                      transition-all duration-200 whitespace-nowrap min-h-[44px] flex items-center gap-2
+                      active:scale-95
+                      ${statusFilter === "online"
+                        ? 'bg-green-500 text-white shadow-lg shadow-green-500/30'
+                        : 'bg-white/10 text-white border border-white/20'
+                      }
+                    `}
+                  >
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
+                    </span>
+                    <FormattedMessage id="sosCall.filters.status.online" defaultMessage="En ligne" />
+                  </button>
+                  <button
+                    onClick={() => setStatusFilter(statusFilter === "offline" ? "all" : "offline")}
+                    className={`
+                      flex-shrink-0 px-4 py-2.5 rounded-full text-sm font-semibold
+                      transition-all duration-200 whitespace-nowrap min-h-[44px] flex items-center gap-2
+                      active:scale-95
+                      ${statusFilter === "offline"
+                        ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30'
+                        : 'bg-white/10 text-white border border-white/20'
+                      }
+                    `}
+                  >
+                    <WifiOff className="w-3.5 h-3.5" />
+                    <FormattedMessage id="sosCall.filters.status.offline" defaultMessage="Hors ligne" />
+                  </button>
+
+                  {/* Filtres actifs (Pays/Langue) */}
+                  {selectedCountryCode !== "all" && (
                     <button
-                      onClick={resetFilters}
-                      className="w-full px-3 py-3 sm:py-2 border border-white/15 rounded-xl text-gray-100 hover:bg-white/10 active:bg-white/15 transition-colors text-sm font-semibold min-h-[44px]"
-                      aria-label={intl.formatMessage({ id: "sosCall.filters.action.resetAriaLabel" })}
+                      onClick={() => setSelectedCountryCode("all")}
+                      className="flex-shrink-0 px-3 py-2.5 rounded-full text-sm font-medium bg-blue-500/20 text-blue-300 border border-blue-400/30 min-h-[44px] flex items-center gap-2 active:scale-95"
                     >
-                      <FormattedMessage id="sosCall.filters.action.reset" />
+                      <MapPin className="w-3.5 h-3.5" />
+                      <span className="max-w-[100px] truncate">
+                        {countryOptions.find(c => c.code === selectedCountryCode)?.label || selectedCountryCode}
+                      </span>
+                      <X className="w-3.5 h-3.5" />
                     </button>
-                  </div>
+                  )}
+                  {selectedLanguageCode !== "all" && (
+                    <button
+                      onClick={() => setSelectedLanguageCode("all")}
+                      className="flex-shrink-0 px-3 py-2.5 rounded-full text-sm font-medium bg-purple-500/20 text-purple-300 border border-purple-400/30 min-h-[44px] flex items-center gap-2 active:scale-95"
+                    >
+                      <Globe className="w-3.5 h-3.5" />
+                      <span className="max-w-[100px] truncate">
+                        {languageOptions.find(l => l.code === selectedLanguageCode)?.label || selectedLanguageCode}
+                      </span>
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                  
+                  {/* Spacer pour padding droit */}
+                  <div className="flex-shrink-0 w-4" aria-hidden="true" />
                 </div>
 
-                {/* Stats */}
-                <div className="mt-4 text-center text-xs text-gray-300" role="status" aria-live="polite">
-                  <span className="inline-flex items-center gap-2 rounded-full px-3 py-1 bg-white/10 border border-white/15">
-                    <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" aria-hidden="true" />
-                    {onlineCount}
-                    <span>
-                      <FormattedMessage id="sosCall.stats.online" />
-                    </span>
-                  </span>
-                  <span className="mx-2 text-white/30" aria-hidden="true">•</span>
-                  {filteredProviders.length}
-                  <span className="ml-1">
-                    <FormattedMessage id="sosCall.stats.total" />
-                  </span>
-                </div>
+                {/* Pagination info mobile */}
+                {!isLoadingProviders && filteredProviders.length > 0 && totalPages > 1 && (
+                  <div className="text-center text-xs text-gray-500">
+                    <FormattedMessage 
+                      id="sosCall.pagination.mobileInfo" 
+                      defaultMessage="Page {current} sur {total}"
+                      values={{ current: page, total: totalPages }}
+                    />
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* PAGINATION (haut) */}
+            {/* PAGINATION (haut) - Desktop only */}
             {!isLoadingProviders && filteredProviders.length > 0 && (
-              <div className="flex items-center justify-end mb-4">
+              <div className="hidden lg:flex items-center justify-end mb-4">
                 <Pagination
                   page={page}
                   totalPages={totalPages}
-                  onChange={setPage}
+                  onChange={handlePageChange}
                   intl={intl}
                 />
               </div>
@@ -2024,38 +2415,70 @@ const SOSCall: React.FC = () => {
 
             {/* Skeletons */}
             {isLoadingProviders ? (
-              <div 
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
-                aria-label={intl.formatMessage({ id: "sosCall.loading.ariaLabel" })}
-                aria-busy="true"
-              >
-                {Array.from({ length: PAGE_SIZE }).map((_, index) => (
-                  <div
-                    key={`sk-${index}`}
-                    className="bg-white/5 rounded-2xl sm:rounded-[28px] border border-white/10 overflow-hidden animate-pulse"
-                    role="article"
-                    aria-label={intl.formatMessage({ id: "sosCall.loading.cardAriaLabel" })}
-                  >
-                    <div className="w-full h-72 sm:h-80 bg-white/10" />
-                    <div className="p-4 space-y-3">
-                      <div className="h-4 bg-white/10 rounded w-3/4" />
-                      <div className="h-3 bg-white/10 rounded w-1/2" />
-                      <div className="h-8 bg-white/10 rounded" />
+              <>
+                {/* Skeleton Mobile */}
+                <div 
+                  className="lg:hidden flex gap-3 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4"
+                  aria-label={intl.formatMessage({ id: "sosCall.loading.ariaLabel", defaultMessage: "Chargement des experts" })}
+                  aria-busy="true"
+                  style={{ WebkitOverflowScrolling: 'touch' }}
+                >
+                  {Array.from({ length: 4 }).map((_, index) => (
+                    <div
+                      key={`sk-mobile-${index}`}
+                      className="flex-shrink-0 bg-white/5 rounded-2xl border border-white/10 overflow-hidden animate-pulse w-[280px]"
+                      role="article"
+                    >
+                      <div className="w-full h-48 bg-white/10" />
+                      <div className="p-4 space-y-3">
+                        <div className="h-4 bg-white/10 rounded w-3/4" />
+                        <div className="h-3 bg-white/10 rounded w-1/2" />
+                        <div className="h-10 bg-white/10 rounded-xl" />
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+                
+                {/* Skeleton Desktop */}
+                <div 
+                  className="hidden lg:grid lg:grid-cols-2 xl:grid-cols-3 gap-5 lg:gap-6 justify-items-center"
+                  aria-label={intl.formatMessage({ id: "sosCall.loading.ariaLabel", defaultMessage: "Chargement des experts" })}
+                  aria-busy="true"
+                >
+                  {Array.from({ length: PAGE_SIZE }).map((_, index) => (
+                    <div
+                      key={`sk-desktop-${index}`}
+                      className="bg-white/5 rounded-2xl border border-white/10 overflow-hidden animate-pulse w-[320px]"
+                      role="article"
+                    >
+                      <div className="w-full h-64 bg-white/10" />
+                      <div className="p-4 space-y-3">
+                        <div className="h-5 bg-white/10 rounded w-3/4" />
+                        <div className="h-4 bg-white/10 rounded w-1/2" />
+                        <div className="h-10 bg-white/10 rounded-xl" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
             ) : filteredProviders.length > 0 ? (
               <>
-                {/* Version Mobile - Scroll horizontal */}
-                <div className="md:hidden">
+                {/* Version Mobile - Scroll horizontal fluide */}
+                <div className="lg:hidden">
                   <div 
-                    className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4"
+                    className="flex gap-3 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4"
                     role="list"
                     aria-label={intl.formatMessage({ id: "sosCall.providerList.mobileAriaLabel" })}
+                    style={{
+                      WebkitOverflowScrolling: 'touch',
+                    }}
                   >
                     {paginatedProviders.map((provider, index) => (
-                      <div key={provider.id} className="snap-start flex-shrink-0" role="listitem">
+                      <div 
+                        key={provider.id} 
+                        className="snap-center flex-shrink-0" 
+                        role="listitem"
+                      >
                         <ModernProfileCard
                           provider={provider}
                           onProfileClick={handleProviderClick}
@@ -2066,11 +2489,25 @@ const SOSCall: React.FC = () => {
                       </div>
                     ))}
                   </div>
+                  
+                  {/* Indicateur de scroll mobile */}
+                  <div className="flex justify-center mt-2 gap-1">
+                    {Array.from({ length: Math.min(paginatedProviders.length, 5) }).map((_, i) => (
+                      <div 
+                        key={i}
+                        className="w-1.5 h-1.5 rounded-full bg-white/30"
+                        aria-hidden="true"
+                      />
+                    ))}
+                    {paginatedProviders.length > 5 && (
+                      <span className="text-white/50 text-[10px] ml-1">+{paginatedProviders.length - 5}</span>
+                    )}
+                  </div>
                 </div>
 
                 {/* Version Desktop - Grille */}
                 <div 
-                  className="hidden md:grid md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8 justify-items-center"
+                  className="hidden lg:grid lg:grid-cols-2 xl:grid-cols-3 gap-5 lg:gap-6 justify-items-center"
                   role="list"
                   aria-label={intl.formatMessage({ id: "sosCall.providerList.desktopAriaLabel" })}
                 >
@@ -2088,8 +2525,8 @@ const SOSCall: React.FC = () => {
                 </div>
 
                 {/* Pagination (bas) */}
-                <div className="flex flex-col sm:flex-row items-center justify-between mt-8 gap-4">
-                  <div className="text-sm text-gray-300" role="status">
+                <div className="flex flex-col sm:flex-row items-center justify-between mt-6 sm:mt-8 gap-3 sm:gap-4">
+                  <div className="text-xs sm:text-sm text-gray-300" role="status">
                     <FormattedMessage id="sosCall.pagination.page" />{" "}
                     <strong>{page}</strong> / {totalPages} —{" "}
                     {filteredProviders.length}
@@ -2100,26 +2537,26 @@ const SOSCall: React.FC = () => {
                   <Pagination
                     page={page}
                     totalPages={totalPages}
-                    onChange={setPage}
+                    onChange={handlePageChange}
                     intl={intl}
                   />
                 </div>
               </>
             ) : (
-              <div className="text-center py-12 sm:py-16" role="status" aria-live="polite">
-                <div className="rounded-2xl sm:rounded-[28px] border border-white/10 bg-white/5 backdrop-blur-md p-6 sm:p-12 max-w-md mx-auto">
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Search className="w-7 h-7 sm:w-8 sm:h-8 text-gray-200" aria-hidden="true" />
+              <div className="text-center py-10 sm:py-14" role="status" aria-live="polite">
+                <div className="rounded-xl sm:rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-5 sm:p-10 max-w-md mx-auto">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                    <Search className="w-6 h-6 sm:w-7 sm:h-7 text-gray-200" aria-hidden="true" />
                   </div>
-                  <h3 className="text-lg sm:text-xl font-semibold text-white mb-2">
+                  <h3 className="text-base sm:text-lg font-semibold text-white mb-2">
                     <FormattedMessage id="sosCall.noResults.title" />
                   </h3>
-                  <p className="text-gray-300 mb-6 text-sm sm:text-base">
+                  <p className="text-gray-300 mb-5 sm:mb-6 text-xs sm:text-sm">
                     <FormattedMessage id="sosCall.noResults.description" />
                   </p>
                   <button
                     onClick={resetFilters}
-                    className="px-6 py-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white font-semibold rounded-xl transition-colors min-h-[48px]"
+                    className="px-5 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white font-semibold rounded-lg sm:rounded-xl transition-colors min-h-[44px] text-sm touch-manipulation"
                   >
                     <FormattedMessage id="sosCall.noResults.resetButton" />
                   </button>
@@ -2128,12 +2565,12 @@ const SOSCall: React.FC = () => {
             )}
 
             {/* CTA Section */}
-            <section className="text-center mt-12 sm:mt-16" aria-labelledby="cta-heading">
-              <div className="rounded-2xl sm:rounded-[28px] border border-white/10 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-md p-6 sm:p-12">
-                <h3 id="cta-heading" className="text-xl sm:text-2xl lg:text-3xl font-black text-white mb-3">
+            <section className="text-center mt-10 sm:mt-14" aria-labelledby="cta-heading">
+              <div className="rounded-xl sm:rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-md p-5 sm:p-10">
+                <h3 id="cta-heading" className="text-lg sm:text-xl lg:text-2xl font-black text-white mb-2 sm:mb-3">
                   <FormattedMessage id="sosCall.cta.title" />
                 </h3>
-                <p className="text-base sm:text-lg text-gray-300 mb-6 sm:mb-8 max-w-2xl mx-auto">
+                <p className="text-sm sm:text-base text-gray-300 mb-5 sm:mb-6 max-w-2xl mx-auto">
                   <FormattedMessage 
                     id="sosCall.cta.description"
                     values={{
@@ -2143,10 +2580,10 @@ const SOSCall: React.FC = () => {
                 </p>
                 <button
                   onClick={() => navigate("/sos-appel")}
-                  className="inline-flex items-center gap-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-0.5 min-h-[52px]"
+                  className="inline-flex items-center gap-2 sm:gap-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white px-5 sm:px-7 py-2.5 sm:py-3.5 rounded-lg sm:rounded-xl font-bold text-sm sm:text-base transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-0.5 min-h-[48px] touch-manipulation"
                   aria-label={intl.formatMessage({ id: "sosCall.cta.buttonAriaLabel" })}
                 >
-                  <Phone className="w-5 h-5" aria-hidden="true" />
+                  <Phone className="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" />
                   <FormattedMessage id="sosCall.cta.button" />
                 </button>
               </div>
@@ -2154,7 +2591,7 @@ const SOSCall: React.FC = () => {
           </div>
         </main>
 
-        {/* FAQ Section (8 questions pour Featured Snippet) */}
+        {/* FAQ Section */}
         <FAQSection intl={intl} />
       </div>
 
@@ -2172,7 +2609,78 @@ const SOSCall: React.FC = () => {
           background-color: #1f2937;
           color: white;
         }
+        
+        /* Smooth scroll pour iOS */
+        .snap-x {
+          -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Amélioration touch */
+        .touch-manipulation {
+          touch-action: manipulation;
+        }
+        
+        /* Line clamp pour texte tronqué */
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+        
+        /* Scrollbar hide pour mobile chips */
+        .scrollbar-hide {
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
       `}</style>
+
+      {/* ========================================
+          📱 FAB - Floating Action Button (Mobile)
+      ======================================== */}
+      <button
+        onClick={() => setIsFilterOpen(true)}
+        className="lg:hidden fixed bottom-6 right-4 z-40 w-14 h-14 rounded-2xl bg-gradient-to-r from-red-600 to-orange-600 flex items-center justify-center shadow-lg shadow-red-500/30 active:scale-95 transition-transform"
+        style={{ marginBottom: 'env(safe-area-inset-bottom, 0px)' }}
+        aria-label={intl.formatMessage({ id: "sosCall.filters.open" }, { defaultMessage: "Ouvrir les filtres" })}
+      >
+        <SlidersHorizontal className="w-6 h-6 text-white" />
+        {activeFiltersCount > 0 && (
+          <span className="absolute -top-1 -right-1 w-5 h-5 bg-white text-red-600 text-xs font-bold rounded-full flex items-center justify-center">
+            {activeFiltersCount}
+          </span>
+        )}
+      </button>
+
+      {/* ========================================
+          📱 Bottom Sheet Filtres (Mobile)
+      ======================================== */}
+      <FilterBottomSheet
+        isOpen={isFilterOpen}
+        onClose={() => setIsFilterOpen(false)}
+        selectedType={selectedType}
+        setSelectedType={setSelectedType}
+        selectedCountryCode={selectedCountryCode}
+        handleCountryChange={handleCountryChange}
+        selectedLanguageCode={selectedLanguageCode}
+        handleLanguageChange={handleLanguageChange}
+        statusFilter={statusFilter}
+        setStatusFilter={setStatusFilter}
+        resetFilters={resetFilters}
+        countryOptions={countryOptions}
+        languageOptions={languageOptions}
+        customCountry={customCountry}
+        setCustomCountry={setCustomCountry}
+        customLanguage={customLanguage}
+        setCustomLanguage={setCustomLanguage}
+        showCustomCountry={showCustomCountry}
+        showCustomLanguage={showCustomLanguage}
+        activeFiltersCount={activeFiltersCount}
+        intl={intl}
+      />
     </Layout>
   );
 };

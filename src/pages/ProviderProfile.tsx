@@ -521,16 +521,14 @@ const calculateProviderStats = async (providerId: string): Promise<ProviderStats
     let realReviewsCount = 0;
 
     reviewsSnapshot.forEach((doc) => {
-      const data = doc.data();
-      
-      const isAAA = data.commentKey !== undefined && data.commentKey !== null;
-      
-      if (!isAAA && typeof data.rating === "number") {
-        totalRating += data.rating;
-        realReviewsCount++;
-        totalReviews++;
-      }
-    });
+  const data = doc.data();
+  
+  if (typeof data.rating === "number") {
+    totalRating += data.rating;
+    realReviewsCount++;
+    totalReviews++;
+  }
+});
 
     const averageRating = realReviewsCount > 0 ? totalRating / realReviewsCount : 0;
     const successRate = totalCallsReceived > 0 
@@ -860,19 +858,25 @@ const ProviderProfile: React.FC = () => {
               const safeType: "lawyer" | "expat" = (data?.type === "lawyer" || data?.type === "expat") ? data.type : "expat";
               const safeProvider = { ...restNormalized, type: safeType, ...data };
               providerData = {
-                ...restNormalized,
-                id: snap.id,
-                uid: normalized.uid || snap.id,
-                type: safeType,
-                description: pickDescription(safeProvider as any, preferredLangKey, intl),
-                specialties: toArrayFromAny(data?.specialties, preferredLangKey),
-                helpTypes: toArrayFromAny(data?.helpTypes, preferredLangKey),
-                operatingCountries: toArrayFromAny(data?.operatingCountries, preferredLangKey),
-                residenceCountry: data?.residenceCountry || data?.country,
-                education: data?.education,
-              } as SosProfile;
-              foundProviderId = snap.id;
-              break;
+              ...restNormalized,
+              id: snap.id,
+              uid: normalized.uid || snap.id,
+              type: safeType,
+              description: pickDescription(safeProvider as any, preferredLangKey, intl),
+              specialties: toArrayFromAny(data?.specialties, preferredLangKey),
+              helpTypes: toArrayFromAny(data?.helpTypes, preferredLangKey),
+              operatingCountries: toArrayFromAny(data?.operatingCountries, preferredLangKey),
+              residenceCountry: data?.residenceCountry || data?.country,
+              education: data?.education,
+              yearsOfExperience: data?.yearsOfExperience || 0,
+              yearsAsExpat: data?.yearsAsExpat || data?.yearsOfExperience || 0,
+              rating: data?.rating || data?.averageRating || 0,
+              reviewCount: data?.reviewCount || 0,
+              totalCalls: data?.totalCalls || 0,
+              createdAt: data?.createdAt,
+            } as SosProfile;
+            foundProviderId = snap.id;
+            break;
             }
           } catch (e) {
             console.warn('Error searching by doc ID:', testId, e);
@@ -895,19 +899,25 @@ const ProviderProfile: React.FC = () => {
               const safeType: "lawyer" | "expat" = (data?.type === "lawyer" || data?.type === "expat") ? data.type : "expat";
               const safeProvider = { ...restNormalized, type: safeType, ...data };
               providerData = {
-                ...restNormalized,
-                id: found.id,
-                uid: normalized.uid || found.id,
-                type: safeType,
-                description: pickDescription(safeProvider as any, preferredLangKey, intl),
-                specialties: toArrayFromAny(data?.specialties, preferredLangKey),
-                helpTypes: toArrayFromAny(data?.helpTypes, preferredLangKey),
-                operatingCountries: toArrayFromAny(data?.operatingCountries, preferredLangKey),
-                residenceCountry: data?.residenceCountry || data?.country,
-                education: data?.education,
-              } as SosProfile;
-              foundProviderId = found.id;
-              break;
+              ...restNormalized,
+              id: found.id,
+              uid: normalized.uid || found.id,
+              type: safeType,
+              description: pickDescription(safeProvider as any, preferredLangKey, intl),
+              specialties: toArrayFromAny(data?.specialties, preferredLangKey),
+              helpTypes: toArrayFromAny(data?.helpTypes, preferredLangKey),
+              operatingCountries: toArrayFromAny(data?.operatingCountries, preferredLangKey),
+              residenceCountry: data?.residenceCountry || data?.country,
+              education: data?.education,
+              yearsOfExperience: data?.yearsOfExperience || 0,
+              yearsAsExpat: data?.yearsAsExpat || data?.yearsOfExperience || 0,
+              rating: data?.rating || data?.averageRating || 0,
+              reviewCount: data?.reviewCount || 0,
+              totalCalls: data?.totalCalls || 0,
+              createdAt: data?.createdAt,
+            } as SosProfile;
+            foundProviderId = found.id;
+            break;
             }
           } catch (e) {
             console.warn('Error searching by uid:', testId, e);
@@ -934,18 +944,24 @@ const ProviderProfile: React.FC = () => {
               const safeType: "lawyer" | "expat" = (data?.type === "lawyer" || data?.type === "expat") ? data.type : "expat";
               const safeProvider = { ...restNormalized, type: safeType, ...data };
               providerData = {
-                ...restNormalized,
-                id: m.id,
-                uid: normalized.uid || m.id,
-                type: safeType,
-                description: pickDescription(safeProvider as any, preferredLangKey, intl),
-                specialties: toArrayFromAny(data?.specialties, preferredLangKey),
-                helpTypes: toArrayFromAny(data?.helpTypes, preferredLangKey),
-                operatingCountries: toArrayFromAny(data?.operatingCountries, preferredLangKey),
-                residenceCountry: data?.residenceCountry || data?.country,
-                education: data?.education,
-              } as SosProfile;
-              foundProviderId = m.id;
+              ...restNormalized,
+              id: m.id,
+              uid: normalized.uid || m.id,
+              type: safeType,
+              description: pickDescription(safeProvider as any, preferredLangKey, intl),
+              specialties: toArrayFromAny(data?.specialties, preferredLangKey),
+              helpTypes: toArrayFromAny(data?.helpTypes, preferredLangKey),
+              operatingCountries: toArrayFromAny(data?.operatingCountries, preferredLangKey),
+              residenceCountry: data?.residenceCountry || data?.country,
+              education: data?.education,
+              yearsOfExperience: data?.yearsOfExperience || 0,
+              yearsAsExpat: data?.yearsAsExpat || data?.yearsOfExperience || 0,
+              rating: data?.rating || data?.averageRating || 0,
+              reviewCount: data?.reviewCount || 0,
+              totalCalls: data?.totalCalls || 0,
+              createdAt: data?.createdAt,
+            } as SosProfile;
+            foundProviderId = m.id;
             }
           } catch (e) {
             console.warn('Error searching by slug:', e);
@@ -972,6 +988,9 @@ const ProviderProfile: React.FC = () => {
               rating: Number(navData.rating) || 0,
               reviewCount: Number(navData.reviewCount) || 0,
               yearsOfExperience: Number(navData.yearsOfExperience) || 0,
+              yearsAsExpat: Number(navData.yearsAsExpat) || Number(navData.yearsOfExperience) || 0,
+              totalCalls: Number(navData.totalCalls) || 0,
+              createdAt: navData.createdAt,
               isActive: true,
               isApproved: true,
               isVerified: !!navData.isVerified,
@@ -1450,8 +1469,16 @@ const ProviderProfile: React.FC = () => {
   );
 
   const languageCodes = useMemo(() => {
-    return convertLanguageNamesToCodes(languagesList);
-  }, [languagesList]);
+  // Si déjà des codes ISO (fr, en, es...), les garder tels quels
+  const isAlreadyCodes = languagesList.every(
+    (lang) => lang.length === 2 || lang.length === 3
+  );
+  if (isAlreadyCodes) {
+    return languagesList;
+  }
+  // Sinon convertir les noms en codes
+  return convertLanguageNamesToCodes(languagesList);
+}, [languagesList]);
   
   const mainPhoto: string =
     provider?.profilePhoto ||
