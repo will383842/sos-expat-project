@@ -72,7 +72,11 @@ const Footer: React.FC = () => {
         href: "/cgu-clients",
         order: 20,
       },
-      { label: "Cookies", href: "/cookies", order: 50 },
+      {
+        label: intl.formatMessage({ id: "footer.legal.cookies" }),
+        href: "/cookies",
+        order: 50,
+      },
       {
         label: intl.formatMessage({ id: "footer.legal.consumers" }),
         href: "/consommateurs",

@@ -46,6 +46,7 @@ const LocaleRouter: React.FC<LocaleRouterProps> = ({ children }) => {
     ) {
       return;
     }
+    
 
     // Validate locale parameter if present
     if (params.locale) {

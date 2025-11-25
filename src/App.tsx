@@ -97,6 +97,9 @@ const FAQ = lazy(() => import("./pages/FAQ"));
 const Contact = lazy(() => import("./pages/Contact"));
 const HowItWorks = lazy(() => import("./pages/HowItWorks"));
 
+// Error pages
+const NotFound = lazy(() => import("./pages/NotFound"));
+
 // -------------------------------------------
 // Laguage config
 // -------------------------------------------
@@ -464,6 +467,9 @@ const App: React.FC = () => {
                   path="marketing/messages-temps-reel"
                   element={<MessagesTempsReel />}
                 />
+
+                {/* 404 - Catch all route (must be last) */}
+                <Route path="*" element={<NotFound />} />
               </Routes>
 
               {/* Routes admin gérées par AdminRoutesV2 */}

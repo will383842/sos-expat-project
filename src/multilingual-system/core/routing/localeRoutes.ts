@@ -9,15 +9,15 @@ type Language = "fr" | "en" | "es" | "ru" | "de" | "hi" | "pt" | "ch" | "ar";
 
 // Map language to default country code (fallback only)
 const LANGUAGE_TO_COUNTRY: Record<Language, string> = {
-  fr: "fr",  // French → France
-  en: "us",  // English → United States
-  es: "es",  // Spanish → Spain
-  ru: "ru",  // Russian → Russia
-  de: "de",  // German → Germany
-  hi: "in",  // Hindi → India
-  pt: "pt",  // Portuguese → Portugal
-  ch: "cn",  // Chinese → China
-  ar: "sa",  // Arabic → Saudi Arabia
+  fr: "fr",  // French → France 
+  en: "us",  // English → United States 
+  es: "es",  // Spanish → Spain 
+  ru: "ru",  // Russian → Russia 
+  de: "de",  // German → Germany 
+  hi: "in",  // Hindi → India 
+  pt: "pt",  // Portuguese → Portugal 
+  ch: "cn",  // Chinese → China 
+  ar: "sa",  // Arabic → Saudi Arabia                                                               
 };
 
 /**
@@ -64,7 +64,7 @@ export function getLocaleString(lang: Language, country?: string): string {
 /**
  * Parse locale from URL path
  * Example: "/en-us/dashboard" → { locale: "en-us", lang: "en", country: "us", pathWithoutLocale: "/dashboard" }
- */
+ **/
 export function parseLocaleFromPath(pathname: string): {
   locale: string | null;
   lang: Language | null;
@@ -118,7 +118,9 @@ export function getLocaleFromPath(pathname: string, defaultLang: Language): stri
 /**
  * Route slug translations
  * Maps route keys to their translated slugs for each language
- */
+ **/
+
+
 export type RouteKey = 
   | "lawyer"           // /avocat → /lawyers, /anwaelte, etc.
   | "expat"            // /expatrie → /expats, /expatriates, etc.
