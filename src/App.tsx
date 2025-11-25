@@ -247,7 +247,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     console.log('language', language)
-    setLocale(language)
+    setLocale(language as Locale)
   },[language])
 
   const renderRoute = (config: RouteConfig, index: number) => {
