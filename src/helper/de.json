@@ -1572,5 +1572,10 @@
   "reviewForm.error.commentRequired": "Bitte geben Sie einen Kommentar ein",
   "reviewForm.error.loginRequired": "Sie müssen angemeldet sein, um eine Bewertung zu hinterlassen",
   "reviewForm.error.ratingRequired": "Bitte wählen Sie eine Bewertung",
-  "reviewForm.error.submitFailed": "Beim Senden Ihrer Bewertung ist ein Fehler aufgetreten: {message}. Bitte versuchen Sie es erneut."
+  "reviewForm.error.submitFailed": "Beim Senden Ihrer Bewertung ist ein Fehler aufgetreten: {message}. Bitte versuchen Sie es erneut.",
+  "providerTranslation.viewIn": "Anzeigen in:",
+  "providerTranslation.translating": "Wird übersetzt...",
+  "providerTranslation.oneTimeCost": "Die Übersetzung ist eine einmalige Kosten (~0,15 €). Zukünftige Besuche sind kostenlos.",
+  "providerTranslation.viewOriginal": "Original anzeigen ({lang})",
+  "providerTranslation.viewTranslated": "Übersetzt anzeigen ({lang})"
 }

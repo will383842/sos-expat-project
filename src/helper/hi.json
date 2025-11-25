@@ -1496,5 +1496,10 @@
   "reviewForm.error.commentRequired": "कृपया एक टिप्पणी दर्ज करें",
   "reviewForm.error.loginRequired": "समीक्षा छोड़ने के लिए आपको लॉग इन होना चाहिए",
   "reviewForm.error.ratingRequired": "कृपया एक रेटिंग चुनें",
-  "reviewForm.error.submitFailed": "आपकी समीक्षा सबमिट करते समय एक त्रुटि हुई: {message}. कृपया पुनः प्रयास करें।"
+  "reviewForm.error.submitFailed": "आपकी समीक्षा सबमिट करते समय एक त्रुटि हुई: {message}. कृपया पुनः प्रयास करें।",
+  "providerTranslation.viewIn": "इसमें देखें:",
+  "providerTranslation.translating": "अनुवाद हो रहा है...",
+  "providerTranslation.oneTimeCost": "अनुवाद एक बार की लागत है (~€0.15)। भविष्य की यात्राएं मुफ्त हैं।",
+  "providerTranslation.viewOriginal": "मूल देखें ({lang})",
+  "providerTranslation.viewTranslated": "अनुवादित देखें ({lang})"
 }

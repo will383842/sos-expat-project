@@ -1626,5 +1626,10 @@
   "reviewForm.error.commentRequired": "请输入评论",
   "reviewForm.error.loginRequired": "您必须登录才能留下评价",
   "reviewForm.error.ratingRequired": "请选择评分",
-  "reviewForm.error.submitFailed": "提交您的评价时发生错误：{message}。请重试。"
+  "reviewForm.error.submitFailed": "提交您的评价时发生错误：{message}。请重试。",
+  "providerTranslation.viewIn": "查看语言：",
+  "providerTranslation.translating": "正在翻译...",
+  "providerTranslation.oneTimeCost": "翻译是一次性费用（约0.15欧元）。以后的访问是免费的。",
+  "providerTranslation.viewOriginal": "查看原文 ({lang})",
+  "providerTranslation.viewTranslated": "查看翻译 ({lang})"
 }

@@ -1543,5 +1543,10 @@
   "reviewForm.error.commentRequired": "Пожалуйста, введите комментарий",
   "reviewForm.error.loginRequired": "Вы должны войти в систему, чтобы оставить отзыв",
   "reviewForm.error.ratingRequired": "Пожалуйста, выберите оценку",
-  "reviewForm.error.submitFailed": "Произошла ошибка при отправке вашего отзыва: {message}. Пожалуйста, попробуйте снова."
+  "reviewForm.error.submitFailed": "Произошла ошибка при отправке вашего отзыва: {message}. Пожалуйста, попробуйте снова.",
+  "providerTranslation.viewIn": "Просмотр на:",
+  "providerTranslation.translating": "Переводится...",
+  "providerTranslation.oneTimeCost": "Перевод — это разовая стоимость (~0,15 €). Последующие посещения бесплатны.",
+  "providerTranslation.viewOriginal": "Просмотреть оригинал ({lang})",
+  "providerTranslation.viewTranslated": "Просмотреть перевод ({lang})"
 }

@@ -1537,5 +1537,10 @@
   "reviewForm.error.commentRequired": "Por favor, insira um comentário",
   "reviewForm.error.loginRequired": "Você deve estar logado para deixar uma avaliação",
   "reviewForm.error.ratingRequired": "Por favor, selecione uma avaliação",
-  "reviewForm.error.submitFailed": "Ocorreu um erro ao enviar sua avaliação: {message}. Por favor, tente novamente."
+  "reviewForm.error.submitFailed": "Ocorreu um erro ao enviar sua avaliação: {message}. Por favor, tente novamente.",
+  "providerTranslation.viewIn": "Ver em:",
+  "providerTranslation.translating": "Traduzindo...",
+  "providerTranslation.oneTimeCost": "A tradução é um custo único (~€0,15). As visitas futuras são gratuitas.",
+  "providerTranslation.viewOriginal": "Ver original ({lang})",
+  "providerTranslation.viewTranslated": "Ver traduzido ({lang})"
 }

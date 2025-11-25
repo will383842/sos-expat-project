@@ -48,6 +48,10 @@ import { formatLanguages } from "@/i18n";
 
 // 👉 Pricing admin (source de vérité)
 import { usePricingConfig } from "../services/pricingService";
+// 👉 Translation system
+import { useProviderTranslation } from "../hooks/useProviderTranslation";
+import { TranslationBanner } from "../components/provider/TranslationBanner";
+import { type SupportedLanguage } from "../services/providerTranslationService";
 import { FormattedMessage, useIntl } from "react-intl";
 
 /* ===================================================================== */
@@ -453,6 +457,20 @@ const ProviderProfile: React.FC = () => {
   const [realProviderId, setRealProviderId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  
+  // Translation system
+  const { locale: currentLocale, lang: currentLang } = parseLocaleFromPath(location.pathname);
+  const targetLanguage: SupportedLanguage = (currentLang?.toLowerCase() as SupportedLanguage) || 'en';
+  const [showOriginal, setShowOriginal] = useState(false);
+  
+  const {
+    translation,
+    original: originalTranslation,
+    availableLanguages,
+    isLoading: isTranslationLoading,
+    translate,
+    error: translationError,
+  } = useProviderTranslation(realProviderId, targetLanguage);
 
   // 👉 Pricing admin (page AdminPricing -> doc "admin_config/pricing")
   const { pricing } = usePricingConfig();
@@ -1335,10 +1353,19 @@ const ProviderProfile: React.FC = () => {
     provider?.photoURL ||
     provider?.avatar ||
     "/default-avatar.png";
-  const descriptionText = useMemo(
-    () => (provider ? pickDescription(provider, preferredLangKey) : ""),
-    [provider, preferredLangKey]
-  );
+  const descriptionText = useMemo(() => {
+    if (!provider) return "";
+    // Use translation if available and not showing original
+    if (translation && !showOriginal) {
+      return translation.description;
+    }
+    // Use original translation if showing original
+    if (showOriginal && originalTranslation) {
+      return originalTranslation.description;
+    }
+    // Fallback to provider's description
+    return pickDescription(provider, preferredLangKey);
+  }, [provider, preferredLangKey, translation, originalTranslation, showOriginal]);
   const educationText = useMemo(() => {
     if (!provider || !isLawyer) return undefined;
     return (
@@ -1357,6 +1384,15 @@ const ProviderProfile: React.FC = () => {
   }, [provider, isLawyer, preferredLangKey]);
   const derivedSpecialties = useMemo(() => {
     if (!provider) return [];
+    // Use translation if available and not showing original
+    if (translation && !showOriginal && translation.specialties) {
+      return translation.specialties;
+    }
+    // Use original translation if showing original
+    if (showOriginal && originalTranslation && originalTranslation.specialties) {
+      return originalTranslation.specialties;
+    }
+    // Fallback to provider's specialties
     const arr = isLawyer
       ? toArrayFromAny(provider.specialties, preferredLangKey)
       : toArrayFromAny(
@@ -1364,7 +1400,7 @@ const ProviderProfile: React.FC = () => {
           preferredLangKey
         );
     return arr.map((s) => s.replace(/\s+/g, " ").trim()).filter(Boolean);
-  }, [provider, isLawyer, preferredLangKey]);
+  }, [provider, isLawyer, preferredLangKey, translation, originalTranslation, showOriginal]);
   const joinDateText = useMemo(() => {
     if (!provider) return undefined;
     const formatted = formatJoinDate(
@@ -1470,12 +1506,28 @@ const ProviderProfile: React.FC = () => {
   return (
     <Layout>
       <SEOHead
-        title={`${provider.fullName} - ${isLawyer ? (detectedLang === "fr" ? "Avocat" : "Lawyer") : detectedLang === "fr" ? "Expatrié" : "Expat"} ${detectedLang === "fr" ? "en" : "in"} ${provider.country} | SOS Expat & Travelers`}
-        description={`${detectedLang === "fr" ? "Consultez" : "Consult"} ${provider.fullName}, ${isLawyer ? (detectedLang === "fr" ? "avocat" : "lawyer") : detectedLang === "fr" ? "expatrié" : "expat"} ${detectedLang === "fr" ? "francophone" : "French-speaking"} ${detectedLang === "fr" ? "en" : "in"} ${provider.country}. ${descriptionText.slice(0, 120)}...`}
-        canonicalUrl={`/${isLawyer ? "avocat" : "expatrie"}/${safeNormalize(provider.country)}/${safeNormalize(provider.mainLanguage || languagesList[0] || "francais")}/${safeNormalize(provider.fullName)}-${provider.id}`}
+        title={
+          translation && !showOriginal && translation.seo?.metaTitle
+            ? translation.seo.metaTitle
+            : `${provider.fullName} - ${isLawyer ? (detectedLang === "fr" ? "Avocat" : "Lawyer") : detectedLang === "fr" ? "Expatrié" : "Expat"} ${detectedLang === "fr" ? "en" : "in"} ${provider.country} | SOS Expat & Travelers`
+        }
+        description={
+          translation && !showOriginal && translation.seo?.metaDescription
+            ? translation.seo.metaDescription
+            : `${detectedLang === "fr" ? "Consultez" : "Consult"} ${provider.fullName}, ${isLawyer ? (detectedLang === "fr" ? "avocat" : "lawyer") : detectedLang === "fr" ? "expatrié" : "expat"} ${detectedLang === "fr" ? "francophone" : "French-speaking"} ${detectedLang === "fr" ? "en" : "in"} ${provider.country}. ${descriptionText.slice(0, 120)}...`
+        }
+        canonicalUrl={
+          translation && !showOriginal && translation.slug
+            ? `/${currentLocale || ''}/${isLawyer ? "avocat" : "expatrie"}/${translation.slug}`
+            : `/${currentLocale || ''}/${isLawyer ? "avocat" : "expatrie"}/${safeNormalize(provider.country)}/${safeNormalize(provider.mainLanguage || languagesList[0] || "francais")}/${safeNormalize(provider.fullName)}-${provider.id}`
+        }
         ogImage={mainPhoto}
         ogType="profile"
-        structuredData={structuredData}
+        structuredData={
+          translation && !showOriginal && translation.seo?.jsonLd
+            ? translation.seo.jsonLd
+            : structuredData
+        }
       />
 
       {/* SVG defs */}
@@ -1640,7 +1692,9 @@ const ProviderProfile: React.FC = () => {
                     {/* Description */}
                     <div className="text-gray-200 leading-relaxed">
                       <p className="mb-2 whitespace-pre-line">
-                        {descriptionText}
+                        {translation && !showOriginal && translation.description
+                          ? translation.description
+                          : descriptionText}
                       </p>
                       {(isLawyer || isExpat) &&
                         getFirstString(
@@ -1896,6 +1950,44 @@ const ProviderProfile: React.FC = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
               {/* Main */}
               <div className="lg:col-span-2 space-y-6 lg:space-y-8">
+                {/* Translation Banner */}
+                {!isTranslationLoading && !translation && realProviderId && (
+                  <TranslationBanner
+                    providerId={realProviderId}
+                    currentLanguage={targetLanguage}
+                    availableLanguages={availableLanguages}
+                    onTranslationComplete={(lang, trans) => {
+                      setShowOriginal(false);
+                    }}
+                    onTranslate={async (lang) => {
+                      const result = await translate();
+                      return result;
+                    }}
+                  />
+                )}
+                
+                {/* View Original Button */}
+                {translation && originalTranslation && (
+                  <div className="bg-white rounded-3xl shadow-sm p-4 border border-gray-200">
+                    <button
+                      onClick={() => setShowOriginal(!showOriginal)}
+                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-md text-sm font-medium transition-colors"
+                    >
+                      {showOriginal ? (
+                        <FormattedMessage
+                          id="providerTranslation.viewTranslated"
+                          defaultMessage={`View translated (${targetLanguage.toUpperCase()})`}
+                        />
+                      ) : (
+                        <FormattedMessage
+                          id="providerTranslation.viewOriginal"
+                          defaultMessage={`View original (${originalTranslation.originalLanguage.toUpperCase()})`}
+                        />
+                      )}
+                    </button>
+                  </div>
+                )}
+                
                 {/* Specialties */}
                 <section className="bg-white rounded-3xl shadow-sm p-6 border border-gray-200">
                   <h2 className="text-xl font-extrabold text-gray-900 mb-4">
@@ -2096,7 +2188,7 @@ const ProviderProfile: React.FC = () => {
 
               {/* Sidebar */}
               <aside className="lg:col-span-1">
-                <div className="sticky top-6 space-y-6">
+                <div className="sticky top-6 space-y-6 z-20 pb-6" style={{ maxHeight: 'calc(100vh - 3rem - 200px)' }}>
                   {/* Stats */}
                   <div className="bg-white rounded-3xl shadow-sm p-6 border border-gray-200">
                     <h3 className="text-lg font-extrabold text-gray-900 mb-4">

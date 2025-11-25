@@ -1495,5 +1495,10 @@
   "reviewForm.error.commentRequired": "يرجى إدخال تعليق",
   "reviewForm.error.loginRequired": "يجب تسجيل الدخول لترك تقييم",
   "reviewForm.error.ratingRequired": "يرجى اختيار تقييم",
-  "reviewForm.error.submitFailed": "حدث خطأ أثناء إرسال تقييمك: {message}. يرجى المحاولة مرة أخرى."
+  "reviewForm.error.submitFailed": "حدث خطأ أثناء إرسال تقييمك: {message}. يرجى المحاولة مرة أخرى.",
+  "providerTranslation.viewIn": "عرض بـ:",
+  "providerTranslation.translating": "جاري الترجمة...",
+  "providerTranslation.oneTimeCost": "الترجمة تكلفة لمرة واحدة (~0.15 يورو). الزيارات المستقبلية مجانية.",
+  "providerTranslation.viewOriginal": "عرض الأصل ({lang})",
+  "providerTranslation.viewTranslated": "عرض المترجم ({lang})"
 }
