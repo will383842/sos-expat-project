@@ -15,6 +15,7 @@ interface TranslationBannerProps {
   availableLanguages: SupportedLanguage[];
   onTranslationComplete: (language: SupportedLanguage, translation: any) => void;
   onTranslate: (language: SupportedLanguage) => Promise<any>;
+  onViewTranslation?: (language: SupportedLanguage) => void;
 }
 
 export const TranslationBanner: React.FC<TranslationBannerProps> = ({
@@ -23,22 +24,27 @@ export const TranslationBanner: React.FC<TranslationBannerProps> = ({
   availableLanguages,
   onTranslationComplete,
   onTranslate,
+  onViewTranslation,
 }) => {
   const { user } = useAuth();
   const intl = useIntl();
   const [isTranslating, setIsTranslating] = useState<SupportedLanguage | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Show banner if there are any missing translations
-  // (excluding the current language from the list, but still show banner if other languages are missing)
+  // Show all languages except the current one
+  // Missing languages = not yet translated
+  // Available languages = already translated (show as "View in X" instead of "Translate to X")
   const missingLanguages = SUPPORTED_LANGUAGES.filter(
     lang => lang !== currentLanguage && !availableLanguages.includes(lang)
   );
+  const availableOtherLanguages = SUPPORTED_LANGUAGES.filter(
+    lang => lang !== currentLanguage && availableLanguages.includes(lang)
+  );
 
-  // Always show banner if there are missing languages (even if current language is available)
-  // This allows users to translate to other languages even if viewing in original language
-  if (missingLanguages.length === 0) {
-    return null; // All languages available
+  // Show banner if there are any languages to translate OR any available translations to view
+  // OR if currently translating
+  if (missingLanguages.length === 0 && availableOtherLanguages.length === 0 && !isTranslating) {
+    return null; // No languages to translate or view, and not currently translating
   }
 
   const handleTranslate = async (targetLanguage: SupportedLanguage) => {
@@ -50,11 +56,27 @@ export const TranslationBanner: React.FC<TranslationBannerProps> = ({
       const translation = await onTranslate(targetLanguage);
       if (translation) {
         onTranslationComplete(targetLanguage, translation);
+      } else {
+        setError('Translation returned no data');
       }
     } catch (err) {
+      console.error('Translation error:', err);
       setError(err instanceof Error ? err.message : 'Translation failed');
     } finally {
-      setIsTranslating(null);
+      // Keep loading state for a bit to show completion
+      setTimeout(() => {
+        setIsTranslating(null);
+      }, 500);
+    }
+  };
+
+  const handleViewTranslation = (targetLanguage: SupportedLanguage) => {
+    // If translation already exists, just switch to viewing it
+    if (onViewTranslation) {
+      onViewTranslation(targetLanguage);
+    } else {
+      // Fallback to onTranslationComplete if onViewTranslation not provided
+      onTranslationComplete(targetLanguage, null);
     }
   };
 
@@ -70,11 +92,12 @@ export const TranslationBanner: React.FC<TranslationBannerProps> = ({
         </span>
       </div>
       <div className="flex flex-wrap gap-2">
+        {/* Show buttons for missing languages (need translation) */}
         {missingLanguages.map(lang => (
           <button
             key={lang}
             onClick={() => handleTranslate(lang)}
-            disabled={isTranslating === lang}
+            disabled={isTranslating === lang || isTranslating !== null}
             className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-blue-300 dark:border-blue-700 rounded-md text-sm font-medium text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
           >
             {isTranslating === lang ? (
@@ -90,16 +113,23 @@ export const TranslationBanner: React.FC<TranslationBannerProps> = ({
             )}
           </button>
         ))}
+        
+        {/* Show buttons for available languages (already translated - can view) */}
+        {availableOtherLanguages.map(lang => (
+          <button
+            key={lang}
+            onClick={() => handleViewTranslation(lang)}
+            disabled={isTranslating !== null}
+            className="px-3 py-1.5 bg-green-50 dark:bg-green-900/20 border border-green-300 dark:border-green-700 rounded-md text-sm font-medium text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+          >
+            {LANGUAGE_NAMES[lang]}
+          </button>
+        ))}
       </div>
       {error && (
         <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>
       )}
-      <p className="mt-3 text-xs text-blue-700 dark:text-blue-300">
-        <FormattedMessage
-          id="providerTranslation.oneTimeCost"
-          defaultMessage="Translation is a one-time cost (~€0.15). Future visits are free."
-        />
-      </p>
+     
     </div>
   );
 };

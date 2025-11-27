@@ -1594,6 +1594,6 @@
   "providerTranslation.viewIn": "Ver en:",
   "providerTranslation.translating": "Traduciendo...",
   "providerTranslation.oneTimeCost": "La traducción es un costo único (~0,15 €). Las visitas futuras son gratuitas.",
-  "providerTranslation.viewOriginal": "Ver original ({lang})",
-  "providerTranslation.viewTranslated": "Ver traducido ({lang})"
+  "providerTranslation.viewOriginal": "Ver original",
+  "providerTranslation.viewTranslated": "Ver traducido"
 }

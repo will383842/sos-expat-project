@@ -1499,6 +1499,6 @@
   "providerTranslation.viewIn": "عرض بـ:",
   "providerTranslation.translating": "جاري الترجمة...",
   "providerTranslation.oneTimeCost": "الترجمة تكلفة لمرة واحدة (~0.15 يورو). الزيارات المستقبلية مجانية.",
-  "providerTranslation.viewOriginal": "عرض الأصل ({lang})",
-  "providerTranslation.viewTranslated": "عرض المترجم ({lang})"
+  "providerTranslation.viewOriginal": "عرض الأصل ",
+  "providerTranslation.viewTranslated": "عرض المترجم "
 }

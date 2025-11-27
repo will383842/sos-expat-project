@@ -1500,6 +1500,6 @@
   "providerTranslation.viewIn": "इसमें देखें:",
   "providerTranslation.translating": "अनुवाद हो रहा है...",
   "providerTranslation.oneTimeCost": "अनुवाद एक बार की लागत है (~€0.15)। भविष्य की यात्राएं मुफ्त हैं।",
-  "providerTranslation.viewOriginal": "मूल देखें ({lang})",
-  "providerTranslation.viewTranslated": "अनुवादित देखें ({lang})"
+  "providerTranslation.viewOriginal": "मूल देखें",
+  "providerTranslation.viewTranslated": "अनुवादित देखें"
 }

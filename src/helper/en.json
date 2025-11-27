@@ -1500,8 +1500,8 @@
   "providerTranslation.viewIn": "View in:",
   "providerTranslation.translating": "Translating...",
   "providerTranslation.oneTimeCost": "Translation is a one-time cost (~€0.15). Future visits are free.",
-  "providerTranslation.viewOriginal": "View original ({lang})",
-  "providerTranslation.viewTranslated": "View translated ({lang})",
+  "providerTranslation.viewOriginal": "View original",
+  "providerTranslation.viewTranslated": "View translated",
   "registerLawyer.checklist.atLeastOneEducation": "At least one education",
   "registerLawyer.checklist.acceptTerms": "Accept T&Cs",
 

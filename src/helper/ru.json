@@ -1547,6 +1547,6 @@
   "providerTranslation.viewIn": "Просмотр на:",
   "providerTranslation.translating": "Переводится...",
   "providerTranslation.oneTimeCost": "Перевод — это разовая стоимость (~0,15 €). Последующие посещения бесплатны.",
-  "providerTranslation.viewOriginal": "Просмотреть оригинал ({lang})",
-  "providerTranslation.viewTranslated": "Просмотреть перевод ({lang})"
+  "providerTranslation.viewOriginal": "Просмотреть оригинал",
+  "providerTranslation.viewTranslated": "Просмотреть перевод"
 }

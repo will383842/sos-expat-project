@@ -5,28 +5,30 @@ import { db, FieldValue } from '../utils/firebase';
 export type SupportedLanguage = 'fr' | 'en' | 'es' | 'pt' | 'de' | 'ru' | 'zh' | 'hi' | 'ar';
 
 export interface OriginalProfile {
-  originalLanguage: SupportedLanguage | string; // Can be any language (e.g., 'nl', 'it')
-  title: string;
-  summary: string;
-  description: string;
-  specialties: string[];
-  cta: string;
-  lastModified: admin.firestore.Timestamp | Date;
-  // For change detection
-  titleHash?: string;
-  summaryHash?: string;
-  descriptionHash?: string;
-  specialtiesHash?: string;
-  ctaHash?: string;
+  // Store ALL data from sos_profiles (with index signature for flexibility)
+  [key: string]: any;
+  // Common fields that might be accessed
+  bio?: string | Record<string, string>;
+  description?: string;
+  motivation?: string | Record<string, string>;
+  professionalDescription?: string;
+  experienceDescription?: string;
+  specialties?: string[];
+  helpTypes?: string[];
+  firstName?: string;
+  lastName?: string;
+  city?: string;
+  country?: string;
 }
 
 export interface TranslatedContent {
-  title: string;
-  summary: string;
-  description: string;
-  specialties: string[];
-  cta: string;
-  slug: string;
+  // ✅ TRANSLATED FIELDS
+  title: string; // Provider name (kept as-is, not translated)
+  summary: string; // Translated summary
+  description: string; // Translated description
+  specialties: string[]; // Translated specialties
+  cta: string; // Translated CTA
+  slug: string; // Translated slug
   seo: {
     metaTitle: string;
     metaDescription: string;
@@ -43,6 +45,30 @@ export interface TranslatedContent {
     answers: string[];
     jsonLd: Record<string, unknown>;
   };
+  
+  // ❌ NON-TRANSLATABLE FIELDS (passed through from original, never translated)
+  firstName?: string;
+  lastName?: string;
+  city?: string;
+  country?: string;
+  phone?: string;
+  email?: string;
+  barNumber?: string;
+  yearsOfExperience?: number;
+  yearsAsExpat?: number;
+  lawSchool?: string;
+  graduationYear?: number;
+  certifications?: string[];
+  education?: string | string[];
+  responseTime?: string;
+  rating?: number;
+  reviewCount?: number;
+  profilePhoto?: string;
+  avatar?: string;
+  photoURL?: string;
+  languages?: string[];
+  type?: 'lawyer' | 'expat';
+  uid?: string;
 }
 
 export interface TranslationMetadata {
@@ -258,6 +284,7 @@ function extractStringValue(value: any, preferredLang?: string): string {
 
 /**
  * Extract original profile from sos_profiles document
+ * Returns data from sos_profiles excluding internal/system fields
  */
 export async function extractOriginalProfile(providerId: string): Promise<OriginalProfile | null> {
   try {
@@ -267,68 +294,47 @@ export async function extractOriginalProfile(providerId: string): Promise<Origin
     }
 
     const data = profileDoc.data()!;
-    let originalLanguage = detectOriginalLanguage(data);
     
-    // Detect actual content language from bio/description if it's a LocalizedText object
-    const bioOrDescription = data.description || data.bio;
-    let actualContentLanguage = originalLanguage;
+    // Fields to exclude (internal/system fields)
+    const excludeFields = [
+      'isActive',
+      'isApproved',
+      'isCallable',
+      'isEarlyProvider',
+      'isOnline',
+      'isSOS',
+      'isTestProfile',
+      'isVerified',
+      'isVisible',
+      'isVisibleOnMap',
+      'graduationYear',
+      'fullName',
+      'earlyBadge',
+      'email',
+      'mapLocation',
+      'needsVerification',
+      'profileCompleted',
+      'rating',
+      'referralBy',
+      'responseTime',
+      'reviewCount',
+      'slug',
+      'totalCalls',
+      'totalEarnings',
+      'type',
+      'verificationStatus',
+      'yearsOfExperience',
+    ];
     
-    if (bioOrDescription && typeof bioOrDescription === 'object' && !Array.isArray(bioOrDescription)) {
-      const contentLang = detectContentLanguage(bioOrDescription);
-      if (contentLang) {
-        console.log(`[extractOriginalProfile] Detected content language from bio: ${contentLang} (profile metadata says: ${originalLanguage})`);
-        // Use the detected content language as it's based on actual text content
-        actualContentLanguage = contentLang;
+    // Create filtered object excluding those fields
+    const filtered: any = {};
+    for (const key in data) {
+      if (!excludeFields.includes(key)) {
+        filtered[key] = data[key];
       }
     }
     
-    console.log(`[extractOriginalProfile] Using original language: ${originalLanguage}, actual content language: ${actualContentLanguage}`);
-    
-    // Safely extract string values
-    const title = data.fullName || `${data.firstName || ''} ${data.lastName || ''}`.trim() || 'Expert';
-    
-    // Extract description/bio safely - handle LocalizedText objects
-    // Pass actualContentLanguage as preferred, but extractStringValue will detect the best version
-    const descriptionText = extractStringValue(bioOrDescription, actualContentLanguage);
-    console.log(`[extractOriginalProfile] Extracted description length: ${descriptionText.length}, preview: ${descriptionText.substring(0, 100)}...`);
-    
-    // Update originalLanguage to match the actual content language if different
-    if (actualContentLanguage !== originalLanguage) {
-      originalLanguage = actualContentLanguage;
-      console.log(`[extractOriginalProfile] Updated originalLanguage to match content: ${originalLanguage}`);
-    }
-    
-    const summary = truncate(descriptionText, 150);
-    const description = truncate(descriptionText, 2000);
-    
-    // Handle specialties - could be array, string, or object
-    let specialties: string[] = [];
-    if (Array.isArray(data.specialties)) {
-      specialties = data.specialties.map(s => extractStringValue(s)).filter(s => s.length > 0);
-    } else if (Array.isArray(data.helpTypes)) {
-      specialties = data.helpTypes.map(s => extractStringValue(s)).filter(s => s.length > 0);
-    } else if (typeof data.specialties === 'string') {
-      specialties = data.specialties.split(',').map(s => s.trim()).filter(s => s.length > 0);
-    } else if (typeof data.helpTypes === 'string') {
-      specialties = data.helpTypes.split(',').map(s => s.trim()).filter(s => s.length > 0);
-    }
-    
-    const cta = data.type === 'lawyer' ? 'Book Consultation' : 'Get Help';
-    
-    return {
-      originalLanguage,
-      title,
-      summary,
-      description,
-      specialties,
-      cta,
-      lastModified: data.updatedAt || data.createdAt || admin.firestore.Timestamp.now(),
-      titleHash: simpleHash(title),
-      summaryHash: simpleHash(summary),
-      descriptionHash: simpleHash(description),
-      specialtiesHash: simpleHash(specialties.join(',')),
-      ctaHash: simpleHash(cta),
-    };
+    return filtered as OriginalProfile;
   } catch (error) {
     console.error('Error extracting original profile:', error);
     return null;
@@ -458,37 +464,218 @@ export function generateSEO(
 }
 
 /**
- * Translate text using translation API
- * TODO: Integrate with actual translation API (Google Translate, DeepL, etc.)
+ * Translate text using free translation API
+ * Uses MyMemory Translation API (free tier) as primary, with LibreTranslate as fallback
  */
 async function translateText(
   text: string,
   from: string,
   to: SupportedLanguage
 ): Promise<string> {
-  // TODO: Replace with actual API call
-  // For now, return placeholder
-  // Example with DeepL:
-  /*
-  const response = await fetch('https://api-free.deepl.com/v2/translate', {
-    method: 'POST',
-    headers: {
-      'Authorization': `DeepL-Auth-Key ${process.env.DEEPL_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      text: [text],
-      source_lang: from.toUpperCase(),
-      target_lang: to.toUpperCase(),
-    }),
-  });
-  const result = await response.json();
-  return result.translations[0].text;
-  */
+  if (!text || text.trim().length === 0) {
+    return text;
+  }
+
+  // If same language, return as-is
+  if (from === to) {
+    return text;
+  }
+
+  // Language code mapping for APIs
+  const languageMap: Record<string, string> = {
+    'fr': 'fr', 'en': 'en', 'es': 'es', 'pt': 'pt', 'de': 'de',
+    'ru': 'ru', 'zh': 'zh', 'hi': 'hi', 'ar': 'ar',
+  };
   
-  // Placeholder - in production, use actual API
-  console.warn(`[Translation] Placeholder translation: ${from} → ${to}`);
-  return `[TRANSLATED: ${to}] ${text}`;
+  const targetLang = languageMap[to] || to;
+  const sourceLang = languageMap[from] || from;
+
+  // Try MyMemory Translation API (free tier - 10000 words/day)
+  try {
+    const myMemoryUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${sourceLang}|${targetLang}`;
+    console.log(`[translateText] Attempting MyMemory translation: ${sourceLang} → ${targetLang}`);
+    
+    const response = await fetch(myMemoryUrl, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json() as { responseData?: { translatedText?: string } };
+      if (data.responseData && data.responseData.translatedText) {
+        const translated = data.responseData.translatedText;
+        console.log(`[translateText] ✓ MyMemory translation successful`);
+        return translated;
+      }
+    }
+  } catch (error) {
+    console.warn(`[translateText] MyMemory API error:`, error);
+  }
+
+  // Fallback: Try LibreTranslate (free, public instance)
+  try {
+    console.log(`[translateText] Attempting LibreTranslate: ${sourceLang} → ${targetLang}`);
+    const libreUrl = 'https://libretranslate.de/translate';
+    
+    const response = await fetch(libreUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        q: text,
+        source: sourceLang,
+        target: targetLang,
+        format: 'text'
+      }),
+    });
+
+    if (response.ok) {
+      const data = await response.json() as { translatedText?: string };
+      if (data.translatedText) {
+        console.log(`[translateText] ✓ LibreTranslate translation successful`);
+        return data.translatedText;
+      }
+    }
+  } catch (error) {
+    console.warn(`[translateText] LibreTranslate API error:`, error);
+  }
+
+  // Final fallback: Try Google Translate (free unofficial API)
+  try {
+    console.log(`[translateText] Attempting Google Translate (unofficial): ${sourceLang} → ${targetLang}`);
+    const googleUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
+    
+    const response = await fetch(googleUrl, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json() as any;
+      if (data && Array.isArray(data) && data[0] && Array.isArray(data[0])) {
+        const translated = data[0].map((item: any[]) => item[0]).join('');
+        if (translated) {
+          console.log(`[translateText] ✓ Google Translate (unofficial) translation successful`);
+          return translated;
+        }
+      }
+    }
+  } catch (error) {
+    console.warn(`[translateText] Google Translate (unofficial) API error:`, error);
+  }
+
+  // If all APIs fail, return original text with warning
+  console.error(`[translateText] ✗ All translation APIs failed, returning original text: ${from} → ${to}`);
+  return text;
+}
+
+/**
+ * Translate all translatable fields in the original profile
+ */
+export async function translateAllFields(
+  original: OriginalProfile,
+  targetLanguage: SupportedLanguage
+): Promise<OriginalProfile> {
+  // Detect source language - prioritize originalLanguage field, then detect from content
+  let sourceLang = 'en';
+  
+  // Priority 1: Use originalLanguage if available
+  if (original.originalLanguage && typeof original.originalLanguage === 'string') {
+    sourceLang = normalizeLanguageCode(original.originalLanguage) || 'en';
+    console.log(`[translateAllFields] Using originalLanguage from profile: ${sourceLang}`);
+  } else if (original.preferredLanguage && typeof original.preferredLanguage === 'string') {
+    // Priority 2: Use preferredLanguage
+    sourceLang = normalizeLanguageCode(original.preferredLanguage) || 'en';
+    console.log(`[translateAllFields] Using preferredLanguage from profile: ${sourceLang}`);
+  } else if (original.bio && typeof original.bio === 'object' && !Array.isArray(original.bio)) {
+    // Priority 3: Detect from bio content (find language with most content)
+    let maxLength = 0;
+    for (const lang in original.bio) {
+      if (typeof original.bio[lang] === 'string' && original.bio[lang].length > maxLength) {
+        maxLength = original.bio[lang].length;
+        sourceLang = lang;
+      }
+    }
+    console.log(`[translateAllFields] Detected source language from bio: ${sourceLang} (${maxLength} chars)`);
+  }
+  
+  // Normalize the source language code
+  sourceLang = normalizeLanguageCode(sourceLang) || 'en';
+  console.log(`[translateAllFields] Final source language: ${sourceLang}, target: ${targetLanguage}`);
+
+  const translated: any = { ...original };
+
+  // ✅ TRANSLATE: firstName
+  if (original.firstName && typeof original.firstName === 'string') {
+    translated.firstName = await translateText(original.firstName, sourceLang, targetLanguage);
+    console.log(`[translateAllFields] Translated firstName: ${original.firstName} → ${translated.firstName}`);
+  }
+
+  // ✅ TRANSLATE: bio (LocalizedText object)
+  if (original.bio && typeof original.bio === 'object' && !Array.isArray(original.bio)) {
+    const bioText = original.bio[sourceLang] || Object.values(original.bio)[0] || '';
+    if (bioText) {
+      translated.bio = await translateText(String(bioText), sourceLang, targetLanguage);
+    }
+  } else if (typeof original.bio === 'string') {
+    translated.bio = await translateText(original.bio, sourceLang, targetLanguage);
+  }
+
+  // ✅ TRANSLATE: description
+  if (original.description && typeof original.description === 'string') {
+    translated.description = await translateText(original.description, sourceLang, targetLanguage);
+  }
+
+  // ✅ TRANSLATE: motivation
+  if (original.motivation && typeof original.motivation === 'object' && !Array.isArray(original.motivation)) {
+    const motivationText = original.motivation[sourceLang] || Object.values(original.motivation)[0] || '';
+    if (motivationText) {
+      translated.motivation = await translateText(String(motivationText), sourceLang, targetLanguage);
+    }
+  } else if (typeof original.motivation === 'string') {
+    translated.motivation = await translateText(original.motivation, sourceLang, targetLanguage);
+  }
+
+  // ✅ TRANSLATE: professionalDescription
+  if (original.professionalDescription && typeof original.professionalDescription === 'string') {
+    translated.professionalDescription = await translateText(original.professionalDescription, sourceLang, targetLanguage);
+  }
+
+  // ✅ TRANSLATE: experienceDescription
+  if (original.experienceDescription && typeof original.experienceDescription === 'string') {
+    translated.experienceDescription = await translateText(original.experienceDescription, sourceLang, targetLanguage);
+  }
+
+  // ✅ TRANSLATE: specialties/helpTypes (array of strings)
+  if (Array.isArray(original.specialties)) {
+    translated.specialties = await Promise.all(
+      original.specialties.map(s => translateText(String(s), sourceLang, targetLanguage))
+    );
+  }
+  if (Array.isArray(original.helpTypes)) {
+    translated.helpTypes = await Promise.all(
+      original.helpTypes.map((h: string) => translateText(String(h), sourceLang, targetLanguage))
+    );
+  }
+
+  // ❌ DO NOT TRANSLATE: lastName, city, country, phone, email, etc.
+  // Keep them exactly as they are in the original
+  translated.lastName = original.lastName;
+  translated.city = original.city;
+  translated.country = original.country;
+  translated.phone = original.phone;
+  translated.email = original.email;
+  translated.barNumber = original.barNumber;
+  translated.phoneCountryCode = original.phoneCountryCode;
+
+  console.log(`[translateAllFields] ✓ Translation complete. Non-translatable fields preserved: lastName=${original.lastName}, city=${original.city}`);
+
+  return translated;
 }
 
 /**
@@ -520,11 +707,17 @@ export async function translateProfile(
   
   // ✅ TRANSLATE: Summary, Description (from bio), Specialties, CTA
   console.log(`[translateProfile] Translating: summary, description, specialties, CTA...`);
+  
+  // Ensure specialties is an array
+  const specialtiesToTranslate = Array.isArray(original.specialties) && original.specialties.length > 0
+    ? original.specialties
+    : [];
+  
   const [summary, description, specialtiesArray, cta] = await Promise.all([
-    translateText(original.summary, sourceLang, targetLanguage),
-    translateText(original.description, sourceLang, targetLanguage),
-    Promise.all(original.specialties.map(s => translateText(s, sourceLang, targetLanguage))),
-    translateText(original.cta, sourceLang, targetLanguage),
+    translateText(original.summary || '', sourceLang, targetLanguage),
+    translateText(original.description || '', sourceLang, targetLanguage),
+    Promise.all(specialtiesToTranslate.map(s => translateText(String(s || ''), sourceLang, targetLanguage))),
+    translateText(original.cta || '', sourceLang, targetLanguage),
   ]);
   
   console.log(`[translateProfile] Translation completed:`, {
@@ -559,13 +752,37 @@ export async function translateProfile(
 
   // Generate SEO
   const translated: TranslatedContent = {
-    title: titleStr,
-    summary: summaryStr,
-    description: descriptionStr,
-    specialties,
-    cta: ctaStr,
-    slug,
+    // ✅ Translated fields
+    title: titleStr || '', // Provider name (NOT translated, kept as-is)
+    summary: summaryStr || '',
+    description: descriptionStr || '',
+    specialties: specialties || [],
+    cta: ctaStr || '',
+    slug: slug || '',
     seo: {} as any, // Will be filled below
+    // ❌ Non-translatable fields (passed through from original, only if they exist)
+    ...(original.firstName !== undefined && { firstName: original.firstName }),
+    ...(original.lastName !== undefined && { lastName: original.lastName }),
+    ...(original.city !== undefined && original.city !== null && { city: original.city }),
+    ...(original.country !== undefined && original.country !== null && { country: original.country }),
+    ...(original.phone !== undefined && original.phone !== null && { phone: original.phone }),
+    ...(original.email !== undefined && original.email !== null && { email: original.email }),
+    ...(original.barNumber !== undefined && original.barNumber !== null && { barNumber: original.barNumber }),
+    ...(original.yearsOfExperience !== undefined && { yearsOfExperience: original.yearsOfExperience }),
+    ...(original.yearsAsExpat !== undefined && { yearsAsExpat: original.yearsAsExpat }),
+    ...(original.lawSchool !== undefined && original.lawSchool !== null && { lawSchool: original.lawSchool }),
+    ...(original.graduationYear !== undefined && { graduationYear: original.graduationYear }),
+    ...(original.certifications !== undefined && original.certifications !== null && { certifications: original.certifications }),
+    ...(original.education !== undefined && original.education !== null && { education: original.education }),
+    ...(original.responseTime !== undefined && original.responseTime !== null && { responseTime: original.responseTime }),
+    ...(original.rating !== undefined && { rating: original.rating }),
+    ...(original.reviewCount !== undefined && { reviewCount: original.reviewCount }),
+    ...(original.profilePhoto !== undefined && original.profilePhoto !== null && { profilePhoto: original.profilePhoto }),
+    ...(original.avatar !== undefined && original.avatar !== null && { avatar: original.avatar }),
+    ...(original.photoURL !== undefined && original.photoURL !== null && { photoURL: original.photoURL }),
+    ...(original.languages !== undefined && original.languages !== null && { languages: original.languages }),
+    ...(original.type !== undefined && original.type !== null && { type: original.type }),
+    ...(original.uid !== undefined && original.uid !== null && { uid: original.uid }),
   };
 
   translated.seo = generateSEO(translated, providerData, targetLanguage);
@@ -769,10 +986,10 @@ export async function checkTranslationOutdated(
   }
 
   // Compare hashes to detect changes
-  const currentTitleHash = simpleHash(original.title);
-  const currentSummaryHash = simpleHash(original.summary);
-  const currentDescriptionHash = simpleHash(original.description);
-  const currentSpecialtiesHash = simpleHash(original.specialties.join(','));
+  const currentTitleHash = simpleHash(original.title || '');
+  const currentSummaryHash = simpleHash(original.summary || '');
+  const currentDescriptionHash = simpleHash(original.description || '');
+  const currentSpecialtiesHash = simpleHash(Array.isArray(original.specialties) ? original.specialties.join(',') : '');
 
   // If any hash changed, translation is outdated
   return (

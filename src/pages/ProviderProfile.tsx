@@ -461,16 +461,47 @@ const ProviderProfile: React.FC = () => {
   // Translation system
   const { locale: currentLocale, lang: currentLang } = parseLocaleFromPath(location.pathname);
   const targetLanguage: SupportedLanguage = (currentLang?.toLowerCase() as SupportedLanguage) || 'en';
-  const [showOriginal, setShowOriginal] = useState(false);
+  // Always show original first, then switch to translated when user selects a language
+  const [showOriginal, setShowOriginal] = useState(true);
+  // Track which language translation we're currently viewing
+  const [viewingLanguage, setViewingLanguage] = useState<SupportedLanguage | null>(null);
   
+  // Use ref to track if we're actively viewing a translation (prevents state resets)
+  const viewingLanguageRef = useRef<SupportedLanguage | null>(null);
+  
+  // Sync ref with state
+  useEffect(() => {
+    viewingLanguageRef.current = viewingLanguage;
+  }, [viewingLanguage]);
+  
+  // Only load translation if user explicitly selected a language to view
+  // On initial load, don't load any translation - always show original
+  const translationLanguage = viewingLanguage || null; // Don't use targetLanguage on initial load
   const {
     translation,
     original: originalTranslation,
     availableLanguages,
     isLoading: isTranslationLoading,
     translate,
+    reloadForLanguage,
     error: translationError,
-  } = useProviderTranslation(realProviderId, targetLanguage);
+  } = useProviderTranslation(realProviderId, viewingLanguage || null); // Never use targetLanguage here to prevent unwanted reloads
+
+  // Preserve translation view state when translation data changes
+  useEffect(() => {
+    // If we're viewing a translation and translation data exists, ensure state is preserved
+    if (viewingLanguageRef.current && translation && !showOriginal) {
+      // State is already correct, but ensure it stays that way
+      // This prevents reverting to original when translation data reloads
+      console.log('[ProviderProfile] Preserving translation view for:', viewingLanguageRef.current);
+      // Force state to remain if it somehow got reset
+      if (viewingLanguage !== viewingLanguageRef.current) {
+        console.log('[ProviderProfile] State mismatch detected, restoring viewingLanguage');
+        setViewingLanguage(viewingLanguageRef.current);
+        setShowOriginal(false);
+      }
+    }
+  }, [translation, viewingLanguage, showOriginal]);
 
   // 👉 Pricing admin (page AdminPricing -> doc "admin_config/pricing")
   const { pricing } = usePricingConfig();
@@ -1355,17 +1386,20 @@ const ProviderProfile: React.FC = () => {
     "/default-avatar.png";
   const descriptionText = useMemo(() => {
     if (!provider) return "";
-    // Use translation if available and not showing original
-    if (translation && !showOriginal) {
-      return translation.description;
+    // ALWAYS show original from sos_profiles when showOriginal is true
+    if (showOriginal) {
+      return pickDescription(provider, preferredLangKey);
     }
-    // Use original translation if showing original
-    if (showOriginal && originalTranslation) {
-      return originalTranslation.description;
+    // Only use translation if user explicitly selected a language and showOriginal is false
+    if (translation && !showOriginal && viewingLanguage) {
+      // Check if translation has bio or description (translation has all fields from original)
+      const trans = translation as any;
+      if (trans.bio) return typeof trans.bio === 'string' ? trans.bio : String(trans.bio);
+      if (trans.description) return trans.description;
     }
-    // Fallback to provider's description
+    // Fallback to provider's description (original)
     return pickDescription(provider, preferredLangKey);
-  }, [provider, preferredLangKey, translation, originalTranslation, showOriginal]);
+  }, [provider, preferredLangKey, translation, showOriginal, viewingLanguage]);
   const educationText = useMemo(() => {
     if (!provider || !isLawyer) return undefined;
     return (
@@ -1384,15 +1418,21 @@ const ProviderProfile: React.FC = () => {
   }, [provider, isLawyer, preferredLangKey]);
   const derivedSpecialties = useMemo(() => {
     if (!provider) return [];
-    // Use translation if available and not showing original
-    if (translation && !showOriginal && translation.specialties) {
+    // ALWAYS show original from sos_profiles when showOriginal is true
+    if (showOriginal) {
+      const arr = isLawyer
+        ? toArrayFromAny(provider.specialties, preferredLangKey)
+        : toArrayFromAny(
+            provider.helpTypes || provider.specialties,
+            preferredLangKey
+          );
+      return arr.map((s) => s.replace(/\s+/g, " ").trim()).filter(Boolean);
+    }
+    // Only use translation if user explicitly selected a language and showOriginal is false
+    if (translation && !showOriginal && viewingLanguage && translation.specialties) {
       return translation.specialties;
     }
-    // Use original translation if showing original
-    if (showOriginal && originalTranslation && originalTranslation.specialties) {
-      return originalTranslation.specialties;
-    }
-    // Fallback to provider's specialties
+    // Fallback to provider's specialties (original)
     const arr = isLawyer
       ? toArrayFromAny(provider.specialties, preferredLangKey)
       : toArrayFromAny(
@@ -1400,7 +1440,7 @@ const ProviderProfile: React.FC = () => {
           preferredLangKey
         );
     return arr.map((s) => s.replace(/\s+/g, " ").trim()).filter(Boolean);
-  }, [provider, isLawyer, preferredLangKey, translation, originalTranslation, showOriginal]);
+  }, [provider, isLawyer, preferredLangKey, translation, showOriginal, viewingLanguage]);
   const joinDateText = useMemo(() => {
     if (!provider) return undefined;
     const formatted = formatJoinDate(
@@ -1597,7 +1637,11 @@ const ProviderProfile: React.FC = () => {
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2 mb-3">
                       <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black leading-tight bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
-                        {provider.fullName}
+                        {translation && !showOriginal && translation.title
+                          ? translation.title
+                          : translation && !showOriginal && translation.seo?.h1
+                          ? translation.seo.h1
+                          : provider.fullName}
                       </h1>
 
                       <span
@@ -1692,24 +1736,31 @@ const ProviderProfile: React.FC = () => {
                     {/* Description */}
                     <div className="text-gray-200 leading-relaxed">
                       <p className="mb-2 whitespace-pre-line">
-                        {translation && !showOriginal && translation.description
-                          ? translation.description
-                          : descriptionText}
+                        {descriptionText}
                       </p>
-                      {(isLawyer || isExpat) &&
-                        getFirstString(
-                          provider.motivation,
-                          preferredLangKey
-                        ) && (
+                      {(isLawyer || isExpat) && (() => {
+                        // ALWAYS show original from sos_profiles when showOriginal is true
+                        let motivationText: string | null = null;
+                        if (showOriginal) {
+                          motivationText = getFirstString(provider.motivation, preferredLangKey);
+                        } else if (translation && viewingLanguage) {
+                          // Only use translation if user explicitly selected a language
+                          const trans = translation as any; // Translation has all fields from original
+                          if (trans.motivation) {
+                            motivationText = typeof trans.motivation === 'string' ? trans.motivation : String(trans.motivation);
+                          }
+                        } else {
+                          // Fallback to original
+                          motivationText = getFirstString(provider.motivation, preferredLangKey);
+                        }
+                        return motivationText && (
                           <div className="mt-4 pt-4 border-t border-white/10">
                             <p className="text-gray-200 whitespace-pre-line">
-                              {getFirstString(
-                                provider.motivation,
-                                preferredLangKey
-                              )}
+                              {motivationText}
                             </p>
                           </div>
-                        )}
+                        );
+                      })()}
                     </div>
 
                     {/* Social sharing */}
@@ -1956,8 +2007,59 @@ const ProviderProfile: React.FC = () => {
                     providerId={realProviderId}
                     currentLanguage={targetLanguage}
                     availableLanguages={availableLanguages}
-                    onTranslationComplete={(lang, trans) => {
+                    onTranslationComplete={async (lang, trans) => {
+                      console.log('[ProviderProfile] Translation complete for language:', lang);
+                      // Switch to viewing the translated language
+                      setViewingLanguage(lang);
+                      viewingLanguageRef.current = lang; // Update ref immediately
+                      setShowOriginal(false); // Switch to translated view after translation completes
+                      
+                      // Reload translation state for the language we just translated
+                      if (reloadForLanguage) {
+                        setTimeout(async () => {
+                          try {
+                            await reloadForLanguage(lang);
+                            // Force state to remain after reload - prevent reverting to original
+                            // Use ref to ensure we maintain the correct language
+                            const currentLang = viewingLanguageRef.current || lang;
+                            setViewingLanguage(currentLang);
+                            viewingLanguageRef.current = currentLang;
+                            setShowOriginal(false);
+                            console.log('[ProviderProfile] State preserved after reload for:', currentLang);
+                          } catch (error) {
+                            console.error('[ProviderProfile] Error reloading translation:', error);
+                            // Even on error, maintain the viewing state
+                            setViewingLanguage(lang);
+                            viewingLanguageRef.current = lang;
+                            setShowOriginal(false);
+                          }
+                        }, 1000); // Wait for Firestore to update
+                      }
+                    }}
+                    onViewTranslation={(lang) => {
+                      // Handle viewing an already-translated language
+                      console.log('[ProviderProfile] Viewing translation for language:', lang);
+                      setViewingLanguage(lang);
+                      viewingLanguageRef.current = lang; // Update ref immediately
                       setShowOriginal(false);
+                      
+                      if (reloadForLanguage) {
+                        reloadForLanguage(lang).then(() => {
+                          // Force state to remain after reload - prevent reverting to original
+                          // Use ref to ensure we maintain the correct language
+                          const currentLang = viewingLanguageRef.current || lang;
+                          setViewingLanguage(currentLang);
+                          viewingLanguageRef.current = currentLang;
+                          setShowOriginal(false);
+                          console.log('[ProviderProfile] State preserved after reload for:', currentLang);
+                        }).catch((error) => {
+                          console.error('[ProviderProfile] Error reloading translation:', error);
+                          // Even on error, maintain the viewing state
+                          setViewingLanguage(lang);
+                          viewingLanguageRef.current = lang;
+                          setShowOriginal(false);
+                        });
+                      }
                     }}
                     onTranslate={async (lang) => {
                       const result = await translate(lang);  // Pass the language parameter
@@ -1966,23 +2068,33 @@ const ProviderProfile: React.FC = () => {
                   />
                 )}
                 
-                {/* View Original Button */}
+                {/* View Original Button - Show if translation exists */}
                 {translation && originalTranslation && (
-                  <div className="bg-white rounded-3xl shadow-sm p-4 border border-gray-200">
+                  <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-sm p-4 border border-gray-200 dark:border-gray-700 mb-6">
                     <button
-                      onClick={() => setShowOriginal(!showOriginal)}
-                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-md text-sm font-medium transition-colors"
+                      onClick={() => {
+                        setShowOriginal(!showOriginal);
+                        // If switching to original, reset viewing language
+                        if (!showOriginal) {
+                          setViewingLanguage(null);
+                        }
+                      }}
+                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-md text-sm font-medium transition-colors flex items-center gap-2 border-2 border-gray-300 text-gray-500"
                     >
                       {showOriginal ? (
-                        <FormattedMessage
-                          id="providerTranslation.viewTranslated"
-                          defaultMessage={`View translated (${targetLanguage.toUpperCase()})`}
-                        />
+                        <>
+                          <FormattedMessage
+                            id="providerTranslation.viewTranslated"
+                            defaultMessage={`View translated `}
+                          />
+                        </>
                       ) : (
-                        <FormattedMessage
-                          id="providerTranslation.viewOriginal"
-                          defaultMessage={`View original (${originalTranslation.originalLanguage.toUpperCase()})`}
-                        />
+                        <>
+                          <FormattedMessage
+                            id="providerTranslation.viewOriginal"
+                            defaultMessage={`View original`}
+                          />
+                        </>
                       )}
                     </button>
                   </div>
@@ -2113,17 +2225,27 @@ const ProviderProfile: React.FC = () => {
                         </p>
                       )}
 
-                      {getFirstString(
-                        provider.motivation,
-                        preferredLangKey
-                      ) && (
-                        <p className="text-gray-700 whitespace-pre-line">
-                          {getFirstString(
-                            provider.motivation,
-                            preferredLangKey
-                          )}
-                        </p>
-                      )}
+                      {(() => {
+                        // ALWAYS show original from sos_profiles when showOriginal is true
+                        let motivationText: string | null = null;
+                        if (showOriginal) {
+                          motivationText = getFirstString(provider.motivation, preferredLangKey);
+                        } else if (translation && viewingLanguage) {
+                          // Only use translation if user explicitly selected a language
+                          const trans = translation as any; // Translation has all fields from original
+                          if (trans.motivation) {
+                            motivationText = typeof trans.motivation === 'string' ? trans.motivation : String(trans.motivation);
+                          }
+                        } else {
+                          // Fallback to original
+                          motivationText = getFirstString(provider.motivation, preferredLangKey);
+                        }
+                        return motivationText && (
+                          <p className="text-gray-700 whitespace-pre-line">
+                            {motivationText}
+                          </p>
+                        );
+                      })()}
                     </div>
                   </section>
                 )}

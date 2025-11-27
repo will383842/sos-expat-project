@@ -1630,6 +1630,6 @@
   "providerTranslation.viewIn": "查看语言：",
   "providerTranslation.translating": "正在翻译...",
   "providerTranslation.oneTimeCost": "翻译是一次性费用（约0.15欧元）。以后的访问是免费的。",
-  "providerTranslation.viewOriginal": "查看原文 ({lang})",
-  "providerTranslation.viewTranslated": "查看翻译 ({lang})"
+  "providerTranslation.viewOriginal": "查看原文 ",
+  "providerTranslation.viewTranslated": "查看翻译 "
 }

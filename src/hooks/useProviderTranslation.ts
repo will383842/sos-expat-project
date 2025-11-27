@@ -133,9 +133,41 @@ export function useProviderTranslation(
       });
 
       console.log('[useProviderTranslation] Step 2: Reloading translation state...');
-      // Reload to get updated state (reload for the language that was just translated)
-      await loadTranslation();
-      console.log('[useProviderTranslation] ✓ Step 2: Translation state reloaded');
+      // Wait a bit for Firestore to update
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Reload to get updated state - reload for the language that was just translated
+      // This ensures we get the translation we just created
+      const result = await getProviderTranslation(providerId, langToTranslate);
+      console.log('[useProviderTranslation] ✓ Step 2: Translation state reloaded for language:', langToTranslate);
+      console.log('[useProviderTranslation] Reload result:', {
+        hasTranslation: !!result.translation,
+        hasOriginal: !!result.original,
+        availableLanguages: result.availableLanguages,
+      });
+      
+      // Only reload for current page language if it's different from the translated language
+      // This prevents resetting the translation state
+      let currentPageResult = result;
+      if (targetLanguage !== langToTranslate) {
+        currentPageResult = await getProviderTranslation(providerId, targetLanguage);
+        console.log('[useProviderTranslation] Current page language result:', {
+          hasTranslation: !!currentPageResult.translation,
+          availableLanguages: currentPageResult.availableLanguages,
+        });
+      }
+      
+      // Use the translation we just created, or the one from Firestore
+      // IMPORTANT: Always use the translation for the language we just translated, not targetLanguage
+      const finalTranslation = translation || result.translation;
+      
+      setState({
+        translation: finalTranslation, // Use the translation we just created (for langToTranslate)
+        original: result.original || currentPageResult.original,
+        availableLanguages: result.availableLanguages, // Use availableLanguages from the translated language result
+        isLoading: false,
+        error: null,
+      });
 
       console.log('[useProviderTranslation] ===== translate() SUCCESS =====');
       return translation;
@@ -188,13 +220,37 @@ export function useProviderTranslation(
   }, [providerId, targetLanguage, user?.uid, loadTranslation]);
 
   useEffect(() => {
-    loadTranslation();
-  }, [loadTranslation]);
+    // Only load translation if targetLanguage is provided (not null)
+    // This ensures we don't load translations on initial page load
+    // Only reload if providerId exists and targetLanguage is set
+    // IMPORTANT: Only reload if targetLanguage matches the one we're supposed to load
+    // This prevents resetting state when viewing a specific translation
+    if (targetLanguage && providerId) {
+      // Only load if targetLanguage matches what we're supposed to load
+      // If targetLanguage is null (meaning we're not viewing any translation), don't load
+      loadTranslation();
+    }
+  }, [loadTranslation, targetLanguage, providerId]);
+
+  // Function to reload translation for a specific language
+  const reloadForLanguage = useCallback(async (lang: SupportedLanguage) => {
+    if (!providerId) return;
+    console.log('[useProviderTranslation] Reloading for specific language:', lang);
+    const result = await getProviderTranslation(providerId, lang);
+    setState({
+      translation: result.translation,
+      original: result.original,
+      availableLanguages: result.availableLanguages,
+      isLoading: false,
+      error: result.error,
+    });
+  }, [providerId]);
 
   return {
     ...state,
     translate,
     reload: loadTranslation,
+    reloadForLanguage,
   };
 }
 

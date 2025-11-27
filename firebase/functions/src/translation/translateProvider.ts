@@ -3,10 +3,9 @@ import { onCall } from 'firebase-functions/v2/https';
 import { HttpsError } from 'firebase-functions/v2/https';
 import * as admin from 'firebase-admin';
 import {
-  translateProfile,
-  saveTranslation,
   getTranslation,
   extractOriginalProfile,
+  translateAllFields,
   SUPPORTED_LANGUAGES,
 } from '../services/providerTranslationService';
 import { db } from '../utils/firebase';
@@ -237,7 +236,8 @@ export const translateProvider = onCall(
     timeoutSeconds: 120,
   },
   async (request) => {
-    console.log('[translateProvider] ===== FUNCTION CALLED =====');
+    try {
+      console.log('[translateProvider] ===== FUNCTION CALLED =====');
     console.log('[translateProvider] Request data:', {
       providerId: request.data?.providerId,
       targetLanguage: request.data?.targetLanguage,
@@ -245,7 +245,7 @@ export const translateProvider = onCall(
       hasRawRequest: !!request.rawRequest,
     });
 
-    const { providerId, targetLanguage, userId } = request.data;
+    const { providerId, targetLanguage } = request.data;
 
     // Step 1: Validate input parameters
     console.log('[translateProvider] Step 1: Validating input parameters...');
@@ -359,29 +359,19 @@ export const translateProvider = onCall(
     const providerData = providerDoc.data()!;
     console.log('[translateProvider] ✓ Step 3: Provider data retrieved, keys:', Object.keys(providerData || {}));
 
-    // Step 4: Extract original profile
+    // Step 4: Extract original profile - just get all data from sos_profiles
     console.log('[translateProvider] Step 4: Extracting original profile...');
     let original;
     try {
       original = await extractOriginalProfile(providerId);
-      console.log('[translateProvider] Original profile extraction result:', {
-        exists: !!original,
-        hasData: original ? Object.keys(original).length : 0,
-        originalKeys: original ? Object.keys(original) : [],
-      });
+      if (!original) {
+        throw new HttpsError('not-found', 'Provider not found');
+      }
+      console.log('[translateProvider] ✓ Step 4: Original profile extracted');
     } catch (error) {
       console.error('[translateProvider] Error extracting original profile:', error);
       throw error;
     }
-
-    if (!original) {
-      console.error('[translateProvider] Could not extract original profile');
-      throw new HttpsError(
-        'not-found',
-        'Could not extract original profile'
-      );
-    }
-    console.log('[translateProvider] ✓ Step 4: Original profile extracted');
 
     // Step 5: Check if robot
     console.log('[translateProvider] Step 5: Checking if request is from robot...');
@@ -409,139 +399,96 @@ export const translateProvider = onCall(
     }
     console.log('[translateProvider] ✓ Step 5: Not a robot, proceeding with translation');
 
-    // Step 6: Translate profile
-    console.log('[translateProvider] Step 6: Starting translation process...');
-    console.log('[translateProvider] Translation parameters:', {
-      targetLanguage,
-      originalTitle: original.title,
-      originalSummaryLength: original.summary?.length || 0,
-      originalDescriptionLength: original.description?.length || 0,
-    });
-    
-    let translation;
+    // Step 6: Translate all fields
+    console.log('[translateProvider] Step 6: Translating all fields...');
+    let translated;
     try {
-      translation = await translateProfile(original, targetLanguage, providerData);
+      translated = await translateAllFields(original, targetLanguage);
       console.log('[translateProvider] ✓ Step 6: Translation completed');
-      console.log('[translateProvider] Translated content keys:', translation ? Object.keys(translation) : []);
-      console.log('[translateProvider] Translation structure:', {
-        hasTitle: !!translation?.title,
-        hasSummary: !!translation?.summary,
-        hasDescription: !!translation?.description,
-        hasSlug: !!translation?.slug,
-        hasSeo: !!translation?.seo,
-        hasFaq: !!translation?.faq,
-        seoKeys: translation?.seo ? Object.keys(translation.seo) : [],
-      });
     } catch (error) {
       console.error('[translateProvider] ✗ Error during translation:', error);
-      console.error('[translateProvider] Translation error details:', {
-        message: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-      });
       throw error;
     }
 
-    // Step 7: Save translation
-    console.log('[translateProvider] Step 7: Saving translation to Firestore...');
+    // Step 7: Save original and translated data to providers_translations
+    console.log('[translateProvider] Step 7: Saving to providers_translations...');
     try {
-      await saveTranslation(providerId, targetLanguage, translation, userId);
-      console.log('[translateProvider] ✓ Step 7: Translation saved successfully');
-    } catch (error) {
-      console.error('[translateProvider] ✗ Error saving translation:', error);
-      console.error('[translateProvider] Save error details:', {
-        message: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-      });
-      throw error;
-    }
-
-    // Step 8: Serialize and return response
-    console.log('[translateProvider] Step 8: Serializing translation for response...');
-    try {
-      console.log('[translateProvider] Starting serialization of translation object...');
-      console.log('[translateProvider] Translation object type check:', {
-        isNull: translation === null,
-        isUndefined: translation === undefined,
-        type: typeof translation,
-        isArray: Array.isArray(translation),
-        keys: translation ? Object.keys(translation) : [],
-      });
-
-      const serializedTranslation = serializeForResponse(translation);
-      console.log('[translateProvider] ✓ Serialization completed');
-      console.log('[translateProvider] Serialized translation keys:', Object.keys(serializedTranslation || {}));
+      const translationRef = db.collection('providers_translations').doc(providerId);
+      const doc = await translationRef.get();
       
-      const response = {
-        success: true,
-        translation: serializedTranslation,
-        cached: false,
-        cost: 0.15,
+      const updateData: any = {
+        [`translations.${targetLanguage}`]: translated,
+        [`metadata.availableLanguages`]: admin.firestore.FieldValue.arrayUnion(targetLanguage),
+        [`metadata.lastUpdated`]: admin.firestore.FieldValue.serverTimestamp(),
+        [`metadata.translations.${targetLanguage}.status`]: 'created',
+        [`metadata.translations.${targetLanguage}.createdAt`]: admin.firestore.FieldValue.serverTimestamp(),
+        [`metadata.translations.${targetLanguage}.updatedAt`]: admin.firestore.FieldValue.serverTimestamp(),
       };
       
-      console.log('[translateProvider] Testing JSON serialization of final response...');
-      const jsonString = JSON.stringify(response);
-      console.log('[translateProvider] ✓ JSON serialization test passed');
-      console.log('[translateProvider] Response size:', jsonString.length, 'bytes');
-      console.log('[translateProvider] Response structure:', {
-        success: response.success,
-        hasTranslation: !!response.translation,
-        cached: response.cached,
-        cost: response.cost,
-        translationKeys: response.translation ? Object.keys(response.translation) : [],
-      });
-      
-      // Use ensureJsonSerializable for final cleanup
-      const cleanResponse = ensureJsonSerializable(response);
-      console.log('[translateProvider] ✓ Response cleaned and verified');
-      console.log('[translateProvider] Final response keys:', Object.keys(cleanResponse || {}));
-      
-      // Final verification: ensure it can be stringified one more time
-      try {
-        const finalTest = JSON.stringify(cleanResponse);
-        console.log('[translateProvider] ✓ Final JSON.stringify test passed, size:', finalTest.length);
-      } catch (finalError) {
-        console.error('[translateProvider] ✗ Final JSON.stringify test failed:', finalError);
-        throw new HttpsError('internal', 'Response serialization verification failed');
+      if (!doc.exists) {
+        // First time: save original profile
+        updateData.original = original;
+        updateData.metadata = {
+          availableLanguages: [targetLanguage],
+          translationCosts: {},
+          totalCost: 0,
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+          lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
+          frozenLanguages: [],
+          translations: {
+            [targetLanguage]: {
+              status: 'created',
+              createdAt: admin.firestore.FieldValue.serverTimestamp(),
+              updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+            },
+          },
+        };
+        await translationRef.set(updateData);
+        console.log('[translateProvider] ✓ Step 7: Original and translation saved');
+      } else {
+        // Update existing
+        await translationRef.update(updateData);
+        console.log('[translateProvider] ✓ Step 7: Translation saved');
       }
-      
-      console.log('[translateProvider] ===== RETURNING SUCCESS RESPONSE =====');
-      return cleanResponse;
     } catch (error) {
-      console.error('[translateProvider] ✗ Error serializing translation:', error);
-      console.error('[translateProvider] Serialization error details:', {
-        message: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-        translationKeys: translation ? Object.keys(translation) : [],
-        translationType: typeof translation,
-        translationIsNull: translation === null,
-        translationIsUndefined: translation === undefined,
+      console.error('[translateProvider] ✗ Error saving translation:', error);
+      throw error;
+    }
+
+    // Step 8: Return success response
+    console.log('[translateProvider] Step 8: Returning success response...');
+    const serializedTranslation = serializeForResponse(translated);
+    const response = {
+      success: true,
+      translation: serializedTranslation,
+      cached: false,
+      cost: 0,
+    };
+    
+    const cleanResponse = ensureJsonSerializable(response);
+    console.log('[translateProvider] ===== RETURNING SUCCESS RESPONSE =====');
+    return cleanResponse;
+    } catch (topLevelError) {
+      // Catch any unhandled errors in the entire function
+      console.error('[translateProvider] ===== TOP-LEVEL ERROR CAUGHT =====');
+      console.error('[translateProvider] Unhandled error:', topLevelError);
+      console.error('[translateProvider] Error details:', {
+        name: topLevelError instanceof Error ? topLevelError.name : typeof topLevelError,
+        message: topLevelError instanceof Error ? topLevelError.message : String(topLevelError),
+        stack: topLevelError instanceof Error ? topLevelError.stack : undefined,
+        errorType: topLevelError?.constructor?.name,
+        errorKeys: topLevelError && typeof topLevelError === 'object' ? Object.keys(topLevelError) : [],
       });
       
-      // Try to log more details about problematic properties
-      if (translation && typeof translation === 'object') {
-        console.error('[translateProvider] Translation object deep inspection:');
-        const translationAny = translation as any; // Type assertion for logging purposes
-        for (const key in translationAny) {
-          try {
-            const value = translationAny[key];
-            console.error(`[translateProvider]   ${key}:`, {
-              type: typeof value,
-              isNull: value === null,
-              isUndefined: value === undefined,
-              isArray: Array.isArray(value),
-              isDate: value instanceof Date,
-              isTimestamp: value instanceof admin.firestore.Timestamp,
-              keys: value && typeof value === 'object' ? Object.keys(value).slice(0, 5) : [],
-            });
-          } catch (e) {
-            console.error(`[translateProvider]   ${key}: [Error inspecting property]`, e);
-          }
-        }
+      // If it's already an HttpsError, re-throw it
+      if (topLevelError instanceof HttpsError) {
+        throw topLevelError;
       }
       
+      // Otherwise, wrap it in an HttpsError
       throw new HttpsError(
         'internal',
-        'Failed to serialize translation data: ' + (error instanceof Error ? error.message : String(error))
+        `Internal server error: ${topLevelError instanceof Error ? topLevelError.message : String(topLevelError)}`
       );
     }
   }
