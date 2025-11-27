@@ -93,6 +93,8 @@ const ProfileCarousel: React.FC<ProfileCarouselProps> = ({
       const sosProfilesQuery = query(
         collection(db, 'sos_profiles'),
         where('type', 'in', ['lawyer', 'expat']),
+        where('isApproved', '==', true),
+        where('isVisible', '==', true),
         fsLimit(50)
       );
       const snapshot = await getDocs(sosProfilesQuery);

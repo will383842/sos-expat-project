@@ -1820,4 +1820,6 @@ exports.testWebhook = (0, https_1.onRequest)({
 }));
 // Add to your existing index.ts exports
 __exportStar(require("./sitemap"), exports);
+__exportStar(require("./translation/translateProvider"), exports);
+__exportStar(require("./translation/initializeProviderTranslation"), exports);
 //# sourceMappingURL=index.js.map

@@ -29,10 +29,14 @@ export const TranslationBanner: React.FC<TranslationBannerProps> = ({
   const [isTranslating, setIsTranslating] = useState<SupportedLanguage | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Show banner if there are any missing translations
+  // (excluding the current language from the list, but still show banner if other languages are missing)
   const missingLanguages = SUPPORTED_LANGUAGES.filter(
     lang => lang !== currentLanguage && !availableLanguages.includes(lang)
   );
 
+  // Always show banner if there are missing languages (even if current language is available)
+  // This allows users to translate to other languages even if viewing in original language
   if (missingLanguages.length === 0) {
     return null; // All languages available
   }
@@ -42,6 +46,7 @@ export const TranslationBanner: React.FC<TranslationBannerProps> = ({
     setError(null);
 
     try {
+      console.log('Translating to', targetLanguage);
       const translation = await onTranslate(targetLanguage);
       if (translation) {
         onTranslationComplete(targetLanguage, translation);

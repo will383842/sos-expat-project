@@ -72,6 +72,9 @@ export interface ProviderTranslationDoc {
     lastUpdated: admin.firestore.Timestamp | Date;
     createdAt: admin.firestore.Timestamp | Date;
     frozenLanguages: SupportedLanguage[];
+    translations?: {
+      [key in SupportedLanguage]?: TranslationMetadata;
+    };
   };
 }
 
@@ -92,18 +95,12 @@ function normalizeLanguageCode(lang: string): string {
     'pt': 'pt', 'portuguese': 'pt', 'portugais': 'pt', 'português': 'pt',
     'ru': 'ru', 'russian': 'ru', 'russe': 'ru', 'русский': 'ru',
     'zh': 'zh', 'chinese': 'zh', 'ch': 'zh', 'chinois': 'zh', '中文': 'zh',
-    'hi': 'hi', 'hindi': 'hi', 'hindi': 'hi', 'हिन्दी': 'hi',
+    'hi': 'hi', 'hindi': 'hi', 'हिन्दी': 'hi',
     'ar': 'ar', 'arabic': 'ar', 'arabe': 'ar', 'العربية': 'ar',
   };
   return langMap[normalized] || normalized;
 }
 
-/**
- * Check if language is in supported list
- */
-function isSupportedLanguage(lang: string): lang is SupportedLanguage {
-  return SUPPORTED_LANGUAGES.includes(lang as SupportedLanguage);
-}
 
 /**
  * Get language from country (fallback)
@@ -174,6 +171,92 @@ export function detectOriginalLanguage(profileData: any): string {
 }
 
 /**
+ * Detect the actual language of content in a LocalizedText object
+ * Returns the language code of the version with the most content
+ */
+function detectContentLanguage(localizedText: any): string | null {
+  if (!localizedText || typeof localizedText !== 'object' || Array.isArray(localizedText)) {
+    return null;
+  }
+  
+  let maxLength = 0;
+  let detectedLang: string | null = null;
+  const langLengths: Record<string, number> = {};
+  
+  // Find the language with the longest content (most likely the original)
+  for (const key in localizedText) {
+    if (typeof localizedText[key] === 'string') {
+      const length = localizedText[key].trim().length;
+      langLengths[key] = length;
+      if (length > maxLength) {
+        maxLength = length;
+        detectedLang = key;
+      }
+    }
+  }
+  
+  if (detectedLang) {
+    console.log(`[detectContentLanguage] Detected language: ${detectedLang} (${maxLength} chars). Available languages:`, Object.keys(langLengths), 'Lengths:', langLengths);
+  }
+  
+  return detectedLang;
+}
+
+/**
+ * Safely extract string value from potentially complex data structure
+ * Handles: string, LocalizedText object, array, null/undefined
+ * Prioritizes the language with most content (likely the original) over preferredLang
+ */
+function extractStringValue(value: any, preferredLang?: string): string {
+  if (!value) return '';
+  
+  // If it's already a string, return it
+  if (typeof value === 'string') {
+    return value.trim();
+  }
+  
+  // If it's an object (LocalizedText), try to get the best version
+  if (typeof value === 'object' && !Array.isArray(value)) {
+    // Strategy 1: Detect which language has the most content (likely the original)
+    // This takes priority because it's based on actual content, not metadata
+    const detectedLang = detectContentLanguage(value);
+    if (detectedLang && typeof value[detectedLang] === 'string' && value[detectedLang].trim()) {
+      return value[detectedLang].trim();
+    }
+    
+    // Strategy 2: If preferredLang is provided and exists with content, use it as fallback
+    if (preferredLang && typeof value[preferredLang] === 'string' && value[preferredLang].trim()) {
+      return value[preferredLang].trim();
+    }
+    
+    // Strategy 3: Try common language codes in order
+    const langOrder = ['en', 'fr', 'es', 'pt', 'de', 'ru', 'zh', 'hi', 'ar'];
+    for (const lang of langOrder) {
+      if (typeof value[lang] === 'string' && value[lang].trim()) {
+        return value[lang].trim();
+      }
+    }
+    
+    // Strategy 4: Get first string value from object (any language)
+    for (const key in value) {
+      if (typeof value[key] === 'string' && value[key].trim()) {
+        return value[key].trim();
+      }
+    }
+  }
+  
+  // If it's an array, join or get first string
+  if (Array.isArray(value)) {
+    const strings = value.filter(v => typeof v === 'string').map(v => v.trim());
+    if (strings.length > 0) {
+      return strings.join(' ');
+    }
+  }
+  
+  return '';
+}
+
+/**
  * Extract original profile from sos_profiles document
  */
 export async function extractOriginalProfile(providerId: string): Promise<OriginalProfile | null> {
@@ -184,12 +267,52 @@ export async function extractOriginalProfile(providerId: string): Promise<Origin
     }
 
     const data = profileDoc.data()!;
-    const originalLanguage = detectOriginalLanguage(data);
+    let originalLanguage = detectOriginalLanguage(data);
     
+    // Detect actual content language from bio/description if it's a LocalizedText object
+    const bioOrDescription = data.description || data.bio;
+    let actualContentLanguage = originalLanguage;
+    
+    if (bioOrDescription && typeof bioOrDescription === 'object' && !Array.isArray(bioOrDescription)) {
+      const contentLang = detectContentLanguage(bioOrDescription);
+      if (contentLang) {
+        console.log(`[extractOriginalProfile] Detected content language from bio: ${contentLang} (profile metadata says: ${originalLanguage})`);
+        // Use the detected content language as it's based on actual text content
+        actualContentLanguage = contentLang;
+      }
+    }
+    
+    console.log(`[extractOriginalProfile] Using original language: ${originalLanguage}, actual content language: ${actualContentLanguage}`);
+    
+    // Safely extract string values
     const title = data.fullName || `${data.firstName || ''} ${data.lastName || ''}`.trim() || 'Expert';
-    const summary = truncate(data.description || data.bio || '', 150);
-    const description = truncate(data.description || data.bio || '', 2000);
-    const specialties = data.specialties || data.helpTypes || [];
+    
+    // Extract description/bio safely - handle LocalizedText objects
+    // Pass actualContentLanguage as preferred, but extractStringValue will detect the best version
+    const descriptionText = extractStringValue(bioOrDescription, actualContentLanguage);
+    console.log(`[extractOriginalProfile] Extracted description length: ${descriptionText.length}, preview: ${descriptionText.substring(0, 100)}...`);
+    
+    // Update originalLanguage to match the actual content language if different
+    if (actualContentLanguage !== originalLanguage) {
+      originalLanguage = actualContentLanguage;
+      console.log(`[extractOriginalProfile] Updated originalLanguage to match content: ${originalLanguage}`);
+    }
+    
+    const summary = truncate(descriptionText, 150);
+    const description = truncate(descriptionText, 2000);
+    
+    // Handle specialties - could be array, string, or object
+    let specialties: string[] = [];
+    if (Array.isArray(data.specialties)) {
+      specialties = data.specialties.map(s => extractStringValue(s)).filter(s => s.length > 0);
+    } else if (Array.isArray(data.helpTypes)) {
+      specialties = data.helpTypes.map(s => extractStringValue(s)).filter(s => s.length > 0);
+    } else if (typeof data.specialties === 'string') {
+      specialties = data.specialties.split(',').map(s => s.trim()).filter(s => s.length > 0);
+    } else if (typeof data.helpTypes === 'string') {
+      specialties = data.helpTypes.split(',').map(s => s.trim()).filter(s => s.length > 0);
+    }
+    
     const cta = data.type === 'lawyer' ? 'Book Consultation' : 'Get Help';
     
     return {
@@ -223,7 +346,11 @@ export function generateTranslatedSlug(
   city?: string,
   existingSlugs: string[] = []
 ): string {
-  const normalize = (text: string): string => {
+  const normalize = (text: string | any): string => {
+    // Ensure text is a string
+    if (typeof text !== 'string') {
+      text = String(text || '');
+    }
     return text
       .toLowerCase()
       .normalize('NFD')
@@ -232,9 +359,14 @@ export function generateTranslatedSlug(
       .replace(/^-+|-+$/g, '');
   };
 
-  const specialtySlug = normalize(specialty);
-  const firstNameSlug = normalize(firstName);
-  const citySlug = city ? normalize(city) : '';
+  // Ensure inputs are strings
+  const specialtyStr = typeof specialty === 'string' ? specialty : String(specialty || 'expert');
+  const firstNameStr = typeof firstName === 'string' ? firstName : String(firstName || 'expert');
+  const cityStr = city && typeof city === 'string' ? city : (city ? String(city) : '');
+
+  const specialtySlug = normalize(specialtyStr);
+  const firstNameSlug = normalize(firstNameStr);
+  const citySlug = cityStr ? normalize(cityStr) : '';
   
   let baseSlug = `${specialtySlug}-${firstNameSlug}`;
   if (citySlug) {
@@ -274,31 +406,52 @@ export function generateSEO(
     ? (language === 'fr' ? 'Avocat' : language === 'de' ? 'Anwalt' : 'Lawyer')
     : (language === 'fr' ? 'Expatrié' : language === 'de' ? 'Expatriate' : 'Expat');
   
-  const metaTitle = truncate(`${translated.title} - ${typeLabel} ${providerData.country || ''}`, 60);
-  const metaDescription = truncate(translated.description, 160);
+  // Safely extract country as string
+  const countryStr = typeof providerData.country === 'string' 
+    ? providerData.country 
+    : extractStringValue(providerData.country || '', language);
   
+  // Ensure translated fields are strings
+  const titleStr = typeof translated.title === 'string' ? translated.title : String(translated.title || '');
+  const descriptionStr = typeof translated.description === 'string' 
+    ? translated.description 
+    : String(translated.description || '');
+  
+  const metaTitle = truncate(`${titleStr} - ${typeLabel} ${countryStr}`, 60);
+  const metaDescription = truncate(descriptionStr, 160);
+  
+  // Safely extract city as string
+  const cityStr = typeof providerData.city === 'string' 
+    ? providerData.city 
+    : extractStringValue(providerData.city || '', language);
+  
+  // Ensure h2 is a string
+  const h2Str = translated.specialties && translated.specialties.length > 0
+    ? String(translated.specialties[0] || typeLabel)
+    : typeLabel;
+
   return {
     metaTitle,
     metaDescription,
     ogTitle: metaTitle,
     ogDescription: metaDescription,
-    h1: translated.title,
-    h2: translated.specialties[0] || typeLabel,
-    h3: providerData.city || providerData.country || '',
+    h1: titleStr,
+    h2: h2Str,
+    h3: cityStr || countryStr || '',
     imageAltTexts: [
-      `${translated.title} profile photo`,
-      `${translated.title} - ${typeLabel}`,
+      `${titleStr} profile photo`,
+      `${titleStr} - ${typeLabel}`,
     ],
     jsonLd: {
       '@context': 'https://schema.org',
       '@type': isLawyer ? 'Attorney' : 'Person',
-      name: translated.title,
+      name: titleStr,
       description: metaDescription,
       jobTitle: typeLabel,
       address: {
         '@type': 'PostalAddress',
-        addressCountry: providerData.country,
-        addressLocality: providerData.city,
+        ...(countryStr ? { addressCountry: countryStr } : {}),
+        ...(cityStr ? { addressLocality: cityStr } : {}),
       },
     },
   };
@@ -351,32 +504,66 @@ export async function translateProfile(
   }
 
   const sourceLang = normalizeLanguageCode(original.originalLanguage);
+  console.log(`[translateProfile] Translating from ${sourceLang} to ${targetLanguage}`);
+  console.log(`[translateProfile] Original content:`, {
+    title: original.title,
+    summaryLength: original.summary?.length || 0,
+    descriptionLength: original.description?.length || 0,
+    specialtiesCount: original.specialties?.length || 0,
+    cta: original.cta,
+  });
   
-  // Translate all text fields
-  const [title, summary, description, specialties, cta] = await Promise.all([
-    translateText(original.title, sourceLang, targetLanguage),
+  // ❌ DO NOT TRANSLATE: Provider Name (title) - keep original
+  // Provider name, city, phone, etc. should NEVER be translated
+  const titleStr = original.title; // Provider name should NEVER be translated
+  console.log(`[translateProfile] Title (NOT translated): ${titleStr}`);
+  
+  // ✅ TRANSLATE: Summary, Description (from bio), Specialties, CTA
+  console.log(`[translateProfile] Translating: summary, description, specialties, CTA...`);
+  const [summary, description, specialtiesArray, cta] = await Promise.all([
     translateText(original.summary, sourceLang, targetLanguage),
     translateText(original.description, sourceLang, targetLanguage),
     Promise.all(original.specialties.map(s => translateText(s, sourceLang, targetLanguage))),
     translateText(original.cta, sourceLang, targetLanguage),
   ]);
+  
+  console.log(`[translateProfile] Translation completed:`, {
+    summaryLength: summary?.length || 0,
+    descriptionLength: description?.length || 0,
+    specialtiesCount: specialtiesArray?.length || 0,
+  });
+
+  // Ensure all translated values are strings
+  const summaryStr = String(summary || original.summary || '');
+  const descriptionStr = String(description || original.description || '');
+  const specialties = specialtiesArray.map(s => String(s || '')).filter(s => s.length > 0);
+  const ctaStr = String(cta || original.cta || '');
+
+  // ❌ DO NOT TRANSLATE: First Name, City - extract as-is (these are proper nouns/locations)
+  const firstNameStr = typeof providerData.firstName === 'string' 
+    ? providerData.firstName 
+    : extractStringValue(providerData.firstName || '') || 'expert';
+  // City should NEVER be translated - it's a location name
+  const cityStr = typeof providerData.city === 'string' 
+    ? providerData.city 
+    : extractStringValue(providerData.city || '');
 
   // Generate slug
   const existingSlugs: string[] = []; // TODO: Fetch existing slugs for this provider
   const slug = generateTranslatedSlug(
     specialties[0] || 'expert',
-    providerData.firstName || 'expert',
-    providerData.city,
+    firstNameStr,
+    cityStr || undefined,
     existingSlugs
   );
 
   // Generate SEO
   const translated: TranslatedContent = {
-    title,
-    summary,
-    description,
+    title: titleStr,
+    summary: summaryStr,
+    description: descriptionStr,
     specialties,
-    cta,
+    cta: ctaStr,
     slug,
     seo: {} as any, // Will be filled below
   };
@@ -467,15 +654,50 @@ export async function getTranslation(
   language: SupportedLanguage
 ): Promise<TranslatedContent | null> {
   try {
+    console.log(`[getTranslation] Fetching translation for providerId: ${providerId}, language: ${language}`);
     const doc = await db.collection('providers_translations').doc(providerId).get();
+    
     if (!doc.exists) {
+      console.log(`[getTranslation] Document does not exist for providerId: ${providerId}`);
       return null;
     }
 
-    const data = doc.data() as ProviderTranslationDoc;
-    return data.translations[language] || null;
+    const data = doc.data();
+    if (!data) {
+      console.log(`[getTranslation] Document exists but has no data for providerId: ${providerId}`);
+      return null;
+    }
+
+    console.log(`[getTranslation] Document data keys:`, Object.keys(data));
+    console.log(`[getTranslation] Has translations property:`, 'translations' in data);
+    console.log(`[getTranslation] Translations value:`, data.translations);
+    console.log(`[getTranslation] Translations type:`, typeof data.translations);
+    console.log(`[getTranslation] Translations is array:`, Array.isArray(data.translations));
+
+    // Safely access translations with null checks
+    const translations = data.translations;
+    if (!translations || typeof translations !== 'object' || Array.isArray(translations)) {
+      console.log(`[getTranslation] Translations is invalid or missing`);
+      return null;
+    }
+
+    const translation = translations[language];
+    if (!translation) {
+      console.log(`[getTranslation] Translation not found for language: ${language}`);
+      console.log(`[getTranslation] Available translation languages:`, Object.keys(translations));
+      return null;
+    }
+
+    console.log(`[getTranslation] ✓ Translation found for language: ${language}`);
+    return translation as TranslatedContent;
   } catch (error) {
-    console.error('Error getting translation:', error);
+    console.error('[getTranslation] Error getting translation:', error);
+    console.error('[getTranslation] Error details:', {
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+      providerId,
+      language,
+    });
     return null;
   }
 }
@@ -509,8 +731,14 @@ export async function getTranslationStatus(providerId: string): Promise<{
       return {};
     }
 
-    const data = doc.data() as ProviderTranslationDoc;
-    return data.metadata.translations || {};
+    const data = doc.data();
+    if (!data || !data.metadata) {
+      return {};
+    }
+
+    // Safely access metadata.translations
+    const metadata = data.metadata as ProviderTranslationDoc['metadata'];
+    return metadata.translations || {};
   } catch (error) {
     console.error('Error getting translation status:', error);
     return {};
@@ -557,12 +785,34 @@ export async function checkTranslationOutdated(
 
 /**
  * Truncate text to max length
- */
-function truncate(text: string, maxLength: number): string {
-  if (text.length <= maxLength) {
-    return text;
+ * Safely handles any input type and ensures string output
+ **/
+function truncate(text: string | any, maxLength: number): string {
+  // Ensure text is a string - handle all edge cases
+  let textStr: string;
+  if (typeof text === 'string') {
+    textStr = text;
+  } else if (text === null || text === undefined) {
+    textStr = '';
+  } else if (typeof text === 'number' || typeof text === 'boolean') {
+    textStr = String(text);
+  } else if (typeof text === 'object') {
+    // If it's an object, try to extract string value
+    console.warn('truncate called with object:', typeof text, text);
+    textStr = extractStringValue(text) || '';
+  } else {
+    textStr = String(text || '');
   }
-  return text.substring(0, maxLength - 3) + '...';
+  
+  // Ensure maxLength is valid
+  if (typeof maxLength !== 'number' || maxLength < 0 || !isFinite(maxLength)) {
+    maxLength = 100; // Default fallback
+  }
+  
+  if (textStr.length <= maxLength) {
+    return textStr;
+  }
+  return textStr.substring(0, maxLength - 3) + '...';
 }
 
 export { SUPPORTED_LANGUAGES, TRANSLATION_COST };

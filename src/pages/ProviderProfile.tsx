@@ -1951,7 +1951,7 @@ const ProviderProfile: React.FC = () => {
               {/* Main */}
               <div className="lg:col-span-2 space-y-6 lg:space-y-8">
                 {/* Translation Banner */}
-                {!isTranslationLoading && !translation && realProviderId && (
+                {realProviderId && !isLoading && (
                   <TranslationBanner
                     providerId={realProviderId}
                     currentLanguage={targetLanguage}
@@ -1960,7 +1960,7 @@ const ProviderProfile: React.FC = () => {
                       setShowOriginal(false);
                     }}
                     onTranslate={async (lang) => {
-                      const result = await translate();
+                      const result = await translate(lang);  // Pass the language parameter
                       return result;
                     }}
                   />

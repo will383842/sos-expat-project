@@ -1,6 +1,6 @@
 // firebase/functions/src/translation/initializeProviderTranslation.ts
 import { onDocumentCreated } from 'firebase-functions/v2/firestore';
-import { extractOriginalProfile, detectOriginalLanguage } from '../services/providerTranslationService';
+import { extractOriginalProfile } from '../services/providerTranslationService';
 import { db, FieldValue } from '../utils/firebase';
 
 /**
@@ -35,10 +35,19 @@ export const initializeProviderTranslation = onDocumentCreated(
 
       if (existingDoc.exists) {
         // Update original if it exists but is outdated
-        await translationRef.update({
+        // Ensure translations object exists if it doesn't
+        const existingData = existingDoc.data();
+        const updateData: any = {
           'original': original,
           'metadata.lastUpdated': FieldValue.serverTimestamp(),
-        });
+        };
+        
+        // Ensure translations object exists
+        if (!existingData?.translations || typeof existingData.translations !== 'object' || Array.isArray(existingData.translations)) {
+          updateData.translations = {};
+        }
+        
+        await translationRef.update(updateData);
         console.log(`Updated original profile for provider ${providerId}`);
       } else {
         // Create new translation document
