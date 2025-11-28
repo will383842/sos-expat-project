@@ -1,5 +1,5 @@
 // src/hooks/useProviderTranslation.ts
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   getProviderTranslation,
   requestTranslation,
@@ -12,7 +12,7 @@ import { useAuth } from '../contexts/AuthContext';
 
 export function useProviderTranslation(
   providerId: string | null,
-  targetLanguage: SupportedLanguage
+  targetLanguage: SupportedLanguage | null
 ) {
   const { user } = useAuth();
   const [state, setState] = useState<ProviderTranslation>({
@@ -22,13 +22,26 @@ export function useProviderTranslation(
     isLoading: true,
     error: null,
   });
+  
+  // Ref to track if we're manually managing a translation (via translate() or reloadForLanguage())
+  // This prevents automatic loadTranslation() from overwriting manual state updates
+  const isManuallyManagingRef = useRef(false);
+  const currentLanguageRef = useRef<SupportedLanguage | null>(null);
 
   const loadTranslation = useCallback(async () => {
     console.log('[useProviderTranslation] ===== loadTranslation() CALLED =====');
     console.log('[useProviderTranslation] Parameters:', {
       providerId,
       targetLanguage,
+      isManuallyManaging: isManuallyManagingRef.current,
+      currentLanguage: currentLanguageRef.current,
     });
+
+    // Skip automatic loading if we're manually managing a translation
+    if (isManuallyManagingRef.current) {
+      console.log('[useProviderTranslation] Skipping automatic loadTranslation - manually managing translation');
+      return;
+    }
 
     if (!providerId) {
       console.log('[useProviderTranslation] No providerId, setting empty state');
@@ -39,6 +52,12 @@ export function useProviderTranslation(
         isLoading: false,
         error: null,
       });
+      return;
+    }
+
+    // If we already have a translation for this language, don't reload
+    if (currentLanguageRef.current === targetLanguage && state.translation) {
+      console.log('[useProviderTranslation] Already have translation for this language, skipping reload');
       return;
     }
 
@@ -59,6 +78,7 @@ export function useProviderTranslation(
       
       console.log('[useProviderTranslation] Setting state with result...');
       setState(result);
+      currentLanguageRef.current = targetLanguage; // Track which language we loaded
       console.log('[useProviderTranslation] ✓ State updated');
       console.log('[useProviderTranslation] ===== loadTranslation() SUCCESS =====');
     } catch (error) {
@@ -82,7 +102,7 @@ export function useProviderTranslation(
       });
       console.error('[useProviderTranslation] ===== loadTranslation() ERROR HANDLED =====');
     }
-  }, [providerId, targetLanguage]);
+  }, [providerId, targetLanguage, state.translation]);
 
   const translate = useCallback(async (lang?: SupportedLanguage): Promise<TranslatedContent | null> => {
     console.log('[useProviderTranslation] ===== translate() CALLED =====');
@@ -107,6 +127,10 @@ export function useProviderTranslation(
       console.warn('[useProviderTranslation] Translation skipped: Robot detected');
       return null;
     }
+
+    // Mark that we're manually managing this translation
+    isManuallyManagingRef.current = true;
+    currentLanguageRef.current = langToTranslate;
 
     console.log('[useProviderTranslation] Setting loading state...');
     setState(prev => ({ ...prev, isLoading: true, error: null }));
@@ -168,6 +192,10 @@ export function useProviderTranslation(
         isLoading: false,
         error: null,
       });
+      
+      // Keep the manual management flag set - don't reset it yet
+      // This prevents automatic loadTranslation from overwriting our state
+      currentLanguageRef.current = langToTranslate;
 
       console.log('[useProviderTranslation] ===== translate() SUCCESS =====');
       return translation;
@@ -213,6 +241,9 @@ export function useProviderTranslation(
         error: errorMessage,
       }));
       
+      // Reset manual management flag on error
+      isManuallyManagingRef.current = false;
+      
       console.error('[useProviderTranslation] ===== translate() ERROR HANDLED =====');
       // Return null instead of throwing to allow UI to handle gracefully
       return null;
@@ -220,6 +251,14 @@ export function useProviderTranslation(
   }, [providerId, targetLanguage, user?.uid, loadTranslation]);
 
   useEffect(() => {
+    // If targetLanguage is null, user wants to view original - reset manual management flag
+    if (!targetLanguage) {
+      isManuallyManagingRef.current = false;
+      currentLanguageRef.current = null;
+      console.log('[useProviderTranslation] targetLanguage is null, resetting manual management flag');
+      return;
+    }
+    
     // Only load translation if targetLanguage is provided (not null)
     // This ensures we don't load translations on initial page load
     // Only reload if providerId exists and targetLanguage is set
@@ -236,6 +275,11 @@ export function useProviderTranslation(
   const reloadForLanguage = useCallback(async (lang: SupportedLanguage) => {
     if (!providerId) return;
     console.log('[useProviderTranslation] Reloading for specific language:', lang);
+    
+    // Mark that we're manually managing this translation
+    isManuallyManagingRef.current = true;
+    currentLanguageRef.current = lang;
+    
     const result = await getProviderTranslation(providerId, lang);
     setState({
       translation: result.translation,
@@ -244,6 +288,9 @@ export function useProviderTranslation(
       isLoading: false,
       error: result.error,
     });
+    
+    // Keep the manual management flag set
+    console.log('[useProviderTranslation] Reload complete, maintaining manual management for:', lang);
   }, [providerId]);
 
   return {
