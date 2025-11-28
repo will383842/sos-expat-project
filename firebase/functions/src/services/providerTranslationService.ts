@@ -324,6 +324,37 @@ export async function extractOriginalProfile(providerId: string): Promise<Origin
       'type',
       'verificationStatus',
       'yearsOfExperience',
+      // Stripe/payment related fields
+      'status',
+      'stripeAccountId',
+      'stripeOnboardingComplete',
+      'payoutsEnabled',
+      'kycStatus',
+      'kycCompleted',
+      'kycCompletedAt',
+      'price',
+      'duration',
+      // Phone/contact fields (not translatable)
+      'phone',
+      'phoneCountryCode',
+      'phoneNumber',
+      // Activity/tracking fields
+      'lastActivity',
+      'lastActivityCheck',
+      'lastStatusChange',
+      'inactivityTimeoutMinutes',
+      // System/status fields
+      'approvalStatus',
+      'autoOfflineEnabled',
+      'availability',
+      'preferredLanguage',
+      // Language arrays (not translatable, system metadata)
+      'languages',
+      'languagesSpoken',
+      // Photo URLs (not translatable)
+      'profilePhoto',
+      'photoURL',
+      'avatar',
     ];
     
     // Create filtered object excluding those fields
