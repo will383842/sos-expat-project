@@ -2,7 +2,7 @@
 import React, { useEffect, Suspense, lazy, useState } from "react";
 import { IntlProvider } from "react-intl";
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
-import { Helmet, HelmetProvider } from "react-helmet-async";
+import { Helmet } from "react-helmet-async";
 import { useDeviceDetection } from "./hooks/useDeviceDetection";
 import { registerSW, measurePerformance } from "./utils/performance";
 import LoadingSpinner from "./components/common/LoadingSpinner";
@@ -405,14 +405,13 @@ const App: React.FC = () => {
   };
 
   return (
-    <HelmetProvider>
-      <IntlProvider locale={locale} messages={messages[locale]} defaultLocale="fr" >
-        <LocaleRouter>
-          <div className={`App ${isMobile ? "mobile-layout" : "desktop-layout"}`}>
-            <DefaultHelmet pathname={location.pathname} />
+    <IntlProvider locale={locale} messages={messages[locale]} defaultLocale="fr" >
+      <LocaleRouter>
+        <div className={`App ${isMobile ? "mobile-layout" : "desktop-layout"}`}>
+          <DefaultHelmet pathname={location.pathname} />
 
-            {/* Dynamically generate hreflang links for all locales */}
-            <HreflangLinks pathname={location.pathname} />
+          {/* Dynamically generate hreflang links for all locales */}
+          <HreflangLinks pathname={location.pathname} />
             <Suspense fallback={<LoadingSpinner size="large" color="red" />}>
               {/* Routes de l'app */}
               <Routes>
@@ -477,7 +476,6 @@ const App: React.FC = () => {
           </div>
         </LocaleRouter>
       </IntlProvider>
-    </HelmetProvider>
   );
 };
 
