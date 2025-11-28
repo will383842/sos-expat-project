@@ -235,6 +235,7 @@ interface SosProfile {
   isApproved: boolean;
   isVerified: boolean;
   isVisibleOnMap?: boolean;
+  
   // ❌ Supprimé: price?: number; duration?: number;
   education?: Education | Education[] | LocalizedText;
   certifications?: Certification | Certification[] | LocalizedText;
