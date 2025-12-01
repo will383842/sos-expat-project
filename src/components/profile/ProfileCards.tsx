@@ -5,6 +5,7 @@ import { collection, query, onSnapshot, limit, where, orderBy } from 'firebase/f
 import { db } from '../../config/firebase';
 import { useApp } from '../../contexts/AppContext';
 import { getCountryCoordinates } from '../../utils/countryCoordinates';
+import { getAllProviderTypeKeywords, normalizeLanguageCode } from '../../utils/multilingualSearch';
 
 // Enhanced types for 2025 standards with AI-friendly structure
 interface FirebaseDocumentSnapshot {
@@ -423,24 +424,31 @@ filtered = filtered.filter(p => {
       filtered = filtered.filter(provider => provider.type === activeFilter);
     }
     
-    // Enhanced semantic search for AI compatibility
+    // Enhanced semantic search for AI compatibility with multilingual support
     if (debouncedSearchTerm.trim()) {
       const searchLower = debouncedSearchTerm.toLowerCase().trim();
       const searchTerms = searchLower.split(' ').filter(Boolean);
       
       filtered = filtered.filter(provider => {
+        // Build comprehensive searchable content including multilingual keywords
+        // Include keywords for both lawyer and expat types to support multilingual search
+        const multilingualKeywords = provider.type === 'lawyer' 
+          ? getAllProviderTypeKeywords('lawyer')
+          : getAllProviderTypeKeywords('expat');
+        
         const searchableContent = [
-  provider.name,
-  provider.fullName,
-  provider.firstName,
-  provider.lastName,
-  provider.country,
-  provider.description,
-  ...provider.languages,
-  ...provider.specialties,
-  ...(provider.certifications || []),
-  provider.type === 'lawyer' ? 'avocat juriste juridique droit' : 'expatrié expat immigration visa',
-].join(' ').toLowerCase();
+          provider.name,
+          provider.fullName,
+          provider.firstName,
+          provider.lastName,
+          provider.country,
+          provider.description,
+          ...provider.languages,
+          ...provider.specialties,
+          ...(provider.certifications || []),
+          // Include multilingual keywords for the provider type (all languages)
+          multilingualKeywords,
+        ].join(' ').toLowerCase();
         
         // Multi-term search with relevance
         return searchTerms.every(term => 

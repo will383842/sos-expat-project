@@ -197,6 +197,103 @@ export function detectOriginalLanguage(profileData: any): string {
 }
 
 /**
+ * Detect language from text content using heuristics
+ * Analyzes common words and patterns to determine the language
+ */
+function detectLanguageFromText(text: string): SupportedLanguage | null {
+  if (!text || typeof text !== 'string' || text.trim().length < 10) {
+    return null;
+  }
+  
+  const normalized = text.toLowerCase();
+  const words = normalized.split(/\s+/);
+  
+  // Language-specific patterns and common words
+  const patterns: Record<SupportedLanguage, { words: string[]; patterns: RegExp[] }> = {
+    fr: {
+      words: ['le', 'la', 'les', 'de', 'des', 'du', 'et', 'est', 'dans', 'pour', 'avec', 'sur', 'par', 'une', 'un', 'être', 'avoir', 'faire', 'aller', 'venir', 'je', 'tu', 'il', 'elle', 'nous', 'vous', 'ils', 'elles', 'c\'est', 'qu\'il', 'qu\'elle', 'très', 'plus', 'tout', 'tous', 'toute', 'toutes'],
+      patterns: [/[àâäéèêëïîôùûüÿç]/g, /\b(le|la|les|de|des|du|et|est|dans|pour|avec|sur|par|une|un)\b/g]
+    },
+    en: {
+      words: ['the', 'and', 'is', 'are', 'was', 'were', 'been', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'this', 'that', 'these', 'those', 'with', 'from', 'for', 'about', 'into', 'through', 'during', 'including', 'against', 'among', 'throughout', 'despite', 'towards', 'upon', 'concerning', 'to', 'of', 'in', 'on', 'at', 'by', 'as', 'an', 'a'],
+      patterns: [/\b(the|and|is|are|was|were|been|have|has|had|do|does|did|will|would|could|should|this|that|these|those|with|from|for|about|into|through|during|including|against|among|throughout|despite|towards|upon|concerning|to|of|in|on|at|by|as|an|a)\b/g]
+    },
+    es: {
+      words: ['el', 'la', 'los', 'las', 'de', 'del', 'y', 'es', 'son', 'está', 'están', 'ser', 'estar', 'tener', 'hacer', 'ir', 'venir', 'yo', 'tú', 'él', 'ella', 'nosotros', 'vosotros', 'ellos', 'ellas', 'muy', 'más', 'todo', 'todos', 'toda', 'todas', 'con', 'por', 'para', 'sobre', 'entre', 'desde', 'hasta', 'durante', 'mediante', 'según', 'un', 'una', 'unos', 'unas'],
+      patterns: [/[áéíóúñü¿¡]/g, /\b(el|la|los|las|de|del|y|es|son|está|están|ser|estar|tener|hacer|ir|venir|yo|tú|él|ella|nosotros|vosotros|ellos|ellas|muy|más|todo|todos|toda|todas|con|por|para|sobre|entre|desde|hasta|durante|mediante|según|un|una|unos|unas)\b/g]
+    },
+    pt: {
+      words: ['o', 'a', 'os', 'as', 'de', 'do', 'da', 'dos', 'das', 'e', 'é', 'são', 'está', 'estão', 'ser', 'estar', 'ter', 'fazer', 'ir', 'vir', 'eu', 'tu', 'ele', 'ela', 'nós', 'vós', 'eles', 'elas', 'muito', 'mais', 'todo', 'todos', 'toda', 'todas', 'com', 'por', 'para', 'sobre', 'entre', 'desde', 'até', 'durante', 'mediante', 'segundo', 'um', 'uma', 'uns', 'umas'],
+      patterns: [/[áàâãéêíóôõúç]/g, /\b(o|a|os|as|de|do|da|dos|das|e|é|são|está|estão|ser|estar|ter|fazer|ir|vir|eu|tu|ele|ela|nós|vós|eles|elas|muito|mais|todo|todos|toda|todas|com|por|para|sobre|entre|desde|até|durante|mediante|segundo|um|uma|uns|umas)\b/g]
+    },
+    de: {
+      words: ['der', 'die', 'das', 'den', 'dem', 'des', 'und', 'ist', 'sind', 'war', 'waren', 'sein', 'haben', 'machen', 'gehen', 'kommen', 'ich', 'du', 'er', 'sie', 'es', 'wir', 'ihr', 'sie', 'sehr', 'mehr', 'alle', 'mit', 'von', 'für', 'über', 'zwischen', 'seit', 'bis', 'während', 'durch', 'gegen', 'ohne', 'um', 'ein', 'eine', 'einen', 'einem', 'eines'],
+      patterns: [/[äöüß]/g, /\b(der|die|das|den|dem|des|und|ist|sind|war|waren|sein|haben|machen|gehen|kommen|ich|du|er|sie|es|wir|ihr|sie|sehr|mehr|alle|mit|von|für|über|zwischen|seit|bis|während|durch|gegen|ohne|um|ein|eine|einen|einem|eines)\b/g]
+    },
+    ru: {
+      words: ['и', 'в', 'не', 'что', 'он', 'на', 'я', 'с', 'со', 'как', 'а', 'то', 'все', 'она', 'так', 'его', 'но', 'да', 'ты', 'к', 'у', 'же', 'вы', 'за', 'бы', 'по', 'только', 'её', 'мне', 'было', 'вот', 'от', 'меня', 'еще', 'нет', 'о', 'из', 'ему', 'теперь', 'когда', 'даже', 'ну', 'вдруг', 'ли', 'если', 'уже', 'или', 'быть', 'был', 'была', 'были', 'было'],
+      patterns: [/[а-яё]/g, /\b(и|в|не|что|он|на|я|с|со|как|а|то|все|она|так|его|но|да|ты|к|у|же|вы|за|бы|по|только|её|мне|было|вот|от|меня|еще|нет|о|из|ему|теперь|когда|даже|ну|вдруг|ли|если|уже|или|быть|был|была|были|было)\b/g]
+    },
+    zh: {
+      words: ['的', '了', '在', '是', '我', '有', '和', '就', '不', '人', '都', '一', '一个', '上', '也', '很', '到', '说', '要', '去', '你', '会', '着', '没有', '看', '好', '自己', '这'],
+      patterns: [/[\u4e00-\u9fff]/g]
+    },
+    hi: {
+      words: ['और', 'है', 'के', 'में', 'की', 'को', 'से', 'पर', 'यह', 'या', 'नहीं', 'हो', 'था', 'था', 'थे', 'थी', 'होता', 'होती', 'होते', 'मैं', 'तुम', 'वह', 'वे', 'हम', 'आप', 'यह', 'वह', 'सब', 'सभी', 'बहुत', 'अधिक', 'कम', 'पहले', 'बाद', 'अब', 'तब', 'कब', 'कहाँ', 'कैसे', 'क्यों', 'क्या', 'कौन'],
+      patterns: [/[\u0900-\u097F]/g]
+    },
+    ar: {
+      words: ['و', 'في', 'من', 'إلى', 'على', 'هذا', 'هذه', 'ذلك', 'تلك', 'هو', 'هي', 'هم', 'هن', 'أنا', 'أنت', 'أنتم', 'أنتن', 'نحن', 'كان', 'كانت', 'كانوا', 'كن', 'يكون', 'تكون', 'يكونون', 'يكون', 'كل', 'جميع', 'كثير', 'قليل', 'أكثر', 'أقل', 'مع', 'بدون', 'حول', 'بين', 'منذ', 'حتى', 'خلال', 'ضد', 'نحو', 'عبر', 'بسبب', 'بعد', 'قبل', 'الآن', 'ثم', 'متى', 'أين', 'كيف', 'لماذا', 'ماذا', 'من'],
+      patterns: [/[\u0600-\u06FF]/g]
+    },
+  };
+  
+  // Score each language
+  const scores: Record<SupportedLanguage, number> = {
+    fr: 0, en: 0, es: 0, pt: 0, de: 0, ru: 0, zh: 0, hi: 0, ar: 0
+  };
+  
+  // Check for language-specific characters/patterns
+  for (const [lang, config] of Object.entries(patterns)) {
+    // Check for language-specific characters
+    for (const pattern of config.patterns) {
+      const matches = normalized.match(pattern);
+      if (matches) {
+        scores[lang as SupportedLanguage] += matches.length * 2; // Character patterns are strong indicators
+      }
+    }
+    
+    // Check for common words
+    for (const word of config.words) {
+      const wordRegex = new RegExp(`\\b${word}\\b`, 'g');
+      const matches = normalized.match(wordRegex);
+      if (matches) {
+        scores[lang as SupportedLanguage] += matches.length;
+      }
+    }
+  }
+  
+  // Find the language with the highest score
+  let maxScore = 0;
+  let detectedLang: SupportedLanguage | null = null;
+  
+  for (const [lang, score] of Object.entries(scores)) {
+    if (score > maxScore) {
+      maxScore = score;
+      detectedLang = lang as SupportedLanguage;
+    }
+  }
+  
+  // Only return if we have a reasonable confidence (at least 3 matches)
+  if (detectedLang && maxScore >= 3) {
+    console.log(`[detectLanguageFromText] Detected language: ${detectedLang} (score: ${maxScore})`);
+    return detectedLang;
+  }
+  
+  return null;
+}
+
+/**
  * Detect the actual language of content in a LocalizedText object
  * Returns the language code of the version with the most content
  */
@@ -355,6 +452,15 @@ export async function extractOriginalProfile(providerId: string): Promise<Origin
       'profilePhoto',
       'photoURL',
       'avatar',
+      // Additional system/user fields
+      'affiliateCode',
+      'averageRating',
+      'createdAt',
+      'createdByAdmin',
+      'points',
+      'previousCountries',
+      'residenceCountry',
+      'role',
     ];
     
     // Create filtered object excluding those fields
@@ -612,27 +718,52 @@ export async function translateAllFields(
   original: OriginalProfile,
   targetLanguage: SupportedLanguage
 ): Promise<OriginalProfile> {
-  // Detect source language - prioritize originalLanguage field, then detect from content
+  // Detect source language - PRIORITIZE detecting from bio content itself
   let sourceLang = 'en';
   
-  // Priority 1: Use originalLanguage if available
-  if (original.originalLanguage && typeof original.originalLanguage === 'string') {
-    sourceLang = normalizeLanguageCode(original.originalLanguage) || 'en';
-    console.log(`[translateAllFields] Using originalLanguage from profile: ${sourceLang}`);
-  } else if (original.preferredLanguage && typeof original.preferredLanguage === 'string') {
-    // Priority 2: Use preferredLanguage
-    sourceLang = normalizeLanguageCode(original.preferredLanguage) || 'en';
-    console.log(`[translateAllFields] Using preferredLanguage from profile: ${sourceLang}`);
-  } else if (original.bio && typeof original.bio === 'object' && !Array.isArray(original.bio)) {
-    // Priority 3: Detect from bio content (find language with most content)
-    let maxLength = 0;
-    for (const lang in original.bio) {
-      if (typeof original.bio[lang] === 'string' && original.bio[lang].length > maxLength) {
-        maxLength = original.bio[lang].length;
-        sourceLang = lang;
+  // Priority 1: Detect from bio content (if bio is a string, analyze the text)
+  if (original.bio && typeof original.bio === 'string' && original.bio.trim().length > 10) {
+    const detected = detectLanguageFromText(original.bio);
+    if (detected) {
+      sourceLang = detected;
+      console.log(`[translateAllFields] ✓ Detected language from bio text content: ${sourceLang}`);
+    }
+  }
+  
+  // Priority 2: If bio is a LocalizedText object, find the language with most content
+  if (!sourceLang || sourceLang === 'en') {
+    if (original.bio && typeof original.bio === 'object' && !Array.isArray(original.bio)) {
+      const detected = detectContentLanguage(original.bio);
+      if (detected) {
+        sourceLang = normalizeLanguageCode(detected) || 'en';
+        console.log(`[translateAllFields] ✓ Detected language from bio object (most content): ${sourceLang}`);
       }
     }
-    console.log(`[translateAllFields] Detected source language from bio: ${sourceLang} (${maxLength} chars)`);
+  }
+  
+  // Priority 3: Try detecting from description if bio detection failed
+  if (!sourceLang || sourceLang === 'en') {
+    if (original.description && typeof original.description === 'string' && original.description.trim().length > 10) {
+      const detected = detectLanguageFromText(original.description);
+      if (detected) {
+        sourceLang = detected;
+        console.log(`[translateAllFields] ✓ Detected language from description text: ${sourceLang}`);
+      }
+    }
+  }
+  
+  // Priority 4: Fall back to originalLanguage field (metadata)
+  if (!sourceLang || sourceLang === 'en') {
+    if (original.originalLanguage && typeof original.originalLanguage === 'string') {
+      sourceLang = normalizeLanguageCode(original.originalLanguage) || 'en';
+      console.log(`[translateAllFields] Using originalLanguage from profile metadata: ${sourceLang}`);
+    }
+  }
+  
+  // Priority 5: Final fallback to English
+  if (!sourceLang || sourceLang === 'en') {
+    sourceLang = 'en';
+    console.log(`[translateAllFields] Using default language (en) - no detection possible`);
   }
   
   // Normalize the source language code

@@ -174,8 +174,11 @@ const routeConfigs: RouteConfig[] = [
   // Fournisseurs publics
   { path: "/providers", component: Providers, translated: "providers" },
   { path: "/provider/:id", component: ProviderProfile },
+  // More flexible route patterns to handle various URL structures
   { path: "/avocat/:country/:language/:nameId", component: ProviderProfile, translated: "lawyer" },
+  { path: "/avocat/:country/:language/*", component: ProviderProfile, translated: "lawyer" },
   { path: "/expatrie/:country/:language/:nameId", component: ProviderProfile, translated: "expat" },
+  { path: "/expatrie/:country/:language/*", component: ProviderProfile, translated: "expat" },
 ];
 
 // Protégées (utilisateur)

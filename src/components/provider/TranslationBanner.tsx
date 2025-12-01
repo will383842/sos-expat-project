@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Globe, Loader2 } from 'lucide-react';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   SUPPORTED_LANGUAGES,
   LANGUAGE_NAMES,
@@ -28,26 +29,41 @@ export const TranslationBanner: React.FC<TranslationBannerProps> = ({
 }) => {
   const { user } = useAuth();
   const intl = useIntl();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isTranslating, setIsTranslating] = useState<SupportedLanguage | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Show all languages except the current one
-  // Missing languages = not yet translated
-  // Available languages = already translated (show as "View in X" instead of "Translate to X")
-  const missingLanguages = SUPPORTED_LANGUAGES.filter(
-    lang => lang !== currentLanguage && !availableLanguages.includes(lang)
+  // Show ALL languages - don't filter by currentLanguage or availableLanguages
+  // Missing languages = not yet translated (will trigger translation)
+  // Available languages = already translated (will view existing translation)
+  const allLanguages = SUPPORTED_LANGUAGES; // Show all supported languages
+  
+  const missingLanguages = allLanguages.filter(
+    lang => !availableLanguages.includes(lang)
   );
-  const availableOtherLanguages = SUPPORTED_LANGUAGES.filter(
-    lang => lang !== currentLanguage && availableLanguages.includes(lang)
+  const availableOtherLanguages = allLanguages.filter(
+    lang => availableLanguages.includes(lang)
   );
 
-  // Show banner if there are any languages to translate OR any available translations to view
-  // OR if currently translating
-  if (missingLanguages.length === 0 && availableOtherLanguages.length === 0 && !isTranslating) {
-    return null; // No languages to translate or view, and not currently translating
-  }
+  // Always show the banner - show all language buttons
 
   const handleTranslate = async (targetLanguage: SupportedLanguage) => {
+    // Check if user is logged in
+    if (!user) {
+      // Store the current path in sessionStorage BEFORE navigating
+      // This ensures we don't lose it even if query params get stripped
+      const currentPath = location.pathname + location.search;
+      sessionStorage.setItem("loginRedirect", currentPath);
+      console.log('[TranslationBanner] Storing redirect in sessionStorage:', currentPath);
+      
+      // Also pass it in the URL as a backup
+      const loginUrl = `/login?redirect=${encodeURIComponent(currentPath)}`;
+      console.log('[TranslationBanner] Redirecting to login with redirect:', currentPath);
+      navigate(loginUrl);
+      return;
+    }
+
     setIsTranslating(targetLanguage);
     setError(null);
 
@@ -71,6 +87,21 @@ export const TranslationBanner: React.FC<TranslationBannerProps> = ({
   };
 
   const handleViewTranslation = (targetLanguage: SupportedLanguage) => {
+    // Check if user is logged in
+    if (!user) {
+      // Store the current path in sessionStorage BEFORE navigating
+      // This ensures we don't lose it even if query params get stripped
+      const currentPath = location.pathname + location.search;
+      sessionStorage.setItem("loginRedirect", currentPath);
+      console.log('[TranslationBanner] Storing redirect in sessionStorage:', currentPath);
+      
+      // Also pass it in the URL as a backup
+      const loginUrl = `/login?redirect=${encodeURIComponent(currentPath)}`;
+      console.log('[TranslationBanner] Redirecting to login with redirect:', currentPath);
+      navigate(loginUrl);
+      return;
+    }
+
     // If translation already exists, just switch to viewing it
     if (onViewTranslation) {
       onViewTranslation(targetLanguage);
@@ -92,7 +123,7 @@ export const TranslationBanner: React.FC<TranslationBannerProps> = ({
         </span>
       </div>
       <div className="flex flex-wrap gap-2">
-        {/* Show buttons for missing languages (need translation) */}
+        {/* Show ALL language buttons - missing languages (need translation) */}
         {missingLanguages.map(lang => (
           <button
             key={lang}
@@ -114,7 +145,7 @@ export const TranslationBanner: React.FC<TranslationBannerProps> = ({
           </button>
         ))}
         
-        {/* Show buttons for available languages (already translated - can view) */}
+        {/* Show ALL language buttons - available languages (already translated - can view) */}
         {availableOtherLanguages.map(lang => (
           <button
             key={lang}

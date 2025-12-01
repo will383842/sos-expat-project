@@ -53,6 +53,9 @@ import { useProviderTranslation } from "../hooks/useProviderTranslation";
 import { TranslationBanner } from "../components/provider/TranslationBanner";
 import { type SupportedLanguage } from "../services/providerTranslationService";
 import { FormattedMessage, useIntl } from "react-intl";
+// 👉 Specialty translation
+import { lawyerSpecialitiesData, flattenLawyerSpecialities } from "../data/lawyer-specialties";
+import { expatHelpTypesData } from "../data/expat-help-types";
 
 /* ===================================================================== */
 
@@ -368,6 +371,35 @@ const toStringFromAny = (
 
 const isFsTimestamp = (v: unknown): v is FsTimestamp =>
   typeof (v as FsTimestamp | null)?.toDate === "function";
+
+// Helper to translate specialty codes to localized labels
+const translateSpecialtyCode = (
+  code: string,
+  locale: "fr" | "en",
+  isLawyer: boolean
+): string => {
+  if (!code) return code;
+  
+  // Try to find in lawyer specialties
+  if (isLawyer) {
+    const flattened = flattenLawyerSpecialities();
+    const specialty = flattened.find((s) => s.code === code);
+    if (specialty) {
+      const labelKey = locale === "fr" ? "labelFr" : "labelEn";
+      return specialty[labelKey] || specialty.labelFr || code;
+    }
+  } else {
+    // Try to find in expat help types
+    const helpType = expatHelpTypesData.find((h) => h.code === code);
+    if (helpType) {
+      const labelKey = locale === "fr" ? "labelFr" : "labelEn";
+      return helpType[labelKey] || helpType.labelFr || code;
+    }
+  }
+  
+  // If not found as a code, return as-is (might be a plain text string)
+  return code;
+};
 
 const formatJoinDate = (val: TSLike, lang: "fr" | "en"): string | undefined => {
   if (!val) return undefined;
@@ -1419,6 +1451,10 @@ const ProviderProfile: React.FC = () => {
   }, [provider, isLawyer, preferredLangKey]);
   const derivedSpecialties = useMemo(() => {
     if (!provider) return [];
+    
+    // Determine which locale to use for translation
+    const localeForTranslation = detectedLang === "fr" ? "fr" : "en";
+    
     // ALWAYS show original from sos_profiles when showOriginal is true
     if (showOriginal) {
       const arr = isLawyer
@@ -1427,21 +1463,29 @@ const ProviderProfile: React.FC = () => {
             provider.helpTypes || provider.specialties,
             preferredLangKey
           );
-      return arr.map((s) => s.replace(/\s+/g, " ").trim()).filter(Boolean);
+      // Translate specialty codes to localized labels
+      return arr
+        .map((s) => translateSpecialtyCode(s, localeForTranslation, isLawyer))
+        .map((s) => s.replace(/\s+/g, " ").trim())
+        .filter(Boolean);
     }
     // Only use translation if user explicitly selected a language and showOriginal is false
     if (translation && !showOriginal && viewingLanguage && translation.specialties) {
       return translation.specialties;
     }
-    // Fallback to provider's specialties (original)
+    // Fallback to provider's specialties (original) - but still translate the codes
     const arr = isLawyer
       ? toArrayFromAny(provider.specialties, preferredLangKey)
       : toArrayFromAny(
           provider.helpTypes || provider.specialties,
           preferredLangKey
         );
-    return arr.map((s) => s.replace(/\s+/g, " ").trim()).filter(Boolean);
-  }, [provider, isLawyer, preferredLangKey, translation, showOriginal, viewingLanguage]);
+    // Translate specialty codes to localized labels
+    return arr
+      .map((s) => translateSpecialtyCode(s, localeForTranslation, isLawyer))
+      .map((s) => s.replace(/\s+/g, " ").trim())
+      .filter(Boolean);
+  }, [provider, isLawyer, preferredLangKey, translation, showOriginal, viewingLanguage, detectedLang]);
   const joinDateText = useMemo(() => {
     if (!provider) return undefined;
     const formatted = formatJoinDate(
