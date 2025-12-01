@@ -50,8 +50,15 @@ export default defineConfig(({ mode }) => {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
       },
+      // Ensure React is resolved correctly
+      dedupe: ['react', 'react-dom'],
     },
     optimizeDeps: {
+      include: [
+        'react',
+        'react-dom',
+        'react-helmet-async',
+      ],
       exclude: [
         'firebase',
         'firebase/app',
@@ -62,8 +69,10 @@ export default defineConfig(({ mode }) => {
         'firebase/analytics',
       ],
       esbuildOptions: {
-        target: 'esnext'
-      }
+        target: 'esnext',
+        // Ensure React exports are handled correctly
+        jsx: 'automatic',
+      },
     },
     build: {
       target: 'esnext',

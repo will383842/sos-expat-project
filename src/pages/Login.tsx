@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useMemo,
   useRef,
+  Component,
 } from "react";
 import {
   Link,
@@ -255,7 +256,7 @@ class ErrorBoundary extends React.Component<
   }
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { hasError: true, error };t
+    return { hasError: true, error };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
