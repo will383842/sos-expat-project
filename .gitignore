@@ -122,3 +122,17 @@ public/firebase-config.js
 /package-lock.json
 **/package-lock.json
 package-lock.json
+
+# Environment variables - NEVER commit these
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+.env.test
+
+# Firebase
+firebase/functions/.env
+firebase/functions/.env.development
+firebase/functions/.env.production
+firebase/functions/.env.local

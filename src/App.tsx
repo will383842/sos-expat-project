@@ -342,6 +342,9 @@ const App: React.FC = () => {
       translated,
     } = config;
 
+    // If this route is an admin path (or its alias), DO NOT add the locale prefix.
+    const isAdminPath = path.startsWith("/admin") || (alias && alias.startsWith("/admin"));
+
     // Add locale prefix to paths - use simple parameter, validation happens in LocaleRouter
     // React Router v6 doesn't support regex in path params, so we use :locale and validate elsewhere
     const localePrefix = `/:locale`;
@@ -349,7 +352,13 @@ const App: React.FC = () => {
     // Handle root path specially - match both with and without trailing slash
     let routes: string[] = [];
 
-    if (path === "/") {
+    if (isAdminPath) {
+      // Register admin route(s) as-is (no locale prefix)
+      routes = [
+        `${path}`,
+        ...(alias ? [`${alias}`] : []),
+      ];
+    } else if (path === "/") {
       // For root, create routes that match both /en-us and /en-us/
       routes = [
         `${localePrefix}`,      // Matches /en-us
@@ -416,14 +425,58 @@ const App: React.FC = () => {
     });
   };
 
+  // New: Redirect any locale-prefixed admin path back to non-locale admin path
+  const AdminLocaleStrip: React.FC = () => {
+    const loc = useLocation();
+    const pathname = loc.pathname || "";
+    // Match "/{locale}/admin" or "/{locale}/admin/..." and preserve the rest
+    const m = pathname.match(/^\/([^/]+)\/admin(\/.*)?$/);
+    if (m) {
+      const suffix = m[2] || "";
+      return <Navigate to={`/admin${suffix}${loc.search || ""}`} replace />;
+    }
+    return null;
+  };
+
+  // helper to detect admin paths (handles both "/admin" and "/:locale/admin")
+  const isAdminPath = (p: string) =>
+    /(^\/admin(\/|$))|(^\/[^/]+\/admin(\/|$))/i.test(p || "");
+
+  const showAdminLayout = isAdminPath(location.pathname);
+
   return (
     <IntlProvider locale={locale} messages={messages[locale]} defaultLocale="fr" >
-      <LocaleRouter>
-        <div className={`App ${isMobile ? "mobile-layout" : "desktop-layout"}`}>
-          <DefaultHelmet pathname={location.pathname} />
+      {/* Render admin routes only when current path is admin (no site layout/navbar) */}
+      {showAdminLayout ? (
+        <Routes>
+          {/* Catch locale-prefixed admin paths and strip locale (preserve subpath & query) */}
+          <Route path="/:locale/admin" element={<AdminLocaleStrip />} />
+          <Route path="/:locale/admin/*" element={<AdminLocaleStrip />} />
 
-          {/* Dynamically generate hreflang links for all locales */}
-          <HreflangLinks pathname={location.pathname} />
+          {/* Admin routes - no locale prefix */}
+          <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+          <Route path="/admin/*" element={<AdminRoutesV2 />} />
+
+          {/* Payment success route without locale (backward compatibility) */}
+          <Route
+            path="/payment-success"
+            element={
+              <ProtectedRoute>
+                <PaymentSuccess />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* If someone hits another path under admin detection that isn't handled, fallback to admin root */}
+          <Route path="*" element={<Navigate to="/admin" replace />} />
+        </Routes>
+      ) : (
+        <LocaleRouter>
+          <div className={`App ${isMobile ? "mobile-layout" : "desktop-layout"}`}>
+            <DefaultHelmet pathname={location.pathname} />
+
+            {/* Dynamically generate hreflang links for all locales */}
+            <HreflangLinks pathname={location.pathname} />
             <Suspense fallback={<LoadingSpinner size="large" color="red" />}>
               {/* Routes de l'app */}
               <Routes>
@@ -431,16 +484,6 @@ const App: React.FC = () => {
                 <Route
                   path="/"
                   element={<Navigate to={`/${getLocaleString(language)}`} replace />}
-                />
-
-                {/* Payment success route without locale (backward compatibility) */}
-                <Route
-                  path="/payment-success"
-                  element={
-                    <ProtectedRoute>
-                      <PaymentSuccess />
-                    </ProtectedRoute>
-                  }
                 />
 
                 {/* Routes with locale prefix - Home route first for root locale path */}
@@ -454,40 +497,22 @@ const App: React.FC = () => {
                   .map((cfg, i) => renderRoute(cfg, i))}
                 {protectedUserRoutes.map((cfg, i) => renderRoute(cfg, i + 1000))}
 
-                {/* Admin routes - no locale prefix */}
-                <Route
-                  path="/admin"
-                  element={<Navigate to="/admin/dashboard" replace />}
-                />
-                <Route path="/admin/*" element={<AdminRoutesV2 />} />
-
                 {/* Marketing & Communication */}
-                <Route
-                  path="marketing/templates-emails"
-                  element={<TemplatesEmails />}
-                />
-                <Route
-                  path="marketing/notifications"
-                  element={<NotificationsRouting />}
-                />
-                <Route
-                  path="marketing/delivrabilite"
-                  element={<DelivrabiliteLogs />}
-                />
-                <Route
-                  path="marketing/messages-temps-reel"
-                  element={<MessagesTempsReel />}
-                />
+                <Route path="marketing/templates-emails" element={<TemplatesEmails />} />
+                <Route path="marketing/notifications" element={<NotificationsRouting />} />
+                <Route path="marketing/delivrabilite" element={<DelivrabiliteLogs />} />
+                <Route path="marketing/messages-temps-reel" element={<MessagesTempsReel />} />
 
                 {/* 404 - Catch all route (must be last) */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
 
-              {/* Routes admin gérées par AdminRoutesV2 */}
+              {/* Routes admin gérées par AdminRoutesV2 (handled above outside LocaleRouter) */}
             </Suspense>
           </div>
         </LocaleRouter>
-      </IntlProvider>
+      )}
+    </IntlProvider>
   );
 };
 
