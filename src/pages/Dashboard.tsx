@@ -50,7 +50,7 @@ import {
   serverTimestamp,
   Timestamp,
 } from "firebase/firestore";
-import { db, auth } from "../config/firebase";
+import { db, auth, functions } from "../config/firebase";
 import {
   updateEmail as fbUpdateEmail,
   updateProfile as fbUpdateProfile,
@@ -61,6 +61,8 @@ import IntlPhoneInput from "@/components/forms-data/IntlPhoneInput";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { useForm, Controller } from "react-hook-form";
 import { getProviderTranslation, type SupportedLanguage } from "../services/providerTranslationService";
+
+import { requestUpdateProviderTranslation } from '../services/providerTranslationService';
 
 // ===============================
 // 🎨 DESIGN TOKENS (UI only — aucune incidence métier)
@@ -334,17 +336,17 @@ const Alert: React.FC<{ type: "success" | "error"; message: string }> = ({
   const cfg =
     type === "success"
       ? {
-          bg: "bg-green-50 dark:bg-green-500/10",
-          border: "border-green-200 dark:border-green-500/20",
-          text: "text-green-800 dark:text-green-200",
-          icon: <Check className="h-5 w-5 mr-2" />,
-        }
+        bg: "bg-green-50 dark:bg-green-500/10",
+        border: "border-green-200 dark:border-green-500/20",
+        text: "text-green-800 dark:text-green-200",
+        icon: <Check className="h-5 w-5 mr-2" />,
+      }
       : {
-          bg: "bg-red-50 dark:bg-red-500/10",
-          border: "border-red-200 dark:border-red-500/20",
-          text: "text-red-800 dark:text-red-200",
-          icon: <AlertTriangle className="h-5 w-5 mr-2" />,
-        };
+        bg: "bg-red-50 dark:bg-red-500/10",
+        border: "border-red-200 dark:border-red-500/20",
+        text: "text-red-800 dark:text-red-200",
+        icon: <AlertTriangle className="h-5 w-5 mr-2" />,
+      };
   return (
     <div
       className={`mb-2 ${cfg.bg} ${cfg.border} ${cfg.text} rounded-xl p-4 shadow-sm transition`}
@@ -367,44 +369,44 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const { user, firebaseUser, logout, refreshUser } = useAuth();
   const { language } = useApp();
-  
+
   // Helper to get user's full name safely
   const getUserFullName = useCallback(() => {
     if (!user) return '';
-    
+
     // Try firstName + lastName
     if (user.firstName || user.lastName) {
       return `${user.firstName || ''} ${user.lastName || ''}`.trim();
     }
-    
+
     // Fallback to fullName
     if ((user as any).fullName) {
       return (user as any).fullName;
     }
-    
+
     // Fallback to displayName
     if ((user as any).displayName) {
       return (user as any).displayName;
     }
-    
+
     // Last resort
     return user.email || 'User';
   }, [user]);
-  
+
   // Helper to get first name only
   const getUserFirstName = useCallback(() => {
     if (!user) return '';
-    
+
     if (user.firstName) {
       return user.firstName;
     }
-    
+
     // Try to extract from fullName or displayName
     const fullName = (user as any).fullName || (user as any).displayName || '';
     if (fullName) {
       return fullName.split(' ')[0];
     }
-    
+
     return user.email?.split('@')[0] || 'User';
   }, [user]);
 
@@ -435,7 +437,7 @@ const Dashboard: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  
+
   // ✅ Track if user data is ready (for KYC component fix)
   const [userDataReady, setUserDataReady] = useState<boolean>(false);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
@@ -549,8 +551,8 @@ const Dashboard: React.FC = () => {
       // If user is lawyer or expat, ensure KYC fields are loaded
       if (user.role === "lawyer" || user.role === "expat") {
         // Check if KYC fields are missing (happens right after signup)
-        const missingKycData = 
-          user.kycStatus === undefined || 
+        const missingKycData =
+          user.kycStatus === undefined ||
           user.stripeOnboardingComplete === undefined ||
           user.chargesEnabled === undefined;
 
@@ -566,7 +568,7 @@ const Dashboard: React.FC = () => {
           }
         }
       }
-      
+
       // Mark as ready after check/refresh
       setUserDataReady(true);
     };
@@ -719,7 +721,7 @@ const Dashboard: React.FC = () => {
       },
     };
     const config = statusConfig[status];
-    // return <span >{config.text}</span>;
+    return <span >{config.text}</span>;
   };
 
   // Palette alignée Home (fallback si rôle non défini)
@@ -748,13 +750,13 @@ const Dashboard: React.FC = () => {
             photoURL: url,
             avatar: url,
             updatedAt: serverTimestamp(),
-          }).catch(() => {});
+          }).catch(() => { });
         }
 
         // Auth photoURL
         if (auth.currentUser) {
           await fbUpdateProfile(auth.currentUser, { photoURL: url }).catch(
-            () => {}
+            () => { }
           );
         }
 
@@ -846,9 +848,7 @@ const Dashboard: React.FC = () => {
       const payload: Record<string, unknown> = {
         email: profileData.email.trim().toLowerCase(),
         phone: validatedPhone || "",
-        // phone: profileData.phone || "",
         phoneCountryCode: profileData.phoneCountryCode || "+33",
-        // whatsappNumber: profileData.whatsappNumber || "",
         whatsappNumber: validatedWhatsApp || "",
 
         whatsappCountryCode: profileData.whatsappCountryCode || "+33",
@@ -861,7 +861,7 @@ const Dashboard: React.FC = () => {
         profilePhoto: profileData.profilePhoto || "",
         photoURL: profileData.profilePhoto || "",
         avatar: profileData.profilePhoto || "",
-        updatedAt: serverTimestamp()  as Timestamp,
+        updatedAt: serverTimestamp() as Timestamp,
       };
 
       if (user.role === "lawyer") {
@@ -926,9 +926,10 @@ const Dashboard: React.FC = () => {
             user.role === "lawyer"
               ? profileData.currentCountry || ""
               : profileData.residenceCountry ||
-                profileData.currentCountry ||
-                "",
+              profileData.currentCountry ||
+              "",
           description: payload.bio,
+          bio: payload.bio,
           specialties:
             user.role === "lawyer"
               ? (payload as { specialties?: string[] }).specialties || []
@@ -936,18 +937,44 @@ const Dashboard: React.FC = () => {
           yearsOfExperience:
             user.role === "lawyer"
               ? (payload as { yearsOfExperience?: number }).yearsOfExperience ||
-                0
+              0
               : (payload as { yearsAsExpat?: number }).yearsAsExpat || 0,
           interventionCountries:
             user.role === "lawyer"
               ? (payload as { practiceCountries?: string[] })
-                  .practiceCountries || []
+                .practiceCountries || []
               : (payload as { interventionCountries?: string[] })
-                  .interventionCountries || [],
+                .interventionCountries || [],
           updatedAt: serverTimestamp(),
-        }).catch(() => {});
+        }).catch(() => { });
       }
 
+      // ✅ Translation update (NEW)
+      if (user.role === "lawyer" || user.role === "expat") {
+        const fieldsUpdated = Object.keys(payload).filter(
+          (key) => key !== "email" && key !== "updatedAt"
+        );
+        
+        if (fieldsUpdated.length > 0) {
+          console.log('[saveSettings] Requesting translation update for fields:', fieldsUpdated);
+          
+          const translationResult = await requestUpdateProviderTranslation(
+            user.id,
+            fieldsUpdated
+          );
+          
+          if (translationResult.success && translationResult.updatedLanguages.length > 0) {
+            console.log('[saveSettings] ✓ Translations updated for languages:', 
+              translationResult.updatedLanguages);
+          } else if (!translationResult.success) {
+            console.warn('[saveSettings] ⚠ Translation update had issues:', 
+              translationResult.message);
+            // Continue - profile was saved successfully, translation update is secondary
+          }
+        }
+      }
+
+      // Audit & refresh
       await logAuditEvent(user.id, "settings_updated", {
         settings: JSON.stringify(payload),
       });
@@ -1145,10 +1172,10 @@ const Dashboard: React.FC = () => {
       const isCurrentlyFrozen = frozenLanguages.includes(selectedTranslationLang);
 
       if (isCurrentlyFrozen) {
-        // Unfreeze
+        // Unfreeze - mark as outdated so it will be regenerated from updated original
         await updateDoc(translationRef, {
           [`metadata.frozenLanguages`]: frozenLanguages.filter((lang: SupportedLanguage) => lang !== selectedTranslationLang),
-          [`metadata.translations.${selectedTranslationLang}.status`]: 'created',
+          [`metadata.translations.${selectedTranslationLang}.status`]: 'outdated', // Mark as outdated to force regeneration
           [`metadata.translations.${selectedTranslationLang}.updatedAt`]: serverTimestamp(),
           [`metadata.lastUpdated`]: serverTimestamp(),
         });
@@ -1570,10 +1597,9 @@ const Dashboard: React.FC = () => {
                         <button
                           onClick={() => setActiveTab(item.key as TabType)}
                           className={`group relative w-full flex items-center px-4 py-2 text-sm font-medium ${UI.radiusSm} transition-all
-                            ${
-                              activeTab === (item.key as TabType)
-                                ? "bg-gradient-to-r from-red-50 to-orange-50 text-red-700 dark:from-white/5 dark:to-white/10 dark:text-white"
-                                : "text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5"
+                            ${activeTab === (item.key as TabType)
+                              ? "bg-gradient-to-r from-red-50 to-orange-50 text-red-700 dark:from-white/5 dark:to-white/10 dark:text-white"
+                              : "text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5"
                             }
                           `}
                           title={
@@ -1598,11 +1624,10 @@ const Dashboard: React.FC = () => {
                         >
                           {/* Barre active à gauche (UI only) */}
                           <span
-                            className={`absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 ${
-                              activeTab === item.key
-                                ? "bg-gradient-to-b from-red-500 to-orange-500 dark:from-red-500 dark:to-orange-500"
-                                : "bg-transparent"
-                            } ${UI.radiusSm}`}
+                            className={`absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 ${activeTab === item.key
+                              ? "bg-gradient-to-b from-red-500 to-orange-500 dark:from-red-500 dark:to-orange-500"
+                              : "bg-transparent"
+                              } ${UI.radiusSm}`}
                           />
                           {item.icon}
 
@@ -1620,9 +1645,9 @@ const Dashboard: React.FC = () => {
                                       ? item.ch
                                       : language === "pt"
                                         ? item.pt
-                                          : language === "ar"
-                                            ? item.ar
-                                        : item.en}
+                                        : language === "ar"
+                                          ? item.ar
+                                          : item.en}
 
                           {activeTab === (item.key as TabType) && (
                             <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded bg-red-100 text-red-700 dark:bg-white/10 dark:text-white">
@@ -1730,27 +1755,25 @@ const Dashboard: React.FC = () => {
                               </p>
                               <div className="mt-1 flex items-center">
                                 <span
-                                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                                    currentStatus
-                                      ? "bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-300"
-                                      : "bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-300"
-                                  }`}
+                                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${currentStatus
+                                    ? "bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-300"
+                                    : "bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-300"
+                                    }`}
                                 >
                                   <span
-                                    className={`w-2 h-2 mr-2 rounded-full ${
-                                      currentStatus
-                                        ? "bg-green-600"
-                                        : "bg-red-600"
-                                    }`}
+                                    className={`w-2 h-2 mr-2 rounded-full ${currentStatus
+                                      ? "bg-green-600"
+                                      : "bg-red-600"
+                                      }`}
                                   />
 
                                   {currentStatus
                                     ? intl.formatMessage({
-                                        id: "dashboard.online",
-                                      })
+                                      id: "dashboard.online",
+                                    })
                                     : intl.formatMessage({
-                                        id: "dashboard.offline",
-                                      })}
+                                      id: "dashboard.offline",
+                                    })}
                                 </span>
                               </div>
                             </div>
@@ -2005,8 +2028,8 @@ const Dashboard: React.FC = () => {
                                     return p && p.isValid()
                                       ? true
                                       : intl.formatMessage({
-                                          id: "dashboard.invalidPhone",
-                                        });
+                                        id: "dashboard.invalidPhone",
+                                      });
                                   } catch {
                                     return intl.formatMessage({
                                       id: "dashboard.invalidPhone",
@@ -2132,8 +2155,8 @@ const Dashboard: React.FC = () => {
                                     return p && p.isValid()
                                       ? true
                                       : intl.formatMessage({
-                                          id: "dashboard.invalidWhatsApp",
-                                        });
+                                        id: "dashboard.invalidWhatsApp",
+                                      });
                                   } catch {
                                     return intl.formatMessage({
                                       id: "dashboard.invalidWhatsApp",
@@ -2250,7 +2273,7 @@ const Dashboard: React.FC = () => {
                           type="number"
                           value={String(
                             profileData.graduationYear ||
-                              new Date().getFullYear() - 5
+                            new Date().getFullYear() - 5
                           )}
                           onChange={(v) =>
                             setProfileData((p) => ({
@@ -2550,11 +2573,10 @@ const Dashboard: React.FC = () => {
                           {notifications.map((n) => (
                             <div
                               key={n.id}
-                              className={`p-4 rounded-lg border ${
-                                n.isRead
-                                  ? "bg-white dark:bg-white/5 border-gray-200 dark:border-white/10"
-                                  : "bg-blue-50 dark:bg-blue-500/10 border-blue-200 dark:border-blue-500/20"
-                              }`}
+                              className={`p-4 rounded-lg border ${n.isRead
+                                ? "bg-white dark:bg-white/5 border-gray-200 dark:border-white/10"
+                                : "bg-blue-50 dark:bg-blue-500/10 border-blue-200 dark:border-blue-500/20"
+                                }`}
                             >
                               <div className="flex justify-between">
                                 <h4 className="font-medium text-gray-900 dark:text-gray-100">
@@ -2624,11 +2646,11 @@ const Dashboard: React.FC = () => {
                                     : "Expat"} */}
                                 {f.type === "lawyer"
                                   ? intl.formatMessage({
-                                      id: "dashboard.lawyer",
-                                    })
+                                    id: "dashboard.lawyer",
+                                  })
                                   : intl.formatMessage({
-                                      id: "dashboard.expat",
-                                    })}
+                                    id: "dashboard.expat",
+                                  })}
 
                                 {f.country ? ` • ${f.country}` : ""}
                               </p>

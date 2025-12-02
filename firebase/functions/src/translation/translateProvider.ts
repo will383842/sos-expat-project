@@ -301,22 +301,42 @@ export const translateProvider = onCall(
     }
     console.log('[translateProvider] ✓ Step 1: Input validation passed');
 
-    // Step 2: Check if translation already exists
+    // Step 2: Check if translation already exists and if it's outdated
     console.log('[translateProvider] Step 2: Checking for existing translation...');
     let existing;
+    let isOutdated = false;
+    let translationStatus = null;
+    
+    // First check the translation document to see if translation exists and its status
+    const translationRef = db.collection('providers_translations').doc(providerId);
+    const translationDoc = await translationRef.get();
+    
+    if (translationDoc.exists) {
+      const docData = translationDoc.data();
+      translationStatus = docData?.metadata?.translations?.[targetLanguage]?.status;
+      isOutdated = translationStatus === 'outdated';
+      console.log('[translateProvider] Translation status check:', {
+        status: translationStatus,
+        isOutdated,
+        isFrozen: docData?.metadata?.frozenLanguages?.includes(targetLanguage),
+      });
+    }
+    
     try {
       existing = await getTranslation(providerId, targetLanguage);
       console.log('[translateProvider] Existing translation check result:', {
         exists: !!existing,
         hasTranslation: existing ? Object.keys(existing).length : 0,
+        isOutdated,
       });
     } catch (error) {
       console.error('[translateProvider] Error checking existing translation:', error);
       throw error;
     }
 
-    if (existing) {
-      console.log('[translateProvider] Step 2a: Translation exists, serializing cached response...');
+    // If translation exists but is outdated, regenerate it instead of returning cached
+    if (existing && !isOutdated) {
+      console.log('[translateProvider] Step 2a: Translation exists and is up-to-date, serializing cached response...');
       try {
         console.log('[translateProvider] Serializing existing translation object...');
         const serializedTranslation = serializeForResponse(existing);
@@ -362,7 +382,11 @@ export const translateProvider = onCall(
         );
       }
     }
-    console.log('[translateProvider] ✓ Step 2: No existing translation found, proceeding with new translation');
+    if (isOutdated) {
+      console.log('[translateProvider] ⚠️ Translation exists but is outdated, will regenerate from updated original');
+    } else {
+      console.log('[translateProvider] ✓ Step 2: No existing translation found, proceeding with new translation');
+    }
 
     // Step 3: Get provider data
     console.log('[translateProvider] Step 3: Fetching provider data from Firestore...');
@@ -429,9 +453,9 @@ export const translateProvider = onCall(
     console.log('[translateProvider] ✓ Step 5: Not a robot, proceeding with translation');
 
     // Step 6: Check if translation is frozen BEFORE translating (to save resources)
+    // Note: translationRef and doc were already fetched in Step 2, reuse them
     console.log('[translateProvider] Step 6: Checking if translation is frozen...');
-    const translationRef = db.collection('providers_translations').doc(providerId);
-    const doc = await translationRef.get();
+    const doc = translationDoc; // Reuse the doc from Step 2
     
     // Check if translation is frozen - if frozen, return existing translation instead of generating new one
     if (doc.exists) {
@@ -488,10 +512,15 @@ export const translateProvider = onCall(
         [`translations.${targetLanguage}`]: cleanedTranslation,
         [`metadata.availableLanguages`]: admin.firestore.FieldValue.arrayUnion(targetLanguage),
         [`metadata.lastUpdated`]: admin.firestore.FieldValue.serverTimestamp(),
-        [`metadata.translations.${targetLanguage}.status`]: 'created',
-        [`metadata.translations.${targetLanguage}.createdAt`]: admin.firestore.FieldValue.serverTimestamp(),
+        [`metadata.translations.${targetLanguage}.status`]: 'created', // Reset from 'outdated' to 'created'
         [`metadata.translations.${targetLanguage}.updatedAt`]: admin.firestore.FieldValue.serverTimestamp(),
       };
+      
+      // If this was a regeneration (outdated), also update the original profile to latest
+      if (isOutdated && doc.exists) {
+        updateData.original = removeUndefinedValues(original);
+        console.log('[translateProvider] ✓ Updating original profile along with regenerated translation');
+      }
       
       if (!doc.exists) {
         // First time: save original profile (remove undefined values)
