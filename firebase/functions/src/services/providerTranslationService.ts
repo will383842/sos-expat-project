@@ -27,8 +27,8 @@ export interface TranslatedContent {
   summary: string; // Translated summary
   description: string; // Translated description
   specialties: string[]; // Translated specialties
-  cta: string; // Translated CTA
-  slug: string; // Translated slug
+  cta: string; 
+  slug: string; 
   seo: {
     metaTitle: string;
     metaDescription: string;
@@ -825,14 +825,14 @@ export async function translateAllFields(
   }
 
   // ❌ DO NOT TRANSLATE: lastName, city, country, phone, email, etc.
-  // Keep them exactly as they are in the original
-  translated.lastName = original.lastName;
-  translated.city = original.city;
-  translated.country = original.country;
-  translated.phone = original.phone;
-  translated.email = original.email;
-  translated.barNumber = original.barNumber;
-  translated.phoneCountryCode = original.phoneCountryCode;
+  // Keep them exactly as they are in the original (only if they exist)
+  if (original.lastName !== undefined) translated.lastName = original.lastName;
+  if (original.city !== undefined && original.city !== null) translated.city = original.city;
+  if (original.country !== undefined && original.country !== null) translated.country = original.country;
+  if (original.phone !== undefined && original.phone !== null) translated.phone = original.phone;
+  if (original.email !== undefined && original.email !== null) translated.email = original.email;
+  if (original.barNumber !== undefined && original.barNumber !== null) translated.barNumber = original.barNumber;
+  if (original.phoneCountryCode !== undefined && original.phoneCountryCode !== null) translated.phoneCountryCode = original.phoneCountryCode;
 
   console.log(`[translateAllFields] ✓ Translation complete. Non-translatable fields preserved: lastName=${original.lastName}, city=${original.city}`);
 
@@ -955,19 +955,63 @@ export async function translateProfile(
 }
 
 /**
+ * Remove undefined values from an object recursively
+ * Firestore doesn't accept undefined values
+ */
+function removeUndefinedValues(obj: any): any {
+  if (obj === null || obj === undefined) {
+    return null;
+  }
+  
+  if (Array.isArray(obj)) {
+    return obj.map(item => removeUndefinedValues(item));
+  }
+  
+  if (typeof obj === 'object') {
+    const cleaned: any = {};
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        const value = obj[key];
+        if (value !== undefined) {
+          cleaned[key] = removeUndefinedValues(value);
+        }
+      }
+    }
+    return cleaned;
+  }
+  
+  return obj;
+}
+
+/**
  * Save translation to Firestore
+ * @param isManualEdit - If true, automatically freezes the translation to prevent auto-updates
  */
 export async function saveTranslation(
   providerId: string,
   language: SupportedLanguage,
   translation: TranslatedContent,
-  userId?: string
+  userId?: string,
+  isManualEdit: boolean = false
 ): Promise<void> {
   const translationRef = db.collection('providers_translations').doc(providerId);
   const doc = await translationRef.get();
 
+  // Check if translation is frozen (only allow manual edits to overwrite frozen translations)
+  if (doc.exists) {
+    const existing = doc.data() as ProviderTranslationDoc;
+    const isFrozen = existing.metadata.frozenLanguages?.includes(language);
+    
+    if (isFrozen && !isManualEdit) {
+      throw new Error(`Translation for language ${language} is frozen. Only manual edits are allowed.`);
+    }
+  }
+
+  // Remove undefined values before saving (Firestore doesn't accept undefined)
+  const cleanedTranslation = removeUndefinedValues(translation);
+  
   const updateData: any = {
-    [`translations.${language}`]: translation,
+    [`translations.${language}`]: cleanedTranslation,
     [`metadata.availableLanguages`]: FieldValue.arrayUnion(language),
     [`metadata.translationCosts.${language}`]: {
       cost: TRANSLATION_COST,
@@ -976,20 +1020,25 @@ export async function saveTranslation(
     },
     [`metadata.totalCost`]: FieldValue.increment(TRANSLATION_COST),
     [`metadata.lastUpdated`]: FieldValue.serverTimestamp(),
-    [`metadata.translations.${language}.status`]: 'created',
+    [`metadata.translations.${language}.status`]: isManualEdit ? 'frozen' : 'created',
     [`metadata.translations.${language}.createdAt`]: FieldValue.serverTimestamp(),
     [`metadata.translations.${language}.updatedAt`]: FieldValue.serverTimestamp(),
     [`metadata.translations.${language}.version`]: 1,
   };
 
+  // If manual edit, freeze the translation
+  if (isManualEdit) {
+    updateData[`metadata.frozenLanguages`] = FieldValue.arrayUnion(language);
+  }
+
   if (!doc.exists) {
-    // First time: save original profile
+    // First time: save original profile (remove undefined values)
     const original = await extractOriginalProfile(providerId);
     if (!original) {
       throw new Error('Provider not found');
     }
     
-    updateData.original = original;
+    updateData.original = removeUndefinedValues(original);
     updateData.metadata = {
       availableLanguages: [language],
       translationCosts: {
@@ -1002,10 +1051,10 @@ export async function saveTranslation(
       totalCost: TRANSLATION_COST,
       createdAt: FieldValue.serverTimestamp(),
       lastUpdated: FieldValue.serverTimestamp(),
-      frozenLanguages: [],
+      frozenLanguages: isManualEdit ? [language] : [],
       translations: {
         [language]: {
-          status: 'created',
+          status: isManualEdit ? 'frozen' : 'created',
           createdAt: FieldValue.serverTimestamp(),
           updatedAt: FieldValue.serverTimestamp(),
           cost: TRANSLATION_COST,

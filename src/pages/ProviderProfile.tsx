@@ -1097,6 +1097,38 @@ const ProviderProfile: React.FC = () => {
     };
   }, [realProviderId]); // Removed 'provider' dependency to prevent listener recreation
 
+  // Track if we're normalizing URL to prevent updateSEOMetadata from running during normalization
+  const isNormalizingRef = useRef(false);
+
+  // Normalize legacy URLs to simplified format immediately
+  useEffect(() => {
+    const pathname = location.pathname;
+    // Check if URL matches legacy pattern: /{locale}/{type}/{country}/{language}/{nameId}
+    const legacyPattern = /^\/(?:[a-z]{2}(?:-[a-z]{2})?\/)?(avocat|expatrie|lawyers|expats)\/([^\/]+)\/([^\/]+)\/(.+)$/i;
+    const match = pathname.match(legacyPattern);
+    
+    if (match) {
+      const [, typeSlug, , , nameId] = match;
+      // Extract locale if present
+      const localeMatch = pathname.match(/^\/([a-z]{2}(?:-[a-z]{2})?)\//i);
+      const locale = localeMatch ? localeMatch[1] : '';
+      // Build simplified URL
+      const simplifiedPath = locale 
+        ? `/${locale}/${typeSlug}/${nameId}`
+        : `/${typeSlug}/${nameId}`;
+      
+      // Redirect to simplified URL immediately
+      if (pathname !== simplifiedPath) {
+        isNormalizingRef.current = true;
+        navigate(simplifiedPath, { replace: true });
+        // Reset flag after navigation
+        setTimeout(() => {
+          isNormalizingRef.current = false;
+        }, 100);
+      }
+    }
+  }, [location.pathname, navigate]);
+
   // Redirect si not found
   useEffect(() => {
     if (!isLoading && !provider && notFound) {
@@ -1110,13 +1142,21 @@ const ProviderProfile: React.FC = () => {
 
   // SEO
   const updateSEOMetadata = useCallback(() => {
-    if (!provider || isLoading || seoUpdatedRef.current) return;
+    if (!provider || isLoading || seoUpdatedRef.current || isNormalizingRef.current) return;
+    
+    // Legacy URL pattern - check this first
+    const legacyPattern = /^\/(?:[a-z]{2}(?:-[a-z]{2})?\/)?(avocat|expatrie|lawyers|expats)\/([^\/]+)\/([^\/]+)\/(.+)$/i;
+    const currentPathname = location.pathname;
+    
+    // Don't update URL if current path is a legacy format - let normalization handle it
+    if (legacyPattern.test(currentPathname)) {
+      return; // Skip URL update, let normalization handle it
+    }
     
     try {
       const isLawyer = provider.type === "lawyer";
       
       // Extract locale and language from current pathname
-      const currentPathname = location.pathname;
       const { locale: currentLocale, lang: currentLang } = parseLocaleFromPath(currentPathname);
       
       // Use translated route slug based on current language
@@ -1125,12 +1165,7 @@ const ProviderProfile: React.FC = () => {
         ? getTranslatedRouteSlug(routeKey, currentLang)
         : (isLawyer ? "avocat" : "expatrie");
       
-      const countrySlug = safeNormalize(provider.country || "");
-      const langSlug =
-        provider.mainLanguage ||
-        (provider.languages?.[0]
-          ? safeNormalize(provider.languages[0])
-          : "francais");
+      // Use translated slug if available, otherwise generate from name
       const nameSlug =
         provider.slug ||
         safeNormalize(
@@ -1138,17 +1173,54 @@ const ProviderProfile: React.FC = () => {
         ) ||
         safeNormalize(provider.fullName || "");
       
-      // Build SEO URL with locale prefix if present
-      const seoPath = `/${displayType}/${countrySlug}/${langSlug}/${nameSlug}-${provider.id}`;
+      // Append ID only if slug doesn't already contain it
+      const finalSlug = nameSlug.includes(provider.id) ? nameSlug : `${nameSlug}-${provider.id}`;
+      
+      // Build SEO URL - simplified structure without country/language segments
+      const seoPath = `/${displayType}/${finalSlug}`;
       const seoUrl = currentLocale ? `/${currentLocale}${seoPath}` : seoPath;
       
       // Only update URL if it's different AND we haven't already updated it
       const currentPath = window.location.pathname.replace(/\/$/, '');
       const targetPath = seoUrl.replace(/\/$/, '');
       
-      if (currentPath !== targetPath && lastUrlRef.current !== targetPath) {
-        window.history.replaceState(null, "", seoUrl);
+      // Don't update if current path is already correct (simplified format)
+      if (currentPath === targetPath) {
         lastUrlRef.current = targetPath;
+        return;
+      }
+      
+      // Don't update if current path is a legacy format - let normalization handle it
+      if (legacyPattern.test(currentPath)) {
+        return;
+      }
+      
+      // Check if current path is already in simplified format (even if different slug)
+      // Pattern: /{locale}/{type}/{slug} - should have max 3 segments after locale
+      const simplifiedPattern = /^\/(?:[a-z]{2}(?:-[a-z]{2})?\/)?(avocat|expatrie|lawyers|expats)\/[^\/]+$/i;
+      const isCurrentSimplified = simplifiedPattern.test(currentPath);
+      
+      // If current path is already simplified, only update if target is also simplified and different
+      if (isCurrentSimplified) {
+        const isTargetSimplified = simplifiedPattern.test(targetPath);
+        if (isTargetSimplified && currentPath !== targetPath && lastUrlRef.current !== targetPath) {
+          // Only update if we're moving to a different simplified URL (e.g., slug changed)
+          window.history.replaceState(null, "", seoUrl);
+          lastUrlRef.current = targetPath;
+        }
+        return; // Don't update if current is simplified but target would be legacy
+      }
+      
+      // Only update if target is different and we haven't already set it
+      // Double-check that we're not generating a legacy URL
+      if (currentPath !== targetPath && lastUrlRef.current !== targetPath) {
+        const isLegacyTarget = legacyPattern.test(targetPath);
+        const isTargetSimplified = simplifiedPattern.test(targetPath);
+        // Only update if target is simplified format
+        if (!isLegacyTarget && isTargetSimplified) {
+          window.history.replaceState(null, "", seoUrl);
+          lastUrlRef.current = targetPath;
+        }
       }
 
       const pageTitle = `${provider.fullName} - ${
@@ -1263,15 +1335,6 @@ const ProviderProfile: React.FC = () => {
     (platform: "facebook" | "twitter" | "linkedin" | "copy") => {
       if (!provider) return;
       const isLawyer = provider.type === "lawyer";
-      const countrySlug = safeNormalize(provider.country);
-      const langSlug =
-        provider.mainLanguage ||
-        (provider.languages?.[0]
-          ? safeNormalize(provider.languages[0])
-          : "francais");
-      const nameSlug =
-        provider.slug ||
-        safeNormalize(`${provider.firstName}-${provider.lastName}`);
       // Extract locale and language from current pathname to preserve it
       const { locale: currentLocale, lang: currentLang } = parseLocaleFromPath(location.pathname);
       
@@ -1281,7 +1344,13 @@ const ProviderProfile: React.FC = () => {
         ? getTranslatedRouteSlug(routeKey, currentLang)
         : (isLawyer ? "avocat" : "expatrie");
       
-      const seoPath = `/${displayType}/${countrySlug}/${langSlug}/${nameSlug}-${provider.id}`;
+      // Use translated slug if available
+      const nameSlug =
+        provider.slug ||
+        safeNormalize(`${provider.firstName}-${provider.lastName}`);
+      const finalSlug = nameSlug.includes(provider.id) ? nameSlug : `${nameSlug}-${provider.id}`;
+      
+      const seoPath = `/${displayType}/${finalSlug}`;
       const fullSeoPath = currentLocale ? `/${currentLocale}${seoPath}` : seoPath;
       const currentUrl = `${window.location.origin}${fullSeoPath}`;
       const title = `${provider.fullName} - ${
@@ -1425,10 +1494,20 @@ const ProviderProfile: React.FC = () => {
     }
     // Only use translation if user explicitly selected a language and showOriginal is false
     if (translation && !showOriginal && viewingLanguage) {
-      // Check if translation has bio or description (translation has all fields from original)
+      // Check translation fields in priority order:
+      // 1. description (what's saved in Dashboard)
+      // 2. bio (fallback for older translations)
+      // 3. summary (motivation field, also saved in Dashboard)
       const trans = translation as any;
-      if (trans.bio) return typeof trans.bio === 'string' ? trans.bio : String(trans.bio);
-      if (trans.description) return trans.description;
+      if (trans.description) {
+        return typeof trans.description === 'string' ? trans.description : String(trans.description);
+      }
+      if (trans.bio) {
+        return typeof trans.bio === 'string' ? trans.bio : String(trans.bio);
+      }
+      if (trans.summary) {
+        return typeof trans.summary === 'string' ? trans.summary : String(trans.summary);
+      }
     }
     // Fallback to provider's description (original)
     return pickDescription(provider, preferredLangKey);
@@ -1602,9 +1681,21 @@ const ProviderProfile: React.FC = () => {
             : `${detectedLang === "fr" ? "Consultez" : "Consult"} ${provider.fullName}, ${isLawyer ? (detectedLang === "fr" ? "avocat" : "lawyer") : detectedLang === "fr" ? "expatrié" : "expat"} ${detectedLang === "fr" ? "francophone" : "French-speaking"} ${detectedLang === "fr" ? "en" : "in"} ${provider.country}. ${descriptionText.slice(0, 120)}...`
         }
         canonicalUrl={
-          translation && !showOriginal && translation.slug
-            ? `/${currentLocale || ''}/${isLawyer ? "avocat" : "expatrie"}/${translation.slug}`
-            : `/${currentLocale || ''}/${isLawyer ? "avocat" : "expatrie"}/${safeNormalize(provider.country)}/${safeNormalize(provider.mainLanguage || languagesList[0] || "francais")}/${safeNormalize(provider.fullName)}-${provider.id}`
+          (() => {
+            // Use translated route slug based on current language
+            const routeKey = isLawyer ? "lawyer" : "expat";
+            const displayType = currentLang 
+              ? getTranslatedRouteSlug(routeKey, currentLang)
+              : (isLawyer ? "avocat" : "expatrie");
+            
+            // Use translated slug if available, otherwise generate from name
+            const nameSlug = translation && !showOriginal && translation.slug
+              ? translation.slug
+              : (provider.slug || safeNormalize(provider.fullName || `${provider.firstName}-${provider.lastName}`));
+            
+            const finalSlug = nameSlug.includes(provider.id) ? nameSlug : `${nameSlug}-${provider.id}`;
+            return `/${currentLocale || ''}/${displayType}/${finalSlug}`;
+          })()
         }
         ogImage={mainPhoto}
         ogType="profile"
@@ -1790,8 +1881,11 @@ const ProviderProfile: React.FC = () => {
                           motivationText = getFirstString(provider.motivation, preferredLangKey);
                         } else if (translation && viewingLanguage) {
                           // Only use translation if user explicitly selected a language
-                          const trans = translation as any; // Translation has all fields from original
-                          if (trans.motivation) {
+                          // Check both 'summary' (what Dashboard saves) and 'motivation' (what backend generates)
+                          const trans = translation as any;
+                          if (trans.summary) {
+                            motivationText = typeof trans.summary === 'string' ? trans.summary : String(trans.summary);
+                          } else if (trans.motivation) {
                             motivationText = typeof trans.motivation === 'string' ? trans.motivation : String(trans.motivation);
                           }
                         } else {
@@ -2277,8 +2371,11 @@ const ProviderProfile: React.FC = () => {
                           motivationText = getFirstString(provider.motivation, preferredLangKey);
                         } else if (translation && viewingLanguage) {
                           // Only use translation if user explicitly selected a language
-                          const trans = translation as any; // Translation has all fields from original
-                          if (trans.motivation) {
+                          // Check both 'summary' (what Dashboard saves) and 'motivation' (what backend generates)
+                          const trans = translation as any;
+                          if (trans.summary) {
+                            motivationText = typeof trans.summary === 'string' ? trans.summary : String(trans.summary);
+                          } else if (trans.motivation) {
                             motivationText = typeof trans.motivation === 'string' ? trans.motivation : String(trans.motivation);
                           }
                         } else {

@@ -11,6 +11,35 @@ import {
 import { db } from '../utils/firebase';
 
 /**
+ * Remove undefined values from an object recursively
+ * Firestore doesn't accept undefined values
+ */
+function removeUndefinedValues(obj: any): any {
+  if (obj === null || obj === undefined) {
+    return null;
+  }
+  
+  if (Array.isArray(obj)) {
+    return obj.map(item => removeUndefinedValues(item));
+  }
+  
+  if (typeof obj === 'object') {
+    const cleaned: any = {};
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        const value = obj[key];
+        if (value !== undefined) {
+          cleaned[key] = removeUndefinedValues(value);
+        }
+      }
+    }
+    return cleaned;
+  }
+  
+  return obj;
+}
+
+/**
  * Final cleanup function that ensures response is 100% JSON-serializable
  * Uses JSON.parse(JSON.stringify()) to create a completely clean object
  */
@@ -399,25 +428,64 @@ export const translateProvider = onCall(
     }
     console.log('[translateProvider] ✓ Step 5: Not a robot, proceeding with translation');
 
-    // Step 6: Translate all fields
-    console.log('[translateProvider] Step 6: Translating all fields...');
+    // Step 6: Check if translation is frozen BEFORE translating (to save resources)
+    console.log('[translateProvider] Step 6: Checking if translation is frozen...');
+    const translationRef = db.collection('providers_translations').doc(providerId);
+    const doc = await translationRef.get();
+    
+    // Check if translation is frozen - if frozen, return existing translation instead of generating new one
+    if (doc.exists) {
+      const existing = doc.data();
+      const frozenLanguages = existing?.metadata?.frozenLanguages || [];
+      if (frozenLanguages.includes(targetLanguage)) {
+        console.log(`[translateProvider] ⚠️ Translation for ${targetLanguage} is frozen - returning existing translation`);
+        
+        // Return the existing frozen translation instead of generating a new one
+        const existingTranslation = existing?.translations?.[targetLanguage];
+        if (existingTranslation) {
+          const serializedExisting = serializeForResponse(existingTranslation);
+          const cleanExisting = ensureJsonSerializable({
+            success: true,
+            translation: serializedExisting,
+            cached: true,
+            cost: 0,
+            isFrozen: true,
+            message: 'Translation is frozen - returning existing translation',
+          });
+          console.log('[translateProvider] ===== RETURNING FROZEN TRANSLATION =====');
+          return cleanExisting;
+        } else {
+          // Frozen but no translation exists - return error
+          return {
+            success: false,
+            message: `Translation for ${targetLanguage} is frozen but no translation exists.`,
+            translation: null,
+          };
+        }
+      }
+    }
+    console.log('[translateProvider] ✓ Step 6: Translation is not frozen, proceeding with translation');
+
+    // Step 7: Translate all fields
+    console.log('[translateProvider] Step 7: Translating all fields...');
     let translated;
     try {
       translated = await translateAllFields(original, targetLanguage);
-      console.log('[translateProvider] ✓ Step 6: Translation completed');
+      console.log('[translateProvider] ✓ Step 7: Translation completed');
     } catch (error) {
       console.error('[translateProvider] ✗ Error during translation:', error);
       throw error;
     }
 
-    // Step 7: Save original and translated data to providers_translations
-    console.log('[translateProvider] Step 7: Saving to providers_translations...');
+    // Step 8: Save original and translated data to providers_translations
+    console.log('[translateProvider] Step 8: Saving to providers_translations...');
     try {
-      const translationRef = db.collection('providers_translations').doc(providerId);
-      const doc = await translationRef.get();
+      
+      // Remove undefined values before saving (Firestore doesn't accept undefined)
+      const cleanedTranslation = removeUndefinedValues(translated);
       
       const updateData: any = {
-        [`translations.${targetLanguage}`]: translated,
+        [`translations.${targetLanguage}`]: cleanedTranslation,
         [`metadata.availableLanguages`]: admin.firestore.FieldValue.arrayUnion(targetLanguage),
         [`metadata.lastUpdated`]: admin.firestore.FieldValue.serverTimestamp(),
         [`metadata.translations.${targetLanguage}.status`]: 'created',
@@ -426,8 +494,8 @@ export const translateProvider = onCall(
       };
       
       if (!doc.exists) {
-        // First time: save original profile
-        updateData.original = original;
+        // First time: save original profile (remove undefined values)
+        updateData.original = removeUndefinedValues(original);
         updateData.metadata = {
           availableLanguages: [targetLanguage],
           translationCosts: {},
@@ -455,8 +523,8 @@ export const translateProvider = onCall(
       throw error;
     }
 
-    // Step 8: Return success response
-    console.log('[translateProvider] Step 8: Returning success response...');
+    // Step 9: Return success response
+    console.log('[translateProvider] Step 9: Returning success response...');
     const serializedTranslation = serializeForResponse(translated);
     const response = {
       success: true,

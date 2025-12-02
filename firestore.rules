@@ -345,6 +345,17 @@ service cloud.firestore {
       allow delete: if isAdmin() || isDev();
     }
 
+    // ================= PROVIDERS TRANSLATIONS =================
+    match /providers_translations/{providerId} {
+      // Read: public (for displaying translated profiles) or owner/admin
+      allow read: if true || (isAuthenticated() && request.auth.uid == providerId) || isAdmin() || isDev();
+      
+      // Write: only the provider themselves (document ID must match user ID) or admin/dev
+      allow create: if (isAuthenticated() && request.auth.uid == providerId) || isAdmin() || isDev();
+      allow update: if (isAuthenticated() && request.auth.uid == providerId) || isAdmin() || isDev();
+      allow delete: if isAdmin() || isDev();
+    }
+
     // ======================= Catch-all =======================
     match /{document=**} { allow read, write: if false || isDev(); }
   }

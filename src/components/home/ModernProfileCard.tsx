@@ -803,7 +803,7 @@ interface ModernProfileCardProps {
   onProfileClick: (provider: Provider) => void;
   isUserConnected: boolean;
   index?: number;
-  language?: "fr" | "en" | "es";
+  language?: "fr" | "en" | "es" | "de" | "it" | "nl" | "ru" | "zh" | "ar";
 }
 
 // Constants - Centralisées pour éviter les recreations
