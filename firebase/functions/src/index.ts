@@ -2569,3 +2569,4 @@ export const testWebhook = onRequest(
 export * from './sitemap';
 export * from './translation/translateProvider';
 export * from './translation/initializeProviderTranslation';
+export * from './translation/updateProviderTranslation';
