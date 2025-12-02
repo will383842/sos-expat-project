@@ -206,6 +206,7 @@ function detectLanguageFromText(text: string): SupportedLanguage | null {
   }
   
   const normalized = text.toLowerCase();
+  // const words = normalized.split(/\s+/);
   
   // Language-specific patterns and common words
   const patterns: Record<SupportedLanguage, { words: string[]; patterns: RegExp[] }> = {

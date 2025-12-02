@@ -349,6 +349,72 @@ export async function requestTranslation(
 }
 
 /**
+ * Request update of existing translations when provider data changes
+ * Updates the original profile and re-translates changed fields to all available languages
+ */
+export async function requestUpdateProviderTranslation(
+  providerId: string,
+  fieldsUpdated: string[]
+): Promise<{ success: boolean; updatedLanguages: string[]; message: string }> {
+  if (!fieldsUpdated || fieldsUpdated.length === 0) {
+    console.log('[requestUpdateProviderTranslation] No fields to update, skipping');
+    return {
+      success: true,
+      updatedLanguages: [],
+      message: 'No fields to update',
+    };
+  }
+
+  try {
+    console.log('[requestUpdateProviderTranslation] Calling updateProviderTranslation function', {
+      providerId,
+      fieldsUpdated,
+    });
+
+    const updateTranslation = httpsCallable(functions, 'updateProviderTranslation');
+    const result = await updateTranslation({
+      providerId,
+      fieldsUpdated,
+    });
+
+    const data = (result as any)?.data;
+    
+    if (!data || typeof data !== 'object') {
+      throw new Error('Invalid response from translation update service');
+    }
+
+    if (!data.success) {
+      const errorMessage = data.error || data.message || 'Translation update failed';
+      console.warn('[requestUpdateProviderTranslation] Update returned success=false:', errorMessage);
+      return {
+        success: false,
+        updatedLanguages: [],
+        message: errorMessage,
+      };
+    }
+
+    console.log('[requestUpdateProviderTranslation] ✓ Translation update successful', {
+      updatedLanguages: data.updatedLanguages,
+      failedLanguages: data.failedLanguages,
+    });
+
+    return {
+      success: true,
+      updatedLanguages: data.updatedLanguages || [],
+      message: data.message || 'Translations updated successfully',
+    };
+  } catch (error) {
+    console.warn('[requestUpdateProviderTranslation] Error updating translations:', error);
+    // Don't throw - translation updates are non-critical
+    return {
+      success: false,
+      updatedLanguages: [],
+      message: error instanceof Error ? error.message : 'Translation update failed',
+    };
+  }
+}
+
+/**
  * Check if user is a robot
  */
 export function isRobot(): boolean {

@@ -1822,4 +1822,5 @@ exports.testWebhook = (0, https_1.onRequest)({
 __exportStar(require("./sitemap"), exports);
 __exportStar(require("./translation/translateProvider"), exports);
 __exportStar(require("./translation/initializeProviderTranslation"), exports);
+__exportStar(require("./translation/updateProviderTranslation"), exports);
 //# sourceMappingURL=index.js.map

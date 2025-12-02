@@ -45,6 +45,7 @@ import {
   BarChart,
   Download,
   Zap,
+  Globe2
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -172,7 +173,7 @@ export const adminMenuTree: AdminMenuItem[] = [
         icon: PlayCircle,
         description: 'Archive des sessions d\'appels'
       },
-      
+
     ]
   },
 
@@ -356,7 +357,7 @@ export const adminMenuTree: AdminMenuItem[] = [
         description: 'Push, SMS et notifications'
       },
       {
-        id:"Contacts",
+        id: "Contacts",
         label: "Contact Requests",
         path: "/admin/contact-messages",
         icon: MessageSquare,
@@ -566,7 +567,15 @@ export const adminMenuTree: AdminMenuItem[] = [
         ]
       }
     ]
-  }
+  },
+  // // ===== 🌐 DASHBOARD LINGUISTIQUE (Priorité 9) =====  
+  // {
+  //   id: 'language-dashboard',
+  //   label: 'tableau de bord linguistique',
+  //   path: '/admin/language/dashboard',
+  //   icon: Globe2,
+  //   description: 'Vue d\'ensemble et KPIs en temps réel'
+  // },
 ];
 
 // ===== FONCTIONS UTILITAIRES AMÉLIORÉES =====
@@ -662,10 +671,10 @@ export function hasMenuAccess(menuItem: AdminMenuItem, userRole: string = 'admin
   };
 
   const permissions = rolePermissions[userRole] || [];
-  
+
   // Si accès total
   if (permissions.includes('*')) return true;
-  
+
   // Vérifier si l'ID du menu est autorisé
   return permissions.includes(menuItem.id);
 }
@@ -675,7 +684,7 @@ export function hasMenuAccess(menuItem: AdminMenuItem, userRole: string = 'admin
  */
 export function applyBadgesToMenu(items: AdminMenuItem[] = adminMenuTree): AdminMenuItem[] {
   const badges = getMenuBadges();
-  
+
   return items.map(item => ({
     ...item,
     badge: badges[item.id] || item.badge,
@@ -687,7 +696,7 @@ export function applyBadgesToMenu(items: AdminMenuItem[] = adminMenuTree): Admin
  * Filtre le menu selon les permissions utilisateur
  */
 export function filterMenuByPermissions(
-  items: AdminMenuItem[] = adminMenuTree, 
+  items: AdminMenuItem[] = adminMenuTree,
   userRole: string = 'admin'
 ): AdminMenuItem[] {
   return items
