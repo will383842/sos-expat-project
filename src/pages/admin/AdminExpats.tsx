@@ -290,7 +290,7 @@ type FirestoreExpatDoc = {
   expertiseDomains?: string[];
   servicesOffered?: string[];
   description?: string;
-  bio?: string;
+  bio?: string | object;
   hourlyRate?: number;
   pricePerHour?: number;
 };
@@ -380,7 +380,7 @@ const useColumnLayout = () => {
       try {
         const raw = localStorage.getItem("admin.expats.colOrder.v1");
         if (raw) return JSON.parse(raw);
-      } catch {}
+      } catch { }
       return DEFAULT_ORDER;
     })()
   );
@@ -392,7 +392,7 @@ const useColumnLayout = () => {
           const obj = JSON.parse(raw) as Record<string, number>;
           return { ...DEFAULT_WIDTHS, ...obj };
         }
-      } catch {}
+      } catch { }
       return DEFAULT_WIDTHS;
     })()
   );
@@ -404,7 +404,7 @@ const useColumnLayout = () => {
           const obj = JSON.parse(raw) as Record<string, boolean>;
           return { ...DEFAULT_VISIBLE, ...obj };
         }
-      } catch {}
+      } catch { }
       return DEFAULT_VISIBLE;
     })()
   );
@@ -576,6 +576,8 @@ const AdminExpats: React.FC = () => {
     const data = d.data() as FirestoreExpatDoc;
     const expatSince = data.expatSince?.toDate() || data.movedToCountryAt?.toDate();
     const yearsInCountry = expatSince ? calculateYearsInCountry(expatSince) : data.yearsInCountry || 0;
+    console.log("data===============>>", data);
+
     return {
       id: d.id,
       email: data.email || "",
@@ -601,7 +603,7 @@ const AdminExpats: React.FC = () => {
       isVisibleOnMap: data.isVisibleOnMap ?? true,
       profileComplete: calculateProfileCompleteness(data),
       helpDomains: data.helpDomains || data.expertiseDomains || data.servicesOffered || [],
-      description: data.description || data.bio || "",
+      description: (typeof data.bio === 'string' ? data.bio : data.description) || "",
       hourlyRate: data.hourlyRate || data.pricePerHour,
     };
   };

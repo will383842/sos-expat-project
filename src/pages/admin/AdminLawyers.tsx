@@ -43,6 +43,8 @@ import {
 import AdminLayout from "../../components/admin/AdminLayout";
 import Button from "../../components/common/Button";
 import Modal from "../../components/common/Modal";
+import TranslationModal from "../../components/admin/TranslationModal";
+import { log } from "node:console";
 
 /* ---------------------- i18n ---------------------- */
 type Lang = "fr" | "en";
@@ -423,7 +425,7 @@ const useColumnLayout = () => {
           const arr = JSON.parse(raw) as ColId[];
           if (Array.isArray(arr) && arr.length) return arr;
         }
-      } catch {}
+      } catch { }
       return DEFAULT_ORDER;
     })()
   );
@@ -435,7 +437,7 @@ const useColumnLayout = () => {
           const obj = JSON.parse(raw) as Record<string, number>;
           return { ...DEFAULT_WIDTHS, ...obj };
         }
-      } catch {}
+      } catch { }
       return DEFAULT_WIDTHS;
     })()
   );
@@ -444,7 +446,7 @@ const useColumnLayout = () => {
       try {
         const raw = localStorage.getItem("admin.lawyers.colVisible.v1");
         if (raw) return { ...DEFAULT_VISIBLE, ...(JSON.parse(raw) as Record<ColId, boolean>) };
-      } catch {}
+      } catch { }
       return DEFAULT_VISIBLE;
     })()
   );
@@ -724,28 +726,28 @@ const AdminLawyers: React.FC = () => {
               x.id !== id
                 ? x
                 : {
-                    ...x,
-                    status: (v.status ?? x.status) as UserStatus,
-                    isValidated: v.isValidated ?? x.isValidated,
-                    validationStatus: v.validationStatus ?? x.validationStatus,
-                    validationReason: v.validationReason ?? x.validationReason,
-                    kycStatus: v.kycStatus ?? x.kycStatus,
-                    kycProvider: v.kycProvider ?? x.kycProvider,
-                    kycStripeAccountId: v.kycStripeAccountId ?? x.kycStripeAccountId,
-                    kycLastSyncAt: v.kycLastSyncAt
-                      ? v.kycLastSyncAt.toDate()
-                      : x.kycLastSyncAt,
-                    lastLoginAt: v.lastLoginAt ? v.lastLoginAt.toDate() : x.lastLoginAt,
-                    emailVerified: v.emailVerified ?? x.emailVerified,
-                    phone: v.phone ?? x.phone,
-                  }
+                  ...x,
+                  status: (v.status ?? x.status) as UserStatus,
+                  isValidated: v.isValidated ?? x.isValidated,
+                  validationStatus: v.validationStatus ?? x.validationStatus,
+                  validationReason: v.validationReason ?? x.validationReason,
+                  kycStatus: v.kycStatus ?? x.kycStatus,
+                  kycProvider: v.kycProvider ?? x.kycProvider,
+                  kycStripeAccountId: v.kycStripeAccountId ?? x.kycStripeAccountId,
+                  kycLastSyncAt: v.kycLastSyncAt
+                    ? v.kycLastSyncAt.toDate()
+                    : x.kycLastSyncAt,
+                  lastLoginAt: v.lastLoginAt ? v.lastLoginAt.toDate() : x.lastLoginAt,
+                  emailVerified: v.emailVerified ?? x.emailVerified,
+                  phone: v.phone ?? x.phone,
+                }
             )
           );
         });
       });
     } catch (e) {
       console.error("[AdminLawyers] load error", e);
-      
+
       setErrorMsg((e as Error)?.message || "Failed to load");
     } finally {
       setLoading(false);
@@ -789,11 +791,17 @@ const AdminLawyers: React.FC = () => {
   const [reasonOpen, setReasonOpen] = useState<
     | null
     | {
-        type: "suspend" | "delete" | "reject" | "kycRequest";
-        ids: string[];
-      }
+      type: "suspend" | "delete" | "reject" | "kycRequest";
+      ids: string[];
+    }
   >(null);
   const [reasonText, setReasonText] = useState("");
+
+  // Translation modal
+  const [translationOpen, setTranslationOpen] = useState<{ open: boolean; lawyerId: string | null }>({
+    open: false,
+    lawyerId: null,
+  });
 
   // Actions unitaires
   const setValidation = async (id: string, status: ValidationStatus, reason?: string) => {
@@ -1157,9 +1165,8 @@ const AdminLawyers: React.FC = () => {
         return (
           <div style={cellStyleFor(col)}>
             <span
-              className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                l.emailVerified ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-              }`}
+              className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${l.emailVerified ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                }`}
             >
               {l.emailVerified ? t("verified") : t("unverified")}
             </span>
@@ -1216,15 +1223,14 @@ const AdminLawyers: React.FC = () => {
         return (
           <div style={cellStyleFor(col)}>
             <span
-              className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                l.status === "active"
-                  ? "bg-green-100 text-green-800"
-                  : l.status === "pending"
+              className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${l.status === "active"
+                ? "bg-green-100 text-green-800"
+                : l.status === "pending"
                   ? "bg-yellow-100 text-yellow-800"
                   : l.status === "suspended"
-                  ? "bg-red-100 text-red-800"
-                  : "bg-gray-100 text-gray-800"
-              }`}
+                    ? "bg-red-100 text-red-800"
+                    : "bg-gray-100 text-gray-800"
+                }`}
             >
               {l.status}
             </span>
@@ -1452,7 +1458,7 @@ const AdminLawyers: React.FC = () => {
             </div>
           </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
             <div className="flex items-center">
               <div className="p-2 bg-yellow-100 rounded-lg">
                 <AlertCircle className="w-6 h-6 text-yellow-600" />
@@ -1864,6 +1870,16 @@ const AdminLawyers: React.FC = () => {
                             {t("suspend")}
                           </Button>
 
+                          <Button
+                            size="small"
+                            variant="secondary"
+                            onClick={() => {
+                              setTranslationOpen({ open: true, lawyerId: l.id });
+                            }}
+                          >
+                            {t("translation")}
+                          </Button>
+
                           {/* Delete */}
                           <Button
                             size="small"
@@ -1988,10 +2004,10 @@ const AdminLawyers: React.FC = () => {
           reasonOpen?.type === "suspend"
             ? t("reasonTitleSuspend")
             : reasonOpen?.type === "delete"
-            ? t("reasonTitleDelete")
-            : reasonOpen?.type === "reject"
-            ? t("reasonTitleReject")
-            : t("reasonTitleKycRequest")
+              ? t("reasonTitleDelete")
+              : reasonOpen?.type === "reject"
+                ? t("reasonTitleReject")
+                : t("reasonTitleKycRequest")
         }
       >
         <div className="space-y-3">
@@ -2082,6 +2098,14 @@ const AdminLawyers: React.FC = () => {
           </div>
         </div>
       </Modal>
+
+      {/* Translation modal */}
+      <TranslationModal
+        isOpen={translationOpen.open}
+        onClose={() => setTranslationOpen({ open: false, lawyerId: null })}
+        providerId={translationOpen.lawyerId}
+        t={t}
+      />
     </AdminLayout>
   );
 };

@@ -730,7 +730,7 @@ const ProviderProfile: React.FC = () => {
               id: snap.id,
               uid: normalized.uid || snap.id,
               type: (data?.type as "lawyer" | "expat") || "expat",
-            } as SosProfile;
+            } as unknown as SosProfile;
 
             built.description = pickDescription(built, preferredLangKey);
             built.specialties = toArrayFromAny(
@@ -769,7 +769,7 @@ const ProviderProfile: React.FC = () => {
                 id: found.id,
                 uid: normalized.uid || found.id,
                 type: (data?.type as "lawyer" | "expat") || "expat",
-              } as SosProfile;
+              } as unknown as SosProfile;
 
               built.description = pickDescription(built, preferredLangKey);
               built.specialties = toArrayFromAny(
@@ -838,7 +838,7 @@ const ProviderProfile: React.FC = () => {
                   id: match.id,
                   uid: normalized.uid || match.id,
                   type: (data?.type as "lawyer" | "expat") || "expat",
-                } as SosProfile;
+                } as unknown as SosProfile;
 
                 built.description = pickDescription(built, preferredLangKey);
                 built.specialties = toArrayFromAny(
@@ -882,7 +882,7 @@ const ProviderProfile: React.FC = () => {
                 id: m.id,
                 uid: normalized.uid || m.id,
                 type: (data?.type as "lawyer" | "expat") || "expat",
-              } as SosProfile;
+              } as unknown as SosProfile;
 
               built.description = pickDescription(built, preferredLangKey);
               built.specialties = toArrayFromAny(

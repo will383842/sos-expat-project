@@ -276,25 +276,25 @@ const useStatusColors = (isOnline: boolean) => {
     () =>
       isOnline
         ? {
-            border: "border-green-300",
-            shadow: "shadow-green-100",
-            glow: "shadow-green-200/50",
-            borderShadow: "drop-shadow-[0_0_8px_rgba(34,197,94,0.3)]",
-            badge: "bg-green-100 text-green-800 border-green-300",
-            button:
-              "bg-green-700 hover:bg-green-800 active:bg-green-900 border-green-700",
-            accent: "text-green-700",
-          }
+          border: "border-green-300",
+          shadow: "shadow-green-100",
+          glow: "shadow-green-200/50",
+          borderShadow: "drop-shadow-[0_0_8px_rgba(34,197,94,0.3)]",
+          badge: "bg-green-100 text-green-800 border-green-300",
+          button:
+            "bg-green-700 hover:bg-green-800 active:bg-green-900 border-green-700",
+          accent: "text-green-700",
+        }
         : {
-            border: "border-red-300",
-            shadow: "shadow-red-100",
-            glow: "shadow-red-200/50",
-            borderShadow: "drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]",
-            badge: "bg-red-100 text-red-800 border-red-300",
-            button:
-              "bg-red-700 hover:bg-red-800 active:bg-red-900 border-red-700",
-            accent: "text-red-700",
-          },
+          border: "border-red-300",
+          shadow: "shadow-red-100",
+          glow: "shadow-red-200/50",
+          borderShadow: "drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]",
+          badge: "bg-red-100 text-red-800 border-red-300",
+          button:
+            "bg-red-700 hover:bg-red-800 active:bg-red-900 border-red-700",
+          accent: "text-red-700",
+        },
     [isOnline]
   );
 };
@@ -510,7 +510,7 @@ const countryOptions_fr = [
   "Zimbabwe",
 ];
 
-const countryOptions= [
+const countryOptions = [
   "Afghanistan",
   "South Africa",
   "Albania",
@@ -702,7 +702,7 @@ const countryOptions= [
   "Zambia",
   "Zimbabwe",
 ];
- 
+
 
 // const giveCountryNameAccordingToLang = (lang: string) => {
 //   const country_fr = countryOptions_fr;
@@ -1181,7 +1181,7 @@ const SOSCall: React.FC = () => {
     }
   });
 
-  const lang = (language as "fr" | "en") || "fr";
+  const lang = (language as "fr" | "en" | "es" | "de" | "pt" | "ch" | "ar" | "hi" | "ru") || "fr";
 
   const cardTranslations = useMemo(
     () => ({
@@ -1248,7 +1248,7 @@ const SOSCall: React.FC = () => {
       collection(db, "sos_profiles"),
       where("type", "in", ["lawyer", "expat"]),
       where("isApproved", "==", true),
-where("isVisible", "==", true),
+      where("isVisible", "==", true),
       limit(100)
     );
 
@@ -1320,7 +1320,7 @@ where("isVisible", "==", true),
             duration: data.duration,
             avatar:
               typeof data.profilePhoto === "string" &&
-              data.profilePhoto.trim() !== ""
+                data.profilePhoto.trim() !== ""
                 ? data.profilePhoto
                 : "/default-avatar.png",
           };
@@ -1521,20 +1521,18 @@ where("isVisible", "==", true),
   return (
     <Layout>
       <SEOHead
-        title={`${
-          selectedType === "lawyer"
+        title={`${selectedType === "lawyer"
             ? "Avocats"
             : selectedType === "expat"
               ? "Expatriés"
               : "Experts"
-        } disponibles | SOS Expat & Travelers`}
-        description={`Trouvez un ${
-          selectedType === "lawyer"
+          } disponibles | SOS Expat & Travelers`}
+        description={`Trouvez un ${selectedType === "lawyer"
             ? "avocat"
             : selectedType === "expat"
               ? "expatrié"
               : "expert"
-        } vérifié disponible immédiatement. Consultation en ligne 24h/24, 7j/7 dans plus de 150 pays.`}
+          } vérifié disponible immédiatement. Consultation en ligne 24h/24, 7j/7 dans plus de 150 pays.`}
         canonicalUrl="/sos-appel"
       />
 
@@ -1776,11 +1774,10 @@ where("isVisible", "==", true),
                       <button
                         type="button"
                         onClick={() => setStatusFilter("all")}
-                        className={`flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl border transition ${
-                          statusFilter === "all"
+                        className={`flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl border transition ${statusFilter === "all"
                             ? "bg-white/20 text-white border-white/30"
                             : "bg-white/10 text-gray-200 border-white/20 hover:bg-white/15"
-                        }`}
+                          }`}
                         aria-pressed={statusFilter === "all"}
                       >
                         <span className="w-2 h-2 rounded-full bg-gray-300" />
@@ -1790,11 +1787,10 @@ where("isVisible", "==", true),
                       <button
                         type="button"
                         onClick={() => setStatusFilter("online")}
-                        className={`flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl border transition ${
-                          statusFilter === "online"
+                        className={`flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl border transition ${statusFilter === "online"
                             ? "bg-white/20 text-white border-white/30"
                             : "bg-white/10 text-gray-200 border-white/20 hover:bg-white/15"
-                        }`}
+                          }`}
                         aria-pressed={statusFilter === "online"}
                         title="En ligne"
                       >
@@ -1805,11 +1801,10 @@ where("isVisible", "==", true),
                       <button
                         type="button"
                         onClick={() => setStatusFilter("offline")}
-                        className={`flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl border transition ${
-                          statusFilter === "offline"
+                        className={`flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl border transition ${statusFilter === "offline"
                             ? "bg-white/20 text-white border-white/30"
                             : "bg-white/10 text-gray-200 border-white/20 hover:bg-white/15"
-                        }`}
+                          }`}
                         aria-pressed={statusFilter === "offline"}
                         title="Hors ligne"
                       >
@@ -2118,11 +2113,10 @@ const Pagination: React.FC<{
             key={`p-${it}`}
             onClick={() => go(it)}
             aria-current={it === page ? "page" : undefined}
-            className={`w-9 h-9 rounded-xl border text-sm font-semibold transition ${
-              it === page
+            className={`w-9 h-9 rounded-xl border text-sm font-semibold transition ${it === page
                 ? "bg-white/20 text-white border-white/30"
                 : "bg-white/10 text-gray-200 border-white/20 hover:bg-white/15"
-            }`}
+              }`}
             title={`Aller à la page ${it}`}
           >
             {it}

@@ -4,7 +4,7 @@ import { functions } from '../config/firebase';
 import { db } from '../config/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
-export type SupportedLanguage = 'fr' | 'en' | 'es' | 'pt' | 'de' | 'ru' | 'zh' | 'hi' | 'ar';
+export type SupportedLanguage = 'fr' | 'en' | 'es' | 'pt' | 'de' | 'ru' | 'zh' | 'hi' | 'ar' | "ch";
 
 export interface TranslatedContent {
   title: string;
@@ -69,6 +69,7 @@ const LANGUAGE_NAMES: Record<SupportedLanguage, string> = {
   zh: '中文',
   hi: 'हिन्दी',
   ar: 'العربية',
+  ch: '中文',
 };
 
 /**
