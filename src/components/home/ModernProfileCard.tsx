@@ -803,7 +803,7 @@ interface ModernProfileCardProps {
   onProfileClick: (provider: Provider) => void;
   isUserConnected: boolean;
   index?: number;
-  language?: "fr" | "en" | "es";
+  language?: "fr" | "en" | "es" | "de" | "it" | "nl" | "ru" | "ch" | "ar";
 }
 
 // Constants - Centralisées pour éviter les recreations
@@ -856,8 +856,10 @@ const LANGUAGE_MAP: Record<string, string> = {
   RU: "Russe",
   中文: "Chinois",
   Chinese: "Chinois",
-  zh: "Chinois",
-  ZH: "Chinois",
+  ch: "Chinois",
+  CH: "Chinois",
+  zh: "Chinois", // Keep for backward compatibility
+  ZH: "Chinois", // Keep for backward compatibility
   العربية: "Arabe",
   Arabic: "Arabe",
   ar: "Arabe",

@@ -621,11 +621,13 @@ filtered = filtered.filter(p => {
         certifications: provider.certifications ? [...provider.certifications] : []
       };
 
-      // Generate SEO URL
+      // Generate SEO URL - simplified structure
       const typeSlug = provider.type === 'lawyer' ? 'avocat' : 'expatrie';
-      const countrySlug = provider.country.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '-');
-      const nameSlug = provider.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '-');
-      const seoUrl = `/${typeSlug}/${countrySlug}/francais/${nameSlug}-${provider.id}`;
+      // Use translated slug if available, otherwise generate from name
+      const nameSlug = provider.slug || provider.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '-');
+      // Append ID only if slug doesn't already contain it
+      const finalSlug = nameSlug.includes(provider.id) ? nameSlug : `${nameSlug}-${provider.id}`;
+      const seoUrl = `/${typeSlug}/${finalSlug}`;
 
       // Navigation based on provider status
       navigate(seoUrl, { 

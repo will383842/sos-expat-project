@@ -1955,7 +1955,7 @@ const SOSCall: React.FC = () => {
                                     : lang === "ar"
                                       ? "صفحة"
                                       : "Page"}{" "}
-                    <strong>{page}</strong> / {totalPages} —{" "}
+                    <strong>{page}</strong> / {totalPages} — {" "}
                     {filteredProviders.length}
                     {/* résultats */}
                     <span className="ml-[2px]">

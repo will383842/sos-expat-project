@@ -2,7 +2,7 @@ import { onCall } from 'firebase-functions/v2/https';
 import { HttpsError } from 'firebase-functions/v2/https';
 import * as admin from 'firebase-admin';
 import { db } from '../utils/firebase';
-import { translateAllFields, extractOriginalProfile } from '../services/providerTranslationService';
+import { extractOriginalProfile } from '../services/providerTranslationService';
 
 /**
  * Serialize object to make it JSON-safe for Firebase Functions response
@@ -178,8 +178,8 @@ export const updateProviderTranslation = onCall(
       }
       console.log('[updateProviderTranslation] ✓ Step 3: Found languages:', availableLanguages);
 
-      // Step 4: Get the current provider data from sos_profiles
-      console.log('[updateProviderTranslation] Step 4: Fetching provider data from sos_profiles...');
+      // Step 4: Verify provider exists (needed for extractOriginalProfile)
+      console.log('[updateProviderTranslation] Step 4: Verifying provider exists...');
       const providerRef = db.collection('sos_profiles').doc(providerId);
       const providerDoc = await providerRef.get();
 
@@ -188,8 +188,7 @@ export const updateProviderTranslation = onCall(
         throw new HttpsError('not-found', 'Provider not found in sos_profiles');
       }
 
-      const providerData = providerDoc.data()!;
-      console.log('[updateProviderTranslation] ✓ Step 4: Provider data retrieved');
+      console.log('[updateProviderTranslation] ✓ Step 4: Provider verified');
 
       // Step 5: Extract original profile
       console.log('[updateProviderTranslation] Step 5: Extracting original profile...');
@@ -205,11 +204,35 @@ export const updateProviderTranslation = onCall(
         throw new HttpsError('internal', 'Failed to extract original profile');
       }
 
-      // Step 6: Update translations for each language
-      console.log('[updateProviderTranslation] Step 6: Updating translations for all languages...');
+      // Step 6: Update the original profile in providers_translations
+      console.log('[updateProviderTranslation] Step 6: Updating original profile...');
+      const removeUndefinedValues = (obj: any): any => {
+        if (obj === null || obj === undefined) return null;
+        if (Array.isArray(obj)) return obj.map(item => removeUndefinedValues(item));
+        if (typeof obj === 'object') {
+          const cleaned: any = {};
+          for (const key in obj) {
+            if (obj.hasOwnProperty(key) && obj[key] !== undefined) {
+              cleaned[key] = removeUndefinedValues(obj[key]);
+            }
+          }
+          return cleaned;
+        }
+        return obj;
+      };
+      
+      await translationRef.update({
+        original: removeUndefinedValues(original),
+        'metadata.lastUpdated': admin.firestore.FieldValue.serverTimestamp(),
+      });
+      console.log('[updateProviderTranslation] ✓ Step 6: Original profile updated');
+
+      // Step 7: Mark unfrozen translations as 'outdated' so they regenerate on next translate
+      console.log('[updateProviderTranslation] Step 7: Marking unfrozen translations as outdated...');
       const updatePromises: Promise<void>[] = [];
       const updatedLanguages: string[] = [];
       const failedLanguages: string[] = [];
+      const frozenLanguages = translationDoc.data()?.metadata?.frozenLanguages || [];
 
       for (const language of availableLanguages) {
         if (language === 'original') {
@@ -218,14 +241,25 @@ export const updateProviderTranslation = onCall(
         }
 
         try {
-          console.log(`[updateProviderTranslation] Translating to ${language}...`);
+          // Check if this language is frozen - skip if frozen
+          if (frozenLanguages.includes(language)) {
+            console.log(`[updateProviderTranslation] ⚠️ Skipping ${language} - translation is frozen`);
+            continue; // Skip frozen translations
+          }
 
-          // Translate the updated fields
-          const translated = await translateAllFields(providerData, language);
+          // Get current status - only mark as 'outdated' if status is 'created' (not 'missing' or already 'outdated')
+          const currentStatus = translationData.metadata?.translations?.[language]?.status || 'missing';
+          
+          // Only mark as 'outdated' if translation exists (status is 'created' or already 'outdated')
+          // If status is 'missing', leave it as 'missing' (no translation exists yet)
+          if (currentStatus === 'missing') {
+            console.log(`[updateProviderTranslation] ⚠️ Skipping ${language} - translation status is 'missing' (no translation exists yet)`);
+            continue;
+          }
 
-          // Build update object for this language
+          // Mark as 'outdated' so it will be regenerated when user clicks translate
           const updateObj: any = {
-            [`translations.${language}`]: translated,
+            [`metadata.translations.${language}.status`]: 'outdated', // Mark as outdated to force regeneration
             [`metadata.translations.${language}.updatedAt`]: admin.firestore.FieldValue.serverTimestamp(),
             [`metadata.translations.${language}.lastFieldsUpdated`]: fieldsUpdated,
             [`metadata.lastUpdated`]: admin.firestore.FieldValue.serverTimestamp(),
@@ -233,12 +267,12 @@ export const updateProviderTranslation = onCall(
 
           updatePromises.push(
             translationRef.update(updateObj).then(() => {
-              console.log(`[updateProviderTranslation] ✓ Successfully updated translation for ${language}`);
+              console.log(`[updateProviderTranslation] ✓ Marked ${language} as outdated (will regenerate on next translate)`);
               updatedLanguages.push(language);
             })
           );
         } catch (error) {
-          console.error(`[updateProviderTranslation] ✗ Error translating to ${language}:`, error);
+          console.error(`[updateProviderTranslation] ✗ Error marking ${language} as outdated:`, error);
           failedLanguages.push(language);
           // Continue with other languages even if one fails
         }
@@ -247,15 +281,15 @@ export const updateProviderTranslation = onCall(
       // Wait for all update promises to complete
       await Promise.all(updatePromises);
 
-      console.log('[updateProviderTranslation] ✓ Step 6: Translation updates completed');
+      console.log('[updateProviderTranslation] ✓ Step 7: Translation status updates completed');
       console.log('[updateProviderTranslation] Update summary:', {
         updatedLanguages,
         failedLanguages,
         fieldsUpdated,
       });
 
-      // Step 7: Return success response
-      console.log('[updateProviderTranslation] Step 7: Returning success response...');
+      // Step 8: Return success response
+      console.log('[updateProviderTranslation] Step 8: Returning success response...');
       const response = {
         success: true,
         updatedLanguages,

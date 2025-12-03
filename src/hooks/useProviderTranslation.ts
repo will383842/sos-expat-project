@@ -101,6 +101,7 @@ export function useProviderTranslation(
         error: errorMessage,
       });
       console.error('[useProviderTranslation] ===== loadTranslation() ERROR HANDLED =====');
+     
     }
   }, [providerId, targetLanguage, state.translation]);
 
@@ -143,10 +144,11 @@ export function useProviderTranslation(
         userId: user?.uid,
       });
 
+      // Translation no longer requires authentication - pass undefined if user not logged in
       const translation = await requestTranslation(
         providerId,
         langToTranslate,
-        user?.uid
+        user?.uid || undefined
       );
 
       console.log('[useProviderTranslation] ✓ Step 1: requestTranslation completed');

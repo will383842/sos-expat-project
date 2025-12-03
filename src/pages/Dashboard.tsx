@@ -19,6 +19,9 @@ import {
   Clock,
   Star,
   Bookmark,
+  Globe,
+  Lock,
+  Unlock,
 } from "lucide-react";
 
 import Layout from "../components/layout/Layout";
@@ -40,6 +43,7 @@ import {
   orderBy,
   limit,
   getDocs,
+  getDoc,
   onSnapshot,
   doc,
   updateDoc,
@@ -56,7 +60,8 @@ import StripeKYC from "@/components/StripeKyc";
 import IntlPhoneInput from "@/components/forms-data/IntlPhoneInput";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { useForm, Controller } from "react-hook-form";
-import { httpsCallable } from "firebase/functions";
+import { getProviderTranslation, type SupportedLanguage } from "../services/providerTranslationService";
+
 import { requestUpdateProviderTranslation } from '../services/providerTranslationService';
 
 // ===============================
@@ -183,7 +188,8 @@ type TabType =
   | "reviews"
   | "notifications"
   | "messages"
-  | "favorites";
+  | "favorites"
+  | "translations";
 
 type CallStatus = "completed" | "pending" | "in_progress" | "failed";
 
@@ -216,7 +222,8 @@ const ChipInput: React.FC<{
   onChange: (next: string[]) => void;
   placeholder?: string;
   className?: string;
-}> = ({ value, onChange, placeholder, className }) => {
+  buttonLabel?: string;
+}> = ({ value, onChange, placeholder, className, buttonLabel = "Add" }) => {
   const [input, setInput] = useState<string>("");
   const add = () => {
     const v = input.trim();
@@ -267,7 +274,7 @@ const ChipInput: React.FC<{
           className="flex-1 px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 transition"
         />
         <Button type="button" onClick={add} size="small">
-          Ajouter
+          {buttonLabel}
         </Button>
       </div>
     </div>
@@ -450,6 +457,16 @@ const Dashboard: React.FC = () => {
       photo?: string;
     }>
   >([]);
+
+  // Translations tab state
+  const [selectedTranslationLang, setSelectedTranslationLang] = useState<SupportedLanguage | null>(null);
+  const [translationDescription, setTranslationDescription] = useState<string>("");
+  const [translationSpecialties, setTranslationSpecialties] = useState<string[]>([]);
+  const [translationMotivation, setTranslationMotivation] = useState<string>("");
+  const [isLoadingTranslation, setIsLoadingTranslation] = useState<boolean>(false);
+  const [isSavingTranslation, setIsSavingTranslation] = useState<boolean>(false);
+  const [isFrozen, setIsFrozen] = useState<boolean>(false);
+  const [isFreezing, setIsFreezing] = useState<boolean>(false);
 
   // Profil (édition) pré-rempli
   const baseProfile: ProfileData = useMemo(
@@ -681,7 +698,7 @@ const Dashboard: React.FC = () => {
     const statusConfig: Record<
       CallStatus,
       { className: string; text: string }
-    > = {
+    > = { 
       completed: {
         className:
           "px-2 py-1 bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-300 rounded-full text-xs font-medium",
@@ -984,6 +1001,206 @@ const Dashboard: React.FC = () => {
       navigate("/login", { replace: true });
     }
   }, [logout, navigate]);
+
+  // Load translation data when language changes
+  useEffect(() => {
+    if (!user || (user.role !== "lawyer" && user.role !== "expat")) return;
+    if (!selectedTranslationLang) {
+      // Reset form when no language selected
+      setTranslationDescription("");
+      setTranslationSpecialties([]);
+      setTranslationMotivation("");
+      setIsFrozen(false);
+      return;
+    }
+
+    const loadTranslation = async () => {
+      setIsLoadingTranslation(true);
+      try {
+        const result = await getProviderTranslation(user.id, selectedTranslationLang);
+        if (result.translation) {
+          setTranslationDescription(result.translation.description || "");
+          setTranslationSpecialties(result.translation.specialties || []);
+          // Motivation might be in summary or a separate field
+          setTranslationMotivation(result.translation.summary || "");
+        } else {
+          // No translation exists yet, reset form
+          setTranslationDescription("");
+          setTranslationSpecialties([]);
+          setTranslationMotivation("");
+        }
+        
+        // Check frozen status
+        const translationRef = doc(db, "providers_translations", user.id);
+        const translationDoc = await getDoc(translationRef);
+        if (translationDoc.exists()) {
+          const data = translationDoc.data();
+          const frozenLanguages = data.metadata?.frozenLanguages || [];
+          setIsFrozen(frozenLanguages.includes(selectedTranslationLang));
+        } else {
+          setIsFrozen(false);
+        }
+      } catch (error) {
+        console.error("Error loading translation:", error);
+        setTranslationDescription("");
+        setTranslationSpecialties([]);
+        setTranslationMotivation("");
+        setIsFrozen(false);
+      } finally {
+        setIsLoadingTranslation(false);
+      }
+    };
+
+    loadTranslation();
+  }, [selectedTranslationLang, user]);
+
+  // Handle language change - reset form
+  const handleLanguageChange = (lang: string) => {
+    setSelectedTranslationLang(lang === "" ? null : (lang as SupportedLanguage));
+    // Form will reset via useEffect
+  };
+
+  // Save translation
+  const handleSaveTranslation = async () => {
+    if (!user || !selectedTranslationLang) {
+      setErrorMessage("Please select a language");
+      return;
+    }
+
+    setIsSavingTranslation(true);
+    setErrorMessage(null);
+    setSuccessMessage(null);
+
+    try {
+      // Update the translation in Firestore
+      const translationRef = doc(db, "providers_translations", user.id);
+      const translationDoc = await getDoc(translationRef);
+      
+      if (!translationDoc.exists()) {
+        setErrorMessage("Translation document not found. Please create a translation first.");
+        setIsSavingTranslation(false);
+        return;
+      }
+
+      const currentData = translationDoc.data();
+      const translations = currentData.translations || {};
+      
+      // Update the specific language translation
+      if (translations[selectedTranslationLang]) {
+        translations[selectedTranslationLang] = {
+          ...translations[selectedTranslationLang],
+          description: translationDescription,
+          bio: translationDescription, // Also update bio with the same value as description
+          specialties: translationSpecialties,
+          summary: translationMotivation,
+        };
+      } else {
+        // Create new translation entry
+        translations[selectedTranslationLang] = {
+          description: translationDescription,
+          bio: translationDescription, // Also update bio with the same value as description
+          specialties: translationSpecialties,
+          summary: translationMotivation,
+          title: user.firstName && user.lastName 
+            ? `${user.firstName} ${user.lastName}` 
+            : user.email || "",
+        };
+      }
+
+      // When provider manually saves, automatically freeze the translation
+      const frozenLanguages = currentData.metadata?.frozenLanguages || [];
+      const updateData: any = {
+        [`translations.${selectedTranslationLang}`]: translations[selectedTranslationLang],
+        [`metadata.lastUpdated`]: serverTimestamp(),
+        [`metadata.translations.${selectedTranslationLang}.status`]: 'frozen',
+        [`metadata.translations.${selectedTranslationLang}.updatedAt`]: serverTimestamp(),
+      };
+
+      // Add to frozen languages if not already frozen
+      if (!frozenLanguages.includes(selectedTranslationLang)) {
+        updateData[`metadata.frozenLanguages`] = [...frozenLanguages, selectedTranslationLang];
+        setIsFrozen(true);
+      }
+
+      await updateDoc(translationRef, updateData);
+      
+      // Reload the translation data to reflect changes immediately
+      const updatedDoc = await getDoc(translationRef);
+      if (updatedDoc.exists()) {
+        const updatedData = updatedDoc.data();
+        const updatedTranslations = updatedData.translations || {};
+        if (updatedTranslations[selectedTranslationLang]) {
+          setTranslationDescription(updatedTranslations[selectedTranslationLang].description || "");
+          setTranslationSpecialties(updatedTranslations[selectedTranslationLang].specialties || []);
+          setTranslationMotivation(updatedTranslations[selectedTranslationLang].summary || "");
+        }
+      }
+
+      setSuccessMessage("Translation saved and frozen successfully! It will not be overwritten by automatic updates.");
+      setTimeout(() => setSuccessMessage(null), 4000);
+    } catch (error) {
+      console.error("Error saving translation:", error);
+      setErrorMessage("Failed to save translation. Please try again.");
+    } finally {
+      setIsSavingTranslation(false);
+    }
+  };
+
+  // Handle freeze/unfreeze translation
+  const handleFreezeUnfreeze = async () => {
+    if (!user || !selectedTranslationLang) {
+      setErrorMessage("Please select a language");
+      return;
+    }
+
+    setIsFreezing(true);
+    setErrorMessage(null);
+    setSuccessMessage(null);
+
+    try {
+      const translationRef = doc(db, "providers_translations", user.id);
+      const translationDoc = await getDoc(translationRef);
+      
+      if (!translationDoc.exists()) {
+        setErrorMessage("Translation document not found.");
+        setIsFreezing(false);
+        return;
+      }
+
+      const currentData = translationDoc.data();
+      const frozenLanguages = currentData.metadata?.frozenLanguages || [];
+      const isCurrentlyFrozen = frozenLanguages.includes(selectedTranslationLang);
+
+      if (isCurrentlyFrozen) {
+        // Unfreeze - mark as outdated so it will be regenerated from updated original
+        await updateDoc(translationRef, {
+          [`metadata.frozenLanguages`]: frozenLanguages.filter((lang: SupportedLanguage) => lang !== selectedTranslationLang),
+          [`metadata.translations.${selectedTranslationLang}.status`]: 'outdated', // Mark as outdated to force regeneration
+          [`metadata.translations.${selectedTranslationLang}.updatedAt`]: serverTimestamp(),
+          [`metadata.lastUpdated`]: serverTimestamp(),
+        });
+        setIsFrozen(false);
+        setSuccessMessage("Translation unfrozen. It can now be automatically updated.");
+      } else {
+        // Freeze
+        await updateDoc(translationRef, {
+          [`metadata.frozenLanguages`]: [...frozenLanguages, selectedTranslationLang],
+          [`metadata.translations.${selectedTranslationLang}.status`]: 'frozen',
+          [`metadata.translations.${selectedTranslationLang}.updatedAt`]: serverTimestamp(),
+          [`metadata.lastUpdated`]: serverTimestamp(),
+        });
+        setIsFrozen(true);
+        setSuccessMessage("Translation frozen. It will not be overwritten by automatic updates.");
+      }
+      
+      setTimeout(() => setSuccessMessage(null), 4000);
+    } catch (error) {
+      console.error("Error freezing/unfreezing translation:", error);
+      setErrorMessage("Failed to update freeze status. Please try again.");
+    } finally {
+      setIsFreezing(false);
+    }
+  };
 
   if (!user) {
     return (
@@ -1358,6 +1575,23 @@ const Dashboard: React.FC = () => {
                         pt: "Meus favoritos",
                         ar: "المفضلة لدي",
                       },
+                      ...(user.role === "lawyer" || user.role === "expat"
+                        ? [
+                            {
+                              key: "translations",
+                              icon: <Globe className="mr-3 h-5 w-5" />,
+                              fr: "Traductions",
+                              en: "Translations",
+                              es: "Traducciones",
+                              de: "Übersetzungen",
+                              ru: "Переводы",
+                              hi: "अनुवाद",
+                              ch: "翻译",
+                              pt: "Traduções",
+                              ar: "الترجمات",
+                            },
+                          ]
+                        : []),
                     ].map((item) => (
                       <li key={item.key}>
                         <button
@@ -2068,6 +2302,7 @@ const Dashboard: React.FC = () => {
                             placeholder={intl.formatMessage({
                               id: "dashboard.addSpecialty",
                             })}
+                            buttonLabel={intl.formatMessage({ id: "dashboard.add" }) || "Add"}
                           />
                         </div>
                         <div className="md:col-span-2">
@@ -2087,6 +2322,7 @@ const Dashboard: React.FC = () => {
                             placeholder={intl.formatMessage({
                               id: "dashboard.addCountry",
                             })}
+                            buttonLabel={intl.formatMessage({ id: "dashboard.add" }) || "Add"}
                           />
                         </div>
                         <Field
@@ -2113,6 +2349,7 @@ const Dashboard: React.FC = () => {
                             placeholder={intl.formatMessage({
                               id: "dashboard.addEducation",
                             })}
+                            buttonLabel={intl.formatMessage({ id: "dashboard.add" }) || "Add"}
                           />
                         </div>
                       </section>
@@ -2146,6 +2383,7 @@ const Dashboard: React.FC = () => {
                             placeholder={intl.formatMessage({
                               id: "dashboard.addType",
                             })}
+                            buttonLabel={intl.formatMessage({ id: "dashboard.add" }) || "Add"}
                           />
                         </div>
                         <div className="md:col-span-2">
@@ -2165,6 +2403,7 @@ const Dashboard: React.FC = () => {
                             placeholder={intl.formatMessage({
                               id: "dashboard.addCountry",
                             })}
+                            buttonLabel={intl.formatMessage({ id: "dashboard.add" }) || "Add"}
                           />
                         </div>
                       </section>
@@ -2425,6 +2664,161 @@ const Dashboard: React.FC = () => {
                           ? "Aucun favori pour le moment."
                           : "No favorites yet."} */}
                         {intl.formatMessage({ id: "dashboard.noFavorites" })}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {activeTab === "translations" && (user.role === "lawyer" || user.role === "expat") && (
+                <div className={`${softCard} overflow-hidden`}>
+                  <div className={`px-6 py-4 ${headerGradient}`}>
+                    <h2 className="text-xl font-semibold">
+                      {intl.formatMessage({ id: "dashboard.translations" }) || "Translations"}
+                    </h2>
+                  </div>
+                  <div className="p-6 space-y-6">
+                            {/* Language Dropdown */}
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                {intl.formatMessage({ id: "dashboard.selectLanguage" }) || "Select Language"}
+                              </label>
+                              <div className="flex gap-2">
+                                <select
+                                  value={selectedTranslationLang || ""}
+                                  onChange={(e) => handleLanguageChange(e.target.value)}
+                                  className="flex-1 px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-red-500 transition"
+                                >
+                                  <option value="">{intl.formatMessage({ id: "dashboard.selectLanguage" }) || "Select a language"}</option>
+                                  <option value="fr">Français</option>
+                                  <option value="en">English</option>
+                                  <option value="es">Español</option>
+                                  <option value="pt">Português</option>
+                                  <option value="de">Deutsch</option>
+                                  <option value="ru">Русский</option>
+                                  <option value="ch">中文</option>
+                                  <option value="hi">हिन्दी</option>
+                                  <option value="ar">العربية</option>
+                                </select>
+                                {selectedTranslationLang && (
+                                  <Button
+                                    type="button"
+                                    onClick={handleFreezeUnfreeze}
+                                    disabled={isFreezing}
+                                    variant={isFrozen ? "outline" : "primary"}
+                                    size="small"
+                                    className="whitespace-nowrap"
+                                  >
+                                    {isFreezing ? (
+                                      <>
+                                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
+                                        {intl.formatMessage({ id: "dashboard.processing" }) || "Processing..."}
+                                      </>
+                                    ) : isFrozen ? (
+                                      <>
+                                        <Unlock className="h-4 w-4 mr-2" />
+                                        {intl.formatMessage({ id: "dashboard.unfreeze" }) || "Unfreeze"}
+                                      </>
+                                    ) : (
+                                      <>
+                                        <Lock className="h-4 w-4 mr-2" />
+                                        {intl.formatMessage({ id: "dashboard.freeze" }) || "Freeze"}
+                                      </>
+                                    )}
+                                  </Button>
+                                )}
+                              </div>
+                              {isFrozen && selectedTranslationLang && (
+                                <div className="mt-2 flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400">
+                                  <Lock className="h-4 w-4" />
+                                  <span>{intl.formatMessage({ id: "dashboard.translationFrozen" }) || "This translation is frozen and protected from automatic updates."}</span>
+                                </div>
+                              )}
+                            </div>
+
+                    {selectedTranslationLang && (
+                      <>
+                        {isLoadingTranslation ? (
+                          <div className="flex items-center justify-center py-12">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500"></div>
+                            <span className="ml-3 text-gray-600 dark:text-gray-400">Loading translation...</span>
+                          </div>
+                        ) : (
+                          <>
+                            {/* Description/Bio Field */}
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                {intl.formatMessage({ id: "dashboard.description" }) || "Description / Bio"}
+                              </label>
+                              <textarea
+                                value={translationDescription}
+                                onChange={(e) => setTranslationDescription(e.target.value)}
+                                placeholder={intl.formatMessage({ id: "dashboard.descriptionPlaceholder" }) || "Enter description or bio..."}
+                                rows={6}
+                                className="w-full px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-red-500 transition resize-none"
+                              />
+                            </div>
+
+                            {/* Specialties Field */}
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                {intl.formatMessage({ id: "dashboard.specialties" }) || "Specialties"}
+                              </label>
+                              <ChipInput
+                                value={translationSpecialties}
+                                onChange={setTranslationSpecialties}
+                                placeholder={intl.formatMessage({ id: "dashboard.specialtiesPlaceholder" }) || "Add specialty and press Enter"}
+                                buttonLabel={intl.formatMessage({ id: "dashboard.addSpecialty" }) || "Add"}
+                              />
+                            </div>
+
+                            {/* Motivation Field */}
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                {intl.formatMessage({ id: "dashboard.motivation" }) || "Motivation"}
+                              </label>
+                              <textarea
+                                value={translationMotivation}
+                                onChange={(e) => setTranslationMotivation(e.target.value)}
+                                placeholder={intl.formatMessage({ id: "dashboard.motivationPlaceholder" }) || "Enter your motivation..."}
+                                rows={6}
+                                className="w-full px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-red-500 transition resize-none"
+                              />
+                            </div>
+
+                            {/* Save Button */}
+                            <div className="flex justify-end">
+                              <Button
+                                onClick={handleSaveTranslation}
+                                disabled={isSavingTranslation}
+                                className="min-w-[120px]"
+                              >
+                                {isSavingTranslation ? (
+                                  <>
+                                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                    {intl.formatMessage({ id: "dashboard.saving" }) || "Saving..."}
+                                  </>
+                                ) : (
+                                  intl.formatMessage({ id: "dashboard.save" }) || "Save"
+                                )}
+                              </Button>
+                            </div>
+
+                            {/* Success/Error Messages */}
+                            {successMessage && (
+                              <Alert type="success" message={successMessage} />
+                            )}
+                            {errorMessage && (
+                              <Alert type="error" message={errorMessage} />
+                            )}
+                          </>
+                        )}
+                      </>
+                    )}
+
+                    {!selectedTranslationLang && (
+                      <p className={`${UI.textMuted} text-center py-12`}>
+                        {intl.formatMessage({ id: "dashboard.selectLanguageToEdit" }) || "Please select a language to edit translations"}
                       </p>
                     )}
                   </div>

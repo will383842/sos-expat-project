@@ -41,21 +41,18 @@ const ProfileCarousel: React.FC<ProfileCarouselProps> = ({
 
   const isUserConnected = useMemo(() => !authLoading && !!user, [authLoading, user]);
 
-  // SEO navigation
+  // SEO navigation - simplified structure
   const handleProfileClick = useCallback((provider: Provider) => {
     const typeSlug = provider.type === 'lawyer' ? 'avocat' : 'expatrie';
-    const countrySlug = (provider.country || 'monde')
+    // Use translated slug if available, otherwise generate from name
+    const nameSlug = (provider as any).slug || provider.name
       .toLowerCase()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
       .replace(/[^a-z0-9]/g, '-');
-    const nameSlug = provider.name
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-z0-9]/g, '-');
-
-    const seoUrl = `/${typeSlug}/${countrySlug}/francais/${nameSlug}-${provider.id}`;
+    // Append ID only if slug doesn't already contain it
+    const finalSlug = nameSlug.includes(provider.id) ? nameSlug : `${nameSlug}-${provider.id}`;
+    const seoUrl = `/${typeSlug}/${finalSlug}`;
     try { sessionStorage.setItem('selectedProvider', JSON.stringify(provider)); } catch {}
     navigate(seoUrl, { state: { selectedProvider: provider, navigationSource: 'home_carousel' } });
   }, [navigate]);
@@ -341,7 +338,7 @@ const ProfileCarousel: React.FC<ProfileCarouselProps> = ({
               onProfileClick={handleProfileClick}
               isUserConnected={isUserConnected}
               index={index}
-              language={language}
+              language={language as "fr" | "en" | "es" | "ru" | "de" | "ar" | "it" | "nl" | "ch"}
             />
           </div>
         ))}

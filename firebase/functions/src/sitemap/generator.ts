@@ -521,18 +521,24 @@ function generateProviderUrl(
   country: string
 ): string {
   const data = provider.data();
-  const type = data?.type === 'lawyer' ? 'avocat' : 'expatrie';
-  const providerCountry = countryToSlug(data?.country || 'monde');
-  const providerLang = data?.languages?.[0]?.toLowerCase() || 'francais';
-  const nameSlug = (data?.fullName || data?.name || 'expert')
+  // Get translated route slug based on language
+  const routeKey = data?.type === 'lawyer' ? 'lawyer' : 'expat';
+  const type = getTranslatedRouteSlug(routeKey, lang) || (data?.type === 'lawyer' ? 'avocat' : 'expatrie');
+  
+  // Use translated slug if available, otherwise generate from name
+  const nameSlug = data?.slug || (data?.fullName || data?.name || 'expert')
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-z0-9]/g, '-')
     .replace(/-+/g, '-');
   
+  // Append ID only if slug doesn't already contain it
+  const finalSlug = nameSlug.includes(provider.id) ? nameSlug : `${nameSlug}-${provider.id}`;
+  
   const locale = getLocaleString(lang, country);
-  return `${SITE_URL}/${locale}/${type}/${providerCountry}/${providerLang}/${nameSlug}-${provider.id}`;
+  // Simplified URL structure: /{locale}/{type}/{slug}
+  return `${SITE_URL}/${locale}/${type}/${finalSlug}`;
 }
 
 /**

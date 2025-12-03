@@ -152,7 +152,7 @@ const AdminUsers: React.FC = () => {
 
         if (selectedCountry !== 'all') {
           queryConstraints.push(where('country', '==', selectedCountry));
-        }
+        }g
 
         // Tri et pagination
         queryConstraints.push(orderBy(sortField, sortDirection));

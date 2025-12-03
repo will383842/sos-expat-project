@@ -2,7 +2,7 @@
 import * as admin from 'firebase-admin';
 import { db, FieldValue } from '../utils/firebase';
 
-export type SupportedLanguage = 'fr' | 'en' | 'es' | 'pt' | 'de' | 'ru' | 'zh' | 'hi' | 'ar';
+export type SupportedLanguage = 'fr' | 'en' | 'es' | 'pt' | 'de' | 'ru' | 'ch' | 'hi' | 'ar';
 
 export interface OriginalProfile {
   // Store ALL data from sos_profiles (with index signature for flexibility)
@@ -27,8 +27,8 @@ export interface TranslatedContent {
   summary: string; // Translated summary
   description: string; // Translated description
   specialties: string[]; // Translated specialties
-  cta: string; // Translated CTA
-  slug: string; // Translated slug
+  cta: string; 
+  slug: string; 
   seo: {
     metaTitle: string;
     metaDescription: string;
@@ -104,7 +104,7 @@ export interface ProviderTranslationDoc {
   };
 }
 
-const SUPPORTED_LANGUAGES: SupportedLanguage[] = ['fr', 'en', 'es', 'pt', 'de', 'ru', 'zh', 'hi', 'ar'];
+const SUPPORTED_LANGUAGES: SupportedLanguage[] = ['fr', 'en', 'es', 'pt', 'de', 'ru', 'ch', 'hi', 'ar'];
 const TRANSLATION_COST = 0.15; // €0.15 per translation
 
 /**
@@ -120,7 +120,7 @@ function normalizeLanguageCode(lang: string): string {
     'es': 'es', 'spanish': 'es', 'espagnol': 'es', 'español': 'es',
     'pt': 'pt', 'portuguese': 'pt', 'portugais': 'pt', 'português': 'pt',
     'ru': 'ru', 'russian': 'ru', 'russe': 'ru', 'русский': 'ru',
-    'zh': 'zh', 'chinese': 'zh', 'ch': 'zh', 'chinois': 'zh', '中文': 'zh',
+    'ch': 'ch', 'chinese': 'ch', 'zh': 'ch', 'chinois': 'ch', '中文': 'ch',
     'hi': 'hi', 'hindi': 'hi', 'हिन्दी': 'hi',
     'ar': 'ar', 'arabic': 'ar', 'arabe': 'ar', 'العربية': 'ar',
   };
@@ -138,7 +138,7 @@ function getLanguageFromCountry(country: string): string | null {
     'spain': 'es', 'espagne': 'es', 'spanien': 'es',
     'portugal': 'pt',
     'russia': 'ru', 'russie': 'ru', 'russland': 'ru',
-    'china': 'zh', 'chine': 'zh', 'chinesisch': 'zh',
+    'china': 'ch', 'chine': 'ch', 'chinesisch': 'ch',
     'india': 'hi', 'inde': 'hi',
     'saudi arabia': 'ar', 'arabie saoudite': 'ar',
   };
@@ -234,7 +234,7 @@ function detectLanguageFromText(text: string): SupportedLanguage | null {
       words: ['и', 'в', 'не', 'что', 'он', 'на', 'я', 'с', 'со', 'как', 'а', 'то', 'все', 'она', 'так', 'его', 'но', 'да', 'ты', 'к', 'у', 'же', 'вы', 'за', 'бы', 'по', 'только', 'её', 'мне', 'было', 'вот', 'от', 'меня', 'еще', 'нет', 'о', 'из', 'ему', 'теперь', 'когда', 'даже', 'ну', 'вдруг', 'ли', 'если', 'уже', 'или', 'быть', 'был', 'была', 'были', 'было'],
       patterns: [/[а-яё]/g, /\b(и|в|не|что|он|на|я|с|со|как|а|то|все|она|так|его|но|да|ты|к|у|же|вы|за|бы|по|только|её|мне|было|вот|от|меня|еще|нет|о|из|ему|теперь|когда|даже|ну|вдруг|ли|если|уже|или|быть|был|была|были|было)\b/g]
     },
-    zh: {
+    ch: {
       words: ['的', '了', '在', '是', '我', '有', '和', '就', '不', '人', '都', '一', '一个', '上', '也', '很', '到', '说', '要', '去', '你', '会', '着', '没有', '看', '好', '自己', '这'],
       patterns: [/[\u4e00-\u9fff]/g]
     },
@@ -250,7 +250,7 @@ function detectLanguageFromText(text: string): SupportedLanguage | null {
   
   // Score each language
   const scores: Record<SupportedLanguage, number> = {
-    fr: 0, en: 0, es: 0, pt: 0, de: 0, ru: 0, zh: 0, hi: 0, ar: 0
+    fr: 0, en: 0, es: 0, pt: 0, de: 0, ru: 0, ch: 0, hi: 0, ar: 0
   };
   
   // Check for language-specific characters/patterns
@@ -353,7 +353,7 @@ function extractStringValue(value: any, preferredLang?: string): string {
     }
     
     // Strategy 3: Try common language codes in order
-    const langOrder = ['en', 'fr', 'es', 'pt', 'de', 'ru', 'zh', 'hi', 'ar'];
+    const langOrder = ['en', 'fr', 'es', 'pt', 'de', 'ru', 'ch', 'hi', 'ar'];
     for (const lang of langOrder) {
       if (typeof value[lang] === 'string' && value[lang].trim()) {
         return value[lang].trim();
@@ -618,10 +618,10 @@ async function translateText(
     return text;
   }
 
-  // Language code mapping for APIs
+  // Language code mapping for APIs (map internal 'ch' to API 'zh')
   const languageMap: Record<string, string> = {
     'fr': 'fr', 'en': 'en', 'es': 'es', 'pt': 'pt', 'de': 'de',
-    'ru': 'ru', 'zh': 'zh', 'hi': 'hi', 'ar': 'ar',
+    'ru': 'ru', 'ch': 'zh', 'hi': 'hi', 'ar': 'ar',
   };
   
   const targetLang = languageMap[to] || to;
@@ -826,14 +826,14 @@ export async function translateAllFields(
   }
 
   // ❌ DO NOT TRANSLATE: lastName, city, country, phone, email, etc.
-  // Keep them exactly as they are in the original
-  translated.lastName = original.lastName;
-  translated.city = original.city;
-  translated.country = original.country;
-  translated.phone = original.phone;
-  translated.email = original.email;
-  translated.barNumber = original.barNumber;
-  translated.phoneCountryCode = original.phoneCountryCode;
+  // Keep them exactly as they are in the original (only if they exist)
+  if (original.lastName !== undefined) translated.lastName = original.lastName;
+  if (original.city !== undefined && original.city !== null) translated.city = original.city;
+  if (original.country !== undefined && original.country !== null) translated.country = original.country;
+  if (original.phone !== undefined && original.phone !== null) translated.phone = original.phone;
+  if (original.email !== undefined && original.email !== null) translated.email = original.email;
+  if (original.barNumber !== undefined && original.barNumber !== null) translated.barNumber = original.barNumber;
+  if (original.phoneCountryCode !== undefined && original.phoneCountryCode !== null) translated.phoneCountryCode = original.phoneCountryCode;
 
   console.log(`[translateAllFields] ✓ Translation complete. Non-translatable fields preserved: lastName=${original.lastName}, city=${original.city}`);
 
@@ -956,19 +956,63 @@ export async function translateProfile(
 }
 
 /**
+ * Remove undefined values from an object recursively
+ * Firestore doesn't accept undefined values
+ */
+function removeUndefinedValues(obj: any): any {
+  if (obj === null || obj === undefined) {
+    return null;
+  }
+  
+  if (Array.isArray(obj)) {
+    return obj.map(item => removeUndefinedValues(item));
+  }
+  
+  if (typeof obj === 'object') {
+    const cleaned: any = {};
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        const value = obj[key];
+        if (value !== undefined) {
+          cleaned[key] = removeUndefinedValues(value);
+        }
+      }
+    }
+    return cleaned;
+  }
+  
+  return obj;
+}
+
+/**
  * Save translation to Firestore
+ * @param isManualEdit - If true, automatically freezes the translation to prevent auto-updates
  */
 export async function saveTranslation(
   providerId: string,
   language: SupportedLanguage,
   translation: TranslatedContent,
-  userId?: string
+  userId?: string,
+  isManualEdit: boolean = false
 ): Promise<void> {
   const translationRef = db.collection('providers_translations').doc(providerId);
   const doc = await translationRef.get();
 
+  // Check if translation is frozen (only allow manual edits to overwrite frozen translations)
+  if (doc.exists) {
+    const existing = doc.data() as ProviderTranslationDoc;
+    const isFrozen = existing.metadata.frozenLanguages?.includes(language);
+    
+    if (isFrozen && !isManualEdit) {
+      throw new Error(`Translation for language ${language} is frozen. Only manual edits are allowed.`);
+    }
+  }
+
+  // Remove undefined values before saving (Firestore doesn't accept undefined)
+  const cleanedTranslation = removeUndefinedValues(translation);
+  
   const updateData: any = {
-    [`translations.${language}`]: translation,
+    [`translations.${language}`]: cleanedTranslation,
     [`metadata.availableLanguages`]: FieldValue.arrayUnion(language),
     [`metadata.translationCosts.${language}`]: {
       cost: TRANSLATION_COST,
@@ -977,20 +1021,25 @@ export async function saveTranslation(
     },
     [`metadata.totalCost`]: FieldValue.increment(TRANSLATION_COST),
     [`metadata.lastUpdated`]: FieldValue.serverTimestamp(),
-    [`metadata.translations.${language}.status`]: 'created',
+    [`metadata.translations.${language}.status`]: isManualEdit ? 'frozen' : 'created',
     [`metadata.translations.${language}.createdAt`]: FieldValue.serverTimestamp(),
     [`metadata.translations.${language}.updatedAt`]: FieldValue.serverTimestamp(),
     [`metadata.translations.${language}.version`]: 1,
   };
 
+  // If manual edit, freeze the translation
+  if (isManualEdit) {
+    updateData[`metadata.frozenLanguages`] = FieldValue.arrayUnion(language);
+  }
+
   if (!doc.exists) {
-    // First time: save original profile
+    // First time: save original profile (remove undefined values)
     const original = await extractOriginalProfile(providerId);
     if (!original) {
       throw new Error('Provider not found');
     }
     
-    updateData.original = original;
+    updateData.original = removeUndefinedValues(original);
     updateData.metadata = {
       availableLanguages: [language],
       translationCosts: {
@@ -1003,10 +1052,10 @@ export async function saveTranslation(
       totalCost: TRANSLATION_COST,
       createdAt: FieldValue.serverTimestamp(),
       lastUpdated: FieldValue.serverTimestamp(),
-      frozenLanguages: [],
+      frozenLanguages: isManualEdit ? [language] : [],
       translations: {
         [language]: {
-          status: 'created',
+          status: isManualEdit ? 'frozen' : 'created',
           createdAt: FieldValue.serverTimestamp(),
           updatedAt: FieldValue.serverTimestamp(),
           cost: TRANSLATION_COST,

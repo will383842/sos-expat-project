@@ -4,7 +4,7 @@ import { functions } from '../config/firebase';
 import { db } from '../config/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
-export type SupportedLanguage = 'fr' | 'en' | 'es' | 'pt' | 'de' | 'ru' | 'zh' | 'hi' | 'ar' | "ch";
+export type SupportedLanguage = 'fr' | 'en' | 'es' | 'pt' | 'de' | 'ru' | 'ch' | 'hi' | 'ar' | "zh";
 
 export interface TranslatedContent {
   title: string;
@@ -57,7 +57,7 @@ export interface TranslationStatus {
   version: number;
 }
 
-const SUPPORTED_LANGUAGES: SupportedLanguage[] = ['fr', 'en', 'es', 'pt', 'de', 'ru', 'zh', 'hi', 'ar'];
+const SUPPORTED_LANGUAGES: SupportedLanguage[] = ['fr', 'en', 'es', 'pt', 'de', 'ru', 'ch', 'hi', 'ar'];
 
 const LANGUAGE_NAMES: Record<SupportedLanguage, string> = {
   fr: 'Français',
@@ -66,10 +66,10 @@ const LANGUAGE_NAMES: Record<SupportedLanguage, string> = {
   es: 'Español',
   pt: 'Português',
   ru: 'Русский',
-  zh: '中文',
+  ch: '中文',
   hi: 'हिन्दी',
   ar: 'العربية',
-  ch: '中文',
+  zh: '中文',
 };
 
 /**
@@ -198,7 +198,7 @@ export async function requestTranslation(
       console.log('[requestTranslation] Data is undefined:', data === undefined);
       console.log('[requestTranslation] Data is object:', typeof data === 'object');
       console.log('[requestTranslation] Data is array:', Array.isArray(data));
-      
+
       if (data && typeof data === 'object') {
         console.log('[requestTranslation] Data keys:', Object.keys(data));
         console.log('[requestTranslation] Data stringified length:', JSON.stringify(data).length);
@@ -302,9 +302,9 @@ export async function requestTranslation(
     });
 
     // Check for specific JSON decoding errors
-    if (error?.message?.includes('cannot be decoded from JSON') || 
-        error?.message?.includes('decode') ||
-        error?.message?.includes('[object Object]')) {
+    if (error?.message?.includes('cannot be decoded from JSON') ||
+      error?.message?.includes('decode') ||
+      error?.message?.includes('[object Object]')) {
       console.error('[requestTranslation] ✗ JSON DECODING ERROR DETECTED');
       console.error('[requestTranslation] This error typically occurs when:');
       console.error('[requestTranslation] 1. The function returns non-serializable data');
@@ -317,7 +317,7 @@ export async function requestTranslation(
       const errorMessages: Record<string, string> = {
         'functions/not-found': 'Translation function not found. Please contact support.',
         'functions/permission-denied': 'You do not have permission to translate this profile.',
-        'functions/unauthenticated': 'You must be logged in to translate profiles.',
+        'functions/unauthenticated': 'Authentication error occurred. Please try again.',
         'functions/invalid-argument': error.message || 'Invalid translation request.',
         'functions/deadline-exceeded': 'Translation request timed out. Please try again.',
         'functions/resource-exhausted': 'Translation service is temporarily unavailable. Please try again later.',
@@ -379,7 +379,7 @@ export async function requestUpdateProviderTranslation(
     });
 
     const data = (result as any)?.data;
-    
+
     if (!data || typeof data !== 'object') {
       throw new Error('Invalid response from translation update service');
     }

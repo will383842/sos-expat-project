@@ -174,11 +174,20 @@ const routeConfigs: RouteConfig[] = [
   // Fournisseurs publics
   { path: "/providers", component: Providers, translated: "providers" },
   { path: "/provider/:id", component: ProviderProfile },
-  // More flexible route patterns to handle various URL structures
+  // Simplified route patterns - just type and slug
+  { path: "/avocat/:slug", component: ProviderProfile, translated: "lawyer" },
+  { path: "/lawyers/:slug", component: ProviderProfile, translated: "lawyer" },
+  { path: "/expatrie/:slug", component: ProviderProfile, translated: "expat" },
+  { path: "/expats/:slug", component: ProviderProfile, translated: "expat" },
+  // Legacy routes for backward compatibility
   { path: "/avocat/:country/:language/:nameId", component: ProviderProfile, translated: "lawyer" },
   { path: "/avocat/:country/:language/*", component: ProviderProfile, translated: "lawyer" },
   { path: "/expatrie/:country/:language/:nameId", component: ProviderProfile, translated: "expat" },
   { path: "/expatrie/:country/:language/*", component: ProviderProfile, translated: "expat" },
+  { path: "/lawyers/:country/:language/:nameId", component: ProviderProfile, translated: "lawyer" },
+  { path: "/lawyers/:country/:language/*", component: ProviderProfile, translated: "lawyer" },
+  { path: "/expats/:country/:language/:nameId", component: ProviderProfile, translated: "expat" },
+  { path: "/expats/:country/:language/*", component: ProviderProfile, translated: "expat" },
 ];
 
 // Protégées (utilisateur)

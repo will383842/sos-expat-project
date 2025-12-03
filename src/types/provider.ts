@@ -21,11 +21,12 @@ export interface Provider {
   isApproved: boolean;
   isBanned: boolean;
 
+
   // Champs étendus pour compatibilité avec les autres composants
   fullName?: string;
   firstName?: string;
   lastName?: string;
-  role: 'lawyer' | 'expat'; // Alias de type pour compatibilité
+  role?: 'lawyer' | 'expat' ; // Alias de type pour compatibilité
   currentCountry?: string;
   currentPresenceCountry?: string;
   profilePhoto?: string;
