@@ -1248,7 +1248,7 @@ const SOSCall: React.FC = () => {
       collection(db, "sos_profiles"),
       where("type", "in", ["lawyer", "expat"]),
       where("isApproved", "==", true),
-where("isVisible", "==", true),
+      where("isVisible", "==", true),
       limit(100)
     );
 

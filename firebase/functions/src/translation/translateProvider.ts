@@ -383,7 +383,8 @@ export const translateProvider = onCall(
       }
     }
     if (isOutdated) {
-      console.log('[translateProvider] ⚠️ Translation exists but is outdated, will regenerate from updated original');
+      console.log('[translateProvider] ⚠️ Translation exists but is outdated, will REGENERATE and COMPLETELY REPLACE old translation with new one from updated original');
+      console.log('[translateProvider] The old frozen translation will be completely overwritten with fresh translation based on latest original profile');
     } else {
       console.log('[translateProvider] ✓ Step 2: No existing translation found, proceeding with new translation');
     }
@@ -508,8 +509,10 @@ export const translateProvider = onCall(
       // Remove undefined values before saving (Firestore doesn't accept undefined)
       const cleanedTranslation = removeUndefinedValues(translated);
       
+      // IMPORTANT: When updating with dot notation like translations.${targetLanguage},
+      // Firestore COMPLETELY REPLACES the nested object, so old frozen translation data is fully overwritten
       const updateData: any = {
-        [`translations.${targetLanguage}`]: cleanedTranslation,
+        [`translations.${targetLanguage}`]: cleanedTranslation, // This COMPLETELY REPLACES the old translation object
         [`metadata.availableLanguages`]: admin.firestore.FieldValue.arrayUnion(targetLanguage),
         [`metadata.lastUpdated`]: admin.firestore.FieldValue.serverTimestamp(),
         [`metadata.translations.${targetLanguage}.status`]: 'created', // Reset from 'outdated' to 'created'
@@ -519,7 +522,10 @@ export const translateProvider = onCall(
       // If this was a regeneration (outdated), also update the original profile to latest
       if (isOutdated && doc.exists) {
         updateData.original = removeUndefinedValues(original);
-        console.log('[translateProvider] ✓ Updating original profile along with regenerated translation');
+        console.log('[translateProvider] ✓ REGENERATING outdated translation:');
+        console.log('[translateProvider]   - Old frozen translation will be COMPLETELY REPLACED');
+        console.log('[translateProvider]   - New translation generated from updated original profile');
+        console.log('[translateProvider]   - Status changed from "outdated" to "created"');
       }
       
       if (!doc.exists) {
@@ -541,11 +547,12 @@ export const translateProvider = onCall(
           },
         };
         await translationRef.set(updateData);
-        console.log('[translateProvider] ✓ Step 7: Original and translation saved');
+        console.log('[translateProvider] ✓ Step 8: Original and translation saved');
       } else {
-        // Update existing
+        // Update existing - this will completely replace the translation object for this language
+        // Using update() with dot notation completely replaces the nested object
         await translationRef.update(updateData);
-        console.log('[translateProvider] ✓ Step 7: Translation saved');
+        console.log('[translateProvider] ✓ Step 8: Translation saved (old translation completely replaced)');
       }
     } catch (error) {
       console.error('[translateProvider] ✗ Error saving translation:', error);
