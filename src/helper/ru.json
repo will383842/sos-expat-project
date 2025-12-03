@@ -1563,5 +1563,22 @@
   "providerTranslation.translating": "Переводится...",
   "providerTranslation.oneTimeCost": "Перевод — это разовая стоимость (~0,15 €). Последующие посещения бесплатны.",
   "providerTranslation.viewOriginal": "Просмотреть оригинал",
-  "providerTranslation.viewTranslated": "Просмотреть перевод"
+  "providerTranslation.viewTranslated": "Просмотреть перевод",
+  "cookieBanner.title": "Мы используем cookies",
+  "cookieBanner.description": "Мы используем cookies для улучшения вашего опыта, анализа трафика и персонализации контента. Продолжая, вы принимаете наше использование cookies.",
+  "cookieBanner.learnMore": "Узнать больше",
+  "cookieBanner.acceptAll": "Принять все",
+  "cookieBanner.rejectAll": "Отклонить все",
+  "cookieBanner.customize": "Настроить",
+  "cookieBanner.savePreferences": "Сохранить настройки",
+  "cookieBanner.showLess": "Показать меньше",
+  "cookieBanner.alwaysActive": "Всегда активно",
+  "cookieBanner.essential.title": "Необходимые cookies",
+  "cookieBanner.essential.description": "Требуются для функционирования сайта (аутентификация, безопасность, языковые настройки).",
+  "cookieBanner.analytics.title": "Аналитические cookies",
+  "cookieBanner.analytics.description": "Помогают нам понять, как вы используете сайт, чтобы улучшить его.",
+  "cookieBanner.performance.title": "Cookies производительности",
+  "cookieBanner.performance.description": "Улучшают скорость загрузки и стабильность сайта.",
+  "cookieBanner.marketing.title": "Маркетинговые cookies",
+  "cookieBanner.marketing.description": "Используются для персонализации рекламы и измерения её эффективности."
 }

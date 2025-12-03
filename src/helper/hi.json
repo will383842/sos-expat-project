@@ -1516,5 +1516,22 @@
   "providerTranslation.translating": "अनुवाद हो रहा है...",
   "providerTranslation.oneTimeCost": "अनुवाद एक बार की लागत है (~€0.15)। भविष्य की यात्राएं मुफ्त हैं।",
   "providerTranslation.viewOriginal": "मूल देखें",
-  "providerTranslation.viewTranslated": "अनुवादित देखें"
+  "providerTranslation.viewTranslated": "अनुवादित देखें",
+  "cookieBanner.title": "हम कुकीज़ का उपयोग करते हैं",
+  "cookieBanner.description": "हम आपके अनुभव को बेहतर बनाने, ट्रैफ़िक का विश्लेषण करने और सामग्री को व्यक्तिगत बनाने के लिए कुकीज़ का उपयोग करते हैं। जारी रखकर, आप कुकीज़ के हमारे उपयोग को स्वीकार करते हैं।",
+  "cookieBanner.learnMore": "अधिक जानें",
+  "cookieBanner.acceptAll": "सभी स्वीकार करें",
+  "cookieBanner.rejectAll": "सभी अस्वीकार करें",
+  "cookieBanner.customize": "अनुकूलित करें",
+  "cookieBanner.savePreferences": "प्राथमिकताएं सहेजें",
+  "cookieBanner.showLess": "कम दिखाएं",
+  "cookieBanner.alwaysActive": "हमेशा सक्रिय",
+  "cookieBanner.essential.title": "आवश्यक कुकीज़",
+  "cookieBanner.essential.description": "साइट के कामकाज के लिए आवश्यक (प्रमाणीकरण, सुरक्षा, भाषा प्राथमिकताएं)।",
+  "cookieBanner.analytics.title": "विश्लेषणात्मक कुकीज़",
+  "cookieBanner.analytics.description": "हमें यह समझने में मदद करती हैं कि आप साइट का उपयोग कैसे करते हैं ताकि इसे बेहतर बनाया जा सके।",
+  "cookieBanner.performance.title": "प्रदर्शन कुकीज़",
+  "cookieBanner.performance.description": "साइट की लोडिंग गति और स्थिरता में सुधार करती हैं।",
+  "cookieBanner.marketing.title": "मार्केटिंग कुकीज़",
+  "cookieBanner.marketing.description": "विज्ञापनों को व्यक्तिगत बनाने और उनकी प्रभावशीलता को मापने के लिए उपयोग की जाती हैं।"
 }

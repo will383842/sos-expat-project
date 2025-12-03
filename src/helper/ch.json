@@ -1646,5 +1646,22 @@
   "providerTranslation.translating": "正在翻译...",
   "providerTranslation.oneTimeCost": "翻译是一次性费用（约0.15欧元）。以后的访问是免费的。",
   "providerTranslation.viewOriginal": "查看原文 ",
-  "providerTranslation.viewTranslated": "查看翻译 "
+  "providerTranslation.viewTranslated": "查看翻译 ",
+  "cookieBanner.title": "我们使用Cookie",
+  "cookieBanner.description": "我们使用Cookie来改善您的体验、分析流量并个性化内容。继续即表示您接受我们对Cookie的使用。",
+  "cookieBanner.learnMore": "了解更多",
+  "cookieBanner.acceptAll": "全部接受",
+  "cookieBanner.rejectAll": "全部拒绝",
+  "cookieBanner.customize": "自定义",
+  "cookieBanner.savePreferences": "保存偏好设置",
+  "cookieBanner.showLess": "显示更少",
+  "cookieBanner.alwaysActive": "始终激活",
+  "cookieBanner.essential.title": "必要的Cookie",
+  "cookieBanner.essential.description": "网站运行所必需的（身份验证、安全性、语言偏好）。",
+  "cookieBanner.analytics.title": "分析Cookie",
+  "cookieBanner.analytics.description": "帮助我们了解您如何使用网站以改进它。",
+  "cookieBanner.performance.title": "性能Cookie",
+  "cookieBanner.performance.description": "提高网站加载速度和稳定性。",
+  "cookieBanner.marketing.title": "营销Cookie",
+  "cookieBanner.marketing.description": "用于个性化广告并衡量其有效性。"
 }

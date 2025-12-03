@@ -1592,5 +1592,22 @@
   "providerTranslation.translating": "Wird übersetzt...",
   "providerTranslation.oneTimeCost": "Die Übersetzung ist eine einmalige Kosten (~0,15 €). Zukünftige Besuche sind kostenlos.",
   "providerTranslation.viewOriginal": "Original anzeigen",
-  "providerTranslation.viewTranslated": "Übersetzt anzeigen"
+  "providerTranslation.viewTranslated": "Übersetzt anzeigen",
+  "cookieBanner.title": "Wir verwenden Cookies",
+  "cookieBanner.description": "Wir verwenden Cookies, um Ihre Erfahrung zu verbessern, den Datenverkehr zu analysieren und Inhalte zu personalisieren. Durch Fortfahren akzeptieren Sie unsere Verwendung von Cookies.",
+  "cookieBanner.learnMore": "Mehr erfahren",
+  "cookieBanner.acceptAll": "Alle akzeptieren",
+  "cookieBanner.rejectAll": "Alle ablehnen",
+  "cookieBanner.customize": "Anpassen",
+  "cookieBanner.savePreferences": "Einstellungen speichern",
+  "cookieBanner.showLess": "Weniger anzeigen",
+  "cookieBanner.alwaysActive": "Immer aktiv",
+  "cookieBanner.essential.title": "Notwendige Cookies",
+  "cookieBanner.essential.description": "Erforderlich für die Funktionalität der Website (Authentifizierung, Sicherheit, Spracheinstellungen).",
+  "cookieBanner.analytics.title": "Analyse-Cookies",
+  "cookieBanner.analytics.description": "Helfen uns zu verstehen, wie Sie die Website nutzen, um sie zu verbessern.",
+  "cookieBanner.performance.title": "Leistungs-Cookies",
+  "cookieBanner.performance.description": "Verbessern die Ladegeschwindigkeit und Stabilität der Website.",
+  "cookieBanner.marketing.title": "Marketing-Cookies",
+  "cookieBanner.marketing.description": "Werden verwendet, um Anzeigen zu personalisieren und deren Wirksamkeit zu messen."
 }

@@ -1557,5 +1557,22 @@
   "providerTranslation.translating": "Traduzindo...",
   "providerTranslation.oneTimeCost": "A tradução é um custo único (~€0,15). As visitas futuras são gratuitas.",
   "providerTranslation.viewOriginal": "Ver original",
-  "providerTranslation.viewTranslated": "Ver traduzido"
+  "providerTranslation.viewTranslated": "Ver traduzido",
+  "cookieBanner.title": "Utilizamos cookies",
+  "cookieBanner.description": "Utilizamos cookies para melhorar sua experiência, analisar o tráfego e personalizar o conteúdo. Ao continuar, você aceita nosso uso de cookies.",
+  "cookieBanner.learnMore": "Saiba mais",
+  "cookieBanner.acceptAll": "Aceitar tudo",
+  "cookieBanner.rejectAll": "Rejeitar tudo",
+  "cookieBanner.customize": "Personalizar",
+  "cookieBanner.savePreferences": "Salvar preferências",
+  "cookieBanner.showLess": "Mostrar menos",
+  "cookieBanner.alwaysActive": "Sempre ativo",
+  "cookieBanner.essential.title": "Cookies essenciais",
+  "cookieBanner.essential.description": "Necessários para o funcionamento do site (autenticação, segurança, preferências de idioma).",
+  "cookieBanner.analytics.title": "Cookies analíticos",
+  "cookieBanner.analytics.description": "Nos ajudam a entender como você usa o site para melhorá-lo.",
+  "cookieBanner.performance.title": "Cookies de desempenho",
+  "cookieBanner.performance.description": "Melhoram a velocidade de carregamento e a estabilidade do site.",
+  "cookieBanner.marketing.title": "Cookies de marketing",
+  "cookieBanner.marketing.description": "Usados para personalizar anúncios e medir sua eficácia."
 }

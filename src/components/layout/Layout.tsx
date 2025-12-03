@@ -1,9 +1,10 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState, useEffect } from 'react';
 import Header from './Header';
 import Footer from './Footer';
 import { useAuth } from '../../contexts/AuthContext';
 import LoadingSpinner from '../common/LoadingSpinner';
 import InstallBanner from '../common/InstallBanner';
+import CookieBanner, { showCookieBanner } from '../common/CookieBanner';
 
 interface LayoutProps {
   children: ReactNode;
@@ -19,6 +20,19 @@ const Layout: React.FC<LayoutProps> = ({
   role = 'main'
 }) => {
   const { authInitialized, isLoading } = useAuth();
+  const [showCookieBannerState, setShowCookieBannerState] = useState(false);
+
+  // Listen for custom event to show cookie banner (e.g., from footer link)
+  useEffect(() => {
+    const handleShowCookieBanner = () => {
+      setShowCookieBannerState(true);
+    };
+
+    window.addEventListener('showCookieBanner', handleShowCookieBanner);
+    return () => {
+      window.removeEventListener('showCookieBanner', handleShowCookieBanner);
+    };
+  }, []);
 
   // Loading state pendant l'initialisation auth
   if (!authInitialized || isLoading) {
@@ -57,7 +71,13 @@ const Layout: React.FC<LayoutProps> = ({
 
       {showFooter && <Footer />}
 
-      {/* Bandeau PWA global — bas-droite, laissé à gauche du bouton “remonter en haut” */}
+      {/* Cookie Consent Banner - GDPR compliant */}
+      <CookieBanner
+        zIndexClass="z-[100]"
+        onPreferencesSaved={() => setShowCookieBannerState(false)}
+      />
+
+      {/* Bandeau PWA global — bas-droite, laissé à gauche du bouton "remonter en haut" */}
       <InstallBanner
         offsetRightPx={88}                        // laisse la place au bouton scroll-to-top
         bottomPx={24}                             // aligné avec bottom-6
