@@ -316,7 +316,7 @@ export async function requestTranslation(
       const errorMessages: Record<string, string> = {
         'functions/not-found': 'Translation function not found. Please contact support.',
         'functions/permission-denied': 'You do not have permission to translate this profile.',
-        'functions/unauthenticated': 'You must be logged in to translate profiles.',
+        'functions/unauthenticated': 'Authentication error occurred. Please try again.',
         'functions/invalid-argument': error.message || 'Invalid translation request.',
         'functions/deadline-exceeded': 'Translation request timed out. Please try again.',
         'functions/resource-exhausted': 'Translation service is temporarily unavailable. Please try again later.',

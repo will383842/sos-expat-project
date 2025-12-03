@@ -2,14 +2,12 @@
 import React, { useState } from 'react';
 import { Globe, Loader2 } from 'lucide-react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { useNavigate, useLocation } from 'react-router-dom';
+// Removed useNavigate and useLocation imports - no longer needed for login redirect
 import {
   SUPPORTED_LANGUAGES,
   LANGUAGE_NAMES,
   type SupportedLanguage,
 } from '../../services/providerTranslationService';
-import { useAuth } from '../../contexts/AuthContext';
-
 interface TranslationBannerProps {
   providerId: string;
   currentLanguage: SupportedLanguage;
@@ -27,10 +25,7 @@ export const TranslationBanner: React.FC<TranslationBannerProps> = ({
   onTranslate,
   onViewTranslation,
 }) => {
-  const { user } = useAuth();
   const intl = useIntl();
-  const navigate = useNavigate();
-  const location = useLocation();
   const [isTranslating, setIsTranslating] = useState<SupportedLanguage | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -49,21 +44,6 @@ export const TranslationBanner: React.FC<TranslationBannerProps> = ({
   // Always show the banner - show all language buttons
 
   const handleTranslate = async (targetLanguage: SupportedLanguage) => {
-    // Check if user is logged in
-    if (!user) {
-      // Store the current path in sessionStorage BEFORE navigating
-      // This ensures we don't lose it even if query params get stripped
-      const currentPath = location.pathname + location.search;
-      sessionStorage.setItem("loginRedirect", currentPath);
-      console.log('[TranslationBanner] Storing redirect in sessionStorage:', currentPath);
-      
-      // Also pass it in the URL as a backup
-      const loginUrl = `/login?redirect=${encodeURIComponent(currentPath)}`;
-      console.log('[TranslationBanner] Redirecting to login with redirect:', currentPath);
-      navigate(loginUrl);
-      return;
-    }
-
     setIsTranslating(targetLanguage);
     setError(null);
 
@@ -87,21 +67,6 @@ export const TranslationBanner: React.FC<TranslationBannerProps> = ({
   };
 
   const handleViewTranslation = (targetLanguage: SupportedLanguage) => {
-    // Check if user is logged in
-    if (!user) {
-      // Store the current path in sessionStorage BEFORE navigating
-      // This ensures we don't lose it even if query params get stripped
-      const currentPath = location.pathname + location.search;
-      sessionStorage.setItem("loginRedirect", currentPath);
-      console.log('[TranslationBanner] Storing redirect in sessionStorage:', currentPath);
-      
-      // Also pass it in the URL as a backup
-      const loginUrl = `/login?redirect=${encodeURIComponent(currentPath)}`;
-      console.log('[TranslationBanner] Redirecting to login with redirect:', currentPath);
-      navigate(loginUrl);
-      return;
-    }
-
     // If translation already exists, just switch to viewing it
     if (onViewTranslation) {
       onViewTranslation(targetLanguage);
