@@ -2,7 +2,7 @@
 import * as admin from 'firebase-admin';
 import { db, FieldValue } from '../utils/firebase';
 
-export type SupportedLanguage = 'fr' | 'en' | 'es' | 'pt' | 'de' | 'ru' | 'zh' | 'hi' | 'ar';
+export type SupportedLanguage = 'fr' | 'en' | 'es' | 'pt' | 'de' | 'ru' | 'ch' | 'hi' | 'ar';
 
 export interface OriginalProfile {
   // Store ALL data from sos_profiles (with index signature for flexibility)
@@ -104,7 +104,7 @@ export interface ProviderTranslationDoc {
   };
 }
 
-const SUPPORTED_LANGUAGES: SupportedLanguage[] = ['fr', 'en', 'es', 'pt', 'de', 'ru', 'zh', 'hi', 'ar'];
+const SUPPORTED_LANGUAGES: SupportedLanguage[] = ['fr', 'en', 'es', 'pt', 'de', 'ru', 'ch', 'hi', 'ar'];
 const TRANSLATION_COST = 0.15; // €0.15 per translation
 
 /**
@@ -120,7 +120,7 @@ function normalizeLanguageCode(lang: string): string {
     'es': 'es', 'spanish': 'es', 'espagnol': 'es', 'español': 'es',
     'pt': 'pt', 'portuguese': 'pt', 'portugais': 'pt', 'português': 'pt',
     'ru': 'ru', 'russian': 'ru', 'russe': 'ru', 'русский': 'ru',
-    'zh': 'zh', 'chinese': 'zh', 'ch': 'zh', 'chinois': 'zh', '中文': 'zh',
+    'ch': 'ch', 'chinese': 'ch', 'zh': 'ch', 'chinois': 'ch', '中文': 'ch',
     'hi': 'hi', 'hindi': 'hi', 'हिन्दी': 'hi',
     'ar': 'ar', 'arabic': 'ar', 'arabe': 'ar', 'العربية': 'ar',
   };
@@ -138,7 +138,7 @@ function getLanguageFromCountry(country: string): string | null {
     'spain': 'es', 'espagne': 'es', 'spanien': 'es',
     'portugal': 'pt',
     'russia': 'ru', 'russie': 'ru', 'russland': 'ru',
-    'china': 'zh', 'chine': 'zh', 'chinesisch': 'zh',
+    'china': 'ch', 'chine': 'ch', 'chinesisch': 'ch',
     'india': 'hi', 'inde': 'hi',
     'saudi arabia': 'ar', 'arabie saoudite': 'ar',
   };
@@ -234,7 +234,7 @@ function detectLanguageFromText(text: string): SupportedLanguage | null {
       words: ['и', 'в', 'не', 'что', 'он', 'на', 'я', 'с', 'со', 'как', 'а', 'то', 'все', 'она', 'так', 'его', 'но', 'да', 'ты', 'к', 'у', 'же', 'вы', 'за', 'бы', 'по', 'только', 'её', 'мне', 'было', 'вот', 'от', 'меня', 'еще', 'нет', 'о', 'из', 'ему', 'теперь', 'когда', 'даже', 'ну', 'вдруг', 'ли', 'если', 'уже', 'или', 'быть', 'был', 'была', 'были', 'было'],
       patterns: [/[а-яё]/g, /\b(и|в|не|что|он|на|я|с|со|как|а|то|все|она|так|его|но|да|ты|к|у|же|вы|за|бы|по|только|её|мне|было|вот|от|меня|еще|нет|о|из|ему|теперь|когда|даже|ну|вдруг|ли|если|уже|или|быть|был|была|были|было)\b/g]
     },
-    zh: {
+    ch: {
       words: ['的', '了', '在', '是', '我', '有', '和', '就', '不', '人', '都', '一', '一个', '上', '也', '很', '到', '说', '要', '去', '你', '会', '着', '没有', '看', '好', '自己', '这'],
       patterns: [/[\u4e00-\u9fff]/g]
     },
@@ -250,7 +250,7 @@ function detectLanguageFromText(text: string): SupportedLanguage | null {
   
   // Score each language
   const scores: Record<SupportedLanguage, number> = {
-    fr: 0, en: 0, es: 0, pt: 0, de: 0, ru: 0, zh: 0, hi: 0, ar: 0
+    fr: 0, en: 0, es: 0, pt: 0, de: 0, ru: 0, ch: 0, hi: 0, ar: 0
   };
   
   // Check for language-specific characters/patterns
@@ -353,7 +353,7 @@ function extractStringValue(value: any, preferredLang?: string): string {
     }
     
     // Strategy 3: Try common language codes in order
-    const langOrder = ['en', 'fr', 'es', 'pt', 'de', 'ru', 'zh', 'hi', 'ar'];
+    const langOrder = ['en', 'fr', 'es', 'pt', 'de', 'ru', 'ch', 'hi', 'ar'];
     for (const lang of langOrder) {
       if (typeof value[lang] === 'string' && value[lang].trim()) {
         return value[lang].trim();
@@ -618,10 +618,10 @@ async function translateText(
     return text;
   }
 
-  // Language code mapping for APIs
+  // Language code mapping for APIs (map internal 'ch' to API 'zh')
   const languageMap: Record<string, string> = {
     'fr': 'fr', 'en': 'en', 'es': 'es', 'pt': 'pt', 'de': 'de',
-    'ru': 'ru', 'zh': 'zh', 'hi': 'hi', 'ar': 'ar',
+    'ru': 'ru', 'ch': 'zh', 'hi': 'hi', 'ar': 'ar',
   };
   
   const targetLang = languageMap[to] || to;

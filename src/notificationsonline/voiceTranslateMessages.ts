@@ -3,7 +3,7 @@ const voiceMessages: Record<string, string> = {
     en: "🔔 You are currently online on S.O.S Expats. Clients may call you at any time. Please switch offline if you're unavailable.",
     es: "🔔 Está en línea en S.O.S Expats. Los clientes pueden llamarle en cualquier momento.",
     pt: "🔔 Você está online na S.O.S Expats. Os clientes podem ligar para você a qualquer momento.",
-    zh: "🔔 您目前在线于 S.O.S 驻外人士。客户随时可能联系您。如果您暂时无法接听，请切换离线。",
+    ch: "🔔 您目前在线于 S.O.S 驻外人士。客户随时可能联系您。如果您暂时无法接听，请切换离线。",
     hi: "🔔 आप वर्तमान में S.O.S Expats पर ऑनलाइन हैं। ग्राहक किसी भी समय आपको कॉल कर सकते हैं। कृपया उपलब्ध न होने पर ऑफ़लाइन स्विच करें।",
     ar: "🔔 أنت متصل الآن على S.O.S Expats. يمكن للعملاء الاتصال بك في أي وقت. الرجاء الانتقال إلى وضع عدم الاتصال إذا كنت غير متاح.",
     ru: "🔔 Вы в сети на S.O.S Expats. Клиенты могут позвонить вам в любой момент. Пожалуйста, переключитесь в офлайн, если вы недоступны.",

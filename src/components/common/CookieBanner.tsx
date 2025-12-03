@@ -105,7 +105,7 @@ const CookieBanner: React.FC<CookieBannerProps> = ({
       pt: '/pt-pt/cookies',
       de: '/de-de/cookies',
       ru: '/ru-ru/cookies',
-      zh: '/zh-cn/cookies',
+      ch: '/zh-cn/cookies',
       hi: '/hi-in/cookies',
       ar: '/ar-sa/cookies',
     };

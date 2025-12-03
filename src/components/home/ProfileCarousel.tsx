@@ -338,7 +338,7 @@ const ProfileCarousel: React.FC<ProfileCarouselProps> = ({
               onProfileClick={handleProfileClick}
               isUserConnected={isUserConnected}
               index={index}
-              language={language as "fr" | "en" | "es" | "ru" | "de" | "ar" | "it" | "nl" | "zh"}
+              language={language as "fr" | "en" | "es" | "ru" | "de" | "ar" | "it" | "nl" | "ch"}
             />
           </div>
         ))}

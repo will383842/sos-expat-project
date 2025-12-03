@@ -2696,7 +2696,7 @@ const Dashboard: React.FC = () => {
                                   <option value="pt">Português</option>
                                   <option value="de">Deutsch</option>
                                   <option value="ru">Русский</option>
-                                  <option value="zh">中文</option>
+                                  <option value="ch">中文</option>
                                   <option value="hi">हिन्दी</option>
                                   <option value="ar">العربية</option>
                                 </select>

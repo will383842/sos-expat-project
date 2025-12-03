@@ -157,23 +157,7 @@ export const languagesData: Language[] = [
     }),
   },
   {
-    code: 'zh',
-    name: 'Chinois (ZH)',
-    nativeName: '中文',
-    labels: buildLabels({
-      fr: 'Chinois',
-      en: 'Chinese',
-      es: 'Chino',
-      de: 'Chinesisch',
-      ru: 'Китайский',
-      hi: 'चीनी',
-      pt: 'Chinês',
-      ch: '中文',
-      ar: 'الصينية',
-    }),
-  },
-  {
-    code: 'ch', // alias used in the app for Chinese
+    code: 'ch', // Chinese language code used in the app
     name: 'Chinois',
     nativeName: '中文',
     labels: buildLabels({
@@ -275,7 +259,7 @@ export const getSortedLanguages = (
   return [...languages].sort((a, b) =>
     getLanguageLabel(a, locale).localeCompare(
       getLanguageLabel(b, locale),
-      locale === 'ch' ? 'zh' : locale
+      locale === 'ch' ? 'zh-CN' : locale
     )
   );
 };
