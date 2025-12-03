@@ -247,6 +247,16 @@ export const updateProviderTranslation = onCall(
             continue; // Skip frozen translations
           }
 
+          // Get current status - only mark as 'outdated' if status is 'created' (not 'missing' or already 'outdated')
+          const currentStatus = translationData.metadata?.translations?.[language]?.status || 'missing';
+          
+          // Only mark as 'outdated' if translation exists (status is 'created' or already 'outdated')
+          // If status is 'missing', leave it as 'missing' (no translation exists yet)
+          if (currentStatus === 'missing') {
+            console.log(`[updateProviderTranslation] ⚠️ Skipping ${language} - translation status is 'missing' (no translation exists yet)`);
+            continue;
+          }
+
           // Mark as 'outdated' so it will be regenerated when user clicks translate
           const updateObj: any = {
             [`metadata.translations.${language}.status`]: 'outdated', // Mark as outdated to force regeneration

@@ -301,11 +301,12 @@ export const translateProvider = onCall(
     }
     console.log('[translateProvider] ✓ Step 1: Input validation passed');
 
-    // Step 2: Check if translation already exists and if it's outdated
-    console.log('[translateProvider] Step 2: Checking for existing translation...');
+    // Step 2: Check if translation already exists and its status
+    // Possible states: 'missing', 'created', 'outdated', 'frozen'
+    console.log('[translateProvider] Step 2: Checking for existing translation and status...');
     let existing;
     let isOutdated = false;
-    let translationStatus = null;
+    let translationStatus: 'missing' | 'created' | 'outdated' | 'frozen' | null = null;
     
     // First check the translation document to see if translation exists and its status
     const translationRef = db.collection('providers_translations').doc(providerId);
@@ -313,20 +314,30 @@ export const translateProvider = onCall(
     
     if (translationDoc.exists) {
       const docData = translationDoc.data();
-      translationStatus = docData?.metadata?.translations?.[targetLanguage]?.status;
+      translationStatus = docData?.metadata?.translations?.[targetLanguage]?.status || 'missing';
       isOutdated = translationStatus === 'outdated';
       console.log('[translateProvider] Translation status check:', {
         status: translationStatus,
         isOutdated,
         isFrozen: docData?.metadata?.frozenLanguages?.includes(targetLanguage),
+        possibleStates: ['missing', 'created', 'outdated', 'frozen'],
       });
+    } else {
+      // Document doesn't exist, so translation is 'missing'
+      translationStatus = 'missing';
+      console.log('[translateProvider] Translation document does not exist - status: missing');
     }
     
     try {
       existing = await getTranslation(providerId, targetLanguage);
+      // If translation doesn't exist but document does, status should be 'missing'
+      if (!existing && translationDoc.exists && translationStatus !== 'missing') {
+        translationStatus = 'missing';
+      }
       console.log('[translateProvider] Existing translation check result:', {
         exists: !!existing,
         hasTranslation: existing ? Object.keys(existing).length : 0,
+        status: translationStatus,
         isOutdated,
       });
     } catch (error) {
@@ -382,11 +393,18 @@ export const translateProvider = onCall(
         );
       }
     }
-    if (isOutdated) {
-      console.log('[translateProvider] ⚠️ Translation exists but is outdated, will REGENERATE and COMPLETELY REPLACE old translation with new one from updated original');
-      console.log('[translateProvider] The old frozen translation will be completely overwritten with fresh translation based on latest original profile');
+    // Log status-based action
+    if (translationStatus === 'missing') {
+      console.log('[translateProvider] ✓ Step 2: Translation status is "missing" - creating new translation');
+    } else if (translationStatus === 'outdated') {
+      console.log('[translateProvider] ⚠️ Translation status is "outdated" - will REGENERATE and COMPLETELY REPLACE old translation with new one from updated original');
+      console.log('[translateProvider] The old translation will be completely overwritten with fresh translation based on latest original profile');
+    } else if (translationStatus === 'created') {
+      console.log('[translateProvider] ✓ Step 2: Translation status is "created" - translation is up-to-date');
+    } else if (translationStatus === 'frozen') {
+      console.log('[translateProvider] ⚠️ Translation status is "frozen" - will be handled in Step 6 (frozen check)');
     } else {
-      console.log('[translateProvider] ✓ Step 2: No existing translation found, proceeding with new translation');
+      console.log('[translateProvider] ✓ Step 2: Proceeding with translation');
     }
 
     // Step 3: Get provider data
@@ -531,6 +549,18 @@ export const translateProvider = onCall(
       if (!doc.exists) {
         // First time: save original profile (remove undefined values)
         updateData.original = removeUndefinedValues(original);
+        // Initialize metadata with all supported languages as 'missing' status
+        // Only the target language will be set to 'created'
+        const allLanguages = SUPPORTED_LANGUAGES;
+        const initialTranslations: any = {};
+        allLanguages.forEach(lang => {
+          initialTranslations[lang] = {
+            status: lang === targetLanguage ? 'created' : 'missing',
+            createdAt: lang === targetLanguage ? admin.firestore.FieldValue.serverTimestamp() : null,
+            updatedAt: lang === targetLanguage ? admin.firestore.FieldValue.serverTimestamp() : null,
+          };
+        });
+        
         updateData.metadata = {
           availableLanguages: [targetLanguage],
           translationCosts: {},
@@ -538,13 +568,7 @@ export const translateProvider = onCall(
           createdAt: admin.firestore.FieldValue.serverTimestamp(),
           lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
           frozenLanguages: [],
-          translations: {
-            [targetLanguage]: {
-              status: 'created',
-              createdAt: admin.firestore.FieldValue.serverTimestamp(),
-              updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-            },
-          },
+          translations: initialTranslations,
         };
         await translationRef.set(updateData);
         console.log('[translateProvider] ✓ Step 8: Original and translation saved');
