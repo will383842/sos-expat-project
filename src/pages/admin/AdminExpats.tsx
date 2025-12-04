@@ -47,6 +47,7 @@ import AdminLayout from "../../components/admin/AdminLayout";
 import Button from "../../components/common/Button";
 import Modal from "../../components/common/Modal";
 import AdminMapVisibilityToggle from "../../components/admin/AdminMapVisibilityToggle";
+import TranslationModal from "../../components/admin/TranslationModal";
 
 /* ---------------------- i18n ---------------------- */
 type Lang = "fr" | "en";
@@ -465,6 +466,10 @@ const AdminExpats: React.FC = () => {
     minYearsInCountry: "all",
   });
 
+  // Translation modal state
+  const [translationModalOpen, setTranslationModalOpen] = useState(false);
+  const [translationProviderId, setTranslationProviderId] = useState<string | null>(null);
+
   // stats (calculées sur la page)
   const stats = React.useMemo(() => {
     const avgRating = expats.length ? expats.reduce((s, e) => s + e.rating, 0) / expats.length : 0;
@@ -847,7 +852,7 @@ const AdminExpats: React.FC = () => {
         );
       case "validation":
         return (
-          <div className="space-y-1">
+          <div className="space-y-1 m-1">
             <select
               value={e.status}
               onChange={(ev) => void handleStatusChange(e.id, ev.target.value as ExpatStatus)}
@@ -872,6 +877,18 @@ const AdminExpats: React.FC = () => {
       case "actions":
         return (
           <div className="flex items-center justify-end space-x-2">
+            <Button
+              size="small"
+              variant="secondary"
+              onClick={() => {
+                console.log("e in admin expat", e);
+
+                setTranslationProviderId(e.id);
+                setTranslationModalOpen(true);
+              }}
+            >
+              {t("translation")}
+            </Button>
             <button className="text-green-600 hover:text-green-900" title={t("view")} onClick={() => setDrawerExpat(e)}>
               <Eye size={16} />
             </button>
@@ -1289,6 +1306,19 @@ const AdminExpats: React.FC = () => {
           </Modal>
         )}
       </div>
+
+      {/* Translation Modal */}
+      {translationModalOpen && (
+        <TranslationModal
+          isOpen={translationModalOpen}
+          onClose={() => {
+            setTranslationModalOpen(false);
+            setTranslationProviderId(null);
+          }}
+          providerId={translationProviderId}
+          t={t}
+        />
+      )}
     </AdminLayout>
   );
 };
