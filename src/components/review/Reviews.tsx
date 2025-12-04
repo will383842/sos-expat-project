@@ -1,5 +1,7 @@
 import React from 'react';
 import { Star, MapPin, Calendar, ThumbsUp, Flag } from 'lucide-react';
+import { useApp } from '../../contexts/AppContext';
+import { formatDate } from '../../utils/localeFormatters';
 
 type FirestoreTimestampLike = { toDate: () => Date };
 type DateLike = Date | string | number | FirestoreTimestampLike;
@@ -44,6 +46,8 @@ const Reviews: React.FC<ReviewsProps> = ({
   totalReviews = 0,
   ratingDistribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
 }) => {
+  const { language } = useApp();
+  
   const renderStars = (rating: number) => {
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating - fullStars >= 0.5;
@@ -62,16 +66,11 @@ const Reviews: React.FC<ReviewsProps> = ({
     ));
   };
 
-  const formatDate = (date: DateLike) => {
-    const d = hasToDate(date)
-      ? date.toDate()
-      : date instanceof Date
-        ? date
-        : new Date(date);
-
-    if (!(d instanceof Date) || isNaN(d.getTime())) return 'Date inconnue';
-
-    return new Intl.DateTimeFormat('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' }).format(d);
+  const formatDateLocal = (date: DateLike) => {
+    return formatDate(date, {
+      language,
+      format: 'long',
+    });
   };
 
   const getPercentage = (count: number) => (!totalReviews ? 0 : Math.round((count / totalReviews) * 100));
@@ -174,7 +173,7 @@ const Reviews: React.FC<ReviewsProps> = ({
                 )}
                 <span className="text-sm text-gray-500">
                   <Calendar size={12} className="inline mr-1" />
-                  {formatDate(review.createdAt)}
+                  {formatDateLocal(review.createdAt)}
                 </span>
               </div>
             </div>

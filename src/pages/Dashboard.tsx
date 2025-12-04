@@ -36,6 +36,7 @@ import MultiLanguageSelect from "../components/forms-data/MultiLanguageSelect";
 import { useAuth } from "../contexts/AuthContext";
 import { useApp } from "../contexts/AppContext";
 import { updateUserProfile, logAuditEvent, getUserCallSessions } from "../utils/firestore";
+import { formatDateTime } from "../utils/localeFormatters";
 
 import {
   collection,
@@ -682,14 +683,15 @@ const Dashboard: React.FC = () => {
   }, [user]);
 
   // Helpers
-  const formatDate = (date: Date): string =>
-    new Intl.DateTimeFormat(language === "fr" ? "fr-FR" : "en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(date);
+  const formatDate = (date: Date): string => {
+    const userCountry = (user as { currentCountry?: string; country?: string })?.currentCountry || 
+                        (user as { currentCountry?: string; country?: string })?.country;
+    return formatDateTime(date, {
+      language,
+      userCountry,
+      dateFormat: 'long',
+    });
+  };
 
   const formatDuration = (minutes: number): string => `${minutes} min`;
   const formatPrice = (price: number): string => `${price.toFixed(2)} €`;

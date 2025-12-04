@@ -40,6 +40,7 @@ import { functions, httpsCallable } from "@/config/firebase";
 import { getFunctions } from "firebase/functions";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useApp } from "../contexts/AppContext";
+import { formatCurrency } from "../utils/localeFormatters";
 
 /* ================================
    Types
@@ -957,14 +958,11 @@ const OptimizedHomePage: React.FC = () => {
               value: number,
               currency: "EUR" | "USD"
             ): string => {
-              return new Intl.NumberFormat(
-                currency === "EUR" ? "fr-FR" : "en-US",
-                {
-                  style: "currency",
-                  currency,
-                  maximumFractionDigits: 0,
-                }
-              ).format(value);
+              // Use locale-aware formatting
+              return formatCurrency(value, currency, {
+                language: currency === "EUR" ? "fr" : "en",
+                maximumFractionDigits: 0,
+              });
             };
 
             interface OfferCardProps {
