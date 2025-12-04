@@ -34,6 +34,7 @@ import Layout from "../components/layout/Layout";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import { useAuth } from "../contexts/AuthContext";
 import { useApp } from "../contexts/AppContext";
+import { formatDate, formatCurrency } from "../utils/localeFormatters";
 import {
   logAnalyticsEvent,
   getProviderReviews,
@@ -216,6 +217,7 @@ interface SosProfile {
   lastName: string;
   slug?: string;
   country: string;
+  currentCountry?: string;
   city?: string;
   languages: string[];
   mainLanguage?: string;
@@ -401,41 +403,35 @@ const translateSpecialtyCode = (
   return code;
 };
 
-const formatJoinDate = (val: TSLike, lang: "fr" | "en"): string | undefined => {
+const formatJoinDate = (val: TSLike, lang: string, userCountry?: string): string | undefined => {
   if (!val) return undefined;
-  const d = isFsTimestamp(val)
-    ? val.toDate()
-    : val instanceof Date 
-      ? val
-      : undefined;
-  if (!d) return undefined;
-  const fmt = new Intl.DateTimeFormat(lang === "fr" ? "fr-FR" : "en-US", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
+  const formatted = formatDate(val, {
+    language: lang,
+    userCountry,
+    format: 'long',
   });
-  return fmt.format(d);
+  return formatted !== '—' ? formatted : undefined;
 };
 
-/* ======= Helpers prix avec Intl.NumberFormat ======= */
-const formatEUR = (value?: number) => {
+/* ======= Helpers prix avec locale-aware formatting ======= */
+const formatEUR = (value?: number, language?: string, userCountry?: string) => {
   if (typeof value !== "number") return "—";
-  return new Intl.NumberFormat("fr-FR", {
-    style: "currency",
-    currency: "EUR",
+  return formatCurrency(value, "EUR", {
+    language: language || "fr",
+    userCountry,
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
-  }).format(value);
+  });
 };
 
-const formatUSD = (value?: number) => {
+const formatUSD = (value?: number, language?: string, userCountry?: string) => {
   if (typeof value !== "number") return "$—";
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
+  return formatCurrency(value, "USD", {
+    language: language || "en",
+    userCountry,
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
-  }).format(value);
+  });
 };
 
 // ✅ Helper type-safe pour extraire l'ID utilisateur sans any
@@ -1567,9 +1563,11 @@ const ProviderProfile: React.FC = () => {
   }, [provider, isLawyer, preferredLangKey, translation, showOriginal, viewingLanguage, detectedLang]);
   const joinDateText = useMemo(() => {
     if (!provider) return undefined;
+    const userCountry = provider.currentCountry || provider.country;
     const formatted = formatJoinDate(
       provider.createdAt || provider.updatedAt || null,
-      detectedLang
+      language,
+      userCountry
     );
     if (!formatted) return undefined;
     // return detectedLang === "fr"
@@ -1578,7 +1576,7 @@ const ProviderProfile: React.FC = () => {
     return detectedLang === "fr"
       ? `${intl.formatMessage({ id: "providerProfile.memberSince" })} ${formatted}`
       : `${intl.formatMessage({ id: "providerProfile.memberSince" })} ${formatted}`;
-  }, [provider, detectedLang, t]);
+  }, [provider, detectedLang, t, language]);
 
   const structuredData = useMemo<Record<string, unknown> | undefined>(() => {
     if (!provider) return undefined;
@@ -1965,10 +1963,10 @@ const ProviderProfile: React.FC = () => {
                         {bookingPrice ? (
                           <>
                             <span className="bg-clip-text">
-                              {formatEUR(bookingPrice.eur)}
+                              {formatEUR(bookingPrice.eur, language, provider?.currentCountry || provider?.country)}
                             </span>{" "}
                             <span className="text-gray-600">
-                              ({formatUSD(bookingPrice.usd)})
+                              ({formatUSD(bookingPrice.usd, language, provider?.currentCountry || provider?.country)})
                             </span>
                           </>
                         ) : (
@@ -1980,29 +1978,29 @@ const ProviderProfile: React.FC = () => {
                           {bookingPrice?.hasDiscount ? (
                             <div>
                               <div className="text-gray-500 line-through text-lg">
-                                {formatEUR(bookingPrice.originalEur)}
+                                {formatEUR(bookingPrice.originalEur, language, provider?.currentCountry || provider?.country)}
                               </div>
                               <div className="text-3xl sm:text-4xl font-black text-red-600">
-                                {formatEUR(bookingPrice.eur)}
+                                {formatEUR(bookingPrice.eur, language, provider?.currentCountry || provider?.country)}
                               </div>
                               <div className="text-xs text-green-600 font-semibold mt-1">
                                 Code {bookingPrice.promoCode} appliqué (-
-                                {formatEUR(bookingPrice.discountEur)})
+                                {formatEUR(bookingPrice.discountEur, language, provider?.currentCountry || provider?.country)})
                               </div>
                               <div className="text-gray-600 text-sm mt-1">
-                                {formatUSD(bookingPrice.usd)}
+                                {formatUSD(bookingPrice.usd, language, provider?.currentCountry || provider?.country)}
                               </div>
                             </div>
                           ) : (
                             <div>
                               <div className="text-3xl sm:text-4xl font-black text-gray-900">
                                 {bookingPrice
-                                  ? formatEUR(bookingPrice.eur)
+                                  ? formatEUR(bookingPrice.eur, language, provider?.currentCountry || provider?.country)
                                   : "—"}
                               </div>
                               <div className="text-gray-600">
                                 {bookingPrice
-                                  ? formatUSD(bookingPrice.usd)
+                                  ? formatUSD(bookingPrice.usd, language, provider?.currentCountry || provider?.country)
                                   : "—"}
                               </div>
                             </div>

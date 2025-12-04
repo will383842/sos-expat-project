@@ -14,6 +14,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Loader } from "@/components/ui/loader";
 import { FormattedDate, FormattedMessage } from "react-intl";
+import { formatDateTime } from "@/utils/localeFormatters";
+import { useApp } from "@/contexts/AppContext";
 
 interface Message {
   id: string;
@@ -32,6 +34,7 @@ interface Message {
 
 const DashboardMessages: React.FC = () => {
   const { user } = useAuth();
+  const { language } = useApp();
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -82,17 +85,12 @@ const DashboardMessages: React.FC = () => {
   if (loading) return <Loader />;
 
   const formatDate = (createdAt: Message["createdAt"]): string => {
-    try {
-      if ("toDate" in createdAt && typeof createdAt.toDate === "function") {
-        return createdAt.toDate().toLocaleString();
-      }
-      // @ts-expect-error: fallback sur shape seconds/nanoseconds
-      if (typeof createdAt?.seconds === "number") {
-        // @ts-expect-error: idem
-        return new Date(createdAt.seconds * 1000).toLocaleString();
-      }
-    } catch {}
-    return "—";
+    const userCountry = (user as { currentCountry?: string; country?: string })?.currentCountry || 
+                        (user as { currentCountry?: string; country?: string })?.country;
+    return formatDateTime(createdAt, {
+      language,
+      userCountry,
+    });
   };
 
   return (

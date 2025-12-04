@@ -43,6 +43,7 @@ import { useForm } from "react-hook-form";
 import { saveProviderMessage } from "@/firebase/saveProviderMessage";
 import { useApp } from "@/contexts/AppContext";
 import { FormattedMessage, useIntl } from "react-intl";
+import { formatCurrency } from "../utils/localeFormatters";
 
 /* -------------------------- Stripe singleton (HMR-safe) ------------------ */
 // Conserve la même Promise Stripe à travers les rechargements HMR.
@@ -2013,11 +2014,10 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
             }
             aria-label={`${
               language === "fr" ? "Payer " : "Pay "
-            }${new Intl.NumberFormat(language === "fr" ? "fr-FR" : "en-US", {
-              style: "currency",
-              currency: serviceCurrency.toUpperCase(),
+            }${formatCurrency(adminPricing.totalAmount, serviceCurrency.toUpperCase(), {
+              language,
               minimumFractionDigits: 2,
-            }).format(adminPricing.totalAmount)}`}
+            })}`}
           >
             {isProcessing ? (
               <div className="flex items-center justify-center space-x-2">
@@ -2028,7 +2028,7 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
               <div className="flex items-center justify-center space-x-2">
                 <Lock className="w-5 h-5" aria-hidden="true" />
                 <span>
-                  {/* {language === "fr" ? "Payer " : "Pay "} */}
+                
                {(() => {
                 switch (language) {
                   case "es":
@@ -2052,14 +2052,10 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
                     return "Payer ";
                 }
               })()}
-                  {new Intl.NumberFormat(
-                    language === "fr" ? "fr-FR" : "en-US",
-                    {
-                      style: "currency",
-                      currency: serviceCurrency.toUpperCase(),
-                      minimumFractionDigits: 2,
-                    }
-                  ).format(adminPricing.totalAmount)}
+                  {formatCurrency(adminPricing.totalAmount, serviceCurrency.toUpperCase(), {
+                    language,
+                    minimumFractionDigits: 2,
+                  })}
                 </span>
               </div>
             )}
@@ -2674,44 +2670,36 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({
                 {activePromo && pricing && providerRole && (
                   <div className="mb-2 text-sm">
                     <div className="text-gray-500 line-through">
-                      {new Intl.NumberFormat(
-                        language === "fr" ? "fr-FR" : "en-US",
+                      {formatCurrency(
+                        pricing[providerRole]?.[selectedCurrency]
+                          ?.totalAmount || 0,
+                        selectedCurrency.toUpperCase(),
                         {
-                          style: "currency",
-                          currency: selectedCurrency.toUpperCase(),
+                          language,
                           minimumFractionDigits: 2,
                         }
-                      ).format(
-                        pricing[providerRole]?.[selectedCurrency]
-                          ?.totalAmount || 0
                       )}
                     </div>
                     <div className="text-green-600 font-medium">
                       -
-                      {new Intl.NumberFormat(
-                        language === "fr" ? "fr-FR" : "en-US",
+                      {formatCurrency(
+                        (pricing[providerRole]?.[selectedCurrency]
+                          ?.totalAmount || 0) - adminPricing.totalAmount,
+                        selectedCurrency.toUpperCase(),
                         {
-                          style: "currency",
-                          currency: selectedCurrency.toUpperCase(),
+                          language,
                           minimumFractionDigits: 2,
                         }
-                      ).format(
-                        (pricing[providerRole]?.[selectedCurrency]
-                          ?.totalAmount || 0) - adminPricing.totalAmount
                       )}{" "}
                       ({activePromo.code})
                     </div>
                   </div>
                 )}
                 <div className="text-2xl font-black bg-gradient-to-r from-red-500 to-pink-600 bg-clip-text text-transparent">
-                  {new Intl.NumberFormat(
-                    language === "fr" ? "fr-FR" : "en-US",
-                    {
-                      style: "currency",
-                      currency: selectedCurrency.toUpperCase(),
-                      minimumFractionDigits: 2,
-                    }
-                  ).format(adminPricing.totalAmount)}
+                  {formatCurrency(adminPricing.totalAmount, selectedCurrency.toUpperCase(), {
+                    language,
+                    minimumFractionDigits: 2,
+                  })}
                 </div>
                 <div className="text-xs text-gray-500">
                   {adminPricing.duration} min

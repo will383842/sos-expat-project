@@ -5,8 +5,9 @@ import {
   useNavigate,
   useParams,
   Link,
+  useLocation,
 } from "react-router-dom";
-import { useLocaleNavigate } from "../multilingual-system";
+import { useLocaleNavigate, parseLocaleFromPath } from "../multilingual-system";
 import {
   Phone,
   CheckCircle,
@@ -24,7 +25,9 @@ import {
 } from "lucide-react";
 import Layout from "../components/layout/Layout";
 import { useApp } from "../contexts/AppContext";
+import { useAuth } from "../contexts/AuthContext";
 import ReviewModal from "../components/review/ReviewModal";
+import { formatDateTime, formatDate } from "../utils/localeFormatters";
 
 // 🔁 Firestore
 import { doc, onSnapshot, getDoc } from "firebase/firestore";
@@ -96,7 +99,12 @@ const SuccessPayment: React.FC = () => {
   const intl = useIntl();
   const [searchParams] = useSearchParams();
   const navigate = useLocaleNavigate();
+  const location = useLocation();
   const { language } = useApp();
+  const { user } = useAuth();
+  
+  // Extract country from URL path (e.g., /en-de/... → de)
+  const { country: urlCountry } = parseLocaleFromPath(location.pathname);
 
   // URL Parameters
   const callStatus = searchParams.get("call");
@@ -617,8 +625,14 @@ const SuccessPayment: React.FC = () => {
                   <Clock className="w-4 h-4 text-gray-300" />
                   <span className="text-white/80 text-sm">
                     {t.paymentAt}:{" "}
-                    {new Date(paymentTimestamp).toLocaleString(
-                      language === "fr" ? "fr-FR" : "en-US"
+                    {formatDateTime(
+                      paymentTimestamp,
+                      {
+                        language,
+                        userCountry: (user as { currentCountry?: string; country?: string })?.currentCountry || 
+                                    (user as { currentCountry?: string; country?: string })?.country ||
+                                    (urlCountry ? urlCountry.toUpperCase() : undefined),
+                      }
                     )}{" "}
                     ✨
                   </span>
@@ -1061,7 +1075,16 @@ const SuccessPayment: React.FC = () => {
                       {intl.formatMessage({ id: "success.date" })}:
                     </span>
                     <span className="font-bold text-gray-900">
-                      {new Date().toLocaleDateString()}
+                      {formatDate(
+                        new Date(),
+                        {
+                          language,
+                          userCountry: (user as { currentCountry?: string; country?: string })?.currentCountry || 
+                                      (user as { currentCountry?: string; country?: string })?.country ||
+                                      (urlCountry ? urlCountry.toUpperCase() : undefined),
+                          format: 'medium',
+                        }
+                      )}
                     </span>
                   </div>
                 </div>
