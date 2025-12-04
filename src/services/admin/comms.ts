@@ -1,16 +1,16 @@
 ﻿// src/services/admin/comms.ts
 import {
-  collection, 
-  doc, 
-  getDoc, 
-  getDocs, 
-  setDoc, 
-  query, 
-  where, 
-  orderBy, 
-  limit, 
-  startAfter, 
-  addDoc, 
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  query,
+  where,
+  orderBy,
+  limit,
+  startAfter,
+  addDoc,
   serverTimestamp,
   QueryDocumentSnapshot,
   DocumentData
@@ -65,11 +65,11 @@ type MessageDelivery = {
   errorMessage?: string;
 };
 
-type DeliveryFilters = { 
-  eventId?: string; 
-  channel?: MessageChannel; 
-  status?: DeliveryStatus; 
-  to?: string; 
+type DeliveryFilters = {
+  eventId?: string;
+  channel?: MessageChannel;
+  status?: DeliveryStatus;
+  to?: string;
 };
 
 type PaginationResult<T> = {
@@ -103,16 +103,16 @@ export async function getTemplate(locale: Locale, eventId: string): Promise<Mess
 }
 
 export async function upsertTemplate(
-  locale: Locale, 
-  eventId: string, 
-  payload: Partial<MessageTemplate>, 
+  locale: Locale,
+  eventId: string,
+  payload: Partial<MessageTemplate>,
   adminUid?: string
 ): Promise<boolean> {
   const ref = doc(db, `message_templates/${locale}/items/${eventId}`);
-  const body: Partial<MessageTemplate> = { 
-    ...payload, 
-    updatedAt: new Date().toISOString(), 
-    updatedBy: adminUid || "admin" 
+  const body: Partial<MessageTemplate> = {
+    ...payload,
+    updatedAt: new Date().toISOString(),
+    updatedBy: adminUid || "admin"
   };
   await setDoc(ref, body, { merge: true });
   return true;
@@ -122,20 +122,20 @@ export async function upsertTemplate(
 export async function getRouting(): Promise<RoutingConfig> {
   const ref = doc(db, "message_routing/config");
   const snap = await getDoc(ref);
-  return snap.exists() 
-    ? snap.data() as RoutingConfig 
+  return snap.exists()
+    ? snap.data() as RoutingConfig
     : { routing: {}, updatedAt: null };
 }
 
 export async function upsertRouting(
-  routing: Record<string, unknown>, 
+  routing: Record<string, unknown>,
   adminUid?: string
 ): Promise<boolean> {
   const ref = doc(db, "message_routing/config");
-  const body: RoutingConfig = { 
-    routing, 
-    updatedAt: new Date().toISOString(), 
-    updatedBy: adminUid || "admin" 
+  const body: RoutingConfig = {
+    routing,
+    updatedAt: new Date().toISOString(),
+    updatedBy: adminUid || "admin"
   };
   await setDoc(ref, body, { merge: true });
   return true;
@@ -143,28 +143,28 @@ export async function upsertRouting(
 
 /** LOGS (deliveries) **/
 export async function listDeliveries(
-  filters: DeliveryFilters = {}, 
-  pageSize = 50, 
+  filters: DeliveryFilters = {},
+  pageSize = 50,
   cursor?: QueryDocumentSnapshot<DocumentData>
 ): Promise<PaginationResult<MessageDelivery>> {
   let q = query(
-    collection(db, "message_deliveries"), 
-    orderBy("createdAt", "desc"), 
+    collection(db, "message_deliveries"),
+    orderBy("createdAt", "desc"),
     limit(pageSize)
   );
-  
+
   if (cursor) {
     q = query(q, startAfter(cursor));
   }
-  
+
   // NB: ajoute ici where(...) si tu as des champs indexés pour filtrer
   const snap = await getDocs(q);
-  const items: MessageDelivery[] = snap.docs.map(d => ({ 
-    id: d.id, 
-    ...(d.data() as Omit<MessageDelivery, 'id'>) 
+  const items: MessageDelivery[] = snap.docs.map(d => ({
+    id: d.id,
+    ...(d.data() as Omit<MessageDelivery, 'id'>)
   }));
   const next = snap.docs.length === pageSize ? snap.docs[snap.docs.length - 1] : null;
-  
+
   return { items, next };
 }
 
@@ -193,7 +193,7 @@ export async function manualSend(
   context: Record<string, unknown>
 ): Promise<void> {
   const uid = getAuth().currentUser?.uid || null;
-  
+
   const payload: MessageEvent = {
     eventId,           // ex: "whatsapp_provider_booking_request"
     locale,            // ex: "fr-FR"

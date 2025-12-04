@@ -115,6 +115,7 @@ const STRINGS: Record<Lang, Record<string, string>> = {
     contact: "Contacter",
     copyEmail: "Copier email",
     copyId: "Copier ID",
+    translation: " Traduction",
   },
   en: {
     title: "Clients",
@@ -180,6 +181,7 @@ const STRINGS: Record<Lang, Record<string, string>> = {
     contact: "Contact",
     copyEmail: "Copy email",
     copyId: "Copy ID",
+    translation: " Translation"
   },
 };
 const useI18n = () => {
@@ -574,13 +576,13 @@ const AdminClients: React.FC = () => {
         // Recherche locale optionnelle
         const filtered = filters.searchTerm.trim()
           ? chunk.filter((c: Client) => {
-              const term = filters.searchTerm.trim().toLowerCase();
-              return (
-                `${c.firstName} ${c.lastName}`.toLowerCase().includes(term) ||
-                c.email.toLowerCase().includes(term) ||
-                (c.phone || "").toLowerCase().includes(term)
-              );
-            })
+            const term = filters.searchTerm.trim().toLowerCase();
+            return (
+              `${c.firstName} ${c.lastName}`.toLowerCase().includes(term) ||
+              c.email.toLowerCase().includes(term) ||
+              (c.phone || "").toLowerCase().includes(term)
+            );
+          })
           : chunk;
 
         all.push(...filtered);
@@ -936,15 +938,14 @@ const AdminClients: React.FC = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            client.status === "active"
-                              ? "bg-green-100 text-green-800"
-                              : client.status === "pending"
+                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${client.status === "active"
+                            ? "bg-green-100 text-green-800"
+                            : client.status === "pending"
                               ? "bg-yellow-100 text-yellow-800"
                               : client.status === "suspended"
-                              ? "bg-red-100 text-red-800"
-                              : "bg-gray-100 text-gray-800"
-                          }`}
+                                ? "bg-red-100 text-red-800"
+                                : "bg-gray-100 text-gray-800"
+                            }`}
                         >
                           {client.status}
                         </span>
@@ -957,10 +958,10 @@ const AdminClients: React.FC = () => {
                               {t("lastLogin")}:{" "}
                               {client.lastLoginAt
                                 ? client.lastLoginAt.toLocaleDateString(undefined, {
-                                    year: "numeric",
-                                    month: "short",
-                                    day: "numeric",
-                                  })
+                                  year: "numeric",
+                                  month: "short",
+                                  day: "numeric",
+                                })
                                 : "—"}
                             </span>
                           </div>
