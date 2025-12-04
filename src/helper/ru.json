@@ -1580,5 +1580,15 @@
   "cookieBanner.performance.title": "Cookies производительности",
   "cookieBanner.performance.description": "Улучшают скорость загрузки и стабильность сайта.",
   "cookieBanner.marketing.title": "Маркетинговые cookies",
-  "cookieBanner.marketing.description": "Используются для персонализации рекламы и измерения её эффективности."
+  "cookieBanner.marketing.description": "Используются для персонализации рекламы и измерения её эффективности.",
+  "search": {
+    "placeholder": "Поиск адвоката, экспата, страны, языка...",
+    "noResults": "Результаты не найдены",
+    "suggestions": "Предложения",
+    "providers": "Провайдеры",
+    "articles": "Статьи",
+    "pages": "Страницы",
+    "loading": "Поиск...",
+    "clear": "Очистить поиск"
+  }
 }

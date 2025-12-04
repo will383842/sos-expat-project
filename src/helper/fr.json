@@ -1536,5 +1536,15 @@
   "cookieBanner.performance.title": "Cookies de performance",
   "cookieBanner.performance.description": "Améliorent la vitesse de chargement et la stabilité du site.",
   "cookieBanner.marketing.title": "Cookies marketing",
-  "cookieBanner.marketing.description": "Utilisés pour personnaliser les publicités et mesurer leur efficacité."
+  "cookieBanner.marketing.description": "Utilisés pour personnaliser les publicités et mesurer leur efficacité.",
+  "search": {
+    "placeholder": "Rechercher un avocat, un expatrié, un pays, une langue...",
+    "noResults": "Aucun résultat trouvé",
+    "suggestions": "Suggestions",
+    "providers": "Prestataires",
+    "articles": "Articles",
+    "pages": "Pages",
+    "loading": "Recherche en cours...",
+    "clear": "Effacer la recherche"
+  }
 }

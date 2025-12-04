@@ -1532,5 +1532,15 @@
   "cookieBanner.performance.title": "ملفات تعريف الارتباط للأداء",
   "cookieBanner.performance.description": "تحسن سرعة تحميل الموقع واستقراره.",
   "cookieBanner.marketing.title": "ملفات تعريف الارتباط التسويقية",
-  "cookieBanner.marketing.description": "تُستخدم لتخصيص الإعلانات وقياس فعاليتها."
+  "cookieBanner.marketing.description": "تُستخدم لتخصيص الإعلانات وقياس فعاليتها.",
+  "search": {
+    "placeholder": "ابحث عن محامٍ، مغترب، بلد، لغة...",
+    "noResults": "لم يتم العثور على نتائج",
+    "suggestions": "اقتراحات",
+    "providers": "مقدمي الخدمات",
+    "articles": "مقالات",
+    "pages": "صفحات",
+    "loading": "جاري البحث...",
+    "clear": "مسح البحث"
+  }
 }

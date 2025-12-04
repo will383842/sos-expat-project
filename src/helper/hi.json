@@ -1533,5 +1533,15 @@
   "cookieBanner.performance.title": "प्रदर्शन कुकीज़",
   "cookieBanner.performance.description": "साइट की लोडिंग गति और स्थिरता में सुधार करती हैं।",
   "cookieBanner.marketing.title": "मार्केटिंग कुकीज़",
-  "cookieBanner.marketing.description": "विज्ञापनों को व्यक्तिगत बनाने और उनकी प्रभावशीलता को मापने के लिए उपयोग की जाती हैं।"
+  "cookieBanner.marketing.description": "विज्ञापनों को व्यक्तिगत बनाने और उनकी प्रभावशीलता को मापने के लिए उपयोग की जाती हैं।",
+  "search": {
+    "placeholder": "वकील, प्रवासी, देश, भाषा खोजें...",
+    "noResults": "कोई परिणाम नहीं मिला",
+    "suggestions": "सुझाव",
+    "providers": "प्रदाता",
+    "articles": "लेख",
+    "pages": "पृष्ठ",
+    "loading": "खोज रहा है...",
+    "clear": "खोज साफ़ करें"
+  }
 }

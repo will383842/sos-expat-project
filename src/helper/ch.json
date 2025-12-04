@@ -1663,5 +1663,15 @@
   "cookieBanner.performance.title": "性能Cookie",
   "cookieBanner.performance.description": "提高网站加载速度和稳定性。",
   "cookieBanner.marketing.title": "营销Cookie",
-  "cookieBanner.marketing.description": "用于个性化广告并衡量其有效性。"
+  "cookieBanner.marketing.description": "用于个性化广告并衡量其有效性。",
+  "search": {
+    "placeholder": "搜索律师、外籍人士、国家、语言...",
+    "noResults": "未找到结果",
+    "suggestions": "建议",
+    "providers": "服务提供商",
+    "articles": "文章",
+    "pages": "页面",
+    "loading": "搜索中...",
+    "clear": "清除搜索"
+  }
 }

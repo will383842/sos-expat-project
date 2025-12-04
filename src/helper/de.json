@@ -1609,5 +1609,15 @@
   "cookieBanner.performance.title": "Leistungs-Cookies",
   "cookieBanner.performance.description": "Verbessern die Ladegeschwindigkeit und Stabilität der Website.",
   "cookieBanner.marketing.title": "Marketing-Cookies",
-  "cookieBanner.marketing.description": "Werden verwendet, um Anzeigen zu personalisieren und deren Wirksamkeit zu messen."
+  "cookieBanner.marketing.description": "Werden verwendet, um Anzeigen zu personalisieren und deren Wirksamkeit zu messen.",
+  "search": {
+    "placeholder": "Nach einem Anwalt, Expatriate, Land, Sprache suchen...",
+    "noResults": "Keine Ergebnisse gefunden",
+    "suggestions": "Vorschläge",
+    "providers": "Anbieter",
+    "articles": "Artikel",
+    "pages": "Seiten",
+    "loading": "Suche läuft...",
+    "clear": "Suche löschen"
+  }
 }

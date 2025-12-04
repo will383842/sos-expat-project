@@ -1610,6 +1610,15 @@
   "cookieBanner.performance.title": "Performance cookies",
   "cookieBanner.performance.description": "Improve site loading speed and stability.",
   "cookieBanner.marketing.title": "Marketing cookies",
-  "cookieBanner.marketing.description": "Used to personalize ads and measure their effectiveness."
-
+  "cookieBanner.marketing.description": "Used to personalize ads and measure their effectiveness.",
+  "search": {
+    "placeholder": "Search for a lawyer, expat, country, language...",
+    "noResults": "No results found",
+    "suggestions": "Suggestions",
+    "providers": "Providers",
+    "articles": "Articles",
+    "pages": "Pages",
+    "loading": "Searching...",
+    "clear": "Clear search"
+  }
 }
