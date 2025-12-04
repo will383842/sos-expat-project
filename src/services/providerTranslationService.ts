@@ -4,7 +4,7 @@ import { functions } from '../config/firebase';
 import { db } from '../config/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
-export type SupportedLanguage = 'fr' | 'en' | 'es' | 'pt' | 'de' | 'ru' | 'ch' | 'hi' | 'ar';
+export type SupportedLanguage = 'fr' | 'en' | 'es' | 'pt' | 'de' | 'ru' | 'ch' | 'hi' | 'ar' | "zh";
 
 export interface TranslatedContent {
   title: string;
@@ -69,6 +69,7 @@ const LANGUAGE_NAMES: Record<SupportedLanguage, string> = {
   ch: '中文',
   hi: 'हिन्दी',
   ar: 'العربية',
+  zh: '中文',
 };
 
 /**
@@ -197,7 +198,7 @@ export async function requestTranslation(
       console.log('[requestTranslation] Data is undefined:', data === undefined);
       console.log('[requestTranslation] Data is object:', typeof data === 'object');
       console.log('[requestTranslation] Data is array:', Array.isArray(data));
-      
+
       if (data && typeof data === 'object') {
         console.log('[requestTranslation] Data keys:', Object.keys(data));
         console.log('[requestTranslation] Data stringified length:', JSON.stringify(data).length);
@@ -301,9 +302,9 @@ export async function requestTranslation(
     });
 
     // Check for specific JSON decoding errors
-    if (error?.message?.includes('cannot be decoded from JSON') || 
-        error?.message?.includes('decode') ||
-        error?.message?.includes('[object Object]')) {
+    if (error?.message?.includes('cannot be decoded from JSON') ||
+      error?.message?.includes('decode') ||
+      error?.message?.includes('[object Object]')) {
       console.error('[requestTranslation] ✗ JSON DECODING ERROR DETECTED');
       console.error('[requestTranslation] This error typically occurs when:');
       console.error('[requestTranslation] 1. The function returns non-serializable data');
@@ -378,7 +379,7 @@ export async function requestUpdateProviderTranslation(
     });
 
     const data = (result as any)?.data;
-    
+
     if (!data || typeof data !== 'object') {
       throw new Error('Invalid response from translation update service');
     }

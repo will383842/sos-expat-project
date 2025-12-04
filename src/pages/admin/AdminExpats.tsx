@@ -47,6 +47,7 @@ import AdminLayout from "../../components/admin/AdminLayout";
 import Button from "../../components/common/Button";
 import Modal from "../../components/common/Modal";
 import AdminMapVisibilityToggle from "../../components/admin/AdminMapVisibilityToggle";
+import TranslationModal from "../../components/admin/TranslationModal";
 
 /* ---------------------- i18n ---------------------- */
 type Lang = "fr" | "en";
@@ -290,7 +291,7 @@ type FirestoreExpatDoc = {
   expertiseDomains?: string[];
   servicesOffered?: string[];
   description?: string;
-  bio?: string;
+  bio?: string | object;
   hourlyRate?: number;
   pricePerHour?: number;
 };
@@ -380,7 +381,7 @@ const useColumnLayout = () => {
       try {
         const raw = localStorage.getItem("admin.expats.colOrder.v1");
         if (raw) return JSON.parse(raw);
-      } catch {}
+      } catch { }
       return DEFAULT_ORDER;
     })()
   );
@@ -392,7 +393,7 @@ const useColumnLayout = () => {
           const obj = JSON.parse(raw) as Record<string, number>;
           return { ...DEFAULT_WIDTHS, ...obj };
         }
-      } catch {}
+      } catch { }
       return DEFAULT_WIDTHS;
     })()
   );
@@ -404,7 +405,7 @@ const useColumnLayout = () => {
           const obj = JSON.parse(raw) as Record<string, boolean>;
           return { ...DEFAULT_VISIBLE, ...obj };
         }
-      } catch {}
+      } catch { }
       return DEFAULT_VISIBLE;
     })()
   );
@@ -464,6 +465,10 @@ const AdminExpats: React.FC = () => {
     minRating: "all",
     minYearsInCountry: "all",
   });
+
+  // Translation modal state
+  const [translationModalOpen, setTranslationModalOpen] = useState(false);
+  const [translationProviderId, setTranslationProviderId] = useState<string | null>(null);
 
   // stats (calculées sur la page)
   const stats = React.useMemo(() => {
@@ -576,6 +581,8 @@ const AdminExpats: React.FC = () => {
     const data = d.data() as FirestoreExpatDoc;
     const expatSince = data.expatSince?.toDate() || data.movedToCountryAt?.toDate();
     const yearsInCountry = expatSince ? calculateYearsInCountry(expatSince) : data.yearsInCountry || 0;
+    console.log("data===============>>", data);
+
     return {
       id: d.id,
       email: data.email || "",
@@ -601,7 +608,7 @@ const AdminExpats: React.FC = () => {
       isVisibleOnMap: data.isVisibleOnMap ?? true,
       profileComplete: calculateProfileCompleteness(data),
       helpDomains: data.helpDomains || data.expertiseDomains || data.servicesOffered || [],
-      description: data.description || data.bio || "",
+      description: (typeof data.bio === 'string' ? data.bio : data.description) || "",
       hourlyRate: data.hourlyRate || data.pricePerHour,
     };
   };
@@ -845,7 +852,7 @@ const AdminExpats: React.FC = () => {
         );
       case "validation":
         return (
-          <div className="space-y-1">
+          <div className="space-y-1 m-1">
             <select
               value={e.status}
               onChange={(ev) => void handleStatusChange(e.id, ev.target.value as ExpatStatus)}
@@ -870,6 +877,18 @@ const AdminExpats: React.FC = () => {
       case "actions":
         return (
           <div className="flex items-center justify-end space-x-2">
+            <Button
+              size="small"
+              variant="secondary"
+              onClick={() => {
+                console.log("e in admin expat", e);
+
+                setTranslationProviderId(e.id);
+                setTranslationModalOpen(true);
+              }}
+            >
+              {t("translation")}
+            </Button>
             <button className="text-green-600 hover:text-green-900" title={t("view")} onClick={() => setDrawerExpat(e)}>
               <Eye size={16} />
             </button>
@@ -1287,6 +1306,19 @@ const AdminExpats: React.FC = () => {
           </Modal>
         )}
       </div>
+
+      {/* Translation Modal */}
+      {translationModalOpen && (
+        <TranslationModal
+          isOpen={translationModalOpen}
+          onClose={() => {
+            setTranslationModalOpen(false);
+            setTranslationProviderId(null);
+          }}
+          providerId={translationProviderId}
+          t={t}
+        />
+      )}
     </AdminLayout>
   );
 };
