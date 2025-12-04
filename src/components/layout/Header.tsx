@@ -690,14 +690,33 @@ const LanguageDropdown = memo<{
       if (pathWithoutLocale && pathWithoutLocale !== "/") {
         const pathSegments = pathWithoutLocale.split("/").filter(Boolean);
         if (pathSegments.length > 0) {
-          const firstSegment = pathSegments[0];
-          // Now getRouteKeyFromSlug should work with Unicode characters (Hindi, Chinese, Arabic, Russian)
-          const routeKey = getRouteKeyFromSlug(firstSegment);
+          // Try to match multi-segment paths first (e.g., "register/client")
+          // This is important for routes like /register/client, /register/lawyer, etc.
+          let routeKey = null;
+          let matchedSegments = 0;
           
-          // If this is a known route key slug, translate it to the new language
+          if (pathSegments.length >= 2) {
+            // Try matching first two segments as a compound route
+            const twoSegmentPath = `${pathSegments[0]}/${pathSegments[1]}`;
+            routeKey = getRouteKeyFromSlug(twoSegmentPath);
+            if (routeKey) {
+              matchedSegments = 2;
+            }
+          }
+          
+          // If no multi-segment match, try just the first segment
+          if (!routeKey) {
+            const firstSegment = pathSegments[0];
+            routeKey = getRouteKeyFromSlug(firstSegment);
+            if (routeKey) {
+              matchedSegments = 1;
+            }
+          }
+          
+          // If we found a route key, translate it
           if (routeKey) {
             const translatedSlug = getTranslatedRouteSlug(routeKey, langCode);
-            const restOfPath = pathSegments.slice(1).join("/");
+            const restOfPath = pathSegments.slice(matchedSegments).join("/");
             translatedPath = `/${translatedSlug}${restOfPath ? `/${restOfPath}` : ""}`;
           }
         }
