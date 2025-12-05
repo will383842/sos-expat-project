@@ -2255,8 +2255,6 @@ const TestimonialDetail: React.FC = () => {
                           id: "testimonial.solicitedExpat",
                         })}
                   </span>
-
-                
                 </div>
 
                 <div className="flex items-center gap-3 flex-wrap mb-4">
@@ -2428,7 +2426,6 @@ const TestimonialDetail: React.FC = () => {
                         {testimonialData.service_used}
                       </div>
                     </div>
-
                     <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100">
                       <span className="text-sm text-gray-500 block font-medium mb-1">
                       
