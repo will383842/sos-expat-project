@@ -178,26 +178,40 @@ const ROUTE_TRANSLATIONS: Record<RouteKey, Record<Language, string>> = {
     ar: "مغتربون",
   },
   "register-lawyer": {
-    fr: "avocat",
-    en: "lawyer",
-    es: "abogado",
-    ru: "юрист",
-    de: "anwalt",
-    hi: "वकील",
-    pt: "advogado",
-    ch: "律师",
-    ar: "محام",
+    // Changed to use compound 'register/<slug>' forms so multi-segment matching works
+    fr: "inscription/avocat",
+    en: "register/lawyer",
+    es: "registro/abogado",
+    ru: "регистрация/юрист",
+    de: "registrierung/anwalt",
+    hi: "पंजीकरण/वकील",
+    pt: "registro/advogado",
+    ch: "注册/律师",
+    ar: "تسجيل/محام",
   },
   "register-expat": {
-    fr: "expatrie",
-    en: "expat",
-    es: "expatriado",
-    ru: "эмигрант",
-    de: "expatriate",
-    hi: "प्रवासी",
-    pt: "expatriado",
-    ch: "外籍人士",
-    ar: "مغترب",
+    // Changed to use compound 'register/<slug>' forms so multi-segment matching works
+    fr: "inscription/expatrie",
+    en: "register/expat",
+    es: "registro/expatriado",
+    ru: "регистрация/эмигрант",
+    de: "registrierung/expatriate",
+    hi: "पंजीकरण/प्रवासी",
+    pt: "registro/expatriado",
+    ch: "注册/外籍人士",
+    ar: "تسجيل/مغترب",
+  },
+  "register-client": {
+    // ...existing translations (already compound)...
+    fr: "inscription/client",
+    en: "register/client",
+    es: "registro/cliente",
+    ru: "регистрация/клиент",
+    de: "registrierung/kunde",
+    hi: "पंजीकरण/ग्राहक",
+    pt: "registro/cliente",
+    ch: "注册/客户",
+    ar: "تسجيل/عميل",
   },
   "terms-lawyers": {
     fr: "cgu-avocats",
@@ -242,17 +256,6 @@ const ROUTE_TRANSLATIONS: Record<RouteKey, Record<Language, string>> = {
     pt: "chamada-expatriado",
     ch: "外籍人士呼叫",
     ar: "مكالمة-المغترب",
-  },
-  "register-client": {
-    fr: "inscription/client",
-    en: "register/client",
-    es: "registro/cliente",
-    ru: "регистрация/клиент",
-    de: "registrierung/kunde",
-    hi: "पंजीकरण/ग्राहक",
-    pt: "registro/cliente",
-    ch: "注册/客户",
-    ar: "تسجيل/عميل",
   },
   "terms-clients": {
     fr: "cgu-clients",
@@ -524,32 +527,47 @@ export function getAllTranslatedSlugs(routeKey: RouteKey): string[] {
  */
 export function getRouteKeyFromSlug(slug: string): RouteKey | null {
   // Normalize the slug - try decoding if it's URL-encoded
-  // This handles cases where Unicode characters (Hindi, Chinese, Arabic, Russian) might be encoded
   let normalizedSlug = slug;
-  
+
   try {
-    // Try to decode URL-encoded characters
     const decoded = decodeURIComponent(slug);
-    // Only use decoded if it's different (was actually encoded)
-    if (decoded !== slug) {
-      normalizedSlug = decoded;
-    }
+    if (decoded !== slug) normalizedSlug = decoded;
   } catch {
-    // If decoding fails, slug might not be encoded, use as-is
     normalizedSlug = slug;
   }
-  
-  // Search through all route translations
+
+  // First pass: exact match against any translation value
   for (const [key, translations] of Object.entries(ROUTE_TRANSLATIONS)) {
     const translationValues = Object.values(translations);
-    
-    // Check both original slug and normalized (decoded) slug
-    // This handles both encoded and unencoded Unicode characters
     if (translationValues.includes(slug) || translationValues.includes(normalizedSlug)) {
       return key as RouteKey;
     }
   }
-  
+
+  // Fallback: if slug is compound (contains '/'), try matching by last segment
+  // Example: incoming "register/lawyer" should match a translation value "lawyer" (or "avocat")
+  if (normalizedSlug.includes("/")) {
+    const segments = normalizedSlug.split("/").filter(Boolean);
+    const last = segments[segments.length - 1];
+    try {
+      const decodedLast = decodeURIComponent(last);
+      // try both last and decodedLast
+      for (const [key, translations] of Object.entries(ROUTE_TRANSLATIONS)) {
+        const translationValues = Object.values(translations);
+        if (translationValues.includes(last) || translationValues.includes(decodedLast)) {
+          return key as RouteKey;
+        }
+      }
+    } catch {
+      for (const [key, translations] of Object.entries(ROUTE_TRANSLATIONS)) {
+        const translationValues = Object.values(translations);
+        if (translationValues.includes(last)) {
+          return key as RouteKey;
+        }
+      }
+    }
+  }
+
   return null;
 }
 
