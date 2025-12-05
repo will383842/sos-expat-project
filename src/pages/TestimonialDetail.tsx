@@ -2256,7 +2256,7 @@ const TestimonialDetail: React.FC = () => {
                         })}
                   </span>
 
-                  {intl.formatMessage({ id: "testimonial.backToTestimonials" })}
+                
                 </div>
 
                 <div className="flex items-center gap-3 flex-wrap mb-4">
