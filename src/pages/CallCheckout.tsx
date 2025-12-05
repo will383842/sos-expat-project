@@ -2423,7 +2423,7 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({
 
   const goBack = useCallback(() => {
     if (onGoBack) return onGoBack();
-    if (window.history.length > 1) navigate(-1);
+    if (window.history.length > 1) navigate(-1 as unknown as string);
     else navigate("/", { replace: true });
   }, [onGoBack, navigate]);
 
