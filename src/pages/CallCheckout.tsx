@@ -1496,7 +1496,7 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
           console.log("[createPaymentIntent] response", resData);
         } catch (e: unknown) {
           logCallableError("[createPaymentIntent:error]", e);
-          throw e; // on laisse la gestion d'erreur globale s’occuper de l’affichage
+          throw e; // on laisse la gestion d'erreur globale s'occuper de l'affichage
         }
 
         if (import.meta.env.DEV) {
@@ -1603,19 +1603,18 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
 
           console.log("[createAndScheduleCall] data", callData);
 
-          void (async () => {
-            try {
-              const callResult = await createAndScheduleCall(callData);
-              console.log(callResult, " == this is the call result");
-              if (callResult && callResult.data && callResult.data.success) {
-                console.log("[createAndScheduleCall] success");
-                callStatus = "scheduled";
-                callId = callResult.data.callId || callSessionId;
-              }
-            } catch (cfErr: unknown) {
-              logCallableError("createAndScheduleCall:error", cfErr);
+          try {
+            const callResult = await createAndScheduleCall(callData);
+            console.log(callResult, " == this is the call result");
+            if (callResult && callResult.data && callResult.data.success) {
+              console.log("[createAndScheduleCall] success");
+              callStatus = "scheduled";
+              callId = callResult.data.callId || callSessionId;
             }
-          })();
+          } catch (cfErr: unknown) {
+            logCallableError("createAndScheduleCall:error", cfErr);
+            // Continue even if call scheduling fails - payment is still successful
+          }
         } else {
           console.warn("Missing/invalid phone(s). Skipping call scheduling.");
         }
