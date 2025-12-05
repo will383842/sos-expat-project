@@ -34,6 +34,7 @@ export interface Provider {
   isApproved?: boolean;
   isBanned?: boolean;
 
+
   // Champs étendus pour compatibilité avec les autres composants
   fullName?: string;
   firstName?: string;

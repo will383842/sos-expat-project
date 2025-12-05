@@ -1,6 +1,7 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import { fileURLToPath, URL } from 'node:url'
+import { resolve } from 'path'
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
@@ -13,13 +14,51 @@ export default defineConfig(({ mode }) => {
     : `https://${REGION}-${PROJECT_ID}.cloudfunctions.net`
 
   return {
-    plugins: [react()],
+    plugins: [
+      react(),
+      // Custom plugin to handle SPA routing in dev server
+      {
+        name: 'spa-fallback',
+        configureServer(server) {
+          return () => {
+            server.middlewares.use((req, res, next) => {
+              // Skip if it's a file request (has extension) or API request
+              if (!req.url) {
+                return next();
+              }
+
+              // Skip static assets, API calls, and files with extensions
+              if (
+                req.url.startsWith('/api') ||
+                req.url.startsWith('/src') ||
+                req.url.startsWith('/node_modules') ||
+                /\.\w+$/.test(req.url) ||
+                req.url.includes('.')
+              ) {
+                return next();
+              }
+
+              // For all other routes (SPA routes), serve index.html
+              req.url = '/index.html';
+              next();
+            });
+          };
+        },
+      },
+    ],
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
       },
+      // Ensure React is resolved correctly
+      dedupe: ['react', 'react-dom'],
     },
     optimizeDeps: {
+      include: [
+        'react',
+        'react-dom',
+        'react-helmet-async',
+      ],
       exclude: [
         'firebase',
         'firebase/app',
@@ -30,8 +69,10 @@ export default defineConfig(({ mode }) => {
         'firebase/analytics',
       ],
       esbuildOptions: {
-        target: 'esnext'
-      }
+        target: 'esnext',
+        // Ensure React exports are handled correctly
+        jsx: 'automatic',
+      },
     },
     build: {
       target: 'esnext',
@@ -62,7 +103,13 @@ export default defineConfig(({ mode }) => {
           target,
           changeOrigin: true,
         }
-      }
-    }
+      },
+      // Configure middleware to serve index.html for all routes (SPA routing)
+      middlewareMode: false,
+    },
+    preview: {
+      // Serve index.html for all routes in preview mode (production build)
+      // This ensures client-side routing works when deployed
+    },
   }
 })

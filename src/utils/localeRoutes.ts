@@ -3,7 +3,7 @@
  * Handles language-country locale prefixes in routes (e.g., /en-us/, /fr-fr/)
  ***/
 
-import { getCachedGeoData, detectCountryFromTimezone } from "./languageDetection";
+import { getCachedGeoData, detectCountryFromTimezone } from "../multilingual-system/core/country-manager/languageDetection";
 
 type Language = "fr" | "en" | "es" | "ru" | "de" | "hi" | "pt" | "ch" | "ar";
 

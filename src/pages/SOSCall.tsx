@@ -28,11 +28,15 @@ import {
   onSnapshot,
   where,
   DocumentData,
+  getDoc,
+  doc,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import Layout from "../components/layout/Layout";
+import SEOHead from "../components/layout/SEOHead";
 import { useApp } from "../contexts/AppContext";
 import { FormattedMessage, useIntl } from "react-intl";
+import { getAllProviderTypeKeywords, getProviderTypeKeywords, type SupportedLanguage, detectSearchLanguage } from "../utils/multilingualSearch";
 
 // ========================================
 // 🌍 IMPORTS POUR INTERNATIONALISATION
@@ -83,6 +87,17 @@ interface Provider {
   isBanned?: boolean;
   role?: string;
   isAdmin?: boolean;
+  education?: string | string[];
+  certifications?: string | string[];
+  lawSchool?: string;
+  translations?: {
+    [lang: string]: {
+      description?: string;
+      bio?: string;
+      summary?: string;
+      specialties?: string[];
+    };
+  };
 }
 
 interface RawProfile extends DocumentData {
@@ -109,6 +124,9 @@ interface RawProfile extends DocumentData {
   price?: number;
   duration?: number;
   profilePhoto?: string;
+  education?: any;
+  certifications?: any;
+  lawSchool?: string;
 }
 
 interface FAQItem {
@@ -198,25 +216,25 @@ const useStatusColors = (isOnline: boolean) => {
     () =>
       isOnline
         ? {
-            border: "border-green-300",
-            shadow: "shadow-green-100",
-            glow: "shadow-green-200/50",
-            borderShadow: "drop-shadow-[0_0_8px_rgba(34,197,94,0.3)]",
-            badge: "bg-green-100 text-green-800 border-green-300",
-            button:
-              "bg-green-700 hover:bg-green-800 active:bg-green-900 border-green-700",
-            accent: "text-green-700",
-          }
+          border: "border-green-300",
+          shadow: "shadow-green-100",
+          glow: "shadow-green-200/50",
+          borderShadow: "drop-shadow-[0_0_8px_rgba(34,197,94,0.3)]",
+          badge: "bg-green-100 text-green-800 border-green-300",
+          button:
+            "bg-green-700 hover:bg-green-800 active:bg-green-900 border-green-700",
+          accent: "text-green-700",
+        }
         : {
-            border: "border-red-300",
-            shadow: "shadow-red-100",
-            glow: "shadow-red-200/50",
-            borderShadow: "drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]",
-            badge: "bg-red-100 text-red-800 border-red-300",
-            button:
-              "bg-red-700 hover:bg-red-800 active:bg-red-900 border-red-700",
-            accent: "text-red-700",
-          },
+          border: "border-red-300",
+          shadow: "shadow-red-100",
+          glow: "shadow-red-200/50",
+          borderShadow: "drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]",
+          badge: "bg-red-100 text-red-800 border-red-300",
+          button:
+            "bg-red-700 hover:bg-red-800 active:bg-red-900 border-red-700",
+          accent: "text-red-700",
+        },
     [isOnline]
   );
 };
@@ -279,6 +297,199 @@ const getLanguagesLocale = (locale: string): SupportedLocale => {
   };
   return mapping[locale.toLowerCase()] || 'fr';
 };
+const countryOptions = [
+  "Afghanistan",
+  "South Africa",
+  "Albania",
+  "Algeria",
+  "Germany",
+  "Andorra",
+  "Angola",
+  "Saudi Arabia",
+  "Argentina",
+  "Armenia",
+  "Australia",
+  "Austria",
+  "Azerbaijan",
+  "Bahamas",
+  "Bahrain",
+  "Bangladesh",
+  "Barbados",
+  "Belgium",
+  "Belize",
+  "Benin",
+  "Bhutan",
+  "Belarus",
+  "Myanmar",
+  "Bolivia",
+  "Bosnia and Herzegovina",
+  "Botswana",
+  "Brazil",
+  "Brunei",
+  "Bulgaria",
+  "Burkina Faso",
+  "Burundi",
+  "Cambodia",
+  "Cameroon",
+  "Canada",
+  "Cabo Verde",
+  "Chile",
+  "China",
+  "Cyprus",
+  "Colombia",
+  "Comoros",
+  "Congo",
+  "North Korea",
+  "South Korea",
+  "Costa Rica",
+  "Côte d'Ivoire",
+  "Croatia",
+  "Cuba",
+  "Denmark",
+  "Djibouti",
+  "Dominica",
+  "Egypt",
+  "United Arab Emirates",
+  "Ecuador",
+  "Eritrea",
+  "Spain",
+  "Estonia",
+  "United States",
+  "Ethiopia",
+  "Fiji",
+  "Finland",
+  "France",
+  "Gabon",
+  "Gambia",
+  "Georgia",
+  "Ghana",
+  "Greece",
+  "Grenada",
+  "Guatemala",
+  "Guinea",
+  "Guinea-Bissau",
+  "Equatorial Guinea",
+  "Guyana",
+  "Haiti",
+  "Honduras",
+  "Hungary",
+  "Cook Islands",
+  "Marshall Islands",
+  "Solomon Islands",
+  "India",
+  "Indonesia",
+  "Iraq",
+  "Iran",
+  "Ireland",
+  "Iceland",
+  "Israel",
+  "Italy",
+  "Jamaica",
+  "Japan",
+  "Jordan",
+  "Kazakhstan",
+  "Kenya",
+  "Kyrgyzstan",
+  "Kiribati",
+  "Kuwait",
+  "Laos",
+  "Lesotho",
+  "Latvia",
+  "Lebanon",
+  "Liberia",
+  "Libya",
+  "Liechtenstein",
+  "Lithuania",
+  "Luxembourg",
+  "North Macedonia",
+  "Madagascar",
+  "Malaysia",
+  "Malawi",
+  "Maldives",
+  "Mali",
+  "Malta",
+  "Morocco",
+  "Mauritius",
+  "Mauritania",
+  "Mexico",
+  "Micronesia",
+  "Moldova",
+  "Monaco",
+  "Mongolia",
+  "Montenegro",
+  "Mozambique",
+  "Namibia",
+  "Nauru",
+  "Nepal",
+  "Netherlands",
+  "New Zealand",
+  "Oman",
+  "Uganda",
+  "Uzbekistan",
+  "Pakistan",
+  "Palau",
+  "Palestine",
+  "Panama",
+  "Papua New Guinea",
+  "Paraguay",
+  "Peru",
+  "Philippines",
+  "Poland",
+  "Portugal",
+  "Qatar",
+  "Central African Republic",
+  "Democratic Republic of the Congo",
+  "Dominican Republic",
+  "Czech Republic",
+  "Romania",
+  "United Kingdom",
+  "Russia",
+  "Rwanda",
+  "Saint Kitts and Nevis",
+  "San Marino",
+  "Saint Vincent and the Grenadines",
+  "Saint Lucia",
+  "El Salvador",
+  "Samoa",
+  "São Tomé and Príncipe",
+  "Senegal",
+  "Serbia",
+  "Seychelles",
+  "Sierra Leone",
+  "Singapore",
+  "Slovakia",
+  "Slovenia",
+  "Somalia",
+  "Sudan",
+  "South Sudan",
+  "Sri Lanka",
+  "Sweden",
+  "Switzerland",
+  "Suriname",
+  "Syria",
+  "Tajikistan",
+  "Tanzania",
+  "Chad",
+  "Thailand",
+  "Timor-Leste",
+  "Togo",
+  "Tonga",
+  "Trinidad and Tobago",
+  "Tunisia",
+  "Turkmenistan",
+  "Turkey",
+  "Tuvalu",
+  "Ukraine",
+  "Uruguay",
+  "Vanuatu",
+  "Vatican City",
+  "Venezuela",
+  "Vietnam",
+  "Yemen",
+  "Zambia",
+  "Zimbabwe",
+];
+
 
 // Retourne les options pays avec code et label traduit
 const getCountryOptions = (locale: string): { code: string; label: string }[] => {
@@ -1632,6 +1843,11 @@ const SOSCall: React.FC = () => {
   // Mobile filter bottom sheet
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
 
+  // Search state
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
+  const [searchSuggestions, setSearchSuggestions] = useState<string[]>([]);
+  
   // Données
   const [isLoadingProviders, setIsLoadingProviders] = useState<boolean>(true);
   const [realProviders, setRealProviders] = useState<Provider[]>([]);
@@ -1640,7 +1856,7 @@ const SOSCall: React.FC = () => {
   // Pagination
   const [page, setPage] = useState<number>(1);
 
-  const lang = (language as "fr" | "en" | "es" | "de" | "ru" | "hi" | "ch" | "pt" | "ar") || "fr";
+  const lang = (language as "fr" | "en" | "es" | "de" | "pt" | "ch" | "ar" | "hi" | "ru") || "fr";
 
   // Listes traduites dynamiquement
   const countryOptions = useMemo(() => {
@@ -1669,7 +1885,7 @@ const SOSCall: React.FC = () => {
 
     const unsubscribe = onSnapshot(
       sosProfilesQuery,
-      (snapshot) => {
+      async (snapshot) => {
         if (snapshot.empty) {
           setRealProviders([]);
           setFilteredProviders([]);
@@ -1741,9 +1957,12 @@ const SOSCall: React.FC = () => {
             duration: data.duration,
             avatar:
               typeof data.profilePhoto === "string" &&
-              data.profilePhoto.trim() !== ""
+                data.profilePhoto.trim() !== ""
                 ? data.profilePhoto
                 : "/default-avatar.png",
+            education: data.education || data.lawSchool || undefined,
+            certifications: data.certifications || undefined,
+            lawSchool: typeof data.lawSchool === "string" ? data.lawSchool : undefined,
           };
 
           const notAdmin =
@@ -1769,6 +1988,70 @@ const SOSCall: React.FC = () => {
         });
 
         setRealProviders(allProfiles);
+        // Load translations BEFORE setting providers (synchronously wait for all)
+        const providersWithTranslations = await Promise.all(
+          allProfiles.map(async (provider) => {
+            try {
+              const translationDoc = await getDoc(
+                doc(db, "providers_translations", provider.id)
+              );
+              
+              if (translationDoc.exists()) {
+                const data = translationDoc.data();
+                const translations: Provider["translations"] = {};
+                
+                // Access translations object directly (structure: translations.hi, translations.en, etc.)
+                if (data.translations && typeof data.translations === "object" && !Array.isArray(data.translations)) {
+                  Object.keys(data.translations).forEach((lang) => {
+                    const trans = data.translations[lang];
+                    // Check if translation exists and has content
+                    if (trans && typeof trans === "object" && !Array.isArray(trans)) {
+                      // Map language code: zh -> ch for consistency
+                      const langKey = lang === "zh" ? "ch" : lang;
+                      
+                      // Get description, bio, summary from translation
+                      const desc = trans.description || trans.bio || trans.summary || "";
+                      const bio = trans.bio || trans.description || "";
+                      const summary = trans.summary || trans.motivation || "";
+                      const specialties = Array.isArray(trans.specialties) ? trans.specialties : [];
+                      
+                      if (desc || bio || summary || specialties.length > 0) {
+                        translations[langKey] = {
+                          description: desc,
+                          bio: bio,
+                          summary: summary,
+                          specialties: specialties,
+                        };
+                      }
+                    }
+                  });
+                }
+                
+                if (Object.keys(translations).length > 0) {
+                  console.log(`[SOSCall] ✓ Loaded translations for ${provider.name} (${provider.id}):`, {
+                    languages: Object.keys(translations),
+                    hi: translations.hi ? {
+                      hasDescription: !!translations.hi.description,
+                      hasBio: !!translations.hi.bio,
+                      hasSummary: !!translations.hi.summary,
+                      specialtiesCount: translations.hi.specialties?.length || 0,
+                    } : null,
+                  });
+                  return { ...provider, translations };
+                }
+              }
+              
+              return provider;
+            } catch (error) {
+              console.error(`[SOSCall] Error loading translation for ${provider.id}:`, error);
+              return provider;
+            }
+          })
+        );
+        
+        console.log(`[SOSCall] Loaded ${providersWithTranslations.length} providers with translations`);
+        setRealProviders(providersWithTranslations);
+        setFilteredProviders(providersWithTranslations);
         setIsLoadingProviders(false);
       },
       (error) => {
@@ -1782,7 +2065,93 @@ const SOSCall: React.FC = () => {
     return () => unsubscribe();
   }, [searchParams, setSearchParams]);
 
-  // Filtrage + tri aléatoire (online first)
+  // Generate search suggestions 
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setSearchSuggestions([]);
+      return;
+    }
+
+    const query = searchQuery.toLowerCase().trim();
+    const suggestions: string[] = [];
+    
+    // Add provider type keywords in user's active language
+    const userLang = (language as SupportedLanguage) || "fr";
+    if (selectedType === "all" || selectedType === "lawyer") {
+      const lawyerKeywords = getProviderTypeKeywords("lawyer", userLang);
+      lawyerKeywords.forEach(keyword => {
+        if (keyword.toLowerCase().includes(query) && keyword.length > 2) {
+          suggestions.push(keyword);
+        }
+      });
+    }
+    
+    if (selectedType === "all" || selectedType === "expat") {
+      const expatKeywords = getProviderTypeKeywords("expat", userLang);
+      expatKeywords.forEach(keyword => {
+        if (keyword.toLowerCase().includes(query) && keyword.length > 2) {
+          suggestions.push(keyword);
+        }
+      });
+    }
+    
+    // Add country suggestions from providers
+    const countrySuggestions = Array.from(
+      new Set(realProviders.map(p => p.country).filter(Boolean))
+    ).filter(country => 
+      country.toLowerCase().includes(query)
+    ).slice(0, 5);
+    
+    suggestions.push(...countrySuggestions);
+    
+    // Add language suggestions
+    const languageSuggestions = Array.from(
+      new Set(realProviders.flatMap(p => p.languages || []).filter(Boolean))
+    ).filter(lang => 
+      lang.toLowerCase().includes(query)
+    ).slice(0, 5);
+    
+    suggestions.push(...languageSuggestions);
+    
+    // Add specialty suggestions
+    const specialtySuggestions = Array.from(
+      new Set(realProviders.flatMap(p => p.specialties || []).filter(Boolean))
+    ).filter(specialty => 
+      specialty.toLowerCase().includes(query)
+    ).slice(0, 5);
+    
+    suggestions.push(...specialtySuggestions);
+    
+    // Add education suggestions
+    const educationSuggestions = realProviders
+      .map(p => {
+        if (Array.isArray(p.education)) return p.education.join(" ");
+        if (typeof p.education === "string") return p.education;
+        return p.lawSchool || "";
+      })
+      .filter(Boolean)
+      .filter(edu => edu.toLowerCase().includes(query))
+      .slice(0, 5);
+    
+    suggestions.push(...educationSuggestions);
+    
+    // Add certification suggestions
+    const certificationSuggestions = realProviders
+      .map(p => {
+        if (Array.isArray(p.certifications)) return p.certifications.join(" ");
+        if (typeof p.certifications === "string") return p.certifications;
+        return "";
+      })
+      .filter(Boolean)
+      .filter(cert => cert.toLowerCase().includes(query))
+      .slice(0, 5);
+    
+    suggestions.push(...certificationSuggestions);
+    
+    setSearchSuggestions(Array.from(new Set(suggestions)).slice(0, 12));
+  }, [searchQuery, selectedType, realProviders, language]);
+
+  // Filtrage + tri
   useEffect(() => {
     if (realProviders.length === 0) {
       setFilteredProviders([]);
@@ -1814,7 +2183,177 @@ const SOSCall: React.FC = () => {
             ? provider.isOnline
             : !provider.isOnline;
 
-      return matchesType && matchesCountryFilter && matchesLanguageFilter && matchesStatus;
+      // Search filter - multilingual search
+      const matchesSearch = !searchQuery.trim() || (() => {
+        const query = searchQuery.toLowerCase().trim();
+        const searchTerms = query.split(" ").filter(Boolean);
+        
+        // Build searchable content - use user's active language for keywords
+        const userLang = (language as SupportedLanguage) || "fr";
+        const multilingualKeywords = provider.type === "lawyer" 
+          ? getProviderTypeKeywords("lawyer", userLang).join(" ")
+          : getProviderTypeKeywords("expat", userLang).join(" ");
+        
+        // Extract education and certifications as strings
+        const educationText = Array.isArray(provider.education)
+          ? provider.education.join(" ")
+          : typeof provider.education === "string"
+            ? provider.education
+            : provider.lawSchool || "";
+        
+        const certificationsText = Array.isArray(provider.certifications)
+          ? provider.certifications.join(" ")
+          : typeof provider.certifications === "string"
+            ? provider.certifications
+            : "";
+        
+        // Detect search language to prioritize relevant translations
+        const searchLang = detectSearchLanguage(searchQuery);
+        
+        // Get translated content for search - include ALL translations
+        let translatedDescription = "";
+        let translatedSpecialties: string[] = [];
+        
+        if (provider.translations && Object.keys(provider.translations).length > 0) {
+          // Include ALL available translations for comprehensive search
+          Object.entries(provider.translations).forEach(([lang, trans]) => {
+            if (trans && typeof trans === 'object') {
+              const t = trans as { description?: string; bio?: string; summary?: string; specialties?: string[] };
+              // Add all text fields
+              const desc = t.description || "";
+              const bio = t.bio || "";
+              const summary = t.summary || "";
+              if (desc) translatedDescription += " " + desc;
+              if (bio) translatedDescription += " " + bio;
+              if (summary) translatedDescription += " " + summary;
+              
+              // Add specialties
+              if (Array.isArray(t.specialties) && t.specialties.length > 0) {
+                translatedSpecialties = [...translatedSpecialties, ...t.specialties];
+              }
+            }
+          });
+          
+          // Trim and clean up
+          translatedDescription = translatedDescription.trim();
+          translatedSpecialties = Array.from(new Set(translatedSpecialties)); // Remove duplicates
+        }
+        
+        // Build comprehensive searchable content
+        const searchableContent = [
+          provider.name,
+          provider.firstName,
+          provider.lastName,
+          provider.country,
+          provider.description || "", // Original description
+          translatedDescription, // All translated descriptions (bio, description, summary from all languages)
+          ...(provider.languages || []),
+          ...(provider.specialties || []), // Original specialties
+          ...translatedSpecialties, // Translated specialties from all languages
+          educationText,
+          certificationsText,
+          provider.lawSchool || "",
+          multilingualKeywords,
+        ]
+          .filter(Boolean)
+          .filter((item) => typeof item === "string" && item.trim().length > 0)
+          .join(" ")
+          .toLowerCase();
+        
+        // Debug logging for search (always log when searching)
+        if (searchQuery.trim().length > 0) {
+          const queryLower = searchQuery.toLowerCase();
+          const hasMatch = searchableContent.includes(queryLower);
+          
+          // Always log for debugging
+          console.log(`[SOSCall Search] Provider: ${provider.name}`, {
+            searchQuery: searchQuery.substring(0, 50),
+            queryLength: searchQuery.length,
+            hasTranslations: !!provider.translations,
+            translationKeys: provider.translations ? Object.keys(provider.translations) : [],
+            translatedDescLength: translatedDescription.length,
+            translatedDescPreview: translatedDescription.substring(0, 100),
+            translatedSpecsCount: translatedSpecialties.length,
+            translatedSpecs: translatedSpecialties.slice(0, 3),
+            searchableLength: searchableContent.length,
+            searchablePreview: searchableContent.substring(0, 300),
+            matches: hasMatch,
+            searchTerms: queryLower.split(" ").filter(Boolean),
+          });
+        }
+        
+        // Multi-term search - all terms must match
+        // For name searches, prioritize exact matches in name fields
+        const nameFields = [
+          provider.name,
+          provider.firstName,
+          provider.lastName,
+        ].filter(Boolean).join(" ").toLowerCase();
+        
+        // Check if all search terms match in name fields (exact name match)
+        const exactNameMatch = searchTerms.every(term => nameFields.includes(term));
+        
+        // If it's a potential name search (2+ words), prioritize name matching
+        if (searchTerms.length >= 2) {
+          if (exactNameMatch) return true;
+          // If name doesn't match, check if it's a partial match in other fields
+          // but be more strict - require at least one term to match in name
+          const atLeastOneNameMatch = searchTerms.some(term => nameFields.includes(term));
+          if (!atLeastOneNameMatch) {
+            // For multi-word searches that don't match names, check other fields more strictly
+            // IMPORTANT: Include translated content here!
+            const otherFieldsContent = [
+              provider.country,
+              provider.description, // Original
+              translatedDescription, // ALL translations
+              ...(provider.languages || []),
+              ...(provider.specialties || []), // Original
+              ...translatedSpecialties, // ALL translated specialties
+              educationText,
+              certificationsText,
+            ].filter(Boolean).join(" ").toLowerCase();
+            
+            // All terms must match in other fields (including translations)
+            const allMatch = searchTerms.every(term => {
+              const termLower = term.toLowerCase();
+              return otherFieldsContent.includes(termLower);
+            });
+            
+            if (!allMatch) {
+              console.log(`[SOSCall Search] Multi-word search didn't match for ${provider.name}`, {
+                searchTerms,
+                otherFieldsLength: otherFieldsContent.length,
+                translatedDescLength: translatedDescription.length,
+              });
+            }
+            
+            return allMatch;
+          }
+        }
+        
+        // Single word or partial matches - use original logic with translated content
+        const allTermsMatch = searchTerms.every(term => {
+          const termLower = term.toLowerCase();
+          const exactMatch = searchableContent.includes(termLower);
+          const pluralMatch = searchableContent.includes(termLower.slice(0, -1));
+          const singularMatch = searchableContent.includes(termLower + "s");
+          
+          if (!exactMatch && !pluralMatch && !singularMatch) {
+            // Debug: log which term didn't match
+            console.log(`[SOSCall Search] Term "${term}" not found in searchable content for ${provider.name}`, {
+              term,
+              searchablePreview: searchableContent.substring(0, 500),
+              hasTranslations: !!provider.translations,
+            });
+          }
+          
+          return exactMatch || pluralMatch || singularMatch;
+        });
+        
+        return allTermsMatch;
+      })();
+
+      return matchesType && matchesCountryFilter && matchesLanguageFilter && matchesStatus && matchesSearch;
     });
 
     // Séparer les profils online et offline
@@ -1838,6 +2377,7 @@ const SOSCall: React.FC = () => {
     customCountry,
     customLanguage,
     statusFilter,
+    searchQuery,
   ]);
 
   // Pagination
@@ -2105,6 +2645,21 @@ const SOSCall: React.FC = () => {
           {JSON.stringify(jsonLdSchemas)}
         </script>
       </Helmet>
+      <SEOHead
+        title={`${selectedType === "lawyer"
+            ? "Avocats"
+            : selectedType === "expat"
+              ? "Expatriés"
+              : "Experts"
+          } disponibles | SOS Expat & Travelers`}
+        description={`Trouvez un ${selectedType === "lawyer"
+            ? "avocat"
+            : selectedType === "expat"
+              ? "expatrié"
+              : "expert"
+          } vérifié disponible immédiatement. Consultation en ligne 24h/24, 7j/7 dans plus de 150 pays.`}
+        canonicalUrl="/sos-appel"
+      />
 
       <div className="min-h-screen bg-gray-950">
         {/* ========================================
@@ -2239,6 +2794,276 @@ const SOSCall: React.FC = () => {
                       <span className="text-gray-400 text-sm">
                         <FormattedMessage id="sosCall.stats.onlineShort" defaultMessage="en ligne" />
                       </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* SEARCH BAR */}
+                <div className="mb-6 max-w-4xl mx-auto">
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-r from-red-500/20 via-orange-500/20 to-yellow-500/20 rounded-3xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-300" />
+                  <div className="relative bg-gray-900 backdrop-blur-xl border border-white/20 rounded-3xl p-2 shadow-2xl my-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex-1 relative">
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 w-5 h-5" />
+                        <input
+                          type="text"
+                          value={searchQuery}
+                          onChange={(e) => {
+                            setSearchQuery(e.target.value);
+                            setShowSuggestions(true);
+                          }}
+                          onFocus={() => setShowSuggestions(true)}
+                          onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                          placeholder={intl.formatMessage({ id: "search.placeholder" })}
+                          className="w-full pl-12 pr-4 py-4 bg-gray-900 border border-white/15 rounded-2xl text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent transition-all duration-300 text-base"
+                        />
+                        {searchQuery && (
+                          <button
+                            onClick={() => {
+                              setSearchQuery("");
+                              setShowSuggestions(false);
+                            }}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                            aria-label="Clear search"
+                          >
+                            <X className="w-5 h-5" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* Search Suggestions */}
+                    {showSuggestions && searchSuggestions.length > 0 && (
+                      <div className="mt-2 bg-gray-900 backdrop-blur-xl border border-white/20 rounded-2xl p-2 max-h-64 overflow-y-auto">
+                        <div className="text-xs font-semibold text-gray-300 uppercase tracking-wide px-3 py-2">
+                          <FormattedMessage id="search.suggestions" />
+                        </div>
+                        <div className="space-y-1">
+                          {searchSuggestions.map((suggestion, idx) => (
+                            <button
+                              key={idx}
+                              onClick={() => {
+                                setSearchQuery(suggestion);
+                                setShowSuggestions(false);
+                              }}
+                              className="w-full text-left px-4 py-2 rounded-xl text-white/90 hover:bg-white/10 hover:text-white transition-all duration-200 text-sm"
+                            >
+                              {suggestion}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              </div>
+
+              {/* FILTRES */}
+              <div className="rounded-[28px] border border-white/10 bg-white/5 backdrop-blur-md p-4 sm:p-6 max-w-6xl mx-auto">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+                  {/* Type */}
+                  <div className="space-y-1">
+                    <label
+                      htmlFor="expert-type"
+                      className="block text-xs font-semibold text-gray-300 uppercase tracking-wide"
+                    >
+                      <FormattedMessage id="type" />
+                      {/* Type */}
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="expert-type"
+                        value={selectedType}
+                        onChange={(e) =>
+                          setSelectedType(
+                            e.target.value as "all" | "lawyer" | "expat"
+                          )
+                        }
+                        className="
+                          w-full px-3 py-2
+                          bg-white text-gray-900
+                          border border-gray-300 rounded-xl
+                          dark:bg-white/10 dark:text-white dark:border-white/20
+                          focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent
+                          transition-all appearance-none text-sm
+                        "
+                      >
+                        {/* <option value="all">Tous</option>
+                        <option value="lawyer">Avocats</option>
+                        <option value="expat">Expatriés</option> */}
+                        <option value="all">
+                          <FormattedMessage id="filter.all" />
+                        </option>
+                        <option value="lawyer">
+                          <FormattedMessage id="filter.lawyer" />
+                        </option>
+                        <option value="expat">
+                          <FormattedMessage id="filter.expat" />
+                        </option>
+                      </select>
+                      <ChevronDown
+                        className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-300 pointer-events-none"
+                        aria-hidden="true"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Pays */}
+                  <div className="space-y-1">
+                    <label
+                      htmlFor="country-filter"
+                      className="block text-xs font-semibold text-gray-300 uppercase tracking-wide"
+                    >
+                      <FormattedMessage id="country.label" />
+                      {/* Pays */}
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="country-filter"
+                        value={selectedCountryCode}
+                        onChange={(e) => handleCountryChange(e.target.value)}
+                        className="
+                          w-full px-3 py-2
+                          bg-white text-gray-900
+                          border border-gray-300 rounded-xl
+                          dark:bg-white/10 dark:text-white dark:border-white/20
+                          focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent
+                          transition-all appearance-none text-sm
+                        "
+                      >
+                        {/* <option value="all">Tous les pays</option> */}
+                        <option value="all">
+                          <FormattedMessage id="country.allCountries" />
+                        </option>
+                        {countryOptions.map((country) => (
+                          <option key={country.code} value={country.code}>
+                            {country.label}
+                          </option>
+                        ))}
+                        {/* <option value="Autre">Autre</option> */}
+                        <option value="Autre">
+                          <FormattedMessage id="country.other" />
+                        </option>
+                      </select>
+                      <ChevronDown
+                        className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-300 pointer-events-none"
+                        aria-hidden="true"
+                      />
+                    </div>
+                    {showCustomCountry && (
+                      <input
+                        type="text"
+                        placeholder="Nom du pays"
+                        value={customCountry}
+                        onChange={(e) => setCustomCountry(e.target.value)}
+                        className="w-full px-3 py-2 bg-white/10 border border-white/15 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/60 focus:border-transparent transition-all text-sm text-white placeholder:text-gray-400 mt-2"
+                      />
+                    )}
+                  </div>
+
+                  {/* Langue */}
+                  <div className="space-y-1">
+                    <label
+                      htmlFor="language-filter"
+                      className="block text-xs font-semibold text-gray-300 uppercase tracking-wide"
+                    >
+                      {/* Langue */}
+                      <FormattedMessage id="language.label" />
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="language-filter"
+                        value={selectedLanguageCode}
+                        onChange={(e) => handleLanguageChange(e.target.value)}
+                        className="
+                          w-full px-3 py-2
+                          bg-white text-gray-900
+                          border border-gray-300 rounded-xl
+                          dark:bg-white/10 dark:text-white dark:border-white/20
+                          focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-transparent
+                          transition-all appearance-none text-sm
+                        "
+                      >
+                        {/* <option value="all">Toutes</option> */}
+                        <option value="all">
+                          <FormattedMessage id="language.all" />
+                        </option>
+                        {languageOptions.map((lang) => (
+                          <option key={lang.code} value={lang.code}>
+                            {lang.label}
+                          </option>
+                        ))}
+                        <option value="Autre">
+                          <FormattedMessage id="language.other" />
+                        </option>
+                        {/* <option value="Autre">Autre</option> */}
+                      </select>
+                      <ChevronDown
+                        className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-300 pointer-events-none"
+                        aria-hidden="true"
+                      />
+                    </div>
+                    {showCustomLanguage && (
+                      <input
+                        type="text"
+                        placeholder="Langue"
+                        value={customLanguage}
+                        onChange={(e) => setCustomLanguage(e.target.value)}
+                        className="w-full px-3 py-2 bg-white/10 border border-white/15 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/60 focus:border-transparent transition-all text-sm text-white placeholder:text-gray-400 mt-2"
+                      />
+                    )}
+                  </div>
+
+                  {/* Statut */}
+                  <div className="space-y-1 lg:col-span-2">
+                    <label className="block text-xs font-semibold text-gray-300 uppercase tracking-wide">
+                      {/* Statut */}
+                      <FormattedMessage id="status.label" />
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setStatusFilter("all")}
+                        className={`flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl border transition ${statusFilter === "all"
+                            ? "bg-white/20 text-white border-white/30"
+                            : "bg-white/10 text-gray-200 border-white/20 hover:bg-white/15"
+                          }`}
+                        aria-pressed={statusFilter === "all"}
+                      >
+                        <span className="w-2 h-2 rounded-full bg-gray-300" />
+                        {/* Tous */}
+                        <FormattedMessage id="status.all" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setStatusFilter("online")}
+                        className={`flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl border transition ${statusFilter === "online"
+                            ? "bg-white/20 text-white border-white/30"
+                            : "bg-white/10 text-gray-200 border-white/20 hover:bg-white/15"
+                          }`}
+                        aria-pressed={statusFilter === "online"}
+                        title="En ligne"
+                      >
+                        <Wifi className="w-4 h-4" />
+                        {/* En ligne */}
+                        <FormattedMessage id="status.online" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setStatusFilter("offline")}
+                        className={`flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl border transition ${statusFilter === "offline"
+                            ? "bg-white/20 text-white border-white/30"
+                            : "bg-white/10 text-gray-200 border-white/20 hover:bg-white/15"
+                          }`}
+                        aria-pressed={statusFilter === "offline"}
+                        title="Hors ligne"
+                      >
+                        <WifiOff className="w-4 h-4" />
+                        {/* Hors ligne */}
+                        <FormattedMessage id="status.offline" />
+                      </button>
                     </div>
                     <span className="text-white/20">•</span>
                     <span className="text-gray-300 text-sm">

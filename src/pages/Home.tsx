@@ -37,6 +37,8 @@ import {
 } from "@/services/pricingService";
 import { FormattedMessage, useIntl } from "react-intl";
 import { useApp } from "../contexts/AppContext";
+import { formatCurrency } from "../utils/localeFormatters";
+import { getTranslatedRouteSlug } from "../multilingual-system/core/routing/localeRoutes";
 
 /* ================================
    CONSTANTES SEO (NE PAS TRADUIRE)
@@ -730,10 +732,10 @@ const OptimizedHomePage: React.FC = () => {
       intl.formatMessage({ id: "join.lawyer.benefit6" }),
     ],
     ctaLabel: intl.formatMessage({ id: "join.lawyer.cta" }),
-    ctaHref: "/register/lawyer",
+    ctaHref: `/${getTranslatedRouteSlug("register-lawyer", language)}`,
     icon: <Briefcase className="w-3.5 h-3.5" aria-hidden="true" />,
     gradient: "from-red-600 to-orange-600",
-  }), [intl]);
+  }), [intl, language]);
 
   const expatCard = useMemo(() => ({
     label: intl.formatMessage({ id: "join.expat.label" }),
@@ -749,10 +751,10 @@ const OptimizedHomePage: React.FC = () => {
       intl.formatMessage({ id: "join.expat.benefit8" }),
     ],
     ctaLabel: intl.formatMessage({ id: "join.expat.cta" }),
-    ctaHref: "/register/expat",
+    ctaHref: `/${getTranslatedRouteSlug("register-expat", language)}`,
     icon: <User className="w-3.5 h-3.5" aria-hidden="true" />,
     gradient: "from-blue-600 to-indigo-600",
-  }), [intl]);
+  }), [intl, language]);
 
   // ======= Helpers pour le pricing =======
   const DEFAULT_USD_RATE = 1.08;

@@ -12,6 +12,7 @@ import React, {
   useCallback,
   useMemo,
   useRef,
+  Component,
 } from "react";
 import {
   Link,
@@ -269,7 +270,24 @@ const Login: React.FC = () => {
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [submitAttempts, setSubmitAttempts] = useState<number>(0);
 
-  const redirectUrl = searchParams.get("redirect") || "/dashboard";
+  // Get redirect URL from sessionStorage first (most reliable), then query params, then default to dashboard
+  // sessionStorage is set BEFORE navigation, so it's more reliable than query params which might get lost
+  // If user came from translation on provider profile, redirect back to that profile
+  // Otherwise, redirect to dashboard
+  const redirectFromStorage = sessionStorage.getItem("loginRedirect");
+  const redirectFromParams = searchParams.get("redirect");
+  
+  // Priority: sessionStorage > query params > default dashboard
+  // sessionStorage is set by TranslationBanner before navigation, so it's most reliable
+  const redirectUrl = redirectFromStorage || redirectFromParams || "/dashboard";
+  
+  // If we have redirect from params but not in storage, store it as backup
+  useEffect(() => {
+    if (redirectFromParams && !redirectFromStorage) {
+      sessionStorage.setItem("loginRedirect", redirectFromParams);
+    }
+  }, [redirectFromParams, redirectFromStorage]);
+  
   const encodedRedirectUrl = encodeURIComponent(redirectUrl);
   const currentLang = language || "fr";
 
@@ -630,17 +648,51 @@ const Login: React.FC = () => {
   // ==================== REDIRECT ====================
   useEffect(() => {
     if (authInitialized && user) {
-      const finalUrl = decodeURIComponent(redirectUrl);
+      // Get redirect URL - prioritize sessionStorage (set before navigation) over query params
+      // sessionStorage is more reliable because it's set BEFORE navigation happens
+      const redirectFromStorage = sessionStorage.getItem("loginRedirect");
+      const redirectFromParams = searchParams.get("redirect");
+      const redirectToUse = redirectFromStorage || redirectFromParams || "/dashboard";
+      
+      // Decode the redirect URL (it was encoded when passed to login page)
+      const finalUrl = decodeURIComponent(redirectToUse);
+
+      // Clear the stored redirect after using it (important to prevent reusing old redirects)
+      sessionStorage.removeItem("loginRedirect");
+
+      const getUserId = (u: unknown): string | undefined => {
+        const obj = u as { uid?: string; id?: string };
+        return obj?.uid || obj?.id;
+      };
+
       const gtag = getGtag();
-      if (gtag) gtag("event", "login_success", { method: "email", redirect_url: finalUrl });
-      
+      if (gtag) {
+        gtag("event", "login_success", {
+          method: "email",
+          user_id: getUserId(user),
+          redirect_url: finalUrl,
+        });
+      }
+
+      // Only clear selectedProvider if not going to booking or provider profile
+      // This preserves provider data when user returns to profile after login (e.g., from translation)
       const goingToBooking = finalUrl.startsWith("/booking-request/");
-      if (!goingToBooking) sessionStorage.removeItem("selectedProvider");
-      sessionStorage.removeItem("loginAttempts");
+      const goingToProviderProfile = finalUrl.includes("/avocat/") || 
+                                     finalUrl.includes("/expatrie/") || 
+                                     finalUrl.includes("/expats/") ||
+                                     finalUrl.includes("/lawyers/") ||
+                                     finalUrl.includes("/provider/");
       
+      if (!goingToBooking && !goingToProviderProfile) {
+        sessionStorage.removeItem("selectedProvider");
+      }
+      sessionStorage.removeItem("loginAttempts");
+
+      // Navigate to the redirect URL (provider profile if coming from translation, dashboard otherwise)
+      console.log("[Login] Redirecting to:", finalUrl);
       navigate(finalUrl, { replace: true });
     }
-  }, [authInitialized, user, navigate, redirectUrl]);
+  }, [authInitialized, user, navigate, searchParams]);
 
   // ==================== FORM SUBMIT ====================
   const handleSubmit = useCallback(

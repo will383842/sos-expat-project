@@ -893,11 +893,10 @@ const AdminDashboard: React.FC = () => {
             {integrityReport && (
               <div className="space-y-4">
                 <div
-                  className={`p-4 rounded-lg ${
-                    integrityReport.isValid
-                      ? "bg-green-50 border border-green-200"
-                      : "bg-red-50 border border-red-200"
-                  }`}
+                  className={`p-4 rounded-lg ${integrityReport.isValid
+                    ? "bg-green-50 border border-green-200"
+                    : "bg-red-50 border border-red-200"
+                    }`}
                 >
                   <div className="flex items-center">
                     {integrityReport.isValid ? (

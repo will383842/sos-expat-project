@@ -31,8 +31,7 @@ interface ModernProfileCardProps {
   onProfileClick: (provider: Provider) => void;
   isUserConnected: boolean;
   index?: number;
-  language?: LanguageKey | string;
-  showSpecialties?: boolean; // Nouveau prop pour contrôler l'affichage des spécialités
+  language?: "fr" | "en" | "es" | "de" | "it" | "nl" | "ru" | "ch" | "ar";
 }
 
 // Constants - Centralisées pour éviter les recreations
@@ -47,6 +46,52 @@ const TOUCH_TARGETS = {
   minimum: 44, // WCAG AA minimum
   button: 48,
   badge: 36,
+} as const;
+
+const LANGUAGE_MAP: Record<string, string> = {
+  Français: "Français",
+  French: "Français",
+  fr: "Français",
+  FR: "Français",
+  Anglais: "Anglais",
+  English: "Anglais",
+  en: "Anglais",
+  EN: "Anglais",
+  Espagnol: "Espagnol",
+  Spanish: "Espagnol",
+  Español: "Espagnol",
+  es: "Espagnol",
+  ES: "Espagnol",
+  Português: "Portugais",
+  Portuguese: "Portugais",
+  pt: "Portugais",
+  PT: "Portugais",
+  Deutsch: "Allemand",
+  German: "Allemand",
+  de: "Allemand",
+  DE: "Allemand",
+  Italiano: "Italien",
+  Italian: "Italien",
+  it: "Italien",
+  IT: "Italien",
+  Nederlands: "Néerlandais",
+  Dutch: "Néerlandais",
+  nl: "Néerlandais",
+  NL: "Néerlandais",
+  Русский: "Russe",
+  Russian: "Russe",
+  ru: "Russe",
+  RU: "Russe",
+  中文: "Chinois",
+  Chinese: "Chinois",
+  ch: "Chinois",
+  CH: "Chinois",
+  zh: "Chinois", // Keep for backward compatibility
+  ZH: "Chinois", // Keep for backward compatibility
+  العربية: "Arabe",
+  Arabic: "Arabe",
+  ar: "Arabe",
+  AR: "Arabe",
 } as const;
 
 // TODO: remplacer par srcset WebP/AVIF pour de meilleures performances

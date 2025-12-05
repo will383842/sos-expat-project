@@ -71,7 +71,7 @@ Olá, você recebeu uma nova solicitação de consulta.
 🗣️ Idioma falado: ${language}
     `.trim(),
   },
-  zh: {
+  ch: {
     generate: ({ firstName, country, title, description, language }) => `
 您好，您收到了一条新的咨询请求。
 👤 客户：${firstName}

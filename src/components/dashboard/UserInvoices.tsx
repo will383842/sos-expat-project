@@ -15,6 +15,8 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useIntl } from 'react-intl';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { formatDate } from '@/utils/localeFormatters';
+import { useApp } from '@/contexts/AppContext';
 
 interface InvoiceRecord {
   id: string;
@@ -30,6 +32,7 @@ interface InvoiceRecord {
 
 export default function UserInvoices() {
   const { user } = useAuth();
+  const { language } = useApp();
   const intl = useIntl();
   const [invoices, setInvoices] = useState<InvoiceRecord[]>([]);
   const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot<DocumentData> | null>(null);
@@ -271,7 +274,15 @@ export default function UserInvoices() {
                   </p>
                   <p>
                     <strong>{intl.formatMessage({ id: 'userInvoices.date' })}:</strong>{' '}
-                    {new Date(invoice.createdAt.seconds * 1000).toLocaleDateString(intl.locale)}
+                    {formatDate(
+                      { seconds: invoice.createdAt.seconds },
+                      {
+                        language,
+                        userCountry: (user as { currentCountry?: string; country?: string })?.currentCountry || 
+                                     (user as { currentCountry?: string; country?: string })?.country,
+                        format: 'medium',
+                      }
+                    )}
                   </p>
                 </div>
               </div>

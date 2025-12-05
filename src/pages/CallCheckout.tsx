@@ -17,7 +17,7 @@ import {
   X,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useLocaleNavigate } from "../hooks/useLocaleNavigate";
+import { useLocaleNavigate } from "../multilingual-system";
 import { useAuth } from "../contexts/AuthContext";
 import { loadStripe, Stripe } from "@stripe/stripe-js";
 import {
@@ -43,6 +43,7 @@ import { useForm } from "react-hook-form";
 import { saveProviderMessage } from "@/firebase/saveProviderMessage";
 import { useApp } from "@/contexts/AppContext";
 import { FormattedMessage, useIntl } from "react-intl";
+import { formatCurrency } from "../utils/localeFormatters";
 
 /* -------------------------- Stripe singleton (HMR-safe) ------------------ */
 // Conserve la même Promise Stripe à travers les rechargements HMR.
@@ -1495,7 +1496,7 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
           console.log("[createPaymentIntent] response", resData);
         } catch (e: unknown) {
           logCallableError("[createPaymentIntent:error]", e);
-          throw e; // on laisse la gestion d'erreur globale s’occuper de l’affichage
+          throw e; // on laisse la gestion d'erreur globale s'occuper de l'affichage
         }
 
         if (import.meta.env.DEV) {
@@ -1602,19 +1603,18 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
 
           console.log("[createAndScheduleCall] data", callData);
 
-          void (async () => {
-            try {
-              const callResult = await createAndScheduleCall(callData);
-              console.log(callResult, " == this is the call result");
-              if (callResult && callResult.data && callResult.data.success) {
-                console.log("[createAndScheduleCall] success");
-                callStatus = "scheduled";
-                callId = callResult.data.callId || callSessionId;
-              }
-            } catch (cfErr: unknown) {
-              logCallableError("createAndScheduleCall:error", cfErr);
+          try {
+            const callResult = await createAndScheduleCall(callData);
+            console.log(callResult, " == this is the call result");
+            if (callResult && callResult.data && callResult.data.success) {
+              console.log("[createAndScheduleCall] success");
+              callStatus = "scheduled";
+              callId = callResult.data.callId || callSessionId;
             }
-          })();
+          } catch (cfErr: unknown) {
+            logCallableError("createAndScheduleCall:error", cfErr);
+            // Continue even if call scheduling fails - payment is still successful
+          }
         } else {
           console.warn("Missing/invalid phone(s). Skipping call scheduling.");
         }
@@ -2013,11 +2013,10 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
             }
             aria-label={`${
               language === "fr" ? "Payer " : "Pay "
-            }${new Intl.NumberFormat(language === "fr" ? "fr-FR" : "en-US", {
-              style: "currency",
-              currency: serviceCurrency.toUpperCase(),
+            }${formatCurrency(adminPricing.totalAmount, serviceCurrency.toUpperCase(), {
+              language,
               minimumFractionDigits: 2,
-            }).format(adminPricing.totalAmount)}`}
+            })}`}
           >
             {isProcessing ? (
               <div className="flex items-center justify-center space-x-2">
@@ -2028,7 +2027,7 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
               <div className="flex items-center justify-center space-x-2">
                 <Lock className="w-5 h-5" aria-hidden="true" />
                 <span>
-                  {/* {language === "fr" ? "Payer " : "Pay "} */}
+                
                {(() => {
                 switch (language) {
                   case "es":
@@ -2052,14 +2051,10 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
                     return "Payer ";
                 }
               })()}
-                  {new Intl.NumberFormat(
-                    language === "fr" ? "fr-FR" : "en-US",
-                    {
-                      style: "currency",
-                      currency: serviceCurrency.toUpperCase(),
-                      minimumFractionDigits: 2,
-                    }
-                  ).format(adminPricing.totalAmount)}
+                  {formatCurrency(adminPricing.totalAmount, serviceCurrency.toUpperCase(), {
+                    language,
+                    minimumFractionDigits: 2,
+                  })}
                 </span>
               </div>
             )}
@@ -2428,7 +2423,7 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({
 
   const goBack = useCallback(() => {
     if (onGoBack) return onGoBack();
-   if (window.history.length > 1) window.history.back();
+    if (window.history.length > 1) navigate(-1 as unknown as string);
     else navigate("/", { replace: true });
   }, [onGoBack, navigate]);
 
@@ -2674,44 +2669,36 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({
                 {activePromo && pricing && providerRole && (
                   <div className="mb-2 text-sm">
                     <div className="text-gray-500 line-through">
-                      {new Intl.NumberFormat(
-                        language === "fr" ? "fr-FR" : "en-US",
+                      {formatCurrency(
+                        pricing[providerRole]?.[selectedCurrency]
+                          ?.totalAmount || 0,
+                        selectedCurrency.toUpperCase(),
                         {
-                          style: "currency",
-                          currency: selectedCurrency.toUpperCase(),
+                          language,
                           minimumFractionDigits: 2,
                         }
-                      ).format(
-                        pricing[providerRole]?.[selectedCurrency]
-                          ?.totalAmount || 0
                       )}
                     </div>
                     <div className="text-green-600 font-medium">
                       -
-                      {new Intl.NumberFormat(
-                        language === "fr" ? "fr-FR" : "en-US",
+                      {formatCurrency(
+                        (pricing[providerRole]?.[selectedCurrency]
+                          ?.totalAmount || 0) - adminPricing.totalAmount,
+                        selectedCurrency.toUpperCase(),
                         {
-                          style: "currency",
-                          currency: selectedCurrency.toUpperCase(),
+                          language,
                           minimumFractionDigits: 2,
                         }
-                      ).format(
-                        (pricing[providerRole]?.[selectedCurrency]
-                          ?.totalAmount || 0) - adminPricing.totalAmount
                       )}{" "}
                       ({activePromo.code})
                     </div>
                   </div>
                 )}
                 <div className="text-2xl font-black bg-gradient-to-r from-red-500 to-pink-600 bg-clip-text text-transparent">
-                  {new Intl.NumberFormat(
-                    language === "fr" ? "fr-FR" : "en-US",
-                    {
-                      style: "currency",
-                      currency: selectedCurrency.toUpperCase(),
-                      minimumFractionDigits: 2,
-                    }
-                  ).format(adminPricing.totalAmount)}
+                  {formatCurrency(adminPricing.totalAmount, selectedCurrency.toUpperCase(), {
+                    language,
+                    minimumFractionDigits: 2,
+                  })}
                 </div>
                 <div className="text-xs text-gray-500">
                   {adminPricing.duration} min

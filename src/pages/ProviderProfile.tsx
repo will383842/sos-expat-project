@@ -84,6 +84,12 @@ import {
 } from "../utils/slugGenerator";
 import { useSnippetGenerator } from '../hooks/useSnippetGenerator';
 
+// 👉 Translation system
+import { useProviderTranslation } from "../hooks/useProviderTranslation";
+import { TranslationBanner } from "../components/provider/TranslationBanner";
+import { type SupportedLanguage } from "../services/providerTranslationService";
+import { getTranslatedRouteSlug } from "../multilingual-system";
+
 const aaaTranslationsMap: Record<string, any> = {
   fr: aaaTranslationsFr,
   en: aaaTranslationsEn,
@@ -628,6 +634,51 @@ const ProviderProfile: React.FC = () => {
   const [realProviderId, setRealProviderId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+
+  // Translation system
+  const { locale: currentLocale, lang: currentLang } = parseLocaleFromPath(location.pathname);
+  const targetLanguage: SupportedLanguage = (currentLang?.toLowerCase() as SupportedLanguage) || 'en';
+  // Always show original first, then switch to translated when user selects a language
+  const [showOriginal, setShowOriginal] = useState(true);
+  // Track which language translation we're currently viewing
+  const [viewingLanguage, setViewingLanguage] = useState<SupportedLanguage | null>(null);
+  
+  // Use ref to track if we're actively viewing a translation (prevents state resets)
+  const viewingLanguageRef = useRef<SupportedLanguage | null>(null);
+  
+  // Sync ref with state
+  useEffect(() => {
+    viewingLanguageRef.current = viewingLanguage;
+  }, [viewingLanguage]);
+  
+  // Only load translation if user explicitly selected a language to view
+  // On initial load, don't load any translation - always show original
+  const translationLanguage = viewingLanguage || null; // Don't use targetLanguage on initial load
+  const {
+    translation,
+    original: originalTranslation,
+    availableLanguages,
+    isLoading: isTranslationLoading,
+    translate,
+    reloadForLanguage,
+    error: translationError,
+  } = useProviderTranslation(realProviderId, viewingLanguage || null); // Never use targetLanguage here to prevent unwanted reloads
+
+  // Preserve translation view state when translation data changes
+  useEffect(() => {
+    // If we're viewing a translation and translation data exists, ensure state is preserved
+    if (viewingLanguageRef.current && translation && !showOriginal) {
+      // State is already correct, but ensure it stays that way
+      // This prevents reverting to original when translation data reloads
+      console.log('[ProviderProfile] Preserving translation view for:', viewingLanguageRef.current);
+      // Force state to remain if it somehow got reset
+      if (viewingLanguage !== viewingLanguageRef.current) {
+        console.log('[ProviderProfile] State mismatch detected, restoring viewingLanguage');
+        setViewingLanguage(viewingLanguageRef.current);
+        setShowOriginal(false);
+      }
+    }
+  }, [translation, viewingLanguage, showOriginal]);
 
   const [providerStats, setProviderStats] = useState<ProviderStats>({
     totalCallsReceived: 0,
@@ -1325,22 +1376,27 @@ const ProviderProfile: React.FC = () => {
   const shareProfile = useCallback(
     (platform: "facebook" | "twitter" | "linkedin" | "copy") => {
       if (!provider) return;
-      
-      const fullSlug = generateSlug({
-        firstName: provider.firstName || '',
-        lastName: provider.lastName || '',
-        role: provider.type,
-        country: provider.country,
-        languages: provider.languages || [],
-        specialties: provider.type === 'lawyer' 
-          ? (provider.specialties || [])
-          : (provider.helpTypes || []),
-        locale: language,
-      });
-      
-      const currentUrl = `${window.location.origin}/${fullSlug}`;
-      const displayName = formatPublicName(provider);
       const isLawyer = provider.type === "lawyer";
+      // Extract locale and language from current pathname to preserve it
+      const { locale: currentLocale, lang: currentLang } = parseLocaleFromPath(location.pathname);
+      
+      // Use translated route slug based on current language
+      const routeKey = isLawyer ? "lawyer" : "expat";
+      const displayType = currentLang 
+        ? getTranslatedRouteSlug(routeKey, currentLang)
+        : (isLawyer ? "avocat" : "expatrie");
+      
+      // Use translated slug if available
+      const nameSlug =
+        translation && !showOriginal && translation.slug
+          ? translation.slug
+          : (provider.slug || safeNormalize(`${provider.firstName}-${provider.lastName}`));
+      const finalSlug = nameSlug.includes(provider.id || '') ? nameSlug : `${nameSlug}-${provider.id}`;
+      
+      const seoPath = `/${displayType}/${finalSlug}`;
+      const fullSeoPath = currentLocale ? `/${currentLocale}${seoPath}` : seoPath;
+      const currentUrl = `${window.location.origin}${fullSeoPath}`;
+      const displayName = formatPublicName(provider);
       
       const roleLabel = isLawyer
         ? intl.formatMessage({ id: "providerProfile.lawyer" })
@@ -1386,7 +1442,7 @@ const ProviderProfile: React.FC = () => {
           break;
       }
     },
-    [provider, intl, language, preferredLangKey]
+    [provider, intl, language, preferredLangKey, location.pathname, translation, showOriginal]
   );
 
   const handleHelpfulClick = useCallback(
@@ -1486,10 +1542,32 @@ const ProviderProfile: React.FC = () => {
     provider?.avatar ||
     "/default-avatar.png";
   
-  const descriptionText = useMemo(
-    () => (provider ? pickDescription(provider, preferredLangKey, intl) : ""),
-    [provider, preferredLangKey, intl]
-  );
+  const descriptionText = useMemo(() => {
+    if (!provider) return "";
+    // ALWAYS show original from sos_profiles when showOriginal is true
+    if (showOriginal) {
+      return pickDescription(provider, preferredLangKey, intl);
+    }
+    // Only use translation if user explicitly selected a language and showOriginal is false
+    if (translation && !showOriginal && viewingLanguage) {
+      // Check translation fields in priority order:
+      // 1. description (what's saved in Dashboard)
+      // 2. bio (fallback for older translations)
+      // 3. summary (motivation field, also saved in Dashboard)
+      const trans = translation as any;
+      if (trans.description) {
+        return typeof trans.description === 'string' ? trans.description : String(trans.description);
+      }
+      if (trans.bio) {
+        return typeof trans.bio === 'string' ? trans.bio : String(trans.bio);
+      }
+      if (trans.summary) {
+        return typeof trans.summary === 'string' ? trans.summary : String(trans.summary);
+      }
+    }
+    // Fallback to provider's description (original)
+    return pickDescription(provider, preferredLangKey, intl);
+  }, [provider, preferredLangKey, intl, translation, showOriginal, viewingLanguage]);
 
   const isNewProvider = useMemo(() => {
     return providerStats.completedCalls === 0 && providerStats.realReviewsCount === 0;
@@ -1535,36 +1613,68 @@ const ProviderProfile: React.FC = () => {
   }, [provider, isLawyer, preferredLangKey]);
   
   const derivedSpecialties = useMemo(() => {
-    if (!provider) {
-      return [];
+    if (!provider) return [];
+    
+    // Determine which locale to use for translation
+    const localeForTranslation = detectedLang === "fr" ? "fr" : "en";
+    
+    // ALWAYS show original from sos_profiles when showOriginal is true
+    if (showOriginal) {
+      const arr = isLawyer
+        ? toArrayFromAny(provider.specialties, preferredLangKey)
+        : toArrayFromAny(
+            provider.helpTypes || provider.specialties,
+            preferredLangKey
+          );
+      // Translate specialty codes to localized labels
+      return arr
+        .map((s) => {
+          try {
+            const cleanCode = s.trim().toUpperCase();
+            if (isLawyer) {
+              const label = getLawyerSpecialityLabel(cleanCode, localeForTranslation as any);
+              return label !== cleanCode ? label : s;
+            } else {
+              const label = getExpatHelpTypeLabel(cleanCode, localeForTranslation as any);
+              return label !== cleanCode ? label : s;
+            }
+          } catch (e) {
+            return s;
+          }
+        })
+        .map((s) => s.replace(/\s+/g, " ").trim())
+        .filter(Boolean);
     }
-    
-    const codes = isLawyer
+    // Only use translation if user explicitly selected a language and showOriginal is false
+    if (translation && !showOriginal && viewingLanguage && translation.specialties) {
+      return translation.specialties;
+    }
+    // Fallback to provider's specialties (original) - but still translate the codes
+    const arr = isLawyer
       ? toArrayFromAny(provider.specialties, preferredLangKey)
-      : toArrayFromAny(provider.helpTypes || provider.specialties, preferredLangKey);
-    
-    const translated = codes.map((code) => {
-      try {
-        const cleanCode = code.trim().toUpperCase();
-        
-        if (isLawyer) {
-          const label = getLawyerSpecialityLabel(cleanCode, preferredLangKey as any);
-          return label !== cleanCode ? label : code;
-        } else {
-          const label = getExpatHelpTypeLabel(cleanCode, preferredLangKey as any);
-          return label !== cleanCode ? label : code;
+      : toArrayFromAny(
+          provider.helpTypes || provider.specialties,
+          preferredLangKey
+        );
+    // Translate specialty codes to localized labels
+    return arr
+      .map((s) => {
+        try {
+          const cleanCode = s.trim().toUpperCase();
+          if (isLawyer) {
+            const label = getLawyerSpecialityLabel(cleanCode, localeForTranslation as any);
+            return label !== cleanCode ? label : s;
+          } else {
+            const label = getExpatHelpTypeLabel(cleanCode, localeForTranslation as any);
+            return label !== cleanCode ? label : s;
+          }
+        } catch (e) {
+          return s;
         }
-      } catch (e) {
-        return code;
-      }
-    });
-    
-    const result = translated
+      })
       .map((s) => s.replace(/\s+/g, " ").trim())
       .filter(Boolean);
-    
-    return result;
-  }, [provider, isLawyer, preferredLangKey]);
+  }, [provider, isLawyer, preferredLangKey, translation, showOriginal, viewingLanguage, detectedLang]);
   
   const joinDateText = useMemo(() => {
     if (!provider) return undefined;
@@ -1747,21 +1857,29 @@ const ProviderProfile: React.FC = () => {
     ? intl.formatMessage({ id: "providerProfile.lawyer" })
     : intl.formatMessage({ id: "providerProfile.expat" });
   
-  const seoTitle = `${formatPublicName(provider)} - ${roleLabel} ${intl.formatMessage({ id: "providerProfile.in" })} ${getCountryName(provider.country, preferredLangKey)} | SOS Expat & Travelers`;
+  const seoTitle = translation && !showOriginal && translation.seo?.metaTitle
+    ? translation.seo.metaTitle
+    : `${formatPublicName(provider)} - ${roleLabel} ${intl.formatMessage({ id: "providerProfile.in" })} ${getCountryName(provider.country, preferredLangKey)} | SOS Expat & Travelers`;
   
-  const seoDescription = `${intl.formatMessage({ id: "providerProfile.consult" })} ${formatPublicName(provider)}, ${roleLabel.toLowerCase()} ${intl.formatMessage({ id: "providerProfile.frenchSpeaking" })} ${intl.formatMessage({ id: "providerProfile.in" })} ${getCountryName(provider.country, preferredLangKey)}. ${descriptionText.slice(0, 120)}...`;
+  const seoDescription = translation && !showOriginal && translation.seo?.metaDescription
+    ? translation.seo.metaDescription
+    : `${intl.formatMessage({ id: "providerProfile.consult" })} ${formatPublicName(provider)}, ${roleLabel.toLowerCase()} ${intl.formatMessage({ id: "providerProfile.frenchSpeaking" })} ${intl.formatMessage({ id: "providerProfile.in" })} ${getCountryName(provider.country, preferredLangKey)}. ${descriptionText.slice(0, 120)}...`;
 
-  const canonicalUrl = `${window.location.origin}/${generateSlug({
-    firstName: provider.firstName || '',
-    lastName: provider.lastName || '',
-    role: provider.type,
-    country: provider.country,
-    languages: provider.languages || [],
-    specialties: provider.type === 'lawyer' 
-      ? (provider.specialties || [])
-      : (provider.helpTypes || []),
-    locale: language,
-  })}`;
+  const canonicalUrl = (() => {
+    // Use translated route slug based on current language
+    const routeKey = isLawyer ? "lawyer" : "expat";
+    const displayType = currentLang 
+      ? getTranslatedRouteSlug(routeKey, currentLang)
+      : (isLawyer ? "avocat" : "expatrie");
+    
+    // Use translated slug if available, otherwise generate from name
+    const nameSlug = translation && !showOriginal && translation.slug
+      ? translation.slug
+      : (provider.slug || safeNormalize(provider.fullName || `${provider.firstName}-${provider.lastName}`));
+    
+    const finalSlug = nameSlug.includes(provider.id || '') ? nameSlug : `${nameSlug}-${provider.id}`;
+    return `/${currentLocale || ''}/${displayType}/${finalSlug}`;
+  })();
 
   return (
     <Layout>
@@ -1771,7 +1889,11 @@ const ProviderProfile: React.FC = () => {
         canonicalUrl={canonicalUrl}
         ogImage={mainPhoto}
         ogType="profile"
-        structuredData={structuredData}
+        structuredData={
+          translation && !showOriginal && translation.seo?.jsonLd
+            ? translation.seo.jsonLd
+            : structuredData
+        }
       />
 
       {/* ✅ Snippets JSON-LD */}
@@ -1886,7 +2008,11 @@ const ProviderProfile: React.FC = () => {
                     {/* Nom + Badges */}
                     <div className="flex flex-wrap items-center gap-2 mb-3">
                       <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black leading-tight bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent">
-                        {formatShortName(provider)}
+                        {translation && !showOriginal && translation.title
+                          ? translation.title
+                          : translation && !showOriginal && translation.seo?.h1
+                          ? translation.seo.h1
+                          : formatShortName(provider)}
                       </h2>
 
                       {/* Badge type */}
@@ -2177,6 +2303,105 @@ const ProviderProfile: React.FC = () => {
               {/* ===== COLONNE PRINCIPALE ===== */}
               <div className="lg:col-span-2 space-y-6">
                 
+                {/* Translation Banner */}
+                {realProviderId && !isLoading && (
+                  <TranslationBanner
+                    providerId={realProviderId}
+                    currentLanguage={targetLanguage}
+                    availableLanguages={availableLanguages}
+                    onTranslationComplete={async (lang, trans) => {
+                      console.log('[ProviderProfile] Translation complete for language:', lang);
+                      // Switch to viewing the translated language
+                      setViewingLanguage(lang);
+                      viewingLanguageRef.current = lang; // Update ref immediately
+                      setShowOriginal(false); // Switch to translated view after translation completes
+                      
+                      // Reload translation state for the language we just translated
+                      if (reloadForLanguage) {
+                        setTimeout(async () => {
+                          try {
+                            await reloadForLanguage(lang);
+                            // Force state to remain after reload - prevent reverting to original
+                            // Use ref to ensure we maintain the correct language
+                            const currentLang = viewingLanguageRef.current || lang;
+                            setViewingLanguage(currentLang);
+                            viewingLanguageRef.current = currentLang;
+                            setShowOriginal(false);
+                            console.log('[ProviderProfile] State preserved after reload for:', currentLang);
+                          } catch (error) {
+                            console.error('[ProviderProfile] Error reloading translation:', error);
+                            // Even on error, maintain the viewing state
+                            setViewingLanguage(lang);
+                            viewingLanguageRef.current = lang;
+                            setShowOriginal(false);
+                          }
+                        }, 1000); // Wait for Firestore to update
+                      }
+                    }}
+                    onViewTranslation={(lang) => {
+                      // Handle viewing an already-translated language
+                      console.log('[ProviderProfile] Viewing translation for language:', lang);
+                      setViewingLanguage(lang);
+                      viewingLanguageRef.current = lang; // Update ref immediately
+                      setShowOriginal(false);
+                      
+                      if (reloadForLanguage) {
+                        reloadForLanguage(lang).then(() => {
+                          // Force state to remain after reload - prevent reverting to original
+                          // Use ref to ensure we maintain the correct language
+                          const currentLang = viewingLanguageRef.current || lang;
+                          setViewingLanguage(currentLang);
+                          viewingLanguageRef.current = currentLang;
+                          setShowOriginal(false);
+                          console.log('[ProviderProfile] State preserved after reload for:', currentLang);
+                        }).catch((error) => {
+                          console.error('[ProviderProfile] Error reloading translation:', error);
+                          // Even on error, maintain the viewing state
+                          setViewingLanguage(lang);
+                          viewingLanguageRef.current = lang;
+                          setShowOriginal(false);
+                        });
+                      }
+                    }}
+                    onTranslate={async (lang) => {
+                      const result = await translate(lang);  // Pass the language parameter
+                      return result;
+                    }}
+                  />
+                )}
+                
+                {/* View Original Button - Show if translation exists */}
+                {translation && originalTranslation && (
+                  <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-sm p-4 border border-gray-200 dark:border-gray-700">
+                    <button
+                      onClick={() => {
+                        setShowOriginal(!showOriginal);
+                        // If switching to original, reset viewing language
+                        if (!showOriginal) {
+                          setViewingLanguage(null);
+                        }
+                      }}
+                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-md text-sm font-medium transition-colors flex items-center gap-2 border-2 border-gray-300 text-gray-500"
+                    >
+                      {showOriginal ? (
+                        <>
+                          <FormattedMessage
+                            id="providerTranslation.viewTranslated"
+                            defaultMessage={`View translated `}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <FormattedMessage
+                            id="providerTranslation.viewOriginal"
+                            defaultMessage={`View original`}
+                          />
+                        </>
+                      )}
+                    </button>
+                  </div>
+                )}
+                
                 {/* Section Description complète */}
                 <section className="bg-white rounded-2xl shadow-sm p-5 sm:p-6 border border-gray-200">
                   <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
@@ -2188,13 +2413,32 @@ const ProviderProfile: React.FC = () => {
                   </p>
                   
                   {/* Motivation si présente */}
-                  {getFirstString(provider.motivation, preferredLangKey) && (
-                    <div className="mt-4 pt-4 border-t border-gray-100">
-                      <p className="text-gray-600 whitespace-pre-line italic">
-                        {getFirstString(provider.motivation, preferredLangKey)}
-                      </p>
-                    </div>
-                  )}
+                  {(() => {
+                    // ALWAYS show original from sos_profiles when showOriginal is true
+                    let motivationText: string | null = null;
+                    if (showOriginal) {
+                      motivationText = getFirstString(provider.motivation, preferredLangKey);
+                    } else if (translation && viewingLanguage) {
+                      // Only use translation if user explicitly selected a language
+                      // Check both 'summary' (what Dashboard saves) and 'motivation' (what backend generates)
+                      const trans = translation as any;
+                      if (trans.summary) {
+                        motivationText = typeof trans.summary === 'string' ? trans.summary : String(trans.summary);
+                      } else if (trans.motivation) {
+                        motivationText = typeof trans.motivation === 'string' ? trans.motivation : String(trans.motivation);
+                      }
+                    } else {
+                      // Fallback to original
+                      motivationText = getFirstString(provider.motivation, preferredLangKey);
+                    }
+                    return motivationText && (
+                      <div className="mt-4 pt-4 border-t border-gray-100">
+                        <p className="text-gray-600 whitespace-pre-line italic">
+                          {motivationText}
+                        </p>
+                      </div>
+                    );
+                  })()}
                 </section>
 
                 {/* Section Spécialités */}
@@ -2324,6 +2568,31 @@ const ProviderProfile: React.FC = () => {
                           {getFirstString(provider.experienceDescription, preferredLangKey)}
                         </p>
                       )}
+
+                      {(() => {
+                        // ALWAYS show original from sos_profiles when showOriginal is true
+                        let motivationText: string | null = null;
+                        if (showOriginal) {
+                          motivationText = getFirstString(provider.motivation, preferredLangKey);
+                        } else if (translation && viewingLanguage) {
+                          // Only use translation if user explicitly selected a language
+                          // Check both 'summary' (what Dashboard saves) and 'motivation' (what backend generates)
+                          const trans = translation as any;
+                          if (trans.summary) {
+                            motivationText = typeof trans.summary === 'string' ? trans.summary : String(trans.summary);
+                          } else if (trans.motivation) {
+                            motivationText = typeof trans.motivation === 'string' ? trans.motivation : String(trans.motivation);
+                          }
+                        } else {
+                          // Fallback to original
+                          motivationText = getFirstString(provider.motivation, preferredLangKey);
+                        }
+                        return motivationText && (
+                          <p className="text-gray-700 whitespace-pre-line">
+                            {motivationText}
+                          </p>
+                        );
+                      })()}
                     </div>
                   </section>
                 )}

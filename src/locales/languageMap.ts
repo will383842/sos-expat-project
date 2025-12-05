@@ -53,7 +53,7 @@ export const LANGUAGE_MAP: Readonly<Record<string, string>> = Object.freeze({
   gallois: 'cy',
   
   // Langues asiatiques principales
-  chinois: 'zh',
+  chinois: 'ch',
   japonais: 'ja',
   coréen: 'ko',
   hindi: 'hi',
@@ -102,7 +102,7 @@ export const LANGUAGE_METADATA: Readonly<Record<string, LanguageEntry>> = Object
   es: { code: 'es', name: 'espagnol', nativeName: 'Español' },
   pt: { code: 'pt', name: 'portugais', nativeName: 'Português' },
   ar: { code: 'ar', name: 'arabe', nativeName: 'العربية', rtl: true },
-  zh: { code: 'zh', name: 'chinois', nativeName: '中文' },
+  ch: { code: 'ch', name: 'chinois', nativeName: '中文' },
   hi: { code: 'hi', name: 'hindi', nativeName: 'हिन्दी' },
   ru: { code: 'ru', name: 'russe', nativeName: 'Русский' },
   ja: { code: 'ja', name: 'japonais', nativeName: '日本語' },
@@ -160,7 +160,7 @@ export const RTL_LANGUAGES: Readonly<Set<string>> = Object.freeze(
 
 // Langues les plus populaires (pour les suggestions prioritaires - UX)
 export const POPULAR_LANGUAGES: Readonly<string[]> = Object.freeze([
-  'fr', 'en', 'es', 'de', 'it', 'pt', 'ru', 'zh', 'ja', 'ar', 'hi'
+  'fr', 'en', 'es', 'de', 'it', 'pt', 'ru', 'ch', 'ja', 'ar', 'hi'
 ]);
 
 // Utilitaires pour la production

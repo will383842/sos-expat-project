@@ -2,6 +2,7 @@
   "name": "functions",
   "scripts": {
     "build": "tsc -p .",
+    "build:watch": "tsc -p . --watch",
     "deploy": "firebase deploy --only functions",
     "test:production": "node testProduction.js"
   },

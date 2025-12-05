@@ -5,7 +5,7 @@
 import React, { useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useApp } from "../../contexts/AppContext";
-import { getLocaleString, parseLocaleFromPath } from "../../utils/localeRoutes";
+import { getLocaleString, parseLocaleFromPath } from "../core/routing/localeRoutes";
 
 interface LocaleLinkProps {
   to: string;

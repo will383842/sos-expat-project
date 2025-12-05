@@ -19,6 +19,9 @@ import {
   Clock,
   Star,
   Bookmark,
+  Globe,
+  Lock,
+  Unlock,
 } from "lucide-react";
 
 import Layout from "../components/layout/Layout";
@@ -34,6 +37,7 @@ import ProfileStatusAlert from "../components/common/ProfileStatusAlert";
 import { useAuth } from "../contexts/AuthContext";
 import { useApp } from "../contexts/AppContext";
 import { updateUserProfile, logAuditEvent, getUserCallSessions } from "../utils/firestore";
+import { formatDateTime } from "../utils/localeFormatters";
 
 import {
   collection,
@@ -41,13 +45,14 @@ import {
   orderBy,
   limit,
   getDocs,
+  getDoc,
   onSnapshot,
   doc,
   updateDoc,
   serverTimestamp,
   Timestamp,
 } from "firebase/firestore";
-import { db, auth } from "../config/firebase";
+import { db, auth, functions } from "../config/firebase";
 import {
   updateEmail as fbUpdateEmail,
   updateProfile as fbUpdateProfile,
@@ -58,6 +63,9 @@ import IntlPhoneInput from "@/components/forms-data/IntlPhoneInput";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { useForm, Controller } from "react-hook-form";
 import ProviderOnlineManager from '../components/providers/ProviderOnlineManager';
+import { getProviderTranslation, type SupportedLanguage } from "../services/providerTranslationService";
+
+import { requestUpdateProviderTranslation } from '../services/providerTranslationService';
 
 // ===============================
 // 🎨 DESIGN TOKENS (UI only — aucune incidence métier)
@@ -183,7 +191,8 @@ type TabType =
   | "reviews"
   | "notifications"
   | "messages"
-  | "favorites";
+  | "favorites"
+  | "translations";
 
 type CallStatus = "completed" | "pending" | "in_progress" | "failed";
 
@@ -216,7 +225,8 @@ const ChipInput: React.FC<{
   onChange: (next: string[]) => void;
   placeholder?: string;
   className?: string;
-}> = ({ value, onChange, placeholder, className }) => {
+  buttonLabel?: string;
+}> = ({ value, onChange, placeholder, className, buttonLabel = "Add" }) => {
   const [input, setInput] = useState<string>("");
   const add = () => {
     const v = input.trim();
@@ -267,7 +277,7 @@ const ChipInput: React.FC<{
           className="flex-1 px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 transition"
         />
         <Button type="button" onClick={add} size="small">
-          Ajouter
+          {buttonLabel}
         </Button>
       </div>
     </div>
@@ -329,17 +339,17 @@ const Alert: React.FC<{ type: "success" | "error"; message: string }> = ({
   const cfg =
     type === "success"
       ? {
-          bg: "bg-green-50 dark:bg-green-500/10",
-          border: "border-green-200 dark:border-green-500/20",
-          text: "text-green-800 dark:text-green-200",
-          icon: <Check className="h-5 w-5 mr-2" />,
-        }
+        bg: "bg-green-50 dark:bg-green-500/10",
+        border: "border-green-200 dark:border-green-500/20",
+        text: "text-green-800 dark:text-green-200",
+        icon: <Check className="h-5 w-5 mr-2" />,
+      }
       : {
-          bg: "bg-red-50 dark:bg-red-500/10",
-          border: "border-red-200 dark:border-red-500/20",
-          text: "text-red-800 dark:text-red-200",
-          icon: <AlertTriangle className="h-5 w-5 mr-2" />,
-        };
+        bg: "bg-red-50 dark:bg-red-500/10",
+        border: "border-red-200 dark:border-red-500/20",
+        text: "text-red-800 dark:text-red-200",
+        icon: <AlertTriangle className="h-5 w-5 mr-2" />,
+      };
   return (
     <div
       className={`mb-2 ${cfg.bg} ${cfg.border} ${cfg.text} rounded-xl p-4 shadow-sm transition`}
@@ -362,44 +372,44 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const { user, firebaseUser, logout, refreshUser } = useAuth();
   const { language } = useApp();
-  
+
   // Helper to get user's full name safely
   const getUserFullName = useCallback(() => {
     if (!user) return '';
-    
+
     // Try firstName + lastName
     if (user.firstName || user.lastName) {
       return `${user.firstName || ''} ${user.lastName || ''}`.trim();
     }
-    
+
     // Fallback to fullName
     if ((user as any).fullName) {
       return (user as any).fullName;
     }
-    
+
     // Fallback to displayName
     if ((user as any).displayName) {
       return (user as any).displayName;
     }
-    
+
     // Last resort
     return user.email || 'User';
   }, [user]);
-  
+
   // Helper to get first name only
   const getUserFirstName = useCallback(() => {
     if (!user) return '';
-    
+
     if (user.firstName) {
       return user.firstName;
     }
-    
+
     // Try to extract from fullName or displayName
     const fullName = (user as any).fullName || (user as any).displayName || '';
     if (fullName) {
       return fullName.split(' ')[0];
     }
-    
+
     return user.email?.split('@')[0] || 'User';
   }, [user]);
 
@@ -430,7 +440,7 @@ const Dashboard: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  
+
   // ✅ Track if user data is ready (for KYC component fix)
   const [userDataReady, setUserDataReady] = useState<boolean>(false);
 const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
@@ -451,6 +461,16 @@ const [kycRefreshAttempted, setKycRefreshAttempted] = useState<boolean>(false);
       photo?: string;
     }>
   >([]);
+
+  // Translations tab state
+  const [selectedTranslationLang, setSelectedTranslationLang] = useState<SupportedLanguage | null>(null);
+  const [translationDescription, setTranslationDescription] = useState<string>("");
+  const [translationSpecialties, setTranslationSpecialties] = useState<string[]>([]);
+  const [translationMotivation, setTranslationMotivation] = useState<string>("");
+  const [isLoadingTranslation, setIsLoadingTranslation] = useState<boolean>(false);
+  const [isSavingTranslation, setIsSavingTranslation] = useState<boolean>(false);
+  const [isFrozen, setIsFrozen] = useState<boolean>(false);
+  const [isFreezing, setIsFreezing] = useState<boolean>(false);
 
   // Profil (édition) pré-rempli
   const baseProfile: ProfileData = useMemo(
@@ -674,23 +694,24 @@ useEffect(() => {
   }, [user]);
 
   // Helpers
-  const formatDate = (date: Date): string =>
-    new Intl.DateTimeFormat(language === "fr" ? "fr-FR" : "en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(date);
+  const formatDate = (date: Date): string => {
+    const userCountry = (user as { currentCountry?: string; country?: string })?.currentCountry || 
+                        (user as { currentCountry?: string; country?: string })?.country;
+    return formatDateTime(date, {
+      language,
+      userCountry,
+      dateFormat: 'long',
+    });
+  };
 
   const formatDuration = (minutes: number): string => `${minutes} min`;
   const formatPrice = (price: number): string => `${price.toFixed(2)} €`;
 
-  const getStatusBadge = (status: CallStatus): JSX.Element => {
+  const getStatusBadge = (status: CallStatus): any => {
     const statusConfig: Record<
       CallStatus,
       { className: string; text: string }
-    > = {
+    > = { 
       completed: {
         className:
           "px-2 py-1 bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-300 rounded-full text-xs font-medium",
@@ -712,8 +733,8 @@ useEffect(() => {
         text: language === "fr" ? "Échoué" : "Failed",
       },
     };
-   const config = statusConfig[status];
-    return <span className={config.className}>{config.text}</span>;
+    const config = statusConfig[status];
+    return <span >{config.text}</span>;
   };
 
   // Palette alignée Home (fallback si rôle non défini)
@@ -742,13 +763,13 @@ useEffect(() => {
             photoURL: url,
             avatar: url,
             updatedAt: serverTimestamp(),
-          }).catch(() => {});
+          }).catch(() => { });
         }
 
         // Auth photoURL
         if (auth.currentUser) {
           await fbUpdateProfile(auth.currentUser, { photoURL: url }).catch(
-            () => {}
+            () => { }
           );
         }
 
@@ -840,9 +861,7 @@ useEffect(() => {
       const payload: Record<string, unknown> = {
         email: profileData.email.trim().toLowerCase(),
         phone: validatedPhone || "",
-        // phone: profileData.phone || "",
         phoneCountryCode: profileData.phoneCountryCode || "+33",
-        // whatsappNumber: profileData.whatsappNumber || "",
         whatsappNumber: validatedWhatsApp || "",
 
         whatsappCountryCode: profileData.whatsappCountryCode || "+33",
@@ -855,7 +874,7 @@ useEffect(() => {
         profilePhoto: profileData.profilePhoto || "",
         photoURL: profileData.profilePhoto || "",
         avatar: profileData.profilePhoto || "",
-        updatedAt: serverTimestamp()  as Timestamp,
+        updatedAt: serverTimestamp() as Timestamp,
       };
 
       if (user.role === "lawyer") {
@@ -920,9 +939,10 @@ useEffect(() => {
             user.role === "lawyer"
               ? profileData.currentCountry || ""
               : profileData.residenceCountry ||
-                profileData.currentCountry ||
-                "",
+              profileData.currentCountry ||
+              "",
           description: payload.bio,
+          bio: payload.bio,
           specialties:
             user.role === "lawyer"
               ? (payload as { specialties?: string[] }).specialties || []
@@ -930,18 +950,44 @@ useEffect(() => {
           yearsOfExperience:
             user.role === "lawyer"
               ? (payload as { yearsOfExperience?: number }).yearsOfExperience ||
-                0
+              0
               : (payload as { yearsAsExpat?: number }).yearsAsExpat || 0,
           interventionCountries:
             user.role === "lawyer"
               ? (payload as { practiceCountries?: string[] })
-                  .practiceCountries || []
+                .practiceCountries || []
               : (payload as { interventionCountries?: string[] })
-                  .interventionCountries || [],
+                .interventionCountries || [],
           updatedAt: serverTimestamp(),
-        }).catch(() => {});
+        }).catch(() => { });
       }
 
+      // ✅ Translation update (NEW)
+      if (user.role === "lawyer" || user.role === "expat") {
+        const fieldsUpdated = Object.keys(payload).filter(
+          (key) => key !== "email" && key !== "updatedAt"
+        );
+        
+        if (fieldsUpdated.length > 0) {
+          console.log('[saveSettings] Requesting translation update for fields:', fieldsUpdated);
+          
+          const translationResult = await requestUpdateProviderTranslation(
+            user.id,
+            fieldsUpdated
+          );
+          
+          if (translationResult.success && translationResult.updatedLanguages.length > 0) {
+            console.log('[saveSettings] ✓ Translations updated for languages:', 
+              translationResult.updatedLanguages);
+          } else if (!translationResult.success) {
+            console.warn('[saveSettings] ⚠ Translation update had issues:', 
+              translationResult.message);
+            // Continue - profile was saved successfully, translation update is secondary
+          }
+        }
+      }
+
+      // Audit & refresh
       await logAuditEvent(user.id, "settings_updated", {
         settings: JSON.stringify(payload),
       });
@@ -968,6 +1014,206 @@ useEffect(() => {
       navigate("/login", { replace: true });
     }
   }, [logout, navigate]);
+
+  // Load translation data when language changes
+  useEffect(() => {
+    if (!user || (user.role !== "lawyer" && user.role !== "expat")) return;
+    if (!selectedTranslationLang) {
+      // Reset form when no language selected
+      setTranslationDescription("");
+      setTranslationSpecialties([]);
+      setTranslationMotivation("");
+      setIsFrozen(false);
+      return;
+    }
+
+    const loadTranslation = async () => {
+      setIsLoadingTranslation(true);
+      try {
+        const result = await getProviderTranslation(user.id, selectedTranslationLang);
+        if (result.translation) {
+          setTranslationDescription(result.translation.description || "");
+          setTranslationSpecialties(result.translation.specialties || []);
+          // Motivation might be in summary or a separate field
+          setTranslationMotivation(result.translation.summary || "");
+        } else {
+          // No translation exists yet, reset form
+          setTranslationDescription("");
+          setTranslationSpecialties([]);
+          setTranslationMotivation("");
+        }
+        
+        // Check frozen status
+        const translationRef = doc(db, "providers_translations", user.id);
+        const translationDoc = await getDoc(translationRef);
+        if (translationDoc.exists()) {
+          const data = translationDoc.data();
+          const frozenLanguages = data.metadata?.frozenLanguages || [];
+          setIsFrozen(frozenLanguages.includes(selectedTranslationLang));
+        } else {
+          setIsFrozen(false);
+        }
+      } catch (error) {
+        console.error("Error loading translation:", error);
+        setTranslationDescription("");
+        setTranslationSpecialties([]);
+        setTranslationMotivation("");
+        setIsFrozen(false);
+      } finally {
+        setIsLoadingTranslation(false);
+      }
+    };
+
+    loadTranslation();
+  }, [selectedTranslationLang, user]);
+
+  // Handle language change - reset form
+  const handleLanguageChange = (lang: string) => {
+    setSelectedTranslationLang(lang === "" ? null : (lang as SupportedLanguage));
+    // Form will reset via useEffect
+  };
+
+  // Save translation
+  const handleSaveTranslation = async () => {
+    if (!user || !selectedTranslationLang) {
+      setErrorMessage("Please select a language");
+      return;
+    }
+
+    setIsSavingTranslation(true);
+    setErrorMessage(null);
+    setSuccessMessage(null);
+
+    try {
+      // Update the translation in Firestore
+      const translationRef = doc(db, "providers_translations", user.id);
+      const translationDoc = await getDoc(translationRef);
+      
+      if (!translationDoc.exists()) {
+        setErrorMessage("Translation document not found. Please create a translation first.");
+        setIsSavingTranslation(false);
+        return;
+      }
+
+      const currentData = translationDoc.data();
+      const translations = currentData.translations || {};
+      
+      // Update the specific language translation
+      if (translations[selectedTranslationLang]) {
+        translations[selectedTranslationLang] = {
+          ...translations[selectedTranslationLang],
+          description: translationDescription,
+          bio: translationDescription, // Also update bio with the same value as description
+          specialties: translationSpecialties,
+          summary: translationMotivation,
+        };
+      } else {
+        // Create new translation entry
+        translations[selectedTranslationLang] = {
+          description: translationDescription,
+          bio: translationDescription, // Also update bio with the same value as description
+          specialties: translationSpecialties,
+          summary: translationMotivation,
+          title: user.firstName && user.lastName 
+            ? `${user.firstName} ${user.lastName}` 
+            : user.email || "",
+        };
+      }
+
+      // When provider manually saves, automatically freeze the translation
+      const frozenLanguages = currentData.metadata?.frozenLanguages || [];
+      const updateData: any = {
+        [`translations.${selectedTranslationLang}`]: translations[selectedTranslationLang],
+        [`metadata.lastUpdated`]: serverTimestamp(),
+        [`metadata.translations.${selectedTranslationLang}.status`]: 'frozen',
+        [`metadata.translations.${selectedTranslationLang}.updatedAt`]: serverTimestamp(),
+      };
+
+      // Add to frozen languages if not already frozen
+      if (!frozenLanguages.includes(selectedTranslationLang)) {
+        updateData[`metadata.frozenLanguages`] = [...frozenLanguages, selectedTranslationLang];
+        setIsFrozen(true);
+      }
+
+      await updateDoc(translationRef, updateData);
+      
+      // Reload the translation data to reflect changes immediately
+      const updatedDoc = await getDoc(translationRef);
+      if (updatedDoc.exists()) {
+        const updatedData = updatedDoc.data();
+        const updatedTranslations = updatedData.translations || {};
+        if (updatedTranslations[selectedTranslationLang]) {
+          setTranslationDescription(updatedTranslations[selectedTranslationLang].description || "");
+          setTranslationSpecialties(updatedTranslations[selectedTranslationLang].specialties || []);
+          setTranslationMotivation(updatedTranslations[selectedTranslationLang].summary || "");
+        }
+      }
+
+      setSuccessMessage("Translation saved and frozen successfully! It will not be overwritten by automatic updates.");
+      setTimeout(() => setSuccessMessage(null), 4000);
+    } catch (error) {
+      console.error("Error saving translation:", error);
+      setErrorMessage("Failed to save translation. Please try again.");
+    } finally {
+      setIsSavingTranslation(false);
+    }
+  };
+
+  // Handle freeze/unfreeze translation
+  const handleFreezeUnfreeze = async () => {
+    if (!user || !selectedTranslationLang) {
+      setErrorMessage("Please select a language");
+      return;
+    }
+
+    setIsFreezing(true);
+    setErrorMessage(null);
+    setSuccessMessage(null);
+
+    try {
+      const translationRef = doc(db, "providers_translations", user.id);
+      const translationDoc = await getDoc(translationRef);
+      
+      if (!translationDoc.exists()) {
+        setErrorMessage("Translation document not found.");
+        setIsFreezing(false);
+        return;
+      }
+
+      const currentData = translationDoc.data();
+      const frozenLanguages = currentData.metadata?.frozenLanguages || [];
+      const isCurrentlyFrozen = frozenLanguages.includes(selectedTranslationLang);
+
+      if (isCurrentlyFrozen) {
+        // Unfreeze - mark as outdated so it will be regenerated from updated original
+        await updateDoc(translationRef, {
+          [`metadata.frozenLanguages`]: frozenLanguages.filter((lang: SupportedLanguage) => lang !== selectedTranslationLang),
+          [`metadata.translations.${selectedTranslationLang}.status`]: 'outdated', // Mark as outdated to force regeneration
+          [`metadata.translations.${selectedTranslationLang}.updatedAt`]: serverTimestamp(),
+          [`metadata.lastUpdated`]: serverTimestamp(),
+        });
+        setIsFrozen(false);
+        setSuccessMessage("Translation unfrozen. It can now be automatically updated.");
+      } else {
+        // Freeze
+        await updateDoc(translationRef, {
+          [`metadata.frozenLanguages`]: [...frozenLanguages, selectedTranslationLang],
+          [`metadata.translations.${selectedTranslationLang}.status`]: 'frozen',
+          [`metadata.translations.${selectedTranslationLang}.updatedAt`]: serverTimestamp(),
+          [`metadata.lastUpdated`]: serverTimestamp(),
+        });
+        setIsFrozen(true);
+        setSuccessMessage("Translation frozen. It will not be overwritten by automatic updates.");
+      }
+      
+      setTimeout(() => setSuccessMessage(null), 4000);
+    } catch (error) {
+      console.error("Error freezing/unfreezing translation:", error);
+      setErrorMessage("Failed to update freeze status. Please try again.");
+    } finally {
+      setIsFreezing(false);
+    }
+  };
 
   if (!user) {
     return (
@@ -1348,15 +1594,31 @@ useEffect(() => {
                         pt: "Meus favoritos",
                         ar: "المفضلة لدي",
                       },
+                      ...(user.role === "lawyer" || user.role === "expat"
+                        ? [
+                            {
+                              key: "translations",
+                              icon: <Globe className="mr-3 h-5 w-5" />,
+                              fr: "Traductions",
+                              en: "Translations",
+                              es: "Traducciones",
+                              de: "Übersetzungen",
+                              ru: "Переводы",
+                              hi: "अनुवाद",
+                              ch: "翻译",
+                              pt: "Traduções",
+                              ar: "الترجمات",
+                            },
+                          ]
+                        : []),
                     ].map((item) => (
                       <li key={item.key}>
                         <button
                           onClick={() => setActiveTab(item.key as TabType)}
                           className={`group relative w-full flex items-center px-4 py-2 text-sm font-medium ${UI.radiusSm} transition-all
-                            ${
-                              activeTab === (item.key as TabType)
-                                ? "bg-gradient-to-r from-red-50 to-orange-50 text-red-700 dark:from-white/5 dark:to-white/10 dark:text-white"
-                                : "text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5"
+                            ${activeTab === (item.key as TabType)
+                              ? "bg-gradient-to-r from-red-50 to-orange-50 text-red-700 dark:from-white/5 dark:to-white/10 dark:text-white"
+                              : "text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5"
                             }
                           `}
                           title={
@@ -1381,11 +1643,10 @@ useEffect(() => {
                         >
                           {/* Barre active à gauche (UI only) */}
                           <span
-                            className={`absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 ${
-                              activeTab === item.key
-                                ? "bg-gradient-to-b from-red-500 to-orange-500 dark:from-red-500 dark:to-orange-500"
-                                : "bg-transparent"
-                            } ${UI.radiusSm}`}
+                            className={`absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 ${activeTab === item.key
+                              ? "bg-gradient-to-b from-red-500 to-orange-500 dark:from-red-500 dark:to-orange-500"
+                              : "bg-transparent"
+                              } ${UI.radiusSm}`}
                           />
                           {item.icon}
 
@@ -1403,9 +1664,9 @@ useEffect(() => {
                                       ? item.ch
                                       : language === "pt"
                                         ? item.pt
-                                          : language === "ar"
-                                            ? item.ar
-                                        : item.en}
+                                        : language === "ar"
+                                          ? item.ar
+                                          : item.en}
 
                           {activeTab === (item.key as TabType) && (
                             <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded bg-red-100 text-red-700 dark:bg-white/10 dark:text-white">
@@ -1513,27 +1774,25 @@ useEffect(() => {
                               </p>
                               <div className="mt-1 flex items-center">
                                 <span
-                                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                                    currentStatus
-                                      ? "bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-300"
-                                      : "bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-300"
-                                  }`}
+                                  className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${currentStatus
+                                    ? "bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-300"
+                                    : "bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-300"
+                                    }`}
                                 >
                                   <span
-                                    className={`w-2 h-2 mr-2 rounded-full ${
-                                      currentStatus
-                                        ? "bg-green-600"
-                                        : "bg-red-600"
-                                    }`}
+                                    className={`w-2 h-2 mr-2 rounded-full ${currentStatus
+                                      ? "bg-green-600"
+                                      : "bg-red-600"
+                                      }`}
                                   />
 
                                   {currentStatus
                                     ? intl.formatMessage({
-                                        id: "dashboard.online",
-                                      })
+                                      id: "dashboard.online",
+                                    })
                                     : intl.formatMessage({
-                                        id: "dashboard.offline",
-                                      })}
+                                      id: "dashboard.offline",
+                                    })}
                                 </span>
                               </div>
                             </div>
@@ -1788,8 +2047,8 @@ useEffect(() => {
                                     return p && p.isValid()
                                       ? true
                                       : intl.formatMessage({
-                                          id: "dashboard.invalidPhone",
-                                        });
+                                        id: "dashboard.invalidPhone",
+                                      });
                                   } catch {
                                     return intl.formatMessage({
                                       id: "dashboard.invalidPhone",
@@ -1915,8 +2174,8 @@ useEffect(() => {
                                     return p && p.isValid()
                                       ? true
                                       : intl.formatMessage({
-                                          id: "dashboard.invalidWhatsApp",
-                                        });
+                                        id: "dashboard.invalidWhatsApp",
+                                      });
                                   } catch {
                                     return intl.formatMessage({
                                       id: "dashboard.invalidWhatsApp",
@@ -2033,7 +2292,7 @@ useEffect(() => {
                           type="number"
                           value={String(
                             profileData.graduationYear ||
-                              new Date().getFullYear() - 5
+                            new Date().getFullYear() - 5
                           )}
                           onChange={(v) =>
                             setProfileData((p) => ({
@@ -2062,6 +2321,7 @@ useEffect(() => {
                             placeholder={intl.formatMessage({
                               id: "dashboard.addSpecialty",
                             })}
+                            buttonLabel={intl.formatMessage({ id: "dashboard.add" }) || "Add"}
                           />
                         </div>
                         <div className="md:col-span-2">
@@ -2081,6 +2341,7 @@ useEffect(() => {
                             placeholder={intl.formatMessage({
                               id: "dashboard.addCountry",
                             })}
+                            buttonLabel={intl.formatMessage({ id: "dashboard.add" }) || "Add"}
                           />
                         </div>
                         <Field
@@ -2107,6 +2368,7 @@ useEffect(() => {
                             placeholder={intl.formatMessage({
                               id: "dashboard.addEducation",
                             })}
+                            buttonLabel={intl.formatMessage({ id: "dashboard.add" }) || "Add"}
                           />
                         </div>
                       </section>
@@ -2140,6 +2402,7 @@ useEffect(() => {
                             placeholder={intl.formatMessage({
                               id: "dashboard.addType",
                             })}
+                            buttonLabel={intl.formatMessage({ id: "dashboard.add" }) || "Add"}
                           />
                         </div>
                         <div className="md:col-span-2">
@@ -2159,6 +2422,7 @@ useEffect(() => {
                             placeholder={intl.formatMessage({
                               id: "dashboard.addCountry",
                             })}
+                            buttonLabel={intl.formatMessage({ id: "dashboard.add" }) || "Add"}
                           />
                         </div>
                       </section>
@@ -2328,11 +2592,10 @@ useEffect(() => {
                           {notifications.map((n) => (
                             <div
                               key={n.id}
-                              className={`p-4 rounded-lg border ${
-                                n.isRead
-                                  ? "bg-white dark:bg-white/5 border-gray-200 dark:border-white/10"
-                                  : "bg-blue-50 dark:bg-blue-500/10 border-blue-200 dark:border-blue-500/20"
-                              }`}
+                              className={`p-4 rounded-lg border ${n.isRead
+                                ? "bg-white dark:bg-white/5 border-gray-200 dark:border-white/10"
+                                : "bg-blue-50 dark:bg-blue-500/10 border-blue-200 dark:border-blue-500/20"
+                                }`}
                             >
                               <div className="flex justify-between">
                                 <h4 className="font-medium text-gray-900 dark:text-gray-100">
@@ -2402,11 +2665,11 @@ useEffect(() => {
                                     : "Expat"} */}
                                 {f.type === "lawyer"
                                   ? intl.formatMessage({
-                                      id: "dashboard.lawyer",
-                                    })
+                                    id: "dashboard.lawyer",
+                                  })
                                   : intl.formatMessage({
-                                      id: "dashboard.expat",
-                                    })}
+                                    id: "dashboard.expat",
+                                  })}
 
                                 {f.country ? ` • ${f.country}` : ""}
                               </p>
@@ -2420,6 +2683,161 @@ useEffect(() => {
                           ? "Aucun favori pour le moment."
                           : "No favorites yet."} */}
                         {intl.formatMessage({ id: "dashboard.noFavorites" })}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {activeTab === "translations" && (user.role === "lawyer" || user.role === "expat") && (
+                <div className={`${softCard} overflow-hidden`}>
+                  <div className={`px-6 py-4 ${headerGradient}`}>
+                    <h2 className="text-xl font-semibold">
+                      {intl.formatMessage({ id: "dashboard.translations" }) || "Translations"}
+                    </h2>
+                  </div>
+                  <div className="p-6 space-y-6">
+                            {/* Language Dropdown */}
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                {intl.formatMessage({ id: "dashboard.selectLanguage" }) || "Select Language"}
+                              </label>
+                              <div className="flex gap-2">
+                                <select
+                                  value={selectedTranslationLang || ""}
+                                  onChange={(e) => handleLanguageChange(e.target.value)}
+                                  className="flex-1 px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-red-500 transition"
+                                >
+                                  <option value="">{intl.formatMessage({ id: "dashboard.selectLanguage" }) || "Select a language"}</option>
+                                  <option value="fr">Français</option>
+                                  <option value="en">English</option>
+                                  <option value="es">Español</option>
+                                  <option value="pt">Português</option>
+                                  <option value="de">Deutsch</option>
+                                  <option value="ru">Русский</option>
+                                  <option value="ch">中文</option>
+                                  <option value="hi">हिन्दी</option>
+                                  <option value="ar">العربية</option>
+                                </select>
+                                {selectedTranslationLang && (
+                                  <Button
+                                    type="button"
+                                    onClick={handleFreezeUnfreeze}
+                                    disabled={isFreezing}
+                                    variant={isFrozen ? "outline" : "primary"}
+                                    size="small"
+                                    className="whitespace-nowrap"
+                                  >
+                                    {isFreezing ? (
+                                      <>
+                                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
+                                        {intl.formatMessage({ id: "dashboard.processing" }) || "Processing..."}
+                                      </>
+                                    ) : isFrozen ? (
+                                      <>
+                                        <Unlock className="h-4 w-4 mr-2" />
+                                        {intl.formatMessage({ id: "dashboard.unfreeze" }) || "Unfreeze"}
+                                      </>
+                                    ) : (
+                                      <>
+                                        <Lock className="h-4 w-4 mr-2" />
+                                        {intl.formatMessage({ id: "dashboard.freeze" }) || "Freeze"}
+                                      </>
+                                    )}
+                                  </Button>
+                                )}
+                              </div>
+                              {isFrozen && selectedTranslationLang && (
+                                <div className="mt-2 flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400">
+                                  <Lock className="h-4 w-4" />
+                                  <span>{intl.formatMessage({ id: "dashboard.translationFrozen" }) || "This translation is frozen and protected from automatic updates."}</span>
+                                </div>
+                              )}
+                            </div>
+
+                    {selectedTranslationLang && (
+                      <>
+                        {isLoadingTranslation ? (
+                          <div className="flex items-center justify-center py-12">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500"></div>
+                            <span className="ml-3 text-gray-600 dark:text-gray-400">Loading translation...</span>
+                          </div>
+                        ) : (
+                          <>
+                            {/* Description/Bio Field */}
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                {intl.formatMessage({ id: "dashboard.description" }) || "Description / Bio"}
+                              </label>
+                              <textarea
+                                value={translationDescription}
+                                onChange={(e) => setTranslationDescription(e.target.value)}
+                                placeholder={intl.formatMessage({ id: "dashboard.descriptionPlaceholder" }) || "Enter description or bio..."}
+                                rows={6}
+                                className="w-full px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-red-500 transition resize-none"
+                              />
+                            </div>
+
+                            {/* Specialties Field */}
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                {intl.formatMessage({ id: "dashboard.specialties" }) || "Specialties"}
+                              </label>
+                              <ChipInput
+                                value={translationSpecialties}
+                                onChange={setTranslationSpecialties}
+                                placeholder={intl.formatMessage({ id: "dashboard.specialtiesPlaceholder" }) || "Add specialty and press Enter"}
+                                buttonLabel={intl.formatMessage({ id: "dashboard.addSpecialty" }) || "Add"}
+                              />
+                            </div>
+
+                            {/* Motivation Field */}
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                {intl.formatMessage({ id: "dashboard.motivation" }) || "Motivation"}
+                              </label>
+                              <textarea
+                                value={translationMotivation}
+                                onChange={(e) => setTranslationMotivation(e.target.value)}
+                                placeholder={intl.formatMessage({ id: "dashboard.motivationPlaceholder" }) || "Enter your motivation..."}
+                                rows={6}
+                                className="w-full px-3 py-2 border border-gray-200 dark:border-white/10 rounded-xl bg-white/70 dark:bg-white/[0.03] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-red-500 transition resize-none"
+                              />
+                            </div>
+
+                            {/* Save Button */}
+                            <div className="flex justify-end">
+                              <Button
+                                onClick={handleSaveTranslation}
+                                disabled={isSavingTranslation}
+                                className="min-w-[120px]"
+                              >
+                                {isSavingTranslation ? (
+                                  <>
+                                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                    {intl.formatMessage({ id: "dashboard.saving" }) || "Saving..."}
+                                  </>
+                                ) : (
+                                  intl.formatMessage({ id: "dashboard.save" }) || "Save"
+                                )}
+                              </Button>
+                            </div>
+
+                            {/* Success/Error Messages */}
+                            {successMessage && (
+                              <Alert type="success" message={successMessage} />
+                            )}
+                            {errorMessage && (
+                              <Alert type="error" message={errorMessage} />
+                            )}
+                          </>
+                        )}
+                      </>
+                    )}
+
+                    {!selectedTranslationLang && (
+                      <p className={`${UI.textMuted} text-center py-12`}>
+                        {intl.formatMessage({ id: "dashboard.selectLanguageToEdit" }) || "Please select a language to edit translations"}
                       </p>
                     )}
                   </div>

@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useIntl } from "react-intl";
-import { getLocaleString, parseLocaleFromPath } from "../../utils/localeRoutes";
+import { getLocaleString, parseLocaleFromPath, getRouteKeyFromSlug, getTranslatedRouteSlug } from "../../multilingual-system";
 import {
   Menu,
   X,
@@ -709,33 +709,85 @@ const LanguageDropdown = memo<LanguageDropdownProps>(function LanguageDropdown({
   }, []);
 
   const handleLanguageChange = useCallback(
-    (lang: Language) => {
-      setLanguage(lang.code);
+    (langCode: "fr" | "en" | "es" | "ru" | "de" | "hi" | "pt" | "ch" | "ar") => {
+      setLanguage(langCode);
       setOpen(false);
-
+      
+      // Update the route to reflect the new language
+      // CRITICAL: Decode URL to handle Unicode characters (Hindi, Chinese, Arabic, Russian)
+      // Browser may encode Unicode in pathname, so we need to decode it
+      let decodedPathname: string;
+      try {
+        decodedPathname = decodeURIComponent(location.pathname);
+      } catch (e) {
+        // If decoding fails (invalid encoding), use original
+        decodedPathname = location.pathname;
+      }
+      
       const { pathname } = location;
 
       if (pathname.startsWith("/admin") || pathname.startsWith("/marketing")) {
         window.gtag?.("event", "language_change", {
           event_category: "engagement",
-          event_label: lang.code,
+          event_label: langCode,
         });
         return;
       }
-
-      const { pathWithoutLocale } = parseLocaleFromPath(pathname);
-      const newLocale = getLocaleString(lang.code);
-
-      const newPath =
-        pathWithoutLocale === "/"
-          ? `/${newLocale}`
-          : `/${newLocale}${pathWithoutLocale}`;
-
-      navigate(newPath, { replace: true });
-
+      
+      // Get current path without locale - use DECODED pathname for Unicode support
+      const { pathWithoutLocale } = parseLocaleFromPath(decodedPathname);
+      const newLocale = getLocaleString(langCode);
+      
+      // Translate the slug if it's a translatable route
+      let translatedPath = pathWithoutLocale;
+      if (pathWithoutLocale && pathWithoutLocale !== "/") {
+        const pathSegments = pathWithoutLocale.split("/").filter(Boolean);
+        if (pathSegments.length > 0) {
+          // Try to match multi-segment paths first (e.g., "register/client")
+          // This is important for routes like /register/client, /register/lawyer, etc.
+          let routeKey = null;
+          let matchedSegments = 0;
+          
+          if (pathSegments.length >= 2) {
+            // Try matching first two segments as a compound route
+            const twoSegmentPath = `${pathSegments[0]}/${pathSegments[1]}`;
+            routeKey = getRouteKeyFromSlug(twoSegmentPath);
+            if (routeKey) {
+              matchedSegments = 2;
+            }
+          }
+          
+          // If no multi-segment match, try just the first segment
+          if (!routeKey) {
+            const firstSegment = pathSegments[0];
+            routeKey = getRouteKeyFromSlug(firstSegment);
+            if (routeKey) {
+              matchedSegments = 1;
+            }
+          }
+          
+          // If we found a route key, translate it
+          if (routeKey) {
+            const translatedSlug = getTranslatedRouteSlug(routeKey, langCode);
+            const restOfPath = pathSegments.slice(matchedSegments).join("/");
+            translatedPath = `/${translatedSlug}${restOfPath ? `/${restOfPath}` : ""}`;
+          }
+        }
+      }
+      
+      // Build new path with new locale and translated slug
+      const newPath = translatedPath === "/" 
+        ? `/${newLocale}` 
+        : `/${newLocale}${translatedPath}`;
+      
+      // Only navigate if the path actually changed
+      if (newPath !== decodedPathname) {
+        navigate(newPath, { replace: true });
+      }
+      
       window.gtag?.("event", "language_change", {
         event_category: "engagement",
-        event_label: lang.code,
+        event_label: langCode,
       });
     },
     [setLanguage, location, navigate]
@@ -785,7 +837,7 @@ const LanguageDropdown = memo<LanguageDropdownProps>(function LanguageDropdown({
             {SUPPORTED_LANGUAGES.map((lang) => (
               <button
                 key={lang.code}
-                onClick={() => handleLanguageChange(lang)}
+                onClick={() => handleLanguageChange(lang.code)}
                 className={`group flex items-center w-full px-4 py-2.5 text-sm 
                   focus:outline-none focus-visible:bg-white/20
                   ${
@@ -842,7 +894,7 @@ const LanguageDropdown = memo<LanguageDropdownProps>(function LanguageDropdown({
           {SUPPORTED_LANGUAGES.map((lang) => (
             <button
               key={lang.code}
-              onClick={() => handleLanguageChange(lang)}
+              onClick={() => handleLanguageChange(lang.code)}
               className={`group flex items-center w-full px-4 py-3 text-sm text-left 
                 hover:bg-gray-50 rounded-xl mx-1 focus:outline-none focus-visible:bg-gray-50
                 ${

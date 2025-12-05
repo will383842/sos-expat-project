@@ -48,6 +48,14 @@
         }
       },
       {
+        "source": "/sitemap_index.xml",
+        "destination": "/sitemaps/global/sitemap-index.xml"
+      },
+      {
+        "source": "/sitemap_index.xml.gz",
+        "destination": "/sitemaps/global/sitemap-index.xml.gz"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
@@ -65,6 +73,13 @@
           { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
           { "key": "Pragma", "value": "no-cache" },
           { "key": "Expires", "value": "0" }
+        ]
+      },
+      {
+        "source": "/sitemap_index.xml",
+        "headers": [
+          { "key": "Content-Type", "value": "application/xml; charset=utf-8" },
+          { "key": "Cache-Control", "value": "public, max-age=3600" }
         ]
       },
       {

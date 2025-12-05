@@ -7,6 +7,7 @@ import { useApp } from '../../contexts/AppContext';
 import { getCountryCoordinates } from '../../utils/countryCoordinates';
 import { getCountryName } from '../../utils/formatters';
 import { languagesData, type SupportedLocale } from '../../data/languages-spoken';
+import { getAllProviderTypeKeywords, normalizeLanguageCode } from '../../utils/multilingualSearch';
 
 // Enhanced types for 2025 standards with AI-friendly structure
 interface FirebaseDocumentSnapshot {
@@ -535,24 +536,31 @@ filtered = filtered.filter(p => {
       filtered = filtered.filter(provider => provider.type === activeFilter);
     }
     
-    // Enhanced semantic search for AI compatibility
+    // Enhanced semantic search for AI compatibility with multilingual support
     if (debouncedSearchTerm.trim()) {
       const searchLower = debouncedSearchTerm.toLowerCase().trim();
       const searchTerms = searchLower.split(' ').filter(Boolean);
       
       filtered = filtered.filter(provider => {
+        // Build comprehensive searchable content including multilingual keywords
+        // Include keywords for both lawyer and expat types to support multilingual search
+        const multilingualKeywords = provider.type === 'lawyer' 
+          ? getAllProviderTypeKeywords('lawyer')
+          : getAllProviderTypeKeywords('expat');
+        
         const searchableContent = [
-  provider.name,
-  provider.fullName,
-  provider.firstName,
-  provider.lastName,
-  provider.country,
-  provider.description,
-  ...provider.languages,
-  ...provider.specialties,
-  ...(provider.certifications || []),
-  provider.type === 'lawyer' ? 'avocat juriste juridique droit' : 'expatrié expat immigration visa',
-].join(' ').toLowerCase();
+          provider.name,
+          provider.fullName,
+          provider.firstName,
+          provider.lastName,
+          provider.country,
+          provider.description,
+          ...provider.languages,
+          ...provider.specialties,
+          ...(provider.certifications || []),
+          // Include multilingual keywords for the provider type (all languages)
+          multilingualKeywords,
+        ].join(' ').toLowerCase();
         
         // Multi-term search with relevance
         return searchTerms.every(term => 
@@ -725,11 +733,13 @@ filtered = filtered.filter(p => {
         certifications: provider.certifications ? [...provider.certifications] : []
       };
 
-      // Generate SEO URL
+      // Generate SEO URL - simplified structure
       const typeSlug = provider.type === 'lawyer' ? 'avocat' : 'expatrie';
-      const countrySlug = provider.country.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '-');
-      const nameSlug = provider.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '-');
-      const seoUrl = `/${typeSlug}/${countrySlug}/francais/${nameSlug}-${provider.id}`;
+      // Use translated slug if available, otherwise generate from name
+      const nameSlug = provider.slug || provider.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, '-');
+      // Append ID only if slug doesn't already contain it
+      const finalSlug = nameSlug.includes(provider.id) ? nameSlug : `${nameSlug}-${provider.id}`;
+      const seoUrl = `/${typeSlug}/${finalSlug}`;
 
       // Navigation based on provider status
       navigate(seoUrl, { 

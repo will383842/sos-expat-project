@@ -19,7 +19,26 @@ export const toDate = (v: any): Date | null => {
 };
 
 // formatDate qui accepte Date | number | Firebase Timestamp | string
-export const formatAnyDate = (v: any, locale = 'fr-FR'): string => {
+// Now uses locale-aware formatting (backward compatible)
+export const formatAnyDate = (v: any, locale = 'fr-FR', language?: string, userCountry?: string): string => {
   const d = toDate(v);
-  return d ? d.toLocaleString(locale) : '—';
+  if (!d) return '—';
+  
+  // Use new locale formatters if language is provided
+  if (language) {
+    try {
+      // Dynamic import to avoid circular dependencies
+      const { formatDate: formatDateLocale } = require('./localeFormatters');
+      return formatDateLocale(d, {
+        language,
+        userCountry,
+        format: 'medium',
+      });
+    } catch {
+      // Fallback to old behavior
+    }
+  }
+  
+  // Fallback to old behavior
+  return d.toLocaleString(locale);
 };

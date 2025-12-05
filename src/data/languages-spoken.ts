@@ -1539,7 +1539,7 @@ export const getSortedLanguages = (
   return [...languages].sort((a, b) =>
     getLanguageLabel(a, locale).localeCompare(
       getLanguageLabel(b, locale),
-      locale === 'ch' ? 'zh' : locale
+      locale === 'ch' ? 'zh-CN' : locale
     )
   );
 };

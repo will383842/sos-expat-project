@@ -593,6 +593,51 @@ export function getSavedLanguage(): Language | null {
       return saved as Language;
     }
     
+    // Nouvelle collection config
+    match /config/{docId} {
+      allow read: if isAdmin() || isDev();
+      allow write: if isAdmin() || isDev();
+    }
+
+    // ================= PROVIDER MESSAGE ORDER CUSTOMERS =================
+    // Conversation "boîte du prestataire" + visibilité à l'expéditeur.
+    match /providerMessageOrderCustomers/{messageId} {
+      // Création : l'expéditeur doit être le user connecté
+      allow create: if isAuthenticated()
+        && request.resource.data.senderId == request.auth.uid
+        && request.resource.data.providerId is string
+        && request.resource.data.message is string
+        && request.resource.data.message.size() > 0
+        && request.resource.data.message.size() <= 1000;
+
+      // Lecture : prestataire concerné OU expéditeur du message (et admin/dev)
+      allow read: if (isAuthenticated()
+        && (request.auth.uid == resource.data.providerId
+            || request.auth.uid == resource.data.senderId))
+        || isAdmin() || isDev();
+
+      // Mise à jour : uniquement par le prestataire, et seulement sur isRead
+      allow update: if isAuthenticated()
+        && request.auth.uid == resource.data.providerId
+        && request.resource.data.diff(resource.data).changedKeys().hasOnly(['isRead']);
+
+      // Suppression : seulement admin/dev
+      allow delete: if isAdmin() || isDev();
+    }
+
+    // ================= PROVIDERS TRANSLATIONS =================
+    match /providers_translations/{providerId} {
+      // Read: public (for displaying translated profiles) or owner/admin
+      allow read: if true || (isAuthenticated() && request.auth.uid == providerId) || isAdmin() || isDev();
+      
+      // Write: only the provider themselves (document ID must match user ID) or admin/dev
+      allow create: if (isAuthenticated() && request.auth.uid == providerId) || isAdmin() || isDev();
+      allow update: if (isAuthenticated() && request.auth.uid == providerId) || isAdmin() || isDev();
+      allow delete: if isAdmin() || isDev();
+    }
+
+    // ======================= Catch-all =======================
+    match /{document=**} { allow read, write: if false || isDev(); }
     return null;
   } catch (error) {
     console.warn('[Language] Could not read saved language:', error);
