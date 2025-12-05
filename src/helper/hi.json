@@ -2194,6 +2194,7 @@
   "dashboard.availabilityStatus": "उपलब्धता स्थिति",
   "dashboard.statusOnlyProviders": "स्थिति केवल सेवा प्रदाताओं के लिए उपलब्ध",
   "dashboard.edit": "संपादित करें",
+  "dashboard.add": "जोड़ें",
   "dashboard.personalInfo": "व्यक्तिगत जानकारी",
   "dashboard.fullName": "पूरा नाम",
   "dashboard.phone": "फ़ोन",
@@ -3002,9 +3003,6 @@
       "success.expatLabel": "एक्सपैट 🌍",
       "success.providerNameLawyer": "वकील",
       "success.providerNameExpat": "एक्सपैट",
-     
-      "dashboard.add": "जोड़ें",
-      
       "dashboard.translations": "अनुवाद",
       "dashboard.selectLanguage": "भाषा चुनें",
       "dashboard.description": "विवरण / जीवनी",

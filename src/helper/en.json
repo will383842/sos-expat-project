@@ -2195,6 +2195,7 @@
   "dashboard.availabilityStatus": "Availability status",
   "dashboard.statusOnlyProviders": "Status only available for providers",
   "dashboard.edit": "Edit",
+  "dashboard.add": "Add",
   "dashboard.personalInfo": "Personal information",
   "dashboard.fullName": "Full name",
   "dashboard.phone": "Phone",

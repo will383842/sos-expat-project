@@ -2195,6 +2195,7 @@
   "dashboard.availabilityStatus": "Estado de disponibilidad",
   "dashboard.statusOnlyProviders": "Estado disponible solo para prestadores",
   "dashboard.edit": "Modificar",
+  "dashboard.add": "Añadir",
   "dashboard.personalInfo": "Información personal",
   "dashboard.fullName": "Nombre completo",
   "dashboard.phone": "Teléfono",
