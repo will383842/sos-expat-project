@@ -59,7 +59,7 @@ export const STATIC_ROUTES: StaticRoute[] = [
 export const ROUTE_TRANSLATIONS: Record<string, Record<string, string>> = {
   'login': { fr: 'connexion', en: 'login', es: 'iniciar-sesion', ru: 'вход', de: 'anmeldung', hi: 'लॉगिन', pt: 'entrar', ch: '登录', ar: 'تسجيل-الدخول' },
   'register': { fr: 'inscription', en: 'register', es: 'registro', ru: 'регистрация', de: 'registrierung', hi: 'पंजीकरण', pt: 'cadastro', ch: '注册', ar: 'التسجيل' },
-  'register-client': { fr: 'inscription-client', en: 'register-client', es: 'registro-cliente', ru: 'регистрация-клиент', de: 'registrierung-kunde', hi: 'पंजीकरण-ग्राहक', pt: 'registro-cliente', ch: '注册-客户', ar: 'تسجيل-عميل' },
+  'register-client': { fr: 'inscription/client', en: 'register/client', es: 'registro/cliente', ru: 'регистрация/клиент', de: 'registrierung/kunde', hi: 'पंजीकरण/ग्राहक', pt: 'registro/cliente', ch: '注册/客户', ar: 'تسجيل/عميل' },
   'register-lawyer': { fr: 'avocat', en: 'lawyer', es: 'abogado', ru: 'юрист', de: 'anwalt', hi: 'वकील', pt: 'advogado', ch: '律师', ar: 'محام' },
   'register-expat': { fr: 'expatrie', en: 'expat', es: 'expatriado', ru: 'эмигрант', de: 'expatriate', hi: 'प्रवासी', pt: 'expatriado', ch: '外籍人士', ar: 'مغترب' },
   'password-reset': { fr: 'reinitialisation-mot-de-passe', en: 'password-reset', es: 'restablecer-contrasena', ru: 'сброс-пароля', de: 'passwort-zurucksetzen', hi: 'पासवर्ड-रीसेट', pt: 'redefinir-senha', ch: '重置密码', ar: 'إعادة-تعيين-كلمة-المرور' },
