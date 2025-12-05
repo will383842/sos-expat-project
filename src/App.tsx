@@ -107,6 +107,12 @@ const messages = {
   en: enMessages,
   es: esMessages,
   fr: frMessages,
+  ru: ruMessages,
+  de: deMessages,
+  hi: hiMessages,
+  pt: ptMessages,
+  ch: chMessages,
+  ar: arMessages,
 }
 
 // --------------------------------------------
