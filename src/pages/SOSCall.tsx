@@ -2794,6 +2794,13 @@ const SOSCall: React.FC = () => {
                       <span className="text-gray-400 text-sm">
                         <FormattedMessage id="sosCall.stats.onlineShort" defaultMessage="en ligne" />
                       </span>
+
+                      <span className="size-1 mx-2 my-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm font-bold" />
+                      <span className="text-white text-sm">{realProviders.length}</span>
+                      <div className="text-white text-sm">
+
+                      <FormattedMessage id="experts"/>
+                      </div>
                     </div>
                   </div>
                 </div>

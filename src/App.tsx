@@ -434,6 +434,7 @@ const App: React.FC = () => {
     /(^\/admin(\/|$))|(^\/[^/]+\/admin(\/|$))/i.test(p || "");
 
   const showAdminLayout = isAdminPath(location.pathname);
+  
 
   return (
     <IntlProvider locale={locale} messages={messages[locale]} defaultLocale="fr" >
