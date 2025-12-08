@@ -17,8 +17,8 @@ import { db } from "../config/firebase";
 
 export interface HelpCategory {
   id: string;
-  name: string;
-  slug: string;
+  name: string | Record<string, string>; // Support both string and translations
+  slug: string | Record<string, string>; // Support both string and translations
   order: number;
   isPublished: boolean;
   locale: string;
@@ -29,12 +29,12 @@ export interface HelpCategory {
 
 export interface HelpArticle {
   id: string;
-  title: string;
-  slug: string;
+  title: string | Record<string, string>; // Support both string and translations
+  slug: string | Record<string, string>; // Support both string and translations
   categoryId: string;
-  excerpt: string;
-  content: string;
-  tags: string[];
+  excerpt: string | Record<string, string>; // Support both string and translations
+  content: string | Record<string, string>; // Support both string and translations
+  tags: string[] | Record<string, string[]>; // Support both array and translations
   readTime: number;
   order: number;
   isPublished: boolean;
@@ -58,33 +58,59 @@ const toDate = (value: unknown): Date | undefined => {
   return undefined;
 };
 
-const mapCategory = (snap: DocumentData & { id: string }): HelpCategory => ({
-  id: snap.id,
-  name: snap.name ?? snap.title ?? "",
-  slug: snap.slug ?? "",
-  order: Number(snap.order ?? 0),
-  isPublished: Boolean(snap.isPublished),
-  locale: snap.locale ?? "en",
-  icon: snap.icon,
-  createdAt: toDate(snap.createdAt),
-  updatedAt: toDate(snap.updatedAt),
-});
+// Helper to get value from string or Record<string, string>
+const getValue = (value: unknown, locale: string = "en"): string => {
+  if (typeof value === "string") return value;
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    const record = value as Record<string, string>;
+    return record[locale] ?? record["en"] ?? record["fr"] ?? Object.values(record)[0] ?? "";
+  }
+  return "";
+};
 
-const mapArticle = (snap: DocumentData & { id: string }): HelpArticle => ({
-  id: snap.id,
-  title: snap.title ?? "",
-  slug: snap.slug ?? "",
-  categoryId: snap.categoryId ?? "",
-  excerpt: snap.excerpt ?? "",
-  content: snap.content ?? "",
-  tags: Array.isArray(snap.tags) ? snap.tags : [],
-  readTime: Number(snap.readTime ?? 0),
-  order: Number(snap.order ?? 0),
-  isPublished: Boolean(snap.isPublished),
-  locale: snap.locale ?? "en",
-  createdAt: toDate(snap.createdAt),
-  updatedAt: toDate(snap.updatedAt),
-});
+// Helper to get tags from array or Record<string, string[]>
+const getTags = (value: unknown, locale: string = "en"): string[] => {
+  if (Array.isArray(value)) return value;
+  if (value && typeof value === "object") {
+    const record = value as Record<string, string[]>;
+    return record[locale] ?? record["en"] ?? record["fr"] ?? Object.values(record)[0] ?? [];
+  }
+  return [];
+};
+
+const mapCategory = (snap: DocumentData & { id: string }): HelpCategory => {
+  const locale = snap.locale ?? "en";
+  return {
+    id: snap.id,
+    name: snap.name ?? snap.title ?? "",
+    slug: snap.slug ?? "",
+    order: Number(snap.order ?? 0),
+    isPublished: Boolean(snap.isPublished),
+    locale,
+    icon: snap.icon,
+    createdAt: toDate(snap.createdAt),
+    updatedAt: toDate(snap.updatedAt),
+  };
+};
+
+const mapArticle = (snap: DocumentData & { id: string }): HelpArticle => {
+  const locale = snap.locale ?? "en";
+  return {
+    id: snap.id,
+    title: snap.title ?? "",
+    slug: snap.slug ?? "",
+    categoryId: snap.categoryId ?? "",
+    excerpt: snap.excerpt ?? "",
+    content: snap.content ?? "",
+    tags: Array.isArray(snap.tags) ? snap.tags : [],
+    readTime: Number(snap.readTime ?? 0),
+    order: Number(snap.order ?? 0),
+    isPublished: Boolean(snap.isPublished),
+    locale,
+    createdAt: toDate(snap.createdAt),
+    updatedAt: toDate(snap.updatedAt),
+  };
+};
 
 export const listHelpCategories = async (locale?: string): Promise<HelpCategory[]> => {
   const categoriesCol = collection(db, "help_categories");

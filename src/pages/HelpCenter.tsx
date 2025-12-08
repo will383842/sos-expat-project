@@ -27,6 +27,7 @@ interface Article {
   tags: string[];
   readTime: number;
   content: string;
+  slug: string;
 }
 
 // Icon mapping from string to component
@@ -46,12 +47,53 @@ const getIcon = (iconName?: string): LucideIcon => {
   return iconMap[key] || Book;
 };
 
+// Helper to get translated value from string or Record<string, string>
+const getTranslatedValue = (
+  value: string | Record<string, string> | undefined,
+  locale: string,
+  fallback: string = ""
+): string => {
+  if (typeof value === "string") return value;
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    return value[locale] || value["en"] || value["fr"] || Object.values(value)[0] || fallback;
+  }
+  return fallback;
+};
+
+// Helper to get translated tags from array or Record<string, string[]>
+const getTranslatedTags = (
+  value: string[] | Record<string, string[]> | undefined,
+  locale: string
+): string[] => {
+  if (Array.isArray(value)) return value;
+  if (value && typeof value === "object") {
+    return value[locale] || value["en"] || value["fr"] || Object.values(value)[0] || [];
+  }
+  return [];
+};
+
+// Helper to get "All categories" text in the selected language
+const getAllCategoriesText = (locale: string): string => {
+  const translations: Record<string, string> = {
+    en: "All categories",
+    fr: "Toutes les catégories",
+    es: "Todas las categorías",
+    de: "Alle Kategorien",
+    hi: "सभी श्रेणियां",
+    ar: "جميع الفئات",
+    ch: "所有类别",
+    pt: "Todas as categorias",
+    ru: "Все категории",
+  };
+  return translations[locale] || translations["en"];
+};
+
 const HelpCenter: React.FC = () => {
   const intl = useIntl();
   const { language } = useApp();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
+  const [selectedArticleId, setSelectedArticleId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState<
     Array<{
@@ -68,10 +110,12 @@ const HelpCenter: React.FC = () => {
     const loadData = async () => {
       setIsLoading(true);
       try {
-        const locale = language === "fr" ? "fr" : "en";
+        // Use the selected language as locale (matches Firestore locale keys: en, hi, ar, ch, de, es, fr, pt, ru)
+        const locale = language;
+        // Load all categories and articles (they contain translations)
         const [firestoreCategories, firestoreArticles] = await Promise.all([
-          listHelpCategories(locale),
-          listHelpArticles({ locale, onlyPublished: true }),
+          listHelpCategories(), // Load all categories
+          listHelpArticles({ onlyPublished: true }), // Load all published articles
         ]);
 
         // Filter only published categories
@@ -80,15 +124,36 @@ const HelpCenter: React.FC = () => {
         );
 
         // Transform Firestore articles to component format
-        const transformedArticles: Article[] = firestoreArticles.map(
+        // First, deduplicate articles - if there are multiple documents per article (one per locale),
+        // we'll group them by categoryId and English slug/title to get unique articles
+        const articleMap = new Map<string, FirestoreArticle>();
+        
+        for (const art of firestoreArticles) {
+          // Use categoryId + English slug as unique key (or English title if slug is not available)
+          const englishSlug = getTranslatedValue(art.slug, "en");
+          const englishTitle = getTranslatedValue(art.title, "en");
+          const uniqueKey = `${art.categoryId}-${englishSlug || englishTitle}`;
+          
+          // Keep the first occurrence (or prefer the one matching current locale)
+          if (!articleMap.has(uniqueKey)) {
+            articleMap.set(uniqueKey, art);
+          } else if (art.locale === locale) {
+            // Prefer the document that matches the current locale
+            articleMap.set(uniqueKey, art);
+          }
+        }
+        
+        // Transform deduplicated articles
+        const transformedArticles: Article[] = Array.from(articleMap.values()).map(
           (art: FirestoreArticle) => ({
             id: art.id,
-            title: art.title,
-            excerpt: art.excerpt,
+            title: getTranslatedValue(art.title, locale),
+            excerpt: getTranslatedValue(art.excerpt, locale),
             category: art.categoryId,
-            tags: art.tags || [],
+            tags: getTranslatedTags(art.tags, locale),
             readTime: art.readTime,
-            content: art.content,
+            content: getTranslatedValue(art.content, locale),
+            slug: getTranslatedValue(art.slug, locale),
           })
         );
 
@@ -96,14 +161,13 @@ const HelpCenter: React.FC = () => {
         const transformedCategories = [
           {
             id: "all",
-            name:
-              language === "fr" ? "Toutes les catégories" : "All categories",
+            name: getAllCategoriesText(locale),
             icon: Book,
             count: transformedArticles.length,
           },
           ...publishedCategories.map((cat: FirestoreCategory) => ({
             id: cat.id,
-            name: cat.name,
+            name: getTranslatedValue(cat.name, locale),
             icon: getIcon(cat.icon),
             count: transformedArticles.filter(
               (a) => a.category === cat.id
@@ -142,16 +206,21 @@ const HelpCenter: React.FC = () => {
   const handleCategoryClick = (categoryId: string) => {
     setSelectedCategory(categoryId);
     setSearchTerm("");
-    setSelectedArticle(null);
+    setSelectedArticleId(null);
   };
 
   const handleArticleClick = (article: Article) => {
-    setSelectedArticle(article);
+    setSelectedArticleId(article.id);
   };
 
   const handleBackToList = () => {
-    setSelectedArticle(null);
+    setSelectedArticleId(null);
   };
+
+  // Derive selected article from articles array so it updates when language changes
+  const selectedArticle = selectedArticleId
+    ? articles.find((a) => a.id === selectedArticleId) || null
+    : null;
 
   // --- Helper rendu markdown léger (présentation uniquement) ---
   const mdToHtml = (md: string): string => {
@@ -407,6 +476,11 @@ const HelpCenter: React.FC = () => {
                         <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-blue-700 transition-colors">
                           {article.title}
                         </h3>
+                        {article.slug && (
+                          <p className="text-xs text-gray-400 mb-2 font-mono">
+                            /{article.slug}
+                          </p>
+                        )}
                         <p className="text-gray-600 mb-4 line-clamp-3">
                           {article.excerpt}
                         </p>

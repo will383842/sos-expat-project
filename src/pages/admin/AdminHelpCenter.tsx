@@ -10,6 +10,7 @@ import {
   Languages,
   Loader2,
   Tag,
+  Globe,
 } from "lucide-react";
 import AdminLayout from "../../components/admin/AdminLayout";
 import Button from "../../components/common/Button";
@@ -31,13 +32,196 @@ import {
 type CategoryFormState = Omit<HelpCategory, "id" | "createdAt" | "updatedAt">;
 type ArticleFormState = Omit<HelpArticle, "id" | "createdAt" | "updatedAt">;
 
+const SUPPORTED_LANGUAGES = [
+  { code: "fr", name: "Français", flag: "🇫🇷" },
+  { code: "en", name: "English", flag: "🇬🇧" },
+  { code: "es", name: "Español", flag: "🇪🇸" },
+  { code: "ru", name: "Русский", flag: "🇷🇺" },
+  { code: "de", name: "Deutsch", flag: "🇩🇪" },
+  { code: "hi", name: "हिन्दी", flag: "🇮🇳" },
+  { code: "pt", name: "Português", flag: "🇵🇹" },
+  { code: "ch", name: "中文", flag: "🇨🇳" },
+  { code: "ar", name: "العربية", flag: "🇸🇦" },
+];
+
+// Helper to get first available translation
+const getFirstAvailableTranslation = (
+  translations: string | Record<string, string> | undefined,
+  fallback: string = ""
+): string => {
+  if (typeof translations === "string") return translations;
+  if (!translations || typeof translations !== "object") return fallback;
+  for (const lang of SUPPORTED_LANGUAGES) {
+    if (translations[lang.code] && translations[lang.code].trim().length > 0) {
+      return translations[lang.code];
+    }
+  }
+  return fallback;
+};
+
+// Helper to get first available language code
+const getFirstAvailableLanguageCode = (
+  translations: string | Record<string, string> | undefined,
+  fallback: string = "fr"
+): string => {
+  if (typeof translations === "string") return fallback;
+  if (!translations || typeof translations !== "object") return fallback;
+  for (const lang of SUPPORTED_LANGUAGES) {
+    if (translations[lang.code] && translations[lang.code].trim().length > 0) {
+      return lang.code;
+    }
+  }
+  return fallback;
+};
+
 const slugify = (value: string): string =>
   value
     .toLowerCase()
     .trim()
-    .replace(/['’"]/g, "")
+    .replace(/[''"]/g, "")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
+
+// Generate slug from text
+const generateSlug = (text: string): string => {
+  if (!text || text.trim().length === 0) {
+    return "untitled";
+  }
+  let slug = text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/(^-|-$)/g, "")
+    .substring(0, 100);
+  if (!slug || slug.trim().length === 0) {
+    slug = "untitled";
+  }
+  return slug;
+};
+
+// Auto-detect language of text
+const detectLanguage = async (text: string): Promise<string> => {
+  if (!text || text.trim().length === 0) {
+    return "en";
+  }
+  try {
+    const detectUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(text.substring(0, 500))}`;
+    const response = await fetch(detectUrl);
+    if (response.ok) {
+      const data = (await response.json()) as any;
+      let detectedLang: string | null = null;
+      if (typeof data === "string") {
+        detectedLang = data;
+      } else if (Array.isArray(data) && data.length > 2 && data[2]) {
+        detectedLang = data[2];
+      } else if (data && typeof data === "object" && data.src) {
+        detectedLang = data.src;
+      }
+      if (detectedLang) {
+        const langMap: Record<string, string> = {
+          fr: "fr",
+          en: "en",
+          es: "es",
+          pt: "pt",
+          de: "de",
+          ru: "ru",
+          zh: "ch",
+          "zh-CN": "ch",
+          "zh-TW": "ch",
+          "zh-cn": "ch",
+          hi: "hi",
+          ar: "ar",
+        };
+        const mappedLang =
+          langMap[detectedLang.toLowerCase()] || langMap[detectedLang];
+        if (mappedLang) {
+          return mappedLang;
+        }
+      }
+    }
+  } catch (error) {
+    console.warn("[detectLanguage] Error detecting language:", error);
+  }
+  // Fallback: Try simple heuristics
+  const textLower = text.toLowerCase();
+  if (/[àâäéèêëïîôùûüÿç]/.test(text)) return "fr";
+  if (/[ñáéíóúü¿¡]/.test(text)) return "es";
+  if (/[äöüß]/.test(text)) return "de";
+  if (/[а-яё]/.test(text)) return "ru";
+  if (/[\u0900-\u097F]/.test(text)) return "hi";
+  if (/[\u4e00-\u9fff]/.test(text)) return "ch";
+  if (/[\u0600-\u06FF]/.test(text)) return "ar";
+  if (/[áàâãéêíóôõúç]/.test(text)) return "pt";
+  return "en";
+};
+
+// Translate text to target language
+const translateText = async (
+  text: string,
+  fromLang: string,
+  toLang: string
+): Promise<string> => {
+  if (!text || text.trim().length === 0) {
+    return text;
+  }
+  if (fromLang === toLang) {
+    return text;
+  }
+  const languageMap: Record<string, string> = {
+    fr: "fr",
+    en: "en",
+    es: "es",
+    pt: "pt",
+    de: "de",
+    ru: "ru",
+    ch: "zh",
+    hi: "hi",
+    ar: "ar",
+  };
+  const targetLang = languageMap[toLang] || toLang;
+  const sourceLang = languageMap[fromLang] || fromLang;
+  // Try MyMemory Translation API
+  try {
+    const myMemoryUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${sourceLang}|${targetLang}`;
+    const response = await fetch(myMemoryUrl, {
+      method: "GET",
+      headers: { Accept: "application/json" },
+    });
+    if (response.ok) {
+      const data = (await response.json()) as {
+        responseData?: { translatedText?: string };
+      };
+      if (data.responseData?.translatedText) {
+        return data.responseData.translatedText;
+      }
+    }
+  } catch (error) {
+    console.warn(`[translateText] MyMemory API error:`, error);
+  }
+  // Fallback: Try Google Translate
+  try {
+    const googleUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
+    const response = await fetch(googleUrl, {
+      method: "GET",
+      headers: { Accept: "application/json" },
+    });
+    if (response.ok) {
+      const data = (await response.json()) as any;
+      if (data && Array.isArray(data) && data[0] && Array.isArray(data[0])) {
+        const translated = data[0].map((item: any[]) => item[0]).join("");
+        if (translated) {
+          return translated;
+        }
+      }
+    }
+  } catch (error) {
+    console.warn(`[translateText] Google Translate API error:`, error);
+  }
+  return text;
+};
 
 const defaultCategoryForm = (locale: string): CategoryFormState => ({
   name: "",
@@ -97,13 +281,21 @@ const AdminHelpCenter: React.FC = () => {
     defaultArticleForm(locale)
   );
   const [tagInput, setTagInput] = useState<string>("");
+  const [translating, setTranslating] = useState<boolean>(false);
+
+  // Single input fields for translation
+  const [categoryNameInput, setCategoryNameInput] = useState<string>("");
+  const [articleTitleInput, setArticleTitleInput] = useState<string>("");
+  const [articleExcerptInput, setArticleExcerptInput] = useState<string>("");
+  const [articleContentInput, setArticleContentInput] = useState<string>("");
 
   const refreshAll = useCallback(async () => {
     setIsLoading(true);
     try {
+      // Load all categories and articles (they contain translations)
       const [cats, arts] = await Promise.all([
-        listHelpCategories(locale),
-        listHelpArticles({ locale, onlyPublished: false }), // Load all articles in admin
+        listHelpCategories(), // Load all categories
+        listHelpArticles({ onlyPublished: false }), // Load all articles in admin
       ]);
       setCategories(cats);
       setArticles(arts);
@@ -147,9 +339,83 @@ const AdminHelpCenter: React.FC = () => {
     return articles.filter((a) => a.categoryId === selectedCategoryId);
   }, [articles, selectedCategoryId]);
 
+  // Translate category name and slug to all languages
+  const translateCategory = async (
+    name: string
+  ): Promise<{ name: Record<string, string>; slug: Record<string, string> }> => {
+    const sourceLang = await detectLanguage(name);
+    const translatedName: Record<string, string> = {};
+    const slugMap: Record<string, string> = {};
+
+    const translationPromises = SUPPORTED_LANGUAGES.map(async (lang) => {
+      const translated = await translateText(name, sourceLang, lang.code);
+      translatedName[lang.code] = translated;
+      const slugSource =
+        translated && translated.trim().length > 0 ? translated : name;
+      slugMap[lang.code] = generateSlug(slugSource);
+    });
+
+    await Promise.all(translationPromises);
+    return { name: translatedName, slug: slugMap };
+  };
+
+  // Translate article fields to all languages
+  const translateArticle = async (
+    title: string,
+    excerpt: string,
+    content: string,
+    tags: string[]
+  ): Promise<{
+    title: Record<string, string>;
+    excerpt: Record<string, string>;
+    content: Record<string, string>;
+    slug: Record<string, string>;
+    tags: Record<string, string[]>;
+  }> => {
+    const sourceLang = await detectLanguage(title);
+    const translatedTitle: Record<string, string> = {};
+    const translatedExcerpt: Record<string, string> = {};
+    const translatedContent: Record<string, string> = {};
+    const slugMap: Record<string, string> = {};
+    const tagsMap: Record<string, string[]> = {};
+
+    const translationPromises = SUPPORTED_LANGUAGES.map(async (lang) => {
+      const [translatedT, translatedE, translatedC] = await Promise.all([
+        translateText(title, sourceLang, lang.code),
+        translateText(excerpt, sourceLang, lang.code),
+        translateText(content, sourceLang, lang.code),
+      ]);
+      translatedTitle[lang.code] = translatedT;
+      translatedExcerpt[lang.code] = translatedE;
+      translatedContent[lang.code] = translatedC;
+
+      const slugSource =
+        translatedT && translatedT.trim().length > 0 ? translatedT : title;
+      slugMap[lang.code] = generateSlug(slugSource);
+
+      // Translate tags
+      const translatedTags = await Promise.all(
+        tags.map((tag) => translateText(tag, sourceLang, lang.code))
+      );
+      tagsMap[lang.code] = translatedTags;
+    });
+
+    await Promise.all(translationPromises);
+    return {
+      title: translatedTitle,
+      excerpt: translatedExcerpt,
+      content: translatedContent,
+      slug: slugMap,
+      tags: tagsMap,
+    };
+  };
+
   const openCategoryModal = (category?: HelpCategory) => {
     if (category) {
       setEditingCategoryId(category.id);
+      // Extract first available translation for editing
+      const nameValue = getFirstAvailableTranslation(category.name, "");
+      setCategoryNameInput(nameValue);
       setCategoryForm({
         name: category.name,
         slug: category.slug,
@@ -160,6 +426,7 @@ const AdminHelpCenter: React.FC = () => {
       });
     } else {
       setEditingCategoryId(null);
+      setCategoryNameInput("");
       setCategoryForm(defaultCategoryForm(locale));
     }
     setIsCategoryModalOpen(true);
@@ -168,6 +435,16 @@ const AdminHelpCenter: React.FC = () => {
   const openArticleModal = (article?: HelpArticle) => {
     if (article) {
       setEditingArticleId(article.id);
+      // Extract first available translations for editing
+      const titleValue = getFirstAvailableTranslation(article.title, "");
+      const excerptValue = getFirstAvailableTranslation(article.excerpt, "");
+      const contentValue = getFirstAvailableTranslation(article.content, "");
+      const tagsArray =
+        Array.isArray(article.tags) ? article.tags : article.tags?.["en"] ?? [];
+      setArticleTitleInput(titleValue);
+      setArticleExcerptInput(excerptValue);
+      setArticleContentInput(contentValue);
+      setTagInput(tagsArray.join(", "));
       setArticleForm({
         title: article.title,
         slug: article.slug,
@@ -180,31 +457,51 @@ const AdminHelpCenter: React.FC = () => {
         isPublished: article.isPublished,
         locale: article.locale,
       });
-      setTagInput((article.tags ?? []).join(", "));
     } else {
       setEditingArticleId(null);
+      setArticleTitleInput("");
+      setArticleExcerptInput("");
+      setArticleContentInput("");
+      setTagInput("");
       const defaultCategoryId = selectedCategoryId ?? categories[0]?.id ?? "";
       setArticleForm(defaultArticleForm(locale, defaultCategoryId));
-      setTagInput("");
     }
     setIsArticleModalOpen(true);
   };
 
   const handleSaveCategory = async (event: React.FormEvent) => {
     event.preventDefault();
+    if (!categoryNameInput.trim()) {
+      alert("Please enter a category name.");
+      return;
+    }
     setIsSaving(true);
+    setTranslating(true);
     try {
+      // Translate name and slug to all languages
+      const { name: translatedName, slug: translatedSlug } =
+        await translateCategory(categoryNameInput.trim());
+
+      const payload = {
+        ...categoryForm,
+        name: translatedName,
+        slug: translatedSlug,
+      };
+
       if (editingCategoryId) {
-        await updateHelpCategory(editingCategoryId, categoryForm);
+        await updateHelpCategory(editingCategoryId, payload);
       } else {
-        await createHelpCategory(categoryForm);
+        await createHelpCategory(payload);
       }
       await refreshAll();
       setIsCategoryModalOpen(false);
+      setCategoryNameInput("");
     } catch (error) {
       console.error("Error saving category", error);
+      alert("Error saving category. Please try again.");
     } finally {
       setIsSaving(false);
+      setTranslating(false);
     }
   };
 
@@ -233,13 +530,40 @@ const AdminHelpCenter: React.FC = () => {
       alert("Select a category for the article.");
       return;
     }
+    if (!articleTitleInput.trim() || !articleExcerptInput.trim() || !articleContentInput.trim()) {
+      alert("Please fill in title, excerpt, and content.");
+      return;
+    }
     setIsSaving(true);
+    setTranslating(true);
     try {
       const tags = tagInput
         .split(",")
         .map((t) => t.trim())
         .filter(Boolean);
-      const payload = { ...articleForm, tags };
+
+      // Translate all article fields to all languages
+      const {
+        title: translatedTitle,
+        excerpt: translatedExcerpt,
+        content: translatedContent,
+        slug: translatedSlug,
+        tags: translatedTags,
+      } = await translateArticle(
+        articleTitleInput.trim(),
+        articleExcerptInput.trim(),
+        articleContentInput.trim(),
+        tags
+      );
+
+      const payload = {
+        ...articleForm,
+        title: translatedTitle,
+        excerpt: translatedExcerpt,
+        content: translatedContent,
+        slug: translatedSlug,
+        tags: translatedTags,
+      };
 
       if (editingArticleId) {
         await updateHelpArticle(editingArticleId, payload);
@@ -248,10 +572,16 @@ const AdminHelpCenter: React.FC = () => {
       }
       await refreshAll();
       setIsArticleModalOpen(false);
+      setArticleTitleInput("");
+      setArticleExcerptInput("");
+      setArticleContentInput("");
+      setTagInput("");
     } catch (error) {
       console.error("Error saving article", error);
+      alert("Error saving article. Please try again.");
     } finally {
       setIsSaving(false);
+      setTranslating(false);
     }
   };
 
@@ -344,7 +674,9 @@ const AdminHelpCenter: React.FC = () => {
                   <div className="space-y-1">
                     <div className="flex items-center space-x-2">
                       <span className="font-medium text-gray-900">
-                        {category.name}
+                        {typeof category.name === "string"
+                          ? category.name
+                          : getFirstAvailableTranslation(category.name, "Untitled Category")}
                       </span>
                       {category.isPublished ? (
                         <span className="inline-flex items-center px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-700">
@@ -358,7 +690,12 @@ const AdminHelpCenter: React.FC = () => {
                       )}
                     </div>
                     <div className="text-xs text-gray-500 space-x-2">
-                      <span>Slug: {category.slug}</span>
+                      <span>
+                        Slug:{" "}
+                        {typeof category.slug === "string"
+                          ? category.slug
+                          : getFirstAvailableTranslation(category.slug, "")}
+                      </span>
                       <span>Order: {category.order}</span>
                     </div>
                   </div>
@@ -425,7 +762,9 @@ const AdminHelpCenter: React.FC = () => {
                   <div className="space-y-1 max-w-3xl">
                     <div className="flex items-center space-x-2">
                       <span className="font-semibold text-gray-900">
-                        {article.title}
+                        {typeof article.title === "string"
+                          ? article.title
+                          : getFirstAvailableTranslation(article.title, "Untitled Article")}
                       </span>
                       {article.isPublished ? (
                         <span className="inline-flex items-center px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-700">
@@ -445,10 +784,15 @@ const AdminHelpCenter: React.FC = () => {
                       </span>
                     </div>
                     <p className="text-sm text-gray-700 line-clamp-2">
-                      {article.excerpt}
+                      {typeof article.excerpt === "string"
+                        ? article.excerpt
+                        : getFirstAvailableTranslation(article.excerpt, "")}
                     </p>
                     <div className="flex flex-wrap gap-2">
-                      {article.tags?.map((tag) => (
+                      {(Array.isArray(article.tags)
+                        ? article.tags
+                        : article.tags?.["en"] || []
+                      ).map((tag) => (
                         <span
                           key={tag}
                           className="px-2 py-0.5 bg-gray-100 text-gray-700 text-xs rounded-full"
@@ -491,45 +835,42 @@ const AdminHelpCenter: React.FC = () => {
         isOpen={isCategoryModalOpen}
         onClose={() => setIsCategoryModalOpen(false)}
         title={editingCategoryId ? "Edit category" : "New category"}
+        size="large"
       >
         <form className="space-y-4" onSubmit={handleSaveCategory}>
+          {/* Translation Info Banner */}
+          <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="flex items-start gap-3">
+              <Globe className="w-5 h-5 text-blue-600 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium text-blue-900 mb-1">
+                  Auto-Translation Enabled
+                </p>
+                <p className="text-xs text-blue-700">
+                  Enter the category name in any language. The system will automatically detect the language and translate it to all 9 supported languages when you save.
+                </p>
+              </div>
+            </div>
+          </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Name
+              Name <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               className="mt-1 w-full border rounded-md px-3 py-2"
-              value={categoryForm.name}
-              onChange={(e) => {
-                const nextTitle = e.target.value;
-                setCategoryForm((prev) => ({
-                  ...prev,
-                  name: nextTitle,
-                  slug: prev.slug ? prev.slug : slugify(nextTitle),
-                }));
-              }}
+              value={categoryNameInput}
+              onChange={(e) => setCategoryNameInput(e.target.value)}
+              placeholder="Enter category name in any language..."
               required
+              disabled={translating}
             />
+            <p className="mt-1 text-xs text-gray-500">
+              Language will be auto-detected automatically
+            </p>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Slug
-              </label>
-              <input
-                type="text"
-                className="mt-1 w-full border rounded-md px-3 py-2"
-                value={categoryForm.slug}
-                onChange={(e) =>
-                  setCategoryForm((prev) => ({
-                    ...prev,
-                    slug: slugify(e.target.value),
-                  }))
-                }
-                required
-              />
-            </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
                 Order
@@ -550,27 +891,6 @@ const AdminHelpCenter: React.FC = () => {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Locale
-              </label>
-              <select
-                className="mt-1 w-full border rounded-md px-3 py-2"
-                value={categoryForm.locale}
-                onChange={(e) =>
-                  setCategoryForm((prev) => ({
-                    ...prev,
-                    locale: e.target.value,
-                  }))
-                }
-              >
-                {locales.map((l) => (
-                  <option key={l.value} value={l.value}>
-                    {l.label}
-                  </option>
-                ))}
-              </select>
-            </div>
             <div className="flex items-center space-x-2 pt-6">
               <input
                 id="category-published"
@@ -616,8 +936,12 @@ const AdminHelpCenter: React.FC = () => {
             >
               Cancel
             </Button>
-            <Button type="submit" variant="primary" loading={isSaving}>
-              {editingCategoryId ? "Update" : "Create"}
+            <Button type="submit" variant="primary" loading={isSaving || translating} disabled={translating}>
+              {translating
+                ? "Translating..."
+                : editingCategoryId
+                ? "Update"
+                : "Create & Translate"}
             </Button>
           </div>
         </form>
@@ -630,43 +954,37 @@ const AdminHelpCenter: React.FC = () => {
         size="large"
       >
         <form className="space-y-4" onSubmit={handleSaveArticle}>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Title
-              </label>
-              <input
-                type="text"
-                className="mt-1 w-full border rounded-md px-3 py-2"
-                value={articleForm.title}
-                onChange={(e) => {
-                  const nextTitle = e.target.value;
-                  setArticleForm((prev) => ({
-                    ...prev,
-                    title: nextTitle,
-                    slug: prev.slug ? prev.slug : slugify(nextTitle),
-                  }));
-                }}
-                required
-              />
+          {/* Translation Info Banner */}
+          <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="flex items-start gap-3">
+              <Globe className="w-5 h-5 text-blue-600 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium text-blue-900 mb-1">
+                  Auto-Translation Enabled
+                </p>
+                <p className="text-xs text-blue-700">
+                  Enter your article content in any language. The system will automatically detect the language and translate it to all 9 supported languages when you save.
+                </p>
+              </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Slug
-              </label>
-              <input
-                type="text"
-                className="mt-1 w-full border rounded-md px-3 py-2"
-                value={articleForm.slug}
-                onChange={(e) =>
-                  setArticleForm((prev) => ({
-                    ...prev,
-                    slug: slugify(e.target.value),
-                  }))
-                }
-                required
-              />
-            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Title <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              className="mt-1 w-full border rounded-md px-3 py-2"
+              value={articleTitleInput}
+              onChange={(e) => setArticleTitleInput(e.target.value)}
+              placeholder="Enter article title in any language..."
+              required
+              disabled={translating}
+            />
+            <p className="mt-1 text-xs text-gray-500">
+              Language will be auto-detected automatically
+            </p>
           </div>
           <div className="grid grid-cols-3 gap-4">
             <div>
@@ -685,13 +1003,13 @@ const AdminHelpCenter: React.FC = () => {
                 required
               >
                 <option value="">Select...</option>
-                {categories
-                  .filter((c) => c.locale === articleForm.locale)
-                  .map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.name}
-                    </option>
-                  ))}
+                {categories.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {typeof c.name === "string"
+                      ? c.name
+                      : getFirstAvailableTranslation(c.name, "Untitled Category")}
+                  </option>
+                ))}
               </select>
             </div>
             <div>
@@ -734,24 +1052,21 @@ const AdminHelpCenter: React.FC = () => {
               />
             </div>
           </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Excerpt <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              className="mt-1 w-full border rounded-md px-3 py-2"
+              rows={3}
+              value={articleExcerptInput}
+              onChange={(e) => setArticleExcerptInput(e.target.value)}
+              placeholder="Enter article excerpt in any language..."
+              required
+              disabled={translating}
+            />
+          </div>
           <div className="grid grid-cols-3 gap-4">
-            <div className="col-span-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Excerpt
-              </label>
-              <textarea
-                className="mt-1 w-full border rounded-md px-3 py-2"
-                rows={3}
-                value={articleForm.excerpt}
-                onChange={(e) =>
-                  setArticleForm((prev) => ({
-                    ...prev,
-                    excerpt: e.target.value,
-                  }))
-                }
-                required
-              />
-            </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
                 Order
@@ -793,6 +1108,23 @@ const AdminHelpCenter: React.FC = () => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
+              Content (markdown supported) <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              className="mt-1 w-full border rounded-md px-3 py-2 font-mono text-sm"
+              rows={12}
+              value={articleContentInput}
+              onChange={(e) => setArticleContentInput(e.target.value)}
+              placeholder="Enter article content in any language (markdown supported)..."
+              required
+              disabled={translating}
+            />
+            <p className="mt-1 text-xs text-gray-500">
+              {articleContentInput.length} characters
+            </p>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
               Tags (comma separated)
             </label>
             <input
@@ -801,21 +1133,11 @@ const AdminHelpCenter: React.FC = () => {
               value={tagInput}
               onChange={(e) => setTagInput(e.target.value)}
               placeholder="sos, urgence, international"
+              disabled={translating}
             />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Content (markdown supported)
-            </label>
-            <textarea
-              className="mt-1 w-full border rounded-md px-3 py-2 font-mono text-sm"
-              rows={12}
-              value={articleForm.content}
-              onChange={(e) =>
-                setArticleForm((prev) => ({ ...prev, content: e.target.value }))
-              }
-              required
-            />
+            <p className="mt-1 text-xs text-gray-500">
+              Tags will be translated to all languages automatically
+            </p>
           </div>
           <div className="flex justify-end space-x-3">
             <Button
@@ -824,8 +1146,12 @@ const AdminHelpCenter: React.FC = () => {
             >
               Cancel
             </Button>
-            <Button type="submit" variant="primary" loading={isSaving}>
-              {editingArticleId ? "Update" : "Create"}
+            <Button type="submit" variant="primary" loading={isSaving || translating} disabled={translating}>
+              {translating
+                ? "Translating..."
+                : editingArticleId
+                ? "Update"
+                : "Create & Translate"}
             </Button>
           </div>
         </form>
