@@ -46,6 +46,7 @@ import {
   Download,
   Zap,
   HelpingHand,
+  HelpCircle,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -551,8 +552,15 @@ export const adminMenuTree: AdminMenuItem[] = [
         description: "manage help center articles",
       },
       {
-        id: "system-maintenance",
-        label: "Maintenance système",
+        id: 'faqs-management',
+        label: 'FAQs',
+        path: '/admin/cms/faqs',
+        icon: HelpCircle,
+        description: 'Gestion des questions fréquentes'
+      },
+      {
+        id: 'system-maintenance',
+        label: 'Maintenance système',
         icon: Cog,
         description: "Outils d'administration technique",
         children: [
