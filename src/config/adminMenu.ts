@@ -45,7 +45,8 @@ import {
   BarChart,
   Download,
   Zap,
-  Globe2
+  Globe2,
+  HelpCircle
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -543,6 +544,13 @@ export const adminMenuTree: AdminMenuItem[] = [
         path: '/admin/documents',
         icon: FileText,
         description: 'CGU, confidentialité, mentions'
+      },
+      {
+        id: 'faqs-management',
+        label: 'FAQs',
+        path: '/admin/cms/faqs',
+        icon: HelpCircle,
+        description: 'Gestion des questions fréquentes'
       },
       {
         id: 'system-maintenance',

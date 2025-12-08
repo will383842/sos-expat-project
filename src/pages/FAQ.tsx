@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ChevronDown,
   ChevronUp,
@@ -15,10 +15,14 @@ import {
   AlertTriangle,
   Settings,
 } from "lucide-react";
+import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
+import { db } from "../config/firebase";
 import Layout from "../components/layout/Layout";
 import SEOHead from "../components/layout/SEOHead";
 import { useApp } from "../contexts/AppContext";
 import { useIntl, FormattedMessage } from "react-intl";
+import { getLocaleString } from "../multilingual-system";
+import { Link } from "react-router-dom";
 
 interface FAQItem {
   id: string;
@@ -26,6 +30,7 @@ interface FAQItem {
   question: string;
   answer: string;
   tags: string[];
+  slug?: Record<string, string>;
 }
 
 const FAQ: React.FC = () => {
@@ -34,8 +39,84 @@ const FAQ: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [openItems, setOpenItems] = useState<Set<string>>(new Set());
+  const [faqData, setFaqData] = useState<FAQItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const langCode = language?.split('-')[0] || 'fr';
 
-  const faqData: FAQItem[] = [
+  // Load FAQs from Firestore
+  useEffect(() => {
+    const loadFAQs = async () => {
+      try {
+        setLoading(true);
+        if (!db) {
+          console.warn('Firebase not initialized');
+          setFaqData([]);
+          setLoading(false);
+          return;
+        }
+
+        const faqsRef = collection(db, 'faqs');
+        
+        // Load active FAQs (we filter by language in JavaScript since Firestore can't query nested fields)
+        const q = query(
+          faqsRef,
+          where('isActive', '==', true)
+        );
+        const snapshot = await getDocs(q);
+
+        const loadedFAQs = snapshot.docs
+          .map(doc => {
+            const data = doc.data() as {
+              category?: string;
+              question?: Record<string, string>;
+              answer?: Record<string, string>;
+              tags?: string[];
+              slug?: Record<string, string>;
+              order?: number;
+              isActive?: boolean;
+            };
+            
+            // Check if FAQ has content in the current language
+            const hasQuestionInLang = data.question?.[langCode] && data.question[langCode].trim().length > 0;
+            const hasAnswerInLang = data.answer?.[langCode] && data.answer[langCode].trim().length > 0;
+            
+            // Only include FAQs that have both question and answer in the current language
+            if (!hasQuestionInLang || !hasAnswerInLang) {
+              return null; // Filter out FAQs without content in current language
+            }
+            
+            return {
+              id: doc.id,
+              category: data.category || 'general',
+              question: data.question[langCode], // Use current language only
+              answer: data.answer[langCode], // Use current language only
+              tags: data.tags || [],
+              slug: data.slug || {}, // Use actual slug from database (don't generate on-the-fly)
+              _order: data.order || 999 // Temporary field for sorting
+            };
+          })
+          .filter((item): item is NonNullable<typeof item> => item !== null) // Remove null items
+          .sort((a, b) => {
+            // Manual sort by order
+            return (a as any)._order - (b as any)._order;
+          })
+          .map(({ _order, ...item }) => item as FAQItem); // Remove temporary order field
+        
+        console.log(`Loaded ${loadedFAQs.length} FAQs from Firestore (filtered for language: ${langCode})`);
+        setFaqData(loadedFAQs);
+      } catch (error) {
+        console.error('Error loading FAQs:', error);
+        // Show error but don't break the page
+        setFaqData([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadFAQs();
+  }, [langCode]);
+
+  // Fallback hardcoded FAQs (for backward compatibility or if Firestore fails)
+  const fallbackFaqData: FAQItem[] = [
     // PAIEMENT ET FACTURATION
     {
       id: "1",
@@ -779,8 +860,20 @@ const FAQ: React.FC = () => {
 
               {/* LISTE FAQ */}
               <main className="lg:col-span-3">
-                <div className="space-y-4">
-                  {filteredFAQ.map((item) => {
+                {loading ? (
+                  <div className="space-y-4">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="rounded-3xl border border-gray-200 bg-white p-6 animate-pulse">
+                        <div className="h-6 bg-gray-200 rounded w-3/4 mb-4"></div>
+                        <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
+                        <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <>
+                    <div className="space-y-4">
+                      {filteredFAQ.map((item) => {
                     const isOpen = openItems.has(item.id);
                     const panelId = `faq-panel-${item.id}`;
                     const buttonId = `faq-button-${item.id}`;
@@ -793,14 +886,8 @@ const FAQ: React.FC = () => {
                             : "border-gray-200 bg-white"
                         }`}
                       >
-                        <button
-                          id={buttonId}
-                          aria-controls={panelId}
-                          aria-expanded={isOpen}
-                          onClick={() => toggleItem(item.id)}
-                          className="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-white/60"
-                        >
-                          <div className="flex items-center gap-3 pr-4">
+                        <div className="w-full px-6 py-5 flex items-center justify-between hover:bg-white/60">
+                          <div className="flex items-center gap-3 pr-4 flex-1">
                             <span
                               className={`inline-flex items-center justify-center w-8 h-8 rounded-xl ${
                                 isOpen
@@ -810,26 +897,35 @@ const FAQ: React.FC = () => {
                             >
                               <HelpCircle size={18} />
                             </span>
-                            <h3 className="text-lg md:text-xl font-bold text-gray-900">
+                            <Link
+                              to={`/${getLocaleString(language)}/faq/${item.slug?.[langCode] || item.slug?.['fr'] || item.slug?.['en'] || item.id}`}
+                              className="text-lg md:text-xl font-bold text-gray-900 flex-1 hover:text-red-600 transition-colors"
+                            >
                               {item.question}
-                            </h3>
+                            </Link>
                           </div>
 
-                          <span
-                            className={`shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-xl border transition-all ${
-                              isOpen
-                                ? "border-red-300 bg-white text-red-600 rotate-180"
-                                : "border-gray-200 bg-gray-50 text-gray-600"
-                            }`}
-                            aria-hidden="true"
-                          >
-                            {isOpen ? (
-                              <ChevronUp size={18} />
-                            ) : (
-                              <ChevronDown size={18} />
-                            )}
-                          </span>
-                        </button>
+                          <div className="flex items-center gap-2 shrink-0">
+                            <button
+                              id={buttonId}
+                              aria-controls={panelId}
+                              aria-expanded={isOpen}
+                              onClick={() => toggleItem(item.id)}
+                              className={`shrink-0 inline-flex items-center justify-center w-8 h-8 rounded-xl border transition-all ${
+                                isOpen
+                                  ? "border-red-300 bg-white text-red-600 rotate-180"
+                                  : "border-gray-200 bg-gray-50 text-gray-600"
+                              }`}
+                              aria-hidden="true"
+                            >
+                              {isOpen ? (
+                                <ChevronUp size={18} />
+                              ) : (
+                                <ChevronDown size={18} />
+                              )}
+                            </button>
+                          </div>
+                        </div>
 
                         {isOpen && (
                           <div
@@ -844,47 +940,47 @@ const FAQ: React.FC = () => {
                               </p>
 
                               {/* Tags */}
-                              <div className="flex flex-wrap gap-2 mt-4">
-                                {item.tags.map((tag, index) => (
-                                  <span
-                                    key={index}
-                                    className="inline-flex rounded-full p-[1px] bg-gradient-to-r from-red-500 to-orange-500"
-                                  >
-                                    <span className="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs font-semibold text-red-700 border border-red-200">
-                                      {tag}
+                              {item.tags && item.tags.length > 0 && (
+                                <div className="flex flex-wrap gap-2 mt-4">
+                                  {item.tags.map((tag, index) => (
+                                    <span
+                                      key={index}
+                                      className="inline-flex rounded-full p-[1px] bg-gradient-to-r from-red-500 to-orange-500"
+                                    >
+                                      <span className="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs font-semibold text-red-700 border border-red-200">
+                                        {tag}
+                                      </span>
                                     </span>
-                                  </span>
-                                ))}
-                              </div>
+                                  ))}
+                                </div>
+                              )}
                             </div>
                           </div>
                         )}
                       </div>
                     );
-                  })}
-
-                  {filteredFAQ.length === 0 && (
-                    <div className="text-center py-16 rounded-3xl border border-dashed border-gray-300 bg-white">
-                      <div className="text-gray-600 text-lg mb-4">
-                        {/* {language === "fr"
-                          ? "Aucune question trouvée pour ces critères"
-                          : "No questions found for these criteria"} */}
-                        {intl.formatMessage({ id: "faq.noResults" })}
-                      </div>
-                      <button
-                        onClick={() => {
-                          setSearchTerm("");
-                          setSelectedCategory("all");
-                        }}
-                        className="inline-flex items-center gap-2 rounded-2xl px-5 py-3 bg-gradient-to-r from-red-600 to-orange-500 text-white font-semibold hover:opacity-95 transition"
-                      >
-                        {language === "fr"
-                          ? "Réinitialiser les filtres"
-                          : "Reset filters"}
-                      </button>
+                      })}
                     </div>
-                  )}
-                </div>
+                    {filteredFAQ.length === 0 && (
+                      <div className="text-center py-16 rounded-3xl border border-dashed border-gray-300 bg-white">
+                        <div className="text-gray-600 text-lg mb-4">
+                          {intl.formatMessage({ id: "faq.noResults" })}
+                        </div>
+                        <button
+                          onClick={() => {
+                            setSearchTerm("");
+                            setSelectedCategory("all");
+                          }}
+                          className="inline-flex items-center gap-2 rounded-2xl px-5 py-3 bg-gradient-to-r from-red-600 to-orange-500 text-white font-semibold hover:opacity-95 transition"
+                        >
+                          {language === "fr"
+                            ? "Réinitialiser les filtres"
+                            : "Reset filters"}
+                        </button>
+                      </div>
+                    )}
+                  </>
+                )}
               </main>
             </div>
           </div>

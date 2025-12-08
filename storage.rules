@@ -26,6 +26,15 @@ service cloud.firestore {
       allow update, delete: if false;
     }
     
+    // ================= FAQ COLLECTION =================
+    match /faqs/{faqId} {
+      // Read: Everyone can read active FAQs
+      allow read: if resource.data.isActive == true;
+      
+      // Write: Only admins
+      allow create, update, delete: if isAdmin();
+    }
+    
     // ... ajoutez vos autres règles Firestore existantes ici ...
   }
 }

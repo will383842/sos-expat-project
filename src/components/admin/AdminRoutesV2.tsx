@@ -164,6 +164,7 @@ const AdminCountries = lazy(() => import("../../pages/admin/AdminCountries"));
 const AdminLegalDocuments = lazy(
   () => import("../../pages/admin/AdminLegalDocuments")
 );
+const AdminFAQs = lazy(() => import("../../pages/admin/AdminFAQs"));
 const AdminBackups = lazy(() => import("../../pages/admin/AdminBackups"));
 const AdminSettings = lazy(() => import("../../pages/admin/AdminSettings"));
 
@@ -775,6 +776,18 @@ const AdminRoutesV2: React.FC = () => {
             }
           >
             <AdminLegalDocuments />
+          </Suspense>
+        }
+      />
+      <Route
+        path="cms/faqs"
+        element={
+          <Suspense
+            fallback={
+              <LoadingSpinner message="Chargement des FAQs..." />
+            }
+          >
+            <AdminFAQs />
           </Suspense>
         }
       />

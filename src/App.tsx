@@ -92,6 +92,7 @@ const TestimonialDetail = lazy(() => import('./pages/TestimonialDetail'));
 const Testimonials = lazy(() => import('./pages/Testimonials'));
 const HelpCenter = lazy(() => import('./pages/HelpCenter'));
 const FAQ = lazy(() => import('./pages/FAQ'));
+const FAQDetail = lazy(() => import('./pages/FAQDetail'));
 const Contact = lazy(() => import('./pages/Contact'));
 const HowItWorks = lazy(() => import('./pages/HowItWorks'));
 
@@ -136,6 +137,7 @@ const routeConfigs: RouteConfig[] = [
   { path: "/contact", component: Contact, translated: "contact" },
   { path: "/how-it-works", component: HowItWorks, translated: "how-it-works" },
   { path: "/faq", component: FAQ, translated: "faq" },
+  { path: "/faq/:slug", component: FAQDetail },
   { path: "/centre-aide", component: HelpCenter, translated: "help-center" },
 
   // Témoignages
