@@ -58,6 +58,8 @@ import {
   updateProfile as fbUpdateProfile,
 } from "firebase/auth";
 import { FormattedMessage, useIntl } from "react-intl";
+import { useTranslation } from "react-i18next";
+import i18n from "../config/i18n";
 import StripeKYC from "@/components/StripeKyc";
 import IntlPhoneInput from "@/components/forms-data/IntlPhoneInput";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
@@ -369,9 +371,28 @@ const Alert: React.FC<{ type: "success" | "error"; message: string }> = ({
 // ===============================
 const Dashboard: React.FC = () => {
   const intl = useIntl();
+  const { t: t_i18n } = useTranslation();
   const navigate = useNavigate();
   const { user, firebaseUser, logout, refreshUser } = useAuth();
   const { language } = useApp();
+  
+  // Update i18n language when AppContext language changes
+  useEffect(() => {
+    const mapLangCodeToI18n = (langCode: string | undefined): 'fr' | 'en' | 'es' | 'ru' | 'de' | 'hi' | 'pt' | 'ch' | 'ar' => {
+      const supportedLanguages = ['fr', 'en', 'es', 'ru', 'de', 'hi', 'pt', 'ch', 'ar'];
+      if (langCode && supportedLanguages.includes(langCode)) {
+        return langCode as 'fr' | 'en' | 'es' | 'ru' | 'de' | 'hi' | 'pt' | 'ch' | 'ar';
+      }
+      return 'en';
+    };
+    
+    const i18nLang = mapLangCodeToI18n(language);
+    if (i18n.language !== i18nLang) {
+      i18n.changeLanguage(i18nLang).catch((err) => {
+        console.error('Error changing i18n language:', err);
+      });
+    }
+  }, [language]);
 
   // Helper to get user's full name safely
   const getUserFullName = useCallback(() => {
@@ -1353,16 +1374,10 @@ useEffect(() => {
               </svg>
               <div>
                 <p className="text-green-800 font-semibold">
-                  <FormattedMessage
-                    id="dashboard.kyc.verified"
-                    defaultMessage="Account Verified!"
-                  />
+                  {t_i18n('kyc.verified.title')}
                 </p>
                 <p className="text-green-700 text-sm">
-                  <FormattedMessage
-                    id="dashboard.kyc.verified.description"
-                    defaultMessage="You can now receive payments from clients."
-                  />
+                  {t_i18n('kyc.verified.description')}
                 </p>
               </div>
             </div>
