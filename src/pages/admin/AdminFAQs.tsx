@@ -95,21 +95,108 @@ const AdminFAQs: React.FC = () => {
     tags: []
   });
 
-  // Generate slug from question text
-  const generateSlug = (text: string): string => {
+  // Transliterate non-Latin text to Latin characters using Google Translate
+  const transliterateText = async (text: string, langCode: string): Promise<string> => {
     if (!text || text.trim().length === 0) {
+      return '';
+    }
+
+    try {
+      // Use Google Translate transliteration API
+      // Format: https://translate.googleapis.com/translate_a/single?client=gtx&sl=SOURCE_LANG&tl=TARGET_LANG&dt=rm&q=TEXT
+      // dt=rm requests romanization/transliteration
+      const transliterateUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${langCode}&tl=en&dt=rm&q=${encodeURIComponent(text.substring(0, 200))}`;
+      const response = await fetch(transliterateUrl);
+
+      if (response.ok) {
+        const data = await response.json() as any;
+        // The transliteration API returns data in format: [[["transliterated", "original", ...], ...]]
+        if (data && Array.isArray(data) && data[0] && Array.isArray(data[0])) {
+          const transliterated = data[0]
+            .map((item: any[]) => item && item[0] ? item[0] : '')
+            .filter(Boolean)
+            .join(' ');
+          
+          if (transliterated && transliterated.trim().length > 0) {
+            console.log(`[transliterateText] Transliterated "${text.substring(0, 30)}..." to "${transliterated.substring(0, 50)}..."`);
+            return transliterated;
+          }
+        }
+      }
+    } catch (error) {
+      console.warn(`[transliterateText] Error transliterating ${langCode}:`, error);
+    }
+
+    return '';
+  };
+
+  // Generate slug from question text
+  const generateSlug = async (text: string, langCode: string, fallbackText?: string): Promise<string> => {
+    if (!text || text.trim().length === 0) {
+      // Try fallback text if provided
+      if (fallbackText && fallbackText.trim().length > 0) {
+        return generateSlug(fallbackText, 'en');
+      }
       return 'untitled-faq';
     }
     
-    let slug = text
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
-      .replace(/[^a-z0-9\s-]/g, '') // Remove special characters except spaces and hyphens
-      .replace(/\s+/g, '-') // Replace spaces with hyphens
-      .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
-      .replace(/(^-|-$)/g, '') // Remove leading/trailing hyphens
-      .substring(0, 100);
+    // Check if text contains non-Latin characters
+    const hasNonLatin = /[^\u0000-\u007F\u0080-\u00FF\u0100-\u017F\u0180-\u024F]/.test(text);
+    
+    let slug = '';
+    
+    if (hasNonLatin && (langCode === 'hi' || langCode === 'ru' || langCode === 'ar' || langCode === 'ch')) {
+      // Try transliteration for non-Latin scripts
+      const transliterated = await transliterateText(text, langCode);
+      if (transliterated && transliterated.trim().length > 0) {
+        // Use transliterated text for slug
+        slug = transliterated
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-z0-9\s-]/g, '')
+          .replace(/\s+/g, '-')
+          .replace(/-+/g, '-')
+          .replace(/(^-|-$)/g, '')
+          .substring(0, 100);
+      }
+    }
+    
+    // If transliteration didn't work or not needed, try normal slug generation
+    if (!slug || slug.trim().length === 0) {
+      slug = text
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+        .replace(/[^a-z0-9\s-]/g, '') // Remove special characters except spaces and hyphens
+        .replace(/\s+/g, '-') // Replace spaces with hyphens
+        .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+        .replace(/(^-|-$)/g, '') // Remove leading/trailing hyphens
+        .substring(0, 100);
+    }
+    
+    // If slug is still empty or too short (likely non-Latin script without transliteration), use fallback with language prefix
+    if (!slug || slug.trim().length === 0 || slug.length < 3) {
+      if (fallbackText && fallbackText.trim().length > 0) {
+        const fallbackSlug = fallbackText
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-z0-9\s-]/g, '')
+          .replace(/\s+/g, '-')
+          .replace(/-+/g, '-')
+          .replace(/(^-|-$)/g, '')
+          .substring(0, 100);
+        
+        // Add language code prefix to ensure uniqueness for non-Latin scripts
+        if (langCode === 'hi' || langCode === 'ru' || langCode === 'ar' || langCode === 'ch') {
+          slug = `${langCode}-${fallbackSlug}`;
+          console.log(`[generateSlug] Using language-prefixed fallback for ${langCode}: "${slug}"`);
+        } else {
+          slug = fallbackSlug;
+        }
+      }
+    }
     
     // Ensure slug is not empty
     if (!slug || slug.trim().length === 0) {
@@ -259,6 +346,12 @@ const AdminFAQs: React.FC = () => {
     const slugMap: Record<string, string> = {};
 
     // Translate to all supported languages
+    // First, get English translation as fallback for non-Latin scripts
+    let englishQuestion = question;
+    if (sourceLang !== 'en') {
+      englishQuestion = await translateText(question, sourceLang, 'en');
+    }
+    
     const translationPromises = SUPPORTED_LANGUAGES.map(async (lang) => {
       const [translatedQ, translatedA] = await Promise.all([
         translateText(question, sourceLang, lang.code),
@@ -268,12 +361,17 @@ const AdminFAQs: React.FC = () => {
       translatedQuestion[lang.code] = translatedQ;
       translatedAnswer[lang.code] = translatedA;
       
-      // Generate slug from translated question, with fallback to original if translation is empty
+      // Generate slug from translated question
+      // For non-Latin scripts (hi, ru, ar, ch), try transliteration first, then fallback to English with language prefix
       const slugSource = translatedQ && translatedQ.trim().length > 0 ? translatedQ : question;
-      const generatedSlug = generateSlug(slugSource);
+      const fallbackForSlug = (lang.code === 'hi' || lang.code === 'ru' || lang.code === 'ar' || lang.code === 'ch') 
+        ? englishQuestion 
+        : undefined;
+      
+      const generatedSlug = await generateSlug(slugSource, lang.code, fallbackForSlug);
       slugMap[lang.code] = generatedSlug;
       
-      console.log(`[translateToAllLanguages] Generated slug for ${lang.code}: "${generatedSlug}" from: "${slugSource.substring(0, 50)}..."`);
+      console.log(`[translateToAllLanguages] Generated slug for ${lang.code}: "${generatedSlug}" from: "${slugSource.substring(0, 50)}..." (fallback: ${fallbackForSlug ? 'yes' : 'no'})`);
     });
 
     await Promise.all(translationPromises);

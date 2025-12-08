@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
-import { collection, query, where, getDocs, getDoc, doc, updateDoc, increment, orderBy } from 'firebase/firestore';
+import { collection, query, where, getDocs, getDoc, doc, updateDoc, increment, orderBy, limit } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import Layout from '../components/layout/Layout';
 import SEOHead from '../components/layout/SEOHead';
@@ -133,6 +133,11 @@ const FAQDetail: React.FC = () => {
           // Normalize slug for comparison (lowercase, trim)
           const normalizedSlug = slug.toLowerCase().trim();
           
+          // Check if slug has a language prefix (e.g., "ru-xxx", "hi-xxx")
+          const langPrefixMatch = normalizedSlug.match(/^(hi|ru|ar|ch)-(.+)$/);
+          const slugWithoutPrefix = langPrefixMatch ? langPrefixMatch[2] : normalizedSlug;
+          const detectedLangFromSlug = langPrefixMatch ? langPrefixMatch[1] : null;
+          
           const matchingFAQ = allSnapshot.docs.find(doc => {
             const data = doc.data();
             const slugData = data.slug || {};
@@ -145,28 +150,79 @@ const FAQDetail: React.FC = () => {
               }
             });
             
-            // Check if slug matches in current language (case-insensitive)
+            // Strategy 1: Exact match in current language
             if (normalizedSlugs[langCode] === normalizedSlug) {
-              console.log(`[FAQDetail] ✓ Found match by langCode ${langCode}`);
+              console.log(`[FAQDetail] ✓ Found exact match by langCode ${langCode}`);
               return true;
             }
             
-            // Check if slug matches in any language (case-insensitive)
+            // Strategy 2: If slug has language prefix, check that language's slug
+            if (detectedLangFromSlug && normalizedSlugs[detectedLangFromSlug]) {
+              const prefixedSlug = `${detectedLangFromSlug}-${normalizedSlugs[detectedLangFromSlug]}`;
+              if (prefixedSlug === normalizedSlug || normalizedSlugs[detectedLangFromSlug] === slugWithoutPrefix) {
+                console.log(`[FAQDetail] ✓ Found match by language prefix ${detectedLangFromSlug}`);
+                return true;
+              }
+            }
+            
+            // Strategy 3: Check if slug matches without prefix (for language-prefixed slugs in DB)
+            if (detectedLangFromSlug) {
+              // Check if any language has a slug that matches when prefixed
+              for (const [key, value] of Object.entries(normalizedSlugs)) {
+                if (key === detectedLangFromSlug && value === slugWithoutPrefix) {
+                  console.log(`[FAQDetail] ✓ Found match by removing prefix for ${key}`);
+                  return true;
+                }
+              }
+            }
+            
+            // Strategy 4: Check if slug matches in any language (case-insensitive)
             if (Object.values(normalizedSlugs).includes(normalizedSlug)) {
               console.log(`[FAQDetail] ✓ Found match in another language`);
               return true;
             }
             
-            // Check common fallback languages (case-insensitive)
+            // Strategy 5: Check if slug matches without prefix in any language
+            if (detectedLangFromSlug) {
+              for (const [key, value] of Object.entries(normalizedSlugs)) {
+                if (value === slugWithoutPrefix) {
+                  console.log(`[FAQDetail] ✓ Found match without prefix in language ${key}`);
+                  return true;
+                }
+              }
+            }
+            
+            // Strategy 6: Check common fallback languages (case-insensitive)
             if (normalizedSlugs['fr'] === normalizedSlug || normalizedSlugs['en'] === normalizedSlug) {
               console.log(`[FAQDetail] ✓ Found match in fallback language`);
               return true;
             }
             
-            // Check if document ID matches (for backward compatibility)
+            // Strategy 7: Check if slug matches fallback languages without prefix
+            if (detectedLangFromSlug) {
+              if (normalizedSlugs['fr'] === slugWithoutPrefix || normalizedSlugs['en'] === slugWithoutPrefix) {
+                console.log(`[FAQDetail] ✓ Found match in fallback language without prefix`);
+                return true;
+              }
+            }
+            
+            // Strategy 8: Check if document ID matches (for backward compatibility)
             if (doc.id === slug || doc.id.toLowerCase() === normalizedSlug) {
               console.log(`[FAQDetail] ✓ Found match by document ID`);
               return true;
+            }
+            
+            // Strategy 9: Partial match - check if slug contains or is contained in any stored slug
+            for (const [key, value] of Object.entries(normalizedSlugs)) {
+              // Check if stored slug contains the search slug or vice versa
+              if (value.includes(normalizedSlug) || normalizedSlug.includes(value)) {
+                // Only match if they're reasonably similar (not too different in length)
+                const lengthDiff = Math.abs(value.length - normalizedSlug.length);
+                if (lengthDiff < 20) { // Allow some difference for prefixes/suffixes
+                  console.log(`[FAQDetail] ✓ Found partial match in language ${key}`);
+                  return true;
+                }
+              }
             }
             
             return false;
@@ -188,7 +244,57 @@ const FAQDetail: React.FC = () => {
         }
 
         if (snapshot.empty) {
+          // Last resort: Try to find by document ID if slug looks like an ID
+          const looksLikeDocId = /^[a-zA-Z0-9]{20,}$/.test(slug);
+          if (looksLikeDocId) {
+            try {
+              const docRef = doc(db, 'faqs', slug);
+              const docSnap = await getDoc(docRef);
+              if (docSnap.exists() && docSnap.data().isActive !== false) {
+                const faqData = { id: docSnap.id, ...docSnap.data() } as FAQ;
+                setFaq(faqData);
+                
+                // Increment view count
+                try {
+                  await updateDoc(docRef, {
+                    views: increment(1)
+                  });
+                } catch (err) {
+                  console.error('Error incrementing views:', err);
+                }
+                
+                // Load related FAQs
+                if (faqData.category) {
+                  const relatedQuery = query(
+                    faqsRef,
+                    where('category', '==', faqData.category),
+                    // where('isActive', '==', true),
+                    // orderBy('order', 'asc')
+                  );
+                  const relatedSnapshot = await getDocs(relatedQuery);
+                  const related = relatedSnapshot.docs
+                    .map(doc => ({ id: doc.id, ...doc.data() } as FAQ))
+                    .filter(f => f.id !== faqData.id)
+                    .slice(0, 5);
+                  setRelatedFAQs(related);
+                }
+                
+                setLoading(false);
+                return;
+              }
+            } catch (err) {
+              console.error('[FAQDetail] Error fetching by document ID as last resort:', err);
+            }
+          }
+          
           console.error(`[FAQDetail] FAQ not found with slug: ${slug} for language: ${langCode}`);
+          console.error(`[FAQDetail] Available slugs in database (first 5 FAQs):`);
+          const allSnapshot = await getDocs(query(faqsRef, where('isActive', '==', true), limit(5)));
+          allSnapshot.docs.forEach(doc => {
+            const data = doc.data();
+            console.error(`  FAQ ${doc.id}:`, data.slug || {});
+          });
+          
           setError('FAQ not found');
           setLoading(false);
           return;

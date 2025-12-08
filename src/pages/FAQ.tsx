@@ -85,6 +85,24 @@ const FAQ: React.FC = () => {
               return null; // Filter out FAQs without content in current language
             }
             
+            // Get the best available slug for current language
+            const getBestSlug = (): string => {
+              // Prefer slug for current language
+              if (data.slug?.[langCode] && data.slug[langCode].trim().length > 0) {
+                return data.slug[langCode];
+              }
+              // Fallback to French
+              if (data.slug?.['fr'] && data.slug['fr'].trim().length > 0) {
+                return data.slug['fr'];
+              }
+              // Fallback to English
+              if (data.slug?.['en'] && data.slug['en'].trim().length > 0) {
+                return data.slug['en'];
+              }
+              // Last resort: document ID
+              return doc.id;
+            };
+            
             return {
               id: doc.id,
               category: data.category || 'general',
