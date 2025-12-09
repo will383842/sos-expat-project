@@ -168,6 +168,9 @@ const AdminBackups = lazy(() => import("../../pages/admin/AdminBackups"));
 const AdminSettings = lazy(() => import("../../pages/admin/AdminSettings"));
 
 // ===== LAZY IMPORTS - ANALYTICS & REPORTS =====
+const AdminCountryStats = lazy(() =>
+  import("../../pages/admin/AdminCountryStats")
+);
 const AdminFinancialReports = lazy(() =>
   Promise.resolve({
     default: () => (
@@ -826,6 +829,18 @@ const AdminRoutesV2: React.FC = () => {
 
       {/* 📊 RAPPORTS & ANALYTICS */}
       <Route
+        path="reports/country-stats"
+        element={
+          <Suspense
+            fallback={
+              <LoadingSpinner message="Chargement des statistiques par pays..." />
+            }
+          >
+            <AdminCountryStats />
+          </Suspense>
+        }
+      />
+      <Route
         path="reports/financial"
         element={
           <Suspense
@@ -976,6 +991,7 @@ export const useAdminRouteValidation = () => {
       "/admin/documents",
       "/admin/backups",
       "/admin/settings",
+      "/admin/reports/country-stats",
       "/admin/reports/financial",
       "/admin/reports/users",
       "/admin/reports/performance",

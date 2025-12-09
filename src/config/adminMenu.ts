@@ -486,6 +486,13 @@ export const adminMenuTree: AdminMenuItem[] = [
     description: "Business Intelligence et reporting",
     children: [
       {
+        id: "country-stats",
+        label: "Statistiques par pays",
+        path: "/admin/reports/country-stats",
+        icon: Globe,
+        description: "Statistiques globales et par pays",
+      },
+      {
         id: "financial-reports",
         label: "Rapports financiers",
         path: "/admin/reports/financial",
