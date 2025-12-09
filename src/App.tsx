@@ -137,7 +137,7 @@ const routeConfigs: RouteConfig[] = [
   { path: "/contact", component: Contact, translated: "contact" },
   { path: "/how-it-works", component: HowItWorks, translated: "how-it-works" },
   { path: "/faq", component: FAQ, translated: "faq" },
-  { path: "/faq/:slug", component: FAQDetail },
+  { path: "/faq/:slug", component: FAQDetail, translated: "faq" },
   { path: "/centre-aide", component: HelpCenter, translated: "help-center" },
 
   // Témoignages

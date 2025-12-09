@@ -916,7 +916,7 @@ const FAQ: React.FC = () => {
                               <HelpCircle size={18} />
                             </span>
                             <Link
-                              to={`/${getLocaleString(language)}/faq/${item.slug?.[langCode] || item.slug?.['fr'] || item.slug?.['en'] || item.id}`}
+                              to={`/${getLocaleString(language)}/faq/${encodeURIComponent(item.slug?.[langCode] || item.slug?.['fr'] || item.slug?.['en'] || item.id)}`}
                               className="text-lg md:text-xl font-bold text-gray-900 flex-1 hover:text-red-600 transition-colors"
                             >
                               {item.question}

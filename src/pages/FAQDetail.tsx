@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import { collection, query, where, getDocs, getDoc, doc, updateDoc, increment, orderBy, limit } from 'firebase/firestore';
 import { db } from '../config/firebase';
@@ -30,9 +30,18 @@ const FAQDetail: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [relatedFAQs, setRelatedFAQs] = useState<FAQ[]>([]);
+  const [show404, setShow404] = useState(false); // Delay 404 display to allow ref to be set
+  const loadedSlugRef = useRef<string | null>(null); // Track which slug we've loaded
+  const faqDataRef = useRef<FAQ | null>(null); // Track FAQ data in ref for immediate access
+  
 
-  // Extract slug from params
-  const slug = params.slug;
+  // Extract slug from params and decode it (handles Unicode characters)
+  let slug = params.slug || '';
+  try {
+    slug = decodeURIComponent(slug);
+  } catch (e) {
+    // If decoding fails, use as-is (might already be decoded)
+  }
   
   // Extract locale from pathname (e.g., /fr-FR/faq/slug or /en-US/faq/slug)
   const { locale: localeFromPath, lang } = parseLocaleFromPath(location.pathname);
@@ -41,10 +50,48 @@ const FAQDetail: React.FC = () => {
   const currentLang = lang || language || 'fr';
   const langCode = currentLang.split('-')[0]; // Extract 'fr' from 'fr-FR'
   
-  console.log('[FAQDetail] Path:', location.pathname, 'Slug:', slug, 'Lang:', langCode, 'CurrentLang:', currentLang);
+  // CRITICAL: Watch for ref changes and sync to state
+  // This ensures that when ref is set, state is updated to trigger a re-render
+  useEffect(() => {
+    if (faqDataRef.current && loadedSlugRef.current === slug && !faq) {
+      setFaq(faqDataRef.current);
+      setError(null);
+      setLoading(false);
+      setShow404(false); // Cancel 404 if ref has data
+    }
+  }, [slug, faq]); // Re-run when slug changes or when faq is null
+  
+  // Delay 404 display to give ref time to be set (setTimeout approach)
+  useEffect(() => {
+    if (!loading && !faq && !faqDataRef.current) {
+      // Only show 404 after a delay to allow ref to be set
+      const timer = setTimeout(() => {
+        // Double-check ref before showing 404
+        if (!faqDataRef.current && !faq) {
+          setShow404(true);
+        } else {
+          setShow404(false);
+        }
+      }, 10); // 10ms delay to allow ref to be set
+      
+      return () => clearTimeout(timer);
+    } else {
+      setShow404(false); // Cancel 404 if we have data
+    }
+  }, [loading, faq]);
 
   useEffect(() => {
     const loadFAQ = async () => {
+      // Declare variables outside try block for use in finally
+      let faqWasSet = false;
+      let snapshot: any = { docs: [], empty: true };
+      let foundFAQ: any = null;
+      
+      // Check if we've already loaded this exact slug - prevent unnecessary re-loads
+      if (loadedSlugRef.current === slug && faq) {
+        return;
+      }
+      
       try {
         setLoading(true);
         setError(null);
@@ -64,21 +111,27 @@ const FAQDetail: React.FC = () => {
         // Query FAQ by slug in current language
         const faqsRef = collection(db, 'faqs');
         
+        // Clean the slug first
+        const cleanedSlugForIdCheck = slug.trim();
+        
         // Check if slug looks like a Firestore document ID (alphanumeric, typically 20 chars)
         // Firestore IDs are usually 20 characters long and alphanumeric
-        const looksLikeDocId = /^[a-zA-Z0-9]{20,}$/.test(slug);
+        const looksLikeDocId = /^[a-zA-Z0-9]{20,}$/.test(cleanedSlugForIdCheck);
         
         // First, try to get document directly by ID if it looks like one
         if (looksLikeDocId) {
           try {
-            const docRef = doc(db, 'faqs', slug);
+            const docRef = doc(db, 'faqs', cleanedSlugForIdCheck);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
               const data = docSnap.data();
               // Only use if active
               if (data.isActive !== false) {
                 const faqData = { id: docSnap.id, ...data } as FAQ;
-                setFaq(faqData);
+                faqDataRef.current = faqData; // Set ref first (synchronous)
+                setFaq(faqData); // Then set state (asynchronous)
+                loadedSlugRef.current = slug;
+                faqWasSet = true;
                 
                 // Increment view count
                 try {
@@ -86,7 +139,7 @@ const FAQDetail: React.FC = () => {
                     views: increment(1)
                   });
                 } catch (err) {
-                  console.error('Error incrementing views:', err);
+                  // Error incrementing views - non-critical
                 }
                 
                 // Load related FAQs
@@ -94,8 +147,7 @@ const FAQDetail: React.FC = () => {
                   const relatedQuery = query(
                     faqsRef,
                     where('category', '==', faqData.category),
-                    // where('isActive', '==', true),
-                    // orderBy('order', 'asc')
+                    where('isActive', '==', true)
                   );
                   const relatedSnapshot = await getDocs(relatedQuery);
                   const related = relatedSnapshot.docs
@@ -104,23 +156,24 @@ const FAQDetail: React.FC = () => {
                     .slice(0, 5);
                   setRelatedFAQs(related);
                 }
-                
                 setLoading(false);
                 return;
               }
             }
           } catch (err) {
-            console.warn('[FAQDetail] Error fetching by document ID:', err);
+            // Error fetching by document ID - continue to slug search
           }
         }
         
+        // Clean the slug - remove any extra whitespace (define early for use in fallback)
+        const cleanedSlug = slug.trim();
+        
         // Always query all active FAQs and search manually for better reliability
         // This handles cases where Firestore queries might fail due to indexing or slug structure
-        let snapshot: any = { docs: [], empty: true };
+        snapshot = { docs: [], empty: true };
+        foundFAQ = null;
         
         try {
-          console.log(`[FAQDetail] Searching for FAQ with slug: "${slug}" (language: ${langCode})`);
-          
           // Query all active FAQs
           const allFAQsQuery = query(
             faqsRef,
@@ -128,131 +181,184 @@ const FAQDetail: React.FC = () => {
           );
           const allSnapshot = await getDocs(allFAQsQuery);
           
-          console.log(`[FAQDetail] Found ${allSnapshot.docs.length} active FAQs, searching for matching slug...`);
+          // Helper function to normalize a slug for comparison
+          // For Latin scripts: lowercase and normalize accents
+          // For non-Latin scripts: keep as-is
+          const normalizeSlugForComparison = (slugText: string, isLatin: boolean): string => {
+            if (!slugText) return '';
+            let normalized = String(slugText).trim();
+            
+            if (isLatin) {
+              // For Latin scripts: normalize accents (NFD) and lowercase
+              normalized = normalized
+                .normalize('NFD') // Decompose accented characters (ó -> o + ́)
+                .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+                .toLowerCase();
+            }
+            // For non-Latin scripts, keep as-is (no normalization)
+            
+            return normalized;
+          };
           
-          // Normalize slug for comparison (lowercase, trim)
-          const normalizedSlug = slug.toLowerCase().trim();
+          // Check if it's a Latin script (includes accented characters like ó, é, ñ, etc.)
+          // Latin scripts include: a-z, A-Z, accented Latin characters, numbers, and common punctuation
+          const isLatinScript = /^[\u0000-\u024F\u1E00-\u1EFF\s\-.,!?'":;()0-9]+$/.test(cleanedSlug) && 
+                                 !/[\u0400-\u04FF\u0590-\u05FF\u0600-\u06FF\u4E00-\u9FFF\u0C80-\u0DFF]/.test(cleanedSlug);
           
-          // Check if slug has a language prefix (e.g., "ru-xxx", "hi-xxx")
-          const langPrefixMatch = normalizedSlug.match(/^(hi|ru|ar|ch)-(.+)$/);
-          const slugWithoutPrefix = langPrefixMatch ? langPrefixMatch[2] : normalizedSlug;
-          const detectedLangFromSlug = langPrefixMatch ? langPrefixMatch[1] : null;
+          // Normalize slug for comparison
+          const normalizedSlug = normalizeSlugForComparison(cleanedSlug, isLatinScript);
           
           const matchingFAQ = allSnapshot.docs.find(doc => {
             const data = doc.data();
             const slugData = data.slug || {};
             
-            // Normalize all slugs for comparison
-            const normalizedSlugs: Record<string, string> = {};
-            Object.keys(slugData).forEach(key => {
-              if (slugData[key]) {
-                normalizedSlugs[key] = String(slugData[key]).toLowerCase().trim();
-              }
-            });
-            
-            // Strategy 1: Exact match in current language
-            if (normalizedSlugs[langCode] === normalizedSlug) {
-              console.log(`[FAQDetail] ✓ Found exact match by langCode ${langCode}`);
-              return true;
-            }
-            
-            // Strategy 2: If slug has language prefix, check that language's slug
-            if (detectedLangFromSlug && normalizedSlugs[detectedLangFromSlug]) {
-              const prefixedSlug = `${detectedLangFromSlug}-${normalizedSlugs[detectedLangFromSlug]}`;
-              if (prefixedSlug === normalizedSlug || normalizedSlugs[detectedLangFromSlug] === slugWithoutPrefix) {
-                console.log(`[FAQDetail] ✓ Found match by language prefix ${detectedLangFromSlug}`);
+            // Strategy 1: Exact match in current language (character-by-character)
+            const directSlug = slugData[langCode];
+            if (directSlug) {
+              const directSlugStr = String(directSlug).trim();
+              
+              // Try exact match first (CRITICAL for all scripts)
+              if (cleanedSlug === directSlugStr) {
                 return true;
               }
-            }
-            
-            // Strategy 3: Check if slug matches without prefix (for language-prefixed slugs in DB)
-            if (detectedLangFromSlug) {
-              // Check if any language has a slug that matches when prefixed
-              for (const [key, value] of Object.entries(normalizedSlugs)) {
-                if (key === detectedLangFromSlug && value === slugWithoutPrefix) {
-                  console.log(`[FAQDetail] ✓ Found match by removing prefix for ${key}`);
+              
+              // For Latin scripts, also try normalized comparison (handles accents)
+              if (isLatinScript) {
+                const normalizedDirect = normalizeSlugForComparison(directSlugStr, true);
+                if (normalizedSlug === normalizedDirect) {
                   return true;
                 }
               }
             }
             
-            // Strategy 4: Check if slug matches in any language (case-insensitive)
-            if (Object.values(normalizedSlugs).includes(normalizedSlug)) {
-              console.log(`[FAQDetail] ✓ Found match in another language`);
-              return true;
-            }
-            
-            // Strategy 5: Check if slug matches without prefix in any language
-            if (detectedLangFromSlug) {
-              for (const [key, value] of Object.entries(normalizedSlugs)) {
-                if (value === slugWithoutPrefix) {
-                  console.log(`[FAQDetail] ✓ Found match without prefix in language ${key}`);
-                  return true;
-                }
-              }
-            }
-            
-            // Strategy 6: Check common fallback languages (case-insensitive)
-            if (normalizedSlugs['fr'] === normalizedSlug || normalizedSlugs['en'] === normalizedSlug) {
-              console.log(`[FAQDetail] ✓ Found match in fallback language`);
-              return true;
-            }
-            
-            // Strategy 7: Check if slug matches fallback languages without prefix
-            if (detectedLangFromSlug) {
-              if (normalizedSlugs['fr'] === slugWithoutPrefix || normalizedSlugs['en'] === slugWithoutPrefix) {
-                console.log(`[FAQDetail] ✓ Found match in fallback language without prefix`);
+            // Strategy 2: Check all languages - exact match first
+            for (const [key, value] of Object.entries(slugData)) {
+              if (!value) continue;
+              const slugValue = String(value).trim();
+              
+              // Try exact match first (most reliable)
+              if (cleanedSlug === slugValue) {
                 return true;
               }
-            }
-            
-            // Strategy 8: Check if document ID matches (for backward compatibility)
-            if (doc.id === slug || doc.id.toLowerCase() === normalizedSlug) {
-              console.log(`[FAQDetail] ✓ Found match by document ID`);
-              return true;
-            }
-            
-            // Strategy 9: Partial match - check if slug contains or is contained in any stored slug
-            for (const [key, value] of Object.entries(normalizedSlugs)) {
-              // Check if stored slug contains the search slug or vice versa
-              if (value.includes(normalizedSlug) || normalizedSlug.includes(value)) {
-                // Only match if they're reasonably similar (not too different in length)
-                const lengthDiff = Math.abs(value.length - normalizedSlug.length);
-                if (lengthDiff < 20) { // Allow some difference for prefixes/suffixes
-                  console.log(`[FAQDetail] ✓ Found partial match in language ${key}`);
+              
+              // For Latin scripts, also try normalized comparison (handles accents)
+              if (isLatinScript) {
+                const normalizedValue = normalizeSlugForComparison(slugValue, true);
+                if (normalizedSlug === normalizedValue) {
                   return true;
                 }
               }
+            }
+            
+            // Strategy 3: Check common fallback languages (fr, en)
+            const frSlug = slugData['fr'];
+            const enSlug = slugData['en'];
+            if (frSlug) {
+              const frSlugStr = String(frSlug).trim();
+              if (cleanedSlug === frSlugStr) {
+                return true;
+              }
+              if (isLatinScript) {
+                const normalizedFr = normalizeSlugForComparison(frSlugStr, true);
+                if (normalizedSlug === normalizedFr) {
+                  return true;
+                }
+              }
+            }
+            if (enSlug) {
+              const enSlugStr = String(enSlug).trim();
+              if (cleanedSlug === enSlugStr) {
+                return true;
+              }
+              if (isLatinScript) {
+                const normalizedEn = normalizeSlugForComparison(enSlugStr, true);
+                if (normalizedSlug === normalizedEn) {
+                  return true;
+                }
+              }
+            }
+            
+            // Strategy 4: Check if document ID matches (for backward compatibility)
+            if (doc.id === slug || doc.id === cleanedSlug) {
+              return true;
             }
             
             return false;
           });
           
           if (matchingFAQ) {
+            foundFAQ = matchingFAQ;
             snapshot = { docs: [matchingFAQ], empty: false };
-            console.log(`[FAQDetail] ✓ Successfully found FAQ: ${matchingFAQ.id}`);
-          } else {
-            console.warn(`[FAQDetail] ✗ No matching FAQ found for slug: "${slug}"`);
-            // Log available slugs for debugging (first 3 FAQs)
-            allSnapshot.docs.slice(0, 3).forEach(doc => {
-              const data = doc.data();
-              console.log(`[FAQDetail] Sample FAQ ${doc.id} slugs:`, data.slug || {});
-            });
           }
         } catch (err) {
-          console.error('[FAQDetail] Error querying FAQs:', err);
+          // Error querying FAQs - continue to fallback
         }
 
+        // If we found the FAQ directly, use it instead of checking snapshot
+        if (foundFAQ) {
+          try {
+            const faqData = { id: foundFAQ.id, ...foundFAQ.data() } as FAQ;
+            faqDataRef.current = faqData; // Set ref first (synchronous)
+            setFaq(faqData); // Then set state (asynchronous)
+            loadedSlugRef.current = slug;
+            
+            // Increment view count
+            try {
+              await updateDoc(doc(db, 'faqs', faqData.id), {
+                views: increment(1)
+              });
+            } catch (err) {
+              // Error incrementing views - non-critical
+            }
+            
+            // Load related FAQs
+            if (faqData.category) {
+              try {
+                const relatedQuery = query(
+                  faqsRef,
+                  where('category', '==', faqData.category),
+                  where('isActive', '==', true)
+                );
+                const relatedSnapshot = await getDocs(relatedQuery);
+                const related = relatedSnapshot.docs
+                  .map(doc => ({ id: doc.id, ...doc.data() } as FAQ))
+                  .filter(f => f.id !== faqData.id)
+                  .slice(0, 5);
+                setRelatedFAQs(related);
+                } catch (err) {
+                  // Error loading related FAQs - non-critical
+                }
+            }
+            
+            // CRITICAL: Set ref FIRST for immediate access (synchronous)
+            faqDataRef.current = faqData;
+            loadedSlugRef.current = slug;
+            faqWasSet = true;
+            
+            // Then set state (asynchronous, but ref is already set)
+            // IMPORTANT: Set all state updates together to trigger a single re-render
+            setFaq(faqData);
+            setError(null);
+            setLoading(false);
+            
+            return; // Exit early since we've set the FAQ
+          } catch (err) {
+            // Error processing foundFAQ - try to use snapshot instead
+          }
+        }
+        
         if (snapshot.empty) {
           // Last resort: Try to find by document ID if slug looks like an ID
-          const looksLikeDocId = /^[a-zA-Z0-9]{20,}$/.test(slug);
+          const looksLikeDocId = /^[a-zA-Z0-9]{20,}$/.test(cleanedSlug);
           if (looksLikeDocId) {
             try {
-              const docRef = doc(db, 'faqs', slug);
+              const docRef = doc(db, 'faqs', cleanedSlug);
               const docSnap = await getDoc(docRef);
               if (docSnap.exists() && docSnap.data().isActive !== false) {
                 const faqData = { id: docSnap.id, ...docSnap.data() } as FAQ;
-                setFaq(faqData);
+                faqDataRef.current = faqData; // Set ref first (synchronous)
+                setFaq(faqData); // Then set state (asynchronous)
+                loadedSlugRef.current = slug;
                 
                 // Increment view count
                 try {
@@ -260,7 +366,7 @@ const FAQDetail: React.FC = () => {
                     views: increment(1)
                   });
                 } catch (err) {
-                  console.error('Error incrementing views:', err);
+                  // Error incrementing views - non-critical
                 }
                 
                 // Load related FAQs
@@ -283,57 +389,74 @@ const FAQDetail: React.FC = () => {
                 return;
               }
             } catch (err) {
-              console.error('[FAQDetail] Error fetching by document ID as last resort:', err);
+              // Error fetching by document ID as last resort
             }
           }
-          
-          console.error(`[FAQDetail] FAQ not found with slug: ${slug} for language: ${langCode}`);
-          console.error(`[FAQDetail] Available slugs in database (first 5 FAQs):`);
-          const allSnapshot = await getDocs(query(faqsRef, where('isActive', '==', true), limit(5)));
-          allSnapshot.docs.forEach(doc => {
-            const data = doc.data();
-            console.error(`  FAQ ${doc.id}:`, data.slug || {});
-          });
           
           setError('FAQ not found');
           setLoading(false);
           return;
         }
 
-        const faqDoc = snapshot.docs[0];
-        const faqData = { id: faqDoc.id, ...faqDoc.data() } as FAQ;
-        setFaq(faqData);
+        // If we reach here and snapshot is not empty, process it
+        if (!snapshot.empty && snapshot.docs && snapshot.docs.length > 0) {
+          const faqDoc = snapshot.docs[0];
+          const faqData = { id: faqDoc.id, ...faqDoc.data() } as FAQ;
+          faqDataRef.current = faqData; // Set ref first (synchronous)
+          loadedSlugRef.current = slug;
+          setFaq(faqData); // Then set state (asynchronous)
+          setError(null); // Clear any previous errors
 
-        // Increment view count
-        try {
-          await updateDoc(doc(db, 'faqs', faqDoc.id), {
-            views: increment(1)
-          });
-        } catch (err) {
-          console.error('Error incrementing views:', err);
-          // Non-critical error, continue
-        }
+          // Increment view count
+          try {
+            await updateDoc(doc(db, 'faqs', faqDoc.id), {
+              views: increment(1)
+            });
+          } catch (err) {
+            // Error incrementing views - non-critical, continue
+          }
 
-        // Load related FAQs (same category)
-        if (faqData.category) {
-          const relatedQuery = query(
-            faqsRef,
-            where('category', '==', faqData.category),
-            // where('isActive', '==', true),
-            // orderBy('order', 'asc')
-          );
-          const relatedSnapshot = await getDocs(relatedQuery);
-          const related = relatedSnapshot.docs
-            .map(doc => ({ id: doc.id, ...doc.data() } as FAQ))
-            .filter(f => f.id !== faqData.id)
-            .slice(0, 5);
-          setRelatedFAQs(related);
+          // Load related FAQs (same category) - wrapped in try-catch to not break main flow
+          if (faqData.category) {
+            try {
+              const relatedQuery = query(
+                faqsRef,
+                where('category', '==', faqData.category),
+                where('isActive', '==', true)
+              );
+              const relatedSnapshot = await getDocs(relatedQuery);
+              const related = relatedSnapshot.docs
+                .map(doc => ({ id: doc.id, ...doc.data() } as FAQ))
+                .filter(f => f.id !== faqData.id)
+                .slice(0, 5);
+              setRelatedFAQs(related);
+            } catch (err) {
+              // Error loading related FAQs - non-critical
+            }
+          }
+          
+          // CRITICAL: Set ref FIRST for immediate access (synchronous)
+          faqDataRef.current = faqData;
+          loadedSlugRef.current = slug;
+          faqWasSet = true;
+          
+          // Then set state (asynchronous, but ref is already set)
+          setFaq(faqData);
+          setError(null);
+          setLoading(false);
+          
+          return; // Exit after successfully setting FAQ
         }
       } catch (err) {
-        console.error('Error loading FAQ:', err);
-        setError('Failed to load FAQ');
+        // Only set error if FAQ hasn't been set
+        if (!faqWasSet) {
+          setError('Failed to load FAQ');
+        }
       } finally {
-        setLoading(false);
+        // Only set loading to false if we haven't already returned
+        if (!faqWasSet) {
+          setLoading(false);
+        }
       }
     };
 
@@ -346,9 +469,32 @@ const FAQDetail: React.FC = () => {
       setError('Database not initialized');
       setLoading(false);
     }
-  }, [slug, langCode, location.pathname]);
+  }, [slug, langCode]); // Removed faq from dependencies to prevent re-runs when FAQ state changes
 
-  if (loading) {
+  // CRITICAL: Check ref FIRST before any other render decisions
+  // Ref is set synchronously, so it's the most reliable source of truth
+  const hasFaqInRef = !!faqDataRef.current && loadedSlugRef.current === slug;
+  const effectiveFaq = faqDataRef.current || faq;
+  
+  // If ref has data, skip loading and 404 - go straight to content
+  // This is CRITICAL: ref is set synchronously, so we can use it immediately
+  if (hasFaqInRef) {
+    // If state hasn't updated yet, update it from ref (this will trigger a re-render)
+    // But for THIS render, we'll use ref data
+    if (!faq || loading) {
+      // Use requestAnimationFrame to update state after current render completes
+      requestAnimationFrame(() => {
+        if (faqDataRef.current) {
+          setFaq(faqDataRef.current);
+          setError(null);
+          setLoading(false);
+        }
+      });
+    }
+    // Continue to render with ref data (will be handled below - skip to content rendering)
+    // Don't return here - let it fall through to content rendering
+  } else if (loading) {
+    // Only show loading if ref doesn't have data
     return (
       <Layout>
         <div className="max-w-4xl mx-auto px-4 py-12">
@@ -361,9 +507,8 @@ const FAQDetail: React.FC = () => {
         </div>
       </Layout>
     );
-  }
-
-  if (error || !faq) {
+  } else if (!loading && (error || (!effectiveFaq && show404))) {
+    // No ref data and no state data - show 404 (only after delay)
     return (
       <Layout>
         <SEOHead
@@ -396,8 +541,15 @@ const FAQDetail: React.FC = () => {
     );
   }
 
-  const question = faq.question[langCode] || faq.question['fr'] || faq.question['en'] || 'Untitled FAQ';
-  const answer = faq.answer[langCode] || faq.answer['fr'] || faq.answer['en'] || 'No answer available';
+  // Use effective FAQ (state or ref) - this ensures we have FAQ data even if state hasn't updated
+  const displayFaq = effectiveFaq || faq;
+  
+  if (!displayFaq) {
+    return null; // Should not happen due to checks above, but safety net
+  }
+  
+  const question = displayFaq.question[langCode] || displayFaq.question['fr'] || displayFaq.question['en'] || 'Untitled FAQ';
+  const answer = displayFaq.answer[langCode] || displayFaq.answer['fr'] || displayFaq.answer['en'] || 'No answer available';
 
   // Format answer with line breaks
   const formattedAnswer = answer.split('\n').map((line, i) => (
@@ -409,7 +561,7 @@ const FAQDetail: React.FC = () => {
 
   // Build canonical URL with locale prefix
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://sos-expat.com';
-  const currentSlug = faq.slug[langCode] || faq.slug['fr'] || faq.slug['en'] || faq.id;
+  const currentSlug = displayFaq.slug[langCode] || displayFaq.slug['fr'] || displayFaq.slug['en'] || displayFaq.id;
   const currentLocale = getLocaleString(currentLang as any);
   const canonicalUrl = `${baseUrl}/${currentLocale}/faq/${currentSlug}`;
 
@@ -433,12 +585,12 @@ const FAQDetail: React.FC = () => {
   const alternateLanguages = supportedLanguages
     .filter(langCode => {
       // Only include languages where the FAQ has content
-      const hasQuestion = faq.question[langCode] && faq.question[langCode].trim().length > 0;
-      const hasAnswer = faq.answer[langCode] && faq.answer[langCode].trim().length > 0;
+      const hasQuestion = displayFaq.question[langCode] && displayFaq.question[langCode].trim().length > 0;
+      const hasAnswer = displayFaq.answer[langCode] && displayFaq.answer[langCode].trim().length > 0;
       return hasQuestion && hasAnswer;
     })
     .map(langCode => {
-      const slug = faq.slug[langCode] || faq.slug['fr'] || faq.slug['en'] || faq.id;
+      const slug = displayFaq.slug[langCode] || displayFaq.slug['fr'] || displayFaq.slug['en'] || displayFaq.id;
       const localeInfo = localeMap[langCode] || { urlLocale: `${langCode}-${langCode}`, hreflangLocale: `${langCode}-${langCode.toUpperCase()}` };
       return {
         lang: localeInfo.hreflangLocale, // Use ISO format for hreflang
@@ -451,7 +603,7 @@ const FAQDetail: React.FC = () => {
       <SEOHead
         title={`${question} - FAQ | SOS Expat`}
         description={answer.substring(0, 160).replace(/\n/g, ' ')}
-        keywords={[faq.category, 'FAQ', 'help', ...(faq.tags || [])].join(', ')}
+        keywords={[displayFaq.category, 'FAQ', 'help', ...(displayFaq.tags || [])].join(', ')}
         canonicalUrl={canonicalUrl}
         alternateLanguages={alternateLanguages}
         locale={currentLang === 'fr' ? 'fr_FR' : 
@@ -485,11 +637,11 @@ const FAQDetail: React.FC = () => {
         <header className="mb-8 pb-6 border-b border-gray-200">
           <div className="flex items-start gap-3 mb-4">
             <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium capitalize">
-              {faq.category}
+              {displayFaq.category}
             </span>
-            {faq.views !== undefined && (
+            {displayFaq.views !== undefined && (
               <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm">
-                {faq.views} views
+                {displayFaq.views} views
               </span>
             )}
           </div>
