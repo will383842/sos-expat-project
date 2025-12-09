@@ -3,6 +3,8 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   collection,
   getDocs,
+  getDoc,
+  doc,
   orderBy,
   query,
   limit,
@@ -15,9 +17,36 @@ import {
 import { db } from '../../config/firebase';
 import AdminLayout from '../../components/admin/AdminLayout';
 import Button from '../../components/common/Button';
-import { RefreshCw, Search, CheckCircle, XCircle } from 'lucide-react';
+import { RefreshCw, Search, CheckCircle, XCircle, Download, Phone } from 'lucide-react';
 
 type PaymentStatus = 'paid' | 'refunded' | 'failed' | 'pending';
+
+interface InvoiceRecord {
+  id: string;
+  invoiceNumber: string;
+  downloadUrl: string;
+  type?: string;
+  callId: string;
+  createdAt?: Timestamp | Date;
+}
+
+interface CallSessionData {
+  status?: 'pending' | 'provider_connecting' | 'client_connecting' | 'both_connecting' | 'active' | 'completed' | 'failed' | 'cancelled';
+  createdAt?: Timestamp | Date;
+  metadata?: {
+    createdAt?: Timestamp | Date;
+  };
+  participants?: {
+    client?: {
+      connectedAt?: Timestamp | Date;
+      disconnectedAt?: Timestamp | Date;
+      status?: string;
+    };
+  };
+  payment?: {
+    duration?: number;
+  };
+}
 
 interface PaymentRecord {
   id: string;
@@ -28,7 +57,14 @@ interface PaymentRecord {
   providerName?: string;
   clientId: string;
   clientName?: string;
-  createdAt: Date; // on normalise en Date pour l’UI
+  createdAt: Date;
+  callSessionId?: string;
+  providerAmount?: number;
+  commissionAmount?: number;
+  duration?: number;
+  callSession?: CallSessionData;
+  invoices?: InvoiceRecord[];
+  callDate?: Date;
 }
 
 const PAGE_SIZE = 25;
@@ -75,6 +111,13 @@ const AdminPayments: React.FC = () => {
       clientId?: string;
       clientName?: string;
       createdAt?: Timestamp | Date;
+      callSessionId?: string;
+      sessionId?: string;
+      providerAmount?: number;
+      providerAmountEuros?: number;
+      commissionAmount?: number;
+      commissionAmountEuros?: number;
+      duration?: number;
     };
 
     // createdAt: on accepte Timestamp | Date | undefined
@@ -96,7 +139,140 @@ const AdminPayments: React.FC = () => {
       clientId: data.clientId ?? '',
       clientName: data.clientName,
       createdAt: createdAtDate,
+      callSessionId: data.callSessionId || data.sessionId,
+      providerAmount: data.providerAmount ?? data.providerAmountEuros,
+      commissionAmount: data.commissionAmount ?? data.commissionAmountEuros,
+      duration: data.duration,
     };
+  };
+
+  // Fetch call session data
+  const fetchCallSession = async (callSessionId: string): Promise<CallSessionData | null> => {
+    if (!callSessionId) return null;
+    try {
+      const sessionDoc = await getDoc(doc(db, 'call_sessions', callSessionId));
+      if (sessionDoc.exists()) {
+        return sessionDoc.data() as CallSessionData;
+      }
+    } catch (error) {
+      console.error('Error fetching call session:', error);
+    }
+    return null;
+  };
+
+  // Fetch invoice records for a call
+  const fetchInvoices = async (callId: string): Promise<InvoiceRecord[]> => {
+    if (!callId) return [];
+    try {
+      const invoicesRef = collection(db, 'invoice_records');
+      const q = query(invoicesRef, where('callId', '==', callId));
+      const snapshot = await getDocs(q);
+      
+      return snapshot.docs.map((docSnap) => {
+        const data = docSnap.data();
+        let createdAtDate: Date = new Date();
+        const val = data.createdAt;
+        if (val instanceof Timestamp) {
+          createdAtDate = val.toDate();
+        } else if (val instanceof Date) {
+          createdAtDate = val;
+        }
+        
+        return {
+          id: docSnap.id,
+          invoiceNumber: data.invoiceNumber || '',
+          downloadUrl: data.downloadUrl || '',
+          type: data.type,
+          callId: data.callId || callId,
+          createdAt: createdAtDate,
+        };
+      });
+    } catch (error) {
+      console.error('Error fetching invoices:', error);
+      return [];
+    }
+  };
+
+  // Fetch additional data for payments
+  const enrichPayments = async (paymentRecords: PaymentRecord[]): Promise<PaymentRecord[]> => {
+    return Promise.all(
+      paymentRecords.map(async (payment) => {
+        if (!payment.callSessionId) return payment;
+
+        const [callSession, invoices] = await Promise.all([
+          fetchCallSession(payment.callSessionId),
+          fetchInvoices(payment.callSessionId),
+        ]);
+
+        let callDate: Date | undefined;
+        let callDuration: number | undefined = payment.duration;
+
+        if (callSession) {
+          // Get call date from call session
+          const sessionCreatedAt = callSession.metadata?.createdAt || callSession.createdAt;
+          if (sessionCreatedAt) {
+            if (sessionCreatedAt instanceof Timestamp) {
+              callDate = sessionCreatedAt.toDate();
+            } else if (sessionCreatedAt instanceof Date) {
+              callDate = sessionCreatedAt;
+            }
+          }
+          
+          // Calculate duration based on call session status
+          const sessionStatus = callSession.status;
+          
+          if (sessionStatus === 'failed') {
+            // If call failed, show 0 duration
+            callDuration = 0;
+          } else if (sessionStatus === 'completed') {
+            // If call completed, calculate duration from client connectedAt - disconnectedAt
+            const client = callSession.participants?.client;
+            if (client?.connectedAt && client?.disconnectedAt) {
+              let connectedAtDate: Date;
+              let disconnectedAtDate: Date;
+              
+              // Convert connectedAt to Date
+              if (client.connectedAt instanceof Timestamp) {
+                connectedAtDate = client.connectedAt.toDate();
+              } else if (client.connectedAt instanceof Date) {
+                connectedAtDate = client.connectedAt;
+              } else {
+                connectedAtDate = new Date(client.connectedAt);
+              }
+              
+              // Convert disconnectedAt to Date
+              if (client.disconnectedAt instanceof Timestamp) {
+                disconnectedAtDate = client.disconnectedAt.toDate();
+              } else if (client.disconnectedAt instanceof Date) {
+                disconnectedAtDate = client.disconnectedAt;
+              } else {
+                disconnectedAtDate = new Date(client.disconnectedAt);
+              }
+              
+              // Calculate duration in minutes
+              const durationMs = disconnectedAtDate.getTime() - connectedAtDate.getTime();
+              callDuration = Math.round(durationMs / (1000 * 60)); // Convert to minutes
+            } else if (callSession.payment?.duration) {
+              // Fallback to payment duration if available
+              callDuration = callSession.payment.duration;
+            }
+          } else {
+            // For other statuses, use payment duration if available
+            if (!callDuration && callSession.payment?.duration) {
+              callDuration = callSession.payment.duration;
+            }
+          }
+        }
+
+        return {
+          ...payment,
+          callSession,
+          invoices,
+          callDate,
+          duration: callDuration,
+        };
+      })
+    );
   };
 
   const buildQuery = useCallback(
@@ -132,14 +308,18 @@ const AdminPayments: React.FC = () => {
         const snap = await getDocs(q);
 
         const pageItems = snap.docs.map(mapSnapToPayment);
+        
+        // Enrich with call session and invoice data
+        const enrichedItems = await enrichPayments(pageItems);
+        
         setLastDoc(snap.docs.length ? snap.docs[snap.docs.length - 1] : null);
 
         setHasMore(snap.docs.length === PAGE_SIZE);
 
         if (reset) {
-          setPayments(pageItems);
+          setPayments(enrichedItems);
         } else {
-          setPayments((prev) => [...prev, ...pageItems]);
+          setPayments((prev) => [...prev, ...enrichedItems]);
         }
       } catch (err) {
         console.error('Error loading payments:', err);
@@ -238,21 +418,30 @@ const AdminPayments: React.FC = () => {
         </div>
 
         {/* Table */}
-        <div className="bg-white border rounded-lg overflow-hidden">
+        <div className="bg-white border rounded-lg overflow-x-auto">
           <table className="min-w-full">
             <thead className="bg-gray-50">
               <tr>
                 <th className="text-left text-xs font-semibold text-gray-600 uppercase px-4 py-3">
-                  Date
+                  Date Paiement
                 </th>
                 <th className="text-left text-xs font-semibold text-gray-600 uppercase px-4 py-3">
-                  Montant
-                </th>
-                <th className="text-left text-xs font-semibold text-gray-600 uppercase px-4 py-3">
-                  Client
+                  Client Payé
                 </th>
                 <th className="text-left text-xs font-semibold text-gray-600 uppercase px-4 py-3">
                   Prestataire
+                </th>
+                <th className="text-left text-xs font-semibold text-gray-600 uppercase px-4 py-3">
+                  Ulixai
+                </th>
+                <th className="text-left text-xs font-semibold text-gray-600 uppercase px-4 py-3">
+                  Appel
+                </th>
+                <th className="text-left text-xs font-semibold text-gray-600 uppercase px-4 py-3">
+                  Durée
+                </th>
+                <th className="text-left text-xs font-semibold text-gray-600 uppercase px-4 py-3">
+                  Factures
                 </th>
                 <th className="text-left text-xs font-semibold text-gray-600 uppercase px-4 py-3">
                   Statut
@@ -260,47 +449,128 @@ const AdminPayments: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredBySearch.map((p) => (
-                <tr key={p.id} className="border-t">
-                  <td className="px-4 py-3">
-                    {new Intl.DateTimeFormat('fr-FR', {
-                      day: '2-digit',
-                      month: '2-digit',
-                      year: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    }).format(p.createdAt)}
-                  </td>
-                  <td className="px-4 py-3">
-                    {p.amount.toFixed(2)} {p.currency}
-                  </td>
-                  <td className="px-4 py-3">{p.clientName ?? p.clientId}</td>
-                  <td className="px-4 py-3">{p.providerName ?? p.providerId}</td>
-                  <td className="px-4 py-3">
-                    {p.status === 'paid' ? (
-                      <span className="inline-flex items-center text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded">
-                        <CheckCircle size={14} className="mr-1" /> Payé
-                      </span>
-                    ) : p.status === 'refunded' ? (
-                      <span className="inline-flex items-center text-blue-700 bg-blue-100 border border-blue-200 px-2 py-0.5 rounded">
-                        Remboursé
-                      </span>
-                    ) : p.status === 'failed' ? (
-                      <span className="inline-flex items-center text-red-700 bg-red-100 border border-red-200 px-2 py-0.5 rounded">
-                        <XCircle size={14} className="mr-1" /> Échec
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center text-gray-700 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded">
-                        En attente
-                      </span>
-                    )}
-                  </td>
-                </tr>
-              ))}
+              {filteredBySearch.map((p) => {
+                const providerInvoice = p.invoices?.find((inv) => inv.invoiceNumber.startsWith('PRV-'));
+                const platformInvoice = p.invoices?.find((inv) => inv.invoiceNumber.startsWith('PLT-'));
+                
+                return (
+                  <tr key={p.id} className="border-t hover:bg-gray-50">
+                    <td className="px-4 py-3">
+                      {new Intl.DateTimeFormat('fr-FR', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      }).format(p.createdAt)}
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="font-medium">
+                        {p.amount.toFixed(2)} {p.currency}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {p.clientName ?? p.clientId}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="font-medium">
+                        {p.providerAmount !== undefined
+                          ? `${p.providerAmount.toFixed(2)} ${p.currency}`
+                          : 'N/A'}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {p.providerName ?? p.providerId}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      {p.commissionAmount !== undefined
+                        ? `${p.commissionAmount.toFixed(2)} ${p.currency}`
+                        : 'N/A'}
+                    </td>
+                    <td className="px-4 py-3">
+                      {p.callDate ? (
+                        <div className="flex items-center gap-1">
+                          <Phone size={14} className="text-gray-400" />
+                          <span>
+                            {new Intl.DateTimeFormat('fr-FR', {
+                              day: '2-digit',
+                              month: '2-digit',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            }).format(p.callDate)}
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-gray-400">N/A</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3">
+                      {p.duration !== undefined ? (
+                        <span>{p.duration} min</span>
+                      ) : p.callSession?.status === 'failed' ? (
+                        <span>0 min</span>
+                      ) : (
+                        <span className="text-gray-400">N/A</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex flex-col gap-1">
+                        {providerInvoice && (
+                          <a
+                            href={providerInvoice.downloadUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center text-xs text-blue-600 hover:text-blue-800 gap-1"
+                            title="Provider invoice"
+                          >
+                            <Download size={12} />
+                            Provider invoice
+                          </a>
+                        )}
+                        {platformInvoice && (
+                          <a
+                            href={platformInvoice.downloadUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center text-xs text-blue-600 hover:text-blue-800 gap-1"
+                            title="Ulixai invoice (commission amount)"
+                          >
+                            <Download size={12} />
+                            Ulixai invoice (commission amount)
+                          </a>
+                        )}
+                        {(!providerInvoice && !platformInvoice) && (
+                          <span className="text-xs text-gray-400">Aucune</span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      {p.status === 'paid' ? (
+                        <span className="inline-flex items-center text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded">
+                          <CheckCircle size={14} className="mr-1" /> Payé
+                        </span>
+                      ) : p.status === 'refunded' ? (
+                        <span className="inline-flex items-center text-blue-700 bg-blue-100 border border-blue-200 px-2 py-0.5 rounded">
+                          Remboursé
+                        </span>
+                      ) : p.status === 'failed' ? (
+                        <span className="inline-flex items-center text-red-700 bg-red-100 border border-red-200 px-2 py-0.5 rounded">
+                          <XCircle size={14} className="mr-1" /> Échec
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center text-gray-700 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded">
+                          En attente
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
 
               {!isLoading && filteredBySearch.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-4 py-6 text-center text-gray-500">
+                  <td colSpan={8} className="px-4 py-6 text-center text-gray-500">
                     Aucun paiement trouvé.
                   </td>
                 </tr>
