@@ -7,7 +7,6 @@ import {
   Trash,
   BookOpen,
   CheckCircle2,
-  Languages,
   Loader2,
   Tag,
   Globe,
@@ -59,6 +58,22 @@ const getFirstAvailableTranslation = (
   return fallback;
 };
 
+// Helper to get translation for a specific locale (with fallback)
+const getTranslationForLocale = (
+  translations: string | Record<string, string> | undefined,
+  locale: string,
+  fallback: string = ""
+): string => {
+  if (typeof translations === "string") return translations;
+  if (!translations || typeof translations !== "object") return fallback;
+  // Try to get translation for the requested locale
+  if (translations[locale] && translations[locale].trim().length > 0) {
+    return translations[locale];
+  }
+  // Fallback to first available translation
+  return getFirstAvailableTranslation(translations, fallback);
+};
+
 // Helper to get first available language code
 const getFirstAvailableLanguageCode = (
   translations: string | Record<string, string> | undefined,
@@ -72,6 +87,46 @@ const getFirstAvailableLanguageCode = (
     }
   }
   return fallback;
+};
+
+// Helper to get first available tags array
+const getFirstAvailableTags = (
+  tags: string[] | Record<string, string[]> | undefined,
+  fallback: string[] = []
+): string[] => {
+  if (Array.isArray(tags)) return tags;
+  if (!tags || typeof tags !== "object") return fallback;
+  // Try to find first available language with tags
+  for (const lang of SUPPORTED_LANGUAGES) {
+    const langTags = tags[lang.code];
+    if (langTags && Array.isArray(langTags) && langTags.length > 0) {
+      return langTags;
+    }
+  }
+  // Fallback: try to get any language's tags from the object
+  const allTags = Object.values(tags);
+  for (const tagArray of allTags) {
+    if (Array.isArray(tagArray) && tagArray.length > 0) {
+      return tagArray;
+    }
+  }
+  return fallback;
+};
+
+// Helper to get tags for a specific locale (with fallback)
+const getTagsForLocale = (
+  tags: string[] | Record<string, string[]> | undefined,
+  locale: string,
+  fallback: string[] = []
+): string[] => {
+  if (Array.isArray(tags)) return tags;
+  if (!tags || typeof tags !== "object") return fallback;
+  // Try to get tags for the requested locale
+  if (tags[locale] && Array.isArray(tags[locale]) && tags[locale].length > 0) {
+    return tags[locale];
+  }
+  // Fallback to first available tags
+  return getFirstAvailableTags(tags, fallback);
 };
 
 const slugify = (value: string): string =>
@@ -248,16 +303,11 @@ const defaultArticleForm = (
   locale,
 });
 
-const locales = [
-  { value: "en", label: "English" },
-  { value: "fr", label: "Français" },
-];
-
 const AdminHelpCenter: React.FC = () => {
   const navigate = useNavigate();
   const { user: currentUser } = useAuth();
 
-  const [locale, setLocale] = useState<string>("en");
+  const [locale, setLocale] = useState<string>("fr");
   const [categories, setCategories] = useState<HelpCategory[]>([]);
   const [articles, setArticles] = useState<HelpArticle[]>([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
@@ -315,7 +365,7 @@ const AdminHelpCenter: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [locale]);
+  }, []);
 
   useEffect(() => {
     if (!currentUser || currentUser.role !== "admin") {
@@ -329,10 +379,8 @@ const AdminHelpCenter: React.FC = () => {
   useEffect(() => {
     setCategoryForm(defaultCategoryForm(locale));
     setArticleForm(defaultArticleForm(locale, selectedCategoryId ?? undefined));
-    // Refresh data when locale changes
-    void refreshAll();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [locale]);
+  }, [locale, selectedCategoryId]);
 
   const filteredArticles = useMemo(() => {
     if (!selectedCategoryId) return articles;
@@ -439,8 +487,7 @@ const AdminHelpCenter: React.FC = () => {
       const titleValue = getFirstAvailableTranslation(article.title, "");
       const excerptValue = getFirstAvailableTranslation(article.excerpt, "");
       const contentValue = getFirstAvailableTranslation(article.content, "");
-      const tagsArray =
-        Array.isArray(article.tags) ? article.tags : article.tags?.["en"] ?? [];
+      const tagsArray = getFirstAvailableTags(article.tags, []);
       setArticleTitleInput(titleValue);
       setArticleExcerptInput(excerptValue);
       setArticleContentInput(contentValue);
@@ -493,9 +540,16 @@ const AdminHelpCenter: React.FC = () => {
       } else {
         await createHelpCategory(payload);
       }
-      await refreshAll();
+      
+      // Close modal and reset form state first to avoid DOM reconciliation issues
       setIsCategoryModalOpen(false);
       setCategoryNameInput("");
+      setEditingCategoryId(null);
+      
+      // Refresh data after a small delay to allow modal to fully unmount
+      setTimeout(() => {
+        void refreshAll();
+      }, 100);
     } catch (error) {
       console.error("Error saving category", error);
       alert("Error saving category. Please try again.");
@@ -570,12 +624,19 @@ const AdminHelpCenter: React.FC = () => {
       } else {
         await createHelpArticle(payload);
       }
-      await refreshAll();
+      
+      // Close modal and reset form state first to avoid DOM reconciliation issues
       setIsArticleModalOpen(false);
       setArticleTitleInput("");
       setArticleExcerptInput("");
       setArticleContentInput("");
       setTagInput("");
+      setEditingArticleId(null);
+      
+      // Refresh data after a small delay to allow modal to fully unmount
+      setTimeout(() => {
+        void refreshAll();
+      }, 100);
     } catch (error) {
       console.error("Error saving article", error);
       alert("Error saving article. Please try again.");
@@ -602,7 +663,7 @@ const AdminHelpCenter: React.FC = () => {
 
   return (
     <AdminLayout>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-6 p-5">
         <div>
           <p className="text-sm text-gray-500">Help Center</p>
           <h1 className="text-2xl font-semibold text-gray-900">
@@ -610,21 +671,6 @@ const AdminHelpCenter: React.FC = () => {
           </h1>
         </div>
         <div className="flex items-center space-x-3">
-          <label className="flex items-center space-x-2 text-sm text-gray-600">
-            <Languages className="h-4 w-4" />
-            <span>Locale</span>
-            <select
-              value={locale}
-              onChange={(e) => setLocale(e.target.value)}
-              className="border rounded-md px-3 py-2 text-sm"
-            >
-              {locales.map((l) => (
-                <option key={l.value} value={l.value}>
-                  {l.label}
-                </option>
-              ))}
-            </select>
-          </label>
           <Button
             variant="primary"
             onClick={() => openArticleModal()}
@@ -661,6 +707,10 @@ const AdminHelpCenter: React.FC = () => {
               <Loader2 className="h-5 w-5 animate-spin mr-2" />
               Loading categories...
             </div>
+          ) : categories.length === 0 ? (
+            <div className="p-6 text-sm text-gray-500 text-center">
+              No categories yet.
+            </div>
           ) : (
             <ul className="divide-y divide-gray-100">
               {categories.map((category) => (
@@ -676,7 +726,7 @@ const AdminHelpCenter: React.FC = () => {
                       <span className="font-medium text-gray-900">
                         {typeof category.name === "string"
                           ? category.name
-                          : getFirstAvailableTranslation(category.name, "Untitled Category")}
+                          : getTranslationForLocale(category.name, locale, "Untitled Category")}
                       </span>
                       {category.isPublished ? (
                         <span className="inline-flex items-center px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-700">
@@ -694,7 +744,7 @@ const AdminHelpCenter: React.FC = () => {
                         Slug:{" "}
                         {typeof category.slug === "string"
                           ? category.slug
-                          : getFirstAvailableTranslation(category.slug, "")}
+                          : getTranslationForLocale(category.slug, locale, "")}
                       </span>
                       <span>Order: {category.order}</span>
                     </div>
@@ -724,11 +774,6 @@ const AdminHelpCenter: React.FC = () => {
                   </div>
                 </li>
               ))}
-              {categories.length === 0 && (
-                <li className="p-4 text-sm text-gray-500">
-                  No categories yet.
-                </li>
-              )}
             </ul>
           )}
         </div>
@@ -755,6 +800,10 @@ const AdminHelpCenter: React.FC = () => {
               <Loader2 className="h-5 w-5 animate-spin mr-2" />
               Loading articles...
             </div>
+          ) : filteredArticles.length === 0 ? (
+            <div className="p-6 text-sm text-gray-500 text-center">
+              No articles in this locale/category yet.
+            </div>
           ) : (
             <div className="divide-y divide-gray-100">
               {filteredArticles.map((article) => (
@@ -764,7 +813,7 @@ const AdminHelpCenter: React.FC = () => {
                       <span className="font-semibold text-gray-900">
                         {typeof article.title === "string"
                           ? article.title
-                          : getFirstAvailableTranslation(article.title, "Untitled Article")}
+                          : getTranslationForLocale(article.title, locale, "Untitled Article")}
                       </span>
                       {article.isPublished ? (
                         <span className="inline-flex items-center px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-700">
@@ -786,15 +835,12 @@ const AdminHelpCenter: React.FC = () => {
                     <p className="text-sm text-gray-700 line-clamp-2">
                       {typeof article.excerpt === "string"
                         ? article.excerpt
-                        : getFirstAvailableTranslation(article.excerpt, "")}
+                        : getTranslationForLocale(article.excerpt, locale, "")}
                     </p>
                     <div className="flex flex-wrap gap-2">
-                      {(Array.isArray(article.tags)
-                        ? article.tags
-                        : article.tags?.["en"] || []
-                      ).map((tag) => (
+                      {getTagsForLocale(article.tags, locale, []).map((tag, tagIndex) => (
                         <span
-                          key={tag}
+                          key={`${article.id}-tag-${tagIndex}-${tag}`}
                           className="px-2 py-0.5 bg-gray-100 text-gray-700 text-xs rounded-full"
                         >
                           #{tag}
@@ -821,11 +867,6 @@ const AdminHelpCenter: React.FC = () => {
                   </div>
                 </div>
               ))}
-              {filteredArticles.length === 0 && (
-                <div className="p-4 text-sm text-gray-500">
-                  No articles in this locale/category yet.
-                </div>
-              )}
             </div>
           )}
         </div>
@@ -1007,7 +1048,7 @@ const AdminHelpCenter: React.FC = () => {
                   <option key={c.id} value={c.id}>
                     {typeof c.name === "string"
                       ? c.name
-                      : getFirstAvailableTranslation(c.name, "Untitled Category")}
+                      : getTranslationForLocale(c.name, locale, "Untitled Category")}
                   </option>
                 ))}
               </select>
@@ -1026,11 +1067,8 @@ const AdminHelpCenter: React.FC = () => {
                   }))
                 }
               >
-                {locales.map((l) => (
-                  <option key={l.value} value={l.value}>
-                    {l.label}
-                  </option>
-                ))}
+                <option value="fr">Français</option>
+                <option value="en">English</option>
               </select>
             </div>
             <div>

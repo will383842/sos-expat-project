@@ -95,6 +95,14 @@ const mapCategory = (snap: DocumentData & { id: string }): HelpCategory => {
 
 const mapArticle = (snap: DocumentData & { id: string }): HelpArticle => {
   const locale = snap.locale ?? "en";
+  // Handle tags: can be array or Record<string, string[]>
+  let tags: string[] | Record<string, string[]> = [];
+  if (Array.isArray(snap.tags)) {
+    tags = snap.tags;
+  } else if (snap.tags && typeof snap.tags === "object") {
+    // Preserve the translation object structure
+    tags = snap.tags as Record<string, string[]>;
+  }
   return {
     id: snap.id,
     title: snap.title ?? "",
@@ -102,7 +110,7 @@ const mapArticle = (snap: DocumentData & { id: string }): HelpArticle => {
     categoryId: snap.categoryId ?? "",
     excerpt: snap.excerpt ?? "",
     content: snap.content ?? "",
-    tags: Array.isArray(snap.tags) ? snap.tags : [],
+    tags,
     readTime: Number(snap.readTime ?? 0),
     order: Number(snap.order ?? 0),
     isPublished: Boolean(snap.isPublished),
