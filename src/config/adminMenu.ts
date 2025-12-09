@@ -514,6 +514,13 @@ export const adminMenuTree: AdminMenuItem[] = [
         description: "Uptime, vitesse, erreurs",
       },
       {
+        id: "error-logs",
+        label: "Suivi des erreurs",
+        path: "/admin/reports/error-logs",
+        icon: AlertCircle,
+        description: "Logs d'erreurs et suivi des incidents",
+      },
+      {
         id: "data-exports",
         label: "Exports de données",
         path: "/admin/reports/exports",

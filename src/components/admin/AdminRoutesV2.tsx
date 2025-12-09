@@ -171,6 +171,9 @@ const AdminSettings = lazy(() => import("../../pages/admin/AdminSettings"));
 const AdminCountryStats = lazy(() =>
   import("../../pages/admin/AdminCountryStats")
 );
+const AdminErrorLogs = lazy(() =>
+  import("../../pages/admin/AdminErrorLogs")
+);
 const AdminFinancialReports = lazy(() =>
   Promise.resolve({
     default: () => (
@@ -837,6 +840,18 @@ const AdminRoutesV2: React.FC = () => {
             }
           >
             <AdminCountryStats />
+          </Suspense>
+        }
+      />
+      <Route
+        path="reports/error-logs"
+        element={
+          <Suspense
+            fallback={
+              <LoadingSpinner message="Chargement des logs d'erreurs..." />
+            }
+          >
+            <AdminErrorLogs />
           </Suspense>
         }
       />
