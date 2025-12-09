@@ -75,7 +75,6 @@ const AdminKYCProviders = lazy(
 );
 const AdminReviews = lazy(() => import("../../pages/admin/AdminReviews"));
 
-
 // ===== LAZY IMPORTS - CALLS =====
 const AdminCalls = lazy(() => import("../../pages/admin/AdminCalls"));
 const AdminCallsSessions = lazy(
@@ -210,13 +209,16 @@ const AdminDataExports = lazy(() =>
   })
 );
 
+// ===== LAZY IMPORTS - HELP CENTER =====
+const AdminHelpCenter = lazy(() => import("../../pages/admin/AdminHelpCenter"));
+
 // ===== LAZY IMPORTS - AUTRES PAGES =====
 const AdminPromoCodes = lazy(() => import("../../pages/admin/AdminPromoCodes"));
-const AdminDocuments = lazy(() => import("../../pages/admin/AdminDocuments"));
+// const AdminDocuments = lazy(() => import("../../pages/admin/AdminDocuments"));
 const AdminContactMessages = lazy(
   () => import("../../pages/admin/AdminContactMessages")
 );
-const AdminEmails = lazy(() => import("../../pages/admin/AdminEmails"));
+// const AdminEmails = lazy(() => import("../../pages/admin/AdminEmails"));
 
 // ===== COMPOSANT PRINCIPAL =====
 const AdminRoutesV2: React.FC = () => {
@@ -331,8 +333,6 @@ const AdminRoutesV2: React.FC = () => {
           </Suspense>
         }
       />
-
-    
 
       {/* Compat anciennes */}
       <Route
@@ -813,6 +813,16 @@ const AdminRoutesV2: React.FC = () => {
           </Suspense>
         }
       />
+      <Route
+        path="help/center"
+        element={
+          <Suspense
+            fallback={<LoadingSpinner message="Chargement du help center..." />}
+          >
+            <AdminHelpCenter />
+          </Suspense>
+        }
+      />
 
       {/* 📊 RAPPORTS & ANALYTICS */}
       <Route
@@ -971,6 +981,7 @@ export const useAdminRouteValidation = () => {
       "/admin/reports/performance",
       "/admin/reports/exports",
       "/admin/promos/codes",
+      "/admin/help/center",
     ];
     return validPaths.includes(path);
   };
