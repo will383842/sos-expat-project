@@ -985,16 +985,34 @@ useEffect(() => {
 
       // ✅ Translation update (NEW)
       if (user.role === "lawyer" || user.role === "expat") {
-        const fieldsUpdated = Object.keys(payload).filter(
-          (key) => key !== "email" && key !== "updatedAt"
+        // Track fields that affect translations: description/bio, specialties, motivation
+        const translationRelevantFields = [
+          'bio',           // Description/bio
+          'description',   // Also check for description field
+          'specialties',   // For lawyers
+          'helpTypes',     // For expats (equivalent to specialties)
+          'summary',       // Motivation field (might be in translations)
+          'motivation',    // Direct motivation field if exists
+        ];
+        
+        // Get all updated fields, excluding non-translatable ones
+        const allFieldsUpdated = Object.keys(payload).filter(
+          (key) => key !== "email" && key !== "updatedAt" && key !== "profilePhoto" && key !== "photoURL" && key !== "avatar"
         );
         
-        if (fieldsUpdated.length > 0) {
-          console.log('[saveSettings] Requesting translation update for fields:', fieldsUpdated);
+        // Check if any translation-relevant fields were updated
+        const hasTranslationRelevantChanges = allFieldsUpdated.some(
+          field => translationRelevantFields.includes(field)
+        ) || allFieldsUpdated.length > 0; // Update if any field changed
+        
+        if (hasTranslationRelevantChanges && allFieldsUpdated.length > 0) {
+          console.log('[saveSettings] Requesting translation update for fields:', allFieldsUpdated);
+          console.log('[saveSettings] Translation-relevant fields detected:', 
+            allFieldsUpdated.filter(f => translationRelevantFields.includes(f)));
           
           const translationResult = await requestUpdateProviderTranslation(
             user.id,
-            fieldsUpdated
+            allFieldsUpdated
           );
           
           if (translationResult.success && translationResult.updatedLanguages.length > 0) {
@@ -1004,6 +1022,8 @@ useEffect(() => {
             console.warn('[saveSettings] ⚠ Translation update had issues:', 
               translationResult.message);
             // Continue - profile was saved successfully, translation update is secondary
+          } else {
+            console.log('[saveSettings] Translation update completed (no languages to update or all were frozen)');
           }
         }
       }

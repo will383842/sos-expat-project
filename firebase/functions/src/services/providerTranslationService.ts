@@ -72,7 +72,7 @@ export interface TranslatedContent {
 }
 
 export interface TranslationMetadata {
-  status: 'missing' | 'created' | 'outdated' | 'frozen';
+  status: 'missing' | 'created' | 'outdated' | 'frozen' | 'updated';
   createdAt?: admin.firestore.Timestamp | Date;
   updatedAt?: admin.firestore.Timestamp | Date;
   cost: number;
