@@ -13,6 +13,7 @@
   "dependencies": {
     "@google-cloud/tasks": "^6.2.0",
     "@types/cors": "^2.8.19",
+    "axios": "^1.6.0",
     "cors": "^2.8.5",
     "dotenv": "^16.6.1",
     "firebase-admin": "^12.7.0",

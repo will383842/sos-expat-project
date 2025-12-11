@@ -41,7 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkProviderInactivity = exports.testWebhook = exports.manuallyTriggerCallExecution = exports.getCloudTasksQueueStats = exports.testCloudTasksConnection = exports.getUltraDebugLogs = exports.getSystemHealthStatus = exports.generateSystemDebugReport = exports.scheduledCleanup = exports.scheduledFirestoreExport = exports.stripeWebhook = exports.getStripe = exports.adminBulkUpdateStatus = exports.adminSoftDeleteUser = exports.adminUpdateStatus = exports.executeCallTask = exports.notifyAfterPayment = exports.initializeMessageTemplates = exports.unifiedWebhook = exports.enqueueMessageEvent = exports.providerNoAnswerTwiML = exports.twilioCallWebhook = exports.testTwilioCall = exports.api = exports.createPaymentIntent = exports.createAndScheduleCall = exports.createAndScheduleCallHTTPS = exports.STRIPE_WEBHOOK_SECRET_LIVE = exports.STRIPE_WEBHOOK_SECRET_TEST = exports.STRIPE_MODE = exports.processScheduledTransfers = exports.completeLawyerOnboarding = exports.checkKycStatus = exports.addBankAccount = exports.submitKycData = exports.createCustomAccount = exports.TASKS_AUTH_SECRET = exports.scheduledBackup = exports.createManualBackup = exports.checkStripeAccountStatus = exports.getStripeAccountSession = exports.createStripeAccount = exports.createLawyerStripeAccount = exports.STRIPE_SECRET_KEY_LIVE = exports.STRIPE_SECRET_KEY_TEST = exports.TWILIO_PHONE_NUMBER = exports.TWILIO_AUTH_TOKEN = exports.TWILIO_ACCOUNT_SID = exports.EMAIL_PASS = exports.EMAIL_USER = void 0;
-exports.setProviderOffline = exports.updateProviderActivity = void 0;
+exports.handlePayoutSent = exports.handlePayoutRequested = exports.handlePaymentFailed = exports.handlePaymentReceived = exports.handleCallCompleted = exports.handleReviewSubmitted = exports.handleUserRegistration = exports.setProviderOffline = exports.updateProviderActivity = void 0;
 // ====== ULTRA DEBUG INITIALIZATION ======
 const ultraDebugLogger_1 = require("./utils/ultraDebugLogger");
 // Tracer tous les imports principaux
@@ -92,6 +92,8 @@ var scheduledBackup_1 = require("./scheduledBackup");
 Object.defineProperty(exports, "scheduledBackup", { enumerable: true, get: function () { return scheduledBackup_1.scheduledBackup; } });
 // Cloud Tasks auth
 exports.TASKS_AUTH_SECRET = (0, params_1.defineSecret)("TASKS_AUTH_SECRET");
+// MailWizz Email Marketing
+const config_1 = require("./emailMarketing/config");
 // ✅ Centralise la liste globale
 const GLOBAL_SECRETS = [
     exports.EMAIL_USER,
@@ -103,6 +105,8 @@ const GLOBAL_SECRETS = [
     exports.STRIPE_SECRET_KEY_TEST,
     exports.STRIPE_SECRET_KEY_LIVE,
     exports.TASKS_AUTH_SECRET,
+    config_1.MAILWIZZ_API_KEY,
+    config_1.MAILWIZZ_WEBHOOK_SECRET,
 ].filter(Boolean);
 // ⚠️ cast 'as any' pour accepter eventarc si les types ne sont pas à jour
 (0, v2_1.setGlobalOptions)({
@@ -1828,9 +1832,18 @@ var setProviderOffline_1 = require("./callables/setProviderOffline");
 Object.defineProperty(exports, "setProviderOffline", { enumerable: true, get: function () { return setProviderOffline_1.setProviderOffline; } });
 // ========== SEO - AUTO-INDEXATION ==========
 __exportStar(require("./seo"), exports);
-// Add to your existing index.ts exports
-__exportStar(require("./sitemap"), exports);
+// ========== TRANSLATION FUNCTIONS ==========
 __exportStar(require("./translation/translateProvider"), exports);
 __exportStar(require("./translation/initializeProviderTranslation"), exports);
 __exportStar(require("./translation/updateProviderTranslation"), exports);
+// ========== EMAIL MARKETING AUTOMATION (MailWizz) ==========
+var userLifecycle_1 = require("./emailMarketing/functions/userLifecycle");
+Object.defineProperty(exports, "handleUserRegistration", { enumerable: true, get: function () { return userLifecycle_1.handleUserRegistration; } });
+var transactions_1 = require("./emailMarketing/functions/transactions");
+Object.defineProperty(exports, "handleReviewSubmitted", { enumerable: true, get: function () { return transactions_1.handleReviewSubmitted; } });
+Object.defineProperty(exports, "handleCallCompleted", { enumerable: true, get: function () { return transactions_1.handleCallCompleted; } });
+Object.defineProperty(exports, "handlePaymentReceived", { enumerable: true, get: function () { return transactions_1.handlePaymentReceived; } });
+Object.defineProperty(exports, "handlePaymentFailed", { enumerable: true, get: function () { return transactions_1.handlePaymentFailed; } });
+Object.defineProperty(exports, "handlePayoutRequested", { enumerable: true, get: function () { return transactions_1.handlePayoutRequested; } });
+Object.defineProperty(exports, "handlePayoutSent", { enumerable: true, get: function () { return transactions_1.handlePayoutSent; } });
 //# sourceMappingURL=index.js.map
