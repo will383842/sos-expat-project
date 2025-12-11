@@ -571,7 +571,7 @@ const AdminCallsMonitoring: React.FC = () => {
     };
   }, [currentUser, isRealTimeActive, soundEnabled, liveCalls.length]);
 
-  // Calcul des métriques en temps réel basé sur les vraies données
+  // Calcul des métriques en temps réel basé sur les vraies données 
   useEffect(() => {
     if (liveCalls.length === 0) {
       setCallMetrics(null);

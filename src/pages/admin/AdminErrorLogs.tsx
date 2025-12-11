@@ -63,6 +63,7 @@ const AdminErrorLogs: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot<DocumentData> | null>(null);
   const [hasMore, setHasMore] = useState<boolean>(true);
+  const [orderByField, setOrderByField] = useState<"timestamp" | "createdAt" | null>(null);
   
   // Filters
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -126,6 +127,7 @@ const AdminErrorLogs: React.FC = () => {
         setErrorLogs([]);
         setLastDoc(null);
         setHasMore(true);
+        setOrderByField(null); // Reset ordering field on reset
       } else {
         setIsLoadingMore(true);
       }
@@ -133,29 +135,59 @@ const AdminErrorLogs: React.FC = () => {
 
       const errorLogsRef = collection(db, "error_logs");
       
-      // Try to order by timestamp, but handle cases where it might not exist
+      // Determine which field to use for ordering
+      // On reset or first load, try timestamp first, then createdAt if needed
+      // On pagination, use the already determined field
+      let fieldToUse: "timestamp" | "createdAt" | null = orderByField || null;
       let q;
-      try {
-        q = query(errorLogsRef, orderBy("timestamp", "desc"), limit(BATCH_SIZE));
-        if (lastDoc && !reset) {
-          q = query(errorLogsRef, orderBy("timestamp", "desc"), startAfter(lastDoc), limit(BATCH_SIZE));
-        }
-      } catch (err) {
-        // If timestamp ordering fails, try ordering by createdAt
+      let snapshot;
+      
+      // On reset or first load, detect which field works
+      if (reset || !orderByField) {
+        // Try timestamp first
         try {
-          q = query(errorLogsRef, orderBy("createdAt", "desc"), limit(BATCH_SIZE));
-          if (lastDoc && !reset) {
-            q = query(errorLogsRef, orderBy("createdAt", "desc"), startAfter(lastDoc), limit(BATCH_SIZE));
+          q = query(errorLogsRef, orderBy("timestamp", "desc"), limit(BATCH_SIZE));
+          snapshot = await getDocs(q);
+          fieldToUse = "timestamp";
+          setOrderByField("timestamp");
+        } catch (timestampErr) {
+          // timestamp failed, try createdAt
+          try {
+            q = query(errorLogsRef, orderBy("createdAt", "desc"), limit(BATCH_SIZE));
+            snapshot = await getDocs(q);
+            fieldToUse = "createdAt";
+            setOrderByField("createdAt");
+          } catch (createdAtErr) {
+            // Both failed - this shouldn't happen normally, but handle gracefully
+            console.error("Cannot order by timestamp or createdAt:", createdAtErr);
+            setError("Unable to load error logs: database query issue");
+            setHasMore(false);
+            return;
           }
-        } catch {
-          // Fallback: no ordering, just limit
-          q = lastDoc && !reset 
-            ? query(errorLogsRef, startAfter(lastDoc), limit(BATCH_SIZE))
-            : query(errorLogsRef, limit(BATCH_SIZE));
+        }
+      } else {
+        // Pagination: use the already determined field
+        if (!lastDoc) {
+          setHasMore(false);
+          return;
+        }
+        
+        try {
+          q = query(
+            errorLogsRef,
+            orderBy(fieldToUse, "desc"),
+            startAfter(lastDoc),
+            limit(BATCH_SIZE)
+          );
+          snapshot = await getDocs(q);
+        } catch (paginationErr) {
+          console.error("Error during pagination:", paginationErr);
+          setError("Error loading more logs. Please refresh and try again.");
+          setHasMore(false);
+          return;
         }
       }
 
-      const snapshot = await getDocs(q);
       const logs: ErrorLog[] = [];
 
       snapshot.forEach((doc) => {
@@ -182,7 +214,7 @@ const AdminErrorLogs: React.FC = () => {
       setIsLoading(false);
       setIsLoadingMore(false);
     }
-  }, [lastDoc, parseLogData]);
+  }, [lastDoc, parseLogData, orderByField]);
 
   useEffect(() => {
     loadErrorLogs(true);
