@@ -1828,8 +1828,7 @@ var setProviderOffline_1 = require("./callables/setProviderOffline");
 Object.defineProperty(exports, "setProviderOffline", { enumerable: true, get: function () { return setProviderOffline_1.setProviderOffline; } });
 // ========== SEO - AUTO-INDEXATION ==========
 __exportStar(require("./seo"), exports);
-// Add to your existing index.ts exports
-__exportStar(require("./sitemap"), exports);
+// ========== TRANSLATION FUNCTIONS ==========
 __exportStar(require("./translation/translateProvider"), exports);
 __exportStar(require("./translation/initializeProviderTranslation"), exports);
 __exportStar(require("./translation/updateProviderTranslation"), exports);
