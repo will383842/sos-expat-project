@@ -11,8 +11,16 @@ import { HelmetProvider } from 'react-helmet-async';
 // Import the centralized i18n configuration
 import './config/i18n';
 
+// Initialize GA4 if user has already consented
+import { initializeGA4, hasAnalyticsConsent } from './utils/ga4';
+
 // Initialiser la capture d'erreurs globale
 setupGlobalErrorLogging();
+
+// Initialize GA4 if consent was already given
+if (hasAnalyticsConsent()) {
+  initializeGA4();
+}
 
 // Composant racine
 const RootApp = (

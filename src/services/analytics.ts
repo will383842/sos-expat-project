@@ -175,12 +175,14 @@ class AnalyticsService {
 
       await addDoc(collection(db, 'analytics_user_actions'), eventData);
 
-      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-        window.gtag('event', data.action, {
+      // Send to GA4
+      if (typeof window !== 'undefined') {
+        const { trackEvent } = await import('../utils/ga4');
+        trackEvent(data.action, {
           event_category: data.category,
           event_label: data.label,
           value: data.value,
-          custom_map: data.metadata,
+          ...data.metadata,
         });
       }
     } catch (error) {
@@ -210,13 +212,18 @@ class AnalyticsService {
         await this.incrementCounter(`conversions_${data.providerType}_${data.conversionType}`);
       }
 
-      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-        window.gtag('event', 'conversion', {
+      // Send to GA4
+      if (typeof window !== 'undefined') {
+        const { trackEvent } = await import('../utils/ga4');
+        trackEvent('conversion', {
           transaction_id: this.sessionId,
           value: data.amount ?? 0,
           currency: 'EUR',
           event_category: 'ecommerce',
           event_label: data.conversionType,
+          conversion_type: data.conversionType,
+          provider_id: data.providerId,
+          provider_type: data.providerType,
         });
       }
 

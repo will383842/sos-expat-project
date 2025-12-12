@@ -5,6 +5,7 @@ import { X, Cookie, Settings, Shield, Check, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useApp } from '../../contexts/AppContext';
 import Button from './Button';
+import { initializeGA4, updateGA4Consent } from '../../utils/ga4';
 
 /**
  * Cookie Consent Banner Component
@@ -145,11 +146,15 @@ const CookieBanner: React.FC<CookieBannerProps> = ({
     localStorage.setItem(COOKIE_PREFERENCES_KEY, JSON.stringify(prefs));
     setIsVisible(false);
     
-    // Trigger analytics based on preferences
-    if (prefs.analytics && typeof window !== 'undefined' && window.gtag) {
-      window.gtag('consent', 'update', {
-        analytics_storage: 'granted',
-      });
+    // Initialize or update GA4 based on preferences
+    if (prefs.analytics) {
+      // Initialize GA4 if not already initialized
+      initializeGA4();
+      // Update consent to granted
+      updateGA4Consent(true);
+    } else {
+      // Update consent to denied
+      updateGA4Consent(false);
     }
     
     if (onPreferencesSaved) {
