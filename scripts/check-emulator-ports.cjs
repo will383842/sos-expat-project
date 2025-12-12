@@ -122,3 +122,4 @@ if (occupiedPorts.length > 0) {
 console.log("✅ All emulator ports are available");
 process.exit(0);
 
+

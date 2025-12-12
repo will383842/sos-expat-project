@@ -24,3 +24,4 @@ try {
   console.log("   Try manually: pkill -9 -f 'firebase.*emulators'\n");
 }
 
+

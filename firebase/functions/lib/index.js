@@ -41,7 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkProviderInactivity = exports.testWebhook = exports.manuallyTriggerCallExecution = exports.getCloudTasksQueueStats = exports.testCloudTasksConnection = exports.getUltraDebugLogs = exports.getSystemHealthStatus = exports.generateSystemDebugReport = exports.scheduledCleanup = exports.scheduledFirestoreExport = exports.stripeWebhook = exports.getStripe = exports.adminBulkUpdateStatus = exports.adminSoftDeleteUser = exports.adminUpdateStatus = exports.executeCallTask = exports.notifyAfterPayment = exports.initializeMessageTemplates = exports.unifiedWebhook = exports.enqueueMessageEvent = exports.providerNoAnswerTwiML = exports.twilioCallWebhook = exports.testTwilioCall = exports.api = exports.createPaymentIntent = exports.createAndScheduleCall = exports.createAndScheduleCallHTTPS = exports.STRIPE_WEBHOOK_SECRET_LIVE = exports.STRIPE_WEBHOOK_SECRET_TEST = exports.STRIPE_MODE = exports.processScheduledTransfers = exports.completeLawyerOnboarding = exports.checkKycStatus = exports.addBankAccount = exports.submitKycData = exports.createCustomAccount = exports.TASKS_AUTH_SECRET = exports.scheduledBackup = exports.createManualBackup = exports.checkStripeAccountStatus = exports.getStripeAccountSession = exports.createStripeAccount = exports.createLawyerStripeAccount = exports.STRIPE_SECRET_KEY_LIVE = exports.STRIPE_SECRET_KEY_TEST = exports.TWILIO_PHONE_NUMBER = exports.TWILIO_AUTH_TOKEN = exports.TWILIO_ACCOUNT_SID = exports.EMAIL_PASS = exports.EMAIL_USER = void 0;
-exports.handlePayoutSent = exports.handlePayoutRequested = exports.handlePaymentFailed = exports.handlePaymentReceived = exports.handleCallCompleted = exports.handleReviewSubmitted = exports.handleUserRegistration = exports.setProviderOffline = exports.updateProviderActivity = void 0;
+exports.handleUnsubscribe = exports.handleEmailComplaint = exports.handleEmailBounce = exports.handleEmailClick = exports.handleEmailOpen = exports.detectInactiveUsers = exports.stopAutorespondersForUser = exports.stopAutoresponders = exports.handlePayPalConfiguration = exports.handleKYCVerification = exports.handleProviderOnlineStatus = exports.handleUserLogin = exports.handleProfileCompleted = exports.handlePayoutSent = exports.handlePayoutRequested = exports.handlePaymentFailed = exports.handlePaymentReceived = exports.handleCallCompleted = exports.handleReviewSubmitted = exports.handleUserRegistration = exports.setProviderOffline = exports.updateProviderActivity = void 0;
 // ====== ULTRA DEBUG INITIALIZATION ======
 const ultraDebugLogger_1 = require("./utils/ultraDebugLogger");
 // Tracer tous les imports principaux
@@ -711,6 +711,7 @@ const sendPaymentNotifications = (0, ultraDebugLogger_1.traceFunction)(async (ca
 //     }
 //   })
 // );
+// @ts-ignore - Type compatibility issue between firebase-functions and express types
 exports.stripeWebhook = (0, https_1.onRequest)({
     region: "europe-west1",
     memory: "512MiB",
@@ -719,7 +720,9 @@ exports.stripeWebhook = (0, https_1.onRequest)({
     timeoutSeconds: 30,
     minInstances: 0,
     maxInstances: 5,
-}, wrapHttpFunction("stripeWebhook", async (req, res) => {
+}, 
+// @ts-ignore - Type compatibility issue between firebase-functions and express types
+wrapHttpFunction("stripeWebhook", async (req, res) => {
     // ✅ STEP 1: Log webhook start
     console.log("🚀 STRIPE WEBHOOK START");
     console.log("📋 Request method:", req.method);
@@ -1815,7 +1818,9 @@ exports.testWebhook = (0, https_1.onRequest)({
     minInstances: 0,
     concurrency: 1,
     timeoutSeconds: 60,
-}, wrapHttpFunction("testWebhook", async (_req, res) => {
+}, 
+// @ts-ignore - Type compatibility issue between firebase-functions and express types
+wrapHttpFunction("testWebhook", async (_req, res) => {
     try {
         res.status(200).json({ ok: true, now: new Date().toISOString() });
     }
@@ -1846,4 +1851,21 @@ Object.defineProperty(exports, "handlePaymentReceived", { enumerable: true, get:
 Object.defineProperty(exports, "handlePaymentFailed", { enumerable: true, get: function () { return transactions_1.handlePaymentFailed; } });
 Object.defineProperty(exports, "handlePayoutRequested", { enumerable: true, get: function () { return transactions_1.handlePayoutRequested; } });
 Object.defineProperty(exports, "handlePayoutSent", { enumerable: true, get: function () { return transactions_1.handlePayoutSent; } });
+var profileLifecycle_1 = require("./emailMarketing/functions/profileLifecycle");
+Object.defineProperty(exports, "handleProfileCompleted", { enumerable: true, get: function () { return profileLifecycle_1.handleProfileCompleted; } });
+Object.defineProperty(exports, "handleUserLogin", { enumerable: true, get: function () { return profileLifecycle_1.handleUserLogin; } });
+Object.defineProperty(exports, "handleProviderOnlineStatus", { enumerable: true, get: function () { return profileLifecycle_1.handleProviderOnlineStatus; } });
+Object.defineProperty(exports, "handleKYCVerification", { enumerable: true, get: function () { return profileLifecycle_1.handleKYCVerification; } });
+Object.defineProperty(exports, "handlePayPalConfiguration", { enumerable: true, get: function () { return profileLifecycle_1.handlePayPalConfiguration; } });
+var stopAutoresponders_1 = require("./emailMarketing/functions/stopAutoresponders");
+Object.defineProperty(exports, "stopAutoresponders", { enumerable: true, get: function () { return stopAutoresponders_1.stopAutoresponders; } });
+Object.defineProperty(exports, "stopAutorespondersForUser", { enumerable: true, get: function () { return stopAutoresponders_1.stopAutorespondersForUser; } });
+var inactiveUsers_1 = require("./emailMarketing/functions/inactiveUsers");
+Object.defineProperty(exports, "detectInactiveUsers", { enumerable: true, get: function () { return inactiveUsers_1.detectInactiveUsers; } });
+var webhooks_1 = require("./emailMarketing/functions/webhooks");
+Object.defineProperty(exports, "handleEmailOpen", { enumerable: true, get: function () { return webhooks_1.handleEmailOpen; } });
+Object.defineProperty(exports, "handleEmailClick", { enumerable: true, get: function () { return webhooks_1.handleEmailClick; } });
+Object.defineProperty(exports, "handleEmailBounce", { enumerable: true, get: function () { return webhooks_1.handleEmailBounce; } });
+Object.defineProperty(exports, "handleEmailComplaint", { enumerable: true, get: function () { return webhooks_1.handleEmailComplaint; } });
+Object.defineProperty(exports, "handleUnsubscribe", { enumerable: true, get: function () { return webhooks_1.handleUnsubscribe; } });
 //# sourceMappingURL=index.js.map

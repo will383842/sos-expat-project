@@ -352,3 +352,4 @@ firebase functions:secrets:set MAILWIZZ_API_KEY
 - **Template Testing**: Ensure all 954 templates exist in MailWizz before production
 - **Rate Limiting**: Be aware of MailWizz rate limits during testing
 
+

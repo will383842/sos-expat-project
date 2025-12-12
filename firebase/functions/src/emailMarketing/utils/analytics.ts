@@ -102,3 +102,4 @@ function cleanParams(params: GA4EventParams): Record<string, any> {
   return cleaned;
 }
 
+

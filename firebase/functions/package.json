@@ -4,7 +4,10 @@
     "build": "tsc -p .",
     "build:watch": "tsc -p . --watch",
     "deploy": "firebase deploy --only functions",
-    "test:production": "node testProduction.js"
+    "test:production": "node testProduction.js",
+    "ci:no-scripts": "npm ci --ignore-scripts",
+    "postinstall": "node patch-protobufjs.js || true",
+    "prebuild": "node patch-protobufjs.js || true"
   },
   "engines": {
     "node": "20"

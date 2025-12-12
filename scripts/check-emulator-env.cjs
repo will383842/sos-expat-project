@@ -35,3 +35,4 @@ if (useEmulators !== "true" && useEmulators !== '"true"' && useEmulators !== "'t
 
 console.log("✅ VITE_USE_EMULATORS=true detected - Frontend will use local emulators");
 
+

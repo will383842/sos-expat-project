@@ -100,3 +100,4 @@ firebase/functions/src/emailMarketing/
     └── fieldMapper.ts                ✅ Field mapping
 ```
 
+

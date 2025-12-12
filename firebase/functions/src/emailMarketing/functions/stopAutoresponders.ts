@@ -27,7 +27,7 @@ export const stopAutoresponders = onSchedule(
     timeZone: "UTC",
   },
   async (event) => {
-    console.log("🔄 Starting autoresponder stop check...");
+    console.log("🔄 Starting autoresponder stop check...",event);
 
     try {
       const mailwizz = new MailwizzAPI();
