@@ -50,6 +50,8 @@ export const TWILIO_PHONE_NUMBER = defineSecret("TWILIO_PHONE_NUMBER");
 export const STRIPE_SECRET_KEY_TEST = defineSecret("STRIPE_SECRET_KEY_TEST");
 export const STRIPE_SECRET_KEY_LIVE = defineSecret("STRIPE_SECRET_KEY_LIVE");
 
+// MAILWIZZ_API_KEY and MAILWIZZ_WEBHOOK_SECRET are now static values from config.ts
+
 // kyc
 export { createLawyerStripeAccount } from "./createLawyerAccount";
 export { createStripeAccount } from "./createStripeAccount";
@@ -64,7 +66,7 @@ export { scheduledBackup } from "./scheduledBackup";
 export const TASKS_AUTH_SECRET = defineSecret("TASKS_AUTH_SECRET");
 
 // MailWizz Email Marketing
-import { MAILWIZZ_API_KEY, MAILWIZZ_WEBHOOK_SECRET } from "./emailMarketing/config";
+// import { MAILWIZZ_API_KEY, MAILWIZZ_WEBHOOK_SECRET } from "./emailMarketing/config";
 
 // ✅ Centralise la liste globale
 const GLOBAL_SECRETS = [
@@ -77,9 +79,9 @@ const GLOBAL_SECRETS = [
   STRIPE_SECRET_KEY_TEST,
   STRIPE_SECRET_KEY_LIVE,
   TASKS_AUTH_SECRET,
-  MAILWIZZ_API_KEY,
-  MAILWIZZ_WEBHOOK_SECRET,
+  // MAILWIZZ_API_KEY and MAILWIZZ_WEBHOOK_SECRET removed - now using static values from environment
 ].filter(Boolean) as any[];
+
 
 // ⚠️ cast 'as any' pour accepter eventarc si les types ne sont pas à jour
 setGlobalOptions({

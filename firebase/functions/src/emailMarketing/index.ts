@@ -17,16 +17,20 @@ export * from './utils/mailwizz';
 export * from './utils/analytics';
 export * from './utils/fieldMapper';
 // Note: config exports getLanguageCode, so don't export * to avoid conflicts
+// MAILWIZZ_API_KEY and MAILWIZZ_WEBHOOK_SECRET are now static values - not exported to avoid Firebase detecting them as secrets
 export { 
-  MAILWIZZ_API_KEY, 
-  MAILWIZZ_WEBHOOK_SECRET,
+  // MAILWIZZ_API_KEY and MAILWIZZ_WEBHOOK_SECRET - removed exports to avoid Firebase detecting them as secrets
+  // Use getMailWizzApiKey() and getMailWizzWebhookSecret() functions instead
   MAILWIZZ_API_URL,
   MAILWIZZ_LIST_UID,
   MAILWIZZ_CUSTOMER_ID,
   validateMailWizzConfig,
+  getMailWizzApiKey,
+  getMailWizzWebhookSecret,
   getLanguageCode,
   SUPPORTED_LANGUAGES,
   type SupportedLanguage
 } from './config';
+
 
 

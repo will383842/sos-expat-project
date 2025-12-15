@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logCallRecord = logCallRecord;
-exports.getCallRecords = getCallRecords;
+exports.getCallRecords = exports.logCallRecord = void 0;
 const firebase_1 = require("../firebase");
 const logError_1 = require("../logs/logError");
 // ✅ UNE SEULE fonction qui gère les deux cas
@@ -55,6 +54,7 @@ async function logCallRecord(data) {
         }
     }
 }
+exports.logCallRecord = logCallRecord;
 async function getCallRecords(callId) {
     try {
         const snapshot = await firebase_1.db.collection('call_records')
@@ -72,4 +72,5 @@ async function getCallRecords(callId) {
         return [];
     }
 }
+exports.getCallRecords = getCallRecords;
 //# sourceMappingURL=logCallRecord.js.map

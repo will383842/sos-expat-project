@@ -2,7 +2,7 @@ import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import { MailwizzAPI } from "../utils/mailwizz";
 import { logGA4Event } from "../utils/analytics";
 import { mapUserToMailWizzFields } from "../utils/fieldMapper";
-import { getLanguageCode, MAILWIZZ_API_KEY } from "../config";
+import { getLanguageCode } from "../config";
 
 /**
  * FUNCTION 1: Handle User Registration
@@ -12,7 +12,6 @@ import { getLanguageCode, MAILWIZZ_API_KEY } from "../config";
 export const handleUserRegistration = onDocumentCreated(
   {
     document: "users/{userId}",
-    secrets: [MAILWIZZ_API_KEY],
     region: "europe-west1",
   },
   async (event) => {

@@ -1,16 +1,7 @@
 "use strict";
 // firebase/functions/src/utils/Language.ts
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DEFAULT_FALLBACK_LANG = exports.SUPPORTED_LANGS = exports.VOICE_LOCALES = void 0;
-exports.normalizeToShortLang = normalizeToShortLang;
-exports.normalizeLangList = normalizeLangList;
-exports.orderedIntersection = orderedIntersection;
-exports.resolveCommonLanguage = resolveCommonLanguage;
-exports.langKeyToTwilioLocale = langKeyToTwilioLocale;
-exports.parseAcceptLanguage = parseAcceptLanguage;
-exports.resolveLangForTwilio = resolveLangForTwilio;
-exports.isSupportedLang = isSupportedLang;
-exports.pickBestClientLang = pickBestClientLang;
+exports.pickBestClientLang = exports.isSupportedLang = exports.resolveLangForTwilio = exports.parseAcceptLanguage = exports.langKeyToTwilioLocale = exports.resolveCommonLanguage = exports.orderedIntersection = exports.normalizeLangList = exports.normalizeToShortLang = exports.DEFAULT_FALLBACK_LANG = exports.SUPPORTED_LANGS = exports.VOICE_LOCALES = void 0;
 /** Mapping "langue courte" -> locale TTS Twilio */
 exports.VOICE_LOCALES = {
     fr: 'fr-FR',
@@ -46,6 +37,7 @@ function normalizeToShortLang(input) {
             return undefined;
     }
 }
+exports.normalizeToShortLang = normalizeToShortLang;
 /**
  * Normalise un tableau de langues vers une liste dédupliquée de codes courts supportés.
  * Exclut silencieusement les langues non supportées.
@@ -60,6 +52,7 @@ function normalizeLangList(langs) {
     }
     return out;
 }
+exports.normalizeLangList = normalizeLangList;
 /**
  * Calcule l'intersection ordonnée des listes A et B.
  * - L'ordre de A est conservé (utile pour prioriser les préférences du client).
@@ -75,6 +68,7 @@ function orderedIntersection(a, b) {
     }
     return out;
 }
+exports.orderedIntersection = orderedIntersection;
 /**
  * Choisit la langue "commune" pour l'appel, à partir des préférences
  * client et prestataire. Renvoie aussi la locale TTS Twilio.
@@ -119,6 +113,7 @@ function resolveCommonLanguage(clientLangs, providerLangs, options = {}) {
     // 3) sinon fallback global
     return { langKey: fallback, ttsLocale: exports.VOICE_LOCALES[fallback], origin: 'fallback' };
 }
+exports.resolveCommonLanguage = resolveCommonLanguage;
 /**
  * Convertit un code court ('fr'|'en'|'es') vers locale Twilio.
  * Lance une erreur si non supporté (utile pour attraper les régressions).
@@ -130,6 +125,7 @@ function langKeyToTwilioLocale(lang) {
     }
     return loc;
 }
+exports.langKeyToTwilioLocale = langKeyToTwilioLocale;
 /**
  * Utilitaire pratique : à partir d'un Accept-Language HTTP,
  * renvoie une liste normalisée (ordonnée par qualité 'q').
@@ -156,6 +152,7 @@ function parseAcceptLanguage(header) {
     // Dédupliquer en conservant l'ordre
     return Array.from(new Set(filtered));
 }
+exports.parseAcceptLanguage = parseAcceptLanguage;
 /**
  * Helper de haut niveau pour Twilio :
  * renvoie directement { langKey, ttsLocale } à partir d'inputs "bruités".
@@ -164,6 +161,7 @@ function resolveLangForTwilio(clientLangs, providerLangs, options) {
     const { langKey, ttsLocale } = resolveCommonLanguage(clientLangs, providerLangs, options);
     return { langKey, ttsLocale };
 }
+exports.resolveLangForTwilio = resolveLangForTwilio;
 /**
  * Valide qu'une langue courte est supportée.
  */
@@ -171,6 +169,7 @@ function isSupportedLang(lang) {
     const n = normalizeToShortLang(lang);
     return !!n && exports.SUPPORTED_LANGS.includes(n);
 }
+exports.isSupportedLang = isSupportedLang;
 /**
  * Renvoie la meilleure langue côté client seule (sans prestataire),
  * utile pour choisir la langue des notifications initiales.
@@ -179,4 +178,5 @@ function pickBestClientLang(clientLangs, fallback = exports.DEFAULT_FALLBACK_LAN
     const c = normalizeLangList(clientLangs);
     return c[0] ?? fallback;
 }
+exports.pickBestClientLang = pickBestClientLang;
 //# sourceMappingURL=Language.js.map

@@ -1,35 +1,21 @@
-import { defineSecret, defineString } from "firebase-functions/params";
-import dotenv from "dotenv";
-import * as path from "path";
-import * as fs from "fs";
+import { defineString } from "firebase-functions/params";
 
-// Load environment variables from .env files
-// Try multiple possible locations for .env files
-const possiblePaths = [
-  // In firebase/functions directory (most common)
-  path.join(process.cwd(), "firebase", "functions", ".env.developement"),
-  path.join(process.cwd(), "firebase", "functions", ".env"),
-  // In root directory
-  path.join(process.cwd(), ".env.development"),
-  path.join(process.cwd(), ".env"),
-  // Relative to this file (when running from functions directory)
-  path.join(__dirname, "..", "..", "..", ".env.developement"),
-  path.join(__dirname, "..", "..", "..", ".env"),
-];
+// MailWizz Configuration - Static hardcoded values (no longer using secrets)
+// IMPORTANT: These are NOT exported to avoid Firebase CLI detecting them as secrets
+// Use getMailWizzApiKey() and getMailWizzWebhookSecret() functions instead
+const MAILWIZZ_API_KEY_VALUE = "63f17459fa45961cbb742a61ddebc157169bd3c1";
+const MAILWIZZ_WEBHOOK_SECRET_VALUE = "your_webhook_secret_static_value_here"; // Replace with your actual webhook secret
 
-// Load the first .env file that exists
-for (const envPath of possiblePaths) {
-  if (fs.existsSync(envPath)) {
-    dotenv.config({ path: envPath });
-    console.log(`✅ Loaded environment variables from: ${envPath}`);
-    break;
-  }
+/**
+ * Get MailWizz API key - static hardcoded value
+ * Using function instead of export to avoid Firebase CLI detecting it as a secret
+ */
+export function getMailWizzApiKey(): string {
+  return MAILWIZZ_API_KEY_VALUE;
 }
 
-// MailWizz Configuration - Read from environment variables first, then fallback to Firebase secrets
-// Environment variables take precedence over Firebase secrets
-export const MAILWIZZ_API_KEY = defineSecret("MAILWIZZ_API_KEY");
-export const MAILWIZZ_WEBHOOK_SECRET = defineSecret("MAILWIZZ_WEBHOOK_SECRET");
+// DO NOT export MAILWIZZ_API_KEY as constant - Firebase CLI will detect it as a secret
+// Use getMailWizzApiKey() function instead
 
 // MailWizz Configuration Strings - Read from env first, then Firebase params
 export const MAILWIZZ_API_URL = defineString("MAILWIZZ_API_URL", {
@@ -44,7 +30,7 @@ export const MAILWIZZ_CUSTOMER_ID = defineString("MAILWIZZ_CUSTOMER_ID", {
   default: process.env.MAILWIZZ_CUSTOMER_ID || "2",
 });
 
-// GA4 Configuration
+// // GA4 Configuration
 export const GA4_MEASUREMENT_ID = defineString("GA4_MEASUREMENT_ID", {
   default: "",
 });
@@ -81,18 +67,18 @@ export function validateMailWizzConfig(): {
   listUid: string;
   customerId: string;
 } {
-  // Priority: 1. Environment variable (.env file), 2. Firebase secret
-  const apiKey = process.env.MAILWIZZ_API_KEY || MAILWIZZ_API_KEY.value() || "";
+  // Using static values - no longer reading from environment or secrets
+  const apiKey = getMailWizzApiKey();
   if (!apiKey) {
     throw new Error(
-      "MAILWIZZ_API_KEY is not configured. Please set it in .env file (MAILWIZZ_API_KEY) or Firebase Functions secrets."
+      "MAILWIZZ_API_KEY is not configured."
     );
   }
 
   // Get values from env first, then Firebase params
-  const apiUrl = process.env.MAILWIZZ_API_URL || MAILWIZZ_API_URL.value();
-  const listUid = process.env.MAILWIZZ_LIST_UID || MAILWIZZ_LIST_UID.value();
-  const customerId = process.env.MAILWIZZ_CUSTOMER_ID || MAILWIZZ_CUSTOMER_ID.value();
+  const apiUrl = process.env.MAILWIZZ_API_URL ||""
+  const listUid = process.env.MAILWIZZ_LIST_UID || ""
+  const customerId = process.env.MAILWIZZ_CUSTOMER_ID || ""
 
   return {
     apiUrl,
@@ -103,9 +89,9 @@ export function validateMailWizzConfig(): {
 }
 
 /**
- * Get MailWizz webhook secret from environment or Firebase secret
+ * Get MailWizz webhook secret - now using static hardcoded value
  */
 export function getMailWizzWebhookSecret(): string {
-  return process.env.MAILWIZZ_WEBHOOK_SECRET || MAILWIZZ_WEBHOOK_SECRET.value() || "";
+  return MAILWIZZ_WEBHOOK_SECRET_VALUE;
 }
 

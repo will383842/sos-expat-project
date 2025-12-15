@@ -353,3 +353,7 @@ firebase functions:secrets:set MAILWIZZ_API_KEY
 - **Rate Limiting**: Be aware of MailWizz rate limits during testing
 
 
+
+
+
+

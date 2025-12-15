@@ -2,7 +2,7 @@ import { onSchedule } from "firebase-functions/v2/scheduler";
 import * as admin from "firebase-admin";
 import { MailwizzAPI } from "../utils/mailwizz";
 import { logGA4Event } from "../utils/analytics";
-import { getLanguageCode, MAILWIZZ_API_KEY } from "../config";
+import { getLanguageCode } from "../config";
 
 /**
  * FUNCTION 15: Detect Inactive Users (Optional Scheduled Function)
@@ -13,7 +13,6 @@ import { getLanguageCode, MAILWIZZ_API_KEY } from "../config";
 export const detectInactiveUsers = onSchedule(
   {
     schedule: "every 24 hours",
-    secrets: [MAILWIZZ_API_KEY],
     region: "europe-west1",
     timeZone: "UTC",
   },

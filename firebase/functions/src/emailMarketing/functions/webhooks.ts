@@ -2,7 +2,9 @@ import { onRequest } from "firebase-functions/v2/https";
 import * as admin from "firebase-admin";
 import { MailwizzAPI } from "../utils/mailwizz";
 import { logGA4Event, logEmailEvent, logTrustpilotEvent } from "../utils/analytics";
-import { MAILWIZZ_WEBHOOK_SECRET, MAILWIZZ_API_KEY, getMailWizzWebhookSecret } from "../config";
+import { getMailWizzWebhookSecret } from "../config";
+
+
 
 /**
  * Verify webhook secret from request headers
@@ -37,7 +39,6 @@ function verifyWebhookSecret(req: any): boolean {
  */
 export const handleEmailOpen = onRequest(
   {
-    secrets: [MAILWIZZ_WEBHOOK_SECRET, MAILWIZZ_API_KEY],
     region: "europe-west1",
   },
   // @ts-ignore - Type compatibility issue between firebase-functions and express types
@@ -109,7 +110,6 @@ export const handleEmailOpen = onRequest(
  */
 export const handleEmailClick = onRequest(
   {
-    secrets: [MAILWIZZ_WEBHOOK_SECRET, MAILWIZZ_API_KEY],
     region: "europe-west1",
   },
   // @ts-ignore - Type compatibility issue between firebase-functions and express types
@@ -209,7 +209,6 @@ export const handleEmailClick = onRequest(
  */
 export const handleEmailBounce = onRequest(
   {
-    secrets: [MAILWIZZ_WEBHOOK_SECRET, MAILWIZZ_API_KEY],
     region: "europe-west1",
   },
   // @ts-ignore - Type compatibility issue between firebase-functions and express types
@@ -325,7 +324,6 @@ export const handleEmailBounce = onRequest(
  */
 export const handleEmailComplaint = onRequest(
   {
-    secrets: [MAILWIZZ_WEBHOOK_SECRET, MAILWIZZ_API_KEY],
     region: "europe-west1",
   },
   // @ts-ignore - Type compatibility issue between firebase-functions and express types
@@ -425,7 +423,6 @@ export const handleEmailComplaint = onRequest(
  */
 export const handleUnsubscribe = onRequest(
   {
-    secrets: [MAILWIZZ_WEBHOOK_SECRET, MAILWIZZ_API_KEY],
     region: "europe-west1",
   },
   // @ts-ignore - Type compatibility issue between firebase-functions and express types

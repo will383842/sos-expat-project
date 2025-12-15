@@ -2,7 +2,7 @@ import { onDocumentCreated, onDocumentUpdated } from "firebase-functions/v2/fire
 import * as admin from "firebase-admin";
 import { MailwizzAPI } from "../utils/mailwizz";
 import { logGA4Event, logTrustpilotEvent } from "../utils/analytics";
-import { getLanguageCode, MAILWIZZ_API_KEY } from "../config";
+import { getLanguageCode } from "../config";
 
 /**
  * FUNCTION 3: Handle Call Completed
@@ -12,7 +12,6 @@ import { getLanguageCode, MAILWIZZ_API_KEY } from "../config";
 export const handleCallCompleted = onDocumentUpdated(
   {
     document: "calls/{callId}",
-    secrets: [MAILWIZZ_API_KEY],
     region: "europe-west1",
   },
   async (event) => {
@@ -135,7 +134,6 @@ export const handleCallCompleted = onDocumentUpdated(
 export const handleReviewSubmitted = onDocumentCreated(
   {
     document: "reviews/{reviewId}",
-    secrets: [MAILWIZZ_API_KEY],
     region: "europe-west1",
   },
   async (event) => {
@@ -350,7 +348,6 @@ export const handleReviewSubmitted = onDocumentCreated(
 export const handlePaymentReceived = onDocumentCreated(
   {
     document: "payments/{paymentId}",
-    secrets: [MAILWIZZ_API_KEY],
     region: "europe-west1",
   },
   async (event) => {
@@ -417,7 +414,6 @@ export const handlePaymentReceived = onDocumentCreated(
 export const handlePaymentFailed = onDocumentCreated(
   {
     document: "payments/{paymentId}",
-    secrets: [MAILWIZZ_API_KEY],
     region: "europe-west1",
   },
   async (event) => {
@@ -484,7 +480,6 @@ export const handlePaymentFailed = onDocumentCreated(
 export const handlePayoutRequested = onDocumentCreated(
   {
     document: "payouts/{payoutId}",
-    secrets: [MAILWIZZ_API_KEY],
     region: "europe-west1",
   },
   async (event) => {
@@ -547,7 +542,6 @@ export const handlePayoutRequested = onDocumentCreated(
 export const handlePayoutSent = onDocumentUpdated(
   {
     document: "payouts/{payoutId}",
-    secrets: [MAILWIZZ_API_KEY],
     region: "europe-west1",
   },
   async (event) => {

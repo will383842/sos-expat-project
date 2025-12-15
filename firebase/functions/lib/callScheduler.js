@@ -15,26 +15,15 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.gracefulShutdown = exports.getCallStatistics = exports.cleanupOldSessions = exports.cancelScheduledCall = exports.createCallSession = exports.executeScheduledCall = void 0;
-exports.callSchedulerManager = getCallSchedulerManager;
+exports.callSchedulerManager = exports.gracefulShutdown = exports.getCallStatistics = exports.cleanupOldSessions = exports.cancelScheduledCall = exports.createCallSession = exports.executeScheduledCall = void 0;
 // firebase/functions/src/callScheduler.ts
 const logCallRecord_1 = require("./utils/logs/logCallRecord");
 const logError_1 = require("./utils/logs/logError");
@@ -43,7 +32,7 @@ const admin = __importStar(require("firebase-admin"));
 const SCHEDULER_CONFIG = {
     RETRY_ATTEMPTS: 3,
     RETRY_DELAY_MS: 5000,
-    HEALTH_CHECK_INTERVAL: 60000, // 1 minute
+    HEALTH_CHECK_INTERVAL: 60000,
     MAX_PENDING_SESSIONS: 100
 };
 /**
@@ -276,6 +265,7 @@ function getCallSchedulerManager() {
     }
     return callSchedulerManagerInstance;
 }
+exports.callSchedulerManager = getCallSchedulerManager;
 // 🔧 FIX: Import mais pas d'initialisation immédiate avec typage précis
 let twilioCallManagerInstance = null;
 let isInitializing = false;
@@ -397,7 +387,7 @@ const createCallSession = async (params) => {
             serviceType: params.serviceType,
             providerType: params.providerType,
             paymentIntentId: params.paymentIntentId,
-            amount: params.amount, // ✅ euros
+            amount: params.amount,
             requestId: params.requestId,
             clientLanguages: params.clientLanguages,
             providerLanguages: params.providerLanguages
@@ -408,8 +398,8 @@ const createCallSession = async (params) => {
             retryCount: 0,
             additionalData: {
                 serviceType: params.serviceType,
-                amountInEuros: params.amount, // audit humain
-                schedulingMethod: 'webhook_only', // Plus de planification ici
+                amountInEuros: params.amount,
+                schedulingMethod: 'webhook_only',
                 // ✅ AJOUT: Log des numéros pour debug
                 hasProviderPhone: !!params.providerPhone,
                 hasClientPhone: !!params.clientPhone,
@@ -451,7 +441,7 @@ const cleanupOldSessions = async (olderThanDays = 30) => {
         const twilioCallManager = await getTwilioCallManager();
         const result = await twilioCallManager.cleanupOldSessions({
             olderThanDays,
-            keepCompletedDays: 7, // Garder les complétées 7 jours
+            keepCompletedDays: 7,
             batchSize: 50
         });
         console.log(`✅ Nettoyage terminé: ${result.deleted} supprimées, ${result.errors} erreurs`);

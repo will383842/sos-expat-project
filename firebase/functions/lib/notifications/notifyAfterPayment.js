@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.notifyAfterPayment = void 0;
-exports.notifyAfterPaymentInternal = notifyAfterPaymentInternal;
+exports.notifyAfterPayment = exports.notifyAfterPaymentInternal = void 0;
 // ✅ Import corrigé - utilisation de la nouvelle planification par tâches
 const tasks_1 = require("../lib/tasks");
 const firestore_1 = require("firebase-admin/firestore");
@@ -150,6 +149,7 @@ async function notifyAfterPaymentInternal(callId) {
         throw error;
     }
 }
+exports.notifyAfterPaymentInternal = notifyAfterPaymentInternal;
 // ✅ Cloud Function (appelable depuis le frontend) - OPTIMISÉE CPU
 exports.notifyAfterPayment = (0, https_1.onCall)(CPU_OPTIMIZED_CONFIG, async (request) => {
     const startTime = Date.now();

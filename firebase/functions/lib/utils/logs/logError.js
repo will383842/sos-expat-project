@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logError = logError;
+exports.logError = void 0;
 const firebase_1 = require("../firebase");
 function safeStringify(obj) {
     const seen = new WeakSet();
@@ -64,6 +64,7 @@ async function logError(context, error) {
         console.error('Original error:', { context, error });
     }
 }
+exports.logError = logError;
 function getSeverityLevel(context) {
     const criticalContexts = ['payment', 'stripe', 'billing'];
     const highContexts = ['twilio', 'call', 'webhook'];

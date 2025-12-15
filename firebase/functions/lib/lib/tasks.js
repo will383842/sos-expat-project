@@ -1,12 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.scheduleCallTask = scheduleCallTask;
-exports.cancelCallTask = cancelCallTask;
-exports.listPendingTasks = listPendingTasks;
-exports.purgeQueue = purgeQueue;
-exports.getQueueStats = getQueueStats;
-exports.taskExists = taskExists;
-exports.createTestTask = createTestTask;
+exports.createTestTask = exports.taskExists = exports.getQueueStats = exports.purgeQueue = exports.listPendingTasks = exports.cancelCallTask = exports.scheduleCallTask = void 0;
 // firebase/functions/src/lib/tasks.ts
 const tasks_1 = require("@google-cloud/tasks");
 const params_1 = require("firebase-functions/params");
@@ -41,7 +35,7 @@ function getTasksConfig() {
         projectId: getProjectId(),
         location: CLOUD_TASKS_LOCATION.value() || "europe-west1",
         queueName: CLOUD_TASKS_QUEUE.value() || "call-scheduler-queue",
-        callbackBaseUrl: getFunctionsBaseUrl(), // sans slash final
+        callbackBaseUrl: getFunctionsBaseUrl(),
         functionName: "executeCallTask"
     };
 }
@@ -113,6 +107,7 @@ async function scheduleCallTask(callSessionId, delaySeconds) {
         throw new Error(`Erreur création tâche Cloud Tasks: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
 }
+exports.scheduleCallTask = scheduleCallTask;
 /**
  * Annule une tâche Cloud Tasks si elle existe encore.
  */
@@ -136,6 +131,7 @@ async function cancelCallTask(taskId) {
         throw new Error(`Erreur annulation tâche Cloud Tasks: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
 }
+exports.cancelCallTask = cancelCallTask;
 /**
  * Liste les tâches en attente dans la queue.
  */
@@ -176,6 +172,7 @@ async function listPendingTasks(maxResults = 100) {
         return [];
     }
 }
+exports.listPendingTasks = listPendingTasks;
 /**
  * Purge toutes les tâches de la queue (⚠️ attention en prod).
  */
@@ -195,6 +192,7 @@ async function purgeQueue() {
         throw new Error(`Erreur purge queue: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
 }
+exports.purgeQueue = purgeQueue;
 /**
  * Statistiques basiques sur la queue.
  */
@@ -224,6 +222,7 @@ async function getQueueStats() {
         };
     }
 }
+exports.getQueueStats = getQueueStats;
 /**
  * Vérifie l'existence d'une tâche.
  */
@@ -242,6 +241,7 @@ async function taskExists(taskId) {
         return false;
     }
 }
+exports.taskExists = taskExists;
 /**
  * Crée une tâche de test vers /test-webhook (utilitaire).
  */
@@ -278,4 +278,5 @@ async function createTestTask(payload, delaySeconds = 5) {
         throw error;
     }
 }
+exports.createTestTask = createTestTask;
 //# sourceMappingURL=tasks.js.map

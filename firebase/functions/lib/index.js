@@ -16,23 +16,13 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
@@ -76,6 +66,7 @@ exports.TWILIO_PHONE_NUMBER = (0, params_1.defineSecret)("TWILIO_PHONE_NUMBER");
 // Stripe
 exports.STRIPE_SECRET_KEY_TEST = (0, params_1.defineSecret)("STRIPE_SECRET_KEY_TEST");
 exports.STRIPE_SECRET_KEY_LIVE = (0, params_1.defineSecret)("STRIPE_SECRET_KEY_LIVE");
+// MAILWIZZ_API_KEY and MAILWIZZ_WEBHOOK_SECRET are now static values from config.ts
 // kyc
 var createLawyerAccount_1 = require("./createLawyerAccount");
 Object.defineProperty(exports, "createLawyerStripeAccount", { enumerable: true, get: function () { return createLawyerAccount_1.createLawyerStripeAccount; } });
@@ -93,7 +84,7 @@ Object.defineProperty(exports, "scheduledBackup", { enumerable: true, get: funct
 // Cloud Tasks auth
 exports.TASKS_AUTH_SECRET = (0, params_1.defineSecret)("TASKS_AUTH_SECRET");
 // MailWizz Email Marketing
-const config_1 = require("./emailMarketing/config");
+// import { MAILWIZZ_API_KEY, MAILWIZZ_WEBHOOK_SECRET } from "./emailMarketing/config";
 // ✅ Centralise la liste globale
 const GLOBAL_SECRETS = [
     exports.EMAIL_USER,
@@ -105,8 +96,7 @@ const GLOBAL_SECRETS = [
     exports.STRIPE_SECRET_KEY_TEST,
     exports.STRIPE_SECRET_KEY_LIVE,
     exports.TASKS_AUTH_SECRET,
-    config_1.MAILWIZZ_API_KEY,
-    config_1.MAILWIZZ_WEBHOOK_SECRET,
+    // MAILWIZZ_API_KEY and MAILWIZZ_WEBHOOK_SECRET removed - now using static values from environment
 ].filter(Boolean);
 // ⚠️ cast 'as any' pour accepter eventarc si les types ne sont pas à jour
 (0, v2_1.setGlobalOptions)({
@@ -928,7 +918,7 @@ wrapHttpFunction("stripeWebhook", async (req, res) => {
                     const externalAccount = event.data.object;
                     console.log("External account details:", {
                         accountId: externalAccount.account,
-                        type: externalAccount.object, // 'bank_account' or 'card'
+                        type: externalAccount.object,
                         last4: externalAccount.last4,
                         bankName: externalAccount.bank_name,
                         country: externalAccount.country,

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.render = render;
+exports.render = void 0;
 const money_1 = require("./money");
 function render(tpl, ctx) {
     if (!tpl)
@@ -22,6 +22,7 @@ function render(tpl, ctx) {
         return v == null ? "" : String(v);
     });
 }
+exports.render = render;
 function get(obj, path) {
     return String(path || "").split(".").reduce((acc, k) => (acc != null ? acc[k] : undefined), obj);
 }

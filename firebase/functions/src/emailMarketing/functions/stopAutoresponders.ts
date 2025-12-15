@@ -2,7 +2,7 @@ import { onSchedule } from "firebase-functions/v2/scheduler";
 import * as admin from "firebase-admin";
 import { MailwizzAPI } from "../utils/mailwizz";
 import { logAutoresponderEvent } from "../utils/analytics";
-import { MAILWIZZ_API_KEY } from "../config";
+// MAILWIZZ_API_KEY is now a static value from config.ts
 
 /**
  * FUNCTION 10: Stop Autoresponders (Monitoring Function)
@@ -22,7 +22,6 @@ import { MAILWIZZ_API_KEY } from "../config";
 export const stopAutoresponders = onSchedule(
   {
     schedule: "every 1 hours",
-    secrets: [MAILWIZZ_API_KEY],
     region: "europe-west1",
     timeZone: "UTC",
   },

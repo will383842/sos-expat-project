@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTemplate = getTemplate;
+exports.getTemplate = void 0;
 const firestore_1 = require("firebase-admin/firestore");
 const db = (0, firestore_1.getFirestore)();
 async function getTemplate(locale, eventId) {
@@ -30,7 +30,7 @@ async function getTemplate(locale, eventId) {
     return {
         _meta: templateData._meta,
         email: templateData.email ? {
-            enabled: templateData.channels?.email !== false, // Par défaut enabled si pas spécifié
+            enabled: templateData.channels?.email !== false,
             subject: templateData.email.subject || "",
             html: templateData.email.html,
             text: templateData.email.text
@@ -57,4 +57,5 @@ async function getTemplate(locale, eventId) {
         } : undefined
     };
 }
+exports.getTemplate = getTemplate;
 //# sourceMappingURL=templates.js.map

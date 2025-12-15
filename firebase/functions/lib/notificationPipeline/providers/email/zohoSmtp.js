@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendZoho = sendZoho;
+exports.sendZoho = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const secrets_1 = require("../../../utils/secrets");
 async function sendZoho(to, subject, html, text) {
@@ -19,4 +19,5 @@ async function sendZoho(to, subject, html, text) {
     });
     return info.messageId;
 }
+exports.sendZoho = sendZoho;
 //# sourceMappingURL=zohoSmtp.js.map

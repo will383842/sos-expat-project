@@ -16,36 +16,15 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.formatEuros = exports.centsToEuros = exports.eurosToCents = exports.PAYMENT_LIMITS = exports.DEFAULT_PRICING_CONFIG = void 0;
-exports.toCents = toCents;
-exports.fromCents = fromCents;
-exports.formatAmount = formatAmount;
-exports.getPricingConfig = getPricingConfig;
-exports.validateAmount = validateAmount;
-exports.calculateSplit = calculateSplit;
-exports.validateSplit = validateSplit;
-exports.checkDailyLimit = checkDailyLimit;
-exports.isSuspiciousAmount = isSuspiciousAmount;
-exports.logPaymentAudit = logPaymentAudit;
-exports.generatePaymentId = generatePaymentId;
+exports.generatePaymentId = exports.logPaymentAudit = exports.isSuspiciousAmount = exports.checkDailyLimit = exports.validateSplit = exports.calculateSplit = exports.validateAmount = exports.getPricingConfig = exports.formatEuros = exports.formatAmount = exports.centsToEuros = exports.eurosToCents = exports.fromCents = exports.toCents = exports.PAYMENT_LIMITS = exports.DEFAULT_PRICING_CONFIG = void 0;
 const admin = __importStar(require("firebase-admin"));
 /* ────────────────────────────────────────────────────────────────────────────
    Configuration par défaut (modifiable dans l'admin)
@@ -111,6 +90,7 @@ function toCents(amount, currency = 'eur') {
     const factor = Math.pow(10, decimals);
     return Math.round(amount * factor);
 }
+exports.toCents = toCents;
 /**
  * Convertit des centimes vers l’unité principale selon la devise.
  */
@@ -123,6 +103,7 @@ function fromCents(cents, currency = 'eur') {
     // On garde un arrondi propre à `decimals` pour éviter des flottants bizarres
     return Math.round((cents / factor) * factor) / factor;
 }
+exports.fromCents = fromCents;
 /** Garde les anciennes fonctions pour compatibilité */
 const eurosToCents = (euros) => toCents(euros, 'eur');
 exports.eurosToCents = eurosToCents;
@@ -139,6 +120,7 @@ function formatAmount(amount, currency = 'eur') {
         maximumFractionDigits: 2,
     }).format(amount);
 }
+exports.formatAmount = formatAmount;
 /** Compatibilité historique */
 const formatEuros = (euros) => formatAmount(euros, 'eur');
 exports.formatEuros = formatEuros;
@@ -230,6 +212,7 @@ async function getPricingConfig(type, currency = 'eur', db) {
         return exports.DEFAULT_PRICING_CONFIG[type][currency];
     }
 }
+exports.getPricingConfig = getPricingConfig;
 /* ────────────────────────────────────────────────────────────────────────────
    Validations & calculs
    ──────────────────────────────────────────────────────────────────────────── */
@@ -259,6 +242,7 @@ function validateAmount(amount, type, currency = 'eur') {
     }
     return { valid: true };
 }
+exports.validateAmount = validateAmount;
 /**
  * Calcule la répartition (frais / prestataire) selon la devise
  */
@@ -289,6 +273,7 @@ function calculateSplit(totalAmount, type, currency = 'eur') {
         isValid,
     };
 }
+exports.calculateSplit = calculateSplit;
 /**
  * Vérifie la cohérence d'une répartition existante selon la devise
  */
@@ -305,6 +290,7 @@ function validateSplit(totalAmount, connectionFeeAmount, providerAmount, currenc
     }
     return { valid: true };
 }
+exports.validateSplit = validateSplit;
 /**
  * Vérifie la limite journalière d'un utilisateur selon la devise
  */
@@ -346,6 +332,7 @@ async function checkDailyLimit(userId, amount, currency = 'eur', db) {
         return { allowed: true, currentTotal: 0, limit: exports.PAYMENT_LIMITS[currency].MAX_DAILY };
     }
 }
+exports.checkDailyLimit = checkDailyLimit;
 /**
  * Détermine si un montant paraît suspect
  */
@@ -367,6 +354,7 @@ function isSuspiciousAmount(amount, type, currency = 'eur', previousPayments = [
         reasons.push('Montant rond inhabituel');
     return { suspicious: reasons.length > 0, reasons };
 }
+exports.isSuspiciousAmount = isSuspiciousAmount;
 /**
  * Log d’audit (types stricts pour metadata)
  */
@@ -384,6 +372,7 @@ async function logPaymentAudit(data, db) {
         console.error('Erreur log audit:', err);
     }
 }
+exports.logPaymentAudit = logPaymentAudit;
 /**
  * Génère un identifiant de paiement unique
  */
@@ -392,4 +381,5 @@ function generatePaymentId() {
     const random = Math.random().toString(36).slice(2, 9);
     return `pay_${timestamp}_${random}`;
 }
+exports.generatePaymentId = generatePaymentId;
 //# sourceMappingURL=paymentValidators.js.map

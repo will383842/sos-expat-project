@@ -2,7 +2,7 @@ import { onDocumentUpdated } from "firebase-functions/v2/firestore";
 import * as admin from "firebase-admin";
 import { MailwizzAPI } from "../utils/mailwizz";
 import { logGA4Event } from "../utils/analytics";
-import { getLanguageCode, MAILWIZZ_API_KEY } from "../config";
+import { getLanguageCode } from "../config";
 
 /**
  * FUNCTION 8: Handle Profile Completion
@@ -11,7 +11,6 @@ import { getLanguageCode, MAILWIZZ_API_KEY } from "../config";
 export const handleProfileCompleted = onDocumentUpdated(
   {
     document: "users/{userId}",
-    secrets: [MAILWIZZ_API_KEY],
     region: "europe-west1",
   },
   async (event) => {
@@ -77,7 +76,6 @@ export const handleProfileCompleted = onDocumentUpdated(
 export const handleUserLogin = onDocumentUpdated(
   {
     document: "users/{userId}",
-    secrets: [MAILWIZZ_API_KEY],
     region: "europe-west1",
   },
   async (event) => {
@@ -147,7 +145,6 @@ export const handleUserLogin = onDocumentUpdated(
 export const handleProviderOnlineStatus = onDocumentUpdated(
   {
     document: "users/{userId}",
-    secrets: [MAILWIZZ_API_KEY],
     region: "europe-west1",
   },
   async (event) => {
@@ -204,7 +201,6 @@ export const handleProviderOnlineStatus = onDocumentUpdated(
 export const handleKYCVerification = onDocumentUpdated(
   {
     document: "users/{userId}",
-    secrets: [MAILWIZZ_API_KEY],
     region: "europe-west1",
   },
   async (event) => {
@@ -270,7 +266,6 @@ export const handleKYCVerification = onDocumentUpdated(
 export const handlePayPalConfiguration = onDocumentUpdated(
   {
     document: "users/{userId}",
-    secrets: [MAILWIZZ_API_KEY],
     region: "europe-west1",
   },
   async (event) => {
