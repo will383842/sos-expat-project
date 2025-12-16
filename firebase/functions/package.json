@@ -7,7 +7,9 @@
     "test:production": "node testProduction.js",
     "ci:no-scripts": "npm ci --ignore-scripts",
     "postinstall": "node patch-protobufjs.js || true",
-    "prebuild": "node patch-protobufjs.js || true"
+    "prebuild": "node patch-protobufjs.js || true",
+    "verify-autoresponders": "node lib/emailMarketing/scripts/verify-autoresponders.js",
+    "test-autoresponders": "node lib/emailMarketing/scripts/test-autoresponder-triggers.js"
   },
   "engines": {
     "node": "20"
