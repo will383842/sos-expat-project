@@ -13,11 +13,14 @@ import {
   Timestamp,
   QueryDocumentSnapshot,
   DocumentData,
+  updateDoc,
 } from 'firebase/firestore';
-import { db } from '../../config/firebase';
+import { db, functions } from '../../config/firebase';
+import { httpsCallable } from 'firebase/functions';
 import AdminLayout from '../../components/admin/AdminLayout';
 import Button from '../../components/common/Button';
 import { RefreshCw, Search, CheckCircle, XCircle, Download, Phone } from 'lucide-react';
+import { isUrlExpired } from '../../utils/urlUtils';
 
 type PaymentStatus = 'paid' | 'refunded' | 'failed' | 'pending';
 
@@ -349,6 +352,46 @@ const AdminPayments: React.FC = () => {
     );
   }, [payments, search]);
 
+  // Handle invoice download with expiration check
+  const handleInvoiceDownload = useCallback(async (invoice: InvoiceRecord, e: React.MouseEvent) => {
+    e.preventDefault();
+    
+    try {
+      let downloadUrl = invoice.downloadUrl;
+      
+      // Check if URL is expired
+      if (isUrlExpired(downloadUrl)) {
+        // Generate fresh URL using cloud function
+        const generateInvoiceDownloadUrlFn = httpsCallable<{ invoiceId: string }, { downloadUrl: string }>(
+          functions,
+          'generateInvoiceDownloadUrl'
+        );
+        
+        const result = await generateInvoiceDownloadUrlFn({ invoiceId: invoice.id });
+        downloadUrl = result.data.downloadUrl;
+        
+        // Update the invoice record in local state (optional, for immediate UI update)
+        setPayments((prevPayments) =>
+          prevPayments.map((payment) => {
+            if (payment.invoices) {
+              const updatedInvoices = payment.invoices.map((inv) =>
+                inv.id === invoice.id ? { ...inv, downloadUrl } : inv
+              );
+              return { ...payment, invoices: updatedInvoices };
+            }
+            return payment;
+          })
+        );
+      }
+      
+      // Download the invoice
+      window.open(downloadUrl, '_blank', 'noopener,noreferrer');
+    } catch (error) {
+      console.error('Error downloading invoice:', error);
+      alert('Failed to download invoice. Please try again.');
+    }
+  }, []);
+
   return (
     <AdminLayout>
       <div className="p-6 text-black">
@@ -517,28 +560,24 @@ const AdminPayments: React.FC = () => {
                     <td className="px-4 py-3">
                       <div className="flex flex-col gap-1">
                         {providerInvoice && (
-                          <a
-                            href={providerInvoice.downloadUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center text-xs text-blue-600 hover:text-blue-800 gap-1"
+                          <button
+                            onClick={(e) => handleInvoiceDownload(providerInvoice, e)}
+                            className="inline-flex items-center text-xs text-blue-600 hover:text-blue-800 gap-1 cursor-pointer bg-transparent border-none p-0"
                             title="Provider invoice"
                           >
                             <Download size={12} />
                             Provider invoice
-                          </a>
+                          </button>
                         )}
                         {platformInvoice && (
-                          <a
-                            href={platformInvoice.downloadUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center text-xs text-blue-600 hover:text-blue-800 gap-1"
+                          <button
+                            onClick={(e) => handleInvoiceDownload(platformInvoice, e)}
+                            className="inline-flex items-center text-xs text-blue-600 hover:text-blue-800 gap-1 cursor-pointer bg-transparent border-none p-0"
                             title="Ulixai invoice (commission amount)"
                           >
                             <Download size={12} />
                             Ulixai invoice (commission amount)
-                          </a>
+                          </button>
                         )}
                         {(!providerInvoice && !platformInvoice) && (
                           <span className="text-xs text-gray-400">Aucune</span>
