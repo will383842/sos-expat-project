@@ -439,7 +439,7 @@ const App: React.FC = () => {
   
 
   return (
-    <IntlProvider locale={locale} messages={messages[locale]} defaultLocale="fr" >
+    <IntlProvider locale={locale} messages={messages[locale] as unknown as Record<string, string>} defaultLocale="fr" >
       {/* Render admin routes only when current path is admin (no site layout/navbar) */}
       {showAdminLayout ? (
         <Routes>
