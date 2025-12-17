@@ -30,6 +30,7 @@ import {
   DocumentData,
   getDoc,
   doc,
+  getDocs,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import Layout from "../components/layout/Layout";
@@ -130,8 +131,12 @@ interface RawProfile extends DocumentData {
 }
 
 interface FAQItem {
-  questionKey: string;
-  answerKey: string;
+  id: string;
+  question: string;
+  answer: string;
+  category?: string;
+  tags?: string[];
+  order?: number;
 }
 
 /* =========================
@@ -166,17 +171,6 @@ const OG_LOCALES: Record<string, string> = {
 };
 
 const SUPPORTED_LANGUAGES = ['fr', 'en', 'es', 'de', 'pt', 'ru', 'zh', 'ar', 'hi'] as const;
-
-const FAQ_ITEMS: FAQItem[] = [
-  { questionKey: "sosCall.faq.q1", answerKey: "sosCall.faq.a1" },
-  { questionKey: "sosCall.faq.q2", answerKey: "sosCall.faq.a2" },
-  { questionKey: "sosCall.faq.q3", answerKey: "sosCall.faq.a3" },
-  { questionKey: "sosCall.faq.q4", answerKey: "sosCall.faq.a4" },
-  { questionKey: "sosCall.faq.q5", answerKey: "sosCall.faq.a5" },
-  { questionKey: "sosCall.faq.q6", answerKey: "sosCall.faq.a6" },
-  { questionKey: "sosCall.faq.q7", answerKey: "sosCall.faq.a7" },
-  { questionKey: "sosCall.faq.q8", answerKey: "sosCall.faq.a8" },
-];
 
 const PROFESSION_ICONS: Record<string, { icon: string; bgColor: string; textColor: string }> = {
   lawyer: {
@@ -660,7 +654,8 @@ const generateAllSchemas = (
   providers: Provider[],
   selectedType: string,
   onlineCount: number,
-  currentLang: string
+  currentLang: string,
+  faqData: FAQItem[]
 ) => {
   const localizedPageUrl = `${BASE_URL}/${currentLang}${PAGE_PATH}`;
   
@@ -814,12 +809,12 @@ const generateAllSchemas = (
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "@id": `${BASE_URL}${PAGE_PATH}/#faq`,
-    mainEntity: FAQ_ITEMS.map((faq) => ({
+    mainEntity: faqData.map((faq) => ({
       "@type": "Question",
-      name: intl.formatMessage({ id: faq.questionKey }),
+      name: faq.question,
       acceptedAnswer: {
         "@type": "Answer",
-        text: intl.formatMessage({ id: faq.answerKey }),
+        text: faq.answer,
       },
     })),
   };
@@ -1418,8 +1413,12 @@ ModernProfileCard.displayName = "ModernProfileCard";
 /* =========================
    FAQ Section Component
 ========================= */
-const FAQSection: React.FC<{ intl: ReturnType<typeof useIntl> }> = React.memo(({ intl }) => {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+const FAQSection: React.FC<{ 
+  intl: ReturnType<typeof useIntl>;
+  faqs: FAQItem[];
+  isLoading: boolean;
+}> = React.memo(({ intl, faqs, isLoading }) => {
+  const [openIndex, setOpenIndex] = useState<string | null>(null);
 
   return (
     <section 
@@ -1447,62 +1446,84 @@ const FAQSection: React.FC<{ intl: ReturnType<typeof useIntl> }> = React.memo(({
           </p>
         </div>
 
-        <div 
-          className="space-y-2 sm:space-y-3" 
-          role="list" 
-          aria-label={intl.formatMessage({ id: "sosCall.faq.listAriaLabel" })}
-        >
-          {FAQ_ITEMS.map((faq, index) => (
-            <article
-              key={index}
-              className="rounded-xl sm:rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm overflow-hidden faq-item"
-              itemScope
-              itemProp="mainEntity"
-              itemType="https://schema.org/Question"
-              role="listitem"
-              data-faq-index={index}
-            >
-              <button
-                className="w-full px-4 sm:px-5 py-3.5 sm:py-4 flex items-center justify-between text-left min-h-[52px] touch-manipulation"
-                onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                aria-expanded={openIndex === index}
-                aria-controls={`faq-answer-${index}`}
-                id={`faq-question-${index}`}
-              >
-                {/* ===== H3 - Questions FAQ ===== */}
-                <h3 
-                  className="font-semibold text-white text-sm sm:text-base pr-3 m-0"
-                  itemProp="name"
-                >
-                  <FormattedMessage id={faq.questionKey} />
-                </h3>
-                <ChevronDown 
-                  className={`w-5 h-5 text-gray-400 flex-shrink-0 transition-transform duration-300 ${openIndex === index ? 'rotate-180 text-red-400' : ''}`}
-                  aria-hidden="true"
-                />
-              </button>
-              <div
-                id={`faq-answer-${index}`}
-                className={`overflow-hidden transition-all duration-300 ${openIndex === index ? 'max-h-96' : 'max-h-0'}`}
-                itemScope
-                itemProp="acceptedAnswer"
-                itemType="https://schema.org/Answer"
-                role="region"
-                aria-labelledby={`faq-question-${index}`}
-                aria-hidden={openIndex !== index}
-              >
-                <div className="px-4 sm:px-5 pb-3.5 sm:pb-4">
-                  <p 
-                    className="text-gray-300 text-sm sm:text-base leading-relaxed faq-answer"
-                    itemProp="text"
-                  >
-                    <FormattedMessage id={faq.answerKey} />
-                  </p>
+        {isLoading ? (
+          <div className="space-y-2 sm:space-y-3">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="rounded-xl sm:rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm overflow-hidden animate-pulse">
+                <div className="w-full px-4 sm:px-5 py-3.5 sm:py-4 min-h-[52px]">
+                  <div className="h-4 bg-white/10 rounded w-3/4 mb-2"></div>
+                  <div className="h-3 bg-white/5 rounded w-1/2"></div>
                 </div>
               </div>
-            </article>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : faqs.length === 0 ? (
+          <div className="text-center py-8">
+            <p className="text-gray-400 text-sm sm:text-base">
+              {intl.formatMessage({ id: "sosCall.faq.noResults" }, { defaultMessage: "No FAQs available at the moment." })}
+            </p>
+          </div>
+        ) : (
+          <div 
+            className="space-y-2 sm:space-y-3" 
+            role="list" 
+            aria-label={intl.formatMessage({ id: "sosCall.faq.listAriaLabel" })}
+          >
+            {faqs.map((faq, index) => {
+              const isOpen = openIndex === faq.id;
+              return (
+                <article
+                  key={faq.id}
+                  className="rounded-xl sm:rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm overflow-hidden faq-item"
+                  itemScope
+                  itemProp="mainEntity"
+                  itemType="https://schema.org/Question"
+                  role="listitem"
+                  data-faq-index={index}
+                >
+                  <button
+                    className="w-full px-4 sm:px-5 py-3.5 sm:py-4 flex items-center justify-between text-left min-h-[52px] touch-manipulation"
+                    onClick={() => setOpenIndex(isOpen ? null : faq.id)}
+                    aria-expanded={isOpen}
+                    aria-controls={`faq-answer-${faq.id}`}
+                    id={`faq-question-${faq.id}`}
+                  >
+                    {/* ===== H3 - Questions FAQ ===== */}
+                    <h3 
+                      className="font-semibold text-white text-sm sm:text-base pr-3 m-0"
+                      itemProp="name"
+                    >
+                      {faq.question}
+                    </h3>
+                    <ChevronDown 
+                      className={`w-5 h-5 text-gray-400 flex-shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180 text-red-400' : ''}`}
+                      aria-hidden="true"
+                    />
+                  </button>
+                  <div
+                    id={`faq-answer-${faq.id}`}
+                    className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-96' : 'max-h-0'}`}
+                    itemScope
+                    itemProp="acceptedAnswer"
+                    itemType="https://schema.org/Answer"
+                    role="region"
+                    aria-labelledby={`faq-question-${faq.id}`}
+                    aria-hidden={!isOpen}
+                  >
+                    <div className="px-4 sm:px-5 pb-3.5 sm:pb-4">
+                      <p 
+                        className="text-gray-300 text-sm sm:text-base leading-relaxed faq-answer whitespace-pre-line"
+                        itemProp="text"
+                      >
+                        {faq.answer}
+                      </p>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
 
         {/* ===== Structured Data Helper pour Speakable ===== */}
         <div className="sr-only" aria-hidden="true">
@@ -1853,10 +1874,15 @@ const SOSCall: React.FC = () => {
   const [realProviders, setRealProviders] = useState<Provider[]>([]);
   const [filteredProviders, setFilteredProviders] = useState<Provider[]>([]);
 
+  // FAQ Data
+  const [faqData, setFaqData] = useState<FAQItem[]>([]);
+  const [isLoadingFAQs, setIsLoadingFAQs] = useState<boolean>(true);
+
   // Pagination
   const [page, setPage] = useState<number>(1);
 
   const lang = (language as "fr" | "en" | "es" | "de" | "pt" | "ch" | "ar" | "hi" | "ru") || "fr";
+  const langCode = language?.split('-')[0] || 'fr';
 
   // Listes traduites dynamiquement
   const countryOptions = useMemo(() => {
@@ -1866,6 +1892,75 @@ const SOSCall: React.FC = () => {
   const languageOptions = useMemo(() => {
     return getLanguageOptions(language || 'fr');
   }, [language]);
+
+  // Load FAQs from Firestore
+  useEffect(() => {
+    const loadFAQs = async () => {
+      try {
+        setIsLoadingFAQs(true);
+        if (!db) {
+          console.warn('Firebase not initialized');
+          setFaqData([]);
+          setIsLoadingFAQs(false);
+          return;
+        }
+
+        const faqsRef = collection(db, 'faqs');
+        
+        // Load active FAQs (we filter by language in JavaScript since Firestore can't query nested fields)
+        const q = query(
+          faqsRef,
+          where('isActive', '==', true)
+        );
+        const snapshot = await getDocs(q);
+
+        const loadedFAQs = snapshot.docs
+          .map(doc => {
+            const data = doc.data() as {
+              category?: string;
+              question?: Record<string, string>;
+              answer?: Record<string, string>;
+              tags?: string[];
+              order?: number;
+              isActive?: boolean;
+            };
+            
+            // Check if FAQ has content in the current language
+            const hasQuestionInLang = data.question?.[langCode] && data.question[langCode].trim().length > 0;
+            const hasAnswerInLang = data.answer?.[langCode] && data.answer[langCode].trim().length > 0;
+            
+            // Only include FAQs that have both question and answer in the current language
+            if (!hasQuestionInLang || !hasAnswerInLang) {
+              return null; // Filter out FAQs without content in current language
+            }
+            
+            return {
+              id: doc.id,
+              category: data.category || 'general',
+              question: data.question[langCode], // Use current language only
+              answer: data.answer[langCode], // Use current language only
+              tags: data.tags || [],
+              order: data.order || 999
+            };
+          })
+          .filter((item): item is NonNullable<typeof item> => item !== null) // Remove null items
+          .sort((a, b) => {
+            // Sort by order field
+            return (a.order || 999) - (b.order || 999);
+          });
+        
+        console.log(`Loaded ${loadedFAQs.length} FAQs from Firestore (filtered for language: ${langCode})`);
+        setFaqData(loadedFAQs);
+      } catch (error) {
+        console.error('Error loading FAQs:', error);
+        // Show error but don't break the page
+        setFaqData([]);
+      } finally {
+        setIsLoadingFAQs(false);
+      }
+    };
+    loadFAQs();
+  }, [langCode]);
 
   // Charger providers
   useEffect(() => {
@@ -2469,8 +2564,8 @@ const SOSCall: React.FC = () => {
   const onlineCount = filteredProviders.filter((p) => p.isOnline).length;
   
   const jsonLdSchemas = useMemo(() => 
-    generateAllSchemas(intl, filteredProviders, selectedType, onlineCount, lang),
-    [intl, filteredProviders, selectedType, onlineCount, lang]
+    generateAllSchemas(intl, filteredProviders, selectedType, onlineCount, lang, faqData),
+    [intl, filteredProviders, selectedType, onlineCount, lang, faqData]
   );
 
   const seoTitle = intl.formatMessage({ 
@@ -3424,7 +3519,7 @@ const SOSCall: React.FC = () => {
         </main>
 
         {/* FAQ Section */}
-        <FAQSection intl={intl} />
+        <FAQSection intl={intl} faqs={faqData} isLoading={isLoadingFAQs} />
       </div>
 
       {/* Global Styles */}
