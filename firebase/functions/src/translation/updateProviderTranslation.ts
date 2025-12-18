@@ -2,7 +2,7 @@ import { onCall } from 'firebase-functions/v2/https';
 import { HttpsError } from 'firebase-functions/v2/https';
 import * as admin from 'firebase-admin';
 import { db } from '../utils/firebase';
-import { extractOriginalProfile } from '../services/providerTranslationService';
+import { extractOriginalProfile, translateAllFields, type SupportedLanguage } from '../services/providerTranslationService';
 
 /**
  * Serialize object to make it JSON-safe for Firebase Functions response
@@ -199,6 +199,17 @@ export const updateProviderTranslation = onCall(
           throw new Error('Could not extract original profile');
         }
         console.log('[updateProviderTranslation] ✓ Step 5: Original profile extracted');
+        console.log('[updateProviderTranslation] Original profile keys:', Object.keys(original || {}));
+        const bioPreview = typeof original?.bio === 'string' 
+          ? original.bio.substring(0, 100) 
+          : original?.bio;
+        const descriptionPreview = typeof original?.description === 'string'
+          ? original.description.substring(0, 100)
+          : original?.description;
+        console.log('[updateProviderTranslation] Original bio/description:', {
+          bio: bioPreview,
+          description: descriptionPreview,
+        });
       } catch (error) {
         console.error('[updateProviderTranslation] Error extracting original profile:', error);
         throw new HttpsError('internal', 'Failed to extract original profile');
@@ -227,8 +238,8 @@ export const updateProviderTranslation = onCall(
       });
       console.log('[updateProviderTranslation] ✓ Step 6: Original profile updated');
 
-      // Step 7: Mark unfrozen translations as 'outdated' so they regenerate on next translate
-      console.log('[updateProviderTranslation] Step 7: Marking unfrozen translations as outdated...');
+      // Step 7: Regenerate translations for all non-frozen languages
+      console.log('[updateProviderTranslation] Step 7: Regenerating translations for all languages...');
       const updatePromises: Promise<void>[] = [];
       const updatedLanguages: string[] = [];
       const failedLanguages: string[] = [];
@@ -247,32 +258,71 @@ export const updateProviderTranslation = onCall(
             continue; // Skip frozen translations
           }
 
-          // Get current status - only mark as 'outdated' if status is 'created' (not 'missing' or already 'outdated')
+          // Get current status - only regenerate if translation exists (status is 'created' or 'outdated')
           const currentStatus = translationData.metadata?.translations?.[language]?.status || 'missing';
           
-          // Only mark as 'outdated' if translation exists (status is 'created' or already 'outdated')
+          // Only regenerate if translation exists (status is 'created' or already 'outdated')
           // If status is 'missing', leave it as 'missing' (no translation exists yet)
           if (currentStatus === 'missing') {
             console.log(`[updateProviderTranslation] ⚠️ Skipping ${language} - translation status is 'missing' (no translation exists yet)`);
             continue;
           }
 
-          // Mark as 'outdated' so it will be regenerated when user clicks translate
+          // Actually regenerate the translation for this language
+          console.log(`[updateProviderTranslation] Regenerating translation for ${language}...`);
+          const translated = await translateAllFields(original, language as SupportedLanguage);
+          const cleanedTranslation = removeUndefinedValues(translated);
+
+          console.log(`[updateProviderTranslation] Translation generated for ${language}, updating Firestore...`);
+          console.log(`[updateProviderTranslation] Translation has keys:`, Object.keys(cleanedTranslation || {}));
+          const transDescPreview = typeof cleanedTranslation?.description === 'string'
+            ? cleanedTranslation.description.substring(0, 100)
+            : cleanedTranslation?.description;
+          const transBioPreview = typeof cleanedTranslation?.bio === 'string'
+            ? cleanedTranslation.bio.substring(0, 100)
+            : cleanedTranslation?.bio;
+          console.log(`[updateProviderTranslation] Translation description:`, transDescPreview);
+          console.log(`[updateProviderTranslation] Translation bio:`, transBioPreview);
+
+          // Update both the translation content AND the status
           const updateObj: any = {
-            [`metadata.translations.${language}.status`]: 'outdated', // Mark as outdated to force regeneration
+            [`translations.${language}`]: cleanedTranslation, // Update the actual translation content in root translations key
+            [`metadata.translations.${language}.status`]: 'updated', // Mark as updated
             [`metadata.translations.${language}.updatedAt`]: admin.firestore.FieldValue.serverTimestamp(),
             [`metadata.translations.${language}.lastFieldsUpdated`]: fieldsUpdated,
             [`metadata.lastUpdated`]: admin.firestore.FieldValue.serverTimestamp(),
           };
 
+          console.log(`[updateProviderTranslation] Firestore update object keys:`, Object.keys(updateObj));
+          console.log(`[updateProviderTranslation] Will update translations.${language} with new translated content`);
+
           updatePromises.push(
-            translationRef.update(updateObj).then(() => {
-              console.log(`[updateProviderTranslation] ✓ Marked ${language} as outdated (will regenerate on next translate)`);
-              updatedLanguages.push(language);
-            })
+            translationRef.update(updateObj)
+              .then(() => {
+                console.log(`[updateProviderTranslation] ✓ Successfully updated translation for ${language} in Firestore`);
+                console.log(`[updateProviderTranslation] ✓ Updated translations.${language} with new content`);
+                console.log(`[updateProviderTranslation] ✓ Updated metadata.translations.${language}.status to 'updated'`);
+                updatedLanguages.push(language);
+              })
+              .catch((updateError) => {
+                console.error(`[updateProviderTranslation] ✗ Firestore update failed for ${language}:`, updateError);
+                console.error(`[updateProviderTranslation] Update error details:`, {
+                  message: updateError instanceof Error ? updateError.message : String(updateError),
+                  code: (updateError as any)?.code,
+                  stack: updateError instanceof Error ? updateError.stack : undefined,
+                });
+                failedLanguages.push(language);
+                // Don't throw - resolve the promise so Promise.all doesn't fail
+                // The error is already logged and added to failedLanguages
+              })
           );
         } catch (error) {
-          console.error(`[updateProviderTranslation] ✗ Error marking ${language} as outdated:`, error);
+          console.error(`[updateProviderTranslation] ✗ Error regenerating translation for ${language}:`, error);
+          console.error(`[updateProviderTranslation] Error details:`, {
+            message: error instanceof Error ? error.message : String(error),
+            code: (error as any)?.code,
+            stack: error instanceof Error ? error.stack : undefined,
+          });
           failedLanguages.push(language);
           // Continue with other languages even if one fails
         }

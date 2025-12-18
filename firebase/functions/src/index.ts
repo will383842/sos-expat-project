@@ -432,13 +432,17 @@ function wrapCallableFunction<T>(
 }
 
 // ====== WRAPPER POUR FONCTIONS HTTP ======
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function wrapHttpFunction(
   functionName: string,
   originalFunction: (req: FirebaseRequest, res: Response) => Promise<void>
-) {
-  return async (req: FirebaseRequest, res: Response) => {
+): any {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return async (req: any, res: any) => {
     const metadata = createDebugMetadata(functionName);
-    (req as DebuggedRequest).debugMetadata = metadata;
+    // Cast to FirebaseRequest for internal use
+    const firebaseReq = req as unknown as FirebaseRequest;
+    (firebaseReq as DebuggedRequest).debugMetadata = metadata;
 
     logFunctionStart(metadata, {
       method: req.method,
@@ -449,7 +453,7 @@ function wrapHttpFunction(
     });
 
     try {
-      await originalFunction(req, res);
+      await originalFunction(firebaseReq, res);
       logFunctionEnd(metadata, { statusCode: res.statusCode });
     } catch (error) {
       logFunctionEnd(metadata, undefined, error as Error);
@@ -2563,6 +2567,7 @@ export const testWebhook = onRequest(
     timeoutSeconds: 60,
   },
   // @ts-ignore - Type compatibility issue between firebase-functions and express types
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   wrapHttpFunction(
     "testWebhook",
     async (_req: FirebaseRequest, res: Response) => {
@@ -2617,3 +2622,205 @@ export {
   handleEmailComplaint,
   handleUnsubscribe,
 } from './emailMarketing/functions/webhooks';
+// ========== INVOICE DOWNLOAD URL GENERATION ==========
+export const generateInvoiceDownloadUrl = onCall(
+  {
+    ...emergencyConfig,
+    timeoutSeconds: 30,
+  },
+  wrapCallableFunction(
+    "generateInvoiceDownloadUrl",
+    async (request: CallableRequest<{ invoiceId: string }>) => {
+      const database = initializeFirebase();
+      const storageInstance = admin.storage();
+
+      ultraLogger.info(
+        "GENERATE_INVOICE_DOWNLOAD_URL",
+        "Génération d'une nouvelle URL de téléchargement",
+        {
+          invoiceId: request.data.invoiceId,
+          userId: request.auth?.uid,
+        }
+      );
+
+      if (!request.data.invoiceId) {
+        throw new HttpsError("invalid-argument", "invoiceId is required");
+      }
+
+      try {
+        // Get invoice record
+        const invoiceDoc = await database
+          .collection("invoice_records")
+          .doc(request.data.invoiceId)
+          .get();
+
+        if (!invoiceDoc.exists) {
+          ultraLogger.warn(
+            "GENERATE_INVOICE_DOWNLOAD_URL",
+            "Invoice not found",
+            { invoiceId: request.data.invoiceId }
+          );
+          throw new HttpsError("not-found", "Invoice not found");
+        }
+
+        const invoiceData = invoiceDoc.data();
+        if (!invoiceData) {
+          throw new HttpsError("not-found", "Invoice data not found");
+        }
+
+        // Extract file path from existing URL or construct it
+        let filePath: string;
+        const existingUrl = invoiceData.downloadUrl as string;
+        const invoiceNumber = invoiceData.invoiceNumber as string;
+        const invoiceType = invoiceData.type as string | undefined;
+
+        if (existingUrl) {
+          // Try to extract path from URL
+          // URL format: https://storage.googleapis.com/BUCKET_NAME/invoices/FILENAME?...
+          // or: https://storage.googleapis.com/BUCKET_NAME/invoices/TYPE/YEAR/MONTH/FILENAME?...
+          const urlMatch = existingUrl.match(/\/invoices\/([^?]+)/);
+          if (urlMatch && urlMatch[1]) {
+            filePath = `invoices/${urlMatch[1]}`;
+          } else if (invoiceNumber) {
+            // Fallback: try common patterns
+            filePath = `invoices/${invoiceNumber}.txt`;
+          } else {
+            throw new HttpsError(
+              "invalid-argument",
+              "Cannot determine file path from URL or invoice number"
+            );
+          }
+        } else if (invoiceNumber) {
+          // Construct from invoice number - try multiple patterns
+          // Pattern 1: invoices/INVOICE_NUMBER.txt
+          // Pattern 2: invoices/TYPE/YEAR/MONTH/INVOICE_NUMBER.pdf
+          const now = new Date();
+          const year = now.getFullYear();
+          const month = now.getMonth() + 1;
+          
+          if (invoiceType) {
+            // Try the structured path first
+            filePath = `invoices/${invoiceType}/${year}/${month}/${invoiceNumber}.pdf`;
+          } else {
+            // Fallback to simple path
+            filePath = `invoices/${invoiceNumber}.txt`;
+          }
+        } else {
+          throw new HttpsError(
+            "invalid-argument",
+            "Cannot determine file path: missing URL and invoice number"
+          );
+        }
+
+        ultraLogger.debug(
+          "GENERATE_INVOICE_DOWNLOAD_URL",
+          "File path determined",
+          { filePath, invoiceId: request.data.invoiceId }
+        );
+
+        // Get file from storage
+        const bucket = storageInstance.bucket();
+        let file = bucket.file(filePath);
+
+        // Check if file exists, try alternative paths if needed
+        let [exists] = await file.exists();
+        if (!exists && invoiceNumber) {
+          // Try alternative paths
+          const alternativePaths = [
+            `invoices/${invoiceNumber}.txt`,
+            `invoices/${invoiceNumber}.pdf`,
+          ];
+          
+          if (invoiceType) {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            alternativePaths.push(
+              `invoices/${invoiceType}/${year}/${month}/${invoiceNumber}.pdf`,
+              `invoices/${invoiceType}/${year}/${month}/${invoiceNumber}.txt`
+            );
+            // Also try previous months (in case invoice was created last month)
+            const prevMonth = month === 1 ? 12 : month - 1;
+            const prevYear = month === 1 ? year - 1 : year;
+            alternativePaths.push(
+              `invoices/${invoiceType}/${prevYear}/${prevMonth}/${invoiceNumber}.pdf`,
+              `invoices/${invoiceType}/${prevYear}/${prevMonth}/${invoiceNumber}.txt`
+            );
+          }
+          
+          // Try each alternative path
+          for (const altPath of alternativePaths) {
+            if (altPath === filePath) continue; // Skip the one we already tried
+            const altFile = bucket.file(altPath);
+            const [altExists] = await altFile.exists();
+            if (altExists) {
+              filePath = altPath;
+              file = altFile;
+              exists = true;
+              ultraLogger.info(
+                "GENERATE_INVOICE_DOWNLOAD_URL",
+                "Found file at alternative path",
+                { originalPath: filePath, foundPath: altPath }
+              );
+              break;
+            }
+          }
+        }
+        
+        if (!exists) {
+          ultraLogger.warn(
+            "GENERATE_INVOICE_DOWNLOAD_URL",
+            "File not found in storage",
+            { filePath, invoiceId: request.data.invoiceId, invoiceNumber }
+          );
+          throw new HttpsError("not-found", "Invoice file not found in storage");
+        }
+
+        // Generate new signed URL (valid for 7 days)
+        const [newUrl] = await file.getSignedUrl({
+          action: "read",
+          expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // 7 days
+        });
+
+        // Update invoice record with new URL
+        await database
+          .collection("invoice_records")
+          .doc(request.data.invoiceId)
+          .update({
+            downloadUrl: newUrl,
+            urlGeneratedAt: admin.firestore.FieldValue.serverTimestamp(),
+          });
+
+        ultraLogger.info(
+          "GENERATE_INVOICE_DOWNLOAD_URL",
+          "New download URL generated successfully",
+          {
+            invoiceId: request.data.invoiceId,
+            filePath,
+          }
+        );
+
+        return { downloadUrl: newUrl };
+      } catch (error) {
+        ultraLogger.error(
+          "GENERATE_INVOICE_DOWNLOAD_URL",
+          "Error generating download URL",
+          {
+            invoiceId: request.data.invoiceId,
+            error: error instanceof Error ? error.message : String(error),
+          },
+          error instanceof Error ? error : undefined
+        );
+
+        if (error instanceof HttpsError) {
+          throw error;
+        }
+
+        throw new HttpsError(
+          "internal",
+          `Failed to generate download URL: ${error instanceof Error ? error.message : String(error)}`
+        );
+      }
+    }
+  )
+);

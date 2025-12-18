@@ -32,6 +32,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkProviderInactivity = exports.testWebhook = exports.manuallyTriggerCallExecution = exports.getCloudTasksQueueStats = exports.testCloudTasksConnection = exports.getUltraDebugLogs = exports.getSystemHealthStatus = exports.generateSystemDebugReport = exports.scheduledCleanup = exports.scheduledFirestoreExport = exports.stripeWebhook = exports.getStripe = exports.adminBulkUpdateStatus = exports.adminSoftDeleteUser = exports.adminUpdateStatus = exports.executeCallTask = exports.notifyAfterPayment = exports.initializeMessageTemplates = exports.unifiedWebhook = exports.enqueueMessageEvent = exports.providerNoAnswerTwiML = exports.twilioCallWebhook = exports.testTwilioCall = exports.api = exports.createPaymentIntent = exports.createAndScheduleCall = exports.createAndScheduleCallHTTPS = exports.STRIPE_WEBHOOK_SECRET_LIVE = exports.STRIPE_WEBHOOK_SECRET_TEST = exports.STRIPE_MODE = exports.processScheduledTransfers = exports.completeLawyerOnboarding = exports.checkKycStatus = exports.addBankAccount = exports.submitKycData = exports.createCustomAccount = exports.TASKS_AUTH_SECRET = exports.scheduledBackup = exports.createManualBackup = exports.checkStripeAccountStatus = exports.getStripeAccountSession = exports.createStripeAccount = exports.createLawyerStripeAccount = exports.STRIPE_SECRET_KEY_LIVE = exports.STRIPE_SECRET_KEY_TEST = exports.TWILIO_PHONE_NUMBER = exports.TWILIO_AUTH_TOKEN = exports.TWILIO_ACCOUNT_SID = exports.EMAIL_PASS = exports.EMAIL_USER = void 0;
 exports.handleUnsubscribe = exports.handleEmailComplaint = exports.handleEmailBounce = exports.handleEmailClick = exports.handleEmailOpen = exports.detectInactiveUsers = exports.stopAutorespondersForUser = exports.stopAutoresponders = exports.handlePayPalConfiguration = exports.handleKYCVerification = exports.handleProviderOnlineStatus = exports.handleUserLogin = exports.handleProfileCompleted = exports.handlePayoutSent = exports.handlePayoutRequested = exports.handlePaymentFailed = exports.handlePaymentReceived = exports.handleCallCompleted = exports.handleReviewSubmitted = exports.handleUserRegistration = exports.setProviderOffline = exports.updateProviderActivity = void 0;
+exports.generateInvoiceDownloadUrl = exports.setProviderOffline = exports.updateProviderActivity = void 0;
 // ====== ULTRA DEBUG INITIALIZATION ======
 const ultraDebugLogger_1 = require("./utils/ultraDebugLogger");
 // Tracer tous les imports principaux
@@ -288,10 +289,14 @@ function wrapCallableFunction(functionName, originalFunction) {
     };
 }
 // ====== WRAPPER POUR FONCTIONS HTTP ======
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function wrapHttpFunction(functionName, originalFunction) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return async (req, res) => {
         const metadata = createDebugMetadata(functionName);
-        req.debugMetadata = metadata;
+        // Cast to FirebaseRequest for internal use
+        const firebaseReq = req;
+        firebaseReq.debugMetadata = metadata;
         logFunctionStart(metadata, {
             method: req.method,
             url: req.url,
@@ -300,7 +305,7 @@ function wrapHttpFunction(functionName, originalFunction) {
             body: req.body,
         });
         try {
-            await originalFunction(req, res);
+            await originalFunction(firebaseReq, res);
             logFunctionEnd(metadata, { statusCode: res.statusCode });
         }
         catch (error) {
@@ -1810,6 +1815,7 @@ exports.testWebhook = (0, https_1.onRequest)({
     timeoutSeconds: 60,
 }, 
 // @ts-ignore - Type compatibility issue between firebase-functions and express types
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 wrapHttpFunction("testWebhook", async (_req, res) => {
     try {
         res.status(200).json({ ok: true, now: new Date().toISOString() });
@@ -1858,4 +1864,143 @@ Object.defineProperty(exports, "handleEmailClick", { enumerable: true, get: func
 Object.defineProperty(exports, "handleEmailBounce", { enumerable: true, get: function () { return webhooks_1.handleEmailBounce; } });
 Object.defineProperty(exports, "handleEmailComplaint", { enumerable: true, get: function () { return webhooks_1.handleEmailComplaint; } });
 Object.defineProperty(exports, "handleUnsubscribe", { enumerable: true, get: function () { return webhooks_1.handleUnsubscribe; } });
+// ========== INVOICE DOWNLOAD URL GENERATION ==========
+exports.generateInvoiceDownloadUrl = (0, https_1.onCall)({
+    ...emergencyConfig,
+    timeoutSeconds: 30,
+}, wrapCallableFunction("generateInvoiceDownloadUrl", async (request) => {
+    const database = initializeFirebase();
+    const storageInstance = admin.storage();
+    ultraDebugLogger_1.ultraLogger.info("GENERATE_INVOICE_DOWNLOAD_URL", "Génération d'une nouvelle URL de téléchargement", {
+        invoiceId: request.data.invoiceId,
+        userId: request.auth?.uid,
+    });
+    if (!request.data.invoiceId) {
+        throw new https_1.HttpsError("invalid-argument", "invoiceId is required");
+    }
+    try {
+        // Get invoice record
+        const invoiceDoc = await database
+            .collection("invoice_records")
+            .doc(request.data.invoiceId)
+            .get();
+        if (!invoiceDoc.exists) {
+            ultraDebugLogger_1.ultraLogger.warn("GENERATE_INVOICE_DOWNLOAD_URL", "Invoice not found", { invoiceId: request.data.invoiceId });
+            throw new https_1.HttpsError("not-found", "Invoice not found");
+        }
+        const invoiceData = invoiceDoc.data();
+        if (!invoiceData) {
+            throw new https_1.HttpsError("not-found", "Invoice data not found");
+        }
+        // Extract file path from existing URL or construct it
+        let filePath;
+        const existingUrl = invoiceData.downloadUrl;
+        const invoiceNumber = invoiceData.invoiceNumber;
+        const invoiceType = invoiceData.type;
+        if (existingUrl) {
+            // Try to extract path from URL
+            // URL format: https://storage.googleapis.com/BUCKET_NAME/invoices/FILENAME?...
+            // or: https://storage.googleapis.com/BUCKET_NAME/invoices/TYPE/YEAR/MONTH/FILENAME?...
+            const urlMatch = existingUrl.match(/\/invoices\/([^?]+)/);
+            if (urlMatch && urlMatch[1]) {
+                filePath = `invoices/${urlMatch[1]}`;
+            }
+            else if (invoiceNumber) {
+                // Fallback: try common patterns
+                filePath = `invoices/${invoiceNumber}.txt`;
+            }
+            else {
+                throw new https_1.HttpsError("invalid-argument", "Cannot determine file path from URL or invoice number");
+            }
+        }
+        else if (invoiceNumber) {
+            // Construct from invoice number - try multiple patterns
+            // Pattern 1: invoices/INVOICE_NUMBER.txt
+            // Pattern 2: invoices/TYPE/YEAR/MONTH/INVOICE_NUMBER.pdf
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            if (invoiceType) {
+                // Try the structured path first
+                filePath = `invoices/${invoiceType}/${year}/${month}/${invoiceNumber}.pdf`;
+            }
+            else {
+                // Fallback to simple path
+                filePath = `invoices/${invoiceNumber}.txt`;
+            }
+        }
+        else {
+            throw new https_1.HttpsError("invalid-argument", "Cannot determine file path: missing URL and invoice number");
+        }
+        ultraDebugLogger_1.ultraLogger.debug("GENERATE_INVOICE_DOWNLOAD_URL", "File path determined", { filePath, invoiceId: request.data.invoiceId });
+        // Get file from storage
+        const bucket = storageInstance.bucket();
+        let file = bucket.file(filePath);
+        // Check if file exists, try alternative paths if needed
+        let [exists] = await file.exists();
+        if (!exists && invoiceNumber) {
+            // Try alternative paths
+            const alternativePaths = [
+                `invoices/${invoiceNumber}.txt`,
+                `invoices/${invoiceNumber}.pdf`,
+            ];
+            if (invoiceType) {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = now.getMonth() + 1;
+                alternativePaths.push(`invoices/${invoiceType}/${year}/${month}/${invoiceNumber}.pdf`, `invoices/${invoiceType}/${year}/${month}/${invoiceNumber}.txt`);
+                // Also try previous months (in case invoice was created last month)
+                const prevMonth = month === 1 ? 12 : month - 1;
+                const prevYear = month === 1 ? year - 1 : year;
+                alternativePaths.push(`invoices/${invoiceType}/${prevYear}/${prevMonth}/${invoiceNumber}.pdf`, `invoices/${invoiceType}/${prevYear}/${prevMonth}/${invoiceNumber}.txt`);
+            }
+            // Try each alternative path
+            for (const altPath of alternativePaths) {
+                if (altPath === filePath)
+                    continue; // Skip the one we already tried
+                const altFile = bucket.file(altPath);
+                const [altExists] = await altFile.exists();
+                if (altExists) {
+                    filePath = altPath;
+                    file = altFile;
+                    exists = true;
+                    ultraDebugLogger_1.ultraLogger.info("GENERATE_INVOICE_DOWNLOAD_URL", "Found file at alternative path", { originalPath: filePath, foundPath: altPath });
+                    break;
+                }
+            }
+        }
+        if (!exists) {
+            ultraDebugLogger_1.ultraLogger.warn("GENERATE_INVOICE_DOWNLOAD_URL", "File not found in storage", { filePath, invoiceId: request.data.invoiceId, invoiceNumber });
+            throw new https_1.HttpsError("not-found", "Invoice file not found in storage");
+        }
+        // Generate new signed URL (valid for 7 days)
+        const [newUrl] = await file.getSignedUrl({
+            action: "read",
+            expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // 7 days
+        });
+        // Update invoice record with new URL
+        await database
+            .collection("invoice_records")
+            .doc(request.data.invoiceId)
+            .update({
+            downloadUrl: newUrl,
+            urlGeneratedAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+        ultraDebugLogger_1.ultraLogger.info("GENERATE_INVOICE_DOWNLOAD_URL", "New download URL generated successfully", {
+            invoiceId: request.data.invoiceId,
+            filePath,
+        });
+        return { downloadUrl: newUrl };
+    }
+    catch (error) {
+        ultraDebugLogger_1.ultraLogger.error("GENERATE_INVOICE_DOWNLOAD_URL", "Error generating download URL", {
+            invoiceId: request.data.invoiceId,
+            error: error instanceof Error ? error.message : String(error),
+        }, error instanceof Error ? error : undefined);
+        if (error instanceof https_1.HttpsError) {
+            throw error;
+        }
+        throw new https_1.HttpsError("internal", `Failed to generate download URL: ${error instanceof Error ? error.message : String(error)}`);
+    }
+}));
 //# sourceMappingURL=index.js.map
