@@ -30,9 +30,46 @@ MAILWIZZ_CUSTOMER_ID=2
 
 # MailWizz Webhook Secret (for webhook authentication)
 MAILWIZZ_WEBHOOK_SECRET=your_webhook_secret_here
+
+# GA4 Configuration (Google Analytics 4)
+GA4_MEASUREMENT_ID=G-XXXXXXXXXX
+GA4_API_SECRET=your_ga4_api_secret_here
 ```
 
-### 3. Verify Your Values
+### 3. GA4 Configuration
+
+To enable Google Analytics 4 tracking, you need to:
+
+1. **Get your GA4 Measurement ID:**
+   - Go to [Google Analytics](https://analytics.google.com/)
+   - Navigate to Admin → Data Streams
+   - Select your web stream
+   - Copy the Measurement ID (format: `G-XXXXXXXXXX`)
+
+2. **Create a GA4 API Secret:**
+   - In the same Data Stream settings, scroll to "Measurement Protocol API secrets"
+   - Click "Create" to generate a new secret
+   - Copy the secret value
+
+3. **Add to your `.env` file:**
+   ```env
+   GA4_MEASUREMENT_ID=G-XXXXXXXXXX
+   GA4_API_SECRET=your_ga4_api_secret_here
+   ```
+
+4. **For Firebase Functions secrets (production):**
+   ```bash
+   firebase functions:secrets:set GA4_API_SECRET
+   firebase functions:config:set email_marketing.ga4_measurement_id="G-XXXXXXXXXX"
+   ```
+
+5. **For frontend (Vite):**
+   Add to your root `.env.development` or `.env` file:
+   ```env
+   VITE_GA4_MEASUREMENT_ID=G-XXXXXXXXXX
+   ```
+
+### 4. Verify Your Values
 
 The following values are already configured in `.env.developement`:
 

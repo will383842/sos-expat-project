@@ -94,6 +94,12 @@ export default defineConfig(({ mode }) => {
       },
     },
     server: {
+      // allowedHosts: 'https://unbluffing-unraptured-lynna.ngrok-free.app/',
+      allowedHosts: [
+        'unbluffing-unraptured-lynna.ngrok-free.app',
+        '.ngrok-free.app',  // Wildcard for all ngrok-free.app subdomains
+        '.ngrok.io',        // Wildcard for all ngrok.io subdomains
+      ],
       cors: {
         origin: true,
         credentials: true,

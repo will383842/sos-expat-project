@@ -518,7 +518,8 @@ const calculateProviderStats = async (providerId: string): Promise<ProviderStats
 
     const reviewsQuery = query(
       collection(db, "reviews"),
-      where("providerId", "==", providerId)
+      where("providerId", "==", providerId),
+      where("isPublic", "==", true)
     );
     const reviewsSnapshot = await getDocs(reviewsQuery);
     

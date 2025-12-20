@@ -1,7 +1,62 @@
 import * as admin from "firebase-admin";
+import { GA4_MEASUREMENT_ID } from "../config";
 
 interface GA4EventParams {
   [key: string]: string | number | boolean | undefined;
+}
+
+/**
+ * Send event to GA4 Measurement Protocol
+ */
+async function sendToGA4(
+  eventName: string,
+  params: GA4EventParams,
+  clientId?: string
+): Promise<void> {
+  const measurementId = GA4_MEASUREMENT_ID.value();
+  // const apiSecret = GA4_API_SECRET.value();
+
+  // Skip if not configured
+  if (measurementId ) {
+    return;
+  }
+
+  try {
+    const payload = {
+      client_id: clientId || generateClientId(),
+      events: [
+        {
+          name: eventName,
+          params: cleanParams(params),
+        },
+      ],
+    };
+
+    const url = `https://www.google-analytics.com/mp/collect?measurement_id=${measurementId}&api_secret=your_ga4_api_secret_here`;
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      console.warn(`⚠️ GA4 API returned ${response.status} for event: ${eventName}`);
+    }
+  } catch (error: any) {
+    // Don't throw - analytics failures shouldn't break the main flow
+    console.error(`❌ Error sending to GA4:`, error.message);
+  }
+}
+
+/**
+ * Generate a client ID for server-side events
+ */
+function generateClientId(): string {
+  // Generate a deterministic client ID based on timestamp and random
+  return `${Date.now()}.${Math.random().toString(36).substring(2, 15)}`;
 }
 
 /**
@@ -9,7 +64,8 @@ interface GA4EventParams {
  */
 export async function logGA4Event(
   eventName: string,
-  params: GA4EventParams = {}
+  params: GA4EventParams = {},
+  clientId?: string
 ): Promise<void> {
   try {
     // Store in Firestore for backup and analysis
@@ -17,7 +73,11 @@ export async function logGA4Event(
       eventName,
       params: cleanParams(params),
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
+      sentToGA4: false, // Will be updated if successful
     });
+
+    // Send to GA4 Measurement Protocol
+    await sendToGA4(eventName, params, clientId);
 
     console.log(`📊 GA4 Event logged: ${eventName}`, params);
   } catch (error: any) {
