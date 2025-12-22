@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logNotification = logNotification;
+exports.logNotification = void 0;
 const firebase_1 = require("../firebase");
 async function logNotification(data) {
     try {
@@ -31,4 +31,5 @@ async function logNotification(data) {
         console.error('Notification data:', data);
     }
 }
+exports.logNotification = logNotification;
 //# sourceMappingURL=logNotification.js.map

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAuth } from '../../contexts/useAuth';
+import { useAuth } from '';
 import { useProviderActivityTracker } from '../../hooks/useProviderActivityTracker';
 import { useProviderReminderSystem } from '../../hooks/useProviderReminderSystem';
 import ReminderModal from '../../notificationsonline/ReminderModal';

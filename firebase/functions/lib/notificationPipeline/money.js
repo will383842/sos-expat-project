@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.formatMoney = formatMoney;
+exports.formatMoney = void 0;
 const minorUnitsMap = {
     // 0-decimal currencies
     BIF: 1, CLP: 1, DJF: 1, GNF: 1, JPY: 1, KMF: 1, KRW: 1, MGA: 1, PYG: 1,
@@ -25,4 +25,5 @@ function formatMoney(amountMinor, currency, locale) {
         return new Intl.NumberFormat(loc, { style: "currency", currency: "EUR" }).format(value);
     }
 }
+exports.formatMoney = formatMoney;
 //# sourceMappingURL=money.js.map

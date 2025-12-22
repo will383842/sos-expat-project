@@ -1,10 +1,7 @@
 "use strict";
 // firebase/functions/src/tests/productionTests.ts
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.runCriticalTests = runCriticalTests;
-exports.runIntegrationTest = runIntegrationTest;
-exports.runPerformanceTest = runPerformanceTest;
-exports.runAllProductionTests = runAllProductionTests;
+exports.runAllProductionTests = exports.runPerformanceTest = exports.runIntegrationTest = exports.runCriticalTests = void 0;
 const paymentValidators_1 = require("../utils/paymentValidators");
 // Couleurs pour la console
 const colors = {
@@ -243,6 +240,7 @@ async function runCriticalTests() {
     }
     return allPassed;
 }
+exports.runCriticalTests = runCriticalTests;
 /**
  * TEST D'INTÉGRATION FRAIS FIXES (corrigé)
  */
@@ -295,6 +293,7 @@ async function runIntegrationTest() {
     console.log(`     • Expat EUR: 9€ de frais sur 19€ (47.4%)`);
     console.log(`     • Expat USD: 15$ de frais sur 25$ (60.0%)`);
 }
+exports.runIntegrationTest = runIntegrationTest;
 /**
  * Test de performance multi-devises
  */
@@ -325,6 +324,7 @@ async function runPerformanceTest() {
         console.log(`\n  ${colors.green}✅ Performance optimale${colors.reset}`);
     }
 }
+exports.runPerformanceTest = runPerformanceTest;
 /**
  * Fonction principale pour lancer tous les tests multi-devises
  */
@@ -340,4 +340,5 @@ async function runAllProductionTests() {
     await runIntegrationTest();
     return criticalTestsPassed;
 }
+exports.runAllProductionTests = runAllProductionTests;
 //# sourceMappingURL=productionTests.js.map

@@ -16,23 +16,13 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
@@ -41,6 +31,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkProviderInactivity = exports.testWebhook = exports.manuallyTriggerCallExecution = exports.getCloudTasksQueueStats = exports.testCloudTasksConnection = exports.getUltraDebugLogs = exports.getSystemHealthStatus = exports.generateSystemDebugReport = exports.scheduledCleanup = exports.scheduledFirestoreExport = exports.stripeWebhook = exports.getStripe = exports.adminBulkUpdateStatus = exports.adminSoftDeleteUser = exports.adminUpdateStatus = exports.executeCallTask = exports.notifyAfterPayment = exports.initializeMessageTemplates = exports.unifiedWebhook = exports.enqueueMessageEvent = exports.providerNoAnswerTwiML = exports.twilioCallWebhook = exports.testTwilioCall = exports.api = exports.createPaymentIntent = exports.createAndScheduleCall = exports.createAndScheduleCallHTTPS = exports.STRIPE_WEBHOOK_SECRET_LIVE = exports.STRIPE_WEBHOOK_SECRET_TEST = exports.STRIPE_MODE = exports.processScheduledTransfers = exports.completeLawyerOnboarding = exports.checkKycStatus = exports.addBankAccount = exports.submitKycData = exports.createCustomAccount = exports.TASKS_AUTH_SECRET = exports.scheduledBackup = exports.createManualBackup = exports.checkStripeAccountStatus = exports.getStripeAccountSession = exports.createStripeAccount = exports.createLawyerStripeAccount = exports.STRIPE_SECRET_KEY_LIVE = exports.STRIPE_SECRET_KEY_TEST = exports.TWILIO_PHONE_NUMBER = exports.TWILIO_AUTH_TOKEN = exports.TWILIO_ACCOUNT_SID = exports.EMAIL_PASS = exports.EMAIL_USER = void 0;
+exports.handleUnsubscribe = exports.handleEmailComplaint = exports.handleEmailBounce = exports.handleEmailClick = exports.handleEmailOpen = exports.detectInactiveUsers = exports.stopAutorespondersForUser = exports.stopAutoresponders = exports.handlePayPalConfiguration = exports.handleKYCVerification = exports.handleProviderOnlineStatus = exports.handleUserLogin = exports.handleProfileCompleted = exports.handlePayoutSent = exports.handlePayoutRequested = exports.handlePaymentFailed = exports.handlePaymentReceived = exports.handleCallCompleted = exports.handleReviewSubmitted = exports.handleUserRegistration = exports.setProviderOffline = exports.updateProviderActivity = void 0;
 exports.generateInvoiceDownloadUrl = exports.setProviderOffline = exports.updateProviderActivity = void 0;
 // ====== ULTRA DEBUG INITIALIZATION ======
 const ultraDebugLogger_1 = require("./utils/ultraDebugLogger");
@@ -76,6 +67,7 @@ exports.TWILIO_PHONE_NUMBER = (0, params_1.defineSecret)("TWILIO_PHONE_NUMBER");
 // Stripe
 exports.STRIPE_SECRET_KEY_TEST = (0, params_1.defineSecret)("STRIPE_SECRET_KEY_TEST");
 exports.STRIPE_SECRET_KEY_LIVE = (0, params_1.defineSecret)("STRIPE_SECRET_KEY_LIVE");
+// MAILWIZZ_API_KEY and MAILWIZZ_WEBHOOK_SECRET are now static values from config.ts
 // kyc
 var createLawyerAccount_1 = require("./createLawyerAccount");
 Object.defineProperty(exports, "createLawyerStripeAccount", { enumerable: true, get: function () { return createLawyerAccount_1.createLawyerStripeAccount; } });
@@ -92,6 +84,8 @@ var scheduledBackup_1 = require("./scheduledBackup");
 Object.defineProperty(exports, "scheduledBackup", { enumerable: true, get: function () { return scheduledBackup_1.scheduledBackup; } });
 // Cloud Tasks auth
 exports.TASKS_AUTH_SECRET = (0, params_1.defineSecret)("TASKS_AUTH_SECRET");
+// MailWizz Email Marketing
+// import { MAILWIZZ_API_KEY, MAILWIZZ_WEBHOOK_SECRET } from "./emailMarketing/config";
 // ✅ Centralise la liste globale
 const GLOBAL_SECRETS = [
     exports.EMAIL_USER,
@@ -103,6 +97,7 @@ const GLOBAL_SECRETS = [
     exports.STRIPE_SECRET_KEY_TEST,
     exports.STRIPE_SECRET_KEY_LIVE,
     exports.TASKS_AUTH_SECRET,
+    // MAILWIZZ_API_KEY and MAILWIZZ_WEBHOOK_SECRET removed - now using static values from environment
 ].filter(Boolean);
 // ⚠️ cast 'as any' pour accepter eventarc si les types ne sont pas à jour
 (0, v2_1.setGlobalOptions)({
@@ -711,6 +706,7 @@ const sendPaymentNotifications = (0, ultraDebugLogger_1.traceFunction)(async (ca
 //     }
 //   })
 // );
+// @ts-ignore - Type compatibility issue between firebase-functions and express types
 exports.stripeWebhook = (0, https_1.onRequest)({
     region: "europe-west1",
     memory: "512MiB",
@@ -719,7 +715,9 @@ exports.stripeWebhook = (0, https_1.onRequest)({
     timeoutSeconds: 30,
     minInstances: 0,
     maxInstances: 5,
-}, wrapHttpFunction("stripeWebhook", async (req, res) => {
+}, 
+// @ts-ignore - Type compatibility issue between firebase-functions and express types
+wrapHttpFunction("stripeWebhook", async (req, res) => {
     // ✅ STEP 1: Log webhook start
     console.log("🚀 STRIPE WEBHOOK START");
     console.log("📋 Request method:", req.method);
@@ -925,7 +923,7 @@ exports.stripeWebhook = (0, https_1.onRequest)({
                     const externalAccount = event.data.object;
                     console.log("External account details:", {
                         accountId: externalAccount.account,
-                        type: externalAccount.object, // 'bank_account' or 'card'
+                        type: externalAccount.object,
                         last4: externalAccount.last4,
                         bankName: externalAccount.bank_name,
                         country: externalAccount.country,
@@ -1816,6 +1814,7 @@ exports.testWebhook = (0, https_1.onRequest)({
     concurrency: 1,
     timeoutSeconds: 60,
 }, 
+// @ts-ignore - Type compatibility issue between firebase-functions and express types
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 wrapHttpFunction("testWebhook", async (_req, res) => {
     try {
@@ -1838,6 +1837,33 @@ __exportStar(require("./seo"), exports);
 __exportStar(require("./translation/translateProvider"), exports);
 __exportStar(require("./translation/initializeProviderTranslation"), exports);
 __exportStar(require("./translation/updateProviderTranslation"), exports);
+// ========== EMAIL MARKETING AUTOMATION (MailWizz) ==========
+var userLifecycle_1 = require("./emailMarketing/functions/userLifecycle");
+Object.defineProperty(exports, "handleUserRegistration", { enumerable: true, get: function () { return userLifecycle_1.handleUserRegistration; } });
+var transactions_1 = require("./emailMarketing/functions/transactions");
+Object.defineProperty(exports, "handleReviewSubmitted", { enumerable: true, get: function () { return transactions_1.handleReviewSubmitted; } });
+Object.defineProperty(exports, "handleCallCompleted", { enumerable: true, get: function () { return transactions_1.handleCallCompleted; } });
+Object.defineProperty(exports, "handlePaymentReceived", { enumerable: true, get: function () { return transactions_1.handlePaymentReceived; } });
+Object.defineProperty(exports, "handlePaymentFailed", { enumerable: true, get: function () { return transactions_1.handlePaymentFailed; } });
+Object.defineProperty(exports, "handlePayoutRequested", { enumerable: true, get: function () { return transactions_1.handlePayoutRequested; } });
+Object.defineProperty(exports, "handlePayoutSent", { enumerable: true, get: function () { return transactions_1.handlePayoutSent; } });
+var profileLifecycle_1 = require("./emailMarketing/functions/profileLifecycle");
+Object.defineProperty(exports, "handleProfileCompleted", { enumerable: true, get: function () { return profileLifecycle_1.handleProfileCompleted; } });
+Object.defineProperty(exports, "handleUserLogin", { enumerable: true, get: function () { return profileLifecycle_1.handleUserLogin; } });
+Object.defineProperty(exports, "handleProviderOnlineStatus", { enumerable: true, get: function () { return profileLifecycle_1.handleProviderOnlineStatus; } });
+Object.defineProperty(exports, "handleKYCVerification", { enumerable: true, get: function () { return profileLifecycle_1.handleKYCVerification; } });
+Object.defineProperty(exports, "handlePayPalConfiguration", { enumerable: true, get: function () { return profileLifecycle_1.handlePayPalConfiguration; } });
+var stopAutoresponders_1 = require("./emailMarketing/functions/stopAutoresponders");
+Object.defineProperty(exports, "stopAutoresponders", { enumerable: true, get: function () { return stopAutoresponders_1.stopAutoresponders; } });
+Object.defineProperty(exports, "stopAutorespondersForUser", { enumerable: true, get: function () { return stopAutoresponders_1.stopAutorespondersForUser; } });
+var inactiveUsers_1 = require("./emailMarketing/functions/inactiveUsers");
+Object.defineProperty(exports, "detectInactiveUsers", { enumerable: true, get: function () { return inactiveUsers_1.detectInactiveUsers; } });
+var webhooks_1 = require("./emailMarketing/functions/webhooks");
+Object.defineProperty(exports, "handleEmailOpen", { enumerable: true, get: function () { return webhooks_1.handleEmailOpen; } });
+Object.defineProperty(exports, "handleEmailClick", { enumerable: true, get: function () { return webhooks_1.handleEmailClick; } });
+Object.defineProperty(exports, "handleEmailBounce", { enumerable: true, get: function () { return webhooks_1.handleEmailBounce; } });
+Object.defineProperty(exports, "handleEmailComplaint", { enumerable: true, get: function () { return webhooks_1.handleEmailComplaint; } });
+Object.defineProperty(exports, "handleUnsubscribe", { enumerable: true, get: function () { return webhooks_1.handleUnsubscribe; } });
 // ========== INVOICE DOWNLOAD URL GENERATION ==========
 exports.generateInvoiceDownloadUrl = (0, https_1.onCall)({
     ...emergencyConfig,

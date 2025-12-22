@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendPush = sendPush;
+exports.sendPush = void 0;
 const firebase_1 = require("../../../utils/firebase"); // admin.messaging()
 async function sendPush(token, title, body, data) {
     await firebase_1.messaging.send({
@@ -9,4 +9,5 @@ async function sendPush(token, title, body, data) {
         data
     });
 }
+exports.sendPush = sendPush;
 //# sourceMappingURL=fcm.js.map

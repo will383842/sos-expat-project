@@ -22,6 +22,10 @@ import {
   Globe,
   Lock,
   Unlock,
+  UserIcon,
+  EyeOff,
+  Eye,
+  EyeOffIcon,
 } from "lucide-react";
 
 import Layout from "../components/layout/Layout";
@@ -51,6 +55,7 @@ import {
   updateDoc,
   serverTimestamp,
   Timestamp,
+  where,
 } from "firebase/firestore";
 import { db, auth, functions } from "../config/firebase";
 import {
@@ -197,6 +202,21 @@ type TabType =
   | "translations";
 
 type CallStatus = "completed" | "pending" | "in_progress" | "failed";
+
+
+
+type ReviewStatus = "pending" | "published" | "hidden";
+
+interface ProviderReview {
+  id: string;
+  clientName?: string;
+  comment?: string;
+  rating: number;
+  status?: ReviewStatus;
+  createdAt?: Date;
+  moderatedAt?: Date;
+  isPublic?: boolean;
+}
 
 // ===============================
 // Sous-composants UI (logique inchangée, styles modernisés)
@@ -375,6 +395,67 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const { user, firebaseUser, logout, refreshUser } = useAuth();
   const { language } = useApp();
+  const [reviews, setReviews] = useState<ProviderReview[]>([]); //define the type here 
+
+
+  const fetchProviderReviews = async (providerId: string) => {
+    const q = query(
+      collection(db, "reviews"),
+      where("providerId", "==", providerId),
+      // orderBy("createdAt", "desc")
+    );
+  
+    const snap = await getDocs(q);
+   
+    return snap.docs.map((d) => ({
+      id: d.id,
+      ...d.data(),
+    }));
+  };
+
+  useEffect(() => {
+  if (!user?.id) return;
+
+  const qRef = query(
+    collection(db, "reviews"),
+    where("providerId", "==", user.id),
+  
+  );
+
+  const unsub = onSnapshot(
+    qRef,
+    (snap) => {
+      const items: ProviderReview[] = snap.docs.map((d) => {
+        const data = d.data() as any;
+        return {
+          id: d.id,
+          clientName: data.clientName || "",
+          comment: data.comment || "",
+          rating: data.rating || 0,
+          status: (data.status || "pending") as ReviewStatus,
+          createdAt: data.createdAt?.toDate?.(),
+          moderatedAt: data.moderatedAt?.toDate?.(),
+          isPublic: data.isPublic || false,
+          clientId: data.clientId || "",
+          providerId: data.providerId || "",
+          providerUid: data.providerUid || "",
+          providerName: data.providerName || "",
+          providerEmail: data.providerEmail || "",
+          providerPhone: data.providerPhone || "",
+          providerCountry: data.providerCountry || "",
+          providerCity: data.providerCity || "",
+        };
+      });
+      setReviews(items);
+    },
+    (err) => {
+      console.error("Error listening to reviews:", err);
+      setReviews([]);
+    }
+  );
+
+  return () => unsub();
+}, [user?.id]);
   
   // Update i18n language when AppContext language changes
   useEffect(() => {
@@ -539,6 +620,9 @@ const [kycRefreshAttempted, setKycRefreshAttempted] = useState<boolean>(false);
   );
   const [profileData, setProfileData] = useState<ProfileData>(baseProfile);
 
+
+
+
   const {
     control: phoneControl,
     setValue: setPhoneValue,
@@ -567,47 +651,48 @@ const [kycRefreshAttempted, setKycRefreshAttempted] = useState<boolean>(false);
 
 // ✅ Force refresh user data on mount for lawyer/expat (fixes KYC loading issue after signup)
 // ⚠️ Limited to ONE attempt to prevent infinite loops
-useEffect(() => {
-  const checkAndRefreshUserData = async () => {
-    if (!user) {
-      setUserDataReady(false);
-      return;
-    }
+// useEffect(() => {
+//   const checkAndRefreshUserData = async () => {
+//     if (!user) {
+//       setUserDataReady(false);
+//       return;
+//     }
 
-    // If user is lawyer or expat, ensure KYC fields are loaded
-    if (user.role === "lawyer" || user.role === "expat") {
-      // Check if KYC fields are missing (happens right after signup)
-      const missingKycData = 
-        user.kycStatus === undefined || 
-        user.stripeOnboardingComplete === undefined ||
-        user.chargesEnabled === undefined;
+//     // If user is lawyer or expat, ensure KYC fields are loaded
+//     if (user.role === "lawyer" || user.role === "expat") {
+//       // Check if KYC fields are missing (happens right after signup)
+//       const missingKycData = 
+//         user.kycStatus === undefined || 
+//         user.stripeOnboardingComplete === undefined ||
+//         user.chargesEnabled === undefined;
 
-      // ✅ Only attempt refresh ONCE to prevent infinite loop
-      if (missingKycData && !kycRefreshAttempted && !isRefreshing) {
-        console.log("🔄 KYC data missing, refreshing user (one-time attempt)...");
-        setKycRefreshAttempted(true); // ← Mark as attempted BEFORE async call
-        setIsRefreshing(true);
-        try {
-          await refreshUser();
-          console.log("✅ User data refreshed");
-        } catch (error) {
-          console.error("❌ Error refreshing user:", error);
-        } finally {
-          setIsRefreshing(false);
-        }
-      } else if (missingKycData && kycRefreshAttempted) {
-        // KYC data still missing after refresh - this is expected for new signups
-        // The user needs to complete Stripe onboarding
-        console.log("ℹ️ KYC data still missing after refresh - awaiting Stripe onboarding");
-      }
-    }
+//       // ✅ Only attempt refresh ONCE to prevent infinite loop
+//       if (missingKycData && !kycRefreshAttempted && !isRefreshing) {
+//         console.log("🔄 KYC data missing, refreshing user (one-time attempt)...");
+//         setKycRefreshAttempted(true); // ← Mark as attempted BEFORE async call
+//         setIsRefreshing(true);
+//         try {
+//           await refreshUser();
+//           console.log("✅ User data refreshed");
+//         } catch (error) {
+//           console.error("❌ Error refreshing user:", error);
+//         } finally {
+//           setIsRefreshing(false);
+//         }
+//       } else if (missingKycData && kycRefreshAttempted) {
+//         // KYC data still missing after refresh - this is expected for new signups
+//         // The user needs to complete Stripe onboarding
+//         console.log("ℹ️ KYC data still missing after refresh - awaiting Stripe onboarding");
+//       }
+//     }
     
-    // Mark as ready after check/refresh
-    setUserDataReady(true);
-  };
+//     // Mark as ready after check/refresh
+//     setUserDataReady(true);
+//   };
 
-  checkAndRefreshUserData();
-}, [user?.uid, user?.role, kycRefreshAttempted]); // ← Added kycRefreshAttempted to deps
+//   checkAndRefreshUserData();
+// // }, [user?.uid, user?.role, kycRefreshAttempted]); // ← Added kycRefreshAttempted to deps
+// }, [user?.id]); // ← Added kycRefreshAttempted to deps
 
   // Status en temps réel (priorité = sos_profiles, fallback = users)
 
@@ -1056,6 +1141,29 @@ useEffect(() => {
     }
   }, [logout, navigate]);
 
+
+
+  const renderStars = (rating: number) => {
+    const full = Math.floor(rating);
+    return (
+      <div className="flex items-center gap-0.5">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Star
+            key={i}
+            className={
+              i < full
+                ? "w-4 h-4 text-yellow-400 fill-yellow-400"
+                : "w-4 h-4 text-gray-300"
+            }
+          />
+        ))}
+        <span className="ml-2 text-xs text-gray-500">{rating.toFixed(1)}/5</span>
+      </div>
+    );
+  };
+
+  
+
   // Load translation data when language changes
   useEffect(() => {
     if (!user || (user.role !== "lawyer" && user.role !== "expat")) return;
@@ -1264,6 +1372,26 @@ useEffect(() => {
       </div>
     );
   }
+
+  const handleShowReview = (reviewId: string) => {
+    const reviewRef = doc(db, "reviews", reviewId);
+    updateDoc(reviewRef, {
+      isPublic: true,
+      status: "published",
+    });
+  };
+
+  const handleHideReview = (reviewId: string) => {
+    const reviewRef = doc(db, "reviews", reviewId);
+    updateDoc(reviewRef, {
+      isPublic: false,
+      status: "pending",
+    });
+  };
+
+
+  
+  
 
   // ===============================
   // Rendu
@@ -2583,12 +2711,104 @@ useEffect(() => {
                   <div className={`px-6 py-4 ${headerGradient}`}>
                     <h2 className="text-xl font-semibold">
                       {intl.formatMessage({ id: "dashboard.myReviews" })}
-                    </h2>
+                      </h2>
                   </div>
-                  <div className="p-6">
-                    <p className={`${UI.textMuted} text-center py-8`}>
-                      {intl.formatMessage({ id: "dashboard.noReviews" })}
-                    </p>
+                    <div className="p-6">
+                      {
+                        reviews.length > 0 ? ( <div className="space-y-4">
+                        {reviews.map((review) => (
+                          <div
+                            key={review.id}
+                            className="rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow duration-200"
+                          >
+                            <div className="p-4 md:p-5 flex flex-col gap-3">
+                              {/* Header row: name + status + action */}
+                              <div className="flex items-start justify-between gap-3">
+                                <div className="flex items-center gap-2">
+                                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-red-500 to-orange-500 text-white">
+                                    <UserIcon className="w-4 h-4" />
+                                  </div>
+                                  <div>
+                                    <p className="text-sm font-semibold text-gray-900">
+                                      {review.clientName || "Anonymous user"}
+                                    </p>
+                                    <p className="text-xs text-gray-500">
+                                      Review ID: {review.id}…
+                                    </p>
+                                  </div>
+                                </div>
+                  
+                                <div className="flex items-center gap-2">
+                                  {/* {getStatusBadge(review.status)} */}
+
+                                        {review.status === "pending" && review.isPublic == false &&  (
+                                  <div className="inline-flex items-center gap-1 font-bold" onClick={() => handleShowReview(review.id)}>
+                                  
+                                      <span className="bg-green-500 px-2 py-1 cursor-pointer rounded text-white">
+                                   Show on profile
+                                    </span>
+                                  </div>
+                                )}
+
+
+                                 {review.status === "published" && review.isPublic === true &&  (
+                                  <div className="inline-flex items-center gap-1 font-bold" onClick={() => handleHideReview(review.id)}>
+                                  
+                                      <span className="bg-red-500 px-2 py-1 cursor-pointer rounded text-white">
+                                   Hide from profile
+                                    </span>
+                                  </div>
+                                )}
+                                  {/* <button
+                                    type="button"
+                                    // onClick={() => onToggleVisibility(review)}
+                                    className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-500 hover:text-gray-800 hover:border-gray-300 shadow-sm transition-colors"
+                                    title={
+                                      review.status === "published"
+                                        ? "Hide from profile"
+                                        : "Show on profile"
+                                    }
+                                  >
+                                    {review.status === "published" ? (
+                                      <EyeOffIcon className="w-4 h-4" />
+                                    ) : (
+                                      <Eye className="w-4 h-4" />
+                                    )}
+                                  </button> */}
+                                </div>
+                              </div>
+                  
+                              {/* Rating */}
+                              <div>{renderStars(review.rating)}</div>
+                  
+                              {/* Comment */}
+                              {review.comment && (
+                                <p className="text-sm text-gray-700 leading-relaxed bg-gray-50 rounded-lg px-3 py-2">
+                                  {review.comment}
+                                </p>
+                              )}
+                  
+                              {/* Meta: dates */}
+                              <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
+                                <div className="inline-flex items-center gap-1">
+                                  <Calendar className="w-3 h-3" />
+                                  <span>
+                                    Created: <span className="font-medium">{formatDate(review.createdAt)}</span>
+                                  </span>
+                                </div>
+                               
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )
+                  : <p className={`${UI.textMuted} text-center py-8`}>
+                          {intl.formatMessage({ id: "dashboard.noReviews" })}
+                         
+                        </p>
+                      }
+                    
                   </div>
                 </div>
               )}

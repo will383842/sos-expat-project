@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.writeInApp = writeInApp;
+exports.writeInApp = void 0;
 const firebase_1 = require("../../../utils/firebase");
 async function writeInApp(params) {
     const { uid, title, body, eventId, data = {}, action } = params;
@@ -22,4 +22,5 @@ async function writeInApp(params) {
         uid
     };
 }
+exports.writeInApp = writeInApp;
 //# sourceMappingURL=firestore.js.map

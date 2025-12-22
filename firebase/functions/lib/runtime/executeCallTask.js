@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TWILIO_PHONE_NUMBER = exports.TWILIO_AUTH_TOKEN = exports.TWILIO_ACCOUNT_SID = exports.TASKS_AUTH_SECRET = void 0;
-exports.runExecuteCallTask = runExecuteCallTask;
+exports.runExecuteCallTask = exports.TWILIO_PHONE_NUMBER = exports.TWILIO_AUTH_TOKEN = exports.TWILIO_ACCOUNT_SID = exports.TASKS_AUTH_SECRET = void 0;
 const params_1 = require("firebase-functions/params");
 // import { onRequest } from "firebase-functions/v2/https";
 const twilio_1 = require("../lib/twilio");
@@ -156,6 +155,7 @@ async function runExecuteCallTask(req, res) {
         return;
     }
 }
+exports.runExecuteCallTask = runExecuteCallTask;
 // --- Fonction Firebase v2 avec configuration optimisée ---
 // export const executeCallTask = onRequest(
 //   {

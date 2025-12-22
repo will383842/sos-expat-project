@@ -8,6 +8,7 @@ import { registerSW, measurePerformance } from './utils/performance';
 import LoadingSpinner from './components/common/LoadingSpinner';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import AdminRoutesV2 from '@/components/admin/AdminRoutesV2';
+import { trackEvent, hasAnalyticsConsent } from './utils/ga4';
 import './App.css';
 import TemplatesEmails from "./pages/admin/marketing/TemplatesEmails";
 import NotificationsRouting from "./pages/admin/marketing/Notifications";
@@ -286,6 +287,28 @@ const DefaultHelmet: React.FC<{ pathname: string }> = ({ pathname }) => {
 
 
 type Locale = 'en' | 'es' | 'fr';
+
+// --------------------------------------------
+// PageViewTracker - Tracks route changes for GA4
+// --------------------------------------------
+const PageViewTracker: React.FC = () => {
+  const location = useLocation();
+  
+  useEffect(() => {
+    // Only track if consent is granted
+    if (hasAnalyticsConsent()) {
+      trackEvent('page_view', {
+        page_location: window.location.href,
+        page_path: location.pathname,
+        page_title: document.title,
+      });
+      console.log('📊 GA4: Page view tracked for:', location.pathname);
+    }
+  }, [location]);
+  
+  return null;
+};
+
 // --------------------------------------------
 // App
 // --------------------------------------------

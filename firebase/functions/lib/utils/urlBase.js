@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getFunctionsBaseUrl = getFunctionsBaseUrl;
+exports.getFunctionsBaseUrl = void 0;
 // firebase/functions/src/utils/urlBase.ts
 const params_1 = require("firebase-functions/params");
 const CLOUD_TASKS_LOCATION = (0, params_1.defineString)("CLOUD_TASKS_LOCATION", { default: "europe-west1" });
@@ -21,4 +21,5 @@ function getFunctionsBaseUrl() {
     const projectId = getProjectId();
     return `https://${region}-${projectId}.cloudfunctions.net`;
 }
+exports.getFunctionsBaseUrl = getFunctionsBaseUrl;
 //# sourceMappingURL=urlBase.js.map

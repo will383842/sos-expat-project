@@ -50,6 +50,8 @@ export const TWILIO_PHONE_NUMBER = defineSecret("TWILIO_PHONE_NUMBER");
 export const STRIPE_SECRET_KEY_TEST = defineSecret("STRIPE_SECRET_KEY_TEST");
 export const STRIPE_SECRET_KEY_LIVE = defineSecret("STRIPE_SECRET_KEY_LIVE");
 
+// MAILWIZZ_API_KEY and MAILWIZZ_WEBHOOK_SECRET are now static values from config.ts
+
 // kyc
 export { createLawyerStripeAccount } from "./createLawyerAccount";
 export { createStripeAccount } from "./createStripeAccount";
@@ -63,6 +65,9 @@ export { scheduledBackup } from "./scheduledBackup";
 // Cloud Tasks auth
 export const TASKS_AUTH_SECRET = defineSecret("TASKS_AUTH_SECRET");
 
+// MailWizz Email Marketing
+// import { MAILWIZZ_API_KEY, MAILWIZZ_WEBHOOK_SECRET } from "./emailMarketing/config";
+
 // ✅ Centralise la liste globale
 const GLOBAL_SECRETS = [
   EMAIL_USER,
@@ -74,7 +79,9 @@ const GLOBAL_SECRETS = [
   STRIPE_SECRET_KEY_TEST,
   STRIPE_SECRET_KEY_LIVE,
   TASKS_AUTH_SECRET,
+  // MAILWIZZ_API_KEY and MAILWIZZ_WEBHOOK_SECRET removed - now using static values from environment
 ].filter(Boolean) as any[];
+
 
 // ⚠️ cast 'as any' pour accepter eventarc si les types ne sont pas à jour
 setGlobalOptions({
@@ -985,6 +992,7 @@ const sendPaymentNotifications = traceFunction(
 //   })
 // );
 
+// @ts-ignore - Type compatibility issue between firebase-functions and express types
 export const stripeWebhook = onRequest(
   {
     region: "europe-west1",
@@ -995,6 +1003,7 @@ export const stripeWebhook = onRequest(
     minInstances: 0,
     maxInstances: 5,
   },
+  // @ts-ignore - Type compatibility issue between firebase-functions and express types
   wrapHttpFunction(
     "stripeWebhook",
     async (req: FirebaseRequest, res: Response) => {
@@ -2557,6 +2566,7 @@ export const testWebhook = onRequest(
     concurrency: 1,
     timeoutSeconds: 60,
   },
+  // @ts-ignore - Type compatibility issue between firebase-functions and express types
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   wrapHttpFunction(
     "testWebhook",
@@ -2583,6 +2593,35 @@ export * from './translation/translateProvider';
 export * from './translation/initializeProviderTranslation';
 export * from './translation/updateProviderTranslation';
 
+// ========== EMAIL MARKETING AUTOMATION (MailWizz) ==========
+export { handleUserRegistration } from './emailMarketing/functions/userLifecycle';
+export {
+  handleReviewSubmitted,
+  handleCallCompleted,
+  handlePaymentReceived,
+  handlePaymentFailed,
+  handlePayoutRequested,
+  handlePayoutSent,
+} from './emailMarketing/functions/transactions';
+export {
+  handleProfileCompleted,
+  handleUserLogin,
+  handleProviderOnlineStatus,
+  handleKYCVerification,
+  handlePayPalConfiguration,
+} from './emailMarketing/functions/profileLifecycle';
+export {
+  stopAutoresponders,
+  stopAutorespondersForUser,
+} from './emailMarketing/functions/stopAutoresponders';
+export { detectInactiveUsers } from './emailMarketing/functions/inactiveUsers';
+export {
+  handleEmailOpen,
+  handleEmailClick,
+  handleEmailBounce,
+  handleEmailComplaint,
+  handleUnsubscribe,
+} from './emailMarketing/functions/webhooks';
 // ========== INVOICE DOWNLOAD URL GENERATION ==========
 export const generateInvoiceDownloadUrl = onCall(
   {

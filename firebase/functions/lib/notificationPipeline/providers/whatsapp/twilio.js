@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendWhatsApp = sendWhatsApp;
+exports.sendWhatsApp = void 0;
 const twilio_1 = require("../../../lib/twilio");
 async function sendWhatsApp(to, text) {
     const client = (0, twilio_1.getTwilioClient)();
@@ -12,4 +12,5 @@ async function sendWhatsApp(to, text) {
     });
     return res.sid;
 }
+exports.sendWhatsApp = sendWhatsApp;
 //# sourceMappingURL=twilio.js.map

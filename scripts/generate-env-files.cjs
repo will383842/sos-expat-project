@@ -14,6 +14,9 @@ VITE_FIREBASE_APP_ID=1:268195823113:web:10bf2e5bacdc1816f182d8
 
 # 💳 STRIPE (clé publique pour Stripe Elements)
 VITE_STRIPE_PUBLIC_KEY=pk_test_51RFHjpDF7L3utQbN7DNWM0zdUWGuwmwTvRLP0GhXYVbpQIzDDEfb7RFjDs9egAN7BYhyvX3JCQMtK3CliZFAI3ew00jhRzLul2
+
+# 📊 GA4 (Google Analytics 4)
+VITE_GA4_MEASUREMENT_ID=G-6855B6E2FB
 `.trim() + "\n";
 
 const rootDir = process.cwd();

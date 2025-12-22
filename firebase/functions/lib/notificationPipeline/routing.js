@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRouting = getRouting;
-exports.isRateLimited = isRateLimited;
+exports.isRateLimited = exports.getRouting = void 0;
 const firestore_1 = require("firebase-admin/firestore");
 const db = (0, firestore_1.getFirestore)();
 async function getRouting(eventId) {
@@ -68,6 +67,7 @@ async function getRouting(eventId) {
         }
     };
 }
+exports.getRouting = getRouting;
 async function isRateLimited(uid, eventId, hours) {
     if (!hours || hours <= 0)
         return false;
@@ -81,4 +81,5 @@ async function isRateLimited(uid, eventId, hours) {
         .get();
     return !snap.empty;
 }
+exports.isRateLimited = isRateLimited;
 //# sourceMappingURL=routing.js.map

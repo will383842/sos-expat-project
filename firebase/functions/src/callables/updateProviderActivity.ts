@@ -1,7 +1,7 @@
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import * as admin from 'firebase-admin';
 
-const db = admin.firestore();
+
 
 export const updateProviderActivity = onCall(async (request) => {
   // Vérifier l'authentification
@@ -13,6 +13,14 @@ export const updateProviderActivity = onCall(async (request) => {
   }
 
   const userId = request.auth.uid;
+
+  // Ensure Firebase Admin is initialized
+  if (!admin.apps.length) {
+    admin.initializeApp();
+  }
+
+  // Initialize Firestore inside the function context to ensure app is ready
+  const db = admin.firestore();
   const now = admin.firestore.Timestamp.now();
 
   try {
@@ -24,10 +32,10 @@ export const updateProviderActivity = onCall(async (request) => {
       throw new HttpsError('not-found', 'User not found');
     }
 
-    const isProvider = 
-      userData.type === 'lawyer' || 
-      userData.type === 'expat' || 
-      userData.role === 'lawyer' || 
+    const isProvider =
+      userData.type === 'lawyer' ||
+      userData.type === 'expat' ||
+      userData.role === 'lawyer' ||
       userData.role === 'expat';
 
     if (!isProvider) {
@@ -40,33 +48,34 @@ export const updateProviderActivity = onCall(async (request) => {
     // Mettre à jour les deux collections en batch
     const batch = db.batch();
 
-    // Mettre à jour sos_profiles
+    // Mettre à jour sos_profiles (use set with merge to create if missing)
     const profileRef = db.collection('sos_profiles').doc(userId);
-    batch.update(profileRef, {
+    batch.set(profileRef, {
       lastActivity: now,
       lastActivityCheck: now,
-    });
+    }, { merge: true });
 
-    // Mettre à jour users
+    // Mettre à jour users (use set with merge to be safe, though user doc exists)
     const userRef = db.collection('users').doc(userId);
-    batch.update(userRef, {
+    batch.set(userRef, {
       lastActivity: now,
       lastActivityCheck: now,
-    });
+    }, { merge: true });
 
     await batch.commit();
 
-    console.log(`Activity updated for provider ${userId}`);
+    console.log(`✅ Activity updated for provider ${userId}`);
 
     return {
       success: true,
       timestamp: now.toMillis(),
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error updating provider activity:', error);
+    // Return key error details to client for debugging
     throw new HttpsError(
       'internal',
-      'Failed to update activity'
+      `Failed to update activity: ${error.message || 'Unknown error'}`
     );
   }
 });
