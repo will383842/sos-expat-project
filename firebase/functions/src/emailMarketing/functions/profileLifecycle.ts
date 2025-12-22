@@ -151,18 +151,23 @@ export const handleProviderOnlineStatus = onDocumentUpdated(
     const before = event.data?.before.data();
     const after = event.data?.after.data();
     const userId = event.params.userId;
+    console.log(`🔍 [Debug] handleProviderOnlineStatus triggered for ${userId}`);
 
     if (!before || !after) {
+      console.log(`⚠️ [Debug] Missing before/after data for ${userId}`);
       return;
     }
 
     // Only process for providers
     if (after.role !== "provider" && after.role !== "lawyer") {
+      console.log(`ℹ️ [Debug] Skipping user ${userId} - Role is '${after.role}', expected 'provider' or 'lawyer'`);
       return;
     }
 
     const beforeOnline = before.isOnline || before.onlineStatus === true;
     const afterOnline = after.isOnline || after.onlineStatus === true;
+
+    console.log(`🔍 [Debug] Status check for ${userId}: Before=${beforeOnline}, After=${afterOnline}`);
 
     // Only process when online status changes
     if (beforeOnline !== afterOnline) {
@@ -171,6 +176,7 @@ export const handleProviderOnlineStatus = onDocumentUpdated(
 
         // Update MailWizz ONLINE_STATUS field
         await mailwizz.updateSubscriber(userId, {
+          EMAIL: after.email,
           IS_ONLINE: afterOnline ? "online" : "offline",
           ONLINE_STATUS: afterOnline ? "online" : "offline",
         });

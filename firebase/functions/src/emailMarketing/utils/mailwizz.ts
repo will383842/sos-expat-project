@@ -39,7 +39,7 @@ export class MailwizzAPI {
       // MailWizz API requires field names in UPPERCASE
       // Ensure EMAIL field is uppercase (it should already be from SubscriberData interface)
       const requestData = { ...data };
-      
+
       // Ensure email is in uppercase EMAIL format
       if (requestData.email && !requestData.EMAIL) {
         requestData.EMAIL = requestData.email;
@@ -62,6 +62,7 @@ export class MailwizzAPI {
             "X-MW-PUBLIC-KEY": this.config.apiKey,
             "X-MW-CUSTOMER-ID": this.config.customerId,
             "Content-Type": "application/x-www-form-urlencoded", // Form data, not JSON!
+            "User-Agent": "SOS-Platform/1.0",
           },
         }
       );
@@ -88,6 +89,8 @@ export class MailwizzAPI {
     updates: Record<string, string>
   ): Promise<any> {
     try {
+      console.log("hit sthe update subscribed method");
+
       // Convert to form-encoded data
       const formData = new URLSearchParams();
       Object.entries(updates).forEach(([key, value]) => {
@@ -107,6 +110,7 @@ export class MailwizzAPI {
               "X-MW-PUBLIC-KEY": this.config.apiKey,
               "X-MW-CUSTOMER-ID": this.config.customerId,
               "Content-Type": "application/x-www-form-urlencoded", // Form data, not JSON!
+              "User-Agent": "SOS-Platform/1.0",
             },
           }
         );
@@ -115,17 +119,44 @@ export class MailwizzAPI {
         // This is a fallback for cases where we have email but not UID
         const email = updates.EMAIL;
         if (email) {
-          response = await axios.put(
-            `${this.config.apiUrl}/lists/${this.config.listUid}/subscribers/search?EMAIL=${encodeURIComponent(email)}`,
-            formData.toString(), // Send as form-encoded string
-            {
-              headers: {
-                "X-MW-PUBLIC-KEY": this.config.apiKey,
-                "X-MW-CUSTOMER-ID": this.config.customerId,
-                "Content-Type": "application/x-www-form-urlencoded", // Form data, not JSON!
-              },
+          try {
+            // First, find the subscriber by email
+            const searchResponse = await axios.get(
+              `${this.config.apiUrl}/lists/${this.config.listUid}/subscribers/search?EMAIL=${encodeURIComponent(email)}`,
+              {
+                headers: {
+                  "X-MW-PUBLIC-KEY": this.config.apiKey,
+                  "X-MW-CUSTOMER-ID": this.config.customerId,
+                  "User-Agent": "SOS-Platform/1.0",
+                },
+              }
+            );
+
+            const subscriberUid = searchResponse.data?.data?.subscriber_uid;
+
+            if (subscriberUid) {
+              // Now update using the correct UID
+              response = await axios.put(
+                `${this.config.apiUrl}/lists/${this.config.listUid}/subscribers/${subscriberUid}`,
+                formData.toString(), // Send as form-encoded string
+                {
+                  headers: {
+                    "X-MW-PUBLIC-KEY": this.config.apiKey,
+                    "X-MW-CUSTOMER-ID": this.config.customerId,
+                    "Content-Type": "application/x-www-form-urlencoded", // Form data, not JSON!
+                    "User-Agent": "SOS-Platform/1.0",
+                  },
+                }
+              );
+              console.log(`✅ Subscriber found and updated via fallback: ${subscriberUid}`);
+            } else {
+              console.warn(`⚠️ Subscriber not found by email: ${email}`);
+              throw updateError;
             }
-          );
+          } catch (searchError) {
+            console.error(`❌ Error searching for subscriber by email:`, searchError);
+            throw updateError;
+          }
         } else {
           throw updateError;
         }
@@ -160,6 +191,7 @@ export class MailwizzAPI {
             "X-MW-PUBLIC-KEY": this.config.apiKey,
             "X-MW-CUSTOMER-ID": this.config.customerId,
             "Content-Type": "application/json",
+            "User-Agent": "SOS-Platform/1.0",
           },
         }
       );
@@ -190,6 +222,7 @@ export class MailwizzAPI {
           headers: {
             "X-MW-PUBLIC-KEY": this.config.apiKey,
             "X-MW-CUSTOMER-ID": this.config.customerId,
+            "User-Agent": "SOS-Platform/1.0",
           },
         }
       );
@@ -217,6 +250,7 @@ export class MailwizzAPI {
           headers: {
             "X-MW-PUBLIC-KEY": this.config.apiKey,
             "X-MW-CUSTOMER-ID": this.config.customerId,
+            "User-Agent": "SOS-Platform/1.0",
           },
         }
       );
@@ -254,6 +288,7 @@ export class MailwizzAPI {
             "X-MW-PUBLIC-KEY": this.config.apiKey,
             "X-MW-CUSTOMER-ID": this.config.customerId,
             "Content-Type": "application/json",
+            "User-Agent": "SOS-Platform/1.0",
           },
         }
       );
@@ -293,6 +328,7 @@ export class MailwizzAPI {
             "X-MW-PUBLIC-KEY": this.config.apiKey,
             "X-MW-CUSTOMER-ID": this.config.customerId,
             "Content-Type": "application/x-www-form-urlencoded",
+            "User-Agent": "SOS-Platform/1.0",
           },
         }
       );
