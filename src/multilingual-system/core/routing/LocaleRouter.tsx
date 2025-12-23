@@ -2,7 +2,7 @@
  * LocaleRouter Component
  * Handles automatic locale prefix management and redirects
  */
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useApp } from "../../../contexts/AppContext";
 import {
@@ -14,6 +14,7 @@ import {
   getTranslatedRouteSlug,
 } from "./localeRoutes";
 import { useParams } from "react-router-dom";
+import LoadingSpinner from "../../../components/common/LoadingSpinner";
 
 interface LocaleRouterProps {
   children: React.ReactNode;
@@ -24,8 +25,10 @@ const LocaleRouter: React.FC<LocaleRouterProps> = ({ children }) => {
   const navigate = useNavigate();
   const { language, setLanguage } = useApp();
   const params = useParams<{ locale?: string }>();
+  const [isValidating, setIsValidating] = useState(true);
 
   useEffect(() => {
+    setIsValidating(true);
     const { pathname } = location;
     
     // CRITICAL: Decode URL to handle Unicode characters (Hindi, Chinese, Arabic, Russian)
@@ -44,6 +47,7 @@ const LocaleRouter: React.FC<LocaleRouterProps> = ({ children }) => {
       pathname.startsWith("/marketing") ||
       pathname.startsWith("/payment-success")
     ) {
+      setIsValidating(false);
       return;
     }
     
@@ -130,8 +134,17 @@ const LocaleRouter: React.FC<LocaleRouterProps> = ({ children }) => {
       // Root path without locale - redirect to default locale
       const locale = getLocaleString(language);
       navigate(`/${locale}`, { replace: true });
+      return; // Don't set isValidating to false, we're redirecting
     }
+
+    // Validation complete, show content
+    setIsValidating(false);
   }, [location.pathname, language, navigate, setLanguage, params.locale]);
+
+  // Show loading spinner while validating locale to prevent 404 flash
+  if (isValidating) {
+    return <LoadingSpinner size="large" color="red" />;
+  }
 
   return <>{children}</>;
 };
