@@ -1504,9 +1504,24 @@ console.log('🔍 [Register] Tentative création compte avec:', {
     if (!user || !firebaseUser) throw new Error('Utilisateur non connecté');
     if (user.role !== 'lawyer' && user.role !== 'expat') return;
 
-    // Vérifier que l'utilisateur est approuvé avant de pouvoir changer sa disponibilité
-    if (!user.isApproved || user.approvalStatus !== 'approved') {
-      throw new Error('Votre compte doit être approuvé pour modifier votre disponibilité');
+    // 🔒 Vérifier l'approbation depuis DEUX sources: users (AuthContext) ET sos_profiles
+    const isApprovedFromUsers = user.isApproved && user.approvalStatus === 'approved';
+
+    // Charger le statut depuis sos_profiles (source de vérité pour les anciens prestataires)
+    let isApprovedFromSosProfiles = false;
+    try {
+      const sosProfileDoc = await getDoc(doc(db, 'sos_profiles', firebaseUser.uid));
+      if (sosProfileDoc.exists()) {
+        const sosData = sosProfileDoc.data();
+        isApprovedFromSosProfiles = sosData?.isApproved === true && sosData?.approvalStatus === 'approved';
+      }
+    } catch (e) {
+      console.warn('Erreur lecture sos_profiles pour vérification approval:', e);
+    }
+
+    // Bloquer si AUCUNE source n'indique l'approbation
+    if (!isApprovedFromUsers && !isApprovedFromSosProfiles) {
+      throw new Error('APPROVAL_REQUIRED_SHORT');
     }
 
     try {

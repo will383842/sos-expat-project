@@ -518,7 +518,7 @@ const getLanguageNameFromCode = (code: string): string => {
   // Mapping direct des codes ISO 639-1 les plus courants
   const ISO_LANGUAGE_MAP: Record<string, string> = {
     'fr': 'Français', 'en': 'Anglais', 'es': 'Espagnol', 'de': 'Allemand', 'it': 'Italien',
-    'pt': 'Portugais', 'ru': 'Russe', 'zh': 'Chinois', 'ja': 'Japonais', 'ko': 'Coréen',
+    'pt': 'Portugais', 'ru': 'Russe', 'zh': 'Chinois', 'ch': 'Chinois', 'ja': 'Japonais', 'ko': 'Coréen',
     'ar': 'Arabe', 'hi': 'Hindi', 'bn': 'Bengali', 'pa': 'Pendjabi', 'vi': 'Vietnamien',
     'th': 'Thaï', 'tr': 'Turc', 'pl': 'Polonais', 'uk': 'Ukrainien', 'nl': 'Néerlandais',
     'sv': 'Suédois', 'no': 'Norvégien', 'da': 'Danois', 'fi': 'Finnois', 'el': 'Grec',

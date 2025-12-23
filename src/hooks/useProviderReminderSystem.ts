@@ -5,6 +5,9 @@ import { PROVIDER_ACTIVITY_CONFIG, toMs } from '../config/providerActivityConfig
 import { playAvailabilityReminder } from '../notificationsonline/playAvailabilityReminder';
 import type { ReminderState, ProviderActivityPreferences } from '../types/providerActivity';
 
+// Timeout en millisecondes avant mise hors ligne automatique si pas de réponse au popup
+const POPUP_AUTO_OFFLINE_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
+
 interface UseProviderReminderSystemProps {
   userId: string;
   isOnline: boolean;
@@ -29,6 +32,7 @@ export const useProviderReminderSystem = ({
   });
 
   const checkIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const popupTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Charger les préférences depuis localStorage
   const getPreferences = useCallback((): ProviderActivityPreferences => {
@@ -110,6 +114,11 @@ export const useProviderReminderSystem = ({
   // Handler pour fermer le modal (rester en ligne)
   const handleClose = useCallback(() => {
     setShowModal(false);
+    // Annuler le timeout de mise hors ligne automatique
+    if (popupTimeoutRef.current) {
+      clearTimeout(popupTimeoutRef.current);
+      popupTimeoutRef.current = null;
+    }
     setReminderState(prev => ({
       ...prev,
       lastSoundPlayed: new Date(),
@@ -121,6 +130,11 @@ export const useProviderReminderSystem = ({
   // Handler pour passer hors ligne
   const handleGoOffline = useCallback(async () => {
     setShowModal(false);
+    // Annuler le timeout de mise hors ligne automatique
+    if (popupTimeoutRef.current) {
+      clearTimeout(popupTimeoutRef.current);
+      popupTimeoutRef.current = null;
+    }
     try {
       const setProviderOffline = httpsCallable(functions, 'setProviderOffline');
       await setProviderOffline({ userId });
@@ -134,6 +148,11 @@ export const useProviderReminderSystem = ({
     const today = new Date().toDateString();
     localStorage.setItem(PROVIDER_ACTIVITY_CONFIG.LAST_REMINDER_DATE_KEY, today);
     setShowModal(false);
+    // Annuler le timeout de mise hors ligne automatique
+    if (popupTimeoutRef.current) {
+      clearTimeout(popupTimeoutRef.current);
+      popupTimeoutRef.current = null;
+    }
   }, []);
 
   // Vérifier périodiquement l'inactivité
@@ -158,6 +177,30 @@ export const useProviderReminderSystem = ({
       }
     };
   }, [isOnline, isProvider, checkAndTriggerReminder]);
+
+  // 🔒 Timeout automatique: mise hors ligne si pas de réponse au popup après 5 minutes
+  useEffect(() => {
+    if (showModal && isOnline && isProvider) {
+      // Démarrer le timeout de 5 minutes
+      popupTimeoutRef.current = setTimeout(async () => {
+        console.warn('Popup timeout: mise hors ligne automatique après 5 minutes sans réponse');
+        setShowModal(false);
+        try {
+          const setProviderOffline = httpsCallable(functions, 'setProviderOffline');
+          await setProviderOffline({ userId });
+        } catch (error) {
+          console.error('Error auto-setting provider offline:', error);
+        }
+      }, POPUP_AUTO_OFFLINE_TIMEOUT_MS);
+
+      return () => {
+        if (popupTimeoutRef.current) {
+          clearTimeout(popupTimeoutRef.current);
+          popupTimeoutRef.current = null;
+        }
+      };
+    }
+  }, [showModal, isOnline, isProvider, userId]);
 
   return {
     showModal,

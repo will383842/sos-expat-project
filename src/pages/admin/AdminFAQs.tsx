@@ -105,7 +105,9 @@ const AdminFAQs: React.FC = () => {
       // Use Google Translate transliteration API
       // Format: https://translate.googleapis.com/translate_a/single?client=gtx&sl=SOURCE_LANG&tl=TARGET_LANG&dt=rm&q=TEXT
       // dt=rm requests romanization/transliteration
-      const transliterateUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${langCode}&tl=en&dt=rm&q=${encodeURIComponent(text.substring(0, 200))}`;
+      // Convert 'ch' to 'zh' for Chinese (Google API uses ISO 'zh')
+      const apiLangCode = langCode === 'ch' ? 'zh' : langCode;
+      const transliterateUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${apiLangCode}&tl=en&dt=rm&q=${encodeURIComponent(text.substring(0, 200))}`;
       const response = await fetch(transliterateUrl);
 
       if (response.ok) {

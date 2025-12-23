@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import { httpsCallable } from 'firebase/functions';
 import { functions } from '../config/firebase';
 import { PROVIDER_ACTIVITY_CONFIG, toMs } from '../config/providerActivityConfig';
@@ -18,6 +18,10 @@ export const useProviderActivityTracker = ({
   const lastActivityRef = useRef<Date>(new Date());
   const updateIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // 🔒 Gestion de l'état de visibilité de l'onglet
+  const [isTabVisible, setIsTabVisible] = useState(!document.hidden);
+  const pauseInactivityCheck = useRef(false);
 
   // Fonction pour mettre à jour l'activité dans Firebase
   const updateActivityInFirebase = useCallback(async () => {
@@ -53,12 +57,37 @@ export const useProviderActivityTracker = ({
     }, PROVIDER_ACTIVITY_CONFIG.EVENT_DEBOUNCE_MS);
   }, [isOnline, isProvider]);
 
+  // 🔒 Gestion de la visibilité de l'onglet (tab en arrière-plan)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      const isVisible = !document.hidden;
+      setIsTabVisible(isVisible);
+
+      if (isVisible) {
+        // L'onglet redevient visible → reset le timer d'inactivité
+        pauseInactivityCheck.current = false;
+        lastActivityRef.current = new Date();
+        console.log('Tab visible: activity timer reset');
+      } else {
+        // L'onglet passe en arrière-plan → pause le tracking d'inactivité
+        pauseInactivityCheck.current = true;
+        console.log('Tab hidden: inactivity tracking paused');
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
+
   // Setup des listeners d'événements
   useEffect(() => {
     if (!isOnline || !isProvider) return;
 
     const events = ['click', 'mousemove', 'keydown', 'scroll', 'touchstart'];
-    
+
     events.forEach(event => {
       window.addEventListener(event, handleActivity, { passive: true });
     });
@@ -98,5 +127,7 @@ export const useProviderActivityTracker = ({
 
   return {
     lastActivity: lastActivityRef.current,
+    isTabVisible,
+    isInactivityPaused: pauseInactivityCheck.current,
   };
 };

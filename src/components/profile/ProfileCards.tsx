@@ -209,19 +209,24 @@ const LANGUAGE_CODE_TO_NAME: Record<string, { fr: string; en: string }> = {
 const getLanguageLabel = (langCode: string, locale: SupportedLocale = 'fr'): string => {
   if (!langCode) return '';
   
-  const normalized = langCode.trim().toLowerCase();
-  
+  let normalized = langCode.trim().toLowerCase();
+
   // Si c'est déjà un nom complet (plus de 3 caractères), le retourner
   if (normalized.length > 3) {
     return langCode.charAt(0).toUpperCase() + langCode.slice(1);
   }
-  
+
   // Chercher dans le mapping des codes ISO
   const langMapping = LANGUAGE_CODE_TO_NAME[normalized];
   if (langMapping) {
     return langMapping[locale === 'fr' ? 'fr' : 'en'];
   }
-  
+
+  // Convertir 'ch' en 'zh' car languagesData utilise 'zh' pour le chinois
+  if (normalized === 'ch') {
+    normalized = 'zh';
+  }
+
   // Chercher dans languagesData en fallback
   const langData = languagesData.find(lang => lang.code?.toLowerCase() === normalized);
   if (langData) {

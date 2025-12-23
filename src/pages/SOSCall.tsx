@@ -170,7 +170,7 @@ const OG_LOCALES: Record<string, string> = {
   ch: "zh_CN",
 };
 
-const SUPPORTED_LANGUAGES = ['fr', 'en', 'es', 'de', 'pt', 'ru', 'zh', 'ar', 'hi'] as const;
+const SUPPORTED_LANGUAGES = ['fr', 'en', 'es', 'de', 'pt', 'ru', 'ch', 'ar', 'hi'] as const;
 
 const PROFESSION_ICONS: Record<string, { icon: string; bgColor: string; textColor: string }> = {
   lawyer: {
@@ -593,7 +593,8 @@ const matchCountry = (
   }
   
   // Générer tous les noms possibles du pays sélectionné dans toutes les langues
-  const allLanguages = ['fr', 'en', 'es', 'de', 'pt', 'ru', 'zh', 'ar', 'hi', 'ch'];
+  // 'ch' est le code interne pour le chinois (converti en 'zh' pour les APIs)
+  const allLanguages = ['fr', 'en', 'es', 'de', 'pt', 'ru', 'ch', 'ar', 'hi'];
   const allPossibleNames: string[] = [selectedCodeLower];
   
   for (const lang of allLanguages) {
@@ -627,8 +628,10 @@ const matchLanguage = (
     return providerLangCodes.some(code => {
       // Vérifier le code directement
       if (code.includes(needle)) return true;
-      
-      const lang = languagesData.find(l => l.code.toLowerCase() === code);
+
+      // Convertir 'ch' en 'zh' car languagesData utilise 'zh' pour le chinois
+      const normalizedCode = code === 'ch' ? 'zh' : code;
+      const lang = languagesData.find(l => l.code.toLowerCase() === normalizedCode);
       if (!lang) return false;
       
       // Vérifier tous les labels dans toutes les langues via l'objet labels
@@ -1091,7 +1094,9 @@ const ModernProfileCard: React.FC<{
     const translatedLanguages = provider.languages
       .slice(0, 3)
       .map(langCode => {
-        const lang = languagesData.find(l => l.code.toLowerCase() === langCode.toLowerCase());
+        // Convertir 'ch' en 'zh' car languagesData utilise 'zh' pour le chinois
+        const normalizedCode = langCode.toLowerCase() === 'ch' ? 'zh' : langCode.toLowerCase();
+        const lang = languagesData.find(l => l.code.toLowerCase() === normalizedCode);
         return lang ? getLanguageLabel(lang, language as SupportedLocale) : langCode;
       })
       .filter(name => name !== '');
@@ -2587,7 +2592,8 @@ const SOSCall: React.FC = () => {
   const seoKeywords = intl.formatMessage({ id: "sosCall.seo.keywords" });
 
   const hreflangLinks = SUPPORTED_LANGUAGES.map(langCode => ({
-    hreflang: langCode === 'zh' ? 'zh-Hans' : langCode,
+    // Convertir 'ch' en 'zh-Hans' pour le standard hreflang SEO
+    hreflang: langCode === 'ch' ? 'zh-Hans' : langCode,
     href: `${BASE_URL}/${langCode}${PAGE_PATH}`,
   }));
 

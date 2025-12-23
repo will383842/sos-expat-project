@@ -11,7 +11,7 @@ import * as admin from 'firebase-admin';
 
 const REGION = 'europe-west1';
 const SITE_URL = 'https://sos-expat.com';
-const LANGUAGES = ['fr', 'en', 'de', 'es', 'pt', 'ru', 'zh', 'ar', 'hi'];
+const LANGUAGES = ['fr', 'en', 'de', 'es', 'pt', 'ru', 'ch', 'ar', 'hi'];
 
 // ============================================
 // 🧑‍⚖️ TRIGGER: Nouveau profil prestataire créé

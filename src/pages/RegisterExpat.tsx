@@ -189,7 +189,8 @@ const useAntiBot = () => {
 
 // Constants
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const NAME_REGEX = /^[a-zA-ZÀ-ÿ\s'-]{2,50}$/;
+// Support tous les alphabets: Latin, Chinois (CJK), Cyrillique, Arabe, Devanagari, etc.
+const NAME_REGEX = /^[\p{L}\p{M}\s'-]{2,50}$/u;
 const MIN_BIO_LENGTH = 50;
 const MAX_BIO_LENGTH = 500;
 

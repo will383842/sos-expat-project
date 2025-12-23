@@ -679,7 +679,7 @@ export function parseLocaleFromPath(path: string): {
   }
   
   // Fallback sur langue simple
-  const simpleLangs = ['fr', 'en', 'es', 'de', 'pt', 'ru', 'zh', 'ar', 'hi'];
+  const simpleLangs = ['fr', 'en', 'es', 'de', 'pt', 'ru', 'ch', 'ar', 'hi'];
   if (simpleLangs.includes(firstPart)) {
     return { locale: firstPart, lang: firstPart, country: null };
   }
@@ -852,7 +852,7 @@ export function getSlugStats(slug: string): {
 } {
   const parts = slug.split('/').filter(Boolean);
   const firstPart = parts[0];
-  const hasLocale = isValidLocale(firstPart) || ['fr', 'en', 'es', 'de', 'pt', 'ru', 'zh', 'ar', 'hi'].includes(firstPart);
+  const hasLocale = isValidLocale(firstPart) || ['fr', 'en', 'es', 'de', 'pt', 'ru', 'ch', 'ar', 'hi'].includes(firstPart);
   
   return {
     length: slug.length,

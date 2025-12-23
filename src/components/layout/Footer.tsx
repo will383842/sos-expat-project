@@ -57,7 +57,7 @@ interface CacheData {
   readonly data: LegalLink[];
 }
 
-type SupportedLanguage = "fr" | "en" | "es";
+type SupportedLanguage = "fr" | "en" | "es" | "de" | "ru" | "hi" | "pt" | "ch" | "ar";
 
 // ============================================================================
 // CONSTANTS
@@ -443,7 +443,7 @@ const Footer: React.FC = () => {
 
   // Resolve language
   const resolvedLang = useMemo<SupportedLanguage>(() => {
-    const supportedLangs: SupportedLanguage[] = ["fr", "en", "es"];
+    const supportedLangs: SupportedLanguage[] = ["fr", "en", "es", "de", "ru", "hi", "pt", "ch", "ar"];
 
     if (supportedLangs.includes(ctxLang as SupportedLanguage)) {
       return ctxLang as SupportedLanguage;

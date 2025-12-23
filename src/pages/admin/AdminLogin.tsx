@@ -14,14 +14,18 @@ const AdminLogin: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Email admin autorisé (seul cet email peut accéder à l'admin)
+  const ADMIN_EMAIL = 'williamsjullin@gmail.com';
+
   // Check if user is already logged in and is admin
   useEffect(() => {
     const checkAdminStatus = async () => {
       const user = auth.currentUser;
       if (user) {
         try {
-          const userDoc = await getDoc(doc(db, 'users', user.uid));
-          if (userDoc.exists() && userDoc.data().role === 'admin') {
+          const isAdminEmail = user.email?.toLowerCase() === ADMIN_EMAIL;
+
+          if (isAdminEmail) {
             navigate('/admin/dashboard');
           }
         } catch (error) {
@@ -52,10 +56,23 @@ const AdminLogin: React.FC = () => {
       console.log(userDoc.exists(), " : userDoc.exists()");
       console.log(userDoc.data(), " : userDoc data");
       
+      // Vérifier que c'est l'email admin autorisé
+      const isAdminEmail = user.email?.toLowerCase() === ADMIN_EMAIL;
+
+      if (!isAdminEmail) {
+        // Email non autorisé - refuser l'accès
+        console.log('[AdminLogin] Accès refusé - email non autorisé:', user.email);
+        setError('Accès non autorisé. Seul l\'administrateur peut se connecter.');
+        try {
+          await signOut(auth);
+        } catch (error) {
+          console.error('Error signing out:', error);
+        }
+        return;
+      }
+
+      // Email admin autorisé - créer ou mettre à jour le document
       if (!userDoc.exists()) {
-        
-        
-        // Create user document if it doesn't exist 
         await setDoc(userRef, {
           id: user.uid,
           uid: user.uid,
@@ -68,41 +85,16 @@ const AdminLogin: React.FC = () => {
           updatedAt: serverTimestamp(),
           lastLoginAt: serverTimestamp()
         });
-        
-        navigate('/admin/dashboard');
-      } else if (userDoc.data().role === 'admin') {
-
-        console.log("now i am in the admin check ")
-
-        console.log('userDoc.data().role === admin');
-        console.log(userDoc.data());
-        console.log(user);
-        console.log(userRef);
-        console.log(serverTimestamp());
-     
-        // Update last login
-        // await setDoc(userRef, {
-        //   lastLoginAt: serverTimestamp(),
-        //   isActive: true
-        // }, { merge: true });
-        
-        // Log the event
-        // await addDoc(collection(db, 'logs'), {
-        //   type: 'admin_login',
-        //   userId: user.uid,
-        //   timestamp: serverTimestamp()
-        // });
-        
-        navigate('/admin/dashboard');
       } else {
-        console.log("now i am in the else");
-        setError('Accès non autorisé. Vous n\'avez pas les droits d\'administration.');
-        try {
-          await signOut(auth);
-        } catch (error) {
-          console.error('Error signing out:', error);
-        }
+        // Mettre à jour lastLoginAt
+        await setDoc(userRef, {
+          lastLoginAt: serverTimestamp(),
+          isActive: true
+        }, { merge: true });
       }
+
+      console.log('[AdminLogin] Accès autorisé pour:', user.email);
+      navigate('/admin/dashboard');
     } catch (error: any) {
       console.error('Login error:', error);
       setError(getErrorMessage(error.code));

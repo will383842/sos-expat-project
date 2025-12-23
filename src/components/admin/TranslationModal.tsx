@@ -99,6 +99,9 @@ type Props = {
   t: (k: string) => string;
 };
 
+// Convertit le code de langue interne 'ch' vers le code Firebase 'zh'
+const toFirebaseKey = (lang: SupportedLanguage): string => lang === 'ch' ? 'zh' : lang;
+
 const TranslationModal: React.FC<Props> = ({ isOpen, onClose, providerId /*, t */ }) => {
   const { tLocal } = useI18n();
 
@@ -167,10 +170,12 @@ const TranslationModal: React.FC<Props> = ({ isOpen, onClose, providerId /*, t *
   };
 
   // Read status ONLY from metadata.translations[lang].status
+  // Note: Firebase uses 'zh' key for Chinese, frontend uses 'ch'
   const getLangStatus = (lang: SupportedLanguage, tdoc: any):
     "missing" | "created" | "outdated" | "frozen" | "disable" => {
     const metaTrans = tdoc?.metadata?.translations || {};
-    const status = metaTrans?.[lang]?.status;
+    const fbKey = toFirebaseKey(lang);
+    const status = metaTrans?.[fbKey]?.status;
     if (!status) return "missing";
     // allow known statuses
     if (status === "outdated") return "outdated";
@@ -185,6 +190,7 @@ const TranslationModal: React.FC<Props> = ({ isOpen, onClose, providerId /*, t *
     setUpdating(true);
     setLangError((prev) => ({ ...prev, [lang]: "" }));
     setLangLoading((prev) => ({ ...prev, [lang]: true }));
+    const fbKey = toFirebaseKey(lang);
     try {
       await translate(lang);
       if (reloadForLanguage) await reloadForLanguage(lang);
@@ -194,8 +200,8 @@ const TranslationModal: React.FC<Props> = ({ isOpen, onClose, providerId /*, t *
       const current = snap.exists() ? snap.data() : {};
       const nextMetadataTranslations = {
         ...(current.metadata?.translations || {}),
-        [lang]: {
-          ...(current.metadata?.translations?.[lang] || {}),
+        [fbKey]: {
+          ...(current.metadata?.translations?.[fbKey] || {}),
           status: "created",
           updatedAt: new Date(),
         },
@@ -226,14 +232,15 @@ const TranslationModal: React.FC<Props> = ({ isOpen, onClose, providerId /*, t *
     setUpdating(true);
     setLangError((prev) => ({ ...prev, [lang]: "" }));
     setLangLoading((prev) => ({ ...prev, [lang]: true }));
+    const fbKey = toFirebaseKey(lang);
     try {
       const ref = doc(db, "providers_translations", providerId);
       const snap = await getDoc(ref);
       const current = snap.exists() ? snap.data() : {};
       const nextMetadataTranslations = {
         ...(current.metadata?.translations || {}),
-        [lang]: {
-          ...(current.metadata?.translations?.[lang] || {}),
+        [fbKey]: {
+          ...(current.metadata?.translations?.[fbKey] || {}),
           status: "disable",
           updatedAt: new Date(),
         },
@@ -264,14 +271,15 @@ const TranslationModal: React.FC<Props> = ({ isOpen, onClose, providerId /*, t *
     setUpdating(true);
     setLangError((prev) => ({ ...prev, [lang]: "" }));
     setLangLoading((prev) => ({ ...prev, [lang]: true }));
+    const fbKey = toFirebaseKey(lang);
     try {
       const ref = doc(db, "providers_translations", providerId);
       const snap = await getDoc(ref);
       const current = snap.exists() ? snap.data() : {};
       const nextMetadataTranslations = {
         ...(current.metadata?.translations || {}),
-        [lang]: {
-          ...(current.metadata?.translations?.[lang] || {}),
+        [fbKey]: {
+          ...(current.metadata?.translations?.[fbKey] || {}),
           status: "frozen",
           updatedAt: new Date(),
         },
@@ -302,14 +310,15 @@ const TranslationModal: React.FC<Props> = ({ isOpen, onClose, providerId /*, t *
     setUpdating(true);
     setLangError((prev) => ({ ...prev, [lang]: "" }));
     setLangLoading((prev) => ({ ...prev, [lang]: true }));
+    const fbKey = toFirebaseKey(lang);
     try {
       const ref = doc(db, "providers_translations", providerId);
       const snap = await getDoc(ref);
       const current = snap.exists() ? snap.data() : {};
       const nextMetadataTranslations = {
         ...(current.metadata?.translations || {}),
-        [lang]: {
-          ...(current.metadata?.translations?.[lang] || {}),
+        [fbKey]: {
+          ...(current.metadata?.translations?.[fbKey] || {}),
           status: "created",
           updatedAt: new Date(),
         },
@@ -381,8 +390,9 @@ const TranslationModal: React.FC<Props> = ({ isOpen, onClose, providerId /*, t *
 
   // Normalize initial data for the edit/view modal to contain only allowed keys.
   const getLanguageData = (lang: SupportedLanguage) => {
-    const primary = translationsDoc?.translations?.[lang] || {};
-    const raw = typeof primary === "object" && primary ? primary : (translationsDoc?.[lang] || translationsDoc?.metadata?.translations?.[lang] || {});
+    const fbKey = toFirebaseKey(lang);
+    const primary = translationsDoc?.translations?.[fbKey] || {};
+    const raw = typeof primary === "object" && primary ? primary : (translationsDoc?.[fbKey] || translationsDoc?.metadata?.translations?.[fbKey] || {});
     return {
       bio: typeof raw.bio === "string" ? raw.bio : "",
       specialties: Array.isArray(raw.specialties) ? raw.specialties : [],
@@ -399,12 +409,13 @@ const TranslationModal: React.FC<Props> = ({ isOpen, onClose, providerId /*, t *
     setUpdating(true);
     setLangError((prev) => ({ ...prev, [lang]: "" }));
     setLangLoading((prev) => ({ ...prev, [lang]: true }));
+    const fbKey = toFirebaseKey(lang);
     try {
       const ref = doc(db, "providers_translations", providerId);
       const snap = await getDoc(ref);
       const current = snap.exists() ? snap.data() : {};
 
-      const currentLangTrans = current?.translations?.[lang] || {};
+      const currentLangTrans = current?.translations?.[fbKey] || {};
       const nextLangTrans = {
         ...currentLangTrans,
         ...(updates.bio !== undefined ? { bio: updates.bio } : {}),
@@ -415,14 +426,14 @@ const TranslationModal: React.FC<Props> = ({ isOpen, onClose, providerId /*, t *
 
       const nextTranslations = {
         ...(current.translations || {}),
-        [lang]: nextLangTrans,
+        [fbKey]: nextLangTrans,
       };
 
       const nextMetadataTranslations = {
         ...(current.metadata?.translations || {}),
-        [lang]: {
-          ...(current.metadata?.translations?.[lang] || {}),
-          status: (current.metadata?.translations?.[lang]?.status as string) || "created",
+        [fbKey]: {
+          ...(current.metadata?.translations?.[fbKey] || {}),
+          status: (current.metadata?.translations?.[fbKey]?.status as string) || "created",
           updatedAt: new Date(),
         },
       };
@@ -694,7 +705,8 @@ const TranslationModal: React.FC<Props> = ({ isOpen, onClose, providerId /*, t *
             <div className="divide-y">
               {dashboardLanguages.map((lang) => {
                 const status = getLangStatus(lang as SupportedLanguage, translationsDoc);
-                const details = translationsDoc?.translations?.[lang] || null;
+                const fbKey = toFirebaseKey(lang);
+                const details = translationsDoc?.translations?.[fbKey] || null;
                 const modifiedFields = Array.isArray(details?.lastFieldsUpdated) ? details.lastFieldsUpdated : [];
                 const updatedAt = details?.updatedAt;
                 const createdAt = details?.createdAt;

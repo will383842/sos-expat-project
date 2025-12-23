@@ -95,7 +95,9 @@ export async function getProviderTranslation(
     }
 
     const data = translationDoc.data();
-    const translation = data.translations?.[language] || null;
+    // Convertir 'ch' en 'zh' car Firebase stocke les traductions avec les clés ISO
+    const dbLanguage = language === 'ch' ? 'zh' : language;
+    const translation = data.translations?.[dbLanguage] || null;
     const original = data.original || null;
     const availableLanguages = data.metadata?.availableLanguages || [];
 

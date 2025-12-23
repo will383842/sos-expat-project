@@ -105,6 +105,7 @@ const registerUser = async (
       updatedAt: serverTimestamp(),
       lastLoginAt: serverTimestamp(),
       isActive: true,
+      // Seuls les clients sont approuvés par défaut - lawyers et expats nécessitent validation admin
       isApproved: userData.role === "client",
       isBanned: false,
       isVerified: userData.role === "client",
@@ -130,11 +131,11 @@ const registerUser = async (
       },
     };
 
-    // 🔒 Avocats non approuvés/online par défaut
+    // 🔒 Prestataires (avocats ET expats) non approuvés/online par défaut - validation admin requise
     const userDocData = {
       ...baseUser,
-      isOnline: userData.role === "lawyer" ? false : baseUser.isOnline,
-      isApproved: userData.role === "lawyer" ? false : baseUser.isApproved,
+      isOnline: (userData.role === "lawyer" || userData.role === "expat") ? false : baseUser.isOnline,
+      isApproved: (userData.role === "lawyer" || userData.role === "expat") ? false : baseUser.isApproved,
     };
 
     await setDoc(doc(db, "users", firebaseUser.uid), userDocData);
@@ -164,9 +165,11 @@ const registerUser = async (
         photoURL: userData.profilePhoto || null,
         avatar: userData.profilePhoto || null,
         isActive: true,
-        isApproved: userData.role === "expat",
-        isVerified: userData.role === "expat",
-        isVisible: true,
+        // 🔒 Tous les prestataires (lawyers ET expats) nécessitent validation admin
+        isApproved: false,
+        isVerified: false,
+        approvalStatus: "pending",
+        isVisible: false,
         isVisibleOnMap: true,
         isOnline: false,
         availability: "offline",

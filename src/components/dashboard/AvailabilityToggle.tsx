@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { useIntl } from "react-intl";
 import { useAuth } from "../../contexts/AuthContext";
 
 type Props = {
@@ -6,9 +7,10 @@ type Props = {
 };
 
 const AvailabilityToggle: React.FC<Props> = ({ className = "" }) => {
+  const intl = useIntl();
   const { user, setUserAvailability, isLoading } = useAuth();
   const [saving, setSaving] = useState(false);
-  const [errorText, setErrorText] = useState<string | null>(null);
+  const [errorCode, setErrorCode] = useState<string | null>(null);
 
   // Calcul état online/offline depuis user
   const isOnline = useMemo(() => {
@@ -26,15 +28,31 @@ const AvailabilityToggle: React.FC<Props> = ({ className = "" }) => {
 
   const handleToggle = async () => {
     if (disabled) return;
-    setErrorText(null);
+    setErrorCode(null);
     setSaving(true);
     try {
-      await setUserAvailability(isOnline ? "offline" : "available");
-      // pas d’update locale → on attend le snapshot Firestore
-    } catch (e) {
-      setErrorText(
-        e instanceof Error ? e.message : "Une erreur est survenue."
+      const newStatus = isOnline ? "offline" : "available";
+      await setUserAvailability(newStatus);
+
+      // Émettre les Custom Events pour synchroniser avec le Header
+      const isNowOnline = newStatus === "available";
+      window.dispatchEvent(
+        new CustomEvent("availability:changed", {
+          detail: { isOnline: isNowOnline },
+        })
       );
+      window.dispatchEvent(
+        new CustomEvent("availabilityChanged", {
+          detail: { isOnline: isNowOnline },
+        })
+      );
+    } catch (e) {
+      // Store error code for i18n translation
+      if (e instanceof Error && e.message === 'APPROVAL_REQUIRED_SHORT') {
+        setErrorCode('APPROVAL_REQUIRED_SHORT');
+      } else {
+        setErrorCode('ERROR_OCCURRED');
+      }
     } finally {
       setSaving(false);
     }
@@ -63,7 +81,9 @@ const AvailabilityToggle: React.FC<Props> = ({ className = "" }) => {
           ].join(" ")}
           aria-pressed={isOnline}
           aria-busy={saving}
-          aria-label={isOnline ? "Se mettre hors ligne" : "Se mettre en ligne"}
+          aria-label={isOnline
+            ? intl.formatMessage({ id: "header.status.goOffline" })
+            : intl.formatMessage({ id: "header.status.goOnline" })}
         >
           {/* Bulle verte/rouge */}
           <span
@@ -76,7 +96,9 @@ const AvailabilityToggle: React.FC<Props> = ({ className = "" }) => {
           />
           {/* Texte */}
           <span className="inline-block font-medium tracking-tight text-sm">
-            {isOnline ? "En ligne" : "Hors ligne"}
+            {isOnline
+              ? intl.formatMessage({ id: "header.status.online" })
+              : intl.formatMessage({ id: "header.status.offline" })}
           </span>
         </button>
 
@@ -111,9 +133,11 @@ const AvailabilityToggle: React.FC<Props> = ({ className = "" }) => {
         )}
       </div>
 
-      {errorText && (
+      {errorCode && (
         <p role="status" aria-live="polite" className="mt-2 text-xs text-red-500">
-          {errorText}
+          {errorCode === 'APPROVAL_REQUIRED_SHORT'
+            ? intl.formatMessage({ id: "header.status.approvalRequiredShort" })
+            : intl.formatMessage({ id: "header.status.errorOccurred" })}
         </p>
       )}
     </div>

@@ -247,8 +247,8 @@ export function useProviderTranslation(
       isManuallyManagingRef.current = false;
       
       console.error('[useProviderTranslation] ===== translate() ERROR HANDLED =====');
-      // Return null instead of throwing to allow UI to handle gracefully
-      return null;
+      // Throw the error so the UI can display the actual message
+      throw new Error(errorMessage);
     }
   }, [providerId, targetLanguage, user?.uid, loadTranslation]);
 

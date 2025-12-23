@@ -185,8 +185,13 @@ export const getLanguageName = (
   }
 
   // Nettoyer et normaliser le code de langue
-  const cleanCode = languageCode.trim().toLowerCase().split('-')[0];
-  
+  let cleanCode = languageCode.trim().toLowerCase().split('-')[0];
+
+  // Convertir 'ch' en 'zh' car languagesData utilise 'zh' pour le chinois
+  if (cleanCode === 'ch') {
+    cleanCode = 'zh';
+  }
+
   // Trouver la langue dans languagesData
   const lang = languagesData.find((l) => l.code.toLowerCase() === cleanCode);
   

@@ -192,8 +192,8 @@ const useAntiBot = () => {
 
 // Constants
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-// ✅ FIX: Regex modifiée pour autoriser explicitement les espaces avec caractère littéral
-const NAME_REGEX = /^[a-zA-ZÀ-ÿ\u00C0-\u017F '-]{2,50}$/;
+// Support tous les alphabets: Latin, Chinois (CJK), Cyrillique, Arabe, Devanagari, etc.
+const NAME_REGEX = /^[\p{L}\p{M}\s'-]{2,50}$/u;
 const MIN_BIO_LENGTH = 50;
 const MAX_BIO_LENGTH = 500;
 

@@ -15,7 +15,22 @@
       "Bash(npm run lint:*)",
       "Bash(npx eslint:*)",
       "Bash(npm install)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(curl:*)",
+      "Bash(npx firebase:*)",
+      "Bash(firebase functions:log:*)",
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "Bash(head:*)",
+      "Bash(grep:*)",
+      "Bash(firebase projects:list:*)",
+      "Bash(where:*)",
+      "Bash(gcloud:*)",
+      "Bash(npm install:*)",
+      "Bash(firebase login:list:*)",
+      "Bash(node set-admin-password.js:*)",
+      "Bash(firebase auth:export:*)",
+      "Bash(firebase login:*)"
     ]
   }
 }

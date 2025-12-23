@@ -601,7 +601,7 @@ const ProviderProfile: React.FC = () => {
   );
 
   const preferredLangKey = useMemo(() => {
-    const validLocales = ['fr', 'en', 'es', 'de', 'pt', 'ru', 'zh', 'ar', 'hi'] as const;
+    const validLocales = ['fr', 'en', 'es', 'de', 'pt', 'ru', 'ch', 'ar', 'hi'] as const;
     type ValidLocale = typeof validLocales[number];
     
     if (validLocales.includes(language as ValidLocale)) {
@@ -1288,16 +1288,17 @@ const ProviderProfile: React.FC = () => {
       updateOrCreateMetaName("format-detection", "telephone=yes");
 
       // ✅ Hreflang pour SEO international
-      const SUPPORTED_LANGS = ['fr', 'en', 'es', 'de', 'pt', 'ru', 'zh', 'ar', 'hi'];
+      const SUPPORTED_LANGS = ['fr', 'en', 'es', 'de', 'pt', 'ru', 'ch', 'ar', 'hi'];
       const baseUrl = window.location.origin;
-      const pathWithoutLang = window.location.pathname.replace(/^\/(fr|en|es|de|pt|ru|zh|ar|hi)/, '');
-      
+      const pathWithoutLang = window.location.pathname.replace(/^\/(fr|en|es|de|pt|ru|ch|ar|hi)/, '');
+
       document.querySelectorAll('link[rel="alternate"][hreflang]').forEach(el => el.remove());
-      
+
       SUPPORTED_LANGS.forEach(lang => {
         const link = document.createElement('link');
         link.rel = 'alternate';
-        link.hreflang = lang;
+        // Convertir 'ch' en 'zh-Hans' pour le standard hreflang SEO
+        link.hreflang = lang === 'ch' ? 'zh-Hans' : lang;
         link.href = `${baseUrl}/${lang}${pathWithoutLang}`;
         document.head.appendChild(link);
       });

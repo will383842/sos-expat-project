@@ -7,7 +7,12 @@ import { onRequest } from 'firebase-functions/v2/https';
 import * as admin from 'firebase-admin';
 
 const SITE_URL = 'https://sos-expat.com';
-const LANGUAGES = ['fr', 'en', 'de', 'es', 'pt', 'ru', 'zh', 'ar', 'hi'];
+const LANGUAGES = ['fr', 'en', 'de', 'es', 'pt', 'ru', 'ch', 'ar', 'hi'];
+
+// Convertit le code de langue interne vers le code hreflang standard
+function getHreflangCode(lang: string): string {
+  return lang === 'ch' ? 'zh-Hans' : lang;
+}
 
 /**
  * Escape les caractères spéciaux XML
@@ -63,10 +68,10 @@ export const sitemapProfiles = onRequest(
     <loc>${escapeXml(url)}</loc>
 `;
           
-          // Hreflang pour toutes les langues
+          // Hreflang pour toutes les langues (ch → zh-Hans pour SEO)
           LANGUAGES.forEach(hrefLang => {
             const hrefUrl = `${SITE_URL}/${hrefLang}-${countryCode}/${profile.slug}`;
-            xml += `    <xhtml:link rel="alternate" hreflang="${hrefLang}" href="${escapeXml(hrefUrl)}"/>
+            xml += `    <xhtml:link rel="alternate" hreflang="${getHreflangCode(hrefLang)}" href="${escapeXml(hrefUrl)}"/>
 `;
           });
           
@@ -132,10 +137,10 @@ export const sitemapBlog = onRequest(
 `;
           
           LANGUAGES.forEach(hrefLang => {
-            xml += `    <xhtml:link rel="alternate" hreflang="${hrefLang}" href="${escapeXml(`${SITE_URL}/${hrefLang}/blog/${slug}`)}"/>
+            xml += `    <xhtml:link rel="alternate" hreflang="${getHreflangCode(hrefLang)}" href="${escapeXml(`${SITE_URL}/${hrefLang}/blog/${slug}`)}"/>
 `;
           });
-          
+
           xml += `    <xhtml:link rel="alternate" hreflang="x-default" href="${escapeXml(`${SITE_URL}/fr/blog/${slug}`)}"/>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -198,10 +203,10 @@ export const sitemapLanding = onRequest(
 `;
           
           LANGUAGES.forEach(hrefLang => {
-            xml += `    <xhtml:link rel="alternate" hreflang="${hrefLang}" href="${escapeXml(`${SITE_URL}/${hrefLang}/${slug}`)}"/>
+            xml += `    <xhtml:link rel="alternate" hreflang="${getHreflangCode(hrefLang)}" href="${escapeXml(`${SITE_URL}/${hrefLang}/${slug}`)}"/>
 `;
           });
-          
+
           xml += `    <xhtml:link rel="alternate" hreflang="x-default" href="${escapeXml(`${SITE_URL}/fr/${slug}`)}"/>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>

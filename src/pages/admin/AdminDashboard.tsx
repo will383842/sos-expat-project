@@ -498,8 +498,9 @@ const AdminDashboard: React.FC = () => {
     );
   }
 
-  // ✅ Vérifier le rôle AVEC bypass pour ton email
-  if (userRole !== "admin" && user?.email !== "williamsjullin@gmail.com") {
+  // ✅ Seul williamsjullin@gmail.com peut accéder
+  const ADMIN_EMAIL = 'williamsjullin@gmail.com';
+  if (user?.email?.toLowerCase() !== ADMIN_EMAIL) {
     return (
       <AdminLayout>
         <div className="min-h-screen flex items-center justify-center">

@@ -176,8 +176,9 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     );
   }
 
-  // Guard 2: Not admin
-  if (!user || (user?.role !== 'admin' && user?.email !== 'williamsjullin@gmail.com')) {
+  // Guard 2: Not admin - seul williamsjullin@gmail.com peut accéder
+  const ADMIN_EMAIL = 'williamsjullin@gmail.com';
+  if (!user || user?.email?.toLowerCase() !== ADMIN_EMAIL) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="bg-white p-8 rounded-lg shadow-md text-center">

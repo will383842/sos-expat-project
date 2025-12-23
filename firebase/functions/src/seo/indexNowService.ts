@@ -91,9 +91,9 @@ export async function submitSingleUrl(url: string): Promise<IndexNowResult> {
  * Génère les URLs pour un article de blog (9 langues)
  */
 export function generateBlogUrls(slug: string): string[] {
-  const languages = ['fr', 'en', 'de', 'es', 'pt', 'ru', 'zh', 'ar', 'hi'];
-  
-  return languages.map(lang => 
+  const languages = ['fr', 'en', 'de', 'es', 'pt', 'ru', 'ch', 'ar', 'hi'];
+
+  return languages.map(lang =>
     `https://sos-expat.com/${lang}/blog/${slug}`
   );
 }
@@ -102,7 +102,7 @@ export function generateBlogUrls(slug: string): string[] {
  * Génère les URLs pour une landing page (9 langues)
  */
 export function generateLandingUrls(slug: string): string[] {
-  const languages = ['fr', 'en', 'de', 'es', 'pt', 'ru', 'zh', 'ar', 'hi'];
+  const languages = ['fr', 'en', 'de', 'es', 'pt', 'ru', 'ch', 'ar', 'hi'];
   
   return languages.map(lang => 
     `https://sos-expat.com/${lang}/${slug}`

@@ -9,7 +9,8 @@ import {
   updateDoc,
   doc,
   serverTimestamp,
-  Timestamp
+  Timestamp,
+  writeBatch
 } from 'firebase/firestore';
 import {
   Check,
@@ -147,39 +148,49 @@ type StatusTab = 'pending' | 'approved' | 'rejected';
     }
   }, [errorMessage]);
 
-  // ✅ CORRECTION 2: Approuver un profil avec TOUS les champs
+  // ✅ CORRECTION 2: Approuver un profil avec TOUS les champs (SYNC users + sos_profiles)
   const approveProfile = async (profileId: string) => {
     if (!currentUser) return;
-    
+
     setProcessingId(profileId);
     setErrorMessage('');
     setSuccessMessage('');
-    
+
     try {
-      await updateDoc(doc(db, 'sos_profiles', profileId), {  // ✅ CORRIGÉ
+      // 🔒 SYNCHRONISATION: Mise à jour des DEUX collections atomiquement
+      const batch = writeBatch(db);
+
+      const approvalData = {
         // ===== APPROBATION =====
         isApproved: true,
         approvalStatus: 'approved',
-        
-        // ===== VÉRIFICATION =====
-        verificationStatus: 'pending',
-        
-        // ===== VISIBILITÉ =====
-        isVisible: true,
-        isVisibleOnMap: true,
-        
-        // ===== STATUT =====
-        status: 'active',
-        isActive: true,
-        
+
         // ===== TIMESTAMPS =====
         approvedAt: serverTimestamp(),
         approvedBy: currentUser.uid,
         reviewedAt: serverTimestamp(),
         updatedAt: serverTimestamp()
+      };
+
+      // Mise à jour sos_profiles (profil complet)
+      batch.update(doc(db, 'sos_profiles', profileId), {
+        ...approvalData,
+        // ===== VÉRIFICATION =====
+        verificationStatus: 'pending',
+        // ===== VISIBILITÉ =====
+        isVisible: true,
+        isVisibleOnMap: true,
+        // ===== STATUT =====
+        status: 'active',
+        isActive: true,
       });
 
-      setSuccessMessage('✅ Profil approuvé avec succès');
+      // 🔒 SYNC: Mise à jour users (pour AuthContext)
+      batch.update(doc(db, 'users', profileId), approvalData);
+
+      await batch.commit();
+
+      setSuccessMessage('✅ Profil approuvé avec succès (sync users + sos_profiles)');
     } catch (error) {
       console.error('Erreur lors de l\'approbation:', error);
       setErrorMessage('❌ Erreur lors de l\'approbation du profil');
@@ -188,40 +199,49 @@ type StatusTab = 'pending' | 'approved' | 'rejected';
     }
   };
 
-  // ✅ CORRECTION 3: Rejeter un profil avec TOUS les champs
+  // ✅ CORRECTION 3: Rejeter un profil avec TOUS les champs (SYNC users + sos_profiles)
   const rejectProfile = async () => {
     if (!currentUser || !selectedProfile) return;
-    
+
     setProcessingId(selectedProfile.id);
     setErrorMessage('');
     setSuccessMessage('');
-    
+
     try {
-      await updateDoc(doc(db, 'sos_profiles', selectedProfile.id), {  // ✅ CORRIGÉ
+      // 🔒 SYNCHRONISATION: Mise à jour des DEUX collections atomiquement
+      const batch = writeBatch(db);
+
+      const rejectionData = {
         // ===== REJET =====
         isApproved: false,
         approvalStatus: 'rejected',
-        
-        // ===== VÉRIFICATION =====
-        verificationStatus: 'rejected',
-        
-        // ===== VISIBILITÉ =====
-        isVisible: false,
-        isVisibleOnMap: false,
-        
-        // ===== STATUT =====
-        status: 'pending',
-        isActive: false,
-        
         // ===== RAISON + TIMESTAMPS =====
         rejectionReason: rejectionReason || 'Non spécifiée',
         rejectedAt: serverTimestamp(),
         reviewedAt: serverTimestamp(),
         reviewedBy: currentUser.uid,
         updatedAt: serverTimestamp()
+      };
+
+      // Mise à jour sos_profiles (profil complet)
+      batch.update(doc(db, 'sos_profiles', selectedProfile.id), {
+        ...rejectionData,
+        // ===== VÉRIFICATION =====
+        verificationStatus: 'rejected',
+        // ===== VISIBILITÉ =====
+        isVisible: false,
+        isVisibleOnMap: false,
+        // ===== STATUT =====
+        status: 'pending',
+        isActive: false,
       });
 
-      setSuccessMessage('✅ Profil rejeté');
+      // 🔒 SYNC: Mise à jour users (pour AuthContext)
+      batch.update(doc(db, 'users', selectedProfile.id), rejectionData);
+
+      await batch.commit();
+
+      setSuccessMessage('✅ Profil rejeté (sync users + sos_profiles)');
       setShowRejectModal(false);
       setRejectionReason('');
       setSelectedProfile(null);
@@ -292,7 +312,7 @@ type StatusTab = 'pending' | 'approved' | 'rejected';
     }
   };
 
-  // ✅ CORRECTION 7: Actions en lot - Rejeter
+  // ✅ CORRECTION 7: Actions en lot - Rejeter (SYNC users + sos_profiles)
   const handleBulkReject = async () => {
     if (selectedProfiles.length === 0) {
       setErrorMessage('Veuillez sélectionner au moins un profil');
@@ -305,24 +325,37 @@ type StatusTab = 'pending' | 'approved' | 'rejected';
     if (!confirm(`Rejeter ${selectedProfiles.length} profil(s) ?`)) return;
 
     try {
+      // 🔒 SYNCHRONISATION: Batch pour toutes les mises à jour
+      const batch = writeBatch(db);
+
       for (const profileId of selectedProfiles) {
-        await updateDoc(doc(db, 'sos_profiles', profileId), {  // ✅ CORRIGÉ
+        const rejectionData = {
           isApproved: false,
-          isVisible: false,
-          isVisibleOnMap: false,
           approvalStatus: 'rejected',
-          verificationStatus: 'rejected',
-          status: 'pending',
-          isActive: false,
           rejectionReason: reason,
           rejectedAt: serverTimestamp(),
           reviewedAt: serverTimestamp(),
           reviewedBy: currentUser?.uid,
           updatedAt: serverTimestamp()
+        };
+
+        // Mise à jour sos_profiles
+        batch.update(doc(db, 'sos_profiles', profileId), {
+          ...rejectionData,
+          isVisible: false,
+          isVisibleOnMap: false,
+          verificationStatus: 'rejected',
+          status: 'pending',
+          isActive: false,
         });
+
+        // 🔒 SYNC: Mise à jour users
+        batch.update(doc(db, 'users', profileId), rejectionData);
       }
+
+      await batch.commit();
       setSelectedProfiles([]);
-      setSuccessMessage(`✅ ${selectedProfiles.length} profil(s) rejeté(s)`);
+      setSuccessMessage(`✅ ${selectedProfiles.length} profil(s) rejeté(s) (sync users + sos_profiles)`);
     } catch (error) {
       console.error('Erreur action en lot:', error);
       setErrorMessage('❌ Erreur lors de l\'action en lot');

@@ -69,7 +69,7 @@ const OG_LOCALES: Record<string, string> = {
   hi: "hi_IN",
 };
 
-const SUPPORTED_LANGS = ["fr", "en", "es", "de", "pt", "ru", "zh", "ar", "hi"] as const;
+const SUPPORTED_LANGS = ["fr", "en", "es", "de", "pt", "ru", "ch", "ar", "hi"] as const;
 
 /* ================================
    Types

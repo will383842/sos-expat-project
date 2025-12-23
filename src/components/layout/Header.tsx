@@ -73,6 +73,8 @@ type WithAuthExtras = User & {
   photoURL?: string;
   isVerified?: boolean;
   isOnline?: boolean;
+  isApproved?: boolean;
+  approvalStatus?: 'pending' | 'approved' | 'rejected';
   fullName?: string;
   firstName?: string;
   lastName?: string;
@@ -373,6 +375,12 @@ const useAvailabilityToggle = () => {
 
   const [isOnline, setIsOnline] = useState<boolean>(!!typedUser?.isOnline);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  // 🔒 État d'approbation chargé depuis sos_profiles (source de vérité)
+  const [sosProfileApproval, setSosProfileApproval] = useState<{
+    isApproved: boolean;
+    approvalStatus: string;
+  } | null>(null);
   const sosSnapshotSubscribed = useRef(false);
 
   const isProvider =
@@ -386,6 +394,16 @@ const useAvailabilityToggle = () => {
   const writeSosProfile = useCallback(
     async (newStatus: boolean) => {
       if (!typedUser || !isProvider || !userId) return;
+
+      // 🔒 Vérification approval: check BOTH sources (users via AuthContext AND sos_profiles)
+      // Approuvé si AU MOINS UNE source indique l'approbation
+      const isApprovedFromUsers = typedUser.isApproved && typedUser.approvalStatus === 'approved';
+      const isApprovedFromSosProfiles = sosProfileApproval?.isApproved && sosProfileApproval?.approvalStatus === 'approved';
+
+      if (newStatus && !isApprovedFromUsers && !isApprovedFromSosProfiles) {
+        console.error('Compte non approuvé - toggle en ligne bloqué');
+        throw new Error('APPROVAL_REQUIRED');
+      }
 
       const sosRef = doc(db, "sos_profiles", userId);
       const updateData = {
@@ -415,8 +433,10 @@ const useAvailabilityToggle = () => {
               "Expert",
             ...updateData,
             isActive: true,
-            isApproved: typedUser.role !== "lawyer",
-            isVerified: !!typedUser.isVerified,
+            // 🔒 Tous les prestataires nécessitent validation admin
+            isApproved: false,
+            approvalStatus: "pending",
+            isVerified: false,
             rating: 5.0,
             reviewCount: 0,
             createdAt: serverTimestamp(),
@@ -451,8 +471,10 @@ const useAvailabilityToggle = () => {
             "Expert",
           ...updateData,
           isActive: true,
-          isApproved: typedUser.role !== "lawyer",
-          isVerified: !!typedUser.isVerified,
+          // 🔒 Tous les prestataires nécessitent validation admin
+          isApproved: false,
+          approvalStatus: "pending",
+          isVerified: false,
           rating: 5.0,
           reviewCount: 0,
           createdAt: serverTimestamp(),
@@ -460,7 +482,7 @@ const useAvailabilityToggle = () => {
         { merge: true }
       );
     },
-    [typedUser, isProvider, userId]
+    [typedUser, isProvider, userId, sosProfileApproval]
   );
 
   const writeUsersPresenceBestEffort = useCallback(
@@ -503,6 +525,12 @@ const useAvailabilityToggle = () => {
         if (!data) return;
         const next = data.isOnline === true;
         setIsOnline((prev) => (prev !== next ? next : prev));
+
+        // 🔒 Charger le statut d'approbation depuis sos_profiles (source de vérité)
+        setSosProfileApproval({
+          isApproved: data.isApproved === true,
+          approvalStatus: data.approvalStatus || 'pending',
+        });
       },
       (err) => console.error("Snapshot error sos_profiles:", err)
     );
@@ -524,6 +552,7 @@ const useAvailabilityToggle = () => {
 
     const newStatus = !isOnline;
     setIsUpdating(true);
+    setErrorMessage(null); // Clear previous error
 
     try {
       await writeSosProfile(newStatus);
@@ -548,6 +577,13 @@ const useAvailabilityToggle = () => {
       });
     } catch (e) {
       console.error("Online/offline toggle error:", e);
+      // 🔒 Capture error code for translation in UI
+      if (e instanceof Error) {
+        // Use error code for i18n translation
+        setErrorMessage(e.message === 'APPROVAL_REQUIRED' ? 'APPROVAL_REQUIRED' : 'ERROR_OCCURRED');
+      } else {
+        setErrorMessage('ERROR_OCCURRED');
+      }
     } finally {
       setIsUpdating(false);
     }
@@ -559,7 +595,17 @@ const useAvailabilityToggle = () => {
     writeUsersPresenceBestEffort,
   ]);
 
-  return { isOnline, isUpdating, isProvider, toggle };
+  // Auto-clear error after 5 seconds
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => setErrorMessage(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
+
+  const clearError = useCallback(() => setErrorMessage(null), []);
+
+  return { isOnline, isUpdating, isProvider, toggle, errorMessage, clearError };
 };
 
 // ============================================================================
@@ -573,7 +619,7 @@ interface HeaderAvailabilityToggleProps {
 const HeaderAvailabilityToggle = memo<HeaderAvailabilityToggleProps>(
   function HeaderAvailabilityToggle({ className = "" }) {
     const intl = useIntl();
-    const { isOnline, isUpdating, isProvider, toggle } = useAvailabilityToggle();
+    const { isOnline, isUpdating, isProvider, toggle, errorMessage, clearError } = useAvailabilityToggle();
 
     if (!isProvider) return null;
 
@@ -591,36 +637,65 @@ const HeaderAvailabilityToggle = memo<HeaderAvailabilityToggleProps>(
     );
 
     return (
-      <button
-        onClick={toggle}
-        disabled={isUpdating}
-        type="button"
-        className={`group flex items-center px-4 py-2.5 rounded-xl font-semibold text-sm 
-          focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 min-h-[44px]
-          border-2 border-white box-border
-          ${isOnline
-            ? "bg-green-500 hover:bg-green-600 text-white shadow-lg"
-            : "bg-gray-500 hover:bg-gray-600 text-white shadow-lg"
-          }
-          ${isUpdating ? "opacity-75 cursor-not-allowed" : ""}
-          ${className}`}
-        aria-label={toggleAriaLabel}
-        aria-pressed={isOnline}
-      >
-        {isUpdating ? (
+      <div className="relative">
+        <button
+          onClick={toggle}
+          disabled={isUpdating}
+          type="button"
+          className={`group flex items-center px-4 py-2.5 rounded-xl font-semibold text-sm
+            focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 min-h-[44px]
+            border-2 border-white box-border
+            ${isOnline
+              ? "bg-green-500 hover:bg-green-600 text-white shadow-lg"
+              : "bg-gray-500 hover:bg-gray-600 text-white shadow-lg"
+            }
+            ${isUpdating ? "opacity-75 cursor-not-allowed" : ""}
+            ${className}`}
+          aria-label={toggleAriaLabel}
+          aria-pressed={isOnline}
+        >
+          {isUpdating ? (
+            <div
+              className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"
+              aria-hidden="true"
+            />
+          ) : isOnline ? (
+            <Wifi className="w-4 h-4 mr-2" aria-hidden="true" />
+          ) : (
+            <WifiOff className="w-4 h-4 mr-2" aria-hidden="true" />
+          )}
+          <span>
+            {isOnline ? "🟢" : "🔴"} {statusText}
+          </span>
+        </button>
+
+        {/* 🔒 Message d'erreur visible pour prestataire non approuvé */}
+        {errorMessage && (
           <div
-            className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"
-            aria-hidden="true"
-          />
-        ) : isOnline ? (
-          <Wifi className="w-4 h-4 mr-2" aria-hidden="true" />
-        ) : (
-          <WifiOff className="w-4 h-4 mr-2" aria-hidden="true" />
+            className="absolute top-full left-0 right-0 mt-2 z-50 min-w-[280px]"
+            role="alert"
+            aria-live="assertive"
+          >
+            <div className="bg-red-600 text-white px-4 py-3 rounded-xl shadow-xl border border-red-400 flex items-start gap-2">
+              <span className="text-lg">⚠️</span>
+              <div className="flex-1">
+                <p className="text-sm font-medium">
+                  {errorMessage === 'APPROVAL_REQUIRED'
+                    ? intl.formatMessage({ id: "header.status.approvalRequired" })
+                    : intl.formatMessage({ id: "header.status.errorOccurred" })}
+                </p>
+              </div>
+              <button
+                onClick={clearError}
+                className="text-white/80 hover:text-white ml-2"
+                aria-label={intl.formatMessage({ id: "header.status.close" })}
+              >
+                ✕
+              </button>
+            </div>
+          </div>
         )}
-        <span>
-          {isOnline ? "🟢" : "🔴"} {statusText}
-        </span>
-      </button>
+      </div>
     );
   }
 );
