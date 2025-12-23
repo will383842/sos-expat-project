@@ -241,11 +241,11 @@ export async function getPricingConfig(
     }
 
     // 3) Fallback
-    // eslint-disable-next-line no-console
+     
     console.log(`💡 Utilisation config par défaut pour ${type}/${currency}`);
     return DEFAULT_PRICING_CONFIG[type][currency];
   } catch (err) {
-    // eslint-disable-next-line no-console
+     
     console.error('Erreur récupération pricing config:', err);
     return DEFAULT_PRICING_CONFIG[type][currency];
   }
@@ -320,7 +320,7 @@ export function calculateSplit(
   const isValid = Math.abs(sumCents - totalCents) <= PAYMENT_LIMITS.SPLIT_TOLERANCE_CENTS;
 
   if (!isValid) {
-    // eslint-disable-next-line no-console
+     
     console.error('⚠️ Incohérence dans la répartition:', {
       totalCents, connectionFeeCents, providerCents, sumCents,
       difference: sumCents - totalCents, currency,
@@ -406,7 +406,7 @@ export async function checkDailyLimit(
         : `Limite journalière dépassée: ${formatAmount(newTotal, currency)} / ${formatAmount(limits.MAX_DAILY, currency)}`,
     };
   } catch (err) {
-    // eslint-disable-next-line no-console
+     
     console.error('Erreur vérification limite journalière:', err);
     return { allowed: true, currentTotal: 0, limit: PAYMENT_LIMITS[currency].MAX_DAILY };
   }
@@ -463,7 +463,7 @@ export async function logPaymentAudit(
       environment: process.env.NODE_ENV || 'development',
     });
   } catch (err) {
-    // eslint-disable-next-line no-console
+     
     console.error('Erreur log audit:', err);
   }
 }

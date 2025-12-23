@@ -136,7 +136,7 @@ const AdminReports: React.FC = () => {
       return;
     }
     void loadAllReports();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [currentUser, navigate]);
 
   const loadAllReports = async (): Promise<void> => {
@@ -210,7 +210,7 @@ const AdminReports: React.FC = () => {
       // 3) Agréger proprement (un seul setReports)
       setReports([...contactReports, ...otherReports]);
     } catch (error) {
-      // eslint-disable-next-line no-console
+       
       console.error('Error loading reports:', error);
     } finally {
       setIsLoading(false);
@@ -257,12 +257,12 @@ const AdminReports: React.FC = () => {
       setShowReportModal(false);
       setSelectedReport(null);
       // Optionnel: remplace par ton système de toast
-      // eslint-disable-next-line no-alert
+       
       alert('Message traité avec succès');
     } catch (error) {
-      // eslint-disable-next-line no-console
+       
       console.error('Error resolving report:', error);
-      // eslint-disable-next-line no-alert
+       
       alert('Erreur lors du traitement du message');
     } finally {
       setIsActionLoading(false);

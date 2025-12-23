@@ -318,7 +318,7 @@ const AdminCallsSessions: React.FC = () => {
   }, [sessions]);
 
   const buildQuery = (isInitial: boolean = true) => {
-    let baseQuery = collection(db, 'call_sessions');
+    const baseQuery = collection(db, 'call_sessions');
     const constraints: any[] = [];
 
     // Filtres de statut

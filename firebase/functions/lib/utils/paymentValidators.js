@@ -202,12 +202,12 @@ async function getPricingConfig(type, currency = 'eur', db) {
             }
         }
         // 3) Fallback
-        // eslint-disable-next-line no-console
+         
         console.log(`💡 Utilisation config par défaut pour ${type}/${currency}`);
         return exports.DEFAULT_PRICING_CONFIG[type][currency];
     }
     catch (err) {
-        // eslint-disable-next-line no-console
+         
         console.error('Erreur récupération pricing config:', err);
         return exports.DEFAULT_PRICING_CONFIG[type][currency];
     }
@@ -256,7 +256,7 @@ function calculateSplit(totalAmount, type, currency = 'eur') {
     const sumCents = connectionFeeCents + providerCents;
     const isValid = Math.abs(sumCents - totalCents) <= exports.PAYMENT_LIMITS.SPLIT_TOLERANCE_CENTS;
     if (!isValid) {
-        // eslint-disable-next-line no-console
+         
         console.error('⚠️ Incohérence dans la répartition:', {
             totalCents, connectionFeeCents, providerCents, sumCents,
             difference: sumCents - totalCents, currency,
@@ -327,7 +327,7 @@ async function checkDailyLimit(userId, amount, currency = 'eur', db) {
         };
     }
     catch (err) {
-        // eslint-disable-next-line no-console
+         
         console.error('Erreur vérification limite journalière:', err);
         return { allowed: true, currentTotal: 0, limit: exports.PAYMENT_LIMITS[currency].MAX_DAILY };
     }
@@ -368,7 +368,7 @@ async function logPaymentAudit(data, db) {
         });
     }
     catch (err) {
-        // eslint-disable-next-line no-console
+         
         console.error('Erreur log audit:', err);
     }
 }

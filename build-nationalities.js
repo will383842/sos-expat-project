@@ -41,7 +41,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-/* eslint-disable no-console */
+ 
 var node_fs_1 = require("node:fs");
 var node_path_1 = require("node:path");
 // Tiny fetch helper that works in Node 18+ (built-in fetch)

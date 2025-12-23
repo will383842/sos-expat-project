@@ -72,7 +72,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
         setAuthState('authorized');
       }
     } catch (err) {
-      // eslint-disable-next-line no-console
+       
       console.error('Authorization check failed:', err);
       setError(err instanceof Error ? err.message : 'Authorization failed');
       setAuthState('error');

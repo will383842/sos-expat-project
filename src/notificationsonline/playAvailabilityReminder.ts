@@ -100,12 +100,12 @@ export const playAvailabilityReminder = (
       void audio.play().catch((err: unknown) => {
         // Erreur lecture (autoplay policy, etc.)
         // On log en silencieux pour debug, sans interrompre l'exécution
-        // eslint-disable-next-line no-console
+         
         console.error('Erreur lecture audio:', err);
       });
       setLocalStorageNumber(LAST_SOUND_KEY, now);
     } catch (err) {
-      // eslint-disable-next-line no-console
+       
       console.error('Audio non supporté:', err);
     }
   }
@@ -126,7 +126,7 @@ export const playAvailabilityReminder = (
         try {
           window.speechSynthesis.speak(utterance);
         } catch (err) {
-          // eslint-disable-next-line no-console
+           
           console.error('Erreur synthèse vocale:', err);
         }
       }, 800);

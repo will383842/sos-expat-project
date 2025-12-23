@@ -1980,7 +1980,7 @@ const BookingRequest: React.FC = () => {
                         name="autrePays"
                         rules={{
                           validate: (v) =>
-                            !!v?.trim()
+                            v?.trim()
                               ? true
                               : intl.formatMessage({
                                   id: "bookingRequest.validators.autrePays",

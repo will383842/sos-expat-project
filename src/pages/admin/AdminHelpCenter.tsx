@@ -379,7 +379,7 @@ const AdminHelpCenter: React.FC = () => {
   useEffect(() => {
     setCategoryForm(defaultCategoryForm(locale));
     setArticleForm(defaultArticleForm(locale, selectedCategoryId ?? undefined));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [locale, selectedCategoryId]);
 
   const filteredArticles = useMemo(() => {

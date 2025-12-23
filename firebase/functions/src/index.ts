@@ -432,12 +432,12 @@ function wrapCallableFunction<T>(
 }
 
 // ====== WRAPPER POUR FONCTIONS HTTP ======
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 function wrapHttpFunction(
   functionName: string,
   originalFunction: (req: FirebaseRequest, res: Response) => Promise<void>
 ): any {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   return async (req: any, res: any) => {
     const metadata = createDebugMetadata(functionName);
     // Cast to FirebaseRequest for internal use
@@ -2567,7 +2567,7 @@ export const testWebhook = onRequest(
     timeoutSeconds: 60,
   },
   // @ts-ignore - Type compatibility issue between firebase-functions and express types
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   wrapHttpFunction(
     "testWebhook",
     async (_req: FirebaseRequest, res: Response) => {

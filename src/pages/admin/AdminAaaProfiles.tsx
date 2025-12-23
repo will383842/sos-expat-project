@@ -1640,7 +1640,7 @@ const AdminAaaProfiles: React.FC = () => {
 
     const uid = `aaa_${role}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
     
-    let specialties: string[] = [];
+    const specialties: string[] = [];
     if (role === 'lawyer') {
       const count = randomInt(2, 4);
       while (specialties.length < count) {

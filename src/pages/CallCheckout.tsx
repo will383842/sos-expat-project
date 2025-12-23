@@ -49,7 +49,7 @@ import { formatCurrency } from "../utils/localeFormatters";
 // Conserve la même Promise Stripe à travers les rechargements HMR.
 // → Empêche: "Unsupported prop change on Elements: you cannot change the `stripe` prop after setting it."
 declare global {
-  // eslint-disable-next-line no-var
+   
   var __STRIPE_PROMISE__: Promise<Stripe | null> | undefined;
 }
 const getStripePromise = (): Promise<Stripe | null> => {

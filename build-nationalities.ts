@@ -4,7 +4,7 @@
 // Run with:  npx tsx build-nationalities.ts
 // If you prefer ts-node:  npx ts-node --transpile-only build-nationalities.ts
 
-/* eslint-disable no-console */
+ 
 import fs from "node:fs";
 import path from "node:path";
 

@@ -186,7 +186,7 @@ const AdminUsers: React.FC = () => {
         setHasMore(usersSnapshot.docs.length === page * USERS_PER_PAGE);
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err);
-        // eslint-disable-next-line no-console
+         
         console.error('Erreur lors du chargement des utilisateurs :', err);
         logError({
           origin: 'frontend',
@@ -241,7 +241,7 @@ const AdminUsers: React.FC = () => {
       });
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
-      // eslint-disable-next-line no-alert
+       
       alert("Erreur lors de la suppression de l'utilisateur");
       logError({
         origin: 'frontend',
@@ -293,7 +293,7 @@ const AdminUsers: React.FC = () => {
       });
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
-      // eslint-disable-next-line no-alert
+       
       alert("Erreur lors du bannissement de l'utilisateur");
       logError({
         origin: 'frontend',
@@ -340,7 +340,7 @@ const AdminUsers: React.FC = () => {
       });
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
-      // eslint-disable-next-line no-alert
+       
       alert("Erreur lors de la réactivation de l'utilisateur");
       logError({
         origin: 'frontend',
@@ -390,7 +390,7 @@ const AdminUsers: React.FC = () => {
       });
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
-      // eslint-disable-next-line no-alert
+       
       alert('Erreur lors de la modification du statut en ligne');
       logError({
         origin: 'frontend',
@@ -428,7 +428,7 @@ const AdminUsers: React.FC = () => {
       });
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
-      // eslint-disable-next-line no-alert
+       
       alert('Erreur lors de la modification de la visibilité');
       logError({
         origin: 'frontend',
@@ -461,7 +461,7 @@ const AdminUsers: React.FC = () => {
       });
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
-      // eslint-disable-next-line no-alert
+       
       alert('Erreur lors de la modification du statut mis en avant');
       logError({
         origin: 'frontend',

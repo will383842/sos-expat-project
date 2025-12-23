@@ -146,7 +146,7 @@ class AnalyticsService {
       await this.incrementCounter(`language_mismatches_${data.source}`);
 
       // Optionnel: console debug
-      // eslint-disable-next-line no-console
+       
       console.log('📊 Language mismatch logged:', {
         providerId: data.providerId,
         clientLanguages: data.clientLanguages,
@@ -154,7 +154,7 @@ class AnalyticsService {
         source: data.source,
       });
     } catch (error) {
-      // eslint-disable-next-line no-console
+       
       console.error("❌ Erreur lors du logging de l'incompatibilité linguistique:", error);
     }
   }
@@ -186,7 +186,7 @@ class AnalyticsService {
         });
       }
     } catch (error) {
-      // eslint-disable-next-line no-console
+       
       console.error("❌ Erreur lors du logging de l'action utilisateur:", error);
     }
   }
@@ -227,10 +227,10 @@ class AnalyticsService {
         });
       }
 
-      // eslint-disable-next-line no-console
+       
       console.log('🎯 Conversion logged:', data.conversionType, data.amount);
     } catch (error) {
-      // eslint-disable-next-line no-console
+       
       console.error('❌ Erreur lors du logging de conversion:', error);
     }
   }
@@ -256,11 +256,11 @@ class AnalyticsService {
       await this.incrementCounter(`errors_severity_${data.severity}`);
 
       if (data.severity === 'critical' || data.severity === 'high') {
-        // eslint-disable-next-line no-console
+         
         console.error('🚨 Critical error logged:', data);
       }
     } catch (error) {
-      // eslint-disable-next-line no-console
+       
       console.error("❌ Erreur lors du logging d'erreur:", error);
     }
   }
@@ -282,11 +282,11 @@ class AnalyticsService {
       await addDoc(collection(db, 'analytics_performance'), eventData);
 
       if (data.duration > 5000) {
-        // eslint-disable-next-line no-console
+         
         console.warn('⚠️ Performance issue detected:', data);
       }
     } catch (error) {
-      // eslint-disable-next-line no-console
+       
       console.error('❌ Erreur lors du logging de performance:', error);
     }
   }
@@ -313,7 +313,7 @@ class AnalyticsService {
         );
       });
     } catch (error) {
-      // eslint-disable-next-line no-console
+       
       console.error("❌ Erreur lors de l'incrémentation du compteur:", error);
     }
   }
