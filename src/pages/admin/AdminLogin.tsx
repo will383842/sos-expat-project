@@ -7,8 +7,9 @@ import { auth, db } from '../../config/firebase';
 
 const AdminLogin: React.FC = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('williamjullin@gmail.com');
-  const [password, setPassword] = useState('11111111');
+  // SECURITY FIX: Removed hardcoded credentials - 2025-12-23
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
