@@ -473,7 +473,7 @@ const TermsClients: React.FC = () => {
   const defaultHi = `
 # सामान्य सेवा शर्तें – ग्राहक (वैश्विक)
 
-**SOS Expat द्वारा Ulixai OÜ** (आगे “प्लेटफ़ॉर्म”, “SOS”, “हम”)
+**SOS Expat द्वारा WorldExpat OÜ** (आगे “प्लेटफ़ॉर्म”, “SOS”, “हम”)
 
 **संस्करण 2.2 – अंतिम अद्यतन: 16 जून 2025**
 
@@ -483,7 +483,7 @@ const TermsClients: React.FC = () => {
 
 1.1. ये सामान्य सेवा शर्तें (“T&C”) उस प्लेटफ़ॉर्म के उपयोग को नियंत्रित करती हैं जहाँ कोई भी व्यक्ति या संस्था खाता बनाकर सेवाएँ बुक करती है (आगे “ग्राहक”)।
 
-1.2. **Ulixai की भूमिका।** SOS Expat एक प्लेटफ़ॉर्म है जो (i) स्वतंत्र वकीलों (“वकील”) और/या (ii) स्वतंत्र Expat सहायक (“सहायक”) से कनेक्शन प्रदान करता है। Ulixai कोई वकील फर्म नहीं है, कोई कानूनी, चिकित्सा, कर या विनियमित सलाह नहीं देता, और ग्राहक और सेवा प्रदाता (वकील/सहायक) के बीच कोई अनुबंध पक्ष नहीं है।
+1.2. **SOS Expat की भूमिका।** SOS Expat एक प्लेटफ़ॉर्म है जो (i) स्वतंत्र वकीलों (“वकील”) और/या (ii) स्वतंत्र Expat सहायक (“सहायक”) से कनेक्शन प्रदान करता है। SOS Expat कोई वकील फर्म नहीं है, कोई कानूनी, चिकित्सा, कर या विनियमित सलाह नहीं देता, और ग्राहक और सेवा प्रदाता (वकील/सहायक) के बीच कोई अनुबंध पक्ष नहीं है।
 
 1.3. **इलेक्ट्रॉनिक सहमति (Click-wrap).** “स्वीकार करें” पर क्लिक करना या प्लेटफ़ॉर्म का उपयोग करना इन T&C की स्वीकृति का संकेत है। SOS तकनीकी रिकॉर्ड रख सकता है (टाइमस्टैम्प, आईडी)।
 
@@ -595,6 +595,8 @@ const TermsClients: React.FC = () => {
 
 10.5. **सुरक्षा।** उचित तकनीकी और संगठनात्मक उपाय; डेटा उल्लंघन की सूचना कानून अनुसार।
 
+10.6. **DSA अनुपालन।** प्लेटफ़ॉर्म **विनियम (EU) 2022/2065 (डिजिटल सेवा अधिनियम)** के अर्थ में एक **मध्यस्थ सेवा** के रूप में कार्य करता है। SOS Expat अवैध सामग्री की रिपोर्टिंग के लिए तंत्र लागू करता है और DSA के अनुसार सक्षम अधिकारियों के साथ सहयोग करता है।
+
 ---
 
 ## 11. बौद्धिक संपदा
@@ -650,7 +652,7 @@ const TermsClients: React.FC = () => {
   const defaultFr = `
 # Conditions Générales – Clients (Global)
 
-**SOS Expat d’Ulixai OÜ** (la « Plateforme », « SOS », « nous »)
+**SOS Expat d’WorldExpat OÜ** (la « Plateforme », « SOS », « nous »)
 
 **Version 2.2 – Dernière mise à jour : 16 juin 2025**
 
@@ -660,7 +662,7 @@ const TermsClients: React.FC = () => {
 
 1.1. Les présentes conditions générales (« CGV ») régissent l’utilisation de la Plateforme par toute personne physique ou morale qui crée un compte client et réserve un service via la Plateforme (le « Client »).
 
-1.2. **Rôle d’Ulixai.** SOS Expat est une plateforme de mise en relation : (i) avec des avocats indépendants (« Avocats »), et/ou (ii) avec des expatriés aidants indépendants (« Aidants »). Ulixai n’est pas un cabinet d’avocats, ne fournit aucun conseil juridique, médical, fiscal ou réglementé, et n’est pas partie au contrat de prestation conclu entre le Client et le prestataire (Avocat/Aidant).
+1.2. **Rôle de SOS Expat.** SOS Expat est une plateforme de mise en relation : (i) avec des avocats indépendants (« Avocats »), et/ou (ii) avec des expatriés aidants indépendants (« Aidants »). SOS Expat n'est pas un cabinet d’avocats, ne fournit aucun conseil juridique, médical, fiscal ou réglementé, et n’est pas partie au contrat de prestation conclu entre le Client et le prestataire (Avocat/Aidant).
 
 1.3. **Acceptation électronique (click-wrap).** En cochant la case d’acceptation et/ou en utilisant la Plateforme, le Client accepte les présentes CGV (signature électronique). SOS peut conserver des preuves techniques (horodatage, identifiants).
 
@@ -774,6 +776,8 @@ const TermsClients: React.FC = () => {
 
 10.5. **Sécurité.** Mesures techniques/organisationnelles raisonnables ; notification des violations requises par la loi.
 
+10.6. **Conformité DSA.** La Plateforme agit en tant que **service intermédiaire** au sens du **Règlement (UE) 2022/2065 (Digital Services Act)**. SOS Expat met en œuvre des mécanismes de signalement des contenus illicites et coopère avec les autorités compétentes conformément au DSA.
+
 ---
 
 ## 11. Propriété intellectuelle
@@ -828,7 +832,7 @@ La Plateforme, ses marques, logos, bases de données et contenus sont protégés
   const defaultEn = `
 # Terms and Conditions – Clients (Global)
 
-**SOS Expat of Ulixai OÜ** (the “Platform,” “SOS,” “we”)
+**SOS Expat of WorldExpat OÜ** (the “Platform,” “SOS,” “we”)
 
 **Version 2.2 – Last updated: June 16, 2025**
 
@@ -838,7 +842,7 @@ La Plateforme, ses marques, logos, bases de données et contenus sont protégés
 
 1.1. These general terms and conditions (“T&Cs”) govern the use of the Platform by any individual or legal entity who creates a client account and books a service via the Platform (the “Client”).
 
-1.2. **Role of Ulixai.** SOS Expat is a connection platform: (i) with independent lawyers (“Lawyers”), and/or (ii) with independent expat helpers (“Helpers”). Ulixai is not a law firm, does not provide legal, medical, tax, or regulated advice, and is not a party to the service contract concluded between the Client and the provider (Lawyer/Helper).
+1.2. **Role of SOS Expat.** SOS Expat is a connection platform: (i) with independent lawyers (“Lawyers”), and/or (ii) with independent expat helpers (“Helpers”). SOS Expat is not a law firm, does not provide legal, medical, tax, or regulated advice, and is not a party to the service contract concluded between the Client and the provider (Lawyer/Helper).
 
 1.3. **Electronic Acceptance (click-wrap).** By checking the acceptance box and/or using the Platform, the Client accepts these T&Cs (electronic signature). SOS may retain technical evidence (timestamp, identifiers).
 
@@ -953,6 +957,8 @@ La Plateforme, ses marques, logos, bases de données et contenus sont protégés
 
 10.5. **Security.** Reasonable technical/organizational measures; breach notification as required by law.
 
+10.6. **DSA Compliance.** The Platform operates as an **intermediary service** within the meaning of **Regulation (EU) 2022/2065 (Digital Services Act)**. SOS Expat implements mechanisms for reporting illegal content and cooperates with competent authorities in accordance with the DSA.
+
 ---
 
 ## 11. Intellectual Property
@@ -1008,7 +1014,7 @@ The Platform, its trademarks, logos, databases, and content are protected. No ri
   const defaultEs = `
 # Condiciones Generales – Clientes (Global)
 
-**SOS Expat de Ulixai OÜ** (la “Plataforma”, “SOS”, “nosotros”)
+**SOS Expat de WorldExpat OÜ** (la “Plataforma”, “SOS”, “nosotros”)
 
 **Versión 2.2 – Última actualización: 16 de junio de 2025**
 
@@ -1018,7 +1024,7 @@ The Platform, its trademarks, logos, databases, and content are protected. No ri
 
 1.1. Estas condiciones generales (“CG”) regulan el uso de la Plataforma por cualquier persona física o jurídica que cree una cuenta de cliente y reserve un servicio a través de la Plataforma (el “Cliente”).
 
-1.2. **Rol de Ulixai.** SOS Expat es una plataforma de conexión: (i) con abogados independientes (“Abogados”), y/o (ii) con ayudantes expatriados independientes (“Ayudantes”). Ulixai no es un despacho de abogados, no proporciona asesoramiento legal, médico, fiscal o regulado, y no es parte del contrato de prestación celebrado entre el Cliente y el proveedor (Abogado/Ayudante).
+1.2. **Rol de SOS Expat.** SOS Expat es una plataforma de conexión: (i) con abogados independientes (“Abogados”), y/o (ii) con ayudantes expatriados independientes (“Ayudantes”). SOS Expat no es un despacho de abogados, no proporciona asesoramiento legal, médico, fiscal o regulado, y no es parte del contrato de prestación celebrado entre el Cliente y el proveedor (Abogado/Ayudante).
 
 1.3. **Aceptación electrónica (click-wrap).** Al marcar la casilla de aceptación y/o utilizar la Plataforma, el Cliente acepta estas CG (firma electrónica). SOS puede conservar pruebas técnicas (sello de tiempo, identificadores).
 
@@ -1133,6 +1139,8 @@ The Platform, its trademarks, logos, databases, and content are protected. No ri
 
 10.5. **Seguridad.** Medidas técnicas/organizativas razonables; notificación de violaciones según la ley.
 
+10.6. **Conformidad DSA.** La Plataforma opera como un **servicio intermediario** en el sentido del **Reglamento (UE) 2022/2065 (Ley de Servicios Digitales)**. SOS Expat implementa mecanismos para reportar contenido ilegal y coopera con las autoridades competentes de acuerdo con el DSA.
+
 ---
 
 ## 11. Propiedad intelectual
@@ -1188,7 +1196,7 @@ La Plataforma, sus marcas, logotipos, bases de datos y contenidos están protegi
   const defaultDe = `
 # Allgemeine Geschäftsbedingungen – Kunden (Global)
 
-**SOS Expat von Ulixai OÜ** (im Folgenden „Plattform“, „SOS“, „wir“)
+**SOS Expat von WorldExpat OÜ** (im Folgenden „Plattform“, „SOS“, „wir“)
 
 **Version 2.2 – Letzte Aktualisierung: 16. Juni 2025**
 
@@ -1198,7 +1206,7 @@ La Plataforma, sus marcas, logotipos, bases de datos y contenidos están protegi
 
 1.1. Diese Allgemeinen Geschäftsbedingungen („AGB“) regeln die Nutzung der Plattform durch jede natürliche oder juristische Person, die ein Kundenkonto erstellt und über die Plattform eine Dienstleistung bucht (im Folgenden „Kunde“).
 
-1.2. **Rolle von Ulixai.** SOS Expat ist eine Plattform, die (i) unabhängige Anwälte („Anwälte“) und/oder (ii) unabhängige Expat-Helfer („Helfer“) vermittelt. Ulixai ist keine Anwaltskanzlei, bietet keine rechtliche, medizinische, steuerliche oder regulierte Beratung an und ist keine Vertragspartei zwischen Kunde und Anbieter (Anwalt/Helfer).
+1.2. **Rolle von SOS Expat.** SOS Expat ist eine Plattform, die (i) unabhängige Anwälte („Anwälte“) und/oder (ii) unabhängige Expat-Helfer („Helfer“) vermittelt. SOS Expat ist keine Anwaltskanzlei, bietet keine rechtliche, medizinische, steuerliche oder regulierte Beratung an und ist keine Vertragspartei zwischen Kunde und Anbieter (Anwalt/Helfer).
 
 1.3. **Elektronische Zustimmung (Click-wrap).** Das Anklicken der Zustimmung oder die Nutzung der Plattform bedeutet die Annahme dieser AGB (elektronische Signatur). SOS kann technische Nachweise speichern (Zeitstempel, IDs).
 
@@ -1313,6 +1321,8 @@ La Plataforma, sus marcas, logotipos, bases de datos y contenidos están protegi
 
 10.5. **Sicherheit.** Angemessene technische und organisatorische Maßnahmen; Benachrichtigung bei Datenschutzverletzungen gemäß Gesetz.
 
+10.6. **DSA-Konformität.** Die Plattform fungiert als **Vermittlungsdienst** im Sinne der **Verordnung (EU) 2022/2065 (Gesetz über digitale Dienste)**. SOS Expat implementiert Mechanismen zur Meldung illegaler Inhalte und kooperiert mit den zuständigen Behörden gemäß dem DSA.
+
 ---
 
 ## 11. Geistiges Eigentum
@@ -1368,7 +1378,7 @@ Die Plattform, Marken, Logos, Datenbanken und Inhalte sind geschützt. Keine Rec
   const defaultRu = `
 # Общие условия – Клиенты (Глобальные)
 
-**SOS Expat от Ulixai OÜ** (далее — «Платформа», «SOS», «мы»)
+**SOS Expat от WorldExpat OÜ** (далее — «Платформа», «SOS», «мы»)
 
 **Версия 2.2 – Последнее обновление: 16 июня 2025 г.**
 
@@ -1378,7 +1388,7 @@ Die Plattform, Marken, Logos, Datenbanken und Inhalte sind geschützt. Keine Rec
 
 1.1. Настоящие общие условия («ОУ») регулируют использование Платформы любым физическим или юридическим лицом, которое создаёт учётную запись клиента и бронирует услугу через Платформу (далее — «Клиент»).
 
-1.2. **Роль Ulixai.** SOS Expat является платформой для соединения: (i) с независимыми юристами («Юристы») и/или (ii) с независимыми помощниками для экспатов («Помощники»). Ulixai не является юридической фирмой, не предоставляет юридические, медицинские, налоговые или регулируемые консультации и не является стороной договора между Клиентом и поставщиком (Юрист/Помощник).
+1.2. **Роль SOS Expat.** SOS Expat является платформой для соединения: (i) с независимыми юристами («Юристы») и/или (ii) с независимыми помощниками для экспатов («Помощники»). SOS Expat не является юридической фирмой, не предоставляет юридические, медицинские, налоговые или регулируемые консультации и не является стороной договора между Клиентом и поставщиком (Юрист/Помощник).
 
 1.3. **Электронное согласие (click-wrap).** Отметка галочки согласия и/или использование Платформы означает принятие настоящих ОУ (электронная подпись). SOS может сохранять технические доказательства (метка времени, идентификаторы).
 
@@ -1493,6 +1503,8 @@ Die Plattform, Marken, Logos, Datenbanken und Inhalte sind geschützt. Keine Rec
 
 10.5. **Безопасность.** Разумные технические и организационные меры; уведомление о нарушениях в соответствии с законом.
 
+10.6. **Соответствие DSA.** Платформа действует как **посреднический сервис** в соответствии с **Регламентом (ЕС) 2022/2065 (Закон о цифровых услугах)**. SOS Expat внедряет механизмы для сообщения о незаконном контенте и сотрудничает с компетентными органами в соответствии с DSA.
+
 ---
 
 ## 11. Интеллектуальная собственность
@@ -1549,7 +1561,7 @@ const defaultPt = `
 # Condições Gerais – Clientes (Global)
 
 
-**SOS Expat da Ulixai OÜ** (a "Plataforma", "SOS", "nós")
+**SOS Expat da WorldExpat OÜ** (a "Plataforma", "SOS", "nós")
 
 
 **Versão 2.2 – Última atualização: 16 de junho de 2025**
@@ -1564,7 +1576,7 @@ const defaultPt = `
 1.1. As presentes condições gerais ("CGV") regem o uso da Plataforma por qualquer pessoa física ou jurídica que crie uma conta de cliente e reserve um serviço através da Plataforma (o "Cliente").
 
 
-1.2. **Papel da Ulixai.** SOS Expat é uma plataforma de conexão: (i) com advogados independentes ("Advogados"), e/ou (ii) com expatriados assistentes independentes ("Assistentes"). Ulixai não é um escritório de advocacia, não fornece nenhum conselho jurídico, médico, fiscal ou regulamentado, e não é parte do contrato de prestação celebrado entre o Cliente e o prestador (Advogado/Assistente).
+1.2. **Papel da SOS Expat.** SOS Expat é uma plataforma de conexão: (i) com advogados independentes ("Advogados"), e/ou (ii) com expatriados assistentes independentes ("Assistentes"). SOS Expat não é um escritório de advocacia, não fornece nenhum conselho jurídico, médico, fiscal ou regulamentado, e não é parte do contrato de prestação celebrado entre o Cliente e o prestador (Advogado/Assistente).
 
 
 1.3. **Aceitação eletrônica (click-wrap).** Ao marcar a caixa de aceitação e/ou usar a Plataforma, o Cliente aceita as presentes CGV (assinatura eletrônica). SOS pode reter evidências técnicas (timestamp, identificadores).
@@ -1733,6 +1745,8 @@ const defaultPt = `
 
 10.5. **Segurança.** Medidas técnicas/organizacionais razoáveis; notificação de violações conforme exigido por lei.
 
+10.6. **Conformidade DSA.** A Plataforma opera como um **serviço intermediário** no âmbito do **Regulamento (UE) 2022/2065 (Lei dos Serviços Digitais)**. SOS Expat implementa mecanismos para reportar conteúdo ilegal e coopera com as autoridades competentes de acordo com o DSA.
+
 
 ---
 
@@ -1810,7 +1824,7 @@ A Plataforma, suas marcas, logos, bases de dados e conteúdos são protegidos. N
 const defaultCh = `
 # 一般条款 – 客户（全球）
 
-**SOS Expat by Ulixai OÜ**（以下简称“平台”、“SOS”、“我们”）
+**SOS Expat by WorldExpat OÜ**（以下简称“平台”、“SOS”、“我们”）
 
 **版本 2.2 – 最后更新：2025年6月16日**
 
@@ -1818,7 +1832,7 @@ const defaultCh = `
 
 1.1 本通用条款及条件（“GTC”）适用于任何创建客户账户并通过平台预订服务的个人或法人实体（“客户”）。
 
-1.2 Ulixai 的角色。SOS Expat 是一个连接以下双方的平台：(i) 独立律师（“律师”），和/或 (ii) 独立外籍护理人员（“护理人员”）。Ulixai 并非律师事务所，不提供任何法律、医疗、税务或监管方面的建议，也并非客户与服务提供商（律师/护理人员）之间签订的服务协议的当事方。
+1.2 SOS Expat 的角色。SOS Expat 是一个连接以下双方的平台：(i) 独立律师（“律师”），和/或 (ii) 独立外籍护理人员（“护理人员”）。SOS Expat 并非律师事务所，不提供任何法律、医疗、税务或监管方面的建议，也并非客户与服务提供商（律师/护理人员）之间签订的服务协议的当事方。
 
 1.3 电子接受（点击式）。客户勾选接受框和/或使用平台即表示接受本 GTC（电子签名）。SOS 可能会保留技术证据（时间戳、标识符）。
 
@@ -1915,11 +1929,13 @@ const defaultCh = `
 10.3 权利与联系： 可通过联系表单行使。
 10.4 采用安全措施，并在发生泄露时依规通知。
 
+10.5 **DSA合规。** 本平台作为**欧盟法规2022/2065（数字服务法）**定义的**中介服务**运营。SOS Expat实施非法内容举报机制，并根据DSA与主管当局合作。
+
 ---
 
 ## 11. 知识产权
 
-平台的知识产权归 Ulixai 所有；客户仅获得个人、有限的访问使用权。
+平台的知识产权归 WorldExpat OÜ 所有；客户仅获得个人、有限的访问使用权。
 
 ---
 
@@ -1959,7 +1975,7 @@ const defaultCh = `
   const defaultAr = `
 # الشروط العامة – العملاء (عالمي)
 
-**SOS Expat من Ulixai OÜ** ("المنصة"، "SOS"، "نحن")
+**SOS Expat من WorldExpat OÜ** ("المنصة"، "SOS"، "نحن")
 
 **الإصدار 2.2 – آخر تحديث: 16 يونيو 2025**
 
@@ -1969,7 +1985,7 @@ const defaultCh = `
 
 1.1. تحكم الشروط العامة الحالية ("CGV") استخدام المنصة من قبل أي شخص طبيعي أو معنوي ينشئ حساب عميل ويحجز خدمة من خلال المنصة ("العميل").
 
-1.2. **دور Ulixai.** SOS Expat هي منصة ربط: (i) مع محامين مستقلين ("محامون")، و/أو (ii) مع مساعدين مغتربين مستقلين ("مساعدون"). Ulixai ليست مكتب محاماة، لا تقدم أي استشارات قانونية أو طبية أو ضريبية أو منظمة، وليست طرفاً في عقد الخدمة المبرم بين العميل ومقدم الخدمة (محامي/مساعد).
+1.2. **دور SOS Expat.** SOS Expat هي منصة ربط: (i) مع محامين مستقلين ("محامون")، و/أو (ii) مع مساعدين مغتربين مستقلين ("مساعدون"). SOS Expat ليست مكتب محاماة، لا تقدم أي استشارات قانونية أو طبية أو ضريبية أو منظمة، وليست طرفاً في عقد الخدمة المبرم بين العميل ومقدم الخدمة (محامي/مساعد).
 
 1.3. **القبول الإلكتروني (النقر).** بتحديد خانة القبول و/أو استخدام المنصة، يقبل العميل هذه الشروط العامة (التوقيع الإلكتروني). يمكن لـ SOS الاحتفاظ بالأدلة التقنية (الطابع الزمني، المعرفات).
 
@@ -2082,6 +2098,8 @@ const defaultCh = `
 10.4. **الحقوق والاتصال.** الممارسة عبر نموذج الاتصال بالمنصة.
 
 10.5. **الأمان.** تدابير تقنية/تنظيمية معقولة؛ إشعار الانتهاكات حسب المطلوب بموجب القانون.
+
+10.6. **الامتثال لـ DSA.** تعمل المنصة كـ **خدمة وسيطة** وفقاً لـ **اللائحة (EU) 2022/2065 (قانون الخدمات الرقمية)**. تنفذ SOS Expat آليات للإبلاغ عن المحتوى غير القانوني وتتعاون مع السلطات المختصة وفقاً لـ DSA.
 
 ---
 

@@ -198,105 +198,92 @@ export const adminMenuTree: AdminMenuItem[] = [
             icon: CreditCard,
             description: "Suivi des paiements clients",
           },
-          {
-            id: "refunds",
-            label: "Remboursements",
-            path: "/admin/finance/refunds",
-            icon: RotateCcw,
-            description: "Traitement des remboursements",
-          },
-          {
-            id: "disputes",
-            label: "Litiges & Contestations",
-            path: "/admin/finance/disputes",
-            icon: AlertCircle,
-            badge: "2",
-            description: "Gestion des litiges Stripe/PayPal",
-          },
+          // NOTE: Pages placeholder - à activer quand implémentées
+          // {
+          //   id: "refunds",
+          //   label: "Remboursements",
+          //   path: "/admin/finance/refunds",
+          //   icon: RotateCcw,
+          //   description: "Traitement des remboursements",
+          // },
+          // {
+          //   id: "disputes",
+          //   label: "Litiges & Contestations",
+          //   path: "/admin/finance/disputes",
+          //   icon: AlertCircle,
+          //   badge: "2",
+          //   description: "Gestion des litiges Stripe/PayPal",
+          // },
         ],
       },
-      // Sous-section : Facturation & Fiscalité
-      {
-        id: "finance-accounting",
-        label: "Comptabilité & Fiscalité",
-        icon: Calculator,
-        description: "Facturation et obligations fiscales",
-        children: [
-          {
-            id: "invoices",
-            label: "Facturation",
-            path: "/admin/finance/invoices",
-            icon: Receipt,
-            description: "Génération et envoi des factures",
-          },
-          {
-            id: "taxes",
-            label: "TVA & Déclarations",
-            path: "/admin/finance/taxes",
-            icon: Calculator,
-            description: "Gestion TVA et fiscalité",
-            children: [
-              {
-                id: "tax-declarations",
-                label: "Déclarations TVA",
-                path: "/admin/finance/taxes",
-                icon: FileText,
-              },
-              {
-                id: "tax-by-country",
-                label: "TVA par pays",
-                path: "/admin/finance/taxes/by-country",
-                icon: Globe,
-              },
-            ],
-          },
-          {
-            id: "reconciliation",
-            label: "Rapprochement bancaire",
-            path: "/admin/finance/reconciliation",
-            icon: ArrowLeftRight,
-            description: "Rapprochement des comptes",
-          },
-          {
-            id: "ledger",
-            label: "Grand livre",
-            path: "/admin/finance/ledger",
-            icon: Database,
-            description: "Comptabilité générale",
-          },
-        ],
-      },
-      // Sous-section : Rémunérations
-      {
-        id: "finance-payouts",
-        label: "Rémunérations",
-        icon: Banknote,
-        description: "Paiements aux prestataires et affiliés",
-        children: [
-          {
-            id: "provider-payouts",
-            label: "Payouts prestataires",
-            path: "/admin/finance/payouts",
-            icon: Banknote,
-            description: "Virements aux avocats/expatriés",
-          },
-          {
-            id: "affiliate-payouts",
-            label: "Commissions affiliés",
-            path: "/admin/affiliates/payouts",
-            icon: Gift,
-            description: "Paiements du programme d'affiliation",
-          },
-        ],
-      },
-      // Rapports financiers
-      {
-        id: "finance-reports",
-        label: "Rapports & Exports",
-        path: "/admin/finance/exports",
-        icon: FileSpreadsheet,
-        description: "Rapports financiers et exports",
-      },
+      // NOTE: Section Comptabilité - pages placeholder, à activer quand implémentées
+      // {
+      //   id: "finance-accounting",
+      //   label: "Comptabilité & Fiscalité",
+      //   icon: Calculator,
+      //   description: "Facturation et obligations fiscales",
+      //   children: [
+      //     {
+      //       id: "invoices",
+      //       label: "Facturation",
+      //       path: "/admin/finance/invoices",
+      //       icon: Receipt,
+      //       description: "Génération et envoi des factures",
+      //     },
+      //     {
+      //       id: "taxes",
+      //       label: "TVA & Déclarations",
+      //       path: "/admin/finance/taxes",
+      //       icon: Calculator,
+      //       description: "Gestion TVA et fiscalité",
+      //     },
+      //     {
+      //       id: "reconciliation",
+      //       label: "Rapprochement bancaire",
+      //       path: "/admin/finance/reconciliation",
+      //       icon: ArrowLeftRight,
+      //       description: "Rapprochement des comptes",
+      //     },
+      //     {
+      //       id: "ledger",
+      //       label: "Grand livre",
+      //       path: "/admin/finance/ledger",
+      //       icon: Database,
+      //       description: "Comptabilité générale",
+      //     },
+      //   ],
+      // },
+      // NOTE: Section Rémunérations - pages placeholder, à activer quand implémentées
+      // {
+      //   id: "finance-payouts",
+      //   label: "Rémunérations",
+      //   icon: Banknote,
+      //   description: "Paiements aux prestataires et affiliés",
+      //   children: [
+      //     {
+      //       id: "provider-payouts",
+      //       label: "Payouts prestataires",
+      //       path: "/admin/finance/payouts",
+      //       icon: Banknote,
+      //       description: "Virements aux avocats/expatriés",
+      //     },
+      //     {
+      //       id: "affiliate-payouts",
+      //       label: "Commissions affiliés",
+      //       path: "/admin/affiliates/payouts",
+      //       icon: Gift,
+      //       description: "Paiements du programme d'affiliation",
+      //     },
+      //   ],
+      // },
+      // NOTE: Rapports financiers - page placeholder
+      // {
+      //   id: "finance-reports",
+      //   label: "Rapports & Exports",
+      //   path: "/admin/finance/exports",
+      //   icon: FileSpreadsheet,
+      //   description: "Rapports financiers et exports",
+      // },
     ],
   },
 
@@ -307,13 +294,14 @@ export const adminMenuTree: AdminMenuItem[] = [
     icon: Megaphone,
     description: "Campagnes et communication client",
     children: [
-      {
-        id: "campaigns",
-        label: "Campagnes marketing",
-        path: "/admin/comms/campaigns",
-        icon: Megaphone,
-        description: "Campagnes email et newsletters",
-      },
+      // NOTE: Campagnes - page placeholder
+      // {
+      //   id: "campaigns",
+      //   label: "Campagnes marketing",
+      //   path: "/admin/comms/campaigns",
+      //   icon: Megaphone,
+      //   description: "Campagnes email et newsletters",
+      // },
       {
         id: "automations",
         label: "Automations",
@@ -321,13 +309,14 @@ export const adminMenuTree: AdminMenuItem[] = [
         icon: Zap,
         description: "Workflows automatisés",
       },
-      {
-        id: "segments",
-        label: "Segmentation",
-        path: "/admin/comms/segments",
-        icon: Target,
-        description: "Segmentation des utilisateurs",
-      },
+      // NOTE: Segments - page placeholder
+      // {
+      //   id: "segments",
+      //   label: "Segmentation",
+      //   path: "/admin/comms/segments",
+      //   icon: Target,
+      //   description: "Segmentation des utilisateurs",
+      // },
       {
         id: "templates",
         label: "Templates emails",
@@ -342,13 +331,14 @@ export const adminMenuTree: AdminMenuItem[] = [
         icon: Percent,
         description: "Créer, activer, suivre les coupons",
       },
-      {
-        id: "messages-realtime",
-        label: "Messages temps réel",
-        path: "/admin/comms/messages",
-        icon: MessageSquare,
-        description: "Chat et messages instantanés",
-      },
+      // NOTE: Messages temps réel - à vérifier si fonctionnel
+      // {
+      //   id: "messages-realtime",
+      //   label: "Messages temps réel",
+      //   path: "/admin/comms/messages",
+      //   icon: MessageSquare,
+      //   description: "Chat et messages instantanés",
+      // },
       {
         id: "notifications",
         label: "Notifications",
@@ -363,120 +353,89 @@ export const adminMenuTree: AdminMenuItem[] = [
         icon: MessageSquare,
         description: "Gestion des contacts",
       },
-      {
-        id: "deliverability",
-        label: "Délivrabilité",
-        path: "/admin/comms/deliverability",
-        icon: Truck,
-        description: "Qualité d'envoi des emails",
-      },
-      {
-        id: "suppression",
-        label: "Listes de suppression",
-        path: "/admin/comms/suppression",
-        icon: Ban,
-        description: "Désinscriptions et blocages",
-      },
-      {
-        id: "ab-tests",
-        label: "Tests A/B",
-        path: "/admin/comms/ab",
-        icon: TestTube,
-        description: "Optimisation des campagnes",
-      },
+      // NOTE: Pages placeholder - à activer quand implémentées
+      // {
+      //   id: "deliverability",
+      //   label: "Délivrabilité",
+      //   path: "/admin/comms/deliverability",
+      //   icon: Truck,
+      //   description: "Qualité d'envoi des emails",
+      // },
+      // {
+      //   id: "suppression",
+      //   label: "Listes de suppression",
+      //   path: "/admin/comms/suppression",
+      //   icon: Ban,
+      //   description: "Désinscriptions et blocages",
+      // },
+      // {
+      //   id: "ab-tests",
+      //   label: "Tests A/B",
+      //   path: "/admin/comms/ab",
+      //   icon: TestTube,
+      //   description: "Optimisation des campagnes",
+      // },
     ],
   },
 
   // ===== 🏢 BUSINESS & PARTENARIATS (Priorité 6) =====
-  {
-    id: "business",
-    label: "Business & Partenariats",
-    icon: Building,
-    description: "Comptes entreprise et programmes partenaires",
-    children: [
-      // B2B Enterprise
-      {
-        id: "b2b",
-        label: "Comptes Entreprise (B2B)",
-        icon: Briefcase,
-        description: "Gestion des clients entreprise",
-        children: [
-          {
-            id: "b2b-accounts",
-            label: "Comptes",
-            path: "/admin/b2b/accounts",
-            icon: Building,
-            description: "Comptes entreprise",
-          },
-          {
-            id: "b2b-members",
-            label: "Membres",
-            path: "/admin/b2b/members",
-            icon: Users,
-            description: "Employés des entreprises",
-          },
-          {
-            id: "b2b-pricing",
-            label: "Tarifs & Contrats",
-            path: "/admin/b2b/pricing",
-            icon: FileSignature,
-            description: "Tarification entreprise",
-          },
-          {
-            id: "b2b-billing",
-            label: "Facturation B2B",
-            path: "/admin/b2b/billing",
-            icon: CreditCardIcon,
-            description: "Facturation mensuelle/annuelle",
-          },
-          {
-            id: "b2b-invoices",
-            label: "Factures",
-            path: "/admin/b2b/invoices",
-            icon: Receipt,
-            description: "Factures B2B générées",
-          },
-          {
-            id: "b2b-reports",
-            label: "Rapports B2B",
-            path: "/admin/b2b/reports",
-            icon: BarChart,
-            description: "Analytics des comptes entreprise",
-          },
-        ],
-      },
-      // Programme d'affiliation
-      {
-        id: "affiliation",
-        label: "Programme Affiliation",
-        icon: Handshake,
-        description: "Affiliés et ambassadeurs",
-        children: [
-          {
-            id: "affiliates-list",
-            label: "Affiliés",
-            path: "/admin/affiliates",
-            icon: UserPlus,
-            description: "Partenaires affiliés",
-          },
-          {
-            id: "commission-rules",
-            label: "Règles de commission",
-            path: "/admin/affiliates/commissions",
-            icon: Percent,
-            description: "Configuration des commissions",
-          },
-          {
-            id: "ambassadors",
-            label: "Ambassadeurs",
-            path: "/admin/ambassadors",
-            icon: Award,
-            description: "Programme ambassadeurs VIP",
-          },
-        ],
-      },
-    ],
-  },
+  // NOTE: Section entièrement placeholder - à activer quand implémentée
+  // {
+  //   id: "business",
+  //   label: "Business & Partenariats",
+  //   icon: Building,
+  //   description: "Comptes entreprise et programmes partenaires",
+  //   children: [
+  //     // B2B Enterprise - pages placeholder
+  //     {
+  //       id: "b2b",
+  //       label: "Comptes Entreprise (B2B)",
+  //       icon: Briefcase,
+  //       description: "Gestion des clients entreprise",
+  //       children: [
+  //         {
+  //           id: "b2b-accounts",
+  //           label: "Comptes",
+  //           path: "/admin/b2b/accounts",
+  //           icon: Building,
+  //         },
+  //         {
+  //           id: "b2b-billing",
+  //           label: "Facturation B2B",
+  //           path: "/admin/b2b/billing",
+  //           icon: CreditCardIcon,
+  //         },
+  //         {
+  //           id: "b2b-invoices",
+  //           label: "Factures",
+  //           path: "/admin/b2b/invoices",
+  //           icon: Receipt,
+  //         },
+  //       ],
+  //     },
+  //     // Programme d'affiliation - pages placeholder
+  //     {
+  //       id: "affiliation",
+  //       label: "Programme Affiliation",
+  //       icon: Handshake,
+  //       description: "Affiliés et ambassadeurs",
+  //       children: [
+  //         {
+  //           id: "affiliates-list",
+  //           label: "Affiliés",
+  //           path: "/admin/affiliates",
+  //           icon: UserPlus,
+  //         },
+  //         {
+  //           id: "ambassadors",
+  //           label: "Ambassadeurs",
+  //           path: "/admin/ambassadors",
+  //           icon: Award,
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // },
 
   // ===== 📊 ANALYTICS & RAPPORTS (Priorité 7) =====
   {
@@ -492,27 +451,28 @@ export const adminMenuTree: AdminMenuItem[] = [
         icon: Globe,
         description: "Statistiques globales et par pays",
       },
-      {
-        id: "financial-reports",
-        label: "Rapports financiers",
-        path: "/admin/reports/financial",
-        icon: PieChart,
-        description: "P&L, revenus, marges",
-      },
-      {
-        id: "user-analytics",
-        label: "Comportement utilisateurs",
-        path: "/admin/reports/users",
-        icon: Users,
-        description: "Funnel, rétention, engagement",
-      },
-      {
-        id: "platform-performance",
-        label: "Performance plateforme",
-        path: "/admin/reports/performance",
-        icon: BarChart3,
-        description: "Uptime, vitesse, erreurs",
-      },
+      // NOTE: Pages placeholder - à activer quand implémentées
+      // {
+      //   id: "financial-reports",
+      //   label: "Rapports financiers",
+      //   path: "/admin/reports/financial",
+      //   icon: PieChart,
+      //   description: "P&L, revenus, marges",
+      // },
+      // {
+      //   id: "user-analytics",
+      //   label: "Comportement utilisateurs",
+      //   path: "/admin/reports/users",
+      //   icon: Users,
+      //   description: "Funnel, rétention, engagement",
+      // },
+      // {
+      //   id: "platform-performance",
+      //   label: "Performance plateforme",
+      //   path: "/admin/reports/performance",
+      //   icon: BarChart3,
+      //   description: "Uptime, vitesse, erreurs",
+      // },
       {
         id: "error-logs",
         label: "Suivi des erreurs",
@@ -520,13 +480,14 @@ export const adminMenuTree: AdminMenuItem[] = [
         icon: AlertCircle,
         description: "Logs d'erreurs et suivi des incidents",
       },
-      {
-        id: "data-exports",
-        label: "Exports de données",
-        path: "/admin/reports/exports",
-        icon: Download,
-        description: "CSV, Excel, API exports",
-      },
+      // NOTE: Exports - page placeholder
+      // {
+      //   id: "data-exports",
+      //   label: "Exports de données",
+      //   path: "/admin/reports/exports",
+      //   icon: Download,
+      //   description: "CSV, Excel, API exports",
+      // },
     ],
   },
 
@@ -560,10 +521,10 @@ export const adminMenuTree: AdminMenuItem[] = [
       },
       {
         id: "help-center",
-        label: "Centro de ayuda",
+        label: "Centre d'aide",
         path: "/admin/help/center",
         icon: HelpingHand,
-        description: "manage help center articles",
+        description: "Gestion des articles du centre d'aide",
       },
       {
         id: 'faqs-management',

@@ -92,6 +92,7 @@ const TermsClients = lazy(() => import('./pages/TermsClients'));
 const TestimonialDetail = lazy(() => import('./pages/TestimonialDetail'));
 const Testimonials = lazy(() => import('./pages/Testimonials'));
 const HelpCenter = lazy(() => import('./pages/HelpCenter'));
+const HelpArticle = lazy(() => import('./pages/HelpArticle'));
 const FAQ = lazy(() => import('./pages/FAQ'));
 const FAQDetail = lazy(() => import('./pages/FAQDetail'));
 const Contact = lazy(() => import('./pages/Contact'));
@@ -140,6 +141,8 @@ const routeConfigs: RouteConfig[] = [
   { path: "/faq", component: FAQ, translated: "faq" },
   { path: "/faq/:slug", component: FAQDetail, translated: "faq" },
   { path: "/centre-aide", component: HelpCenter, translated: "help-center" },
+  { path: "/centre-aide/:slug", component: HelpArticle, translated: "help-center" },
+  { path: "/help-center/:slug", component: HelpArticle, translated: "help-center" },
 
   // Témoignages
   { path: "/testimonials", component: Testimonials, alias: "/temoignages", translated: "testimonials" },
@@ -324,6 +327,24 @@ const App: React.FC = () => {
   useEffect(() => {
     registerSW();
     measurePerformance();
+
+    // P2 FIX: Listen for SW updates and notify user
+    const handleSWUpdate = () => {
+      // Show update notification to user
+      if (window.confirm('Une nouvelle version est disponible. Voulez-vous recharger la page pour mettre à jour ?')) {
+        // Tell SW to skip waiting and take control
+        navigator.serviceWorker.ready.then(registration => {
+          registration.waiting?.postMessage({ type: 'SKIP_WAITING' });
+        });
+        window.location.reload();
+      }
+    };
+
+    window.addEventListener('sw-update-available', handleSWUpdate);
+
+    return () => {
+      window.removeEventListener('sw-update-available', handleSWUpdate);
+    };
   }, []);
 
   // Scroll top on route change

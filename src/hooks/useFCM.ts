@@ -2,16 +2,18 @@ import { useEffect } from 'react';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { getApp } from 'firebase/app';
 import { doc, setDoc } from 'firebase/firestore';
-import { db } from '../config/firebase'; // adapte ce chemin selon ton projet
+import { db } from '../config/firebase';
 import { useAuth } from '../contexts/AuthContext';
 
-const vapidKey = 'BAu8XYFKlF2_FC9BH3zPzZRH-KfEJjcRN0J6rCOIoBy7-LFw8_nxz6lkRaMwSNKS2IcrnVpyDDO6Wm1T3qNflOw';
+// VAPID key from environment variable (P0 security fix)
+const vapidKey = import.meta.env.VITE_FIREBASE_VAPID_KEY || '';
 
 export function useFCM() {
   const { user } = useAuth();
 
   useEffect(() => {
-    if (!user || user.role === 'client') return;
+    // Enable push notifications for all authenticated users (P2 fix - was excluding clients)
+    if (!user) return;
 
     const app = getApp();
     const messaging = getMessaging(app);
@@ -26,7 +28,8 @@ export function useFCM() {
           });
 
           if (token) {
-            console.log('✅ Token FCM reçu :', token);
+            // P2 security fix: mask token in logs (only show first 20 chars)
+            console.log('✅ Token FCM reçu :', token.slice(0, 20) + '...');
 
             // Sauvegarde le token FCM dans Firestore
             await setDoc(doc(db, 'fcm_tokens', user.id), {

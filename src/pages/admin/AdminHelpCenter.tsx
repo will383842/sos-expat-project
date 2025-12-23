@@ -10,6 +10,11 @@ import {
   Loader2,
   Tag,
   Globe,
+  Database,
+  MessageCircleQuestion,
+  RefreshCw,
+  ChevronDown,
+  ChevronRight,
 } from "lucide-react";
 import AdminLayout from "../../components/admin/AdminLayout";
 import Button from "../../components/common/Button";
@@ -20,13 +25,20 @@ import {
   createHelpCategory,
   deleteHelpArticle,
   deleteHelpCategory,
+  deleteAllHelpCenterData,
   HelpArticle,
+  HelpArticleFAQ,
   HelpCategory,
   listHelpArticles,
   listHelpCategories,
   updateHelpArticle,
   updateHelpCategory,
 } from "../../services/helpCenter";
+import { initializeHelpCenterCategories } from "../../services/helpCenterInit";
+import {
+  initializeAllArticles,
+  checkCategoriesExist as checkCategoriesExistFirestore,
+} from "../../services/helpArticles/helpArticlesAdminService";
 
 type CategoryFormState = Omit<HelpCategory, "id" | "createdAt" | "updatedAt">;
 type ArticleFormState = Omit<HelpArticle, "id" | "createdAt" | "updatedAt">;
@@ -156,6 +168,9 @@ const generateSlug = (text: string): string => {
   }
   return slug;
 };
+
+// Non-Latin languages that need English slug fallback for clean ASCII URLs
+const NON_LATIN_LANGUAGES = ["hi", "ru", "ar", "ch"];
 
 // Auto-detect language of text
 const detectLanguage = async (text: string): Promise<string> => {
@@ -313,6 +328,7 @@ const AdminHelpCenter: React.FC = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
     null
   );
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
@@ -332,6 +348,48 @@ const AdminHelpCenter: React.FC = () => {
   );
   const [tagInput, setTagInput] = useState<string>("");
   const [translating, setTranslating] = useState<boolean>(false);
+  const [isInitModalOpen, setIsInitModalOpen] = useState<boolean>(false);
+  const [isInitializing, setIsInitializing] = useState<boolean>(false);
+  const [initResult, setInitResult] = useState<{
+    success: boolean;
+    created: number;
+    skipped: number;
+    total: number;
+    errors: string[];
+  } | null>(null);
+  const [isFaqModalOpen, setIsFaqModalOpen] = useState<boolean>(false);
+  const [selectedArticleFaqs, setSelectedArticleFaqs] = useState<{
+    title: string;
+    faqs: HelpArticleFAQ[];
+  } | null>(null);
+
+  // État pour l'initialisation des 119 articles
+  const [isArticlesInitModalOpen, setIsArticlesInitModalOpen] = useState<boolean>(false);
+  const [isInitializingArticles, setIsInitializingArticles] = useState<boolean>(false);
+  const [articlesInitProgress, setArticlesInitProgress] = useState<{
+    completed: number;
+    total: number;
+    currentArticle: string;
+  } | null>(null);
+  const [articlesInitResult, setArticlesInitResult] = useState<{
+    total: number;
+    success: number;
+    failed: number;
+    errors: string[];
+  } | null>(null);
+  const [categoriesCheckResult, setCategoriesCheckResult] = useState<{
+    exists: boolean;
+    missing: string[];
+    found: string[];
+  } | null>(null);
+
+  // Reset Help Center state
+  const [isResetModalOpen, setIsResetModalOpen] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
+  const [resetResult, setResetResult] = useState<{
+    categoriesDeleted: number;
+    articlesDeleted: number;
+  } | null>(null);
 
   // Single input fields for translation
   const [categoryNameInput, setCategoryNameInput] = useState<string>("");
@@ -382,10 +440,51 @@ const AdminHelpCenter: React.FC = () => {
      
   }, [locale, selectedCategoryId]);
 
+  // Build hierarchical category structure
+  const hierarchicalCategories = useMemo(() => {
+    // Create a map of parentSlug -> subcategories
+    const subcatMap = new Map<string, HelpCategory[]>();
+
+    for (const cat of categories) {
+      const slugFr = typeof cat.slug === 'string' ? cat.slug : (cat.slug as Record<string, string>)?.fr || '';
+
+      if (cat.parentSlug) {
+        const existing = subcatMap.get(cat.parentSlug) || [];
+        existing.push(cat);
+        subcatMap.set(cat.parentSlug, existing);
+      }
+    }
+
+    // Get main categories (no parentSlug) and attach children
+    const mainCats = categories
+      .filter(cat => !cat.parentSlug)
+      .map(cat => {
+        const slugFr = typeof cat.slug === 'string' ? cat.slug : (cat.slug as Record<string, string>)?.fr || '';
+        const children = subcatMap.get(slugFr) || [];
+        return {
+          ...cat,
+          children: children.sort((a, b) => a.order - b.order),
+        };
+      })
+      .sort((a, b) => a.order - b.order);
+
+    return { mainCategories: mainCats, subcategoryMap: subcatMap };
+  }, [categories]);
+
   const filteredArticles = useMemo(() => {
     if (!selectedCategoryId) return articles;
+
+    // Check if selected is a main category (has children)
+    const mainCat = hierarchicalCategories.mainCategories.find(c => c.id === selectedCategoryId);
+    if (mainCat && mainCat.children && mainCat.children.length > 0) {
+      // Include articles from all subcategories
+      const subcatIds = mainCat.children.map(c => c.id);
+      return articles.filter(a => subcatIds.includes(a.categoryId));
+    }
+
+    // It's a subcategory, match directly
     return articles.filter((a) => a.categoryId === selectedCategoryId);
-  }, [articles, selectedCategoryId]);
+  }, [articles, selectedCategoryId, hierarchicalCategories]);
 
   // Translate category name and slug to all languages
   const translateCategory = async (
@@ -395,12 +494,23 @@ const AdminHelpCenter: React.FC = () => {
     const translatedName: Record<string, string> = {};
     const slugMap: Record<string, string> = {};
 
+    // Get English translation first (for non-Latin slug fallback)
+    const englishName = sourceLang === "en" ? name : await translateText(name, sourceLang, "en");
+    const englishSlug = generateSlug(englishName);
+
     const translationPromises = SUPPORTED_LANGUAGES.map(async (lang) => {
       const translated = await translateText(name, sourceLang, lang.code);
       translatedName[lang.code] = translated;
-      const slugSource =
-        translated && translated.trim().length > 0 ? translated : name;
-      slugMap[lang.code] = generateSlug(slugSource);
+
+      // For non-Latin scripts, use English slug with language prefix
+      // e.g., "ar-account-settings" instead of broken transliteration
+      if (NON_LATIN_LANGUAGES.includes(lang.code)) {
+        slugMap[lang.code] = `${lang.code}-${englishSlug}`;
+      } else {
+        const slugSource =
+          translated && translated.trim().length > 0 ? translated : name;
+        slugMap[lang.code] = generateSlug(slugSource);
+      }
     });
 
     await Promise.all(translationPromises);
@@ -427,6 +537,10 @@ const AdminHelpCenter: React.FC = () => {
     const slugMap: Record<string, string> = {};
     const tagsMap: Record<string, string[]> = {};
 
+    // Get English translation first (for non-Latin slug fallback)
+    const englishTitle = sourceLang === "en" ? title : await translateText(title, sourceLang, "en");
+    const englishSlug = generateSlug(englishTitle);
+
     const translationPromises = SUPPORTED_LANGUAGES.map(async (lang) => {
       const [translatedT, translatedE, translatedC] = await Promise.all([
         translateText(title, sourceLang, lang.code),
@@ -437,9 +551,15 @@ const AdminHelpCenter: React.FC = () => {
       translatedExcerpt[lang.code] = translatedE;
       translatedContent[lang.code] = translatedC;
 
-      const slugSource =
-        translatedT && translatedT.trim().length > 0 ? translatedT : title;
-      slugMap[lang.code] = generateSlug(slugSource);
+      // For non-Latin scripts, use English slug with language prefix
+      // e.g., "ar-how-to-create-account" instead of broken transliteration
+      if (NON_LATIN_LANGUAGES.includes(lang.code)) {
+        slugMap[lang.code] = `${lang.code}-${englishSlug}`;
+      } else {
+        const slugSource =
+          translatedT && translatedT.trim().length > 0 ? translatedT : title;
+        slugMap[lang.code] = generateSlug(slugSource);
+      }
 
       // Translate tags
       const translatedTags = await Promise.all(
@@ -658,6 +778,128 @@ const AdminHelpCenter: React.FC = () => {
     }
   };
 
+  const handleInitializeCategories = async () => {
+    setIsInitializing(true);
+    setInitResult(null);
+    try {
+      const result = await initializeHelpCenterCategories();
+      setInitResult(result);
+      if (result.created > 0) {
+        await refreshAll();
+      }
+    } catch (error) {
+      console.error("Error initializing categories", error);
+      setInitResult({
+        success: false,
+        created: 0,
+        skipped: 0,
+        total: 0,
+        errors: [error instanceof Error ? error.message : String(error)],
+      });
+    } finally {
+      setIsInitializing(false);
+    }
+  };
+
+  const openFaqModal = (article: HelpArticle) => {
+    const title = typeof article.title === "string"
+      ? article.title
+      : getTranslationForLocale(article.title, locale, "Article");
+    setSelectedArticleFaqs({
+      title,
+      faqs: article.faqs || [],
+    });
+    setIsFaqModalOpen(true);
+  };
+
+  // Ouvrir le modal d'initialisation des articles
+  const openArticlesInitModal = async () => {
+    setIsArticlesInitModalOpen(true);
+    setArticlesInitResult(null);
+    setArticlesInitProgress(null);
+    setCategoriesCheckResult(null);
+
+    // Vérifier si les catégories existent dans Firestore
+    try {
+      const result = await checkCategoriesExistFirestore();
+      setCategoriesCheckResult(result);
+    } catch (error) {
+      console.error("Error checking categories:", error);
+      // En cas d'erreur, on permet quand même de continuer si on a des catégories localement
+      if (categories.length >= 5) {
+        setCategoriesCheckResult({
+          exists: true,
+          missing: [],
+          found: categories.map(c => typeof c.slug === 'string' ? c.slug : c.slug?.fr || ''),
+        });
+      } else {
+        setCategoriesCheckResult({
+          exists: false,
+          missing: ["Erreur de vérification - Initialisez d'abord les 25 catégories"],
+          found: [],
+        });
+      }
+    }
+  };
+
+  // Lancer l'initialisation des 119 articles
+  const handleInitializeArticles = async () => {
+    setIsInitializingArticles(true);
+    setArticlesInitResult(null);
+    setArticlesInitProgress({ completed: 0, total: 119, currentArticle: "Démarrage..." });
+
+    try {
+      const result = await initializeAllArticles(
+        false, // dryRun = false (pour de vrai)
+        (completed, total, currentArticle) => {
+          setArticlesInitProgress({ completed, total, currentArticle });
+        }
+      );
+
+      setArticlesInitResult({
+        total: result.total,
+        success: result.success,
+        failed: result.failed,
+        errors: result.errors,
+      });
+
+      // Rafraîchir les articles après l'initialisation
+      if (result.success > 0) {
+        await refreshAll();
+      }
+    } catch (error) {
+      console.error("Error initializing articles:", error);
+      setArticlesInitResult({
+        total: 119,
+        success: 0,
+        failed: 119,
+        errors: [error instanceof Error ? error.message : String(error)],
+      });
+    } finally {
+      setIsInitializingArticles(false);
+      setArticlesInitProgress(null);
+    }
+  };
+
+  // Reset complet du Help Center (supprimer toutes les catégories et articles)
+  const handleResetHelpCenter = async () => {
+    setIsResetting(true);
+    setResetResult(null);
+
+    try {
+      const result = await deleteAllHelpCenterData();
+      setResetResult(result);
+
+      // Rafraîchir après la suppression
+      await refreshAll();
+    } catch (error) {
+      console.error("Error resetting Help Center:", error);
+      alert("Erreur lors de la réinitialisation: " + (error instanceof Error ? error.message : String(error)));
+    } finally {
+      setIsResetting(false);
+    }
+  };
+
   // const selectedCategory =
   //   categories.find((c) => c.id === selectedCategoryId) ?? null;
 
@@ -671,6 +913,29 @@ const AdminHelpCenter: React.FC = () => {
           </h1>
         </div>
         <div className="flex items-center space-x-3">
+          <Button
+            variant="outline"
+            onClick={() => setIsResetModalOpen(true)}
+            className="bg-red-50 border-red-300 text-red-700 hover:bg-red-100"
+          >
+            <Trash className="h-4 w-4 mr-2" />
+            Reset complet
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => setIsInitModalOpen(true)}
+          >
+            <Database className="h-4 w-4 mr-2" />
+            Init 25 catégories
+          </Button>
+          <Button
+            variant="outline"
+            onClick={openArticlesInitModal}
+            className="bg-green-50 border-green-300 text-green-700 hover:bg-green-100"
+          >
+            <BookOpen className="h-4 w-4 mr-2" />
+            Init 119 articles
+          </Button>
           <Button
             variant="primary"
             onClick={() => openArticleModal()}
@@ -712,69 +977,166 @@ const AdminHelpCenter: React.FC = () => {
               No categories yet.
             </div>
           ) : (
-            <ul className="divide-y divide-gray-100">
-              {categories.map((category) => (
-                <li
-                  key={category.id}
-                  className={`p-4 flex items-start justify-between cursor-pointer hover:bg-gray-50 ${
-                    selectedCategoryId === category.id ? "bg-red-50" : ""
-                  }`}
-                  onClick={() => setSelectedCategoryId(category.id)}
-                >
-                  <div className="space-y-1">
-                    <div className="flex items-center space-x-2">
-                      <span className="font-medium text-gray-900">
-                        {typeof category.name === "string"
-                          ? category.name
-                          : getTranslationForLocale(category.name, locale, "Untitled Category")}
-                      </span>
-                      {category.isPublished ? (
-                        <span className="inline-flex items-center px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-700">
-                          <CheckCircle2 className="h-3 w-3 mr-1" />
-                          Published
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center px-2 py-0.5 text-xs rounded-full bg-yellow-100 text-yellow-700">
-                          Draft
-                        </span>
-                      )}
-                    </div>
-                    <div className="text-xs text-gray-500 space-x-2">
-                      <span>
-                        Slug:{" "}
-                        {typeof category.slug === "string"
-                          ? category.slug
-                          : getTranslationForLocale(category.slug, locale, "")}
-                      </span>
-                      <span>Order: {category.order}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Button
-                      size="small"
-                      variant="ghost"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openCategoryModal(category);
+            <div className="divide-y divide-gray-100">
+              {/* "All" option */}
+              <div
+                className={`p-3 flex items-center justify-between cursor-pointer hover:bg-gray-50 ${
+                  selectedCategoryId === null ? "bg-red-50" : ""
+                }`}
+                onClick={() => setSelectedCategoryId(null)}
+              >
+                <div className="flex items-center space-x-2">
+                  <BookOpen className="h-4 w-4 text-gray-500" />
+                  <span className="font-medium text-gray-900">All articles</span>
+                </div>
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+                  {articles.length}
+                </span>
+              </div>
+
+              {/* Hierarchical categories */}
+              {hierarchicalCategories.mainCategories.map((category) => {
+                const isExpanded = expandedCategories.has(category.id);
+                const isActive = selectedCategoryId === category.id;
+                const hasChildren = category.children && category.children.length > 0;
+                const subcatArticleCount = hasChildren
+                  ? category.children.reduce((sum, sub) => sum + articles.filter(a => a.categoryId === sub.id).length, 0)
+                  : articles.filter(a => a.categoryId === category.id).length;
+
+                return (
+                  <div key={category.id}>
+                    {/* Main category */}
+                    <div
+                      className={`p-3 flex items-start justify-between cursor-pointer hover:bg-gray-50 ${
+                        isActive ? "bg-red-50" : ""
+                      }`}
+                      onClick={() => {
+                        if (hasChildren) {
+                          const newExpanded = new Set(expandedCategories);
+                          if (newExpanded.has(category.id)) {
+                            newExpanded.delete(category.id);
+                          } else {
+                            newExpanded.add(category.id);
+                          }
+                          setExpandedCategories(newExpanded);
+                        }
+                        setSelectedCategoryId(category.id);
                       }}
                     >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      size="small"
-                      variant="ghost"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteCategory(category.id);
-                      }}
-                      disabled={isSaving}
-                    >
-                      <Trash className="h-4 w-4 text-red-600" />
-                    </Button>
+                      <div className="space-y-1 flex-1">
+                        <div className="flex items-center space-x-2">
+                          {hasChildren && (
+                            <span className="text-gray-400">
+                              {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                            </span>
+                          )}
+                          <span className="font-medium text-gray-900">
+                            {typeof category.name === "string"
+                              ? category.name
+                              : getTranslationForLocale(category.name, locale, "Untitled Category")}
+                          </span>
+                          {category.isPublished ? (
+                            <span className="inline-flex items-center px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-700">
+                              <CheckCircle2 className="h-3 w-3 mr-1" />
+                              Published
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center px-2 py-0.5 text-xs rounded-full bg-yellow-100 text-yellow-700">
+                              Draft
+                            </span>
+                          )}
+                          <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+                            {subcatArticleCount}
+                          </span>
+                        </div>
+                        <div className="text-xs text-gray-500 space-x-2 ml-6">
+                          <span>Order: {category.order}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <Button
+                          size="small"
+                          variant="ghost"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openCategoryModal(category);
+                          }}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          size="small"
+                          variant="ghost"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteCategory(category.id);
+                          }}
+                          disabled={isSaving}
+                        >
+                          <Trash className="h-4 w-4 text-red-600" />
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Subcategories (shown when expanded) */}
+                    {hasChildren && isExpanded && (
+                      <div className="ml-4 border-l-2 border-gray-100">
+                        {category.children.map((subcat) => {
+                          const isSubActive = selectedCategoryId === subcat.id;
+                          const subArticleCount = articles.filter(a => a.categoryId === subcat.id).length;
+                          return (
+                            <div
+                              key={subcat.id}
+                              className={`p-2 pl-4 flex items-center justify-between cursor-pointer hover:bg-gray-50 ${
+                                isSubActive ? "bg-red-50" : ""
+                              }`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedCategoryId(subcat.id);
+                              }}
+                            >
+                              <div className="flex items-center space-x-2">
+                                <span className="text-sm text-gray-700">
+                                  {typeof subcat.name === "string"
+                                    ? subcat.name
+                                    : getTranslationForLocale(subcat.name, locale, "")}
+                                </span>
+                                <span className="text-xs bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded-full">
+                                  {subArticleCount}
+                                </span>
+                              </div>
+                              <div className="flex items-center space-x-1">
+                                <Button
+                                  size="small"
+                                  variant="ghost"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    openCategoryModal(subcat);
+                                  }}
+                                >
+                                  <Edit className="h-3 w-3" />
+                                </Button>
+                                <Button
+                                  size="small"
+                                  variant="ghost"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeleteCategory(subcat.id);
+                                  }}
+                                  disabled={isSaving}
+                                >
+                                  <Trash className="h-3 w-3 text-red-600" />
+                                </Button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
-                </li>
-              ))}
-            </ul>
+                );
+              })}
+            </div>
           )}
         </div>
 
@@ -849,6 +1211,16 @@ const AdminHelpCenter: React.FC = () => {
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
+                    {article.faqs && article.faqs.length > 0 && (
+                      <Button
+                        size="small"
+                        variant="ghost"
+                        onClick={() => openFaqModal(article)}
+                      >
+                        <MessageCircleQuestion className="h-4 w-4 text-blue-600" />
+                        <span className="ml-1 text-xs text-blue-600">{article.faqs.length}</span>
+                      </Button>
+                    )}
                     <Button
                       size="small"
                       variant="ghost"
@@ -1193,6 +1565,507 @@ const AdminHelpCenter: React.FC = () => {
             </Button>
           </div>
         </form>
+      </Modal>
+
+      {/* Modal d'initialisation des catégories */}
+      <Modal
+        isOpen={isInitModalOpen}
+        onClose={() => {
+          setIsInitModalOpen(false);
+          setInitResult(null);
+        }}
+        title="Initialiser les catégories du Centre d'Aide"
+        size="large"
+      >
+        <div className="space-y-4">
+          {!initResult ? (
+            <>
+              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="flex items-start gap-3">
+                  <Database className="w-5 h-5 text-blue-600 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-blue-900 mb-1">
+                      25 catégories prêtes à être créées
+                    </p>
+                    <p className="text-xs text-blue-700 mb-2">
+                      Ce script va créer les catégories suivantes, toutes traduites dans les 9 langues (FR, EN, ES, DE, PT, RU, HI, AR, CH):
+                    </p>
+                    <ul className="text-xs text-blue-700 space-y-1 ml-4 list-disc">
+                      <li><strong>5 catégories principales:</strong> Clients Expatriés, Prestataires Avocats, Prestataires Expat Aidant, Comprendre SOS-Expat, Guides par Situation</li>
+                      <li><strong>5 sous-catégories Clients:</strong> Urgences, Paiements, Mon Compte, Évaluations, Sécurité</li>
+                      <li><strong>5 sous-catégories Avocats:</strong> Rejoindre, Missions, Paiements, Performance, Déontologie</li>
+                      <li><strong>4 sous-catégories Expat Aidant:</strong> Devenir, Interventions, Paiements, Développer</li>
+                      <li><strong>4 sous-catégories Comprendre:</strong> Présentation, FAQ, Contact, Légal</li>
+                      <li><strong>2 sous-catégories Guides:</strong> Urgences, Pays</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <p className="text-sm text-yellow-800">
+                  <strong>Note:</strong> Les catégories existantes ne seront pas dupliquées (vérification par slug français).
+                </p>
+              </div>
+              <div className="flex justify-end space-x-3">
+                <Button
+                  variant="ghost"
+                  onClick={() => setIsInitModalOpen(false)}
+                >
+                  Annuler
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={handleInitializeCategories}
+                  loading={isInitializing}
+                  disabled={isInitializing}
+                >
+                  {isInitializing ? (
+                    <>
+                      <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                      Initialisation...
+                    </>
+                  ) : (
+                    <>
+                      <Database className="h-4 w-4 mr-2" />
+                      Initialiser maintenant
+                    </>
+                  )}
+                </Button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className={`p-4 rounded-lg border ${
+                initResult.success
+                  ? "bg-green-50 border-green-200"
+                  : "bg-red-50 border-red-200"
+              }`}>
+                <div className="flex items-start gap-3">
+                  {initResult.success ? (
+                    <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5" />
+                  ) : (
+                    <Trash className="w-5 h-5 text-red-600 mt-0.5" />
+                  )}
+                  <div>
+                    <p className={`text-sm font-medium mb-2 ${
+                      initResult.success ? "text-green-900" : "text-red-900"
+                    }`}>
+                      {initResult.success
+                        ? "Initialisation terminée avec succès!"
+                        : "Initialisation terminée avec des erreurs"}
+                    </p>
+                    <ul className={`text-xs space-y-1 ${
+                      initResult.success ? "text-green-700" : "text-red-700"
+                    }`}>
+                      <li>Total: {initResult.total} catégories</li>
+                      <li>Créées: {initResult.created}</li>
+                      <li>Ignorées (déjà existantes): {initResult.skipped}</li>
+                      {initResult.errors.length > 0 && (
+                        <li>Erreurs: {initResult.errors.length}</li>
+                      )}
+                    </ul>
+                    {initResult.errors.length > 0 && (
+                      <div className="mt-2 p-2 bg-red-100 rounded text-xs text-red-800">
+                        {initResult.errors.map((err, i) => (
+                          <p key={i}>{err}</p>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-end">
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    setIsInitModalOpen(false);
+                    setInitResult(null);
+                  }}
+                >
+                  Fermer
+                </Button>
+              </div>
+            </>
+          )}
+        </div>
+      </Modal>
+
+      {/* Modal d'affichage des FAQ */}
+      <Modal
+        isOpen={isFaqModalOpen}
+        onClose={() => {
+          setIsFaqModalOpen(false);
+          setSelectedArticleFaqs(null);
+        }}
+        title={`FAQ - ${selectedArticleFaqs?.title || "Article"}`}
+        size="large"
+      >
+        <div className="space-y-4">
+          {selectedArticleFaqs?.faqs && selectedArticleFaqs.faqs.length > 0 ? (
+            <>
+              <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <p className="text-xs text-blue-700">
+                  Ces FAQ ont été générées automatiquement et sont affichées avec le Schema.org FAQPage pour le SEO.
+                </p>
+              </div>
+              <div className="divide-y divide-gray-200">
+                {selectedArticleFaqs.faqs.map((faq, index) => {
+                  const question = typeof faq.question === "string"
+                    ? faq.question
+                    : getTranslationForLocale(faq.question, locale, "Question");
+                  const answer = typeof faq.answer === "string"
+                    ? faq.answer
+                    : getTranslationForLocale(faq.answer, locale, "Réponse");
+                  return (
+                    <div key={index} className="py-4">
+                      <h4 className="font-medium text-gray-900 mb-2 flex items-start gap-2">
+                        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-red-100 text-red-600 text-xs font-bold flex-shrink-0">
+                          {index + 1}
+                        </span>
+                        {question}
+                      </h4>
+                      <p className="text-sm text-gray-600 ml-8">{answer}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          ) : (
+            <div className="p-6 text-center text-gray-500">
+              <MessageCircleQuestion className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+              <p>Aucune FAQ générée pour cet article.</p>
+              <p className="text-xs mt-2">
+                Les FAQ sont générées automatiquement lors de la création/modification de l'article.
+              </p>
+            </div>
+          )}
+          <div className="flex justify-end">
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setIsFaqModalOpen(false);
+                setSelectedArticleFaqs(null);
+              }}
+            >
+              Fermer
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Modal d'initialisation des 119 articles */}
+      <Modal
+        isOpen={isArticlesInitModalOpen}
+        onClose={() => {
+          if (!isInitializingArticles) {
+            setIsArticlesInitModalOpen(false);
+            setArticlesInitResult(null);
+            setArticlesInitProgress(null);
+            setCategoriesCheckResult(null);
+          }
+        }}
+        title="Initialiser les 119 articles du Help Center"
+        size="large"
+      >
+        <div className="space-y-4">
+          {/* Phase 1: Vérification des catégories */}
+          {!articlesInitResult && !isInitializingArticles && (
+            <>
+              {/* Stats des articles */}
+              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="flex items-start gap-3">
+                  <BookOpen className="w-5 h-5 text-blue-600 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-blue-900 mb-1">
+                      119 articles prêts à être créés
+                    </p>
+                    <p className="text-xs text-blue-700 mb-2">
+                      Les articles seront traduits automatiquement en 9 langues (FR, EN, ES, DE, PT, RU, HI, AR, CH) via API gratuite.
+                    </p>
+                    <ul className="text-xs text-blue-700 space-y-1 ml-4 list-disc">
+                      <li><strong>Clients Expatriés:</strong> 31 articles</li>
+                      <li><strong>Prestataires Avocats:</strong> 27 articles</li>
+                      <li><strong>Prestataires Expat Aidant:</strong> 19 articles</li>
+                      <li><strong>Comprendre SOS-Expat:</strong> 17 articles</li>
+                      <li><strong>Guides par Situation:</strong> 25 articles</li>
+                    </ul>
+                    <p className="text-xs text-blue-600 mt-2 font-medium">
+                      Total: 119 articles × 9 langues = 1071 versions traduites
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Vérification des catégories */}
+              {categoriesCheckResult === null ? (
+                <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg flex items-center gap-3">
+                  <Loader2 className="w-5 h-5 animate-spin text-gray-500" />
+                  <span className="text-sm text-gray-600">Vérification des catégories...</span>
+                </div>
+              ) : categoriesCheckResult.exists ? (
+                <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="flex items-start gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-medium text-green-900">
+                        Toutes les catégories existent dans Firestore
+                      </p>
+                      <p className="text-xs text-green-700">
+                        {categoriesCheckResult.found.length} catégories trouvées. Prêt pour l'initialisation des articles.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <div className="flex items-start gap-3">
+                    <Trash className="w-5 h-5 text-red-600 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-medium text-red-900">
+                        {categoriesCheckResult.missing.length} sous-catégories manquantes!
+                      </p>
+                      <p className="text-xs text-red-700 mb-2">
+                        Cliquez d'abord sur <strong>"Init 25 catégories"</strong> pour créer toutes les catégories.
+                      </p>
+                      <div className="text-xs text-green-700 mb-1">
+                        ✓ Trouvées: {categoriesCheckResult.found.length}/20
+                      </div>
+                      <div className="max-h-24 overflow-y-auto">
+                        <ul className="text-xs text-red-600 list-disc ml-4">
+                          {categoriesCheckResult.missing.slice(0, 10).map((m, i) => (
+                            <li key={i}>{m}</li>
+                          ))}
+                          {categoriesCheckResult.missing.length > 10 && (
+                            <li className="font-medium">... et {categoriesCheckResult.missing.length - 10} autres</li>
+                          )}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Avertissement temps */}
+              <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <p className="text-sm text-yellow-800">
+                  <strong>Note:</strong> L'initialisation peut prendre 15-30 minutes en raison des traductions API.
+                  Ne fermez pas cette fenêtre pendant le processus.
+                </p>
+              </div>
+
+              <div className="flex justify-end space-x-3">
+                <Button
+                  variant="ghost"
+                  onClick={() => setIsArticlesInitModalOpen(false)}
+                >
+                  Annuler
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={handleInitializeArticles}
+                  disabled={!categoriesCheckResult?.exists}
+                >
+                  <BookOpen className="h-4 w-4 mr-2" />
+                  Initialiser les 119 articles
+                </Button>
+              </div>
+            </>
+          )}
+
+          {/* Phase 2: Progression */}
+          {isInitializingArticles && articlesInitProgress && (
+            <div className="space-y-4">
+              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="flex items-center gap-3 mb-3">
+                  <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
+                  <span className="text-sm font-medium text-blue-900">
+                    Initialisation en cours...
+                  </span>
+                </div>
+
+                {/* Barre de progression */}
+                <div className="w-full bg-blue-200 rounded-full h-3 mb-2">
+                  <div
+                    className="bg-blue-600 h-3 rounded-full transition-all duration-300"
+                    style={{ width: `${(articlesInitProgress.completed / articlesInitProgress.total) * 100}%` }}
+                  />
+                </div>
+
+                <div className="flex justify-between text-xs text-blue-700">
+                  <span>{articlesInitProgress.completed} / {articlesInitProgress.total} articles</span>
+                  <span>{Math.round((articlesInitProgress.completed / articlesInitProgress.total) * 100)}%</span>
+                </div>
+
+                <p className="text-xs text-blue-600 mt-2 truncate">
+                  En cours: {articlesInitProgress.currentArticle}
+                </p>
+              </div>
+
+              <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <p className="text-xs text-yellow-700">
+                  Ne fermez pas cette fenêtre. Chaque article est traduit en 9 langues via API gratuite.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Phase 3: Résultat */}
+          {articlesInitResult && (
+            <>
+              <div className={`p-4 rounded-lg border ${
+                articlesInitResult.failed === 0
+                  ? "bg-green-50 border-green-200"
+                  : articlesInitResult.success > 0
+                  ? "bg-yellow-50 border-yellow-200"
+                  : "bg-red-50 border-red-200"
+              }`}>
+                <div className="flex items-start gap-3">
+                  {articlesInitResult.failed === 0 ? (
+                    <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5" />
+                  ) : (
+                    <RefreshCw className="w-5 h-5 text-yellow-600 mt-0.5" />
+                  )}
+                  <div>
+                    <p className={`text-sm font-medium mb-2 ${
+                      articlesInitResult.failed === 0 ? "text-green-900" : "text-yellow-900"
+                    }`}>
+                      {articlesInitResult.failed === 0
+                        ? "Initialisation terminée avec succès!"
+                        : `Initialisation partielle: ${articlesInitResult.success}/${articlesInitResult.total}`}
+                    </p>
+                    <ul className="text-xs space-y-1 text-gray-700">
+                      <li>Total: {articlesInitResult.total} articles</li>
+                      <li className="text-green-700">Réussis: {articlesInitResult.success}</li>
+                      {articlesInitResult.failed > 0 && (
+                        <li className="text-red-700">Échoués: {articlesInitResult.failed}</li>
+                      )}
+                    </ul>
+                    {articlesInitResult.errors.length > 0 && (
+                      <div className="mt-2 p-2 bg-red-100 rounded text-xs text-red-800 max-h-32 overflow-y-auto">
+                        {articlesInitResult.errors.slice(0, 5).map((err, i) => (
+                          <p key={i} className="truncate">{err}</p>
+                        ))}
+                        {articlesInitResult.errors.length > 5 && (
+                          <p className="text-red-600 font-medium">
+                            ... et {articlesInitResult.errors.length - 5} autres erreurs
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-end">
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    setIsArticlesInitModalOpen(false);
+                    setArticlesInitResult(null);
+                  }}
+                >
+                  Fermer
+                </Button>
+              </div>
+            </>
+          )}
+        </div>
+      </Modal>
+
+      {/* Modal de Reset complet */}
+      <Modal
+        isOpen={isResetModalOpen}
+        onClose={() => {
+          if (!isResetting) {
+            setIsResetModalOpen(false);
+            setResetResult(null);
+          }
+        }}
+        title="Reset complet du Help Center"
+        size="medium"
+      >
+        <div className="space-y-4">
+          {!resetResult && !isResetting && (
+            <>
+              <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div className="flex items-start gap-3">
+                  <Trash className="w-5 h-5 text-red-600 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-red-900 mb-1">
+                      Attention : Cette action est irréversible!
+                    </p>
+                    <p className="text-xs text-red-700">
+                      Cette action va supprimer TOUTES les catégories ({categories.length}) et TOUS les articles ({articles.length}) du Help Center.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                <p className="text-sm text-gray-700 mb-2">
+                  <strong>Étapes recommandées après le reset :</strong>
+                </p>
+                <ol className="text-xs text-gray-600 list-decimal ml-4 space-y-1">
+                  <li>Cliquez sur <strong>"Init 25 catégories"</strong> pour recréer la structure</li>
+                  <li>Cliquez sur <strong>"Init 119 articles"</strong> pour créer tous les articles</li>
+                </ol>
+              </div>
+
+              <div className="flex justify-end gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => setIsResetModalOpen(false)}
+                >
+                  Annuler
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={handleResetHelpCenter}
+                  className="bg-red-600 hover:bg-red-700"
+                >
+                  <Trash className="h-4 w-4 mr-2" />
+                  Confirmer le reset
+                </Button>
+              </div>
+            </>
+          )}
+
+          {isResetting && (
+            <div className="p-6 flex flex-col items-center justify-center">
+              <Loader2 className="h-8 w-8 animate-spin text-red-600 mb-4" />
+              <p className="text-sm text-gray-600">Suppression en cours...</p>
+            </div>
+          )}
+
+          {resetResult && (
+            <>
+              <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-green-900 mb-1">
+                      Reset terminé avec succès!
+                    </p>
+                    <ul className="text-xs text-green-700 space-y-1">
+                      <li>{resetResult.categoriesDeleted} catégories supprimées</li>
+                      <li>{resetResult.articlesDeleted} articles supprimés</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-end">
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    setIsResetModalOpen(false);
+                    setResetResult(null);
+                  }}
+                >
+                  Fermer
+                </Button>
+              </div>
+            </>
+          )}
+        </div>
       </Modal>
     </AdminLayout>
   );

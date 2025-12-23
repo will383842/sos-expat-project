@@ -23,8 +23,16 @@ export interface HelpCategory {
   isPublished: boolean;
   locale: string;
   icon?: string;
+  parentSlug?: string; // For subcategories, links to parent category's slug (fr)
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+// FAQ item for Schema.org FAQPage support
+export interface HelpArticleFAQ {
+  question: string | Record<string, string>; // Multilingual question
+  answer: string | Record<string, string>;   // Multilingual answer
+  order: number;
 }
 
 export interface HelpArticle {
@@ -35,6 +43,7 @@ export interface HelpArticle {
   excerpt: string | Record<string, string>; // Support both string and translations
   content: string | Record<string, string>; // Support both string and translations
   tags: string[] | Record<string, string[]>; // Support both array and translations
+  faqs?: HelpArticleFAQ[]; // FAQ items for Schema.org FAQPage
   readTime: number;
   order: number;
   isPublished: boolean;
@@ -88,6 +97,7 @@ const mapCategory = (snap: DocumentData & { id: string }): HelpCategory => {
     isPublished: Boolean(snap.isPublished),
     locale,
     icon: snap.icon,
+    parentSlug: snap.parentSlug,
     createdAt: toDate(snap.createdAt),
     updatedAt: toDate(snap.updatedAt),
   };
@@ -103,6 +113,15 @@ const mapArticle = (snap: DocumentData & { id: string }): HelpArticle => {
     // Preserve the translation object structure
     tags = snap.tags as Record<string, string[]>;
   }
+  // Handle FAQs: array of FAQ items with multilingual support
+  let faqs: HelpArticleFAQ[] | undefined;
+  if (Array.isArray(snap.faqs)) {
+    faqs = snap.faqs.map((faq: any, index: number) => ({
+      question: faq.question ?? "",
+      answer: faq.answer ?? "",
+      order: faq.order ?? index,
+    }));
+  }
   return {
     id: snap.id,
     title: snap.title ?? "",
@@ -111,6 +130,7 @@ const mapArticle = (snap: DocumentData & { id: string }): HelpArticle => {
     excerpt: snap.excerpt ?? "",
     content: snap.content ?? "",
     tags,
+    faqs,
     readTime: Number(snap.readTime ?? 0),
     order: Number(snap.order ?? 0),
     isPublished: Boolean(snap.isPublished),
@@ -207,4 +227,28 @@ export const updateHelpArticle = async (
 
 export const deleteHelpArticle = (id: string): Promise<void> =>
   deleteDoc(doc(db, "help_articles", id));
+
+/**
+ * Delete ALL categories and ALL articles from the Help Center
+ * Use with caution - this cannot be undone!
+ */
+export const deleteAllHelpCenterData = async (): Promise<{
+  categoriesDeleted: number;
+  articlesDeleted: number;
+}> => {
+  // Delete all categories
+  const categoriesSnap = await getDocs(collection(db, "help_categories"));
+  const categoryDeletePromises = categoriesSnap.docs.map(d => deleteDoc(d.ref));
+  await Promise.all(categoryDeletePromises);
+
+  // Delete all articles
+  const articlesSnap = await getDocs(collection(db, "help_articles"));
+  const articleDeletePromises = articlesSnap.docs.map(d => deleteDoc(d.ref));
+  await Promise.all(articleDeletePromises);
+
+  return {
+    categoriesDeleted: categoriesSnap.size,
+    articlesDeleted: articlesSnap.size,
+  };
+};
 

@@ -475,7 +475,7 @@ const AdminPayments: React.FC = () => {
                   Prestataire
                 </th>
                 <th className="text-left text-xs font-semibold text-gray-600 uppercase px-4 py-3">
-                  Ulixai
+                  WorldExpat OÜ
                 </th>
                 <th className="text-left text-xs font-semibold text-gray-600 uppercase px-4 py-3">
                   Appel
@@ -573,10 +573,10 @@ const AdminPayments: React.FC = () => {
                           <button
                             onClick={(e) => handleInvoiceDownload(platformInvoice, e)}
                             className="inline-flex items-center text-xs text-blue-600 hover:text-blue-800 gap-1 cursor-pointer bg-transparent border-none p-0"
-                            title="Ulixai invoice (commission amount)"
+                            title="WorldExpat OÜ invoice (commission amount)"
                           >
                             <Download size={12} />
-                            Ulixai invoice (commission amount)
+                            WorldExpat OÜ invoice (commission amount)
                           </button>
                         )}
                         {(!providerInvoice && !platformInvoice) && (

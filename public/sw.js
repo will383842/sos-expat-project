@@ -14,9 +14,11 @@ const NETWORK_TIMEOUTS = {
 };
 
 // Ressources critiques (path-agnostique pour i18n futur)
+// P2 FIX: Added offline.html to pre-cache
 const CORE_RESOURCES = [
   '/',
-  '/manifest.json'
+  '/manifest.json',
+  '/offline.html'
 ];
 
 // Configuration des caches avec limites strictes pour mobile
@@ -666,4 +668,140 @@ async function getCacheStatus() {
     totalEntries: Object.values(caches_detail).reduce((sum, cache) => sum + cache.entries, 0),
     timestamp: new Date().toISOString()
   };
+}
+
+// ============================================
+// P1 FIX: Push Notification Event Handler
+// ============================================
+self.addEventListener('push', event => {
+  console.log('[SW] Push notification received');
+
+  let data = {};
+  try {
+    data = event.data?.json() ?? {};
+  } catch {
+    data = { title: 'SOS Expat', body: event.data?.text() || 'Nouvelle notification' };
+  }
+
+  const title = data.title || data.notification?.title || 'SOS Expat';
+  const options = {
+    body: data.body || data.notification?.body || '',
+    icon: data.icon || '/icons/icon-192x192.png',
+    badge: '/icons/icon-72x72.png',
+    tag: data.tag || 'sos-push',
+    data: data.data || data,
+    vibrate: [100, 50, 100],
+    requireInteraction: data.requireInteraction || false,
+    actions: [
+      { action: 'open', title: 'Ouvrir' },
+      { action: 'dismiss', title: 'Fermer' }
+    ]
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(title, options)
+  );
+});
+
+// Handle push notification click
+self.addEventListener('notificationclick', event => {
+  console.log('[SW] Notification clicked:', event.action);
+  event.notification.close();
+
+  if (event.action === 'dismiss') return;
+
+  const urlToOpen = event.notification.data?.url || '/';
+
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true })
+      .then(windowClients => {
+        // Focus existing window if available
+        for (const client of windowClients) {
+          if (client.url.includes(self.location.origin) && 'focus' in client) {
+            client.navigate(urlToOpen);
+            return client.focus();
+          }
+        }
+        // Otherwise open new window
+        return clients.openWindow(urlToOpen);
+      })
+  );
+});
+
+// ============================================
+// P1 FIX: Background Sync Event Handler
+// ============================================
+self.addEventListener('sync', event => {
+  console.log('[SW] Background sync triggered:', event.tag);
+
+  if (event.tag === 'sync-pending-requests') {
+    event.waitUntil(syncPendingRequests());
+  } else if (event.tag === 'sync-notifications') {
+    event.waitUntil(syncPendingNotifications());
+  } else if (event.tag === 'sync-messages') {
+    event.waitUntil(syncPendingMessages());
+  }
+});
+
+// Sync pending API requests from IndexedDB queue
+async function syncPendingRequests() {
+  console.log('[SW] Syncing pending requests...');
+
+  try {
+    // Open IndexedDB to get pending requests
+    const db = await openSyncDB();
+    const tx = db.transaction('pending-requests', 'readwrite');
+    const store = tx.objectStore('pending-requests');
+    const requests = await store.getAll();
+
+    for (const req of requests) {
+      try {
+        const response = await fetch(req.url, {
+          method: req.method,
+          headers: req.headers,
+          body: req.body
+        });
+
+        if (response.ok) {
+          await store.delete(req.id);
+          console.log('[SW] Synced request:', req.url);
+        }
+      } catch (error) {
+        console.warn('[SW] Failed to sync request:', req.url, error);
+      }
+    }
+
+    await tx.done;
+  } catch (error) {
+    console.error('[SW] Sync failed:', error);
+  }
+}
+
+// Placeholder for notification sync
+async function syncPendingNotifications() {
+  console.log('[SW] Syncing pending notifications...');
+  // Implementation depends on your notification queue system
+}
+
+// Placeholder for message sync
+async function syncPendingMessages() {
+  console.log('[SW] Syncing pending messages...');
+  // Implementation depends on your messaging system
+}
+
+// Helper to open IndexedDB for sync
+function openSyncDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('sos-sync-db', 1);
+
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+
+    request.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains('pending-requests')) {
+        db.createObjectStore('pending-requests', { keyPath: 'id', autoIncrement: true });
+      }
+    };
+  });
 }

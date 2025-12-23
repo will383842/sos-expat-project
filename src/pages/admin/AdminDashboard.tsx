@@ -739,7 +739,7 @@ const AdminDashboard: React.FC = () => {
                     Gestion des Avis
                   </Button>
                   <Button
-                    onClick={() => navigate("/admin/reports")}
+                    onClick={() => navigate("/admin/reports/country-stats")}
                     className="bg-indigo-600 hover:bg-indigo-700 justify-start"
                   >
                     <BarChart3 size={20} className="mr-2" />

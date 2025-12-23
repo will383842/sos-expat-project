@@ -48,113 +48,35 @@ const AdminDocuments: React.FC = () => {
   const loadDocuments = async () => {
     try {
       setIsLoading(true);
-      
-      // Exemple de documents pour le développement
-      const mockDocuments: Document[] = [
-        {
-          id: 'doc1',
-          userId: 'user123',
-          type: 'identity',
-          documentType: 'Carte d\'identité',
-          filename: 'carte-identite.jpg',
-          url: 'https://images.pexels.com/photos/2694434/pexels-photo-2694434.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-          mimeType: 'image/jpeg',
-          fileSize: 1024000,
-          status: 'pending',
-          uploadedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000)
-        },
-        {
-          id: 'doc2',
-          userId: 'user456',
-          type: 'diploma',
-          documentType: 'Diplôme d\'avocat',
-          filename: 'diplome-avocat.pdf',
-          url: 'https://example.com/documents/diplome-avocat.pdf',
-          mimeType: 'application/pdf',
-          fileSize: 2048000,
-          status: 'approved',
-          uploadedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-          reviewedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
-          reviewNotes: 'Document vérifié et validé',
-          verifiedBy: 'admin1'
-        },
-        {
-          id: 'doc3',
-          userId: 'user789',
-          type: 'residence_proof',
-          documentType: 'Justificatif de domicile',
-          filename: 'facture-electricite.jpg',
-          url: 'https://images.pexels.com/photos/3760067/pexels-photo-3760067.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-          mimeType: 'image/jpeg',
-          fileSize: 1536000,
-          status: 'rejected',
-          uploadedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
-          reviewedAt: new Date(Date.now() - 9 * 24 * 60 * 60 * 1000),
-          reviewNotes: 'Document trop ancien (plus de 3 mois)',
-          verifiedBy: 'admin2'
-        }
+
+      // Construire la requête Firestore avec les filtres
+      const constraints: Parameters<typeof query>[1][] = [
+        orderBy('uploadedAt', 'desc'),
+        limit(100)
       ];
-      
-      // Filtrer par statut et type si nécessaire
-      let filteredDocuments = mockDocuments;
+
+      // Appliquer les filtres
       if (selectedStatus !== 'all') {
-        filteredDocuments = filteredDocuments.filter(doc => doc.status === selectedStatus);
+        constraints.unshift(where('status', '==', selectedStatus));
       }
       if (selectedType !== 'all') {
-        filteredDocuments = filteredDocuments.filter(doc => doc.type === selectedType);
+        constraints.unshift(where('type', '==', selectedType));
       }
-      
-      // En production, on chargerait depuis Firestore
-      // let documentsQuery = query(
-      //   collection(db, 'documents'),
-      //   orderBy('uploadedAt', 'desc'),
-      //   limit(100)
-      // );
-      
-      // // Apply status filter
-      // if (selectedStatus !== 'all') {
-      //   documentsQuery = query(
-      //     collection(db, 'documents'),
-      //     where('status', '==', selectedStatus),
-      //     orderBy('uploadedAt', 'desc'),
-      //     limit(100)
-      //   );
-      // }
-      
-      // // Apply type filter
-      // if (selectedType !== 'all') {
-      //   documentsQuery = query(
-      //     collection(db, 'documents'),
-      //     where('type', '==', selectedType),
-      //     orderBy('uploadedAt', 'desc'),
-      //     limit(100)
-      //   );
-      // }
-      
-      // // Apply both filters
-      // if (selectedStatus !== 'all' && selectedType !== 'all') {
-      //   documentsQuery = query(
-      //     collection(db, 'documents'),
-      //     where('status', '==', selectedStatus),
-      //     where('type', '==', selectedType),
-      //     orderBy('uploadedAt', 'desc'),
-      //     limit(100)
-      //   );
-      // }
-      
-      // const documentsSnapshot = await getDocs(documentsQuery);
-      
-      // // Process results
-      // const documentsData = documentsSnapshot.docs.map(doc => ({
-      //   ...doc.data(),
-      //   id: doc.id,
-      //   uploadedAt: doc.data().uploadedAt?.toDate() || new Date(),
-      //   reviewedAt: doc.data().reviewedAt?.toDate()
-      // })) as Document[];
-      
+
+      const documentsQuery = query(collection(db, 'documents'), ...constraints);
+      const documentsSnapshot = await getDocs(documentsQuery);
+
+      // Process results
+      const documentsData = documentsSnapshot.docs.map(docSnap => ({
+        ...docSnap.data(),
+        id: docSnap.id,
+        uploadedAt: docSnap.data().uploadedAt?.toDate() || new Date(),
+        reviewedAt: docSnap.data().reviewedAt?.toDate()
+      })) as Document[];
+
       // Update state
-      setDocuments(filteredDocuments);
-      
+      setDocuments(documentsData);
+
     } catch (error) {
       console.error('Error loading documents:', error);
     } finally {
@@ -170,40 +92,28 @@ const AdminDocuments: React.FC = () => {
 
   const handleApproveDocument = async () => {
     if (!selectedDocument) return;
-    
+
     try {
       setIsActionLoading(true);
-      
-      // En production, on mettrait à jour dans Firestore
-      // await updateDoc(doc(db, 'documents', selectedDocument.id), {
-      //   status: 'approved',
-      //   reviewedAt: serverTimestamp(),
-      //   reviewNotes: adminNotes,
-      //   verifiedBy: currentUser?.id
-      // });
-      
-      // Update local state
-      setDocuments(prev => 
-        prev.map(doc => 
-          doc.id === selectedDocument.id 
-            ? { 
-                ...doc, 
-                status: 'approved', 
-                reviewedAt: new Date(), 
-                reviewNotes: adminNotes,
-                verifiedBy: currentUser?.id
-              }
-            : doc
-        )
-      );
-      
+
+      // Mettre à jour dans Firestore
+      await updateDoc(doc(db, 'documents', selectedDocument.id), {
+        status: 'approved',
+        reviewedAt: serverTimestamp(),
+        reviewNotes: adminNotes,
+        verifiedBy: currentUser?.id
+      });
+
+      // Recharger les documents depuis Firestore
+      await loadDocuments();
+
       // Close modal
       setShowDocumentModal(false);
       setSelectedDocument(null);
-      
+
       // Show success message
       alert('Document approuvé avec succès');
-      
+
     } catch (error) {
       console.error('Error approving document:', error);
       alert('Erreur lors de l\'approbation du document');
@@ -214,40 +124,28 @@ const AdminDocuments: React.FC = () => {
 
   const handleRejectDocument = async () => {
     if (!selectedDocument) return;
-    
+
     try {
       setIsActionLoading(true);
-      
-      // En production, on mettrait à jour dans Firestore
-      // await updateDoc(doc(db, 'documents', selectedDocument.id), {
-      //   status: 'rejected',
-      //   reviewedAt: serverTimestamp(),
-      //   reviewNotes: adminNotes,
-      //   verifiedBy: currentUser?.id
-      // });
-      
-      // Update local state
-      setDocuments(prev => 
-        prev.map(doc => 
-          doc.id === selectedDocument.id 
-            ? { 
-                ...doc, 
-                status: 'rejected', 
-                reviewedAt: new Date(), 
-                reviewNotes: adminNotes,
-                verifiedBy: currentUser?.id
-              }
-            : doc
-        )
-      );
-      
+
+      // Mettre à jour dans Firestore
+      await updateDoc(doc(db, 'documents', selectedDocument.id), {
+        status: 'rejected',
+        reviewedAt: serverTimestamp(),
+        reviewNotes: adminNotes,
+        verifiedBy: currentUser?.id
+      });
+
+      // Recharger les documents depuis Firestore
+      await loadDocuments();
+
       // Close modal
       setShowDocumentModal(false);
       setSelectedDocument(null);
-      
+
       // Show success message
       alert('Document rejeté avec succès');
-      
+
     } catch (error) {
       console.error('Error rejecting document:', error);
       alert('Erreur lors du rejet du document');

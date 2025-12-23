@@ -2622,6 +2622,21 @@ export {
   handleEmailComplaint,
   handleUnsubscribe,
 } from './emailMarketing/functions/webhooks';
+
+// ========== HELP CENTER FAQ GENERATION ==========
+export {
+  onHelpArticleCreated,
+  onHelpArticleUpdated,
+} from './helpCenter/generateFAQ';
+
+// ========== HELP CENTER ARTICLES INITIALIZATION ==========
+export {
+  initSingleHelpArticle,
+  initHelpArticlesBatch,
+  checkHelpCategories,
+  clearHelpArticles,
+} from './helpCenter/initHelpArticles';
+
 // ========== INVOICE DOWNLOAD URL GENERATION ==========
 export const generateInvoiceDownloadUrl = onCall(
   {

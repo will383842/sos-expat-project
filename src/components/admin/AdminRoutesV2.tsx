@@ -948,6 +948,11 @@ const AdminRoutesV2: React.FC = () => {
 
       <Route path="promos" element={<Navigate to="promos/codes" replace />} />
 
+      <Route
+        path="reports"
+        element={<Navigate to="reports/country-stats" replace />}
+      />
+
       {/* 404 admin */}
       <Route path="*" element={<AdminNotFound />} />
     </Routes>

@@ -45,10 +45,13 @@ const FAQDetail: React.FC = () => {
   
   // Extract locale from pathname (e.g., /fr-FR/faq/slug or /en-US/faq/slug)
   const { locale: localeFromPath, lang } = parseLocaleFromPath(location.pathname);
-  
+
   // Determine language from URL path or context
   const currentLang = lang || language || 'fr';
   const langCode = currentLang.split('-')[0]; // Extract 'fr' from 'fr-FR'
+
+  // Current locale preserves the country from URL (e.g., "fr-ar", "en-de")
+  const currentLocale = localeFromPath || getLocaleString(language as any);
   
   // CRITICAL: Watch for ref changes and sync to state
   // This ensures that when ref is set, state is updated to trigger a re-render
@@ -471,6 +474,34 @@ const FAQDetail: React.FC = () => {
     }
   }, [slug, langCode]); // Removed faq from dependencies to prevent re-runs when FAQ state changes
 
+  // Handle language change from header - redirect to translated slug
+  // This ensures SEO-friendly URLs when user changes language while viewing a FAQ
+  // Extract country from current URL to preserve it when changing language
+  const { country: currentCountry } = parseLocaleFromPath(location.pathname);
+
+  useEffect(() => {
+    const currentFaq = faqDataRef.current || faq;
+    if (!currentFaq || !language) return;
+
+    // Get the new language code from context (strip region, e.g., "fr-FR" -> "fr")
+    const newLangCode = language.split('-')[0];
+
+    // If URL language matches context language, no need to redirect
+    if (newLangCode === langCode) return;
+
+    // Get the slug for the new language
+    const newSlug = currentFaq.slug[newLangCode] || currentFaq.slug['fr'] || currentFaq.slug['en'] || currentFaq.id;
+
+    // Build new URL preserving the current country
+    // e.g., if user is on /fr-ar/faq/... and changes to English, go to /en-ar/faq/...
+    const countryCode = currentCountry || getLocaleString(language as any).split('-')[1] || 'fr';
+    const newLocale = `${newLangCode}-${countryCode}`;
+    const newUrl = `/${newLocale}/faq/${newSlug}`;
+
+    // Navigate to the new URL (replace to avoid back button issues)
+    navigate(newUrl, { replace: true });
+  }, [language, langCode, faq, navigate, currentCountry]);
+
   // CRITICAL: Check ref FIRST before any other render decisions
   // Ref is set synchronously, so it's the most reliable source of truth
   const hasFaqInRef = !!faqDataRef.current && loadedSlugRef.current === slug;
@@ -522,14 +553,14 @@ const FAQDetail: React.FC = () => {
             <p className="text-gray-600 mb-6">{error || 'The requested FAQ could not be found.'}</p>
             <div className="flex gap-4 justify-center">
               <Link
-                to={`/${getLocaleString(language)}/faq`}
+                to={`/${currentLocale}/faq`}
                 className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors inline-flex items-center gap-2"
               >
                 <Home className="w-5 h-5" />
                 Back to FAQ
               </Link>
               <Link
-                to={`/${getLocaleString(language)}`}
+                to={`/${currentLocale}`}
                 className="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors"
               >
                 Go Home
@@ -562,7 +593,6 @@ const FAQDetail: React.FC = () => {
   // Build canonical URL with locale prefix
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://sos-expat.com';
   const currentSlug = displayFaq.slug[langCode] || displayFaq.slug['fr'] || displayFaq.slug['en'] || displayFaq.id;
-  const currentLocale = getLocaleString(currentLang as any);
   const canonicalUrl = `${baseUrl}/${currentLocale}/faq/${currentSlug}`;
 
   // Generate alternate language URLs for hreflang tags
@@ -620,11 +650,11 @@ const FAQDetail: React.FC = () => {
       <article className="max-w-4xl mx-auto px-4 py-8 sm:py-12 min-h-[70vh]" >
         {/* Breadcrumb */}
         <nav className="mb-6 text-sm text-gray-600 flex items-center gap-2" aria-label="Breadcrumb">
-          <Link to={`/${getLocaleString(language)}`} className="hover:text-red-600 transition-colors">
+          <Link to={`/${currentLocale}`} className="hover:text-red-600 transition-colors">
             Home
           </Link>
           <ChevronRight className="w-4 h-4" />
-          <Link to={`/${getLocaleString(language)}/faq`} className="hover:text-red-600 transition-colors">
+          <Link to={`/${currentLocale}/faq`} className="hover:text-red-600 transition-colors">
             FAQ
           </Link>
           <ChevronRight className="w-4 h-4" />
@@ -673,7 +703,7 @@ const FAQDetail: React.FC = () => {
                 return (
                   <Link
                     key={relatedFaq.id}
-                    to={`/${getLocaleString(language)}/faq/${relatedSlug}`}
+                    to={`/${currentLocale}/faq/${relatedSlug}`}
                     className="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors border border-gray-200"
                   >
                     <h3 className="font-semibold text-gray-900 mb-2">{relatedQuestion}</h3>
@@ -690,7 +720,7 @@ const FAQDetail: React.FC = () => {
         {/* Back to FAQ Link */}
         <div className="mt-8 pt-6 border-t border-gray-200">
           <Link
-            to={`/${getLocaleString(language)}/faq`}
+            to={`/${currentLocale}/faq`}
             className="inline-flex items-center gap-2 text-red-600 hover:text-red-700 font-medium transition-colors"
           >
             <ChevronRight className="w-4 h-4 rotate-180" />

@@ -746,17 +746,166 @@ const defaultCh = `
   http://localhost:5174/contact
 `
 
+const defaultEs = `
+# Política de Privacidad
+
+**${t.lastUpdated}**
+
+---
+
+## 1. ${t.dataCollection}
+Solo recopilamos los datos **estrictamente necesarios** para proporcionar nuestros servicios (datos de contacto, metadatos técnicos, detalles de la solicitud).
+
+## 2. ${t.dataProtection}
+Cifrado **en tránsito** y **en reposo** cuando sea posible. Fuertes salvaguardas técnicas y organizativas.
+
+## 3. ${t.dataSharing}
+Sin **reventa de datos**. Compartición limitada con procesadores **verificados** para proporcionar el servicio.
+
+## 4. ${t.yourRights}
+- ${t.rights[0]}
+- ${t.rights[1]}
+- ${t.rights[2]}
+- ${t.rights[3]}
+- ${t.rights[4]}
+
+---
+
+## 5. ${t.contact}
+http://localhost:5174/contact
+`;
+
+const defaultDe = `
+# Datenschutzerklärung
+
+**${t.lastUpdated}**
+
+---
+
+## 1. ${t.dataCollection}
+Wir erheben nur **streng notwendige** Daten zur Erbringung unserer Dienstleistungen (Kontaktdaten, technische Metadaten, Anfragedetails).
+
+## 2. ${t.dataProtection}
+Verschlüsselung **während der Übertragung** und **im Ruhezustand** wo möglich. Starke technische und organisatorische Schutzmaßnahmen.
+
+## 3. ${t.dataSharing}
+Kein **Datenverkauf**. Begrenzte Weitergabe an **geprüfte** Auftragsverarbeiter zur Serviceerbringung.
+
+## 4. ${t.yourRights}
+- ${t.rights[0]}
+- ${t.rights[1]}
+- ${t.rights[2]}
+- ${t.rights[3]}
+- ${t.rights[4]}
+
+---
+
+## 5. ${t.contact}
+http://localhost:5174/contact
+`;
+
+const defaultPt = `
+# Política de Privacidade
+
+**${t.lastUpdated}**
+
+---
+
+## 1. ${t.dataCollection}
+Coletamos apenas os dados **estritamente necessários** para fornecer nossos serviços (dados de contato, metadados técnicos, detalhes da solicitação).
+
+## 2. ${t.dataProtection}
+Criptografia **em trânsito** e **em repouso** quando possível. Fortes salvaguardas técnicas e organizacionais.
+
+## 3. ${t.dataSharing}
+Sem **revenda de dados**. Compartilhamento limitado com processadores **verificados** para fornecer o serviço.
+
+## 4. ${t.yourRights}
+- ${t.rights[0]}
+- ${t.rights[1]}
+- ${t.rights[2]}
+- ${t.rights[3]}
+- ${t.rights[4]}
+
+---
+
+## 5. ${t.contact}
+http://localhost:5174/contact
+`;
+
+const defaultRu = `
+# Политика конфиденциальности
+
+**${t.lastUpdated}**
+
+---
+
+## 1. ${t.dataCollection}
+Мы собираем только **строго необходимые** данные для предоставления наших услуг (контактные данные, технические метаданные, детали запроса).
+
+## 2. ${t.dataProtection}
+Шифрование **при передаче** и **при хранении** где возможно. Строгие технические и организационные меры защиты.
+
+## 3. ${t.dataSharing}
+Никакой **перепродажи данных**. Ограниченный обмен с **проверенными** обработчиками для предоставления услуги.
+
+## 4. ${t.yourRights}
+- ${t.rights[0]}
+- ${t.rights[1]}
+- ${t.rights[2]}
+- ${t.rights[3]}
+- ${t.rights[4]}
+
+---
+
+## 5. ${t.contact}
+http://localhost:5174/contact
+`;
+
+const defaultAr = `
+# سياسة الخصوصية
+
+**${t.lastUpdated}**
+
+---
+
+## 1. ${t.dataCollection}
+نجمع فقط البيانات **الضرورية للغاية** لتقديم خدماتنا (بيانات الاتصال، البيانات الوصفية التقنية، تفاصيل الطلب).
+
+## 2. ${t.dataProtection}
+تشفير **أثناء النقل** و**أثناء التخزين** حيثما أمكن. إجراءات حماية تقنية وتنظيمية قوية.
+
+## 3. ${t.dataSharing}
+لا **إعادة بيع للبيانات**. مشاركة محدودة مع معالجين **معتمدين** لتقديم الخدمة.
+
+## 4. ${t.yourRights}
+- ${t.rights[0]}
+- ${t.rights[1]}
+- ${t.rights[2]}
+- ${t.rights[3]}
+- ${t.rights[4]}
+
+---
+
+## 5. ${t.contact}
+http://localhost:5174/contact
+`;
+
   // const defaultContent = selectedLanguage === "fr" ? defaultFr : defaultEn;
 
-  const defaultContent = 
-  selectedLanguage === "fr" 
-    ? defaultFr 
+  const defaultContent =
+  selectedLanguage === "fr"
+    ? defaultFr
     : selectedLanguage === "es"
-    ? texts.es.title // Use Spanish default if you have it
+    ? defaultEs
     : selectedLanguage === "de"
-    ? texts.de.title // Use German default if you have it
+    ? defaultDe
     : selectedLanguage === "ru"
-    ? texts.ru.title // Use Russian default if you have it
+    ? defaultRu
+    : selectedLanguage === "pt"
+    ? defaultPt
+    : selectedLanguage === "ar"
+    ? defaultAr
     : selectedLanguage === "hi"
     ? defaultHi
     : selectedLanguage === "ch"

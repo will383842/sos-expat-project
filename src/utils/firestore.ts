@@ -795,6 +795,24 @@ export const createReviewRecord = async (reviewData: Partial<Review>) => {
 
     console.log("✅ User authenticated:", currentUser.uid);
 
+    // ✅ Check if review already exists for this call (unicité)
+    if (reviewData.callId) {
+      console.log("🔍 Checking for existing review...");
+      const existingReviewQuery = query(
+        collection(db, "reviews"),
+        where("callId", "==", reviewData.callId),
+        where("clientId", "==", currentUser.uid),
+        fsLimit(1)
+      );
+      const existingReviewSnap = await getDocs(existingReviewQuery);
+
+      if (!existingReviewSnap.empty) {
+        console.log("⚠️ Review already exists for this call");
+        throw new Error("You have already submitted a review for this call");
+      }
+      console.log("✅ No existing review found, proceeding...");
+    }
+
     const payload: Dict = {
       ...(reviewData as Dict),
       status: auto ? "published" : "pending",

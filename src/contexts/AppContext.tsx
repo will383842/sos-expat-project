@@ -5,6 +5,8 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
+import { collection, getDocs, query } from "firebase/firestore";
+import { db } from "../config/firebase";
 import { Service, AppSettings, Notification, EnhancedSettings } from "./types";
 import { ensureCollectionsExist } from "../utils/firestore";
 import { detectUserLanguage, saveLanguagePreference } from "../multilingual-system";
@@ -25,6 +27,8 @@ interface AppContextType {
   markNotificationAsRead: (id: string) => void;
   getUnreadNotificationsCount: () => number;
   updateEnhancedSettings: (settings: Partial<EnhancedSettings>) => void;
+  isCountryEnabled: (countryCode: string) => boolean; // ✅ Check if country is enabled
+  countriesLoading: boolean; // ✅ Loading state for countries
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -45,8 +49,42 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [services, setServices] = useState<Service[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [language, setLanguage] = useState<Language>("fr"); // ✅ Changed type to Language
+  const [supportedCountries, setSupportedCountries] = useState<string[]>([]);
+  const [countriesLoading, setCountriesLoading] = useState(true);
 
-  const [settings] = useState<AppSettings>({
+  // ✅ Load enabled countries from Firestore on app startup
+  useEffect(() => {
+    const loadEnabledCountries = async () => {
+      try {
+        setCountriesLoading(true);
+        const countrySettingsQuery = query(collection(db, "country_settings"));
+        const snapshot = await getDocs(countrySettingsQuery);
+
+        const enabledCountries: string[] = [];
+        snapshot.docs.forEach((doc) => {
+          const data = doc.data();
+          if (data.isActive === true) {
+            // Use the code from the document (uppercase)
+            enabledCountries.push(data.code?.toUpperCase() || doc.id.toUpperCase());
+          }
+        });
+
+        setSupportedCountries(enabledCountries);
+        console.log(`[AppContext] Loaded ${enabledCountries.length} enabled countries from Firestore`);
+      } catch (error) {
+        console.error("[AppContext] Error loading country settings:", error);
+        // Fallback to empty array - admin must enable countries
+        setSupportedCountries([]);
+      } finally {
+        setCountriesLoading(false);
+      }
+    };
+
+    loadEnabledCountries();
+  }, []);
+
+  // ✅ Settings now uses dynamic supportedCountries from Firestore
+  const settings: AppSettings = {
     servicesEnabled: {
       lawyerCalls: true,
       expatCalls: true,
@@ -58,20 +96,15 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     platformCommission: 0.15,
     maxCallDuration: 30,
     callTimeout: 30,
-    supportedCountries: [
-      "CA",
-      "UK",
-      "DE",
-      "ES",
-      "IT",
-      "BE",
-      "CH",
-      "LU",
-      "NL",
-      "AT",
-    ],
-    supportedLanguages: ["fr", "en", "es"],
-  });
+    supportedCountries: supportedCountries, // ✅ Dynamic from Firestore!
+    supportedLanguages: ["fr", "en", "es", "de", "pt", "ru", "hi", "ar", "ch"],
+  };
+
+  // ✅ Helper function to check if a country is enabled
+  const isCountryEnabled = (countryCode: string): boolean => {
+    if (!countryCode) return false;
+    return supportedCountries.includes(countryCode.toUpperCase());
+  };
 
   const [enhancedSettings, setEnhancedSettings] = useState<EnhancedSettings>({
     notifications: {
@@ -203,6 +236,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         markNotificationAsRead,
         getUnreadNotificationsCount,
         updateEnhancedSettings,
+        isCountryEnabled,
+        countriesLoading,
       }}
     >
       {children}

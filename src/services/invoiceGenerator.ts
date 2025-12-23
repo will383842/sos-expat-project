@@ -92,7 +92,7 @@ interface InvoiceRecord {
 
 // ==================== CONFIGURATION ====================
 const COMPANY_INFO: CompanyInfo = {
-  name: process.env.REACT_APP_COMPANY_NAME || 'Ulixai',
+  name: process.env.REACT_APP_COMPANY_NAME || 'WorldExpat OÜ',
   address: process.env.REACT_APP_COMPANY_ADDRESS || '',
   city: process.env.REACT_APP_COMPANY_CITY || '',
   postalCode: process.env.REACT_APP_COMPANY_POSTAL || '',

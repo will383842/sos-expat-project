@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import Button from '../../components/common/Button';
 import AdminLayout from '../../components/admin/AdminLayout';
+import { useAuth } from '../../contexts/AuthContext';
 
 type ServiceType = 'lawyer_call' | 'expat_call';
 type KYCStatus = 'pending' | 'approved' | 'rejected' | 'incomplete';
@@ -94,6 +95,7 @@ interface Stats {
 }
 
 const AdminKYCProviders: React.FC = () => {
+  const { user: currentUser } = useAuth();
   const [providers, setProviders] = useState<KYCProvider[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedProviders, setSelectedProviders] = useState<string[]>([]);
@@ -292,7 +294,7 @@ const AdminKYCProviders: React.FC = () => {
       } = {
         kycStatus: newStatus,
         kycReviewedAt: new Date(),
-        kycReviewedBy: 'admin', // TODO: remplace par l'ID de l'admin connecté
+        kycReviewedBy: currentUser?.id || 'admin',
         updatedAt: new Date(),
       };
 
@@ -950,13 +952,36 @@ const AdminKYCProviders: React.FC = () => {
                                 <Eye size={12} className="mr-1" />
                                 Voir
                               </button>
-                              {/* TODO: Validation document (mettre à jour la sous-collection si besoin) */}
                               <button
-                                onClick={() => alert("Fonction 'Valider' à implémenter pour ce document.")}
-                                className="flex items-center px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700"
+                                onClick={async () => {
+                                  try {
+                                    // Mettre à jour le document comme vérifié
+                                    const updatedDocs = selectedProvider.documents.map((d) =>
+                                      d.url === doc.url ? { ...d, verified: true } : d
+                                    );
+                                    await updateDoc(fsDoc(db, 'sos_profiles', selectedProvider.id), {
+                                      documents: updatedDocs,
+                                      updatedAt: new Date(),
+                                    });
+                                    // Mettre à jour l'état local
+                                    setSelectedProvider((prev) =>
+                                      prev ? { ...prev, documents: updatedDocs } : prev
+                                    );
+                                    alert('Document validé avec succès');
+                                  } catch (error) {
+                                    console.error('Erreur validation document:', error);
+                                    alert('Erreur lors de la validation du document');
+                                  }
+                                }}
+                                disabled={doc.verified}
+                                className={`flex items-center px-3 py-1 text-white text-xs rounded ${
+                                  doc.verified
+                                    ? 'bg-gray-400 cursor-not-allowed'
+                                    : 'bg-green-600 hover:bg-green-700'
+                                }`}
                               >
                                 <CheckCircle size={12} className="mr-1" />
-                                Valider
+                                {doc.verified ? 'Validé' : 'Valider'}
                               </button>
                             </div>
                           </div>

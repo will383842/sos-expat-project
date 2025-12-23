@@ -6,6 +6,7 @@ import { useIntl } from "react-intl";
 interface ReviewModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
   providerId: string;
   providerName: string;
   callId: string;
@@ -15,6 +16,7 @@ interface ReviewModalProps {
 const ReviewModal: React.FC<ReviewModalProps> = ({
   isOpen,
   onClose,
+  onSuccess,
   providerId,
   providerName,
   callId,
@@ -22,8 +24,12 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
 }) => {
   const intl = useIntl();
   const handleSuccess = () => {
-    onClose();
-    // Optionally show a success message or refresh reviews
+    // Appeler le callback de succès si fourni, sinon fermer simplement
+    if (onSuccess) {
+      onSuccess();
+    } else {
+      onClose();
+    }
   };
 
   return (

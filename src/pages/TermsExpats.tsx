@@ -115,12 +115,14 @@ const TermsExpats: React.FC = () => {
         rules: "Règles d'usage – Qualité, interdits, non-contournement",
         relationship: "Relation Aidant–Utilisateur (hors Plateforme)",
         fees: "Frais, paiement unique et taxes",
+        kyc: "Paiements – KYC/LCB-FT – Sanctions",
         data: "Données personnelles (cadre global)",
         ip: "Propriété intellectuelle",
         liability: "Garanties, responsabilité et indemnisation",
         law: "Droit applicable – Arbitrage – Juridiction estonienne",
+        protection: "Clauses de protection internationale",
         misc: "Divers",
-        contact: "Contact", 
+        contact: "Contact",
       },
       readyToJoin: "Prêt à rejoindre SOS Expat ?",
       readySubtitle:
@@ -156,10 +158,12 @@ const TermsExpats: React.FC = () => {
         rules: "Use Rules – Quality, Prohibited Conduct, No Circumvention",
         relationship: "Helper–User Relationship (Off-Platform)",
         fees: "Fees, Single Payment and Taxes",
+        kyc: "Payments – KYC/AML – Sanctions",
         data: "Data Protection (Global Framework)",
         ip: "Intellectual Property",
         liability: "Warranties, Liability and Indemnity",
         law: "Governing Law – ICC Arbitration – Estonian Courts",
+        protection: "International Protection Clauses",
         misc: "Miscellaneous",
         contact: "Contact",
       },
@@ -196,10 +200,12 @@ const TermsExpats: React.FC = () => {
         rules: "Reglas de uso – Calidad, prohibiciones, no evasión",
         relationship: "Relación Ayudante–Usuario (fuera de la plataforma)",
         fees: "Tarifas, pago único e impuestos",
+        kyc: "Pagos – KYC/AML – Sanciones",
         data: "Datos personales (marco global)",
         ip: "Propiedad intelectual",
         liability: "Garantías, responsabilidad e indemnización",
         law: "Ley aplicable – Arbitraje – Jurisdicción estonia",
+        protection: "Cláusulas de protección internacional",
         misc: "Varios",
         contact: "Contacto",
       },
@@ -237,10 +243,12 @@ const TermsExpats: React.FC = () => {
         rules: "Nutzungsregeln – Qualität, Verbote, keine Umgehung",
         relationship: "Helfer–Benutzer-Beziehung (außerhalb der Plattform)",
         fees: "Gebühren, Einzelzahlung und Steuern",
+        kyc: "Zahlungen – KYC/AML – Sanktionen",
         data: "Personenbezogene Daten (globaler Rahmen)",
         ip: "Geistiges Eigentum",
         liability: "Garantien, Haftung und Entschädigung",
         law: "Anwendbares Recht – Schiedsverfahren – Estnische Gerichtsbarkeit",
+        protection: "Internationale Schutzklauseln",
         misc: "Verschiedenes",
         contact: "Kontakt",
       },
@@ -278,10 +286,12 @@ const TermsExpats: React.FC = () => {
         rules: "Правила использования – Качество, запреты, отсутствие обхода",
         relationship: "Отношения помощник–пользователь (вне платформы)",
         fees: "Сборы, единый платёж и налоги",
+        kyc: "Платежи – KYC/AML – Санкции",
         data: "Персональные данные (глобальная структура)",
         ip: "Интеллектуальная собственность",
         liability: "Гарантии, ответственность и возмещение ущерба",
         law: "Применимое право – Арбитраж – Эстонская юрисдикция",
+        protection: "Международные защитные положения",
         misc: "Разное",
         contact: "Контакт",
       },
@@ -319,10 +329,12 @@ const TermsExpats: React.FC = () => {
         rules: "उपयोग नियम – गुणवत्ता, निषेध, कोई परिहार नहीं",
         relationship: "सहायक–उपयोगकर्ता संबंध (प्लेटफ़ॉर्म के बाहर)",
         fees: "शुल्क, एकल भुगतान और कर",
+        kyc: "भुगतान – KYC/AML – प्रतिबंध",
         data: "व्यक्तिगत डेटा (वैश्विक ढांचा)",
         ip: "बौद्धिक संपदा",
         liability: "वारंटी, दायित्व और क्षतिपूर्ति",
         law: "लागू कानून – मध्यस्थता – एस्टोनियाई अधिकार क्षेत्र",
+        protection: "अंतर्राष्ट्रीय सुरक्षा खंड",
         misc: "विविध",
         contact: "संपर्क",
       },
@@ -360,10 +372,12 @@ const TermsExpats: React.FC = () => {
         rules: "使用规则 – 质量、禁止行为与禁止规避",
         relationship: "助手与用户关系（平台外）",
         fees: "费用、单次付款与税务",
+        kyc: "支付 – KYC/AML – 制裁",
         data: "数据保护（全球框架）",
         ip: "知识产权",
         liability: "保证、责任与赔偿",
         law: "适用法律 – ICC 仲裁 – 爱沙尼亚法院",
+        protection: "国际保护条款",
         misc: "其他条款",
         contact: "联系方式",
       },
@@ -400,10 +414,12 @@ const TermsExpats: React.FC = () => {
         rules: "قواعد الاستخدام – الجودة والسلوك المحظور وبدون التفافية",
         relationship: "علاقة المساعد والمستخدم (خارج المنصة)",
         fees: "الرسوم والدفع الواحد والضرائب",
+        kyc: "المدفوعات – KYC/AML – العقوبات",
         data: "حماية البيانات (الإطار العالمي)",
         ip: "الملكية الفكرية",
         liability: "الضمانات والمسؤولية والتعويض",
         law: "القانون الحاكم – التحكيم ICC – المحاكم الإستونية",
+        protection: "بنود الحماية الدولية",
         misc: "متفرقات",
         contact: "اتصل",
       },
@@ -440,10 +456,12 @@ const TermsExpats: React.FC = () => {
     rules: "Regras de uso – Qualidade, condutas proibidas, sem contornamento",
     relationship: "Relação Ajudante–Usuário (fora da plataforma)",
     fees: "Taxas, pagamento único e impostos",
+    kyc: "Pagamentos – KYC/AML – Sanções",
     data: "Proteção de dados (estrutura global)",
     ip: "Propriedade intelectual",
     liability: "Garantias, responsabilidade e indenização",
     law: "Lei aplicável – Arbitragem ICC – Tribunais estonianos",
+    protection: "Cláusulas de proteção internacional",
     misc: "Diversos",
     contact: "Contato",
   },
@@ -655,7 +673,7 @@ const TermsExpats: React.FC = () => {
   const defaultFr = `
 # Conditions Générales d'Utilisation – Expatriés Aidants (Global)
 
-**SOS Expat d'Ulixai OÜ** (la « **Plateforme** », « **SOS** », « **nous** »)
+**SOS Expat d'WorldExpat OÜ** (la « **Plateforme** », « **SOS** », « **nous** »)
 
 **Version 2.2 – Dernière mise à jour : 16 juin 2025**
 
@@ -681,21 +699,21 @@ const TermsExpats: React.FC = () => {
 
 2.1. Les présentes CGU régissent l'accès et l'utilisation de la Plateforme par les Aidants.
 
-2.2. **Ulixai agit exclusivement comme intermédiaire technique de Mise en relation.** Ulixai n'est pas employeur, mandataire ou partenaire des Aidants, ne fournit aucun conseil juridique, médical, fiscal, comptable ou réglementé, et n'est pas partie aux contrats entre Aidants et Utilisateurs.
+2.2. **SOS Expat agit exclusivement comme intermédiaire technique de Mise en relation.** SOS Expat n'est pas employeur, mandataire ou partenaire des Aidants, ne fournit aucun conseil juridique, médical, fiscal, comptable ou réglementé, et n'est pas partie aux contrats entre Aidants et Utilisateurs.
 
 2.3. **Acceptation électronique (click-wrap).** L'inscription et/ou l'usage de la Plateforme valent acceptation des CGU, signature électronique et consentement contractuel. SOS peut conserver des preuves techniques (horodatage, identifiants).
 
 2.4. **Modifications.** SOS peut mettre à jour les CGU et/ou les barèmes de frais (par pays/devise) avec **effet prospectif** par publication sur la Plateforme. L'usage continu vaut acceptation.
 
-2.5. **Capacité professionnelle (B2B).** L'Aidant déclare agir **exclusivement à des fins professionnelles** ; les régimes de protection des consommateurs ne s'appliquent pas à la relation Ulixai–Aidant.
+2.5. **Capacité professionnelle (B2B).** L'Aidant déclare agir **exclusivement à des fins professionnelles** ; les régimes de protection des consommateurs ne s'appliquent pas à la relation SOS Expat–Aidant.
 
 ---
 
 ## 3. Statut de l'Aidant – Conformité, autorisations et responsabilités
 
-3.1. **Indépendance.** L'Aidant agit en **professionnel indépendant** ; aucun lien d'emploi, mandat, agence, partenariat ou coentreprise n'est créé avec Ulixai.
+3.1. **Indépendance.** L'Aidant agit en **professionnel indépendant** ; aucun lien d'emploi, mandat, agence, partenariat ou coentreprise n'est créé avec SOS Expat.
 
-3.2. **Autorisation de travail & statut d'immigration.** L'Aidant est **seul responsable** d'obtenir et de maintenir **toutes autorisations** requises dans chaque Pays d'Intervention (visa, permis de travail, enregistrement d'activité/auto-entreprise, assurances, licences locales, etc.). Ulixai **ne vérifie pas** ces autorisations et **n'assume aucune responsabilité** à ce titre.
+3.2. **Autorisation de travail & statut d'immigration.** L'Aidant est **seul responsable** d'obtenir et de maintenir **toutes autorisations** requises dans chaque Pays d'Intervention (visa, permis de travail, enregistrement d'activité/auto-entreprise, assurances, licences locales, etc.). SOS Expat **ne vérifie pas** ces autorisations et **n'assume aucune responsabilité** à ce titre.
 
 3.3. **Services non réglementés.** L'Aidant s'engage à **ne pas fournir de services réglementés** (ex. conseil juridique, médical, financier, d'expert-comptable, d'agent immobilier, etc.) **sans** détenir les **autorisations/licences** nécessaires **et** sans se conformer pleinement aux lois locales. À défaut, il s'abstient de tels services et redirige l'Utilisateur vers un professionnel dûment habilité (ex. avocat inscrit).
 
@@ -711,9 +729,13 @@ const TermsExpats: React.FC = () => {
 
 4.1. **Inscription.** Un (1) compte par Aidant ; informations exactes, complètes et à jour (identité, moyens de contact, description des services, zones d'intervention, etc.).
 
-4.2. **Vérifications.** Ulixai peut procéder à des contrôles raisonnables (identité, cohérence du profil, screenings sanctions/KYC via Prestataires) et refuser/suspendre/retirer l'accès pour motif de sécurité, conformité ou qualité de service.
+4.2. **Vérifications.** SOS Expat peut procéder à des contrôles raisonnables (identité, cohérence du profil, screenings sanctions/KYC via Prestataires) et refuser/suspendre/retirer l'accès pour motif de sécurité, conformité ou qualité de service.
 
 4.3. **Sécurité des accès.** L'Aidant protège ses identifiants. Toute activité via le compte est réputée effectuée par lui.
+
+4.4. **Inactivité & résiliation.** En cas d'**inactivité supérieure à 365 jours**, le compte peut être désactivé automatiquement après notification. L'Aidant peut fermer son compte à tout moment après avoir honoré ses obligations en cours. SOS Expat peut suspendre ou résilier un compte pour violation des CGU, sans préjudice d'autres recours.
+
+4.5. **Communications électroniques.** L'Aidant consent à recevoir toute notification relative aux CGU par voie électronique (email, notification in-app, publication sur la Plateforme).
 
 ---
 
@@ -735,97 +757,135 @@ const TermsExpats: React.FC = () => {
 
 6.2. L'Aidant remet des **conditions/confirmations de service** conformes au droit local, gère sa **facturation** et ses **obligations fiscales**.
 
-6.3. Ulixai **n'est pas responsable** de la qualité, de l'exactitude ou du résultat des services de l'Aidant, ni des engagements pris entre l'Aidant et l'Utilisateur.
+6.3. SOS Expat **n'est pas responsable** de la qualité, de l'exactitude ou du résultat des services de l'Aidant, ni des engagements pris entre l'Aidant et l'Utilisateur.
 
 ---
 
 ## 7. Frais, paiement unique et taxes
 
-7.1. **Frais de Mise en relation (forfait).** **19 € (EUR)** **ou** **25 $ (USD)** **par Mise en relation**, hors taxes et hors frais du Prestataire de paiement. Ulixai peut modifier ces montants et/ou publier des **barèmes locaux** par pays/devise, avec effet prospectif.
+7.1. **Frais de Mise en relation (forfait).** **19 € (EUR)** **ou** **25 $ (USD)** **par Mise en relation**, hors taxes et hors frais du Prestataire de paiement. SOS Expat peut modifier ces montants et/ou publier des **barèmes locaux** par pays/devise, avec effet prospectif.
 
-7.2. **Paiement unique & répartition.** L'Utilisateur effectue **un paiement unique** via la Plateforme couvrant (i) la **rémunération de l'Aidant** (telle que convenue) et (ii) les **Frais de Mise en relation** d'Ulixai. Ulixai (ou son Prestataire) encaisse, **déduit** ses frais, puis **reverse** le solde à l'Aidant. L'Aidant **autorise** ces déductions et répartitions.
+7.2. **Paiement unique & répartition.** L'Utilisateur effectue **un paiement unique** via la Plateforme couvrant (i) la **rémunération de l'Aidant** (telle que convenue) et (ii) les **Frais de Mise en relation** d'SOS Expat. SOS Expat (ou son Prestataire) encaisse, **déduit** ses frais, puis **reverse** le solde à l'Aidant. L'Aidant **autorise** ces déductions et répartitions.
 
-7.3. **Exigibilité & non-remboursement.** Les Frais de Mise en relation sont **dus dès** la Mise en relation et sont **non remboursables** (sauf geste commercial discrétionnaire d'Ulixai en cas d'échec exclusivement imputable à la Plateforme et **dans la mesure permise par la loi**).
+7.3. **Exigibilité & non-remboursement.** Les Frais de Mise en relation sont **dus dès** la Mise en relation et sont **non remboursables** (sauf geste commercial discrétionnaire d'SOS Expat en cas d'échec exclusivement imputable à la Plateforme et **dans la mesure permise par la loi**).
 
-7.4. **Remboursements Utilisateur.** Si un remboursement est accordé à l'Utilisateur, il est **imputé sur la part de l'Aidant** : Ulixai peut **retenir/compenser** le montant correspondant sur les versements futurs de l'Aidant ou en demander le remboursement si aucun versement n'est à venir. **Aucun remboursement** des Frais de Mise en relation n'est dû, sauf décision discrétionnaire d'Ulixai.
+7.4. **Remboursements Utilisateur.** Si un remboursement est accordé à l'Utilisateur, il est **imputé sur la part de l'Aidant** : SOS Expat peut **retenir/compenser** le montant correspondant sur les versements futurs de l'Aidant ou en demander le remboursement si aucun versement n'est à venir. **Aucun remboursement** des Frais de Mise en relation n'est dû, sauf décision discrétionnaire d'SOS Expat.
 
 7.5. **Devises & conversion.** Plusieurs devises peuvent être proposées ; des taux/frais de conversion du Prestataire peuvent s'appliquer.
 
-7.6. **Taxes.** L'Aidant demeure responsable de **toutes taxes** applicables (TVA, impôt sur le revenu, sécurité sociale, etc.). Ulixai collecte/reverse, lorsque requis, la TVA/équivalent local sur les Frais de Mise en relation.
+7.6. **Taxes.** L'Aidant demeure responsable de **toutes taxes** applicables (TVA, impôt sur le revenu, sécurité sociale, etc.). SOS Expat collecte/reverse, lorsque requis, la TVA/équivalent local sur les Frais de Mise en relation.
 
-7.7. **Compensation.** Ulixai peut compenser toute somme due par l'Aidant avec toute somme payable à l'Aidant.
-
----
-
-## 8. Données personnelles (cadre global)
-
-8.1. **Rôles.** Pour les données d'Utilisateurs reçues aux fins de Mise en relation, **Ulixai et l'Aidant** agissent **chacun** en **responsable de traitement** pour leurs propres finalités.
-
-8.2. **Bases & finalités.** Exécution du contrat (Mise en relation), intérêts légitimes (sécurité, prévention de la fraude, amélioration), conformité légale (LCB-FT, sanctions), et consentement lorsque requis.
-
-8.3. **Transferts internationaux** avec **garanties appropriées** lorsque requis.
-
-8.4. **Droits & contact.** Exercice via le **formulaire de contact** de la Plateforme.
-
-8.5. **Sécurité.** Mesures techniques/organisationnelles raisonnables ; notification des violations selon les lois applicables.
-
-8.6. L'Aidant traite les données conformément au droit du **Pays d'Intervention**.
+7.7. **Compensation.** SOS Expat peut compenser toute somme due par l'Aidant avec toute somme payable à l'Aidant.
 
 ---
 
-## 9. Propriété intellectuelle
+## 8. Paiements – KYC/LCB-FT – Sanctions
 
-La Plateforme, ses marques, logos, bases de données et contenus sont protégés. Aucun droit n'est cédé à l'Aidant, hormis un droit **personnel, non exclusif, non transférable** d'accès pendant la durée des CGU. Les contenus fournis par l'Aidant font l'objet d'une **licence mondiale, non exclusive** au profit d'Ulixai pour l'hébergement et l'affichage dans la Plateforme.
+8.1. **Prestataires de paiement.** Les paiements sont traités par des **Prestataires tiers** (Stripe, etc.). L'Aidant accepte leurs conditions générales et leurs processus de vérification **KYC/LCB-FT** (Know Your Customer / Lutte contre le Blanchiment et le Financement du Terrorisme).
 
----
+8.2. **KYC obligatoire pour recevoir les versements.** L'Aidant **doit compléter avec succès** la procédure de vérification d'identité (KYC) auprès du Prestataire de paiement **avant** de pouvoir recevoir tout versement. **Aucun paiement ne sera effectué** tant que le KYC n'est pas validé. SOS Expat décline toute responsabilité pour les retards de paiement liés à un KYC incomplet ou refusé.
 
-## 10. Garanties, responsabilité et indemnisation
+8.3. **Rétention et annulation.** SOS Expat peut **différer, retenir ou annuler** des paiements en cas de : (i) soupçon de fraude, (ii) non-conformité aux CGU ou aux lois, (iii) injonction légale ou administrative, (iv) défaut de KYC, (v) violation des règles de sanctions internationales.
 
-10.1. **Aucune garantie** quant aux résultats/qualité/volume d'affaires ; la Plateforme est fournie **« en l'état »**.
+8.4. **Sanctions et embargos.** L'accès à la Plateforme et aux services de paiement peut être **restreint** dans des territoires soumis à **sanctions ou embargos** (UE, USA, ONU, OFAC). L'Aidant déclare **ne figurer sur aucune liste de sanctions** et respecter les **contrôles export** applicables.
 
-10.2. **Limitation de responsabilité** : dans la mesure permise, la responsabilité totale d'Ulixai envers l'Aidant est limitée aux **dommages directs** et **ne peut excéder** le total des **Frais de Mise en relation** perçus par Ulixai au titre de la **transaction** à l'origine de la réclamation.
-
-10.3. **Exclusions** : aucun dommage indirect/consécutif/spécial/punitif (perte de profits, d'opportunités, de clientèle, atteinte à la réputation, coûts de remplacement, etc.).
-
-10.4. **Indemnisation** : l'Aidant **indemnise et garantit** Ulixai (ainsi que ses affiliés, dirigeants, employés, agents) contre toute réclamation, perte, dommage, pénalité et frais (dont honoraires d'avocat) liés à (i) son manquement aux CGU/lois, (ii) ses contenus, (iii) ses services/omissions, (iv) l'absence d'autorisations de travail/immigration/licences.
-
-10.5. **Aucune représentation.** Rien n'emporte mandat, emploi, partenariat ou coentreprise entre Ulixai et l'Aidant.
-
-10.6. **Survie.** Les art. 5, 7, 8, 9, 10, 11 et 12 survivent à la résiliation.
+8.5. **Coopération légale.** L'Aidant s'engage à coopérer avec SOS Expat et les autorités compétentes en cas d'enquête relative au blanchiment d'argent, au financement du terrorisme ou à toute autre infraction financière.
 
 ---
 
-## 11. Droit applicable – Arbitrage – Juridiction estonienne – Actions collectives
+## 9. Données personnelles (cadre global – GDPR/DSA)
 
-11.1. **Droit matériel** : pour chaque Mise en relation, la relation **Ulixai–Aidant** est régie par les **lois du Pays d'Intervention**, sous réserve des règles d'ordre public locales et des normes internationales impératives. **À titre supplétif et pour l'interprétation/validité des présentes CGU ainsi que pour toute question non régie par le droit du Pays d'Intervention, le droit estonien s'applique.**
+9.1. **Rôles.** Pour les données d'Utilisateurs reçues aux fins de Mise en relation, **SOS Expat et l'Aidant** agissent **chacun** en **responsable de traitement** pour leurs propres finalités, conformément au **Règlement (UE) 2016/679 (GDPR)**.
 
-11.2. **Arbitrage CCI obligatoire** : tout litige Ulixai/Aidant est résolu **définitivement** selon le Règlement d'Arbitrage de la **CCI**. **Siège : Tallinn (Estonie)**. **Langue : français.** Le tribunal applique le **droit matériel** défini à l'art. 11.1. Procédure **confidentielle**.
+9.2. **Bases & finalités.** Exécution du contrat (Mise en relation), intérêts légitimes (sécurité, prévention de la fraude, amélioration), conformité légale (LCB-FT, sanctions), et consentement lorsque requis.
 
-11.3. **Renonciation aux actions collectives** : dans la mesure permise, toute action **collective/de groupe/représentative** est exclue ; réclamations **individuelles uniquement**.
+9.3. **Transferts internationaux** avec **garanties appropriées** lorsque requis (clauses contractuelles types, décision d'adéquation, etc.).
 
-11.4. **Compétence exclusive des tribunaux d'Estonie** : pour toute demande **non arbitrable**, l'**exécution** des sentences ou les **mesures urgentes**, les tribunaux estoniens (compétents à Tallinn) ont compétence **exclusive**. L'Aidant renonce à toute objection de forum/non-convenance.
+9.4. **Droits & contact.** Exercice des droits (accès, rectification, effacement, portabilité, opposition) via le **formulaire de contact** de la Plateforme.
 
----
+9.5. **Sécurité.** Mesures techniques/organisationnelles raisonnables ; notification des violations selon les lois applicables (72 heures conformément au GDPR).
 
-## 12. Divers
+9.6. L'Aidant traite les données conformément au droit du **Pays d'Intervention**.
 
-12.1. **Cession.** Ulixai peut céder les CGU à une entité de son groupe ou à un successeur ; l'Aidant ne peut céder sans accord écrit d'Ulixai.
-
-12.2. **Intégralité.** Les CGU constituent l'accord complet et remplacent tout accord antérieur relatif au même objet.
-
-12.3. **Notifications.** Par publication sur la Plateforme, notification in-app ou via le **formulaire de contact**.
-
-12.4. **Interprétation.** Les intitulés sont indicatifs. Aucune règle **contra proferentem**.
-
-12.5. **Langues.** Des traductions peuvent être fournies ; **le français prévaut** pour l'interprétation.
-
-12.6. **Nullité partielle.** Si une stipulation est nulle/inapplicable, le reste demeure en vigueur ; remplaçable par une stipulation valide d'effet équivalent lorsque possible.
-
-12.7. **Non-renonciation.** L'absence d'exercice d'un droit n'emporte pas renonciation.
+9.7. **Conformité DSA.** La Plateforme opère en tant que **service intermédiaire** au sens du **Règlement (UE) 2022/2065 (Digital Services Act)**. SOS Expat met en place des mécanismes de signalement de contenus illicites et coopère avec les autorités compétentes conformément au DSA.
 
 ---
 
-## 13. Contact
+## 10. Propriété intellectuelle
+
+La Plateforme, ses marques, logos, bases de données et contenus sont protégés. Aucun droit n'est cédé à l'Aidant, hormis un droit **personnel, non exclusif, non transférable** d'accès pendant la durée des CGU. Les contenus fournis par l'Aidant font l'objet d'une **licence mondiale, non exclusive** au profit d'SOS Expat pour l'hébergement et l'affichage dans la Plateforme.
+
+---
+
+## 11. Garanties, responsabilité et indemnisation
+
+11.1. **Aucune garantie** quant aux résultats/qualité/volume d'affaires ; la Plateforme est fournie **« en l'état »**.
+
+11.2. **Limitation de responsabilité** : dans la mesure permise, la responsabilité totale d'SOS Expat envers l'Aidant est limitée aux **dommages directs** et **ne peut excéder** le total des **Frais de Mise en relation** perçus par SOS Expat au titre de la **transaction** à l'origine de la réclamation.
+
+11.3. **Exclusions** : aucun dommage indirect/consécutif/spécial/punitif (perte de profits, d'opportunités, de clientèle, atteinte à la réputation, coûts de remplacement, etc.).
+
+11.4. **Indemnisation** : l'Aidant **indemnise et garantit** SOS Expat (ainsi que ses affiliés, dirigeants, employés, agents) contre toute réclamation, perte, dommage, pénalité et frais (dont honoraires d'avocat) liés à (i) son manquement aux CGU/lois, (ii) ses contenus, (iii) ses services/omissions, (iv) l'absence d'autorisations de travail/immigration/licences.
+
+11.5. **Renonciation aux recours.** L'Aidant **renonce expressément et irrévocablement** à tout recours contre SOS Expat au titre (i) des dommages résultant de la prestation de services, (ii) des pertes indirectes, (iii) des litiges contractuels avec les Utilisateurs, (iv) de toute défaillance des services fournis par l'Aidant. Cette renonciation s'applique dans la mesure maximale permise par la loi.
+
+11.6. **Aucune représentation.** Rien n'emporte mandat, emploi, partenariat ou coentreprise entre SOS Expat et l'Aidant.
+
+11.7. **Force majeure.** SOS Expat n'est pas responsable des retards ou défaillances causés par des événements de **force majeure** (catastrophe naturelle, guerre, pandémie, cyberattaque, panne électrique ou internet, décision gouvernementale, grève, etc.).
+
+11.8. **Survie.** Les art. 5, 7, 8, 9, 10, 11, 12 et 13 survivent à la résiliation.
+
+---
+
+## 12. Droit applicable – Arbitrage – Juridiction estonienne – Actions collectives
+
+12.1. **Droit matériel** : pour chaque Mise en relation, la relation **SOS Expat–Aidant** est régie par les **lois du Pays d'Intervention**, sous réserve des règles d'ordre public locales et des normes internationales impératives. **À titre supplétif et pour l'interprétation/validité des présentes CGU ainsi que pour toute question non régie par le droit du Pays d'Intervention, le droit estonien s'applique.**
+
+12.2. **Arbitrage CCI obligatoire** : tout litige SOS Expat/Aidant est résolu **définitivement** selon le Règlement d'Arbitrage de la **CCI**. **Siège : Tallinn (Estonie)**. **Langue : français.** Le tribunal applique le **droit matériel** défini à l'art. 12.1. Procédure **confidentielle**.
+
+12.3. **Renonciation aux actions collectives** : dans la mesure permise, toute action **collective/de groupe/représentative** est exclue ; réclamations **individuelles uniquement**.
+
+12.4. **Compétence exclusive des tribunaux d'Estonie** : pour toute demande **non arbitrable**, l'**exécution** des sentences ou les **mesures urgentes**, les tribunaux estoniens (compétents à Tallinn) ont compétence **exclusive**. L'Aidant renonce à toute objection de forum/non-convenance.
+
+12.5. **Médiation préalable.** Avant tout arbitrage, les parties s'engagent à tenter de résoudre le litige à l'amiable par **négociation de bonne foi** pendant un délai de **trente (30) jours** à compter de la notification écrite du différend.
+
+---
+
+## 13. Clauses de protection internationale
+
+13.1. **Anti-corruption.** L'Aidant s'engage à ne pas offrir, promettre ou verser de pots-de-vin ou avantages indus à des agents publics ou privés. Il respecte les lois anti-corruption applicables (FCPA, UK Bribery Act, loi Sapin II, etc.).
+
+13.2. **Confidentialité des échanges.** Les échanges réalisés via la Plateforme (messages, appels, vidéos) sont **confidentiels**. L'Aidant s'interdit de les enregistrer, divulguer ou utiliser à d'autres fins que la prestation convenue, sauf autorisation écrite ou obligation légale.
+
+13.3. **Non-sollicitation.** Pendant la durée des CGU et **douze (12) mois** après leur résiliation, l'Aidant s'interdit de solliciter directement les Utilisateurs rencontrés via la Plateforme pour éviter les Frais de Mise en relation.
+
+13.4. **Responsabilité exclusive de l'Aidant.** L'Aidant est **seul responsable** de la qualité, de l'exactitude et de la légalité des services qu'il fournit. SOS Expat **ne garantit pas** les conseils, informations ou services délivrés par l'Aidant et **décline toute responsabilité** pour tout préjudice subi par un Utilisateur du fait des services de l'Aidant.
+
+13.5. **Absence de relation de conseil.** SOS Expat n'est **pas un cabinet de conseil**, ni un prestataire de services juridiques, fiscaux, médicaux ou réglementés. La Plateforme se limite à la **mise en relation**. Toute relation de conseil est établie **exclusivement** entre l'Aidant et l'Utilisateur, **hors** de SOS Expat.
+
+13.6. **Litiges Aidant-Utilisateur.** Tout litige entre un Aidant et un Utilisateur relève **exclusivement** de leur relation directe. SOS Expat **n'intervient pas** dans ces litiges et **ne peut être mis en cause** comme partie, garant ou médiateur.
+
+---
+
+## 14. Divers
+
+14.1. **Cession.** SOS Expat peut céder les CGU à une entité de son groupe ou à un successeur ; l'Aidant ne peut céder sans accord écrit d'SOS Expat.
+
+14.2. **Intégralité.** Les CGU constituent l'accord complet et remplacent tout accord antérieur relatif au même objet.
+
+14.3. **Notifications.** Par publication sur la Plateforme, notification in-app ou via le **formulaire de contact**.
+
+14.4. **Interprétation.** Les intitulés sont indicatifs. Aucune règle **contra proferentem**.
+
+14.5. **Langues.** Des traductions peuvent être fournies ; **le français prévaut** pour l'interprétation.
+
+14.6. **Nullité partielle.** Si une stipulation est nulle/inapplicable, le reste demeure en vigueur ; remplaçable par une stipulation valide d'effet équivalent lorsque possible.
+
+14.7. **Non-renonciation.** L'absence d'exercice d'un droit n'emporte pas renonciation.
+
+---
+
+## 15. Contact
 
 Pour toute question ou demande légale, contactez-nous :
 `;
@@ -834,7 +894,7 @@ Pour toute question ou demande légale, contactez-nous :
   const defaultEn = `
 # Terms of Use – Expatriate Helpers (Global)
 
-**SOS Expat by Ulixai OÜ** (the "**Platform**", "**SOS**", "**we**")
+**SOS Expat by WorldExpat OÜ** (the "**Platform**", "**SOS**", "**we**")
 
 **Version 2.2 – Last updated: 16 June 2025**
 
@@ -860,21 +920,21 @@ Pour toute question ou demande légale, contactez-nous :
 
 2.1. These Terms of Use govern access to and use of the Platform by Helpers.
 
-2.2. Ulixai acts solely as a technical intermediary for Connections. Ulixai is not the employer, agent, or partner of Helpers, provides no legal, medical, tax, accounting, or other regulated advice, and is not a party to contracts between Helpers and Users.
+2.2. SOS Expat acts solely as a technical intermediary for Connections. SOS Expat is not the employer, agent, or partner of Helpers, provides no legal, medical, tax, accounting, or other regulated advice, and is not a party to contracts between Helpers and Users.
 
 2.3. **Electronic acceptance (click-wrap):** Registration and/or use of the Platform constitutes acceptance of these Terms, electronic signature, and contractual consent. SOS may retain technical evidence (timestamps, identifiers).
 
 2.4. **Modifications:** SOS may update the Terms and/or fee schedules (by country/currency) with prospective effect by publishing them on the Platform. Continued use constitutes acceptance.
 
-2.5. **Professional capacity (B2B):** The Helper declares to act solely for professional purposes; consumer protection regimes do not apply to the Ulixai–Helper relationship.
+2.5. **Professional capacity (B2B):** The Helper declares to act solely for professional purposes; consumer protection regimes do not apply to the SOS Expat–Helper relationship.
 
 ---
 
 ## 3. Helper status – Compliance, authorizations, and responsibilities
 
-3.1. **Independence:** The Helper acts as an independent professional; no employment, agency, partnership, or joint venture relationship is created with Ulixai.
+3.1. **Independence:** The Helper acts as an independent professional; no employment, agency, partnership, or joint venture relationship is created with SOS Expat.
 
-3.2. **Work authorization & immigration status:** The Helper is solely responsible for obtaining and maintaining all required authorizations in each Country of Operation (visa, work permit, business registration/self-employment, insurance, local licenses, etc.). Ulixai does not verify such authorizations and assumes no responsibility in this regard.
+3.2. **Work authorization & immigration status:** The Helper is solely responsible for obtaining and maintaining all required authorizations in each Country of Operation (visa, work permit, business registration/self-employment, insurance, local licenses, etc.). SOS Expat does not verify such authorizations and assumes no responsibility in this regard.
 
 3.3. **Unregulated services:** The Helper agrees not to provide regulated services (e.g. legal, medical, financial, accounting, or real estate advice, etc.) without holding the required authorizations/licenses and full compliance with local laws. Otherwise, the Helper must refrain from such services and refer the User to a duly licensed professional (e.g. a registered lawyer).
 
@@ -890,9 +950,13 @@ Pour toute question ou demande légale, contactez-nous :
 
 4.1. **Registration** One (1) account per Helper; information must be accurate, complete, and up to date (identity, contact details, service descriptions, operational areas, etc.).
 
-4.2. **Verification** Ulixai may perform reasonable checks (identity, profile consistency, sanctions/KYC screenings via Providers) and may refuse/suspend/remove access for reasons of security, compliance, or service quality.
+4.2. **Verification** SOS Expat may perform reasonable checks (identity, profile consistency, sanctions/KYC screenings via Providers) and may refuse/suspend/remove access for reasons of security, compliance, or service quality.
 
 4.3. **Access security** The Helper protects their login credentials. Any activity under the account is deemed to have been performed by them.
+
+4.4. **Inactivity & termination.** After **365 days of inactivity**, the account may be automatically deactivated following notification. The Helper may close their account at any time after fulfilling their outstanding obligations. SOS Expat may suspend or terminate an account for violation of the Terms, without prejudice to other remedies.
+
+4.5. **Electronic communications.** The Helper consents to receive any notifications related to the Terms by electronic means (email, in-app notification, publication on the Platform).
 
 ---
 
@@ -914,287 +978,143 @@ Pour toute question ou demande légale, contactez-nous :
 
 6.2. The Helper provides service confirmations/terms compliant with local law, manages their own billing and tax obligations.
 
-6.3. Ulixai is not responsible for the quality, accuracy, or outcome of the Helper’s services, nor for any commitments made between Helper and User.
+6.3. SOS Expat is not responsible for the quality, accuracy, or outcome of the Helper’s services, nor for any commitments made between Helper and User.
 
 ---
 
 ## 7. Fees, Single Payment and Taxes
 
-7.1. **Connection Fee (flat rate): €19 (EUR) or $25 (USD)** per Connection, excluding taxes and Payment Provider fees. Ulixai may modify these amounts and/or publish local rate schedules by country/currency, with prospective effect.
+7.1. **Connection Fee (flat rate): €19 (EUR) or $25 (USD)** per Connection, excluding taxes and Payment Provider fees. SOS Expat may modify these amounts and/or publish local rate schedules by country/currency, with prospective effect.
 
-7.2. **Single payment & distribution:** The User makes a single payment via the Platform covering (i) the Helper’s remuneration (as agreed) and (ii) Ulixai’s Connection Fee. Ulixai (or its Provider) collects, deducts its fee, and transfers the remaining balance to the Helper. The Helper authorizes such deductions and allocations.
+7.2. **Single payment & distribution:** The User makes a single payment via the Platform covering (i) the Helper’s remuneration (as agreed) and (ii) SOS Expat’s Connection Fee. SOS Expat (or its Provider) collects, deducts its fee, and transfers the remaining balance to the Helper. The Helper authorizes such deductions and allocations.
 
-7.3. **Due and non-refundable:** The Connection Fee is due as soon as the Connection is made and non-refundable (except at Ulixai’s discretionary goodwill in case of a failure solely attributable to the Platform and to the extent permitted by law).
+7.3. **Due and non-refundable:** The Connection Fee is due as soon as the Connection is made and non-refundable (except at SOS Expat’s discretionary goodwill in case of a failure solely attributable to the Platform and to the extent permitted by law).
 
-7.4. **User refunds:** If a refund is granted to a User, it is deducted from the Helper’s share: Ulixai may withhold/offset the corresponding amount from future payments to the Helper or request repayment if no payment is pending. No refund of Connection Fees is due, except at Ulixai’s discretion.
+7.4. **User refunds:** If a refund is granted to a User, it is deducted from the Helper’s share: SOS Expat may withhold/offset the corresponding amount from future payments to the Helper or request repayment if no payment is pending. No refund of Connection Fees is due, except at SOS Expat’s discretion.
 
 7.5. **Currencies & conversion:** Multiple currencies may be offered; Provider exchange rates/fees may apply.
 
-7.6. **Taxes** The Helper remains responsible for all applicable taxes (VAT, income tax, social security, etc.). Ulixai collects/remits, where required, VAT/equivalent on Connection Fees.
+7.6. **Taxes** The Helper remains responsible for all applicable taxes (VAT, income tax, social security, etc.). SOS Expat collects/remits, where required, VAT/equivalent on Connection Fees.
 
-7.7. **Set-off** Ulixai may offset any amount owed by the Helper against any amount payable to the Helper.
-
----
-
-## 8. Data Protection (Global Framework)
-
-8.1. **Roles** For User data received for Connection purposes, Ulixai and the Helper each act as independent data controllers for their own purposes.
-
-8.2. **Legal bases & purposes** Contract performance (Connection), legitimate interests (security, fraud prevention, improvement), legal compliance (AML, sanctions), and consent where required.
-
-8.3. International transfers with appropriate safeguards where required.
-
-8.4. **Rights & contact** Exercised via the Platform’s contact form.
-
-8.5. **Security** Reasonable technical/organizational measures; breach notifications according to applicable law.
-
-8.6. The Helper processes data in accordance with the law of the Country of Operation.
----
-
-## 9. Intellectual Property
-
-The Platform, its trademarks, logos, databases, and content are protected. No rights are transferred to the Helper, except for a personal, non-exclusive, non-transferable right of access during the term of these Terms. Content provided by the Helper is subject to a worldwide, non-exclusive license in favor of Ulixai for hosting and display on the Platform.
+7.7. **Set-off** SOS Expat may offset any amount owed by the Helper against any amount payable to the Helper.
 
 ---
 
-## 10. Warranties, Liability and Indemnity
+## 8. Payments – KYC/AML – Sanctions
 
-10.1. No guarantee regarding results/quality/business volume; the Platform is provided “as is”.
+8.1. **Payment Providers.** Payments are processed by **third-party Providers** (Stripe, etc.). The Helper agrees to their terms and conditions and their **KYC/AML** (Know Your Customer / Anti-Money Laundering) verification processes.
 
-10.2. **Liability limitation:** to the extent permitted, Ulixai’s total liability to the Helper is limited to direct damages and shall not exceed the total Connection Fees received by Ulixai for the transaction giving rise to the claim.
+8.2. **KYC required to receive payments.** The Helper **must successfully complete** the identity verification process (KYC) with the Payment Provider **before** receiving any payment. **No payment will be made** until KYC is validated. SOS Expat disclaims any responsibility for payment delays related to incomplete or rejected KYC.
 
-10.3. **Exclusions:** no indirect/consequential/special/punitive damages (loss of profits, opportunities, clients, reputation, replacement costs, etc.).
+8.3. **Retention and cancellation.** SOS Expat may **defer, withhold, or cancel** payments in case of: (i) suspected fraud, (ii) non-compliance with Terms or laws, (iii) legal or administrative order, (iv) KYC failure, (v) violation of international sanctions rules.
 
-10.4. **Indemnification:** the Helper indemnifies and holds harmless Ulixai (and its affiliates, officers, employees, agents) from any claim, loss, damage, penalty, and expense (including attorney fees) arising from (i) breach of these Terms/laws, (ii) their content, (iii) their services/omissions, (iv) lack of work/immigration/license authorization.
+8.4. **Sanctions and embargoes.** Access to the Platform and payment services may be **restricted** in territories subject to **sanctions or embargoes** (EU, USA, UN, OFAC). The Helper declares **not to appear on any sanctions list** and to comply with applicable **export controls**.
 
-10.5. No representation. Nothing herein creates agency, employment, partnership, or joint venture between Ulixai and the Helper.
-
-10.6. Survival. Articles 5, 7, 8, 9, 10, 11, and 12 survive termination.
+8.5. **Legal cooperation.** The Helper agrees to cooperate with SOS Expat and competent authorities in case of investigation related to money laundering, terrorist financing, or any other financial offense.
 
 ---
 
-## 11. Governing law – Arbitration – Estonian jurisdiction – Class action waiver
+## 9. Data Protection (Global Framework – GDPR/DSA)
 
-11.1. **Substantive law:** for each Connection, the Ulixai–Helper relationship is governed by the **laws of the Country of Operation**, subject to local public policy and mandatory international norms. Supplementarily, and for interpretation/validity of these Terms as well as any issue not governed by the law of the Country of Operation, Estonian law applies.
+9.1. **Roles** For User data received for Connection purposes, SOS Expat and the Helper each act as independent data controllers for their own purposes, in accordance with **Regulation (EU) 2016/679 (GDPR)**.
 
-11.2. **Mandatory ICC arbitration:** any dispute between Ulixai and the Helper shall be finally resolved under the ICC Arbitration Rules. Seat: Tallinn (Estonia). Language: French. The tribunal shall apply the substantive law defined in art. 11.1. Proceedings are confidential.
+9.2. **Legal bases & purposes** Contract performance (Connection), legitimate interests (security, fraud prevention, improvement), legal compliance (AML, sanctions), and consent where required.
 
-11.3. **Class action waiver:** to the extent permitted, any collective/group/representative action is excluded; individual claims only are allowed.
+9.3. International transfers with appropriate safeguards where required (standard contractual clauses, adequacy decisions, etc.).
 
-11.4. **Exclusive jurisdiction of Estonian courts:** for any non-arbitrable matters, enforcement of awards, or urgent measures, Estonian courts (competent in Tallinn) have exclusive jurisdiction. The Helper waives any objection of forum or non-convenience.
+9.4. **Rights & contact** Exercise of rights (access, rectification, erasure, portability, objection) via the Platform's contact form.
 
----
+9.5. **Security** Reasonable technical/organizational measures; breach notifications according to applicable law (72 hours under GDPR).
 
-## 12. Miscellaneous
+9.6. The Helper processes data in accordance with the law of the Country of Operation.
 
-12.1. **Assignment**: Ulixai may assign these Terms to an affiliate or successor; the Helper may not assign without Ulixai’s written consent.
-
-12.2. **Entire Agreement**: These Terms constitute the entire agreement and supersede all prior agreements relating to the same subject matter.
-
-12.3. **Notices**: By publication on the Platform, in-app notification, or via the contact form.
-
-12.4. **Interpretation**: Headings are for convenience only. No **contra proferentem** rule applies.
-
-12.5. **Languages**: Translations may be provided; French prevails for interpretation.
-
-12.6. **Severability**: If any provision is invalid/unenforceable, the remainder remains effective; it may be replaced by a valid provision of equivalent effect where possible.
-
-12.7. **No waiver**: Failure to exercise a right does not constitute waiver thereof.
+9.7. **DSA Compliance.** The Platform operates as an **intermediary service** within the meaning of **Regulation (EU) 2022/2065 (Digital Services Act)**. SOS Expat implements mechanisms for reporting illegal content and cooperates with competent authorities in accordance with the DSA.
 
 ---
 
-## 13. Contact
+## 10. Intellectual Property
+
+The Platform, its trademarks, logos, databases, and content are protected. No rights are transferred to the Helper, except for a personal, non-exclusive, non-transferable right of access during the term of these Terms. Content provided by the Helper is subject to a worldwide, non-exclusive license in favor of SOS Expat for hosting and display on the Platform.
+
+---
+
+## 11. Warranties, Liability and Indemnity
+
+11.1. No guarantee regarding results/quality/business volume; the Platform is provided "as is".
+
+11.2. **Liability limitation:** to the extent permitted, SOS Expat's total liability to the Helper is limited to direct damages and shall not exceed the total Connection Fees received by SOS Expat for the transaction giving rise to the claim.
+
+11.3. **Exclusions:** no indirect/consequential/special/punitive damages (loss of profits, opportunities, clients, reputation, replacement costs, etc.).
+
+11.4. **Indemnification:** the Helper indemnifies and holds harmless SOS Expat (and its affiliates, officers, employees, agents) from any claim, loss, damage, penalty, and expense (including attorney fees) arising from (i) breach of these Terms/laws, (ii) their content, (iii) their services/omissions, (iv) lack of work/immigration/license authorization.
+
+11.5. **Waiver of recourse.** The Helper **expressly and irrevocably waives** any recourse against SOS Expat for (i) damages arising from the provision of services, (ii) indirect losses, (iii) contractual disputes with Users, (iv) any failure of services provided by the Helper. This waiver applies to the maximum extent permitted by law.
+
+11.6. No representation. Nothing herein creates agency, employment, partnership, or joint venture between SOS Expat and the Helper.
+
+11.7. **Force majeure.** SOS Expat is not liable for delays or failures caused by **force majeure** events (natural disaster, war, pandemic, cyberattack, power or internet outage, government decision, strike, etc.).
+
+11.8. Survival. Articles 5, 7, 8, 9, 10, 11, 12, and 13 survive termination.
+
+---
+
+## 12. Governing law – Arbitration – Estonian jurisdiction – Class action waiver
+
+12.1. **Substantive law:** for each Connection, the SOS Expat–Helper relationship is governed by the **laws of the Country of Operation**, subject to local public policy and mandatory international norms. Supplementarily, and for interpretation/validity of these Terms as well as any issue not governed by the law of the Country of Operation, Estonian law applies.
+
+12.2. **Mandatory ICC arbitration:** any dispute between SOS Expat and the Helper shall be finally resolved under the ICC Arbitration Rules. Seat: Tallinn (Estonia). Language: French. The tribunal shall apply the substantive law defined in art. 12.1. Proceedings are confidential.
+
+12.3. **Class action waiver:** to the extent permitted, any collective/group/representative action is excluded; individual claims only are allowed.
+
+12.4. **Exclusive jurisdiction of Estonian courts:** for any non-arbitrable matters, enforcement of awards, or urgent measures, Estonian courts (competent in Tallinn) have exclusive jurisdiction. The Helper waives any objection of forum or non-convenience.
+
+12.5. **Pre-arbitration mediation.** Before any arbitration, the parties agree to attempt to resolve the dispute amicably through **good faith negotiation** for a period of **thirty (30) days** from written notice of the dispute.
+
+---
+
+## 13. International Protection Clauses
+
+13.1. **Anti-corruption.** The Helper agrees not to offer, promise, or pay bribes or undue benefits to public or private officials. The Helper complies with applicable anti-corruption laws (FCPA, UK Bribery Act, Sapin II Act, etc.).
+
+13.2. **Confidentiality of communications.** Communications made through the Platform (messages, calls, videos) are **confidential**. The Helper shall not record, disclose, or use them for purposes other than the agreed service, except with written authorization or legal obligation.
+
+13.3. **Non-solicitation.** During the term of these Terms and **twelve (12) months** after termination, the Helper shall not directly solicit Users met through the Platform to avoid Connection Fees.
+
+13.4. **Exclusive responsibility of the Helper.** The Helper is **solely responsible** for the quality, accuracy, and legality of the services provided. SOS Expat **does not guarantee** the advice, information, or services delivered by the Helper and **disclaims any liability** for any harm suffered by a User due to the Helper's services.
+
+13.5. **No advisory relationship.** SOS Expat is **not a consulting firm**, nor a provider of legal, tax, medical, or regulated services. The Platform is limited to **connection services**. Any advisory relationship is established **exclusively** between the Helper and the User, **outside** of SOS Expat.
+
+13.6. **Helper-User disputes.** Any dispute between a Helper and a User falls **exclusively** within their direct relationship. SOS Expat **does not intervene** in such disputes and **cannot be held liable** as a party, guarantor, or mediator.
+
+---
+
+## 14. Miscellaneous
+
+14.1. **Assignment**: SOS Expat may assign these Terms to an affiliate or successor; the Helper may not assign without SOS Expat's written consent.
+
+14.2. **Entire Agreement**: These Terms constitute the entire agreement and supersede all prior agreements relating to the same subject matter.
+
+14.3. **Notices**: By publication on the Platform, in-app notification, or via the contact form.
+
+14.4. **Interpretation**: Headings are for convenience only. No **contra proferentem** rule applies.
+
+14.5. **Languages**: Translations may be provided; French prevails for interpretation.
+
+14.6. **Severability**: If any provision is invalid/unenforceable, the remainder remains effective; it may be replaced by a valid provision of equivalent effect where possible.
+
+14.7. **No waiver**: Failure to exercise a right does not constitute waiver thereof.
+
+---
+
+## 15. Contact
 
 For any question or legal request, please contact us:
 `;
 
   const defaultRu = `
-
-Sure! I will convert your French text into **German**, keeping all the markup exactly as it is. Here’s the translation:
-
----
-
-# Allgemeine Nutzungsbedingungen – Expatriates Aidants (Global)
-
-**SOS Expat von Ulixai OÜ** (die „**Plattform**“, „**SOS**“, „**wir**“)
-
-**Version 2.2 – Letzte Aktualisierung: 16. Juni 2025**
-
----
-
-## 1. Definitionen
-
-**Expatrié Aidant** („**Aidant**“): jede auf der Plattform registrierte Person, die eigenständig **nicht-juristische und nicht-medizinische Unterstützungsleistungen** für Nutzer anbietet (Orientierung, praktische Hilfe, Begleitung, informelle Übersetzungen, lokale Vernetzung usw.).
-
-**Nutzer**: jede Person, die die Plattform verwendet, um einen Aidant zu kontaktieren.
-
-**Vernetzung / Matching**: die technische/operative Einführung, die von der Plattform zwischen einem Nutzer und einem Aidant vorgenommen wird (Weitergabe von Kontaktdaten und/oder Eröffnung eines Kommunikationskanals und/oder Annahme einer über die Plattform gestellten Anfrage durch den Aidant).
-
-**Einsatzland**: die Rechtsordnung, auf die sich die Nutzeranfrage zum Zeitpunkt der Vernetzung hauptsächlich bezieht; falls nicht definiert, das Wohnsitzland des Nutzers zum Zeitpunkt der Anfrage.
-
-**Vernetzungsgebühren**: feste Gebühren, die an SOS pro Vernetzung zu zahlen sind (Art. 7): **19 €** bei Zahlung in **EUR** oder **25 $ USD** bei Zahlung in **USD**, Änderungen und/oder **lokale Tarife** nach Land/Währung vorbehalten, mit **zukunftsgerichteter Wirkung**.
-
-**Zahlungsdienstleister**: Dritte, die Zahlungen abwickeln und Gelder verteilen.
-
----
-
-## 2. Zweck, Anwendungsbereich und Zustimmung
-
-2.1. Diese AGB regeln den Zugriff auf und die Nutzung der Plattform durch die Aidants.
-
-2.2. **Ulixai fungiert ausschließlich als technischer Vermittler für die Vernetzung.** Ulixai ist weder Arbeitgeber, Vertreter noch Partner der Aidants, bietet keine rechtlichen, medizinischen, steuerlichen, buchhalterischen oder regulierten Beratungen an und ist nicht Partei von Verträgen zwischen Aidants und Nutzern.
-
-2.3. **Elektronische Zustimmung (Click-wrap).** Die Registrierung und/oder Nutzung der Plattform gilt als Zustimmung zu den AGB, elektronische Unterzeichnung und vertragliche Einwilligung. SOS kann technische Nachweise (Zeitstempel, IDs) aufbewahren.
-
-2.4. **Änderungen.** SOS kann die AGB und/oder die Gebührenordnungen (nach Land/Währung) mit **zukunftsgerichteter Wirkung** durch Veröffentlichung auf der Plattform aktualisieren. Fortgesetzte Nutzung gilt als Zustimmung.
-
-2.5. **Berufliche Kapazität (B2B).** Der Aidant erklärt, **ausschließlich beruflich** zu handeln; Verbraucherschutzregelungen gelten nicht für die Beziehung Ulixai–Aidant.
-
----
-
-## 3. Status des Aidants – Compliance, Genehmigungen und Verantwortung
-
-3.1. **Unabhängigkeit.** Der Aidant handelt als **selbstständiger Fachmann**; keine Beschäftigungs-, Mandats-, Agentur-, Partnerschafts- oder Joint-Venture-Beziehung zu Ulixai wird begründet.
-
-3.2. **Arbeitserlaubnis & Einwanderungsstatus.** Der Aidant ist **allein verantwortlich**, alle erforderlichen Genehmigungen in jedem Einsatzland zu beschaffen und aufrechtzuerhalten (Visum, Arbeitserlaubnis, Geschäftsanmeldung/Selbständigkeit, Versicherungen, lokale Lizenzen etc.). Ulixai **prüft diese Genehmigungen nicht** und **trägt hierfür keine Verantwortung**.
-
-3.3. **Nicht regulierte Dienstleistungen.** Der Aidant verpflichtet sich, **keine regulierten Dienstleistungen** (z. B. Rechts-, Medizin-, Finanz-, Steuerberater-, Immobilienmaklerdienstleistungen etc.) **ohne** erforderliche **Genehmigungen/Lizenzen** und **ohne vollständige Einhaltung der lokalen Gesetze** anzubieten. Andernfalls verzichtet er auf diese Dienste und verweist den Nutzer an einen ordnungsgemäß befugten Fachmann (z. B. registrierter Anwalt).
-
-3.4. **Allgemeine Compliance.** Der Aidant hält die geltenden Gesetze/Vorschriften ein (Verbraucherschutz, E-Commerce, Werbung/Telefonwerbung, fairer Wettbewerb, AML/KYC falls zutreffend, Steuern, Datenschutz, Sanktionen/Export, Sicherheit von Personen).
-
-3.5. **Versicherungen.** Der Aidant erklärt, die erforderlichen Versicherungen (berufliche Haftpflicht, falls zutreffend) für seine Tätigkeiten und Einsatzgebiete zu haben.
-
-3.6. **Vertraulichkeit.** Der Aidant schützt die Daten der Nutzer und gibt sie nicht weiter, außer bei gesetzlicher Pflicht oder Einwilligung.
-
----
-
-## 4. Konto, Überprüfungen und Sicherheit
-
-4.1. **Registrierung.** Ein (1) Konto pro Aidant; genaue, vollständige und aktuelle Angaben (Identität, Kontaktmöglichkeiten, Leistungsbeschreibung, Einsatzgebiete usw.).
-
-4.2. **Überprüfungen.** Ulixai kann angemessene Kontrollen durchführen (Identität, Profilkonsistenz, Sanktions-/KYC-Prüfungen über Dienstleister) und den Zugang aus Sicherheits-, Compliance- oder Qualitätsgründen verweigern, aussetzen oder löschen.
-
-4.3. **Zugriffssicherheit.** Der Aidant schützt seine Zugangsdaten. Jede Aktivität über das Konto gilt als durch ihn erfolgt.
-
----
-
-## 5. Nutzungsregeln – Qualität, Verbote, Umgehungsverbot
-
-5.1. **Qualität & zutreffende Beschreibung.** Der Aidant beschreibt seine Dienstleistungen korrekt, ohne Erfolgsgarantie. Keine falschen Angaben (z. B. unberechtigte Berufsausübung).
-
-5.2. **Verbote.** Illegale, diskriminierende oder irreführende Inhalte; unfaire Praktiken; missbräuchliche Datennutzung; Umgehung/Reverse-Engineering der Plattform; Kollusion/Boykott; Verletzung von Sanktionen/Export; jegliche illegale Aktivitäten.
-
-5.3. **Umgehungsverbot.** Jede **neue Vernetzung** mit einem **neuen Nutzer** über die Plattform unterliegt den **Vernetzungsgebühren** (Art. 7). Es ist **verboten**, diese Gebühren durch Umgehung der Plattform zu vermeiden.
-
-5.4. **Verfügbarkeit.** Die Plattform wird **„wie besehen“** bereitgestellt; keine durchgehende Verfügbarkeit garantiert (Wartung, Zwischenfälle, höhere Gewalt). Zugang kann gesetzlich eingeschränkt werden.
-
----
-
-## 6. Beziehung Aidant–Nutzer (außerhalb der Plattform)
-
-6.1. Nach der Vernetzung können Aidant und Nutzer **außerhalb der Plattform** Verträge schließen. **Honorare** und Bedingungen werden von beiden frei festgelegt, unter Einhaltung der lokalen Gesetze.
-
-6.2. Der Aidant stellt **Leistungsbedingungen/-bestätigungen** nach lokalem Recht aus, verwaltet **Rechnungen** und **steuerliche Verpflichtungen**.
-
-6.3. Ulixai **trägt keine Verantwortung** für Qualität, Richtigkeit oder Ergebnisse der Leistungen des Aidants oder für Vereinbarungen zwischen Aidant und Nutzer.
-
----
-
-## 7. Gebühren, Einmalzahlung und Steuern
-
-7.1. **Vernetzungsgebühren (Pauschale).** **19 € (EUR)** **oder** **25 $ (USD)** **pro Vernetzung**, zuzüglich Steuern und Zahlungsdienstleistergebühren. Ulixai kann diese Beträge ändern und/oder **lokale Tarife** veröffentlichen, mit zukunftsgerichteter Wirkung.
-
-7.2. **Einmalzahlung & Verteilung.** Der Nutzer leistet **eine Einmalzahlung** über die Plattform, die (i) die **Vergütung des Aidants** und (ii) die **Vernetzungsgebühren von Ulixai** abdeckt. Ulixai (oder dessen Dienstleister) zieht Gebühren ab und überweist den Rest an den Aidant. Der Aidant **erlaubt** diese Abzüge und Verteilungen.
-
-7.3. **Fälligkeit & Nicht-Rückerstattung.** Vernetzungsgebühren sind **bei Vernetzung fällig** und **nicht erstattbar** (außer nach freiem Ermessen von Ulixai bei ausschließlich durch die Plattform verursachtem Scheitern und **sofern gesetzlich zulässig**).
-
-7.4. **Rückerstattung an Nutzer.** Wird einem Nutzer eine Rückerstattung gewährt, wird sie **vom Anteil des Aidants abgezogen**: Ulixai kann den Betrag **einbehalten/kompensieren** oder Rückzahlung verlangen, falls keine zukünftigen Zahlungen anstehen. **Keine Rückerstattung** der Vernetzungsgebühren, außer nach Ermessen von Ulixai.
-
-7.5. **Währungen & Umrechnung.** Mehrere Währungen möglich; ggf. Gebühren/Umrechnung durch Zahlungsdienstleister.
-
-7.6. **Steuern.** Der Aidant bleibt verantwortlich für **alle anwendbaren Steuern** (MwSt., Einkommensteuer, Sozialversicherung etc.). Ulixai erhebt/überweist, wenn erforderlich, MwSt./lokale Äquivalente auf Vernetzungsgebühren.
-
-7.7. **Kompensation.** Ulixai kann Forderungen gegen den Aidant mit Zahlungen an ihn verrechnen.
-
----
-
-## 8. Persönliche Daten (globaler Rahmen)
-
-8.1. **Rollen.** Für vom Nutzer empfangene Daten zur Vernetzung handeln **Ulixai und der Aidant** jeweils als **Verantwortliche für die Datenverarbeitung** für ihre eigenen Zwecke.
-
-8.2. **Grundlagen & Zwecke.** Vertragserfüllung (Vernetzung), berechtigte Interessen (Sicherheit, Betrugsprävention, Verbesserung), gesetzliche Pflichten (AML/KYC, Sanktionen) und Einwilligung, wo erforderlich.
-
-8.3. **Internationale Übermittlungen** mit **angemessenen Garantien**, wenn erforderlich.
-
-8.4. **Rechte & Kontakt.** Ausübung über das **Kontaktformular** der Plattform.
-
-8.5. **Sicherheit.** Angemessene technische/organisatorische Maßnahmen; Benachrichtigung über Verstöße gemäß geltendem Recht.
-
-8.6. Der Aidant verarbeitet Daten gemäß dem Recht des **Einsatzlands**.
-
----
-
-## 9. Geistiges Eigentum
-
-Die Plattform, Marken, Logos, Datenbanken und Inhalte sind geschützt. Kein Recht wird an den Aidant übertragen, außer einem **persönlichen, nicht-exklusiven, nicht übertragbaren** Zugriffsrecht während der AGB-Laufzeit. Inhalte, die vom Aidant bereitgestellt werden, unterliegen einer **weltweiten, nicht-exklusiven Lizenz** zugunsten von Ulixai für Hosting und Anzeige auf der Plattform.
-
----
-
-## 10. Garantien, Haftung und Entschädigung
-
-10.1. **Keine Garantie** für Ergebnisse/Qualität/Umsatz; Plattform wird **„wie besehen“** bereitgestellt.
-
-10.2. **Haftungsbegrenzung:** Soweit zulässig, ist die Gesamthaftung von Ulixai gegenüber dem Aidant auf **direkte Schäden** begrenzt und darf die Summe der von Ulixai erhaltenen **Vernetzungsgebühren** der betreffenden **Transaktion** nicht überschreiten.
-
-10.3. **Ausschlüsse:** keine indirekten/folgenden/sonderen/Strafschäden (Gewinnverlust, Chancenverlust, Kundenverlust, Rufschädigung, Ersatzkosten etc.).
-
-10.4. **Entschädigung:** Der Aidant **schützt und stellt frei** Ulixai (einschließlich verbundener Unternehmen, Führungskräfte, Mitarbeiter, Vertreter) von Ansprüchen, Verlusten, Schäden, Strafen und Kosten (einschließlich Anwaltsgebühren) im Zusammenhang mit (i) Verstößen gegen AGB/Gesetze, (ii) Inhalten, (iii) Dienstleistungen/Unterlassungen, (iv) fehlenden Arbeitserlaubnissen/Immigration/Lizenzen.
-
-10.5. **Keine Vertretung.** Nichts begründet Mandat, Anstellung, Partnerschaft oder Joint Venture zwischen Ulixai und dem Aidant.
-
-10.6. **Fortbestehen.** Die Art. 5, 7, 8, 9, 10, 11 und 12 bleiben nach Kündigung wirksam.
-
----
-
-## 11. Anwendbares Recht – Schiedsgericht – Estnische Gerichtsbarkeit – Sammelklagen
-
-11.1. **Materielles Recht:** Für jede Vernetzung gilt das Recht des **Einsatzlands**, vorbehaltlich lokaler zwingender Vorschriften und internationaler zwingender Normen. **Ergänzend und für die Auslegung/Gültigkeit der AGB sowie nicht geregelte Fragen gilt estnisches Recht.**
-
-11.2. **Verbindliche ICC-Schiedsgerichtsbarkeit:** Alle Streitigkeiten zwischen Ulixai und Aidant werden **endgültig** nach dem Schiedsgerichtsreglement der **ICC** gelöst. **Sitz: Tallinn (Estland)**. **Sprache: Französisch.** Das Gericht wendet das in Art. 11.1 definierte materielle Recht an. **Vertrauliches Verfahren.**
-
-11.3. **Verzicht auf Sammelklagen:** Soweit zulässig, ausgeschlossen; nur **individuelle Ansprüche**.
-
-11.4. **Ausschließliche Zuständigkeit estnischer Gerichte:** Für nicht-schiedsgerichtliche Ansprüche, Vollstreckung von Urteilen oder einstweilige Maßnahmen haben estnische Gerichte (zuständig in Tallinn) **ausschließliche Zuständigkeit**. Der Aidant verzichtet auf Einwände wegen unpassendem Gerichtsstand.
-
----
-
-## 12. Sonstiges
-
-12.1. **Abtretung.** Ulixai kann die AGB an ein Konzernunternehmen oder einen Nachfolger abtreten; der Aidant kann ohne schriftliche Zustimmung von Ulixai nicht abtreten.
-
-12.2. **Gesamtheit.** Die AGB bilden die vollständige Vereinbarung und ersetzen alle vorherigen Vereinbarungen zum selben Gegenstand.
-
-12.3. **Benachrichtigungen.** Durch Veröffentlichung auf der Plattform, In-App-Benachrichtigung oder über das **Kontaktformular**.
-
-12.4. **Auslegung.** Überschriften sind nur Hinweis; keine Regel **contra proferentem**.
-
-12.5. **Sprachen.** Übersetzungen können bereitgestellt werden; **Französisch ist maßgeblich** für die Auslegung.
-
-12.6. **Teilnichtigkeit.** Ist eine Bestimmung ungültig/unanwendbar, bleibt der Rest in Kraft; ersetzbar durch gültige Bestimmung mit gleichwertiger Wirkung, wenn möglich.
-
-12.7. **Nichtverzicht.** Nichtausübung eines Rechts bedeutet keinen Verzicht.
-
----
-
-## 13. Kontakt
-
-Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
-
-
-
 # Общие условия использования – Эмигранты-помощники (Global)
 
-**SOS Expat d'Ulixai OÜ** (далее « **Платформа** », « **SOS** », « **мы** »)
+**SOS Expat d'WorldExpat OÜ** (далее « **Платформа** », « **SOS** », « **мы** »)
 
 **Версия 2.2 – Последнее обновление: 16 июня 2025 года**
 
@@ -1220,21 +1140,21 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 2.1. Настоящие ОУС регулируют доступ и использование Платформы Помощниками.
 
-2.2. **Ulixai действует исключительно как технический посредник по Связи.** Ulixai не является работодателем, агентом или партнером Помощников, не предоставляет юридические, медицинские, налоговые, бухгалтерские или регулируемые консультации и не является стороной контрактов между Помощниками и Пользователями.
+2.2. **SOS Expat действует исключительно как технический посредник по Связи.** SOS Expat не является работодателем, агентом или партнером Помощников, не предоставляет юридические, медицинские, налоговые, бухгалтерские или регулируемые консультации и не является стороной контрактов между Помощниками и Пользователями.
 
 2.3. **Электронное согласие (click-wrap).** Регистрация и/или использование Платформы означает принятие ОУС, электронную подпись и контрактное согласие. SOS может сохранять технические доказательства (отметки времени, идентификаторы).
 
 2.4. **Изменения.** SOS может обновлять ОУС и/или тарифы (по странам/валютам) с **перспективным действием**, публикуя их на Платформе. Продолжение использования означает согласие.
 
-2.5. **Профессиональная компетенция (B2B).** Помощник заявляет, что действует **исключительно в профессиональных целях**; нормы защиты потребителей не применяются к отношениям Ulixai–Помощник.
+2.5. **Профессиональная компетенция (B2B).** Помощник заявляет, что действует **исключительно в профессиональных целях**; нормы защиты потребителей не применяются к отношениям SOS Expat–Помощник.
 
 ---
 
 ## 3. Статус Помощника – Соответствие, разрешения и ответственность
 
-3.1. **Независимость.** Помощник действует как **независимый профессионал**; никакая связь трудовых отношений, агентства, партнерства или совместного предприятия с Ulixai не создается.
+3.1. **Независимость.** Помощник действует как **независимый профессионал**; никакая связь трудовых отношений, агентства, партнерства или совместного предприятия с SOS Expat не создается.
 
-3.2. **Разрешение на работу и иммиграционный статус.** Помощник **сам несет ответственность** за получение и поддержание **всех необходимых разрешений** в каждой Стране деятельности (визы, разрешения на работу, регистрация деятельности/самозанятость, страховки, местные лицензии и т.д.). Ulixai **не проверяет** эти разрешения и **не несет никакой ответственности** в этом отношении.
+3.2. **Разрешение на работу и иммиграционный статус.** Помощник **сам несет ответственность** за получение и поддержание **всех необходимых разрешений** в каждой Стране деятельности (визы, разрешения на работу, регистрация деятельности/самозанятость, страховки, местные лицензии и т.д.). SOS Expat **не проверяет** эти разрешения и **не несет никакой ответственности** в этом отношении.
 
 3.3. **Нерегулируемые услуги.** Помощник обязуется **не предоставлять регулируемые услуги** (например, юридические, медицинские, финансовые, бухгалтерские, риелторские и т.д.) **без наличия соответствующих лицензий** и **без полного соблюдения местного законодательства**. В противном случае он воздерживается от таких услуг и направляет Пользователя к квалифицированному специалисту (например, зарегистрированному адвокату).
 
@@ -1250,9 +1170,13 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 4.1. **Регистрация.** Один (1) аккаунт на Помощника; точная, полная и актуальная информация (личность, контактные данные, описание услуг, зоны работы и т.д.).
 
-4.2. **Проверки.** Ulixai может проводить разумные проверки (идентификация, согласованность профиля, проверки санкций/KYC через Поставщиков) и отказать/приостановить/удалить доступ по причинам безопасности, соответствия или качества обслуживания.
+4.2. **Проверки.** SOS Expat может проводить разумные проверки (идентификация, согласованность профиля, проверки санкций/KYC через Поставщиков) и отказать/приостановить/удалить доступ по причинам безопасности, соответствия или качества обслуживания.
 
 4.3. **Безопасность доступа.** Помощник защищает свои идентификаторы. Любая деятельность через аккаунт считается выполненной им самим.
+
+4.4. **Неактивность и расторжение.** После **365 дней неактивности** аккаунт может быть автоматически деактивирован после уведомления. Помощник может закрыть свой аккаунт в любое время после выполнения своих текущих обязательств. SOS Expat может приостановить или расторгнуть аккаунт за нарушение Условий, без ущерба для других средств правовой защиты.
+
+4.5. **Электронные сообщения.** Помощник соглашается получать любые уведомления, связанные с Условиями, электронными средствами (электронная почта, уведомление в приложении, публикация на Платформе).
 
 ---
 
@@ -1274,31 +1198,31 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 6.2. Помощник предоставляет **условия/подтверждения услуг**, соответствующие местному праву, ведет **счет-фактуру** и выполняет **налоговые обязательства**.
 
-6.3. Ulixai **не несет ответственности** за качество, точность или результат услуг Помощника, а также за обязательства между Помощником и Пользователем.
+6.3. SOS Expat **не несет ответственности** за качество, точность или результат услуг Помощника, а также за обязательства между Помощником и Пользователем.
 
 ---
 
 ## 7. Плата, единоразовая оплата и налоги
 
-7.1. **Плата за Связь (фиксированная).** **19 € (EUR)** **или** **25 $ (USD)** **за Связь**, без учета налогов и комиссии Поставщика платежей. Ulixai может изменять эти суммы и/или публиковать **локальные тарифы** по странам/валютам с перспективным действием.
+7.1. **Плата за Связь (фиксированная).** **19 € (EUR)** **или** **25 $ (USD)** **за Связь**, без учета налогов и комиссии Поставщика платежей. SOS Expat может изменять эти суммы и/или публиковать **локальные тарифы** по странам/валютам с перспективным действием.
 
-7.2. **Единоразовая оплата и распределение.** Пользователь осуществляет **единый платеж** через Платформу, включающий (i) **вознаграждение Помощника** (согласованное) и (ii) **Плату за Связь** Ulixai. Ulixai (или его Поставщик) получает платеж, **вычитает** свои комиссии, а оставшееся **переводит Помощнику**. Помощник **согласен** с этими вычетами и распределением.
+7.2. **Единоразовая оплата и распределение.** Пользователь осуществляет **единый платеж** через Платформу, включающий (i) **вознаграждение Помощника** (согласованное) и (ii) **Плату за Связь** SOS Expat. SOS Expat (или его Поставщик) получает платеж, **вычитает** свои комиссии, а оставшееся **переводит Помощнику**. Помощник **согласен** с этими вычетами и распределением.
 
-7.3. **Сроки и невозвратность.** Плата за Связь **должна быть уплачена сразу** при Связи и **не подлежит возврату** (за исключением дискреционных действий Ulixai в случае неудачи, полностью связанной с Платформой и **в пределах, разрешенных законом**).
+7.3. **Сроки и невозвратность.** Плата за Связь **должна быть уплачена сразу** при Связи и **не подлежит возврату** (за исключением дискреционных действий SOS Expat в случае неудачи, полностью связанной с Платформой и **в пределах, разрешенных законом**).
 
-7.4. **Возвраты Пользователю.** Если возврат предоставляется Пользователю, он **считается вычетом из доли Помощника**: Ulixai может **удерживать/компенсировать** сумму с будущих выплат или требовать возврат, если будущих выплат нет. **Возврат Платы за Связь не предусмотрен**, кроме как по дискреционному решению Ulixai.
+7.4. **Возвраты Пользователю.** Если возврат предоставляется Пользователю, он **считается вычетом из доли Помощника**: SOS Expat может **удерживать/компенсировать** сумму с будущих выплат или требовать возврат, если будущих выплат нет. **Возврат Платы за Связь не предусмотрен**, кроме как по дискреционному решению SOS Expat.
 
 7.5. **Валюты и конвертация.** Возможны различные валюты; могут применяться курсы/комиссии Поставщика.
 
-7.6. **Налоги.** Помощник остается ответственным за **все применимые налоги** (НДС, подоходный налог, социальное страхование и т.д.). Ulixai собирает/перечисляет, если требуется, НДС/местный эквивалент с Платы за Связь.
+7.6. **Налоги.** Помощник остается ответственным за **все применимые налоги** (НДС, подоходный налог, социальное страхование и т.д.). SOS Expat собирает/перечисляет, если требуется, НДС/местный эквивалент с Платы за Связь.
 
-7.7. **Компенсация.** Ulixai может компенсировать любую сумму, подлежащую Помощником, с любой суммы, подлежащей выплате Помощнику.
+7.7. **Компенсация.** SOS Expat может компенсировать любую сумму, подлежащую Помощником, с любой суммы, подлежащей выплате Помощнику.
 
 ---
 
-## 8. Персональные данные (глобальные рамки)
+## 8. Персональные данные (глобальные рамки – GDPR/DSA)
 
-8.1. **Роли.** Для данных Пользователей, полученных для Связи, **Ulixai и Помощник** действуют **каждый** как **контролер обработки** для своих целей.
+8.1. **Роли.** Для данных Пользователей, полученных для Связи, **SOS Expat и Помощник** действуют **каждый** как **контролер обработки** для своих целей, в соответствии с **Регламентом (ЕС) 2016/679 (GDPR)**.
 
 8.2. **Основания и цели.** Исполнение договора (Связь), законные интересы (безопасность, предотвращение мошенничества, улучшение), юридическое соответствие (AML/KYC, санкции), согласие, когда требуется.
 
@@ -1310,11 +1234,13 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 8.6. Помощник обрабатывает данные в соответствии с законодательством **Страны деятельности**.
 
+8.7. **Соответствие DSA.** Платформа функционирует как **посреднический сервис** в понимании **Регламента (ЕС) 2022/2065 (Закон о цифровых услугах)**. SOS Expat внедряет механизмы для сообщения о незаконном контенте и сотрудничает с компетентными органами в соответствии с DSA.
+
 ---
 
 ## 9. Интеллектуальная собственность
 
-Платформа, её бренды, логотипы, базы данных и контент защищены. Помощнику не передаются права, кроме **личного, неисключительного, непередаваемого** права на доступ на срок действия ОУС. Контент, предоставленный Помощником, лицензируется **всемирно, неисключительно** в пользу Ulixai для размещения и отображения на Платформе.
+Платформа, её бренды, логотипы, базы данных и контент защищены. Помощнику не передаются права, кроме **личного, неисключительного, непередаваемого** права на доступ на срок действия ОУС. Контент, предоставленный Помощником, лицензируется **всемирно, неисключительно** в пользу SOS Expat для размещения и отображения на Платформе.
 
 ---
 
@@ -1322,23 +1248,27 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 10.1. **Нет гарантии** по результатам/качеству/объему бизнеса; Платформа предоставляется **«как есть»**.
 
-10.2. **Ограничение ответственности**: в пределах разрешенного законом, общая ответственность Ulixai перед Помощником ограничивается **прямым ущербом** и **не может превышать** сумму **Платы за Связь**, полученной Ulixai по **транзакции**, послужившей причиной претензии.
+10.2. **Ограничение ответственности**: в пределах разрешенного законом, общая ответственность SOS Expat перед Помощником ограничивается **прямым ущербом** и **не может превышать** сумму **Платы за Связь**, полученной SOS Expat по **транзакции**, послужившей причиной претензии.
 
 10.3. **Исключения**: никакой косвенный/последующий/специальный/штрафной ущерб (потеря прибыли, возможностей, клиентов, репутации, расходы на замену и т.д.).
 
-10.4. **Возмещение**: Помощник **возмещает и гарантирует** Ulixai (а также его аффилированным лицам, руководителям, сотрудникам, агентам) против любых претензий, потерь, ущерба, штрафов и расходов (включая адвокатские гонорары), связанных с (i) его нарушением ОУС/законов, (ii) его контентом, (iii) его услугами/упущениями, (iv) отсутствием разрешений на работу/иммиграцию/лицензий.
+10.4. **Возмещение**: Помощник **возмещает и гарантирует** SOS Expat (а также его аффилированным лицам, руководителям, сотрудникам, агентам) против любых претензий, потерь, ущерба, штрафов и расходов (включая адвокатские гонорары), связанных с (i) его нарушением ОУС/законов, (ii) его контентом, (iii) его услугами/упущениями, (iv) отсутствием разрешений на работу/иммиграцию/лицензий.
 
-10.5. **Нет представительства.** Ничто не создает мандат, трудовые отношения, партнерство или совместное предприятие между Ulixai и Помощником.
+10.5. **Отказ от регресса.** Помощник **прямо и безотзывно отказывается** от любого регресса против SOS Expat за (i) ущерб, возникший в результате оказания услуг, (ii) косвенные убытки, (iii) договорные споры с Пользователями, (iv) любые недостатки услуг, оказанных Помощником. Этот отказ применяется в максимальной степени, разрешенной законом.
 
-10.6. **Сохранение.** Ст. 5, 7, 8, 9, 10, 11 и 12 сохраняются после прекращения действия.
+10.6. **Нет представительства.** Ничто не создает мандат, трудовые отношения, партнерство или совместное предприятие между SOS Expat и Помощником.
+
+10.7. **Форс-мажор.** SOS Expat не несет ответственности за задержки или сбои, вызванные **форс-мажорными обстоятельствами** (стихийное бедствие, война, пандемия, кибератака, отключение электроэнергии или интернета, решение правительства, забастовка и т.д.).
+
+10.8. **Сохранение.** Ст. 5, 7, 8, 9, 10, 11 и 12 сохраняются после прекращения действия.
 
 ---
 
 ## 11. Применимое право – Арбитраж – Эстонская юрисдикция – Коллективные иски
 
-11.1. **Материальное право**: для каждой Связи отношения **Ulixai–Помощник** регулируются **законами Страны деятельности**, с учетом местного публичного порядка и обязательных международных норм. **В качестве дополняющего права и для толкования/действительности настоящих ОУС, а также для вопросов, не регулируемых правом Страны деятельности, применяется право Эстонии.**
+11.1. **Материальное право**: для каждой Связи отношения **SOS Expat–Помощник** регулируются **законами Страны деятельности**, с учетом местного публичного порядка и обязательных международных норм. **В качестве дополняющего права и для толкования/действительности настоящих ОУС, а также для вопросов, не регулируемых правом Страны деятельности, применяется право Эстонии.**
 
-11.2. **Обязательный арбитраж ICC**: любые споры между Ulixai и Помощником решаются **окончательно** в соответствии с Регламентом арбитража **ICC**. **Место: Таллинн (Эстония)**. **Язык: французский.** Суд применяет **материальное право**, указанное в ст. 11.1. Процедура **конфиденциальная**.
+11.2. **Обязательный арбитраж ICC**: любые споры между SOS Expat и Помощником решаются **окончательно** в соответствии с Регламентом арбитража **ICC**. **Место: Таллинн (Эстония)**. **Язык: французский.** Суд применяет **материальное право**, указанное в ст. 11.1. Процедура **конфиденциальная**.
 
 11.3. **Отказ от коллективных исков**: в пределах разрешенного законом любые коллективные/групповые/представительные иски исключены; только **индивидуальные претензии**.
 
@@ -1348,7 +1278,7 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 ## 12. Разное
 
-12.1. **Передача.** Ulixai может передать ОУС любой компании своей группы или правопреемнику; Помощник не может передавать без письменного согласия Ulixai.
+12.1. **Передача.** SOS Expat может передать ОУС любой компании своей группы или правопреемнику; Помощник не может передавать без письменного согласия SOS Expat.
 
 12.2. **Полнота.** ОУС составляют полное соглашение и заменяют все предыдущие соглашения по тому же объекту.
 
@@ -1371,7 +1301,7 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
   const defaultHi = `
 # सामान्य उपयोग शर्तें – Expatriates Aidants (वैश्विक)
 
-**SOS Expat by Ulixai OÜ** (यहाँ “**प्लेटफ़ॉर्म**”, “**SOS**”, “**हम**” के रूप में संदर्भित है)
+**SOS Expat by WorldExpat OÜ** (यहाँ “**प्लेटफ़ॉर्म**”, “**SOS**”, “**हम**” के रूप में संदर्भित है)
 
 **संस्करण 2.2 – अंतिम अद्यतन: 16 जून 2025**
 
@@ -1397,7 +1327,7 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 2.1. ये शर्तें Aidants द्वारा प्लेटफ़ॉर्म तक पहुँच और उपयोग को नियंत्रित करती हैं।
 
-2.2. **Ulixai केवल तकनीकी मध्यस्थ के रूप में कार्य करता है।** Ulixai न तो Aidants का नियोक्ता है, न प्रतिनिधि या साझेदार, न कानूनी/चिकित्सीय/कर/लेखांकन सेवाएं प्रदान करता है और न ही Aidant और उपयोगकर्ता के बीच किसी अनुबंध का पक्ष है।
+2.2. **SOS Expat केवल तकनीकी मध्यस्थ के रूप में कार्य करता है।** SOS Expat न तो Aidants का नियोक्ता है, न प्रतिनिधि या साझेदार, न कानूनी/चिकित्सीय/कर/लेखांकन सेवाएं प्रदान करता है और न ही Aidant और उपयोगकर्ता के बीच किसी अनुबंध का पक्ष है।
 
 2.3. **इलेक्ट्रॉनिक सहमति (Click-wrap)।** पंजीकरण या प्लेटफ़ॉर्म का उपयोग शर्तों की स्वीकृति के रूप में माना जाएगा। SOS तकनीकी प्रमाण (समय-स्टैम्प, ID) रख सकता है।
 
@@ -1409,9 +1339,9 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 ## 3. Aidant की स्थिति – अनुपालन, अनुमतियाँ और जिम्मेदारी
 
-3.1. **स्वतंत्रता।** Aidant **स्वतंत्र पेशेवर** के रूप में कार्य करता है; Ulixai के साथ कोई रोजगार, एजेंसी, साझेदारी या जॉइंट वेंचर संबंध नहीं बनता।
+3.1. **स्वतंत्रता।** Aidant **स्वतंत्र पेशेवर** के रूप में कार्य करता है; SOS Expat के साथ कोई रोजगार, एजेंसी, साझेदारी या जॉइंट वेंचर संबंध नहीं बनता।
 
-3.2. **कार्य अनुमति और प्रवास स्थिति।** Aidant स्वयं जिम्मेदार है कि वह हर देश में आवश्यक अनुमतियाँ प्राप्त और बनाए रखे (वीज़ा, कार्य अनुमति, व्यवसाय पंजीकरण, बीमा, स्थानीय लाइसेंस)। Ulixai इन अनुमतियों की जांच नहीं करता।
+3.2. **कार्य अनुमति और प्रवास स्थिति।** Aidant स्वयं जिम्मेदार है कि वह हर देश में आवश्यक अनुमतियाँ प्राप्त और बनाए रखे (वीज़ा, कार्य अनुमति, व्यवसाय पंजीकरण, बीमा, स्थानीय लाइसेंस)। SOS Expat इन अनुमतियों की जांच नहीं करता।
 
 3.3. **गैर-नियंत्रित सेवाएँ।** Aidant बिना उचित लाइसेंस के किसी भी नियंत्रित सेवा (कानूनी, चिकित्सा, वित्त, कर आदि) प्रदान नहीं करेगा।
 
@@ -1427,9 +1357,13 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 4.1. **पंजीकरण।** प्रत्येक Aidant का केवल एक खाता होगा; सभी विवरण सटीक और अद्यतन होंगे।
 
-4.2. **सत्यापन।** Ulixai सुरक्षा, अनुपालन या गुणवत्ता कारणों से पहुँच अस्वीकृत, निलंबित या हटाने का अधिकार रखता है।
+4.2. **सत्यापन।** SOS Expat सुरक्षा, अनुपालन या गुणवत्ता कारणों से पहुँच अस्वीकृत, निलंबित या हटाने का अधिकार रखता है।
 
 4.3. **सुरक्षा।** खाता गतिविधि को Aidant की ओर से किया गया माना जाएगा।
+
+4.4. **निष्क्रियता।** 365 दिनों की निष्क्रियता के बाद, खाता स्वचालित रूप से निष्क्रिय किया जा सकता है। Aidant अपने दायित्वों को पूरा करने के बाद किसी भी समय अपना खाता बंद कर सकता है। SOS Expat शर्तों के उल्लंघन के लिए खाता निलंबित या समाप्त कर सकता है।
+
+4.5. **इलेक्ट्रॉनिक संचार।** Aidant इलेक्ट्रॉनिक माध्यमों (ईमेल, इन-ऐप अधिसूचनाएँ, प्लेटफ़ॉर्म पर प्रकाशन) के माध्यम से अधिसूचनाएँ प्राप्त करने की सहमति देता है।
 
 ---
 
@@ -1451,7 +1385,7 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 6.2. Aidant स्थानीय कानून के अनुसार **सेवा शर्तें और चालान** प्रबंधित करेगा।
 
-6.3. Ulixai **सेवा की गुणवत्ता या परिणामों के लिए जिम्मेदार नहीं** है।
+6.3. SOS Expat **सेवा की गुणवत्ता या परिणामों के लिए जिम्मेदार नहीं** है।
 
 ---
 
@@ -1459,7 +1393,7 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 7.1. **नेटवर्किंग शुल्क।** 19 € (EUR) या 25 $ (USD) प्रति नेटवर्किंग।
 
-7.2. **एकल भुगतान और वितरण।** भुगतान प्लेटफ़ॉर्म के माध्यम से किया जाता है; Ulixai शुल्क काटकर शेष राशि Aidant को भेजेगा।
+7.2. **एकल भुगतान और वितरण।** भुगतान प्लेटफ़ॉर्म के माध्यम से किया जाता है; SOS Expat शुल्क काटकर शेष राशि Aidant को भेजेगा।
 
 7.3. **वापसी योग्य नहीं।** नेटवर्किंग शुल्क गैर-वापसी योग्य।
 
@@ -1469,13 +1403,13 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 7.6. **कर।** Aidant सभी लागू करों के लिए जिम्मेदार है।
 
-7.7. **मुआवजा।** Ulixai दावे काटकर भुगतान समायोजित कर सकता है।
+7.7. **मुआवजा।** SOS Expat दावे काटकर भुगतान समायोजित कर सकता है।
 
 ---
 
-## 8. व्यक्तिगत डेटा (वैश्विक)
+## 8. व्यक्तिगत डेटा (वैश्विक – GDPR/DSA)
 
-8.1. **भूमिकाएँ।** डेटा प्रसंस्करण के लिए Ulixai और Aidant अलग-अलग जिम्मेदार हैं।
+8.1. **भूमिकाएँ।** नेटवर्किंग के लिए प्राप्त उपयोगकर्ता डेटा के लिए, SOS Expat और Aidant प्रत्येक **विनियमन (EU) 2016/679 (GDPR)** के अनुसार अपने स्वयं के उद्देश्यों के लिए स्वतंत्र डेटा नियंत्रक के रूप में कार्य करते हैं।
 
 8.2. **उद्देश्य।** नेटवर्किंग, सुरक्षा, धोखाधड़ी रोकथाम, कानूनी आवश्यकताएँ।
 
@@ -1487,11 +1421,13 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 8.6. Aidant डेटा का प्रसंस्करण **स्थान/देश कानून** के अनुसार करेगा।
 
+8.7. **DSA अनुपालन।** प्लेटफ़ॉर्म **विनियमन (EU) 2022/2065 (डिजिटल सेवा अधिनियम)** के तहत एक **मध्यस्थ सेवा** के रूप में कार्य करता है। SOS Expat अवैध सामग्री की रिपोर्टिंग के लिए तंत्र लागू करता है और DSA के अनुसार सक्षम अधिकारियों के साथ सहयोग करता है।
+
 ---
 
 ## 9. बौद्धिक संपदा
 
-प्लेटफ़ॉर्म, ट्रेडमार्क, लोगो, डेटाबेस और सामग्री सुरक्षित हैं। Aidant को केवल व्यक्तिगत, गैर-विशेष, गैर-हस्तांतरित अधिकार मिलेगा। Aidant द्वारा दी गई सामग्री Ulixai को प्लेटफ़ॉर्म पर होस्टिंग और प्रदर्शन के लिए गैर-विशेष लाइसेंस देती है।
+प्लेटफ़ॉर्म, ट्रेडमार्क, लोगो, डेटाबेस और सामग्री सुरक्षित हैं। Aidant को केवल व्यक्तिगत, गैर-विशेष, गैर-हस्तांतरित अधिकार मिलेगा। Aidant द्वारा दी गई सामग्री SOS Expat को प्लेटफ़ॉर्म पर होस्टिंग और प्रदर्शन के लिए गैर-विशेष लाइसेंस देती है।
 
 ---
 
@@ -1503,11 +1439,15 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 10.3. **बहिष्कार:** अप्रत्यक्ष, परिणामी, दंडात्मक नुकसान शामिल नहीं।
 
-10.4. **मुआवजा:** Aidant Ulixai को किसी भी दावे, नुकसान या कानूनी शुल्क से मुक्त रखेगा।
+10.4. **मुआवजा:** Aidant SOS Expat को किसी भी दावे, नुकसान या कानूनी शुल्क से मुक्त रखेगा।
 
-10.5. **कोई प्रतिनिधित्व नहीं।**
+10.5. **पुनर्प्राप्ति का त्याग।** Aidant **स्पष्ट और अपरिवर्तनीय रूप से** SOS Expat के विरुद्ध किसी भी पुनर्प्राप्ति का त्याग करता है: (i) सेवाओं के प्रावधान से उत्पन्न क्षति, (ii) अप्रत्यक्ष हानि, (iii) उपयोगकर्ताओं के साथ संविदात्मक विवाद, (iv) Aidant द्वारा प्रदान की गई सेवाओं की कोई भी विफलता। यह त्याग कानून द्वारा अनुमत अधिकतम सीमा तक लागू होता है।
 
-10.6. ये प्रावधान समाप्ति के बाद भी लागू रहेंगे।
+10.6. **कोई प्रतिनिधित्व नहीं।** यहाँ कुछ भी SOS Expat और Aidant के बीच एजेंसी, रोजगार, साझेदारी या संयुक्त उद्यम नहीं बनाता।
+
+10.7. **अप्रत्याशित घटना।** SOS Expat **अप्रत्याशित घटना** के कारण होने वाली देरी या विफलताओं के लिए उत्तरदायी नहीं है (प्राकृतिक आपदा, युद्ध, महामारी, साइबर हमला, बिजली या इंटरनेट आउटेज, सरकारी निर्णय, हड़ताल, आदि)।
+
+10.8. ये प्रावधान समाप्ति के बाद भी लागू रहेंगे।
 
 ---
 
@@ -1525,7 +1465,7 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 ## 12. विविध
 
-12.1. **हस्तांतरण।** Ulixai अधिकारों का हस्तांतरण कर सकता है।
+12.1. **हस्तांतरण।** SOS Expat अधिकारों का हस्तांतरण कर सकता है।
 
 12.2. **पूर्ण समझौता।**
 
@@ -1550,7 +1490,7 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 # Términos de Uso – Ayudantes de Expatriados (Global)
 
 
-**SOS Expat por Ulixai OÜ** (la "**Plataforma**", "**SOS**", "**nosotros**")
+**SOS Expat por WorldExpat OÜ** (la "**Plataforma**", "**SOS**", "**nosotros**")
 
 
 **Versión 2.2 – Última actualización: 16 de junio de 2025**
@@ -1587,13 +1527,13 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 2.1. Las presentes CGU regulan el acceso y el uso de la Plataforma por parte de los Asistentes.
 
-2.2. **Ulixai actúa exclusivamente como intermediario técnico de la puesta en contacto** Ulixai no es empleador, mandatario ni socio de los Asistentes, no proporciona ningún tipo de asesoramiento jurídico, médico, fiscal, contable ni de otra índole regulada, y no forma parte de los contratos entre Asistentes y Usuarios.
+2.2. **SOS Expat actúa exclusivamente como intermediario técnico de la puesta en contacto** SOS Expat no es empleador, mandatario ni socio de los Asistentes, no proporciona ningún tipo de asesoramiento jurídico, médico, fiscal, contable ni de otra índole regulada, y no forma parte de los contratos entre Asistentes y Usuarios.
 
 2.3. **Aceptación electrónica (click-wrap)** El registro y/o el uso de la Plataforma constituyen la aceptación de las CGU, la firma electrónica y el consentimiento contractual. SOS puede conservar pruebas técnicas (marca de tiempo, identificadores).
 
 2.4. **Modificaciones** SOS puede actualizar las CGU y/o las tablas de tarifas (por país/divisa) con efecto prospectivo mediante su publicación en la Plataforma. El uso continuado implica aceptación.
 
-2.5. **Capacidad profesional (B2B)** El Asistente declara actuar exclusivamente con fines profesionales; los regímenes de protección al consumidor no se aplican a la relación entre Ulixai y el Asistente.
+2.5. **Capacidad profesional (B2B)** El Asistente declara actuar exclusivamente con fines profesionales; los regímenes de protección al consumidor no se aplican a la relación entre SOS Expat y el Asistente.
 
 
 ---
@@ -1602,9 +1542,9 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 ## 3. Estado del Ayudante – Cumplimiento, Autorizaciones y Responsabilidades
 
 
-3.1. **Independencia** El Asistente actúa como profesional independiente; no se crea ningún vínculo de empleo, mandato, agencia, asociación o empresa conjunta con Ulixai.
+3.1. **Independencia** El Asistente actúa como profesional independiente; no se crea ningún vínculo de empleo, mandato, agencia, asociación o empresa conjunta con SOS Expat.
 
-3.2. **Autorización de trabajo y estatus migratorio** El Asistente es únicamente responsable de obtener y mantener todas las autorizaciones necesarias en cada País de Intervención (visado, permiso de trabajo, registro de actividad/autónomo, seguros, licencias locales, etc.). Ulixai no verifica dichas autorizaciones y no asume ninguna responsabilidad al respecto.
+3.2. **Autorización de trabajo y estatus migratorio** El Asistente es únicamente responsable de obtener y mantener todas las autorizaciones necesarias en cada País de Intervención (visado, permiso de trabajo, registro de actividad/autónomo, seguros, licencias locales, etc.). SOS Expat no verifica dichas autorizaciones y no asume ninguna responsabilidad al respecto.
 
 3.3. **Servicios no regulados** El Asistente se compromete a no prestar servicios regulados (por ejemplo, asesoramiento jurídico, médico, financiero, contable o inmobiliario, etc.) sin poseer las autorizaciones/licencias necesarias y sin cumplir plenamente con las leyes locales. En caso contrario, deberá abstenerse de ofrecer dichos servicios y redirigir al Usuario hacia un profesional debidamente autorizado (por ejemplo, un abogado colegiado).
 
@@ -1621,9 +1561,13 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 4.1. **Registro** Un (1) cuenta por Asistente; la información debe ser exacta, completa y actualizada (identidad, medios de contacto, descripción de los servicios, zonas de intervención, etc.).
 
-4.2. **Verificaciones** Ulixai puede realizar controles razonables (identidad, coherencia del perfil, revisiones de sanciones/KYC a través de Proveedores) y puede rechazar, suspender o retirar el acceso por motivos de seguridad, cumplimiento o calidad del servicio.
+4.2. **Verificaciones** SOS Expat puede realizar controles razonables (identidad, coherencia del perfil, revisiones de sanciones/KYC a través de Proveedores) y puede rechazar, suspender o retirar el acceso por motivos de seguridad, cumplimiento o calidad del servicio.
 
 4.3. **Seguridad de acceso** El Asistente debe proteger sus credenciales. Toda actividad realizada a través de la cuenta se considerará efectuada por él mismo.
+
+4.4. **Inactividad y rescisión.** Tras **365 días de inactividad**, la cuenta podrá ser desactivada automáticamente previo aviso. El Asistente puede cerrar su cuenta en cualquier momento una vez cumplidas sus obligaciones pendientes. SOS Expat puede suspender o rescindir una cuenta por incumplimiento de los Términos, sin perjuicio de otros recursos.
+
+4.5. **Comunicaciones electrónicas.** El Asistente consiente en recibir cualquier notificación relacionada con los Términos por medios electrónicos (correo electrónico, notificación in-app, publicación en la Plataforma).
 
 ---
 
@@ -1648,7 +1592,7 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 6.2. El Asistente debe proporcionar **condiciones o confirmaciones de servicio** conformes con la legislación local, gestionar su **facturación** y cumplir con sus **obligaciones fiscales.**
 
-6.3. **Ulixai no es responsable** de la calidad, exactitud o resultado de los servicios del Asistente, ni de los compromisos asumidos entre el Asistente y el Usuario.
+6.3. **SOS Expat no es responsable** de la calidad, exactitud o resultado de los servicios del Asistente, ni de los compromisos asumidos entre el Asistente y el Usuario.
 
 ---
 
@@ -1656,26 +1600,26 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 ## 7. Tarifas, Pago Único e Impuestos
 
 
-7.1. **Gastos de Puesta en Contacto (tarifa fija).** **19 € (EUR)** o **25 $ (USD)** por cada Puesta en Contacto, sin incluir impuestos ni las comisiones del Proveedor de pagos. Ulixai puede modificar estos importes y/o publicar **tarifas locales** por país o moneda, con **efecto prospectivo.**
+7.1. **Gastos de Puesta en Contacto (tarifa fija).** **19 € (EUR)** o **25 $ (USD)** por cada Puesta en Contacto, sin incluir impuestos ni las comisiones del Proveedor de pagos. SOS Expat puede modificar estos importes y/o publicar **tarifas locales** por país o moneda, con **efecto prospectivo.**
 
-7.2. **Pago único y distribución.** El Usuario realiza **un solo pago** a través de la Plataforma que cubre (i) la **remuneración del Asistente** (según lo acordado) y (ii) los **Gastos de Puesta en Contacto** de Ulixai. Ulixai (o su Proveedor) recibe el pago, **deduce** sus comisiones y luego **transfiere** el saldo al Asistente. El Asistente **autoriza** dichas deducciones y distribuciones.
+7.2. **Pago único y distribución.** El Usuario realiza **un solo pago** a través de la Plataforma que cubre (i) la **remuneración del Asistente** (según lo acordado) y (ii) los **Gastos de Puesta en Contacto** de SOS Expat. SOS Expat (o su Proveedor) recibe el pago, **deduce** sus comisiones y luego **transfiere** el saldo al Asistente. El Asistente **autoriza** dichas deducciones y distribuciones.
 
-7.3. **Exigibilidad y no reembolso.** Los Gastos de Puesta en Contacto son **exigibles desde** el momento de la Puesta en Contacto y **no son reembolsables** (salvo por decisión comercial discrecional de Ulixai en caso de fallo exclusivamente atribuible a la Plataforma y **dentro de los límites permitidos por la ley**).
+7.3. **Exigibilidad y no reembolso.** Los Gastos de Puesta en Contacto son **exigibles desde** el momento de la Puesta en Contacto y **no son reembolsables** (salvo por decisión comercial discrecional de SOS Expat en caso de fallo exclusivamente atribuible a la Plataforma y **dentro de los límites permitidos por la ley**).
 
-7.4. **Reembolsos al Usuario.** Si se concede un reembolso al Usuario, este se **deducirá de la parte correspondiente al Asistente**: Ulixai podrá **retener o compensar** dicho importe con futuros pagos al Asistente, o **reclamar su devolución** si no hay pagos pendientes. **No se reembolsarán** los Gastos de Puesta en Contacto, salvo decisión discrecional de Ulixai.
+7.4. **Reembolsos al Usuario.** Si se concede un reembolso al Usuario, este se **deducirá de la parte correspondiente al Asistente**: SOS Expat podrá **retener o compensar** dicho importe con futuros pagos al Asistente, o **reclamar su devolución** si no hay pagos pendientes. **No se reembolsarán** los Gastos de Puesta en Contacto, salvo decisión discrecional de SOS Expat.
 
 7.5. **Monedas y conversión.** Pueden ofrecerse varias monedas; se pueden aplicar tasas o comisiones de conversión del Proveedor de pagos.
 
-7.6. **Impuestos.** El Asistente sigue siendo responsable de **todos los impuestos aplicables** (IVA, impuesto sobre la renta, seguridad social, etc.). Ulixai recaudará y/o remitirá, cuando sea necesario, el IVA o su **equivalente local** correspondiente a los Gastos de Puesta en Contacto.
+7.6. **Impuestos.** El Asistente sigue siendo responsable de **todos los impuestos aplicables** (IVA, impuesto sobre la renta, seguridad social, etc.). SOS Expat recaudará y/o remitirá, cuando sea necesario, el IVA o su **equivalente local** correspondiente a los Gastos de Puesta en Contacto.
 
-7.7. **Compensación.** Ulixai podrá compensar cualquier suma debida por el Asistente con cualquier suma pagadera al mismo.
+7.7. **Compensación.** SOS Expat podrá compensar cualquier suma debida por el Asistente con cualquier suma pagadera al mismo.
 
 ---
 
 
-## 8. Protección de Datos (Marco Global)
+## 8. Protección de Datos (Marco Global – RGPD/DSA)
 
-8.1. **Funciones.** Con respecto a los datos de los Usuarios recibidos con el fin de la Puesta en Contacto, **Ulixai y el Asistente** actúan **cada uno** como **responsable del tratamiento** para sus propias finalidades.
+8.1. **Funciones.** Con respecto a los datos de los Usuarios recibidos con el fin de la Puesta en Contacto, **SOS Expat y el Asistente** actúan **cada uno** como **responsable del tratamiento** para sus propias finalidades, de conformidad con el **Reglamento (UE) 2016/679 (RGPD)**.
 
 8.2. **Bases y finalidades.** Ejecución del contrato (Puesta en Contacto), intereses legítimos (seguridad, prevención del fraude, mejora del servicio), cumplimiento legal (LCB-FT, sanciones) y consentimiento cuando sea requerido.
 
@@ -1687,6 +1631,7 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 8.6. El Asistente tratará los datos de acuerdo con la legislación del **País de Intervención.**
 
+8.7. **Conformidad con la DSA.** La Plataforma opera como **servicio intermediario** en el sentido del **Reglamento (UE) 2022/2065 (Ley de Servicios Digitales)**. SOS Expat implementa mecanismos para la notificación de contenidos ilícitos y coopera con las autoridades competentes de conformidad con la DSA.
 
 ---
 
@@ -1694,7 +1639,7 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 ## 9. Propiedad Intelectual
 
 
-La **Plataforma**, sus **marcas, logotipos, bases de datos y contenidos** están protegidos. **Ningún derecho** se cede al Asistente, salvo un derecho **personal, no exclusivo y no transferible** de acceso durante la vigencia de los Términos y Condiciones. Los **contenidos proporcionados por el Asistente** están sujetos a una **licencia mundial, no exclusiva** a favor de Ulixai para su **alojamiento y exhibición en la Plataforma**.
+La **Plataforma**, sus **marcas, logotipos, bases de datos y contenidos** están protegidos. **Ningún derecho** se cede al Asistente, salvo un derecho **personal, no exclusivo y no transferible** de acceso durante la vigencia de los Términos y Condiciones. Los **contenidos proporcionados por el Asistente** están sujetos a una **licencia mundial, no exclusiva** a favor de SOS Expat para su **alojamiento y exhibición en la Plataforma**.
 
 ---
 
@@ -1703,24 +1648,28 @@ La **Plataforma**, sus **marcas, logotipos, bases de datos y contenidos** están
 
 10.1. Ninguna garantía sobre resultados, calidad o volumen de negocio; la Plataforma se proporciona "**tal cual**".
 
-10.2. Limitación de responsabilidad:** en la medida permitida, la responsabilidad total de Ulixai frente al Asistente se limita a los **daños directos** y no puede exceder el total de los **Gastos de Conexión** percibidos por Ulixai por la transacción que dio origen a la reclamación.
+10.2. Limitación de responsabilidad:** en la medida permitida, la responsabilidad total de SOS Expat frente al Asistente se limita a los **daños directos** y no puede exceder el total de los **Gastos de Conexión** percibidos por SOS Expat por la transacción que dio origen a la reclamación.
 
 10.3. Exclusiones:** no se cubren daños **indirectos, consecuentes, especiales o punitivos** (pérdida de beneficios, oportunidades, clientela, daño a la reputación, costes de reemplazo, etc.).
 
-10.4. Indemnización:** el Asistente **indemniza y garantiza** a Ulixai (así como a sus afiliados, directivos, empleados y agentes) frente a cualquier reclamación, pérdida, daño, penalidad y gastos (incluidos honorarios de abogados) relacionados con: (i) su incumplimiento de los Términos y Condiciones o de la ley,(ii) sus contenidos,(iii) sus servicios u omisiones, (iv) la falta de autorizaciones de trabajo, inmigración o licencias.
+10.4. Indemnización:** el Asistente **indemniza y garantiza** a SOS Expat (así como a sus afiliados, directivos, empleados y agentes) frente a cualquier reclamación, pérdida, daño, penalidad y gastos (incluidos honorarios de abogados) relacionados con: (i) su incumplimiento de los Términos y Condiciones o de la ley,(ii) sus contenidos,(iii) sus servicios u omisiones, (iv) la falta de autorizaciones de trabajo, inmigración o licencias.
 
-10.5. Ninguna representación:** nada implica mandato, empleo, asociación, sociedad o empresa conjunta entre Ulixai y el Asistente.
+10.5. **Renuncia a recursos.** El Asistente **renuncia expresa e irrevocablemente** a cualquier recurso contra SOS Expat por (i) daños derivados de la prestación de servicios, (ii) pérdidas indirectas, (iii) disputas contractuales con los Usuarios, (iv) cualquier fallo de los servicios prestados por el Asistente. Esta renuncia se aplica en la máxima medida permitida por la ley.
 
-10.6. Vigencia tras la terminación:** los arts. 5, 7, 8, 9, 10, 11 y 12 **sobreviven a la terminación**.
+10.6. Ninguna representación:** nada implica mandato, empleo, asociación, sociedad o empresa conjunta entre SOS Expat y el Asistente.
+
+10.7. **Fuerza mayor.** SOS Expat no será responsable de retrasos o fallos causados por eventos de **fuerza mayor** (catástrofe natural, guerra, pandemia, ciberataque, corte de electricidad o internet, decisión gubernamental, huelga, etc.).
+
+10.8. Vigencia tras la terminación:** los arts. 5, 7, 8, 9, 10, 11 y 12 **sobreviven a la terminación**.
 
 ---
 
 
 ## 11. Ley Aplicable – Arbitraje – Tribunales Estonios – Acciones Colectivas
 
-11.1. **Derecho sustantivo:** para cada Conexión, la relación Ulixai–Asistente se rige por las leyes del **País de Intervención**, sin perjuicio de las normas de orden público locales y de las normas internacionales imperativas. A modo supletorio y para la interpretación/validez de estos Términos y Condiciones, así como para cualquier cuestión no regulada por la ley del País de Intervención, se aplica el **derecho estonio**.
+11.1. **Derecho sustantivo:** para cada Conexión, la relación SOS Expat–Asistente se rige por las leyes del **País de Intervención**, sin perjuicio de las normas de orden público locales y de las normas internacionales imperativas. A modo supletorio y para la interpretación/validez de estos Términos y Condiciones, así como para cualquier cuestión no regulada por la ley del País de Intervención, se aplica el **derecho estonio**.
 
-11.2. **Arbitraje obligatorio de la CCI:** cualquier disputa entre Ulixai y el Asistente se resolverá **definitivamente** conforme al **Reglamento de Arbitraje de la CCI**. Sede: **Tallin (Estonia)**. Idioma: **francés**. El tribunal aplicará el derecho sustantivo definido en el art. 11.1. Procedimiento confidencial.
+11.2. **Arbitraje obligatorio de la CCI:** cualquier disputa entre SOS Expat y el Asistente se resolverá **definitivamente** conforme al **Reglamento de Arbitraje de la CCI**. Sede: **Tallin (Estonia)**. Idioma: **francés**. El tribunal aplicará el derecho sustantivo definido en el art. 11.1. Procedimiento confidencial.
 
 11.3. **Renuncia a acciones colectivas:** en la medida permitida, se excluyen todas las acciones colectivas/de grupo/representativas; únicamente se admiten reclamaciones individuales.
 
@@ -1732,7 +1681,7 @@ La **Plataforma**, sus **marcas, logotipos, bases de datos y contenidos** están
 ## 12. Diverso
 
 
-12.1. **Cesión:** Ulixai puede ceder los Términos y Condiciones a una entidad de su grupo o a un sucesor; el Asistente no puede cederlos sin el acuerdo escrito de Ulixai.
+12.1. **Cesión:** SOS Expat puede ceder los Términos y Condiciones a una entidad de su grupo o a un sucesor; el Asistente no puede cederlos sin el acuerdo escrito de SOS Expat.
 
 12.2. **Integridad:** Los Términos y Condiciones constituyen el acuerdo completo y reemplazan cualquier acuerdo previo relativo al mismo objeto.
 
@@ -1757,7 +1706,7 @@ Para cualquier pregunta o solicitud legal, contáctenos:
   const defaultDe = `
 # Allgemeine Nutzungsbedingungen – Expatriates Aidants (Global)
 
-**SOS Expat von Ulixai OÜ** (die „**Plattform**“, „**SOS**“, „**wir**“)
+**SOS Expat von WorldExpat OÜ** (die „**Plattform**“, „**SOS**“, „**wir**“)
 
 **Version 2.2 – Letzte Aktualisierung: 16. Juni 2025**
 
@@ -1783,21 +1732,21 @@ Para cualquier pregunta o solicitud legal, contáctenos:
 
 2.1. Diese AGB regeln den Zugriff auf und die Nutzung der Plattform durch die Aidants.
 
-2.2. **Ulixai fungiert ausschließlich als technischer Vermittler für die Vernetzung.** Ulixai ist weder Arbeitgeber, Vertreter noch Partner der Aidants, bietet keine rechtlichen, medizinischen, steuerlichen, buchhalterischen oder regulierten Beratungen an und ist nicht Partei von Verträgen zwischen Aidants und Nutzern.
+2.2. **SOS Expat fungiert ausschließlich als technischer Vermittler für die Vernetzung.** SOS Expat ist weder Arbeitgeber, Vertreter noch Partner der Aidants, bietet keine rechtlichen, medizinischen, steuerlichen, buchhalterischen oder regulierten Beratungen an und ist nicht Partei von Verträgen zwischen Aidants und Nutzern.
 
 2.3. **Elektronische Zustimmung (Click-wrap).** Die Registrierung und/oder Nutzung der Plattform gilt als Zustimmung zu den AGB, elektronische Unterzeichnung und vertragliche Einwilligung. SOS kann technische Nachweise (Zeitstempel, IDs) aufbewahren.
 
 2.4. **Änderungen.** SOS kann die AGB und/oder die Gebührenordnungen (nach Land/Währung) mit **zukunftsgerichteter Wirkung** durch Veröffentlichung auf der Plattform aktualisieren. Fortgesetzte Nutzung gilt als Zustimmung.
 
-2.5. **Berufliche Kapazität (B2B).** Der Aidant erklärt, **ausschließlich beruflich** zu handeln; Verbraucherschutzregelungen gelten nicht für die Beziehung Ulixai–Aidant.
+2.5. **Berufliche Kapazität (B2B).** Der Aidant erklärt, **ausschließlich beruflich** zu handeln; Verbraucherschutzregelungen gelten nicht für die Beziehung SOS Expat–Aidant.
 
 ---
 
 ## 3. Status des Aidants – Compliance, Genehmigungen und Verantwortung
 
-3.1. **Unabhängigkeit.** Der Aidant handelt als **selbstständiger Fachmann**; keine Beschäftigungs-, Mandats-, Agentur-, Partnerschafts- oder Joint-Venture-Beziehung zu Ulixai wird begründet.
+3.1. **Unabhängigkeit.** Der Aidant handelt als **selbstständiger Fachmann**; keine Beschäftigungs-, Mandats-, Agentur-, Partnerschafts- oder Joint-Venture-Beziehung zu SOS Expat wird begründet.
 
-3.2. **Arbeitserlaubnis & Einwanderungsstatus.** Der Aidant ist **allein verantwortlich**, alle erforderlichen Genehmigungen in jedem Einsatzland zu beschaffen und aufrechtzuerhalten (Visum, Arbeitserlaubnis, Geschäftsanmeldung/Selbständigkeit, Versicherungen, lokale Lizenzen etc.). Ulixai **prüft diese Genehmigungen nicht** und **trägt hierfür keine Verantwortung**.
+3.2. **Arbeitserlaubnis & Einwanderungsstatus.** Der Aidant ist **allein verantwortlich**, alle erforderlichen Genehmigungen in jedem Einsatzland zu beschaffen und aufrechtzuerhalten (Visum, Arbeitserlaubnis, Geschäftsanmeldung/Selbständigkeit, Versicherungen, lokale Lizenzen etc.). SOS Expat **prüft diese Genehmigungen nicht** und **trägt hierfür keine Verantwortung**.
 
 3.3. **Nicht regulierte Dienstleistungen.** Der Aidant verpflichtet sich, **keine regulierten Dienstleistungen** (z. B. Rechts-, Medizin-, Finanz-, Steuerberater-, Immobilienmaklerdienstleistungen etc.) **ohne** erforderliche **Genehmigungen/Lizenzen** und **ohne vollständige Einhaltung der lokalen Gesetze** anzubieten. Andernfalls verzichtet er auf diese Dienste und verweist den Nutzer an einen ordnungsgemäß befugten Fachmann (z. B. registrierter Anwalt).
 
@@ -1813,9 +1762,13 @@ Para cualquier pregunta o solicitud legal, contáctenos:
 
 4.1. **Registrierung.** Ein (1) Konto pro Aidant; genaue, vollständige und aktuelle Angaben (Identität, Kontaktmöglichkeiten, Leistungsbeschreibung, Einsatzgebiete usw.).
 
-4.2. **Überprüfungen.** Ulixai kann angemessene Kontrollen durchführen (Identität, Profilkonsistenz, Sanktions-/KYC-Prüfungen über Dienstleister) und den Zugang aus Sicherheits-, Compliance- oder Qualitätsgründen verweigern, aussetzen oder löschen.
+4.2. **Überprüfungen.** SOS Expat kann angemessene Kontrollen durchführen (Identität, Profilkonsistenz, Sanktions-/KYC-Prüfungen über Dienstleister) und den Zugang aus Sicherheits-, Compliance- oder Qualitätsgründen verweigern, aussetzen oder löschen.
 
 4.3. **Zugriffssicherheit.** Der Aidant schützt seine Zugangsdaten. Jede Aktivität über das Konto gilt als durch ihn erfolgt.
+
+4.4. **Inaktivität & Kündigung.** Nach **365 Tagen Inaktivität** kann das Konto nach vorheriger Benachrichtigung automatisch deaktiviert werden. Der Aidant kann sein Konto jederzeit schließen, nachdem er seine laufenden Verpflichtungen erfüllt hat. SOS Expat kann ein Konto wegen Verstoßes gegen die AGB aussetzen oder kündigen, unbeschadet anderer Rechtsbehelfe.
+
+4.5. **Elektronische Kommunikation.** Der Aidant stimmt zu, alle Benachrichtigungen bezüglich der AGB elektronisch zu erhalten (E-Mail, In-App-Benachrichtigung, Veröffentlichung auf der Plattform).
 
 ---
 
@@ -1837,31 +1790,31 @@ Para cualquier pregunta o solicitud legal, contáctenos:
 
 6.2. Der Aidant stellt **Leistungsbedingungen/-bestätigungen** nach lokalem Recht aus, verwaltet **Rechnungen** und **steuerliche Verpflichtungen**.
 
-6.3. Ulixai **trägt keine Verantwortung** für Qualität, Richtigkeit oder Ergebnisse der Leistungen des Aidants oder für Vereinbarungen zwischen Aidant und Nutzer.
+6.3. SOS Expat **trägt keine Verantwortung** für Qualität, Richtigkeit oder Ergebnisse der Leistungen des Aidants oder für Vereinbarungen zwischen Aidant und Nutzer.
 
 ---
 
 ## 7. Gebühren, Einmalzahlung und Steuern
 
-7.1. **Vernetzungsgebühren (Pauschale).** **19 € (EUR)** **oder** **25 $ (USD)** **pro Vernetzung**, zuzüglich Steuern und Zahlungsdienstleistergebühren. Ulixai kann diese Beträge ändern und/oder **lokale Tarife** veröffentlichen, mit zukunftsgerichteter Wirkung.
+7.1. **Vernetzungsgebühren (Pauschale).** **19 € (EUR)** **oder** **25 $ (USD)** **pro Vernetzung**, zuzüglich Steuern und Zahlungsdienstleistergebühren. SOS Expat kann diese Beträge ändern und/oder **lokale Tarife** veröffentlichen, mit zukunftsgerichteter Wirkung.
 
-7.2. **Einmalzahlung & Verteilung.** Der Nutzer leistet **eine Einmalzahlung** über die Plattform, die (i) die **Vergütung des Aidants** und (ii) die **Vernetzungsgebühren von Ulixai** abdeckt. Ulixai (oder dessen Dienstleister) zieht Gebühren ab und überweist den Rest an den Aidant. Der Aidant **erlaubt** diese Abzüge und Verteilungen.
+7.2. **Einmalzahlung & Verteilung.** Der Nutzer leistet **eine Einmalzahlung** über die Plattform, die (i) die **Vergütung des Aidants** und (ii) die **Vernetzungsgebühren von SOS Expat** abdeckt. SOS Expat (oder dessen Dienstleister) zieht Gebühren ab und überweist den Rest an den Aidant. Der Aidant **erlaubt** diese Abzüge und Verteilungen.
 
-7.3. **Fälligkeit & Nicht-Rückerstattung.** Vernetzungsgebühren sind **bei Vernetzung fällig** und **nicht erstattbar** (außer nach freiem Ermessen von Ulixai bei ausschließlich durch die Plattform verursachtem Scheitern und **sofern gesetzlich zulässig**).
+7.3. **Fälligkeit & Nicht-Rückerstattung.** Vernetzungsgebühren sind **bei Vernetzung fällig** und **nicht erstattbar** (außer nach freiem Ermessen von SOS Expat bei ausschließlich durch die Plattform verursachtem Scheitern und **sofern gesetzlich zulässig**).
 
-7.4. **Rückerstattung an Nutzer.** Wird einem Nutzer eine Rückerstattung gewährt, wird sie **vom Anteil des Aidants abgezogen**: Ulixai kann den Betrag **einbehalten/kompensieren** oder Rückzahlung verlangen, falls keine zukünftigen Zahlungen anstehen. **Keine Rückerstattung** der Vernetzungsgebühren, außer nach Ermessen von Ulixai.
+7.4. **Rückerstattung an Nutzer.** Wird einem Nutzer eine Rückerstattung gewährt, wird sie **vom Anteil des Aidants abgezogen**: SOS Expat kann den Betrag **einbehalten/kompensieren** oder Rückzahlung verlangen, falls keine zukünftigen Zahlungen anstehen. **Keine Rückerstattung** der Vernetzungsgebühren, außer nach Ermessen von SOS Expat.
 
 7.5. **Währungen & Umrechnung.** Mehrere Währungen möglich; ggf. Gebühren/Umrechnung durch Zahlungsdienstleister.
 
-7.6. **Steuern.** Der Aidant bleibt verantwortlich für **alle anwendbaren Steuern** (MwSt., Einkommensteuer, Sozialversicherung etc.). Ulixai erhebt/überweist, wenn erforderlich, MwSt./lokale Äquivalente auf Vernetzungsgebühren.
+7.6. **Steuern.** Der Aidant bleibt verantwortlich für **alle anwendbaren Steuern** (MwSt., Einkommensteuer, Sozialversicherung etc.). SOS Expat erhebt/überweist, wenn erforderlich, MwSt./lokale Äquivalente auf Vernetzungsgebühren.
 
-7.7. **Kompensation.** Ulixai kann Forderungen gegen den Aidant mit Zahlungen an ihn verrechnen.
+7.7. **Kompensation.** SOS Expat kann Forderungen gegen den Aidant mit Zahlungen an ihn verrechnen.
 
 ---
 
-## 8. Persönliche Daten (globaler Rahmen)
+## 8. Persönliche Daten (globaler Rahmen – DSGVO/DSA)
 
-8.1. **Rollen.** Für vom Nutzer empfangene Daten zur Vernetzung handeln **Ulixai und der Aidant** jeweils als **Verantwortliche für die Datenverarbeitung** für ihre eigenen Zwecke.
+8.1. **Rollen.** Für vom Nutzer empfangene Daten zur Vernetzung handeln **SOS Expat und der Aidant** jeweils als **Verantwortliche für die Datenverarbeitung** für ihre eigenen Zwecke, gemäß der **Verordnung (EU) 2016/679 (DSGVO)**.
 
 8.2. **Grundlagen & Zwecke.** Vertragserfüllung (Vernetzung), berechtigte Interessen (Sicherheit, Betrugsprävention, Verbesserung), gesetzliche Pflichten (AML/KYC, Sanktionen) und Einwilligung, wo erforderlich.
 
@@ -1873,11 +1826,13 @@ Para cualquier pregunta o solicitud legal, contáctenos:
 
 8.6. Der Aidant verarbeitet Daten gemäß dem Recht des **Einsatzlands**.
 
+8.7. **DSA-Konformität.** Die Plattform fungiert als **Vermittlungsdienst** im Sinne der **Verordnung (EU) 2022/2065 (Gesetz über digitale Dienste)**. SOS Expat implementiert Mechanismen zur Meldung illegaler Inhalte und kooperiert mit den zuständigen Behörden gemäß dem DSA.
+
 ---
 
 ## 9. Geistiges Eigentum
 
-Die Plattform, Marken, Logos, Datenbanken und Inhalte sind geschützt. Kein Recht wird an den Aidant übertragen, außer einem **persönlichen, nicht-exklusiven, nicht übertragbaren** Zugriffsrecht während der AGB-Laufzeit. Inhalte, die vom Aidant bereitgestellt werden, unterliegen einer **weltweiten, nicht-exklusiven Lizenz** zugunsten von Ulixai für Hosting und Anzeige auf der Plattform.
+Die Plattform, Marken, Logos, Datenbanken und Inhalte sind geschützt. Kein Recht wird an den Aidant übertragen, außer einem **persönlichen, nicht-exklusiven, nicht übertragbaren** Zugriffsrecht während der AGB-Laufzeit. Inhalte, die vom Aidant bereitgestellt werden, unterliegen einer **weltweiten, nicht-exklusiven Lizenz** zugunsten von SOS Expat für Hosting und Anzeige auf der Plattform.
 
 ---
 
@@ -1885,15 +1840,19 @@ Die Plattform, Marken, Logos, Datenbanken und Inhalte sind geschützt. Kein Rech
 
 10.1. **Keine Garantie** für Ergebnisse/Qualität/Umsatz; Plattform wird **„wie besehen“** bereitgestellt.
 
-10.2. **Haftungsbegrenzung:** Soweit zulässig, ist die Gesamthaftung von Ulixai gegenüber dem Aidant auf **direkte Schäden** begrenzt und darf die Summe der von Ulixai erhaltenen **Vernetzungsgebühren** der betreffenden **Transaktion** nicht überschreiten.
+10.2. **Haftungsbegrenzung:** Soweit zulässig, ist die Gesamthaftung von SOS Expat gegenüber dem Aidant auf **direkte Schäden** begrenzt und darf die Summe der von SOS Expat erhaltenen **Vernetzungsgebühren** der betreffenden **Transaktion** nicht überschreiten.
 
 10.3. **Ausschlüsse:** keine indirekten/folgenden/sonderen/Strafschäden (Gewinnverlust, Chancenverlust, Kundenverlust, Rufschädigung, Ersatzkosten etc.).
 
-10.4. **Entschädigung:** Der Aidant **schützt und stellt frei** Ulixai (einschließlich verbundener Unternehmen, Führungskräfte, Mitarbeiter, Vertreter) von Ansprüchen, Verlusten, Schäden, Strafen und Kosten (einschließlich Anwaltsgebühren) im Zusammenhang mit (i) Verstößen gegen AGB/Gesetze, (ii) Inhalten, (iii) Dienstleistungen/Unterlassungen, (iv) fehlenden Arbeitserlaubnissen/Immigration/Lizenzen.
+10.4. **Entschädigung:** Der Aidant **schützt und stellt frei** SOS Expat (einschließlich verbundener Unternehmen, Führungskräfte, Mitarbeiter, Vertreter) von Ansprüchen, Verlusten, Schäden, Strafen und Kosten (einschließlich Anwaltsgebühren) im Zusammenhang mit (i) Verstößen gegen AGB/Gesetze, (ii) Inhalten, (iii) Dienstleistungen/Unterlassungen, (iv) fehlenden Arbeitserlaubnissen/Immigration/Lizenzen.
 
-10.5. **Keine Vertretung.** Nichts begründet Mandat, Anstellung, Partnerschaft oder Joint Venture zwischen Ulixai und dem Aidant.
+10.5. **Verzicht auf Regress.** Der Aidant **verzichtet ausdrücklich und unwiderruflich** auf jeglichen Regress gegen SOS Expat für (i) Schäden aus der Erbringung von Dienstleistungen, (ii) indirekte Verluste, (iii) vertragliche Streitigkeiten mit Nutzern, (iv) jegliche Mängel der vom Aidant erbrachten Dienstleistungen. Dieser Verzicht gilt im maximal gesetzlich zulässigen Umfang.
 
-10.6. **Fortbestehen.** Die Art. 5, 7, 8, 9, 10, 11 und 12 bleiben nach Kündigung wirksam.
+10.6. **Keine Vertretung.** Nichts begründet Mandat, Anstellung, Partnerschaft oder Joint Venture zwischen SOS Expat und dem Aidant.
+
+10.7. **Höhere Gewalt.** SOS Expat haftet nicht für Verzögerungen oder Ausfälle, die durch Ereignisse **höherer Gewalt** verursacht werden (Naturkatastrophe, Krieg, Pandemie, Cyberangriff, Strom- oder Internetausfall, Regierungsentscheidung, Streik usw.).
+
+10.8. **Fortbestehen.** Die Art. 5, 7, 8, 9, 10, 11 und 12 bleiben nach Kündigung wirksam.
 
 ---
 
@@ -1901,7 +1860,7 @@ Die Plattform, Marken, Logos, Datenbanken und Inhalte sind geschützt. Kein Rech
 
 11.1. **Materielles Recht:** Für jede Vernetzung gilt das Recht des **Einsatzlands**, vorbehaltlich lokaler zwingender Vorschriften und internationaler zwingender Normen. **Ergänzend und für die Auslegung/Gültigkeit der AGB sowie nicht geregelte Fragen gilt estnisches Recht.**
 
-11.2. **Verbindliche ICC-Schiedsgerichtsbarkeit:** Alle Streitigkeiten zwischen Ulixai und Aidant werden **endgültig** nach dem Schiedsgerichtsreglement der **ICC** gelöst. **Sitz: Tallinn (Estland)**. **Sprache: Französisch.** Das Gericht wendet das in Art. 11.1 definierte materielle Recht an. **Vertrauliches Verfahren.**
+11.2. **Verbindliche ICC-Schiedsgerichtsbarkeit:** Alle Streitigkeiten zwischen SOS Expat und Aidant werden **endgültig** nach dem Schiedsgerichtsreglement der **ICC** gelöst. **Sitz: Tallinn (Estland)**. **Sprache: Französisch.** Das Gericht wendet das in Art. 11.1 definierte materielle Recht an. **Vertrauliches Verfahren.**
 
 11.3. **Verzicht auf Sammelklagen:** Soweit zulässig, ausgeschlossen; nur **individuelle Ansprüche**.
 
@@ -1911,7 +1870,7 @@ Die Plattform, Marken, Logos, Datenbanken und Inhalte sind geschützt. Kein Rech
 
 ## 12. Sonstiges
 
-12.1. **Abtretung.** Ulixai kann die AGB an ein Konzernunternehmen oder einen Nachfolger abtreten; der Aidant kann ohne schriftliche Zustimmung von Ulixai nicht abtreten.
+12.1. **Abtretung.** SOS Expat kann die AGB an ein Konzernunternehmen oder einen Nachfolger abtreten; der Aidant kann ohne schriftliche Zustimmung von SOS Expat nicht abtreten.
 
 12.2. **Gesamtheit.** Die AGB bilden die vollständige Vereinbarung und ersetzen alle vorherigen Vereinbarungen zum selben Gegenstand.
 
@@ -1934,7 +1893,7 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
   const defaultCh = `
 # 使用条款 – 海外互助者（全球版）
 
-**SOS Expat by Ulixai OÜ（“**平台**”、“**SOS**”、“**我们**”） 
+**SOS Expat by WorldExpat OÜ（“**平台**”、“**SOS**”、“**我们**”） 
 
 **版本 2.2 – 最后更新：2025 年 6 月 16 日**
 
@@ -1958,21 +1917,21 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 2.1. 本使用条款规范互助者对平台的访问与使用。
 
-2.2. Ulixai 仅作为技术性匹配中介。 Ulixai 不是互助者的雇主、代理或合作伙伴，不提供任何法律、医疗、税务、会计或其他受监管的建议，也不是互助者与用户之间合同的当事方。
+2.2. SOS Expat 仅作为技术性匹配中介。 SOS Expat 不是互助者的雇主、代理或合作伙伴，不提供任何法律、医疗、税务、会计或其他受监管的建议，也不是互助者与用户之间合同的当事方。
 
 2.3. **电子接受（点击同意):** 注册和/或使用平台即表示接受本条款，构成电子签署与合同同意。SOS 可保留技术性证据（时间戳、标识符等）。
 
 2.4. **修改:** SOS 可通过在平台上发布方式更新条款和/或费率表（按国家/货币），更新具有前瞻性效力。继续使用即视为接受。
 
-2.5. **专业身份（B2B):** 互助者声明其仅为职业目的行事；消费者保护法律不适用于 Ulixai–互助者关系。
+2.5. **专业身份（B2B):** 互助者声明其仅为职业目的行事；消费者保护法律不适用于 SOS Expat–互助者关系。
 
 ---
 
 ## 3. 互助者身份 – 合规、许可与责任
 
-3.1. **独立性:** 互助者以独立专业人士身份行事；Ulixai 与互助者之间不构成雇佣、代理、合作或合资关系。
+3.1. **独立性:** 互助者以独立专业人士身份行事；SOS Expat 与互助者之间不构成雇佣、代理、合作或合资关系。
 
-3.2. **工作许可与移民身份** 互助者全权负责在每个服务国家获得并保持所有必要许可（签证、工作许可证、商业登记/个体经营、保险、当地执照等）。Ulixai 不核实这些许可，也不承担任何责任。
+3.2. **工作许可与移民身份** 互助者全权负责在每个服务国家获得并保持所有必要许可（签证、工作许可证、商业登记/个体经营、保险、当地执照等）。SOS Expat 不核实这些许可，也不承担任何责任。
 
 3.3. **非受监管服务:** 互助者承诺不得提供受监管的服务（如法律、医疗、金融、会计、房地产咨询等），除非持有必要的许可/执照并完全遵守当地法律。否则，互助者应避免此类服务，并将用户转介给具有合法资质的专业人士（如注册律师）。
 
@@ -1988,9 +1947,13 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 4.1. **注册:** 每位互助者仅可拥有一个账户；所填信息必须准确、完整并保持更新（身份、联系方式、服务描述、地区范围等）。
 
-4.2. **验证:** Ulixai 可进行合理检查（身份验证、资料一致性、制裁/尽调筛查等），并可因安全、合规或服务质量原因拒绝/暂停/撤销访问。
+4.2. **验证:** SOS Expat 可进行合理检查（身份验证、资料一致性、制裁/尽调筛查等），并可因安全、合规或服务质量原因拒绝/暂停/撤销访问。
 
 4.3. **账户安全:** 互助者须保护其登录凭证。任何账户下的操作均视为互助者本人行为。
+
+4.4. **不活动。** 账户在365天不活动后可能会被自动停用。互助者可在履行义务后随时关闭其账户。SOS Expat 可因违反条款而暂停或终止账户。
+
+4.5. **电子通信。** 互助者同意通过电子方式（电子邮件、应用内通知、平台发布）接收通知。
 
 ---
 
@@ -2012,31 +1975,31 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 6.2. 互助者应提供符合当地法律的服务确认/条款，并自行处理开票与纳税义务。
 
-6.3. Ulixai 不对互助者服务的质量、准确性或结果负责，也不对互助者与用户之间的任何承诺承担责任。
+6.3. SOS Expat 不对互助者服务的质量、准确性或结果负责，也不对互助者与用户之间的任何承诺承担责任。
 
 ---
 
 ## 7. 费用、单次付款与税务
 
-7.1. **匹配费用（固定费率）。 每次匹配收费 €19（欧元） 或 $25（美元）**，不含税及支付服务费用。Ulixai 可调整金额及/或按国家/货币发布本地费率表，具前瞻性效力。
+7.1. **匹配费用（固定费率）。 每次匹配收费 €19（欧元） 或 $25（美元）**，不含税及支付服务费用。SOS Expat 可调整金额及/或按国家/货币发布本地费率表，具前瞻性效力。
 
-7.2. **一次性支付与分配。** 用户通过平台进行一次性支付，涵盖 (i) 互助者报酬（双方约定）及 (ii) Ulixai 的匹配费用。Ulixai（或其服务商）收款后，扣除费用并将余额转给互助者。互助者授权此类扣除与分配。
+7.2. **一次性支付与分配。** 用户通过平台进行一次性支付，涵盖 (i) 互助者报酬（双方约定）及 (ii) SOS Expat 的匹配费用。SOS Expat（或其服务商）收款后，扣除费用并将余额转给互助者。互助者授权此类扣除与分配。
 
-7.3. **应付且不退款。** 匹配费用自匹配达成即应付且不可退还（除非 Ulixai 出于善意、且在法律允许范围内、因平台自身原因造成失败而决定退款）。
+7.3. **应付且不退款。** 匹配费用自匹配达成即应付且不可退还（除非 SOS Expat 出于善意、且在法律允许范围内、因平台自身原因造成失败而决定退款）。
 
-7.4. **用户退款。** 若用户获批退款，该金额从互助者份额中扣除：Ulixai 可抵扣/保留未来支付款，或在无未来支付时要求返还。匹配费用不退，除非 Ulixai 自主决定。
+7.4. **用户退款。** 若用户获批退款，该金额从互助者份额中扣除：SOS Expat 可抵扣/保留未来支付款，或在无未来支付时要求返还。匹配费用不退，除非 SOS Expat 自主决定。
 
 7.5. **货币与兑换。** 平台可支持多种货币；可能适用服务商汇率及手续费。
 
-7.6. **税费。** 互助者自行承担所有适用税费（增值税、所得税、社保等）。Ulixai 在必要时收取/代缴匹配费用相关增值税或同等税项。
+7.6. **税费。** 互助者自行承担所有适用税费（增值税、所得税、社保等）。SOS Expat 在必要时收取/代缴匹配费用相关增值税或同等税项。
 
-7.7. **抵销。** Ulixai 可将互助者所欠款项与其应收款项相互抵销。
+7.7. **抵销。** SOS Expat 可将互助者所欠款项与其应收款项相互抵销。
 
 ---
 
-## 8. 个人数据（全球框架)
+## 8. 个人数据（全球框架 – GDPR/DSA）
 
-8.1. **角色。** 就为匹配目的接收的用户数据而言，Ulixai 与互助者各自为其自身目的的独立数据控制者。
+8.1. **角色。** 就为匹配目的接收的用户数据而言，SOS Expat 与互助者各自依据**欧盟法规 2016/679 (GDPR)** 为其自身目的担任独立的数据控制者。
 
 8.2. **法律依据与目的。** 合同履行（匹配）、合法利益（安全、防欺诈、改进）、法律合规（反洗钱、制裁）及必要时的同意。
 
@@ -2048,11 +2011,13 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 8.6. 互助者根据服务国家法律处理数据。
 
+8.7. **DSA 合规。** 平台作为**欧盟法规 2022/2065（数字服务法）**下的**中介服务**运营。SOS Expat 实施非法内容举报机制，并依据 DSA 与主管当局合作。
+
 ---
 
 ## 9. 知识产权
 
-平台及其商标、标识、数据库和内容受保护。除在条款有效期内享有个人的、非独占、不可转让的访问权外，互助者不获得任何权利。互助者提供的内容授予 Ulixai 全球性、非独占许可，用于平台的托管与展示。
+平台及其商标、标识、数据库和内容受保护。除在条款有效期内享有个人的、非独占、不可转让的访问权外，互助者不获得任何权利。互助者提供的内容授予 SOS Expat 全球性、非独占许可，用于平台的托管与展示。
 
 ---
 
@@ -2060,23 +2025,27 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 10.1. 不作任何保证，包括成果、质量或业务量；平台按**“原样”**提供。
 
-10.2. **责任限制：** 在法律允许范围内，Ulixai 对互助者的总责任仅限于直接损失，且不得超过 Ulixai 在引发索赔的匹配交易中所收取的匹配费用总额。
+10.2. **责任限制：** 在法律允许范围内，SOS Expat 对互助者的总责任仅限于直接损失，且不得超过 SOS Expat 在引发索赔的匹配交易中所收取的匹配费用总额。
 
-10.3. **排除责任：** Ulixai 不承担任何间接、连带、特殊或惩罚性损失（包括利润损失、机会损失、客户流失、声誉损害、替代成本等）。
+10.3. **排除责任：** SOS Expat 不承担任何间接、连带、特殊或惩罚性损失（包括利润损失、机会损失、客户流失、声誉损害、替代成本等）。
 
-10.4. **赔偿义务：** 互助者应赔偿并保障 Ulixai（及其关联方、管理人员、员工、代理）免受因以下情况产生的任何索赔、损害、罚款或费用（包括律师费）：(i) 违反本条款/法律，(ii) 提供的内容，(iii) 服务或疏忽行为，(iv) 无合法工作/移民/执照许可。
+10.4. **赔偿义务：** 互助者应赔偿并保障 SOS Expat（及其关联方、管理人员、员工、代理）免受因以下情况产生的任何索赔、损害、罚款或费用（包括律师费）：(i) 违反本条款/法律，(ii) 提供的内容，(iii) 服务或疏忽行为，(iv) 无合法工作/移民/执照许可。
 
-10.5. 无代表关系。 本条款不构成 Ulixai 与互助者之间的代理、雇佣、合作或合资关系。
+10.5. **追索权放弃。** 互助者**明确且不可撤销地放弃**对 SOS Expat 的任何追索权，包括：(i) 因提供服务产生的损害，(ii) 间接损失，(iii) 与用户的合同纠纷，(iv) 互助者所提供服务的任何缺陷。此放弃在法律允许的最大范围内适用。
 
-10.6. 存续条款。 第 5、7、8、9、10、11、12 条在终止后仍有效。
+10.6. **无代表关系。** 本条款不构成 SOS Expat 与互助者之间的代理、雇佣、合作或合资关系。
+
+10.7. **不可抗力。** SOS Expat 不对因**不可抗力**事件（自然灾害、战争、流行病、网络攻击、电力或互联网中断、政府决定、罢工等）造成的延迟或故障承担责任。
+
+10.8. **存续条款。** 第 5、7、8、9、10、11、12 条在终止后仍有效。
 
 ---
 
 ## 11. 适用法律 – 仲裁 – 爱沙尼亚司法管辖 – 集体诉讼放弃
 
-11.1. **实体法：** 每次匹配中，Ulixai–互助者关系受服务国家法律管辖，受当地强制性法律及国际强制规范约束。补充适用及本条款的解释/效力或任何未被服务国家法律规制的事项，适用爱沙尼亚法。
+11.1. **实体法：** 每次匹配中，SOS Expat–互助者关系受服务国家法律管辖，受当地强制性法律及国际强制规范约束。补充适用及本条款的解释/效力或任何未被服务国家法律规制的事项，适用爱沙尼亚法。
 
-11.2. **强制 ICC 仲裁：** Ulixai 与互助者的任何争议应根据国际商会仲裁规则（ICC）最终解决。仲裁地：爱沙尼亚塔林。 语言：法语。 仲裁庭适用第 11.1 条所述实体法。程序保密。
+11.2. **强制 ICC 仲裁：** SOS Expat 与互助者的任何争议应根据国际商会仲裁规则（ICC）最终解决。仲裁地：爱沙尼亚塔林。 语言：法语。 仲裁庭适用第 11.1 条所述实体法。程序保密。
 
 11.3. **集体诉讼放弃：** 在法律允许范围内，任何集体/代表性诉讼均被排除；仅允许个人索赔。
 
@@ -2086,7 +2055,7 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 ## 12. 其他条款
 
-12.1. **转让。** Ulixai 可将本条款转让给其关联实体或继承方；互助者未经书面同意不得转让。
+12.1. **转让。** SOS Expat 可将本条款转让给其关联实体或继承方；互助者未经书面同意不得转让。
 
 12.2. **完整协议。** 本条款构成完整协议，取代此前关于同一主题的任何协议。
 
@@ -2110,7 +2079,7 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
   const defaultAr = `
 # الشروط والأحكام – Expatriates Aidants (عالمي)
 
-**SOS Expat بواسطة Ulixai OÜ** (ويشار إليها فيما يلي باسم “**المنصة**”، “**SOS**” أو “**نحن**”)
+**SOS Expat بواسطة WorldExpat OÜ** (ويشار إليها فيما يلي باسم “**المنصة**”، “**SOS**” أو “**نحن**”)
 
 **الإصدار 2.2 – آخر تحديث: 16 يونيو 2025**
 
@@ -2136,7 +2105,7 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 2.1. تحكم هذه الشروط الوصول إلى المنصة واستخدامها من قبل المساعدين.
 
-2.2. **تعمل Ulixai فقط كوسيط تقني.** Ulixai ليست صاحب عمل، ممثلًا، أو شريكًا للمساعد، ولا تقدم خدمات قانونية أو طبية أو مالية، ولا تشارك في أي عقد بين المساعد والمستخدم.
+2.2. **تعمل SOS Expat فقط كوسيط تقني.** SOS Expat ليست صاحب عمل، ممثلًا، أو شريكًا للمساعد، ولا تقدم خدمات قانونية أو طبية أو مالية، ولا تشارك في أي عقد بين المساعد والمستخدم.
 
 2.3. **الموافقة الإلكترونية (Click-wrap).** التسجيل أو استخدام المنصة يعني قبول هذه الشروط. يمكن لـ SOS الاحتفاظ بسجلات تقنية (طابع زمني، معرف، إلخ).
 
@@ -2148,9 +2117,9 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 ## 3. حالة المساعد – الامتثال، التصاريح والمسؤوليات
 
-3.1. **الاستقلالية.** يعمل المساعد كـ **مهني مستقل**؛ ولا ينشأ أي علاقة توظيف أو وكالة أو مشروع مشترك مع Ulixai.
+3.1. **الاستقلالية.** يعمل المساعد كـ **مهني مستقل**؛ ولا ينشأ أي علاقة توظيف أو وكالة أو مشروع مشترك مع SOS Expat.
 
-3.2. **تصاريح العمل ووضع الهجرة.** المساعد مسؤول عن الحصول على جميع التصاريح اللازمة في كل بلد (تأشيرة، تصريح عمل، تسجيل تجاري، تأمين، تراخيص محلية). Ulixai لا تتحقق من هذه التصاريح.
+3.2. **تصاريح العمل ووضع الهجرة.** المساعد مسؤول عن الحصول على جميع التصاريح اللازمة في كل بلد (تأشيرة، تصريح عمل، تسجيل تجاري، تأمين، تراخيص محلية). SOS Expat لا تتحقق من هذه التصاريح.
 
 3.3. **الخدمات غير المنظمة.** لا يقدم المساعد خدمات منظمة بدون الترخيص المناسب (قانونية، طبية، مالية، ضريبية، إلخ).
 
@@ -2166,9 +2135,13 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 4.1. **التسجيل.** لكل مساعد حساب واحد فقط؛ يجب أن تكون جميع المعلومات دقيقة ومحدثة.
 
-4.2. **التحقق.** يمكن لـ Ulixai رفض، تعليق، أو حذف الوصول لأسباب أمنية أو امتثال أو جودة.
+4.2. **التحقق.** يمكن لـ SOS Expat رفض، تعليق، أو حذف الوصول لأسباب أمنية أو امتثال أو جودة.
 
 4.3. **الأمان.** تعتبر جميع الأنشطة التي تتم عبر الحساب من مسؤولية المساعد.
+
+4.4. **عدم النشاط.** بعد 365 يومًا من عدم النشاط، قد يتم إلغاء تنشيط الحساب تلقائيًا. يمكن للمساعد إغلاق حسابه في أي وقت بعد الوفاء بالتزاماته. يحق لـ SOS Expat تعليق أو إنهاء الحساب في حالة انتهاك الشروط.
+
+4.5. **الاتصالات الإلكترونية.** يوافق المساعد على تلقي الإشعارات عبر الوسائل الإلكترونية (البريد الإلكتروني، الإشعارات داخل التطبيق، النشر على المنصة).
 
 ---
 
@@ -2190,7 +2163,7 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 6.2. يدير المساعد شروط الخدمة والفواتير وفقًا للقوانين المحلية.
 
-6.3. **Ulixai ليست مسؤولة عن جودة أو نتائج الخدمة.**
+6.3. **SOS Expat ليست مسؤولة عن جودة أو نتائج الخدمة.**
 
 ---
 
@@ -2198,7 +2171,7 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 7.1. **رسوم التواصل:** 19 € (يورو) أو 25 $ (دولار أمريكي) لكل تواصل.
 
-7.2. **الدفع الفردي والتوزيع.** تتم المدفوعات عبر المنصة؛ تقوم Ulixai بخصم الرسوم وتحويل الرصيد إلى المساعد.
+7.2. **الدفع الفردي والتوزيع.** تتم المدفوعات عبر المنصة؛ تقوم SOS Expat بخصم الرسوم وتحويل الرصيد إلى المساعد.
 
 7.3. **غير قابلة للاسترداد.** رسوم التواصل غير قابلة للاسترداد.
 
@@ -2208,13 +2181,13 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 7.6. **الضرائب.** المساعد مسؤول عن جميع الضرائب المترتبة.
 
-7.7. **التعويض.** يمكن لـ Ulixai تعديل المدفوعات لتعويض أي مطالبات.
+7.7. **التعويض.** يمكن لـ SOS Expat تعديل المدفوعات لتعويض أي مطالبات.
 
 ---
 
-## 8. البيانات الشخصية (عالمي)
+## 8. البيانات الشخصية (عالمي – GDPR/DSA)
 
-8.1. **الأدوار.** Ulixai والمساعد مسؤولان بشكل مستقل عن معالجة البيانات.
+8.1. **الأدوار.** فيما يتعلق ببيانات المستخدمين المستلمة لأغراض التواصل، يعمل كل من SOS Expat والمساعد كمتحكمين مستقلين في البيانات لأغراضهما الخاصة، وفقًا **للائحة (EU) 2016/679 (GDPR)**.
 
 8.2. **الغرض.** التواصل، الأمان، منع الاحتيال، الامتثال القانوني.
 
@@ -2226,11 +2199,13 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 8.6. يعالج المساعد البيانات وفق قوانين بلده/منطقته.
 
+8.7. **الامتثال لـ DSA.** تعمل المنصة كـ **خدمة وسيطة** بموجب **اللائحة (EU) 2022/2065 (قانون الخدمات الرقمية)**. تطبق SOS Expat آليات للإبلاغ عن المحتوى غير القانوني وتتعاون مع السلطات المختصة وفقًا لـ DSA.
+
 ---
 
 ## 9. الملكية الفكرية
 
-المنصة والعلامات التجارية والشعارات وقاعدة البيانات والمحتوى محمية. يمنح المساعد فقط حقًا محدودًا وشخصيًا وغير قابل للتحويل. يمنح المحتوى المقدم من المساعد Ulixai ترخيصًا غير حصري لاستضافته وعرضه على المنصة.
+المنصة والعلامات التجارية والشعارات وقاعدة البيانات والمحتوى محمية. يمنح المساعد فقط حقًا محدودًا وشخصيًا وغير قابل للتحويل. يمنح المحتوى المقدم من المساعد SOS Expat ترخيصًا غير حصري لاستضافته وعرضه على المنصة.
 
 ---
 
@@ -2242,11 +2217,15 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 10.3. **الاستثناء:** لا تُطبق المسؤولية عن الأضرار غير المباشرة أو التبعية أو العقابية.
 
-10.4. **التعويض:** يعوض المساعد Ulixai عن أي مطالبات أو أضرار أو تكاليف قانونية.
+10.4. **التعويض:** يعوض المساعد SOS Expat عن أي مطالبات أو أضرار أو تكاليف قانونية.
 
-10.5. **عدم التمثيل.**
+10.5. **التنازل عن حق الرجوع.** يتنازل المساعد **صراحةً وبشكل لا رجعة فيه** عن أي حق رجوع ضد SOS Expat فيما يخص: (i) الأضرار الناتجة عن تقديم الخدمات، (ii) الخسائر غير المباشرة، (iii) النزاعات التعاقدية مع المستخدمين، (iv) أي قصور في الخدمات المقدمة من المساعد. يسري هذا التنازل إلى أقصى حد يسمح به القانون.
 
-10.6. تظل هذه الأحكام سارية بعد إنهاء الحساب.
+10.6. **عدم التمثيل.** لا شيء في هذه الشروط ينشئ علاقة وكالة أو توظيف أو شراكة أو مشروع مشترك بين SOS Expat والمساعد.
+
+10.7. **القوة القاهرة.** لا تتحمل SOS Expat المسؤولية عن التأخيرات أو الإخفاقات الناتجة عن أحداث **القوة القاهرة** (كوارث طبيعية، حروب، أوبئة، هجمات إلكترونية، انقطاع الكهرباء أو الإنترنت، قرارات حكومية، إضرابات، إلخ).
+
+10.8. تظل هذه الأحكام سارية بعد إنهاء الحساب.
 
 ---
 
@@ -2264,7 +2243,7 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 ## 12. متفرقات
 
-12.1. **النقل.** يمكن لـ Ulixai نقل حقوقها.
+12.1. **النقل.** يمكن لـ SOS Expat نقل حقوقها.
 
 12.2. **الاتفاق الكامل.**
 
@@ -2288,7 +2267,7 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
   const defaultPt = `
 # Termos e Condições de Uso – Expatriates Aidants (Global)
 
-**SOS Expat by Ulixai OÜ** (doravante denominado “**Plataforma**”, “**SOS**” ou “**nós**”)
+**SOS Expat by WorldExpat OÜ** (doravante denominado “**Plataforma**”, “**SOS**” ou “**nós**”)
 
 **Versão 2.2 – Última atualização: 16 de junho de 2025**
 
@@ -2314,7 +2293,7 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 2.1. Estes termos regem o acesso e uso da Plataforma por Aidants.
 
-2.2. **Ulixai atua apenas como intermediário técnico.** Ulixai não é empregador, representante ou parceiro do Aidant, não fornece serviços legais, médicos, fiscais ou contábeis, nem é parte de qualquer contrato entre Aidant e Usuário.
+2.2. **SOS Expat atua apenas como intermediário técnico.** SOS Expat não é empregador, representante ou parceiro do Aidant, não fornece serviços legais, médicos, fiscais ou contábeis, nem é parte de qualquer contrato entre Aidant e Usuário.
 
 2.3. **Consentimento eletrônico (Click-wrap).** O registro ou uso da Plataforma constitui aceitação destes Termos. A SOS pode manter provas técnicas (timestamp, ID, etc.).
 
@@ -2326,9 +2305,9 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 ## 3. Status do Aidant – Conformidade, permissões e responsabilidades
 
-3.1. **Independência.** O Aidant atua como **profissional independente**; nenhum vínculo empregatício, agência ou joint venture é criado com Ulixai.
+3.1. **Independência.** O Aidant atua como **profissional independente**; nenhum vínculo empregatício, agência ou joint venture é criado com SOS Expat.
 
-3.2. **Autorização de trabalho e status migratório.** O Aidant é responsável por obter e manter todas as autorizações necessárias em cada país (visto, permissão de trabalho, registro comercial, seguro, licenças locais). A Ulixai não verifica essas autorizações.
+3.2. **Autorização de trabalho e status migratório.** O Aidant é responsável por obter e manter todas as autorizações necessárias em cada país (visto, permissão de trabalho, registro comercial, seguro, licenças locais). A SOS Expat não verifica essas autorizações.
 
 3.3. **Serviços não regulamentados.** O Aidant não fornecerá serviços regulamentados sem licenciamento adequado (legal, médico, financeiro, fiscal, etc.).
 
@@ -2344,9 +2323,13 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 4.1. **Registro.** Cada Aidant terá apenas uma conta; todas as informações devem ser precisas e atualizadas.
 
-4.2. **Verificação.** A Ulixai pode recusar, suspender ou excluir o acesso por motivos de segurança, conformidade ou qualidade.
+4.2. **Verificação.** A SOS Expat pode recusar, suspender ou excluir o acesso por motivos de segurança, conformidade ou qualidade.
 
 4.3. **Segurança.** Atividades na conta são consideradas realizadas pelo Aidant.
+
+4.4. **Inatividade.** Após 365 dias de inatividade, a conta poderá ser automaticamente desativada. O Aidant pode encerrar sua conta a qualquer momento após cumprir suas obrigações. A SOS Expat pode suspender ou encerrar contas por violação dos Termos.
+
+4.5. **Comunicações eletrônicas.** O Aidant consente em receber notificações por meios eletrônicos (e-mail, notificações no aplicativo, publicação na plataforma).
 
 ---
 
@@ -2368,7 +2351,7 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 6.2. O Aidant gerenciará condições de serviço e faturamento conforme a legislação local.
 
-6.3. A Ulixai **não é responsável pela qualidade ou resultados do serviço**.
+6.3. A SOS Expat **não é responsável pela qualidade ou resultados do serviço**.
 
 ---
 
@@ -2376,7 +2359,7 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 7.1. **Taxa de networking:** 19 € (EUR) ou 25 $ (USD) por conexão.
 
-7.2. **Pagamento único e distribuição.** Pagamentos são feitos via Plataforma; Ulixai deduz a taxa e repassa o saldo ao Aidant.
+7.2. **Pagamento único e distribuição.** Pagamentos são feitos via Plataforma; SOS Expat deduz a taxa e repassa o saldo ao Aidant.
 
 7.3. **Não reembolsável.** A taxa de networking não é reembolsável.
 
@@ -2386,13 +2369,13 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 7.6. **Impostos.** O Aidant é responsável por todos os impostos aplicáveis.
 
-7.7. **Indenização.** Ulixai pode ajustar pagamentos para compensar reivindicações.
+7.7. **Indenização.** SOS Expat pode ajustar pagamentos para compensar reivindicações.
 
 ---
 
-## 8. Dados pessoais (global)
+## 8. Dados pessoais (global – GDPR/DSA)
 
-8.1. **Papéis.** Ulixai e o Aidant são responsáveis separadamente pelo processamento de dados.
+8.1. **Papéis.** Para dados de usuários recebidos para fins de networking, SOS Expat e o Aidant atuam como controladores de dados independentes para seus próprios fins, em conformidade com o **Regulamento (UE) 2016/679 (GDPR)**.
 
 8.2. **Finalidade.** Networking, segurança, prevenção de fraude, conformidade legal.
 
@@ -2404,11 +2387,13 @@ Bei Fragen oder rechtlichen Anliegen kontaktieren Sie uns:
 
 8.6. O Aidant processará dados conforme leis do país/local.
 
+8.7. **Conformidade DSA.** A Plataforma opera como um **serviço intermediário** nos termos do **Regulamento (UE) 2022/2065 (Digital Services Act)**. A SOS Expat implementa mecanismos para denúncia de conteúdo ilegal e coopera com as autoridades competentes em conformidade com o DSA.
+
 ---
 
 ## 9. Propriedade intelectual
 
-A Plataforma, marcas, logotipos, banco de dados e conteúdo são protegidos. O Aidant recebe apenas direito limitado, pessoal e não transferível. O conteúdo fornecido pelo Aidant concede à Ulixai licença não exclusiva para hospedagem e exibição na Plataforma.
+A Plataforma, marcas, logotipos, banco de dados e conteúdo são protegidos. O Aidant recebe apenas direito limitado, pessoal e não transferível. O conteúdo fornecido pelo Aidant concede à SOS Expat licença não exclusiva para hospedagem e exibição na Plataforma.
 
 ---
 
@@ -2420,11 +2405,15 @@ A Plataforma, marcas, logotipos, banco de dados e conteúdo são protegidos. O A
 
 10.3. **Exclusão:** danos indiretos, consequenciais ou punitivos não aplicáveis.
 
-10.4. **Indenização:** Aidant indenizará Ulixai por quaisquer reivindicações, danos ou custos legais.
+10.4. **Indenização:** Aidant indenizará SOS Expat por quaisquer reivindicações, danos ou custos legais.
 
-10.5. **Sem representação.**
+10.5. **Renúncia ao recurso.** O Aidant **renuncia expressa e irrevogavelmente** a qualquer recurso contra a SOS Expat por: (i) danos decorrentes da prestação de serviços, (ii) perdas indiretas, (iii) disputas contratuais com Usuários, (iv) qualquer falha nos serviços prestados pelo Aidant. Esta renúncia aplica-se na máxima extensão permitida por lei.
 
-10.6. Estas disposições permanecem válidas após término.
+10.6. **Sem representação.** Nada aqui cria relação de agência, emprego, parceria ou joint venture entre a SOS Expat e o Aidant.
+
+10.7. **Força maior.** A SOS Expat não é responsável por atrasos ou falhas causados por eventos de **força maior** (desastre natural, guerra, pandemia, ciberataque, interrupção de energia ou internet, decisão governamental, greve, etc.).
+
+10.8. Estas disposições permanecem válidas após término.
 
 ---
 
@@ -2442,7 +2431,7 @@ A Plataforma, marcas, logotipos, banco de dados e conteúdo são protegidos. O A
 
 ## 12. Diversos
 
-12.1. **Transferência.** Ulixai pode transferir seus direitos.
+12.1. **Transferência.** SOS Expat pode transferir seus direitos.
 
 12.2. **Acordo completo.**
 

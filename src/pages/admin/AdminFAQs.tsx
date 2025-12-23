@@ -1,73 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  collection, 
-  query, 
-  getDocs, 
-  addDoc, 
-  updateDoc, 
-  deleteDoc, 
-  doc, 
-  orderBy,
-  serverTimestamp 
-} from 'firebase/firestore';
-import { db } from '../../config/firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import AdminLayout from '../../components/admin/AdminLayout';
-import { Globe, Plus, Edit, Trash2, Save, X, Eye, CheckCircle, AlertCircle } from 'lucide-react';
-
-interface FAQ {
-  id?: string;
-  question: Record<string, string>;
-  answer: Record<string, string>;
-  category: string;
-  slug: Record<string, string>;
-  order: number;
-  isActive: boolean;
-  tags: string[];
-  views?: number;
-  createdAt?: any;
-  updatedAt?: any;
-}
-
-const SUPPORTED_LANGUAGES = [
-  { code: 'fr', name: 'Français', flag: '🇫🇷' },
-  { code: 'en', name: 'English', flag: '🇬🇧' },
-  { code: 'es', name: 'Español', flag: '🇪🇸' },
-  { code: 'ru', name: 'Русский', flag: '🇷🇺' },
-  { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
-  { code: 'hi', name: 'हिन्दी', flag: '🇮🇳' },
-  { code: 'pt', name: 'Português', flag: '🇵🇹' },
-  { code: 'ch', name: '中文', flag: '🇨🇳' },
-  { code: 'ar', name: 'العربية', flag: '🇸🇦' }
-];
-
-// Helper function to get first available translation from any language
-const getFirstAvailableTranslation = (translations: Record<string, string> | undefined, fallback: string = ''): string => {
-  if (!translations) return fallback;
-  
-  // Try all supported languages in order
-  for (const lang of SUPPORTED_LANGUAGES) {
-    if (translations[lang.code] && translations[lang.code].trim().length > 0) {
-      return translations[lang.code];
-    }
-  }
-  
-  return fallback;
-};
-
-// Helper function to get the language code of the first available translation
-const getFirstAvailableLanguageCode = (translations: Record<string, string> | undefined, fallback: string = 'fr'): string => {
-  if (!translations) return fallback;
-  
-  // Try all supported languages in order
-  for (const lang of SUPPORTED_LANGUAGES) {
-    if (translations[lang.code] && translations[lang.code].trim().length > 0) {
-      return lang.code;
-    }
-  }
-  
-  return fallback;
-};
+import { Globe, Plus, Edit, Trash2, Save, X, Eye, CheckCircle, AlertCircle, Database, Loader2 } from 'lucide-react';
+import {
+  FAQ,
+  SUPPORTED_LANGUAGES,
+  FAQ_CATEGORIES,
+  listFAQs,
+  createFAQ,
+  updateFAQ,
+  deleteFAQ,
+  getFirstAvailableTranslation,
+  getFirstAvailableLanguageCode,
+  translateFAQToAllLanguages,
+  FAQInput
+} from '../../services/faq';
+import { initializeFAQs, resetAndInitializeFAQs, PREDEFINED_FAQS } from '../../services/faqInit';
 
 const AdminFAQs: React.FC = () => {
   const { user } = useAuth();
@@ -75,310 +23,106 @@ const AdminFAQs: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showNewForm, setShowNewForm] = useState<boolean>(false);
-  const [tagsInput, setTagsInput] = useState<string>(''); // Separate state for tags input
+  const [tagsInput, setTagsInput] = useState<string>('');
   const [translating, setTranslating] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<{ show: boolean; id: string | null }>({ show: false, id: null });
-  
-  // Single language form data (source language - default to French)
+  const [initializing, setInitializing] = useState(false);
+  const [resetting, setResetting] = useState(false);
+
+  // Single language form data (source language - auto-detected)
   const [questionText, setQuestionText] = useState<string>('');
   const [answerText, setAnswerText] = useState<string>('');
-  
-  const [formData, setFormData] = useState<FAQ>({
+
+  const [formData, setFormData] = useState<Partial<FAQ>>({
     question: {},
     answer: {},
     category: 'general',
     slug: {},
     order: 0,
     isActive: true,
+    isFooter: false,
     tags: []
   });
 
-  // Transliterate non-Latin text to Latin characters using Google Translate
-  const transliterateText = async (text: string, langCode: string): Promise<string> => {
-    if (!text || text.trim().length === 0) {
-      return '';
-    }
+  // Initialize predefined FAQs
+  const handleInitializeFAQs = async () => {
+    if (initializing) return;
+
+    const confirmInit = window.confirm(
+      `Voulez-vous initialiser ${PREDEFINED_FAQS.all.length} FAQ prédéfinies ?\n\nLes FAQ existantes ne seront pas modifiées.`
+    );
+    if (!confirmInit) return;
 
     try {
-      // Use Google Translate transliteration API
-      // Format: https://translate.googleapis.com/translate_a/single?client=gtx&sl=SOURCE_LANG&tl=TARGET_LANG&dt=rm&q=TEXT
-      // dt=rm requests romanization/transliteration
-      // Convert 'ch' to 'zh' for Chinese (Google API uses ISO 'zh')
-      const apiLangCode = langCode === 'ch' ? 'zh' : langCode;
-      const transliterateUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${apiLangCode}&tl=en&dt=rm&q=${encodeURIComponent(text.substring(0, 200))}`;
-      const response = await fetch(transliterateUrl);
+      setInitializing(true);
+      setSuccessMessage('');
+      setErrorMessage('');
 
-      if (response.ok) {
-        const data = await response.json() as any;
-        // The transliteration API returns data in format: [[["transliterated", "original", ...], ...]]
-        if (data && Array.isArray(data) && data[0] && Array.isArray(data[0])) {
-          const transliterated = data[0]
-            .map((item: any[]) => item && item[0] ? item[0] : '')
-            .filter(Boolean)
-            .join(' ');
-          
-          if (transliterated && transliterated.trim().length > 0) {
-            console.log(`[transliterateText] Transliterated "${text.substring(0, 30)}..." to "${transliterated.substring(0, 50)}..."`);
-            return transliterated;
-          }
-        }
+      const result = await initializeFAQs();
+
+      if (result.success) {
+        setSuccessMessage(
+          `Initialisation terminée ! ${result.created} FAQ créées, ${result.skipped} ignorées (déjà existantes).`
+        );
+      } else {
+        setErrorMessage(
+          `Initialisation partielle : ${result.created} créées, ${result.skipped} ignorées. Erreurs : ${result.errors.length}`
+        );
       }
+
+      // Recharger les FAQ
+      const updatedFAQs = await listFAQs();
+      setFaqs(updatedFAQs);
     } catch (error) {
-      console.warn(`[transliterateText] Error transliterating ${langCode}:`, error);
+      console.error('[handleInitializeFAQs] Error:', error);
+      setErrorMessage('Erreur lors de l\'initialisation des FAQ.');
+    } finally {
+      setInitializing(false);
     }
-
-    return '';
   };
 
-  // Generate slug from question text
-  const generateSlug = async (text: string, langCode: string, fallbackText?: string): Promise<string> => {
-    if (!text || text.trim().length === 0) {
-      // Try fallback text if provided
-      if (fallbackText && fallbackText.trim().length > 0) {
-        return generateSlug(fallbackText, 'en');
-      }
-      return 'untitled-faq';
-    }
-    
-    // Check if text contains non-Latin characters
-    const hasNonLatin = /[^\u0000-\u007F\u0080-\u00FF\u0100-\u017F\u0180-\u024F]/.test(text);
-    
-    let slug = '';
-    
-    if (hasNonLatin && (langCode === 'hi' || langCode === 'ru' || langCode === 'ar' || langCode === 'ch')) {
-      // Try transliteration for non-Latin scripts
-      const transliterated = await transliterateText(text, langCode);
-      if (transliterated && transliterated.trim().length > 0) {
-        // Use transliterated text for slug
-        slug = transliterated
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .replace(/[^a-z0-9\s-]/g, '')
-          .replace(/\s+/g, '-')
-          .replace(/-+/g, '-')
-          .replace(/(^-|-$)/g, '')
-          .substring(0, 100);
-      }
-    }
-    
-    // If transliteration didn't work or not needed, try normal slug generation
-    if (!slug || slug.trim().length === 0) {
-      slug = text
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
-        .replace(/[^a-z0-9\s-]/g, '') // Remove special characters except spaces and hyphens
-        .replace(/\s+/g, '-') // Replace spaces with hyphens
-        .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
-        .replace(/(^-|-$)/g, '') // Remove leading/trailing hyphens
-        .substring(0, 100);
-    }
-    
-    // If slug is still empty or too short (likely non-Latin script without transliteration), use fallback with language prefix
-    if (!slug || slug.trim().length === 0 || slug.length < 3) {
-      if (fallbackText && fallbackText.trim().length > 0) {
-        const fallbackSlug = fallbackText
-          .toLowerCase()
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .replace(/[^a-z0-9\s-]/g, '')
-          .replace(/\s+/g, '-')
-          .replace(/-+/g, '-')
-          .replace(/(^-|-$)/g, '')
-          .substring(0, 100);
-        
-        // Add language code prefix to ensure uniqueness for non-Latin scripts
-        if (langCode === 'hi' || langCode === 'ru' || langCode === 'ar' || langCode === 'ch') {
-          slug = `${langCode}-${fallbackSlug}`;
-          console.log(`[generateSlug] Using language-prefixed fallback for ${langCode}: "${slug}"`);
-        } else {
-          slug = fallbackSlug;
-        }
-      }
-    }
-    
-    // Ensure slug is not empty
-    if (!slug || slug.trim().length === 0) {
-      slug = 'untitled-faq';
-    }
-    
-    return slug;
-  };
+  // Reset and reinitialize FAQs (fixes slug translations)
+  const handleResetFAQs = async () => {
+    if (resetting) return;
 
-  // Auto-detect language of text
-  const detectLanguage = async (text: string): Promise<string> => {
-    if (!text || text.trim().length === 0) {
-      return 'en'; // Default to English
-    }
+    const confirmReset = window.confirm(
+      `⚠️ ATTENTION: Cette action va:\n\n` +
+      `1. SUPPRIMER toutes les FAQ existantes\n` +
+      `2. Recréer ${PREDEFINED_FAQS.all.length} FAQ avec traductions complètes\n\n` +
+      `Les slugs seront traduits dans chaque langue pour le SEO.\n\n` +
+      `Cette opération peut prendre plusieurs minutes.\n\n` +
+      `Continuer ?`
+    );
+    if (!confirmReset) return;
 
     try {
-      // Use Google Translate language detection API
-      const detectUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(text.substring(0, 500))}`;
-      const response = await fetch(detectUrl);
-      
-      if (response.ok) {
-        const data = await response.json() as any;
-        // Google Translate API returns detected language in different formats
-        // Try to extract from various possible response structures
-        let detectedLang: string | null = null;
-        
-        // Method 1: Check if response has language code directly
-        if (typeof data === 'string') {
-          detectedLang = data;
-        } else if (Array.isArray(data) && data.length > 2 && data[2]) {
-          detectedLang = data[2];
-        } else if (data && typeof data === 'object' && data.src) {
-          detectedLang = data.src;
-        }
-        
-        if (detectedLang) {
-          // Map detected language to our supported languages
-          const langMap: Record<string, string> = {
-            'fr': 'fr', 'en': 'en', 'es': 'es', 'pt': 'pt', 'de': 'de',
-            'ru': 'ru', 'zh': 'ch', 'zh-CN': 'ch', 'zh-TW': 'ch', 'zh-cn': 'ch',
-            'hi': 'hi', 'ar': 'ar',
-          };
-          const mappedLang = langMap[detectedLang.toLowerCase()] || langMap[detectedLang];
-          if (mappedLang) {
-            console.log(`[detectLanguage] Detected: ${detectedLang} → Mapped: ${mappedLang}`);
-            return mappedLang;
-          }
-        }
+      setResetting(true);
+      setSuccessMessage('');
+      setErrorMessage('');
+
+      const result = await resetAndInitializeFAQs();
+
+      if (result.success) {
+        setSuccessMessage(
+          `Reset terminé ! ${result.deleted} FAQ supprimées, ${result.created}/${result.total} FAQ recréées avec slugs traduits.`
+        );
+      } else {
+        setErrorMessage(
+          `Reset partiel: ${result.created}/${result.total} FAQ créées. Erreurs: ${result.errors.length}`
+        );
       }
+
+      // Recharger les FAQ
+      const updatedFAQs = await listFAQs();
+      setFaqs(updatedFAQs);
     } catch (error) {
-      console.warn('[detectLanguage] Error detecting language:', error);
+      console.error('[handleResetFAQs] Error:', error);
+      setErrorMessage('Erreur lors du reset des FAQ.');
+    } finally {
+      setResetting(false);
     }
-
-    // Fallback: Try simple heuristics based on character patterns
-    const textLower = text.toLowerCase();
-    
-    // Check for common language patterns
-    if (/[àâäéèêëïîôùûüÿç]/.test(text)) return 'fr';
-    if (/[ñáéíóúü¿¡]/.test(text)) return 'es';
-    if (/[äöüß]/.test(text)) return 'de';
-    if (/[а-яё]/.test(text)) return 'ru';
-    if (/[\u0900-\u097F]/.test(text)) return 'hi'; // Devanagari script
-    if (/[\u4e00-\u9fff]/.test(text)) return 'ch'; // Chinese characters
-    if (/[\u0600-\u06FF]/.test(text)) return 'ar'; // Arabic script
-    if (/[áàâãéêíóôõúç]/.test(text)) return 'pt';
-
-    console.log('[detectLanguage] Using default: en');
-    return 'en'; // Default fallback
-  };
-
-  // Translate text to target language using free translation API
-  const translateText = async (text: string, fromLang: string, toLang: string): Promise<string> => {
-    if (!text || text.trim().length === 0) {
-      return text;
-    }
-
-    // If same language, return as-is
-    if (fromLang === toLang) {
-      return text;
-    }
-
-    // Language code mapping for APIs (map internal 'ch' to API 'zh')
-    const languageMap: Record<string, string> = {
-      'fr': 'fr', 'en': 'en', 'es': 'es', 'pt': 'pt', 'de': 'de',
-      'ru': 'ru', 'ch': 'zh', 'hi': 'hi', 'ar': 'ar',
-    };
-    
-    const targetLang = languageMap[toLang] || toLang;
-    const sourceLang = languageMap[fromLang] || fromLang;
-
-    // Try MyMemory Translation API (free tier - 10000 words/day)
-    try {
-      const myMemoryUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${sourceLang}|${targetLang}`;
-      const response = await fetch(myMemoryUrl, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json() as { responseData?: { translatedText?: string } };
-        if (data.responseData && data.responseData.translatedText) {
-          return data.responseData.translatedText;
-        }
-      }
-    } catch (error) {
-      console.warn(`[translateText] MyMemory API error:`, error);
-    }
-
-    // Fallback: Try Google Translate (free unofficial API)
-    try {
-      const googleUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
-      const response = await fetch(googleUrl, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json() as any;
-        if (data && Array.isArray(data) && data[0] && Array.isArray(data[0])) {
-          const translated = data[0].map((item: any[]) => item[0]).join('');
-          if (translated) {
-            return translated;
-          }
-        }
-      }
-    } catch (error) {
-      console.warn(`[translateText] Google Translate API error:`, error);
-    }
-
-    // If all APIs fail, return original text
-    console.warn(`[translateText] Translation failed for ${fromLang} → ${toLang}, returning original`);
-    return text;
-  };
-
-  // Translate question and answer to all languages (auto-detect source language)
-  const translateToAllLanguages = async (question: string, answer: string): Promise<{ question: Record<string, string>, answer: Record<string, string>, slug: Record<string, string> }> => {
-    // Auto-detect source language from question text
-    const sourceLang = await detectLanguage(question);
-    console.log(`[translateToAllLanguages] Detected source language: ${sourceLang}`);
-    
-    const translatedQuestion: Record<string, string> = {};
-    const translatedAnswer: Record<string, string> = {};
-    const slugMap: Record<string, string> = {};
-
-    // Translate to all supported languages
-    // First, get English translation as fallback for non-Latin scripts
-    let englishQuestion = question;
-    if (sourceLang !== 'en') {
-      englishQuestion = await translateText(question, sourceLang, 'en');
-    }
-    
-    const translationPromises = SUPPORTED_LANGUAGES.map(async (lang) => {
-      const [translatedQ, translatedA] = await Promise.all([
-        translateText(question, sourceLang, lang.code),
-        translateText(answer, sourceLang, lang.code)
-      ]);
-      
-      translatedQuestion[lang.code] = translatedQ;
-      translatedAnswer[lang.code] = translatedA;
-      
-      // Generate slug from translated question
-      // For non-Latin scripts (hi, ru, ar, ch), try transliteration first, then fallback to English with language prefix
-      const slugSource = translatedQ && translatedQ.trim().length > 0 ? translatedQ : question;
-      const fallbackForSlug = (lang.code === 'hi' || lang.code === 'ru' || lang.code === 'ar' || lang.code === 'ch') 
-        ? englishQuestion 
-        : undefined;
-      
-      const generatedSlug = await generateSlug(slugSource, lang.code, fallbackForSlug);
-      slugMap[lang.code] = generatedSlug;
-      
-      console.log(`[translateToAllLanguages] Generated slug for ${lang.code}: "${generatedSlug}" from: "${slugSource.substring(0, 50)}..." (fallback: ${fallbackForSlug ? 'yes' : 'no'})`);
-    });
-
-    await Promise.all(translationPromises);
-
-    return { question: translatedQuestion, answer: translatedAnswer, slug: slugMap };
   };
 
   // Auto-dismiss success messages
@@ -399,11 +143,10 @@ const AdminFAQs: React.FC = () => {
 
   // Load FAQs
   useEffect(() => {
-    const loadFAQs = async () => {
+    const loadFAQsData = async () => {
       try {
-        const q = query(collection(db, 'faqs'), orderBy('order', 'asc'));
-        const snapshot = await getDocs(q);
-        setFaqs(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as FAQ)));
+        const faqList = await listFAQs();
+        setFaqs(faqList);
       } catch (error) {
         console.error('Error loading FAQs:', error);
         setErrorMessage('Error loading FAQs. Please refresh the page.');
@@ -411,13 +154,13 @@ const AdminFAQs: React.FC = () => {
         setLoading(false);
       }
     };
-    loadFAQs();
+    loadFAQsData();
   }, []);
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validate input
     if (!questionText.trim() || !answerText.trim()) {
       setErrorMessage('Please provide both a question and an answer.');
@@ -426,9 +169,9 @@ const AdminFAQs: React.FC = () => {
 
     try {
       setTranslating(true);
-      
+
       // Translate to all languages (auto-detect source language)
-      const { question, answer, slug } = await translateToAllLanguages(
+      const { question, answer, slug } = await translateFAQToAllLanguages(
         questionText.trim(),
         answerText.trim()
       );
@@ -436,30 +179,24 @@ const AdminFAQs: React.FC = () => {
       // Convert tags input string to array
       const tagsArray = tagsInput
         .split(',')
-        .map(t => t.trim())
+        .map((t) => t.trim())
         .filter(Boolean);
 
-      const faqData = {
+      const faqData: FAQInput = {
         question,
         answer,
         slug,
-        category: formData.category,
-        order: formData.order,
-        isActive: formData.isActive,
+        category: formData.category || 'general',
+        order: formData.order || 0,
+        isActive: formData.isActive ?? true,
+        isFooter: formData.isFooter ?? false,
         tags: tagsArray,
-        updatedAt: serverTimestamp(),
-        updatedBy: user?.uid
       };
 
       if (editingId) {
-        await updateDoc(doc(db, 'faqs', editingId), faqData);
+        await updateFAQ(editingId, faqData);
       } else {
-        await addDoc(collection(db, 'faqs'), {
-          ...faqData,
-          createdAt: serverTimestamp(),
-          createdBy: user?.uid,
-          views: 0
-        });
+        await createFAQ(faqData);
       }
 
       // Reset form
@@ -472,18 +209,20 @@ const AdminFAQs: React.FC = () => {
         slug: {},
         order: 0,
         isActive: true,
-        tags: []
+        isFooter: false,
+        tags: [],
       });
       setTagsInput('');
       setEditingId(null);
       setShowNewForm(false);
-      
-      setSuccessMessage(editingId ? 'FAQ updated successfully!' : 'FAQ created and translated successfully!');
-      
+
+      setSuccessMessage(
+        editingId ? 'FAQ updated successfully!' : 'FAQ created and translated successfully!'
+      );
+
       // Reload FAQs
-      const q = query(collection(db, 'faqs'), orderBy('order', 'asc'));
-      const snapshot = await getDocs(q);
-      setFaqs(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as FAQ)));
+      const updatedFAQs = await listFAQs();
+      setFaqs(updatedFAQs);
     } catch (error) {
       console.error('Error saving FAQ:', error);
       setErrorMessage('Error saving FAQ. Please try again.');
@@ -499,10 +238,10 @@ const AdminFAQs: React.FC = () => {
 
   const handleDeleteConfirm = async () => {
     if (!showDeleteConfirm.id) return;
-    
+
     try {
-      await deleteDoc(doc(db, 'faqs', showDeleteConfirm.id));
-      setFaqs(faqs.filter(f => f.id !== showDeleteConfirm.id));
+      await deleteFAQ(showDeleteConfirm.id);
+      setFaqs(faqs.filter((f) => f.id !== showDeleteConfirm.id));
       setSuccessMessage('FAQ deleted successfully!');
       setShowDeleteConfirm({ show: false, id: null });
     } catch (error) {
@@ -647,13 +386,54 @@ const AdminFAQs: React.FC = () => {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Manage FAQs</h1>
         {!editingId && !showNewForm && (
-          <button
-            onClick={handleNewFAQ}
-            className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
-          >
-            <Plus className="w-5 h-5" />
-            New FAQ
-          </button>
+          <div className="flex items-center gap-3">
+            {/* Initialize FAQs Button */}
+            <button
+              onClick={handleInitializeFAQs}
+              disabled={initializing || resetting}
+              className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              title={`Initialiser ${PREDEFINED_FAQS.all.length} FAQ prédéfinies`}
+            >
+              {initializing ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Initialisation...
+                </>
+              ) : (
+                <>
+                  <Database className="w-5 h-5" />
+                  Init FAQ ({PREDEFINED_FAQS.all.length})
+                </>
+              )}
+            </button>
+            {/* Reset FAQs Button - Fixes slug translations */}
+            <button
+              onClick={handleResetFAQs}
+              disabled={initializing || resetting}
+              className="flex items-center gap-2 bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Supprimer et recréer toutes les FAQ avec slugs traduits"
+            >
+              {resetting ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Reset en cours...
+                </>
+              ) : (
+                <>
+                  <AlertCircle className="w-5 h-5" />
+                  Reset FAQ (SEO)
+                </>
+              )}
+            </button>
+            {/* New FAQ Button */}
+            <button
+              onClick={handleNewFAQ}
+              className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+            >
+              <Plus className="w-5 h-5" />
+              New FAQ
+            </button>
+          </div>
         )}
       </div>
 

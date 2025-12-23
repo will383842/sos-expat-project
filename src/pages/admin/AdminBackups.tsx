@@ -59,9 +59,8 @@ async function isAdminNow(): Promise<boolean> {
   // Forcer un token frais
   await auth.currentUser?.getIdToken(true);
   const t = await auth.currentUser?.getIdTokenResult();
-  // TODO: Changed to true for testing purpose -> later fix the admin role issue
-  // return t?.claims?.role === "admin";
-  return true;
+  // Vérifier le rôle admin via les custom claims
+  return t?.claims?.role === "admin" || t?.claims?.admin === true;
 }
 
 function getErrMsg(e: unknown) {

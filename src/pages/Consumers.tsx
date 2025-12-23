@@ -575,8 +575,8 @@ const Consumers: React.FC = () => {
 
 ## 3. Transparence des prix (EUR / USD)
 
-3.1. **Appel Avocat** : **49 € (EUR)** / **$49 (USD)** pour **20 minutes** (prix TTC).  
-3.2. **Appel Expatrié Aidant** : **19 € (EUR)** / **$19 (USD)** pour **30 minutes** (prix TTC).  
+3.1. **Appel Avocat** : **49 € (EUR)** / **$55 (USD)** pour **20 minutes** (prix TTC).  
+3.2. **Appel Expatrié Aidant** : **19 € (EUR)** / **$25 (USD)** pour **30 minutes** (prix TTC).  
 3.3. **Aucun frais caché** ; le prix affiché inclut, le cas échéant, les frais techniques de mise en relation.  
 3.4. Les montants en **USD** peuvent être affichés et réglés **au choix du Client** ; des **frais/taux de conversion** du prestataire de paiement peuvent s’appliquer le cas échéant.
 
@@ -629,8 +629,8 @@ Formulaire (support & demandes légales) : http://localhost:5174/contact
 
 ## 3. شفافية الأسعار (يورو / دولار)
 
-3.1. **مكالمة محامي**: **49 يورو (EUR)** / **49 دولار (USD)** لمدة **20 دقيقة** (السعر شامل الضرائب).  
-3.2. **مكالمة مساعد مغترب**: **19 يورو (EUR)** / **19 دولار (USD)** لمدة **30 دقيقة** (السعر شامل الضرائب).  
+3.1. **مكالمة محامي**: **49 يورو (EUR)** / **55 دولار (USD)** لمدة **20 دقيقة** (السعر شامل الضرائب).
+3.2. **مكالمة مساعد مغترب**: **19 يورو (EUR)** / **25 دولار (USD)** لمدة **30 دقيقة** (السعر شامل الضرائب).  
 3.3. **لا توجد رسوم مخفية**؛ السعر المعروض يشمل، عند الاقتضاء، الرسوم التقنية للاتصال.  
 3.4. يمكن عرض المبالغ بالـ **دولار** والدفع بها **حسب اختيار المستخدم**؛ قد تطبق **أسعار صرف/رسوم** معالج الدفع عند الاقتضاء.
 
@@ -683,8 +683,8 @@ Formulaire (support & demandes légales) : http://localhost:5174/contact
 
 ## 3. Price transparency (EUR / USD)
 
-3.1. **Lawyer call**: **€49 (EUR)** / **$49 (USD)** for **20 minutes** (tax included).  
-3.2. **Expat Helper call**: **€19 (EUR)** / **$19 (USD)** for **30 minutes** (tax included).  
+3.1. **Lawyer call**: **€49 (EUR)** / **$55 (USD)** for **20 minutes** (tax included).  
+3.2. **Expat Helper call**: **€19 (EUR)** / **$25 (USD)** for **30 minutes** (tax included).  
 3.3. **No hidden fees**; the displayed price includes, where applicable, the technical connection fee.  
 3.4. **USD** amounts can be displayed and charged at **checkout**; **FX rates/fees** from the payment processor may apply.
 
@@ -736,8 +736,8 @@ Contact form (support & legal requests): http://localhost:5174/contact
 
 ## 3. Transparencia de precios (EUR / USD)
 
-3.1. **Llamada con abogado**: **49€ (EUR)** / **$49 (USD)** por **20 minutos** (impuestos incluidos).
-3.2. **Llamada con ayudante expatriado**: **19€ (EUR)** / **$19 (USD)** por **30 minutos** (impuestos incluidos).
+3.1. **Llamada con abogado**: **49€ (EUR)** / **$55 (USD)** por **20 minutos** (impuestos incluidos).
+3.2. **Llamada con ayudante expatriado**: **19€ (EUR)** / **$25 (USD)** por **30 minutos** (impuestos incluidos).
 3.3. **Sin tarifas ocultas**; el precio mostrado incluye, cuando corresponda, la tarifa técnica de conexión.
 3.4. Los montos en **USD** pueden mostrarse y cobrarse en el **pago**; pueden aplicarse **tarifas/tasas de cambio** del procesador de pagos.
 
@@ -789,8 +789,8 @@ Formulario de contacto (soporte y solicitudes legales): http://localhost:5174/co
 
 ## 3. Preistransparenz (EUR / USD)
 
-3.1. **Anwaltsanruf**: **49€ (EUR)** / **$49 (USD)** für **20 Minuten** (inkl. Steuern).
-3.2. **Expat-Helfer-Anruf**: **19€ (EUR)** / **$19 (USD)** für **30 Minuten** (inkl. Steuern).
+3.1. **Anwaltsanruf**: **49€ (EUR)** / **$55 (USD)** für **20 Minuten** (inkl. Steuern).
+3.2. **Expat-Helfer-Anruf**: **19€ (EUR)** / **$25 (USD)** für **30 Minuten** (inkl. Steuern).
 3.3. **Keine versteckten Gebühren**; der angezeigte Preis umfasst gegebenenfalls die technische Verbindungsgebühr.
 3.4. **USD**-Beträge können an der **Kasse** angezeigt und berechnet werden; **Wechselkurse/Gebühren** des Zahlungsabwicklers können anfallen.
 
@@ -842,8 +842,8 @@ Kontaktformular (Support und rechtliche Anfragen): http://localhost:5174/contact
 
 ## 3. Прозрачность цен (EUR / USD)
 
-3.1. **Звонок юристу**: **49€ (EUR)** / **$49 (USD)** на **20 минут** (включая налоги).
-3.2. **Звонок помощнику-экспату**: **19€ (EUR)** / **$19 (USD)** на **30 минут** (включая налоги).
+3.1. **Звонок юристу**: **49€ (EUR)** / **$55 (USD)** на **20 минут** (включая налоги).
+3.2. **Звонок помощнику-экспату**: **19€ (EUR)** / **$25 (USD)** на **30 минут** (включая налоги).
 3.3. **Без скрытых комиссий**; указанная цена включает, где применимо, техническую плату за соединение.
 3.4. Суммы в **USD** могут отображаться и взиматься при **оплате**; могут применяться **курсы/сборы** платежного процессора.
 
@@ -895,8 +895,8 @@ Kontaktformular (Support und rechtliche Anfragen): http://localhost:5174/contact
 
 ## 3. मूल्य पारदर्शिता (EUR / USD)
 
-3.1. **वकील कॉल**: **49€ (EUR)** / **$49 (USD)** **20 मिनट** के लिए (कर सहित)।
-3.2. **प्रवासी सहायक कॉल**: **19€ (EUR)** / **$19 (USD)** **30 मिनट** के लिए (कर सहित)।
+3.1. **वकील कॉल**: **49€ (EUR)** / **$55 (USD)** **20 मिनट** के लिए (कर सहित)।
+3.2. **प्रवासी सहायक कॉल**: **19€ (EUR)** / **$25 (USD)** **30 मिनट** के लिए (कर सहित)।
 3.3. **कोई छिपा हुआ शुल्क नहीं**; प्रदर्शित मूल्य में, जहां लागू हो, तकनीकी कनेक्शन शुल्क शामिल है।
 3.4. **USD** राशि **चेकआउट** पर प्रदर्शित और चार्ज की जा सकती है; भुगतान प्रोसेसर से **विनिमय दरें/शुल्क** लागू हो सकते हैं।
 
@@ -958,8 +958,8 @@ const defaultPt = `
 ## 3. Transparência de preços (EUR / USD)
 
 
-3.1. **Chamada com advogado**: **49€ (EUR)** / **$49 (USD)** por **20 minutos** (incluindo impostos).
-3.2. **Chamada com assistente expatriado**: **19€ (EUR)** / **$19 (USD)** por **30 minutos** (incluindo impostos).
+3.1. **Chamada com advogado**: **49€ (EUR)** / **$55 (USD)** por **20 minutos** (incluindo impostos).
+3.2. **Chamada com assistente expatriado**: **19€ (EUR)** / **$25 (USD)** por **30 minutos** (incluindo impostos).
 3.3. **Sem taxas ocultas**; o preço exibido inclui a taxa de conexão técnica, quando aplicável.
 3.4. Os valores em **USD** podem ser exibidos e cobrados no **checkout**; **taxas de câmbio/taxas** do processador de pagamento podem se aplicar.
 
@@ -1014,8 +1014,8 @@ const defaultCh = `
 
     3. 价格透明度（欧元 / 美元）
 
-    3.1. 律师咨询电话：€49（欧元） / $49（美元），20 分钟（含税）。
-    3.2. 外籍人士协助通话：€19（欧元） / $19（美元），30 分钟（含税）。
+    3.1. 律师咨询电话：€49（欧元） / $55（美元），20 分钟（含税）。
+    3.2. 外籍人士协助通话：€19（欧元） / $25（美元），30 分钟（含税）。
     3.3. 无隐藏费用；显示的价格在适用情况下包含技术连接费用。
     3.4. 可在结账时选择以 美元（USD） 显示和支付；支付处理方的汇率/手续费可能适用。
 
@@ -1255,7 +1255,7 @@ const defaultCh = `
                       <span className="text-gray-500 font-medium">EUR</span>
                       <span className="text-gray-400">/</span>
                       <span className="text-3xl font-extrabold text-gray-900">
-                        $49
+                        $55
                       </span>
                       <span className="text-gray-500 font-medium">USD</span>
                       <span className="ml-2 text-sm text-gray-500">
@@ -1284,7 +1284,7 @@ const defaultCh = `
                       <span className="text-gray-500 font-medium">EUR</span>
                       <span className="text-gray-400">/</span>
                       <span className="text-3xl font-extrabold text-gray-900">
-                        $19
+                        $25
                       </span>
                       <span className="text-gray-500 font-medium">USD</span>
                       <span className="ml-2 text-sm text-gray-500">
@@ -1314,7 +1314,7 @@ const defaultCh = `
                       <span className="text-gray-500 font-medium">EUR</span>
                       <span className="text-gray-400">/</span>
                       <span className="text-3xl font-extrabold text-gray-900">
-                        $49
+                        $55
                       </span>
                       <span className="text-gray-500 font-medium">USD</span>
                       <span className="ml-2 text-sm text-gray-500">
@@ -1335,7 +1335,7 @@ const defaultCh = `
                       <span className="text-gray-500 font-medium">EUR</span>
                       <span className="text-gray-400">/</span>
                       <span className="text-3xl font-extrabold text-gray-900">
-                        $19
+                        $25
                       </span>
                       <span className="text-gray-500 font-medium">USD</span>
                       <span className="ml-2 text-sm text-gray-500">

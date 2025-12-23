@@ -31,5 +31,5 @@ export const contactReply = ({
     <p>📱 Téléchargez notre application PWA pour un accès rapide :<br/>
     👉 <a href="https://sos-expat.com" target="_blank" rel="noopener noreferrer">sos-expat.com</a></p>
 
-    <p style="margin-top: 40px;">Merci pour votre confiance,<br/>L’équipe <strong>Ulixai - SOS Expat</strong></p>
+    <p style="margin-top: 40px;">Merci pour votre confiance,<br/>L'équipe <strong>WorldExpat OÜ - SOS Expat</strong></p>
   `);

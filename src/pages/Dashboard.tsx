@@ -37,6 +37,7 @@ import DashboardMessages from "../components/dashboard/DashboardMessages";
 import ImageUploader from "../components/common/ImageUploader";
 import MultiLanguageSelect from "../components/forms-data/MultiLanguageSelect";
 import ProfileStatusAlert from "../components/common/ProfileStatusAlert";
+import ReviewModal from "../components/review/ReviewModal";
 
 import { useAuth } from "../contexts/AuthContext";
 import { useApp } from "../contexts/AppContext";
@@ -139,6 +140,7 @@ interface Call {
   startedAt: Date;
   endedAt: Date;
   clientRating?: number;
+  hasReview?: boolean; // Indique si le client a déjà laissé un avis
 }
 
 interface Invoice {
@@ -574,6 +576,10 @@ const [kycRefreshAttempted, setKycRefreshAttempted] = useState<boolean>(false);
   const [isFrozen, setIsFrozen] = useState<boolean>(false);
   const [isFreezing, setIsFreezing] = useState<boolean>(false);
 
+  // Review Modal state (pour laisser un avis depuis l'onglet "calls")
+  const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
+  const [selectedCallForReview, setSelectedCallForReview] = useState<Call | null>(null);
+
   // Profil (édition) pré-rempli
   const baseProfile: ProfileData = useMemo(
     () => ({
@@ -789,7 +795,29 @@ const [kycRefreshAttempted, setKycRefreshAttempted] = useState<boolean>(false);
     const fetchCallSessions = async () => {
       try {
         const sessions = await getUserCallSessions(user.id, user.role);
-        setCalls(sessions as unknown as Call[]);
+
+        // Pour les clients, vérifier si un avis existe déjà pour chaque appel terminé
+        if (user.role === "client") {
+          const callsWithReviewStatus = await Promise.all(
+            (sessions as unknown as Call[]).map(async (call) => {
+              if (call.status === "completed") {
+                // Vérifier si un avis existe pour cet appel
+                const reviewsQuery = query(
+                  collection(db, "reviews"),
+                  where("callId", "==", call.id),
+                  where("clientId", "==", user.id),
+                  limit(1)
+                );
+                const reviewSnap = await getDocs(reviewsQuery);
+                return { ...call, hasReview: !reviewSnap.empty };
+              }
+              return call;
+            })
+          );
+          setCalls(callsWithReviewStatus);
+        } else {
+          setCalls(sessions as unknown as Call[]);
+        }
       } catch (error) {
         console.error("Error fetching call sessions:", error);
         setCalls([]);
@@ -2664,16 +2692,23 @@ const [kycRefreshAttempted, setKycRefreshAttempted] = useState<boolean>(false);
                               </div>
                               <div className="flex flex-col items-end space-y-2">
                                 {getStatusBadge(call.status)}
-                                {/* {call.status === "completed" &&
+                                {call.status === "completed" &&
                                   user.role === "client" &&
-                                  !call.clientRating && (
-                                    <Button size="small" variant="outline">
-                                    
+                                  !call.hasReview && (
+                                    <Button
+                                      size="small"
+                                      variant="outline"
+                                      onClick={() => {
+                                        setSelectedCallForReview(call);
+                                        setShowReviewModal(true);
+                                      }}
+                                    >
+                                      <Star className="w-4 h-4 mr-1" />
                                       {intl.formatMessage({
                                         id: "dashboard.leaveReview",
                                       })}
                                     </Button>
-                                  )} */}
+                                  )}
                               </div>
                             </div>
                           </div>
@@ -3102,6 +3137,30 @@ const [kycRefreshAttempted, setKycRefreshAttempted] = useState<boolean>(false);
           </div>
         </div>
       </div>
+      {/* Review Modal pour laisser un avis depuis l'onglet "calls" */}
+      {selectedCallForReview && (
+        <ReviewModal
+          isOpen={showReviewModal}
+          onClose={() => {
+            setShowReviewModal(false);
+            setSelectedCallForReview(null);
+          }}
+          onSuccess={() => {
+            // Mettre à jour hasReview pour cet appel après soumission réussie
+            setCalls((prevCalls) =>
+              prevCalls.map((c) =>
+                c.id === selectedCallForReview.id ? { ...c, hasReview: true } : c
+              )
+            );
+            setShowReviewModal(false);
+            setSelectedCallForReview(null);
+          }}
+          providerId={selectedCallForReview.providerId}
+          providerName={selectedCallForReview.providerName}
+          callId={selectedCallForReview.id}
+          serviceType={selectedCallForReview.serviceType === "lawyer_call" ? "lawyer_call" : "expat_call"}
+        />
+      )}
       </ProviderOnlineManager>
     </Layout>
   );
