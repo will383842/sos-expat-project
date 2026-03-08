@@ -249,14 +249,13 @@ const sanitizeEmail = (email: string): string => {
 };
 
 // ✅ FIX: Fonction pour sanitizer les noms en préservant les espaces internes
+// Supporte tous les alphabets: Latin, CJK, Cyrillique, Arabe, Devanagari, etc.
 const sanitizeName = (name: string): string => {
   if (!name) return "";
-  // Supprime les caractères dangereux mais garde les espaces, accents, tirets, apostrophes
   return name
     .replace(/[<>]/g, "")
     .replace(/javascript:/gi, "")
-    .replace(/on\w+=/gi, "")
-    .replace(/[^a-zA-ZÀ-ÿ\u00C0-\u017F '\-]/g, "");
+    .replace(/on\w+=/gi, "");
 };
 
 // 🌍 Liste des pays supportés par Stripe Connect (mise à jour 2024)
@@ -1180,20 +1179,26 @@ const RegisterLawyer: React.FC = () => {
         rating: 4.5,
         reviewCount: 0,
         preferredLanguage: form.preferredLanguage,
-        // 🔐 Données anti-bot (pour analyse côté serveur)
-        _securityMeta: {
-          recaptchaToken: botCheck.recaptchaToken,
-          formFillTime: stats.timeSpent,
-          mouseMovements: stats.mouseMovements,
-          keystrokes: stats.keystrokes,
-          userAgent: navigator.userAgent,
-          timestamp: Date.now(),
-        },
         createdAt: new Date(),
         updatedAt: new Date(),
       };
 
       await register(userData, form.password);
+
+      // Log anti-bot metadata separately (not in user document - security)
+      try {
+        const { collection, addDoc, serverTimestamp } = await import("firebase/firestore");
+        const { db } = await import("@/config/firebase");
+        await addDoc(collection(db, "logs"), {
+          type: "registration_antibot",
+          email: sanitizeEmail(form.email),
+          recaptchaToken: botCheck.recaptchaToken,
+          formFillTime: stats.timeSpent,
+          mouseMovements: stats.mouseMovements,
+          keystrokes: stats.keystrokes,
+          timestamp: serverTimestamp(),
+        });
+      } catch { /* best-effort logging */ }
       
       // ✅ Vérification du support Stripe pour le pays
       const stripeCountryCode = getCountryCode(form.currentCountry);

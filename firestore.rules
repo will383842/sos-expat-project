@@ -294,6 +294,13 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    // ================= LOGS COLLECTION (Auth Events) =================
+    match /logs/{logId} {
+      allow read: if isAdmin() || isDev();
+      allow create: if isAuthenticated();
+      allow update, delete: if false;
+    }
+
     // ================= CATCH-ALL (deny by default) =================
     match /{document=**} {
       allow read, write: if isDev();

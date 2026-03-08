@@ -11,7 +11,6 @@ import {
   signInWithRedirect,
   getRedirectResult,
   reload,
-  sendEmailVerification,
   fetchSignInMethodsForEmail,
   deleteUser,
   User as FirebaseUser,
@@ -307,13 +306,6 @@ const createUserDocumentInFirestore = async (
       ...additionalData,
       ...approvalFields,
     });
-
-    // 2️⃣ Si lawyer/expat → créer AUSSI dans sos_profiles avec TOUS les champs
-console.log('🔍 [DEBUG] additionalData complet:', JSON.stringify(additionalData, null, 2));
-console.log('🔍 [DEBUG] additionalData.role:', additionalData.role);
-console.log('🔍 [DEBUG] typeof additionalData.role:', typeof additionalData.role);
-console.log('🔍 [DEBUG] role === lawyer ?', additionalData.role === 'lawyer');
-console.log('🔍 [DEBUG] role === expat ?', additionalData.role === 'expat');
 
     // 2️⃣ Si lawyer/expat → créer AUSSI dans sos_profiles avec TOUS les champs
     if (additionalData.role === 'lawyer' || additionalData.role === 'expat') {
@@ -1098,11 +1090,7 @@ console.log('🔍 [Register] Tentative création compte avec:', {
         }).catch(() => { /* no-op */ });
       }
 
-      try {
-        await sendEmailVerification(cred.user);
-      } catch {
-        /* no-op */ void 0;
-      }
+      // Pas d'envoi d'email de vérification à l'inscription
 
       await logAuthEvent('registration_success', {
         userId: cred.user.uid,
@@ -1311,8 +1299,6 @@ console.log('🔍 [Register] Tentative création compte avec:', {
         updatedAt: serverTimestamp(),
       });
 
-      await sendEmailVerification(firebaseUser);
-
       await logAuthEvent('email_updated', {
         userId: firebaseUser.uid,
         oldEmail: user?.email,
@@ -1403,27 +1389,10 @@ console.log('🔍 [Register] Tentative création compte avec:', {
     }
   }, [deviceInfo]);
 
+  // sendVerificationEmail désactivé - pas de vérification d'email
   const sendVerificationEmail = useCallback(async (): Promise<void> => {
-    if (!firebaseUser) throw new Error('Utilisateur non connecté');
-
-    try {
-      await sendEmailVerification(firebaseUser);
-
-      await logAuthEvent('verification_email_sent', {
-        userId: firebaseUser.uid,
-        email: firebaseUser.email,
-        deviceInfo
-      });
-
-    } catch (error) {
-      await logAuthEvent('verification_email_failed', {
-        userId: firebaseUser.uid,
-        error: error instanceof Error ? error.message : String(error),
-        deviceInfo
-      });
-      throw error;
-    }
-  }, [firebaseUser, deviceInfo]);
+    // No-op: email verification disabled
+  }, []);
 
   const deleteUserAccount = useCallback(async (): Promise<void> => {
     if (!firebaseUser || !user) throw new Error('Utilisateur non connecté');

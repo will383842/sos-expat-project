@@ -536,9 +536,6 @@ const Login: React.FC = () => {
       setEmailCheckStatus("checking");
       const signInMethods = await fetchSignInMethodsForEmail(auth, email);
       
-      // 🐛 Debug - À retirer après test
-      console.log('🔍 Email check:', email, 'Methods:', signInMethods);
-      
       const exists = signInMethods.length > 0;
       setEmailCheckStatus(exists ? "exists" : "not-exists");
       
