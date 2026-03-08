@@ -46,6 +46,7 @@ import { auth, db, storage } from '../config/firebase';
 import type { User } from './types';
 import type { AuthContextType } from './AuthContextBase';
 import { AuthContext as BaseAuthContext } from './AuthContextBase';
+import { getAffiliateRef } from '../hooks/useAffiliateTracking';
 
 /* =========================================================
    Types utilitaires
@@ -284,6 +285,10 @@ const createUserDocumentInFirestore = async (
         verificationStatus: 'pending' as const,
       };
   
+  // Capture affiliate ref from sessionStorage (set on first visit via ?ref=)
+  const referralBy = additionalData.referralBy || getAffiliateRef() || null;
+  const affiliateCode = `SOS-${firebaseUser.uid.substring(0, 6).toUpperCase()}`;
+
   try {
     // 1️⃣ Créer dans users (tous les utilisateurs)
     await setDoc(userRef, {
@@ -305,6 +310,8 @@ const createUserDocumentInFirestore = async (
       lastLoginAt: serverTimestamp(),
       ...additionalData,
       ...approvalFields,
+      referralBy,
+      affiliateCode,
     });
 
     // 2️⃣ Si lawyer/expat → créer AUSSI dans sos_profiles avec TOUS les champs

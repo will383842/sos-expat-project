@@ -17,6 +17,7 @@ import {
 import { useIntl } from "react-intl";
 import { useApp } from "../../contexts/AppContext";
 import { Link } from "react-router-dom";
+import { appendAffiliateRef } from "../../hooks/useAffiliateTracking";
 import { collection, query, where, getDocs, orderBy, limit } from "firebase/firestore";
 import { db } from "../../config/firebase";
 import { getLocaleString } from "../../multilingual-system";
@@ -181,7 +182,7 @@ const FooterLink = memo<FooterLinkProps>(function FooterLink({
 
   return (
     <Link
-      to={href}
+      to={appendAffiliateRef(href)}
       className={baseClass}
       aria-label={ariaLabel}
       {...(prefetch && { "data-prefetch": "true" })}
@@ -312,7 +313,7 @@ const ContactItem = memo<ContactItemProps>(function ContactItem({ item }) {
 
   return (
     <Link
-      to={item.href}
+      to={appendAffiliateRef(item.href)}
       className={`${wrapperClass} focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/50 touch-manipulation`}
       aria-label={item.ariaLabel}
     >
@@ -366,9 +367,9 @@ const LegalLinksNav = memo<LegalLinksNavProps>(function LegalLinksNav({
         {links.map((link, index) => (
           <li key={`${link.href}-${index}`} className="flex items-center">
             <Link
-              to={link.href}
-              className="px-3 py-2 rounded-lg text-gray-400 hover:text-white 
-                focus:text-white transition-all duration-300 
+              to={appendAffiliateRef(link.href)}
+              className="px-3 py-2 rounded-lg text-gray-400 hover:text-white
+                focus:text-white transition-all duration-300
                 hover:bg-white/5 focus:bg-white/5 focus:outline-none
                 focus-visible:ring-2 focus-visible:ring-red-500/50
                 touch-manipulation relative group overflow-hidden"

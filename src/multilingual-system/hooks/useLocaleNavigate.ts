@@ -1,21 +1,22 @@
 /**
  * useLocaleNavigate Hook
  * Provides locale-aware navigation that automatically adds locale prefix to paths
+ * and preserves affiliate tracking parameters across navigation.
  **/
 
 import { useNavigate as useRouterNavigate, useLocation } from "react-router-dom";
 import { useApp } from "../../contexts/AppContext";
 import { getLocaleString, parseLocaleFromPath } from "../core/routing/localeRoutes";
 import { useMemo } from "react";
+import { appendAffiliateRef } from "../../hooks/useAffiliateTracking";
 
 export function useLocaleNavigate() {
   const navigate = useRouterNavigate();
   const location = useLocation();
   const { language } = useApp();
-  
+
   // Get current locale from URL
   const currentLocale = useMemo(() => {
-
     const parsed = parseLocaleFromPath(location.pathname);
     return parsed.locale || getLocaleString(language);
   }, [location.pathname, language]);
@@ -33,13 +34,13 @@ export function useLocaleNavigate() {
 
     // If path already has locale, use as-is (with query params)
     if (/^\/[a-z]{2}-[a-z]{2}\//.test(pathWithoutQuery)) {
-      navigate(`${pathWithoutQuery}${query}`, options);
+      navigate(appendAffiliateRef(`${pathWithoutQuery}${query}`), options);
       return;
     }
 
-    // Add locale prefix and preserve query params
+    // Add locale prefix, preserve query params, and append affiliate ref
     const localePath = `/${currentLocale}${pathWithoutQuery.startsWith("/") ? pathWithoutQuery : `/${pathWithoutQuery}`}${query}`;
-    navigate(localePath, options);
+    navigate(appendAffiliateRef(localePath), options);
   };
 
   return localeNavigate;

@@ -613,10 +613,14 @@ const CallCheckoutWrapper: React.FC = () => {
             </button>
             <button
               onClick={() => {
-                try { 
-                  sessionStorage.clear(); 
-                  localStorage.clear(); 
-                  console.log('🗑️ Cache vidé');
+                try {
+                  // Preserve affiliate tracking ref before clearing
+                  const affiliateRef = sessionStorage.getItem('sos_affiliate_ref');
+                  sessionStorage.clear();
+                  localStorage.clear();
+                  // Restore affiliate ref so tracking is not lost
+                  if (affiliateRef) sessionStorage.setItem('sos_affiliate_ref', affiliateRef);
+                  console.log('🗑️ Cache vidé (affiliate ref préservé)');
                 } catch { /* noop */ }
                 finally { window.location.reload(); }
               }}

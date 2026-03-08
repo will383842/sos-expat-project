@@ -44,6 +44,7 @@ import { saveProviderMessage } from "@/firebase/saveProviderMessage";
 import { useApp } from "@/contexts/AppContext";
 import { FormattedMessage, useIntl } from "react-intl";
 import { formatCurrency } from "../utils/localeFormatters";
+import { getAffiliateRef } from "../hooks/useAffiliateTracking";
 
 /* -------------------------- Stripe singleton (HMR-safe) ------------------ */
 // Conserve la même Promise Stripe à travers les rechargements HMR.
@@ -86,6 +87,7 @@ interface User {
   email?: string;
   phone?: string;
   fullName?: string;
+  referralBy?: string;
 }
 
 interface PaymentIntentData {
@@ -1221,6 +1223,7 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
           status: "pending",
           createdAt: serverTimestamp(),
           notifiedAt: null,
+          referralBy: user.referralBy || getAffiliateRef() || null,
         };
 
         const orderDoc = {
@@ -1250,6 +1253,7 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
           // ✅ Add additional fields that might be useful
           totalSaved: 0, // Will calculate: original_standard_amount - amount
           appliedDiscounts: [], // Array of applied discounts
+          referralBy: user.referralBy || getAffiliateRef() || null,
         };
 
         try {
@@ -1481,6 +1485,7 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
             requestTitle: bookingMeta?.title || "",
             timestamp: new Date().toISOString(),
             callSessionId: callSessionId,
+            affiliateRef: getAffiliateRef() || "",
           },
           // Include coupon information if active
           ...(couponData && { coupon: couponData }),

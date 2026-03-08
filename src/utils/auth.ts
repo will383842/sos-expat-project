@@ -24,6 +24,7 @@ import { auth, db } from "../config/firebase";
 import { logError } from "./logging";
 import { getErrorMessage } from "./errors";
 import type { User } from "../contexts/types";
+import { getAffiliateRef } from "../hooks/useAffiliateTracking";
 
 /* -------------------------------------------------------------------------- */
 /*                          Config i18n SMS (typée)                            */
@@ -120,7 +121,7 @@ const registerUser = async (
       isSOS: userData.role !== "client",
       points: 0,
       affiliateCode: `SOS-${firebaseUser.uid.substring(0, 6).toUpperCase()}`,
-      referralBy: userData.referralBy || null,
+      referralBy: userData.referralBy || getAffiliateRef() || null,
       registrationIP: "",
       deviceInfo: "",
       userAgent: navigator.userAgent || "",

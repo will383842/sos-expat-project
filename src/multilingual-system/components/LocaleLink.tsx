@@ -1,11 +1,13 @@
 /**
  * LocaleLink Component
  * Link component that automatically adds locale prefix to paths
+ * and preserves affiliate tracking parameters across navigation.
  */
 import React, { useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useApp } from "../../contexts/AppContext";
 import { getLocaleString, parseLocaleFromPath } from "../core/routing/localeRoutes";
+import { appendAffiliateRef } from "../../hooks/useAffiliateTracking";
 
 interface LocaleLinkProps {
   to: string;
@@ -16,15 +18,15 @@ interface LocaleLinkProps {
 export const LocaleLink: React.FC<LocaleLinkProps> = ({ to, children, ...props }) => {
   const location = useLocation();
   const { language } = useApp();
-  
+
   // Skip locale for admin routes
   if (to.startsWith("/admin")) {
     return <Link to={to} {...props}>{children}</Link>;
   }
 
-  // If path already has locale, use as-is
+  // If path already has locale, use as-is (but still append affiliate ref)
   if (/^\/[a-z]{2}-[a-z]{2}\//.test(to)) {
-    return <Link to={to} {...props}>{children}</Link>;
+    return <Link to={appendAffiliateRef(to)} {...props}>{children}</Link>;
   }
 
   // Get current locale from URL or use default
@@ -34,7 +36,7 @@ export const LocaleLink: React.FC<LocaleLinkProps> = ({ to, children, ...props }
   }, [location.pathname, language]);
 
   const localePath = `/${currentLocale}${to.startsWith("/") ? to : `/${to}`}`;
-  
-  return <Link to={localePath} {...props}>{children}</Link>;
+
+  return <Link to={appendAffiliateRef(localePath)} {...props}>{children}</Link>;
 };
 

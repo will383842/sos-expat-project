@@ -1,7 +1,8 @@
 import React from 'react';
 import { Scale, Users, Clock, Shield, CheckCircle, Phone, Globe } from 'lucide-react';
 import { useApp } from '../../contexts/AppContext';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { appendAffiliateRef } from '../../hooks/useAffiliateTracking';
 
 const ServicesSection: React.FC = () => {
   const { language, services } = useApp();
@@ -109,12 +110,12 @@ const ServicesSection: React.FC = () => {
                     </div>
                   </div>
                   
-                  <a 
-                    href={isLawyer ? '/sos-appel?type=lawyer' : '/sos-appel?type=expat'}
+                  <Link
+                    to={appendAffiliateRef(isLawyer ? '/sos-appel?type=lawyer' : '/sos-appel?type=expat')}
                     className={`w-full ${isLawyer ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'} text-white py-4 px-6 rounded-xl font-semibold text-lg transition-colors text-center block`}
                   >
                     {language === 'fr' ? 'Choisir ce service' : 'Choose this service'}
-                  </a>
+                  </Link>
                 </div>
               </div>
             );

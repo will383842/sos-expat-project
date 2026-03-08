@@ -1,7 +1,9 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Phone, CheckCircle, Clock, LucideIcon } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useApp } from '../../contexts/AppContext';
+import { appendAffiliateRef } from '../../hooks/useAffiliateTracking';
 
 interface Step {
   number: number;
@@ -150,12 +152,12 @@ const HowItWorksPage: React.FC = () => {
         <nav className="bg-white border-b border-gray-200" aria-label="Breadcrumb">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center py-4">
-              <a 
-                href="/" 
+              <Link
+                to={appendAffiliateRef("/")}
                 className="text-gray-500 hover:text-gray-700 transition-colors"
               >
                 {t.home}
-              </a>
+              </Link>
               <span className="mx-2 text-gray-400">/</span>
               <span className="text-gray-900 font-medium">{t.breadcrumb}</span>
             </div>
@@ -271,12 +273,12 @@ const HowItWorksPage: React.FC = () => {
             <p className="text-lg text-red-100 mb-8 max-w-2xl mx-auto">
               {t.ctaSubtitle}
             </p>
-            <a
-              href="/contact"
+            <Link
+              to={appendAffiliateRef("/contact")}
               className="inline-flex items-center px-8 py-3 bg-white text-red-600 font-semibold rounded-lg hover:bg-gray-50 transition-colors shadow-lg"
             >
               {t.ctaButton}
-            </a>
+            </Link>
           </div>
         </section>
       </main>

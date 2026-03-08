@@ -1264,7 +1264,7 @@ const ProviderProfile: React.FC = () => {
       updateOrCreateMeta("og:title", pageTitle);
       updateOrCreateMeta("og:description", ogDesc);
       updateOrCreateMeta("og:image", fullImageUrl);
-      updateOrCreateMeta("og:url", window.location.href);
+      updateOrCreateMeta("og:url", window.location.origin + window.location.pathname);
       updateOrCreateMeta("og:type", "profile");
       updateOrCreateMeta("og:site_name", "SOS Expat & Travelers");
       updateOrCreateMeta(

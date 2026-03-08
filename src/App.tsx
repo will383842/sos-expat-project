@@ -9,6 +9,7 @@ import LoadingSpinner from './components/common/LoadingSpinner';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import AdminRoutesV2 from '@/components/admin/AdminRoutesV2';
 import { trackEvent, hasAnalyticsConsent } from './utils/ga4';
+import { captureAffiliateRef, AffiliateRefSync } from './hooks/useAffiliateTracking';
 import './App.css';
 import TemplatesEmails from "./pages/admin/marketing/TemplatesEmails";
 import NotificationsRouting from "./pages/admin/marketing/Notifications";
@@ -323,6 +324,11 @@ const App: React.FC = () => {
   console.log("Current locale:", locale);
 
 
+  // Capture affiliate ref from URL on first load (before any navigation)
+  useEffect(() => {
+    captureAffiliateRef();
+  }, []);
+
   // SW + perf
   useEffect(() => {
     registerSW();
@@ -510,6 +516,8 @@ const App: React.FC = () => {
         </Routes>
       ) : (
         <LocaleRouter>
+          {/* Sync affiliate ?ref= param on every route change */}
+          <AffiliateRefSync />
           <div className={`App ${isMobile ? "mobile-layout" : "desktop-layout"}`}>
             <DefaultHelmet pathname={location.pathname} />
 

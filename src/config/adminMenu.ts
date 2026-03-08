@@ -36,6 +36,7 @@ import {
   Percent,
   Gift,
   Award,
+  Crown,
   Briefcase,
   UsersIcon,
   FileSignature,
@@ -115,13 +116,21 @@ export const adminMenuTree: AdminMenuItem[] = [
           },
         ],
       },
+      // Sous-section : CAPITAINES CHATTERS
+      {
+        id: "chatters-captains",
+        label: "Capitaines Chatters",
+        path: "/admin/chatters/captains",
+        icon: Crown,
+        description: "Gestion des capitaines et de leurs \u00e9quipes",
+      },
       // Sous-section : AAA PROFILES
       {
         id: "aaa-profiles",
         label: "AAA Profiles",
         path: "/admin/aaaprofiles",
         icon: TestTube,
-        description: "Profils de démonstration et test",
+        description: "Profils de d\u00e9monstration et test",
       },
       // Sous-section : VALIDATION AVOCATS
       {

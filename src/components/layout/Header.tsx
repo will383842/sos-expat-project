@@ -7,6 +7,7 @@ import React, {
   useState,
 } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { appendAffiliateRef } from "../../hooks/useAffiliateTracking";
 import { useIntl } from "react-intl";
 import { getLocaleString, parseLocaleFromPath, getRouteKeyFromSlug, getTranslatedRouteSlug } from "../../multilingual-system";
 import {
@@ -855,9 +856,9 @@ const LanguageDropdown = memo<LanguageDropdownProps>(function LanguageDropdown({
         ? `/${newLocale}` 
         : `/${newLocale}${translatedPath}`;
       
-      // Only navigate if the path actually changed
+      // Only navigate if the path actually changed (preserve query params & hash)
       if (newPath !== decodedPathname) {
-        navigate(newPath, { replace: true });
+        navigate(`${newPath}${location.search}${location.hash}`, { replace: true });
       }
       
       window.gtag?.("event", "language_change", {
@@ -1011,7 +1012,7 @@ const PWAInstallArea = memo<PWAInstallAreaProps>(function PWAInstallArea({
 
   return (
     <Link
-      to="/"
+      to={appendAffiliateRef("/")}
       className="flex items-center select-none group"
       aria-label={homeAriaLabel}
     >
@@ -1056,8 +1057,8 @@ const PWAIconButton = memo(function PWAIconButton() {
 
   return (
     <Link
-      to="/"
-      className="w-16 h-16 rounded-2xl overflow-hidden bg-transparent 
+      to={appendAffiliateRef("/")}
+      className="w-16 h-16 rounded-2xl overflow-hidden bg-transparent
         focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/50"
       aria-label={homeAriaLabel}
     >
@@ -1157,7 +1158,7 @@ const UserMenu = memo<UserMenuProps>(function UserMenu({
     const authLinks = (
       <>
         <Link
-          to="/login"
+          to={appendAffiliateRef("/login")}
           className={
             isMobile
               ? "group flex items-center justify-center w-full bg-white text-red-600 px-6 py-3 rounded-xl border border-gray-300 hover:bg-gray-50 font-semibold min-h-[44px]"
@@ -1175,7 +1176,7 @@ const UserMenu = memo<UserMenuProps>(function UserMenu({
           )}
         </Link>
         <Link
-          to="/register"
+          to={appendAffiliateRef("/register")}
           className={
             isMobile
               ? "group flex items-center justify-center w-full bg-red-600 text-white px-6 py-3 rounded-xl hover:bg-red-700 font-bold shadow min-h-[44px]"
@@ -1436,7 +1437,7 @@ const Header: React.FC = () => {
                   {LEFT_NAVIGATION_ITEMS.slice(0, 2).map((item) => (
                     <Link
                       key={item.path}
-                      to={item.path}
+                      to={appendAffiliateRef(item.path)}
                       className={`flex items-center gap-2.5 px-2 py-2 rounded-lg transition-colors
                         ${scrolled ? "hover:bg-white/10" : "hover:bg-gray-100"}
                         ${isActive(item.path)
@@ -1470,9 +1471,9 @@ const Header: React.FC = () => {
                   {/* SOS CALL CTA */}
                   <div className="mx-6">
                     <Link
-                      to="/sos-appel"
-                      className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 
-                        text-white px-3 py-1 rounded-2xl font-bold flex items-center space-x-2 
+                      to={appendAffiliateRef("/sos-appel")}
+                      className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800
+                        text-white px-3 py-1 rounded-2xl font-bold flex items-center space-x-2
                         shadow-lg border-2 border-white/20 transition-all"
                       aria-label={t.sosCall}
                     >
@@ -1491,7 +1492,7 @@ const Header: React.FC = () => {
                   ).map((item) => (
                     <Link
                       key={item.path}
-                      to={item.path}
+                      to={appendAffiliateRef(item.path)}
                       className={`flex items-center gap-2.5 px-2 py-2 rounded-lg transition-colors
                         ${scrolled ? "hover:bg-white/10" : "hover:bg-gray-100"}
                         ${isActive(item.path)
@@ -1554,8 +1555,8 @@ const Header: React.FC = () => {
 
             <div className="flex items-center gap-3">
               <Link
-                to="/sos-appel"
-                className="bg-gradient-to-r from-red-600 to-red-700 text-white px-7 py-2.5 
+                to={appendAffiliateRef("/sos-appel")}
+                className="bg-gradient-to-r from-red-600 to-red-700 text-white px-7 py-2.5
                   rounded-2xl font-bold text-base flex items-center space-x-2 border border-white/20"
                 aria-label={t.sosCall}
               >
@@ -1621,7 +1622,7 @@ const Header: React.FC = () => {
                     {MOBILE_NAVIGATION_ITEMS.map((item) => (
                       <li key={item.path}>
                         <Link
-                          to={item.path}
+                          to={appendAffiliateRef(item.path)}
                           className={`flex items-center space-x-3 p-3 rounded-xl text-gray-300 
                             hover:bg-white/10 transition-colors
                             ${location.pathname === item.path ? "bg-white/10" : ""}`}

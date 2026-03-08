@@ -2147,7 +2147,7 @@ const TestimonialDetail: React.FC = () => {
     setOrCreateMeta("og:title", pageTitle);
     setOrCreateMeta("og:description", pageDescription);
     setOrCreateMeta("og:type", "article");
-    setOrCreateMeta("og:url", window.location.href);
+    setOrCreateMeta("og:url", window.location.origin + window.location.pathname);
     setOrCreateMeta("og:image", testimonialData.clientAvatar);
 
     // Set structured data for better SEO / Définir les données структурées pour un meilleur SEO
