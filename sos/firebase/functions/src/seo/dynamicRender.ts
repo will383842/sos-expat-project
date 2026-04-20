@@ -62,7 +62,16 @@ function extractLocaleFromPath(path: string): { lang: string; locale: string } {
 // Firestore collection for persistent SSR cache (survives cold starts)
 const SSR_CACHE_COLLECTION = 'ssr_cache';
 
-// L1: In-memory cache (fast, same instance — lost on cold start)
+// L1: In-memory cache (fast, same instance — lost on cold start).
+//
+// KNOWN LIMITATION: this Map is module-level and lives inside the
+// renderForBotsV2 process. `invalidateCacheEndpoint` runs in a DIFFERENT
+// Firebase Function process and has its own module-level Map, so calling
+// `{clearAll: true}` on the invalidation endpoint only clears Firestore
+// (L2) and ITS OWN in-process L1 — NOT this one. Since this function uses
+// minInstances: 1, the stale L1 can keep serving pre-fix HTML until a
+// cold restart (triggered by a redeploy of this file). Invalidation path
+// 2026-04-20 — any code change here forces Firebase to cold-start.
 const memoryCache = new Map<string, { html: string; timestamp: number }>();
 
 /**
