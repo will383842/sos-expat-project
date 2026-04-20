@@ -28,6 +28,22 @@ const DISABLED_SUBSCRIPTION = {
 const DISABLED_MILESTONES = {
   enabled: false, qualificationThreshold: 0, milestones: [] as import("./types").ReferralMilestone[],
 } as const;
+
+// Standard milestones — used by Chatter, Captain, Influencer, Blogger, GroupAdmin.
+// Strategy "milestones all roles" (Commission Overhaul 2026-03-16).
+// Referral is "qualified" once it has generated $20 in commissions.
+const STANDARD_MILESTONES = {
+  enabled: true,
+  qualificationThreshold: 2000,
+  milestones: [
+    { minQualifiedReferrals: 5, bonusAmount: 1500, name: "5 filleuls" },
+    { minQualifiedReferrals: 10, bonusAmount: 3500, name: "10 filleuls" },
+    { minQualifiedReferrals: 20, bonusAmount: 7500, name: "20 filleuls" },
+    { minQualifiedReferrals: 50, bonusAmount: 25000, name: "50 filleuls" },
+    { minQualifiedReferrals: 100, bonusAmount: 60000, name: "100 filleuls" },
+    { minQualifiedReferrals: 500, bonusAmount: 400000, name: "500 filleuls" },
+  ] as import("./types").ReferralMilestone[],
+} as const;
 const DISABLED_CAPTAIN = {
   enabled: false, callAmount: 0, tiers: [] as import("./types").CaptainTier[],
   qualityBonus: { enabled: false, amount: 0, minActiveRecruits: 0, minTeamCommissions: 0 },
@@ -121,18 +137,7 @@ export const CHATTER_V1: PlanSeedData = {
     recruit_bonus: { enabled: true, amount: 100 },
     n1_recruit_bonus: { enabled: true, amount: 100 },
     subscription_commission: DISABLED_SUBSCRIPTION,
-    referral_milestones: {
-      enabled: true,
-      qualificationThreshold: 2000,
-      milestones: [
-        { minQualifiedReferrals: 5, bonusAmount: 1500, name: "5 filleuls" },
-        { minQualifiedReferrals: 10, bonusAmount: 3500, name: "10 filleuls" },
-        { minQualifiedReferrals: 20, bonusAmount: 7500, name: "20 filleuls" },
-        { minQualifiedReferrals: 50, bonusAmount: 25000, name: "50 filleuls" },
-        { minQualifiedReferrals: 100, bonusAmount: 60000, name: "100 filleuls" },
-        { minQualifiedReferrals: 500, bonusAmount: 400000, name: "500 filleuls" },
-      ],
-    },
+    referral_milestones: STANDARD_MILESTONES,
     captain_bonus: DISABLED_CAPTAIN,
     promo_multiplier: DISABLED_PROMO,
   },
@@ -175,18 +180,7 @@ export const CAPTAIN_V1: PlanSeedData = {
     recruit_bonus: { enabled: true, amount: 100 },
     n1_recruit_bonus: { enabled: true, amount: 100 },
     subscription_commission: DISABLED_SUBSCRIPTION,
-    referral_milestones: {
-      enabled: true,
-      qualificationThreshold: 2000,
-      milestones: [
-        { minQualifiedReferrals: 5, bonusAmount: 1500, name: "5 filleuls" },
-        { minQualifiedReferrals: 10, bonusAmount: 3500, name: "10 filleuls" },
-        { minQualifiedReferrals: 20, bonusAmount: 7500, name: "20 filleuls" },
-        { minQualifiedReferrals: 50, bonusAmount: 25000, name: "50 filleuls" },
-        { minQualifiedReferrals: 100, bonusAmount: 60000, name: "100 filleuls" },
-        { minQualifiedReferrals: 500, bonusAmount: 400000, name: "500 filleuls" },
-      ],
-    },
+    referral_milestones: STANDARD_MILESTONES,
     // Captain-specific
     captain_bonus: {
       enabled: true,
@@ -233,7 +227,7 @@ export const CAPTAIN_V1: PlanSeedData = {
 export const INFLUENCER_V1: PlanSeedData = {
   id: "influencer_v1",
   name: "Plan Influenceur Standard",
-  description: "Plan influenceur avec top 3 multiplicateur et 5% discount client",
+  description: "Plan influenceur avec top 3 cash, milestones, $5 fixe de remise client",
   targetRoles: ["influencer"],
   isDefault: true,
   rules: {
@@ -245,7 +239,7 @@ export const INFLUENCER_V1: PlanSeedData = {
     recruit_bonus: DISABLED_RECRUIT_BONUS,
     n1_recruit_bonus: DISABLED_RECRUIT_BONUS,
     subscription_commission: DISABLED_SUBSCRIPTION,
-    referral_milestones: DISABLED_MILESTONES,
+    referral_milestones: STANDARD_MILESTONES,
     captain_bonus: DISABLED_CAPTAIN,
     promo_multiplier: DISABLED_PROMO,
   },
@@ -264,10 +258,10 @@ export const INFLUENCER_V1: PlanSeedData = {
   },
   discount: {
     enabled: true,
-    type: "percentage",
-    value: 5,
+    type: "fixed",
+    value: 500,
     label: "Remise affilié",
-    labelTranslations: { fr: "5% de remise", en: "5% discount" },
+    labelTranslations: { fr: "5$ de remise", en: "$5 discount" },
   },
   withdrawal: DEFAULT_WITHDRAWAL,
   updatedBy: "system",
@@ -281,7 +275,7 @@ export const INFLUENCER_V1: PlanSeedData = {
 export const BLOGGER_V1: PlanSeedData = {
   id: "blogger_v1",
   name: "Plan Bloggeur Standard",
-  description: "Plan bloggeur avec commissions fixes, pas de discount client",
+  description: "Plan bloggeur avec commissions fixes, milestones, pas de discount client",
   targetRoles: ["blogger"],
   isDefault: true,
   rules: {
@@ -293,7 +287,7 @@ export const BLOGGER_V1: PlanSeedData = {
     recruit_bonus: DISABLED_RECRUIT_BONUS,
     n1_recruit_bonus: DISABLED_RECRUIT_BONUS,
     subscription_commission: DISABLED_SUBSCRIPTION,
-    referral_milestones: DISABLED_MILESTONES,
+    referral_milestones: STANDARD_MILESTONES,
     captain_bonus: DISABLED_CAPTAIN,
     promo_multiplier: DISABLED_PROMO,
   },
@@ -311,7 +305,7 @@ export const BLOGGER_V1: PlanSeedData = {
 export const GROUPADMIN_V1: PlanSeedData = {
   id: "groupadmin_v1",
   name: "Plan Admin Groupe Standard",
-  description: "Plan admin groupe avec cascade N1/N2, promo multiplier, et $5 discount client",
+  description: "Plan admin groupe avec cascade N1/N2, milestones, promo multiplier, et $5 discount client",
   targetRoles: ["groupAdmin"],
   isDefault: true,
   rules: {
@@ -323,7 +317,7 @@ export const GROUPADMIN_V1: PlanSeedData = {
     recruit_bonus: { enabled: true, amount: 100 },
     n1_recruit_bonus: { enabled: true, amount: 100 },
     subscription_commission: DISABLED_SUBSCRIPTION,
-    referral_milestones: DISABLED_MILESTONES,
+    referral_milestones: STANDARD_MILESTONES,
     captain_bonus: DISABLED_CAPTAIN,
     promo_multiplier: { enabled: true },
   },

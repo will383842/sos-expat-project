@@ -2,7 +2,7 @@
  * Unified Discount Resolver
  *
  * Resolves the discount to apply to a client during payment.
- * Replaces 3 separate lookups (groupAdmin $5, influencer 5%, partner custom)
+ * Replaces 3 separate lookups (groupAdmin $5, influencer $5, partner custom)
  * with 1 unified call.
  *
  * All amounts in CENTS (USD).

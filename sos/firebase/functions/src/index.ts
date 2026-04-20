@@ -3459,6 +3459,7 @@ export {
 } from './unified/callables/adminDashboard';
 export {
   adminSeedDefaultPlans,
+  adminUpdateDefaultPlans,
   adminMigrateAffiliateCodes,
   adminMigrateReferrals,
   adminGetMigrationStatus,

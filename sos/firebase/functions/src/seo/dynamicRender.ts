@@ -67,7 +67,9 @@ const SSR_CACHE_COLLECTION = 'ssr_cache';
 // start and evicts the stale L1 memoryCache. Increment whenever you need to
 // force L1 invalidation on renderForBotsV2 specifically (e.g. after an SPA
 // schema change that must propagate but SSR keeps serving pre-change HTML).
-const DEPLOY_MARKER = '2026-04-20-v3-review-schema-itemReviewed';
+// Exported so TypeScript's noUnusedLocals doesn't block the build (the value is
+// intentionally read only by Firebase's source-hash diff, not by the runtime).
+export const DEPLOY_MARKER = '2026-04-20-v3-review-schema-itemReviewed';
 
 // L1: In-memory cache (fast, same instance — lost on cold start).
 //
