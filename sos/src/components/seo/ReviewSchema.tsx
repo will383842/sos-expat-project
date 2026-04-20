@@ -44,7 +44,7 @@ export interface ReviewItem {
 
 export interface ReviewedItem {
   /** Type of item being reviewed */
-  type: 'Organization' | 'Service' | 'Product' | 'LocalBusiness' | 'ProfessionalService';
+  type: 'Organization' | 'Service' | 'Product' | 'LocalBusiness' | 'ProfessionalService' | 'LegalService';
   /** Name of the reviewed item */
   name: string;
   /** URL of the reviewed item */
