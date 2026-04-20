@@ -10,7 +10,6 @@ Allow: /
 Allow: /llms.txt
 Allow: /ai.txt
 Allow: /.well-known/
-Crawl-delay: 1
 
 # Pages protégées à ne pas indexer
 Disallow: /dashboard
@@ -34,7 +33,6 @@ Disallow: /captain/
 # ===========================================
 User-agent: Googlebot
 Allow: /
-Crawl-delay: 0
 
 User-agent: Googlebot-Image
 Allow: /
@@ -44,23 +42,18 @@ Allow: /
 
 User-agent: Bingbot
 Allow: /
-Crawl-delay: 1
 
 User-agent: Yandex
 Allow: /
-Crawl-delay: 2
 
 User-agent: DuckDuckBot
 Allow: /
-Crawl-delay: 1
 
 User-agent: Baiduspider
 Allow: /
-Crawl-delay: 2
 
 User-agent: Sogou
 Allow: /
-Crawl-delay: 2
 
 # ===========================================
 # BOTS SOCIAUX - PREVIEWS & PARTAGES
@@ -98,101 +91,80 @@ Allow: /
 # ChatGPT / OpenAI
 User-agent: GPTBot
 Allow: /
-Crawl-delay: 2
 
 User-agent: ChatGPT-User
 Allow: /
-Crawl-delay: 2
 
 User-agent: OAI-SearchBot
 Allow: /
-Crawl-delay: 2
 
 # Claude / Anthropic
 User-agent: ClaudeBot
 Allow: /
-Crawl-delay: 2
 
 User-agent: Claude-Web
 Allow: /
-Crawl-delay: 2
 
 User-agent: anthropic-ai
 Allow: /
-Crawl-delay: 2
 
 # Perplexity AI
 User-agent: PerplexityBot
 Allow: /
-Crawl-delay: 2
 
 # Google AI (Gemini)
 User-agent: Google-Extended
 Allow: /
-Crawl-delay: 2
 
 # Cohere AI
 User-agent: cohere-ai
 Allow: /
-Crawl-delay: 2
 
 # Meta AI
 User-agent: FacebookBot
 Allow: /
-Crawl-delay: 2
 
 User-agent: meta-externalagent
 Allow: /
-Crawl-delay: 2
 
 # Amazon / Alexa
 User-agent: Amazonbot
 Allow: /
-Crawl-delay: 2
 
 # Apple
 User-agent: Applebot
 Allow: /
-Crawl-delay: 2
 
 User-agent: Applebot-Extended
 Allow: /
-Crawl-delay: 2
 
 # You.com
 User-agent: YouBot
 Allow: /
-Crawl-delay: 2
 
 # AI2 (Allen Institute)
 User-agent: Ai2Bot
 Allow: /
-Crawl-delay: 2
 
 User-agent: Ai2Bot-Dolma
 Allow: /
-Crawl-delay: 2
 
 # Mistral AI
 User-agent: MistralBot
 Allow: /
-Crawl-delay: 2
 
 # Common Crawl (utilisé par plusieurs IA)
 User-agent: CCBot
 Allow: /
-Crawl-delay: 3
 
 # ===========================================
 # OUTILS SEO AUTORISÉS
 # ===========================================
 User-agent: Screaming Frog SEO Spider
 Allow: /
-Crawl-delay: 2
 
 User-agent: Sitebulb
 Allow: /
-Crawl-delay: 2
 
 # ===========================================
 # BOTS BLOQUÉS (Scrapers agressifs)
