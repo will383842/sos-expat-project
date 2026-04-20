@@ -46,7 +46,13 @@ jobs:
 
       - name: Install dependencies
         working-directory: sos
-        run: npm ci --prefer-offline --no-audit --no-fund
+        # `npm install` (not `npm ci`) because the repo has a known lock-file
+        # drift (observed 2026-04-20: yaml@2.8.3 in package.json but missing
+        # from package-lock.json). CF Pages auto-build uses `npm install`
+        # implicitly for the same reason — match that tolerance so the
+        # fallback deploy works out of the box, at the cost of slightly
+        # less deterministic installs.
+        run: npm install --prefer-offline --no-audit --no-fund
 
       - name: Build SPA
         working-directory: sos
