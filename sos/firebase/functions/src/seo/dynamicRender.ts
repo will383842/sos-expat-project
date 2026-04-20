@@ -62,6 +62,13 @@ function extractLocaleFromPath(path: string): { lang: string; locale: string } {
 // Firestore collection for persistent SSR cache (survives cold starts)
 const SSR_CACHE_COLLECTION = 'ssr_cache';
 
+// Deploy marker — bumping this constant guarantees Firebase `incremental passes`
+// detects a real code change and redeploys renderForBotsV2, which forces a cold
+// start and evicts the stale L1 memoryCache. Increment whenever you need to
+// force L1 invalidation on renderForBotsV2 specifically (e.g. after an SPA
+// schema change that must propagate but SSR keeps serving pre-change HTML).
+const DEPLOY_MARKER = '2026-04-20-v3-review-schema-itemReviewed';
+
 // L1: In-memory cache (fast, same instance — lost on cold start).
 //
 // KNOWN LIMITATION: this Map is module-level and lives inside the
