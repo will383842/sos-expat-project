@@ -84,6 +84,9 @@ const PRIORITY_PATHS = [
   '/hi-in/kaise-kaam-karta-hai',
 
   // Captain landing — all 9 languages (new page, priority warm-up)
+  // Arabic slugs MUST be romanized ASCII (see multilingual-system/sitemaps/constants.ts):
+  // the Cloud Function router + sitemap expect ASCII, Unicode paths 301-redirect to
+  // targets the warm-up doesn't follow cleanly.
   '/fr-fr/devenir-capitaine',
   '/en-us/become-captain',
   '/es-es/ser-capitan',
@@ -91,10 +94,10 @@ const PRIORITY_PATHS = [
   '/pt-pt/tornar-se-capitao',
   '/ru-ru/stat-kapitanom',
   '/zh-cn/chengwei-duizhang',
-  '/ar-sa/كن-قائدا',
+  '/ar-sa/kun-qaidan',
   '/hi-in/captain-bane',
 
-  // Chatter landing — all languages (high-traffic affiliate pages)
+  // Chatter landing — all 9 languages (high-traffic affiliate pages)
   '/fr-fr/devenir-chatter',
   '/en-us/become-chatter',
   '/es-es/ser-chatter',
@@ -102,6 +105,7 @@ const PRIORITY_PATHS = [
   '/pt-pt/tornar-se-chatter',
   '/ru-ru/stat-chatterom',
   '/zh-cn/chengwei-chatter',
+  '/ar-sa/kun-musawwiqan',
   '/hi-in/chatter-bane',
 ];
 
