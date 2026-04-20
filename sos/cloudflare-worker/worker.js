@@ -1249,7 +1249,15 @@ const EDGE_CACHE_ENABLED = true;
 // the pre-fix rendered HTML for the 24h TTL. Bumping the cache key
 // version is the supported global-invalidation mechanism (per code
 // comments above) since caches.default.delete() is PoP-local only.
-const EDGE_CACHE_VERSION = 'v15';
+//
+// v16 (2026-04-20, +1h): v15 cached responses were stored BEFORE the
+// SPA build itself had commit 72faefc3's code (the build had been
+// silently failing TSC since the commit, fixed now in 2034aa09 which
+// added 'LegalService' to the ReviewedItem.type union). So v15 cache
+// entries contain the OLD schema. Bumping to v16 invalidates those
+// too so the first fresh fetch (now backed by a SPA build that DOES
+// contain the fix) lands in prod.
+const EDGE_CACHE_VERSION = 'v16';
 
 const EDGE_CACHE_TTL = {
   SSR_OK: 86400,   // 24h for valid pages
