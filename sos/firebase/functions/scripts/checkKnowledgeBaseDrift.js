@@ -215,13 +215,35 @@ function runChecks(kb, ts) {
     check(`${plan.id} withdrawal.fee`, common.withdrawal_fee, plan.withdrawal.fee);
   }
 
-  // Milestones: KB + code should have the same 6 tiers for every plan that has them enabled.
-  const expected = kb.programs.chatter.milestones; // {5: 1500, 10: 3500, ...}
+  // Milestones: compare TS plan milestones against the KB block for the same
+  // program (per-plan comparison, not just against chatter). This catches drift
+  // introduced on a single role's KB milestones without touching others.
+  //
+  // TS plan id -> KB program key
+  const planToKbProgram = {
+    chatter_v1: "chatter",
+    captain_v1: "captain_chatter",
+    influencer_v1: "influencer",
+    blogger_v1: "blogger",
+    groupadmin_v1: "group_admin",
+  };
   for (const plan of ALL_DEFAULT_PLANS) {
     if (!plan.rules.referral_milestones?.enabled) continue;
-    const planMs = plan.rules.referral_milestones.milestones;
-    for (const m of planMs) {
-      const kbBonus = expected[m.minQualifiedReferrals];
+    const kbKey = planToKbProgram[plan.id];
+    if (!kbKey) continue; // Plans like client_v1 / provider_v1 don't have KB milestones
+    // Captain inherits its milestones from chatter in the KB (no own block)
+    const kbSource = kb.programs[kbKey]?.milestones
+      ?? (kbKey === "captain_chatter" ? kb.programs.chatter?.milestones : null);
+    if (!kbSource) {
+      drifts.push({
+        label: `${plan.id} has milestones in code but KB.programs.${kbKey}.milestones missing`,
+        kb: null,
+        ts: plan.rules.referral_milestones.milestones.length,
+      });
+      continue;
+    }
+    for (const m of plan.rules.referral_milestones.milestones) {
+      const kbBonus = kbSource[m.minQualifiedReferrals] ?? kbSource[String(m.minQualifiedReferrals)];
       check(
         `${plan.id} milestone @${m.minQualifiedReferrals}`,
         kbBonus,
