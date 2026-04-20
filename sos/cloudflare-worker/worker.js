@@ -993,6 +993,14 @@ const LP_SEGMENTS = new Set([
   'expert', 'experto', 'experte', 'visheshagya', 'zhuanjia', 'mutakhasis',
   // Nationality — 9 languages
   'nationalite', 'nationality', 'nacionalidad', 'nationalitaet', 'nacionalidade', 'natsionalnost', 'guoji', 'rashtriyata', 'jinsiya',
+  // Lawyers partner recruitment — 9 languages
+  // (synced with LandingGenerationService::URL_SEGMENTS['lawyers'])
+  'devenir-partenaire', 'become-partner', 'ser-socio', 'partner-werden', 'tornar-parceiro',
+  'sajhidari-bane', 'chengwei-hezuo', 'stat-partnerom',
+  // Helpers (expat helpers) recruitment — 9 languages
+  // (synced with LandingGenerationService::URL_SEGMENTS['helpers'])
+  'expats-aidants', 'expat-helpers', 'expats-ayudantes', 'expat-helfer', 'expats-ajudantes',
+  'expat-sahayta', 'expat-bangzhu', 'expat-pomoshchniki',
 ]);
 
 // Tools (all 9 languages) -- listing + detail → Blog SSR (redesign 2026-04)
