@@ -73,6 +73,7 @@ jobs:
           MAILWIZZ_CUSTOMER_ID=2
           MAILWIZZ_LIST_CHATTER_RECRUTEMENT=ye577s0s75c99
           MAILWIZZ_LIST_CHATTER_ONBOARDING=yr810av4z5275
+          MAILWIZZ_LIST_IA_PROSPECTS=
           OUTIL_INGEST_ENDPOINT=https://europe-west1-outils-sos-expat.cloudfunctions.net/ingestBooking
           EXECUTE_PAYOUT_RETRY_TASK_URL=
           EXECUTE_STRIPE_TRANSFER_RETRY_URL=
