@@ -1496,7 +1496,35 @@ function serviceUnavailableResponse(pathname, originalStatus = 0, errorMsg = '')
 // SECTION 7: SUB-HANDLERS
 // =========================================================================
 
+// Patterns signaling SEO spam injection / pharma hack / Japanese keyword hack.
+// The site runs Firebase+Vite (zero PHP/ASP/JSP), so these paths are always malicious
+// probes or leftover hack URLs indexed by crawlers. Returning 410 Gone tells Google/Moz
+// to remove them from their index, which is what lowers the Moz Spam Score.
+function isHackedUrlPattern(pathname, search) {
+  // Server-side script extensions we never serve
+  if (/\.(php|php[3-7]?|phtml|asp|aspx|jsp|jspx|cgi|pl|cfm)($|[/?])/i.test(pathname)) return true;
+  // Specific hack query parameter observed in Moz index (hfm=... pharma/tickets spam)
+  if (/[?&]hfm=/i.test(search)) return true;
+  // WordPress probe paths (site is not WordPress)
+  if (/^\/(wp-admin|wp-login|wp-content|wp-includes|xmlrpc)(\/|\.php|$)/i.test(pathname)) return true;
+  // Common shell/backdoor probe names
+  if (/\/(shell|cmd|c99|r57|wso|adminer|phpmyadmin|eval)\.(php|asp|jsp)$/i.test(pathname)) return true;
+  return false;
+}
+
 function handleAntiScraping(request, pathname, userAgent) {
+if (isHackedUrlPattern(pathname, request.url.includes('?') ? '?' + request.url.split('?')[1] : '')) {
+  console.log(`[WORKER 410] Hacked URL pattern blocked: ${pathname}`);
+  return new Response('Gone', {
+    status: 410,
+    headers: {
+      'Content-Type': 'text/plain; charset=utf-8',
+      'X-Robots-Tag': 'noindex, nofollow',
+      'Cache-Control': 'public, max-age=86400',
+    },
+  });
+}
+
 if (isBlockedScraper(userAgent)) {
   console.log(`[WORKER BLOCKED] Scraper UA: ${userAgent.substring(0, 80)}`);
   return new Response('Forbidden', { status: 403 });

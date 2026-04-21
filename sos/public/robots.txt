@@ -28,6 +28,19 @@ Disallow: /group-admin/
 Disallow: /partner/
 Disallow: /captain/
 
+# Spam injection / hack URL patterns (410 Gone served by edge worker).
+# Listed here to accelerate deindexation — the site never serves server-side scripts.
+Disallow: /*.php$
+Disallow: /*.php?
+Disallow: /*.asp$
+Disallow: /*.aspx$
+Disallow: /*.jsp$
+Disallow: /*.cgi$
+Disallow: /*?hfm=
+Disallow: /wp-admin/
+Disallow: /wp-login.php
+Disallow: /xmlrpc.php
+
 # ===========================================
 # MOTEURS DE RECHERCHE PRINCIPAUX
 # ===========================================
