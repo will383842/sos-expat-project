@@ -1685,6 +1685,129 @@ async function handleHolidaysDomain(request, pathname, url, userAgent, ctx) {
   return null;
 }
 
+// =========================================================================
+// LEGACY LP REDIRECTS (P0-C, 2026-04-22)
+// =========================================================================
+// 11 legacy LP segments were announced as "indexable content" but never
+// implemented in sos/src/App.tsx (catch-all → <NotFound> → HTTP 404).
+// GSC reports 208+ URLs in the "Not Found" bucket from this bug.
+//
+// Strategy: 301 each legacy segment to the closest canonical target per
+// locale. Per-language target table avoids 301 chains (e.g., /es-es/blog
+// goes DIRECTLY to /es-es/articulos, not through /es-es/articles).
+//
+// Coverage per segment:
+//   - blog|news|guides|actualites|nouvelles → articles listing (9 langs)
+//   - aide|help|ayuda|hilfe|ajuda|pomoshch|bangzhu|madad|musaada → help
+//     center (8 langs; ar help-center slug not verified → no redirect)
+//   - expatries|expats → directory listing (fr, en)
+//   - consulter-avocat|sos-avocat|consult-lawyer|sos-lawyer → pricing (fr, en)
+//   - country/{slug} on non-en locales → {canonical-country}/{slug}
+//   - (sos-avocat|avocat|sos-lawyer|lawyer)-{country} → directory/{country}
+//     Critical: only when NO subpath — provider profiles like
+//     /fr-fr/avocat-thailande/julien-penal-xxx must stay 200.
+//
+// null target = "slug not verified 200 in this locale" → do not redirect,
+// let it 404 naturally rather than forward to a broken page.
+const LEGACY_LP_CANONICAL = {
+  fr: { help: 'centre-aide',      articles: 'articles',  directory: 'annuaire',    pricing: 'tarifs',  country: 'pays' },
+  en: { help: 'help-center',      articles: 'articles',  directory: 'directory',   pricing: 'pricing', country: 'country' },
+  es: { help: 'centro-ayuda',     articles: 'articulos', directory: 'directorio',  pricing: null,      country: 'pais' },
+  de: { help: 'hilfezentrum',     articles: 'artikel',   directory: 'verzeichnis', pricing: null,      country: 'land' },
+  pt: { help: 'centro-ajuda',     articles: 'artigos',   directory: 'diretorio',   pricing: null,      country: 'pais' },
+  ru: { help: 'tsentr-pomoshchi', articles: 'stati',     directory: 'spravochnik', pricing: null,      country: 'strana' },
+  zh: { help: 'bangzhu-zhongxin', articles: 'wenzhang',  directory: 'minglu',      pricing: null,      country: 'guojia' },
+  hi: { help: 'sahayata-kendra',  articles: 'lekh',      directory: 'nirdeshika',  pricing: null,      country: 'desh' },
+  ar: { help: null,               articles: 'maqalat',   directory: 'dalil',       pricing: null,      country: 'balad' },
+};
+
+const LEGACY_SEGMENT_ALIAS = {
+  // "help" family (any locale user may type the EN or localized variant)
+  'help': 'help', 'aide': 'help', 'ayuda': 'help', 'hilfe': 'help',
+  'ajuda': 'help', 'pomoshch': 'help', 'bangzhu': 'help',
+  'madad': 'help', 'musaada': 'help',
+  // "blog" family → articles
+  'blog': 'articles', 'news': 'articles', 'guides': 'articles',
+  'actualites': 'articles', 'nouvelles': 'articles',
+  // "expats directory" family
+  'expatries': 'directory', 'expats': 'directory',
+  // "consult lawyer" LP family → pricing
+  'consulter-avocat': 'pricing', 'sos-avocat': 'pricing',
+  'consult-lawyer': 'pricing', 'sos-lawyer': 'pricing',
+};
+
+function legacyLPRedirect301(locationUrl) {
+  return new Response(null, {
+    status: 301,
+    headers: {
+      'Location': locationUrl,
+      'X-Worker-Active': 'true',
+      'X-Worker-Redirect': 'legacy-lp',
+      'Cache-Control': 'public, max-age=31536000',
+      'Vary': 'User-Agent, Accept-Language',
+    },
+  });
+}
+
+function handleLegacyLPRedirect(pathname, url) {
+  const m = pathname.match(/^\/([a-z]{2})-([a-z]{2})\/([^\/]+)(\/.*)?$/i);
+  if (!m) return null;
+  const lang = m[1].toLowerCase();
+  const country = m[2].toLowerCase();
+  const segment = m[3].toLowerCase();
+  const rest = m[4] || '';
+  const locale = `${lang}-${country}`;
+
+  // Internal code 'ch' maps to 'zh'
+  const canonicalLang = (lang === 'ch') ? 'zh' : lang;
+  const canonicalForLang = LEGACY_LP_CANONICAL[canonicalLang];
+  if (!canonicalForLang) return null;
+
+  // Case 1: /{locale}/country/{slug} on non-EN locale → /{locale}/{canonical-country}/{slug}
+  // (English uses `country` natively so /en-us/country/* is already canonical.)
+  if (segment === 'country' && rest && canonicalLang !== 'en') {
+    const canonCountrySlug = canonicalForLang.country;
+    if (canonCountrySlug && canonCountrySlug !== 'country') {
+      return legacyLPRedirect301(`${url.origin}/${locale}/${canonCountrySlug}${rest}${url.search}`);
+    }
+  }
+
+  // Case 2a: /{locale}/sos-avocat-{country} or sos-lawyer-{country} (NO provider
+  // profile ever uses the `sos-` prefix, so redirect regardless of rest).
+  const sosLawyerCountry = segment.match(/^(?:sos-avocat-|sos-lawyer-)(.+)$/);
+  if (sosLawyerCountry) {
+    const countrySlug = sosLawyerCountry[1];
+    const dir = canonicalForLang.directory;
+    if (dir) {
+      return legacyLPRedirect301(`${url.origin}/${locale}/${dir}/${countrySlug}${url.search}`);
+    }
+  }
+
+  // Case 2b: /{locale}/avocat-{country} or lawyer-{country} WITHOUT subpath.
+  // With subpath these are provider profile URLs (must stay 200) — DO NOT redirect.
+  const bareLawyerCountry = segment.match(/^(?:avocat-|lawyer-)(.+)$/);
+  if (bareLawyerCountry && !rest) {
+    const countrySlug = bareLawyerCountry[1];
+    const dir = canonicalForLang.directory;
+    if (dir) {
+      return legacyLPRedirect301(`${url.origin}/${locale}/${dir}/${countrySlug}${url.search}`);
+    }
+  }
+
+  // Case 3: exact legacy segment alias → canonical target
+  const aliasKey = LEGACY_SEGMENT_ALIAS[segment];
+  if (aliasKey) {
+    const canonSlug = canonicalForLang[aliasKey];
+    // canonSlug === null  → no verified target; let 404
+    // canonSlug === segment → already canonical (idempotent); no redirect
+    if (canonSlug && canonSlug !== segment) {
+      return legacyLPRedirect301(`${url.origin}/${locale}/${canonSlug}${rest}${url.search}`);
+    }
+  }
+
+  return null;
+}
+
 function handleBlogCrossLocaleRedirects(pathname, url) {
 // CROSS-LOCALE BLOG SLUG REDIRECT (must run BEFORE blog proxy)
 // Detects when a blog content slug (gallery, tools, surveys, articles)
@@ -3141,6 +3264,13 @@ async function handleRequest(request, env, ctx) {
 
   const blogRedirect = handleBlogCrossLocaleRedirects(pathname, url);
   if (blogRedirect) return blogRedirect;
+
+  // P0-C: intercept legacy LP segments BEFORE blog proxy sends them to Laravel.
+  // Without this, /fr-fr/aide (inside LP_SEGMENTS) is proxied to the blog,
+  // which doesn't recognize the route and returns 404 — a false 404 from
+  // Google's point of view. We 301 instead to the locale's canonical target.
+  const legacyLPRedirect = handleLegacyLPRedirect(pathname, url);
+  if (legacyLPRedirect) return legacyLPRedirect;
 
   if (isBlogProxyPath(pathname)) {
     return handleBlogProxy(request, pathname, url, ctx);
