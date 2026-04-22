@@ -675,7 +675,11 @@ const FAQDetail: React.FC = () => {
         <link rel="alternate" hrefLang="x-default" href={`https://sos-expat.com/fr-fr/faq/${displayFaq.slug?.['fr'] || displayFaq.id}`} />
         {/* robots géré exclusivement par SEOHead (noindex={noIndex}) — pas de doublon ici */}
 
-        {/* QAPage JSON-LD — plus précis que FAQPage pour une page détail unique */}
+        {/* QAPage JSON-LD — plus précis que FAQPage pour une page détail unique.
+            SEO FIX 2026-04-22 (P1-J): ajout de `author`, `datePublished`, `url`
+            sur mainEntity + `datePublished` sur acceptedAnswer. GSC Q&A report
+            signalait 87 champs manquants (29 author, 22 upvoteCount, 22 url,
+            22 datePublished mainEntity, 7 datePublished acceptedAnswer). */}
         <script type="application/ld+json">{JSON.stringify({
           "@context": "https://schema.org",
           "@type": "QAPage",
@@ -685,13 +689,22 @@ const FAQDetail: React.FC = () => {
             "@type": "Question",
             "name": question,
             "text": question,
+            "url": canonicalUrl,
             "answerCount": 1,
+            "upvoteCount": (displayFaq.views || 0),
             "dateCreated": (displayFaq as any).createdAt?.toDate?.()?.toISOString?.() || "2024-01-01T00:00:00.000Z",
+            "datePublished": (displayFaq as any).createdAt?.toDate?.()?.toISOString?.() || "2024-01-01T00:00:00.000Z",
+            "author": {
+              "@type": "Organization",
+              "name": "SOS Expat & Travelers",
+              "url": "https://sos-expat.com"
+            },
             "acceptedAnswer": {
               "@type": "Answer",
               "text": plainAnswer,
               "url": canonicalUrl,
               "upvoteCount": (displayFaq.views || 0),
+              "datePublished": (displayFaq as any).updatedAt?.toDate?.()?.toISOString?.() || (displayFaq as any).createdAt?.toDate?.()?.toISOString?.() || "2024-01-01T00:00:00.000Z",
               "author": {
                 "@type": "Organization",
                 "name": "SOS Expat & Travelers",
