@@ -1,0 +1,113 @@
+name: Deploy Press Outreach — VPS A (Backlink Engine)
+
+# Manual trigger — run this once after providing all secrets in the repo.
+# Workflow Dispatch avoids surprise deploys on every push.
+
+on:
+  workflow_dispatch:
+    inputs:
+      skip_seed:
+        description: "Skip the seed step (if contacts already present)"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy press-outreach module
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Install SSH client + tools
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq openssh-client
+
+      - name: Setup SSH key
+        env:
+          VPS_A_SSH_KEY: ${{ secrets.VPS_A_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$VPS_A_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H 204.168.180.175 >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Git pull on VPS A
+        run: |
+          ssh -i ~/.ssh/id_ed25519 root@204.168.180.175 \
+            "cd /opt/backlink-engine && git fetch origin main && git reset --hard origin/main && echo '✓ HEAD=' \$(git rev-parse --short HEAD)"
+
+      - name: Inject press env vars (idempotent)
+        env:
+          PRESS_SMTP_HOST: ${{ secrets.PRESS_SMTP_HOST }}
+          PRESS_SMTP_PORT: ${{ secrets.PRESS_SMTP_PORT }}
+          PRESS_SMTP_SECURE: ${{ secrets.PRESS_SMTP_SECURE }}
+          PRESS_INBOX_FR_USER: ${{ secrets.PRESS_INBOX_FR_USER }}
+          PRESS_INBOX_FR_PASS: ${{ secrets.PRESS_INBOX_FR_PASS }}
+          PRESS_INBOX_EN_USER: ${{ secrets.PRESS_INBOX_EN_USER }}
+          PRESS_INBOX_EN_PASS: ${{ secrets.PRESS_INBOX_EN_PASS }}
+          PRESS_INBOX_ES_USER: ${{ secrets.PRESS_INBOX_ES_USER }}
+          PRESS_INBOX_ES_PASS: ${{ secrets.PRESS_INBOX_ES_PASS }}
+          PRESS_INBOX_DE_USER: ${{ secrets.PRESS_INBOX_DE_USER }}
+          PRESS_INBOX_DE_PASS: ${{ secrets.PRESS_INBOX_DE_PASS }}
+          PRESS_INBOX_DEFAULT_USER: ${{ secrets.PRESS_INBOX_DEFAULT_USER }}
+          PRESS_INBOX_DEFAULT_PASS: ${{ secrets.PRESS_INBOX_DEFAULT_PASS }}
+          PRESS_PDF_BASE_URL: ${{ secrets.PRESS_PDF_BASE_URL }}
+          TELEGRAM_PRESS_CHAT_ID: ${{ secrets.TELEGRAM_PRESS_CHAT_ID }}
+        run: |
+          ssh -i ~/.ssh/id_ed25519 root@204.168.180.175 "bash -s" <<SSH
+          set -euo pipefail
+          ENV_FILE=/opt/backlink-engine/.env
+          # Remove any previous press block (idempotent re-run)
+          sed -i '/^# Press outreach /,/^TELEGRAM_PRESS_CHAT_ID=/d' \$ENV_FILE 2>/dev/null || true
+          cat >> \$ENV_FILE <<EOF
+
+          # Press outreach (auto-set by GitHub Actions on \$(date -Iseconds))
+          PRESS_SMTP_HOST=${PRESS_SMTP_HOST:-mail.sos-expat.com}
+          PRESS_SMTP_PORT=${PRESS_SMTP_PORT:-587}
+          PRESS_SMTP_SECURE=${PRESS_SMTP_SECURE:-false}
+          PRESS_INBOX_FR_USER=${PRESS_INBOX_FR_USER}
+          PRESS_INBOX_FR_PASS=${PRESS_INBOX_FR_PASS}
+          PRESS_INBOX_EN_USER=${PRESS_INBOX_EN_USER}
+          PRESS_INBOX_EN_PASS=${PRESS_INBOX_EN_PASS}
+          PRESS_INBOX_ES_USER=${PRESS_INBOX_ES_USER}
+          PRESS_INBOX_ES_PASS=${PRESS_INBOX_ES_PASS}
+          PRESS_INBOX_DE_USER=${PRESS_INBOX_DE_USER}
+          PRESS_INBOX_DE_PASS=${PRESS_INBOX_DE_PASS}
+          PRESS_INBOX_DEFAULT_USER=${PRESS_INBOX_DEFAULT_USER}
+          PRESS_INBOX_DEFAULT_PASS=${PRESS_INBOX_DEFAULT_PASS}
+          PRESS_PDF_BASE_URL=${PRESS_PDF_BASE_URL:-https://sos-expat.com}
+          TELEGRAM_PRESS_CHAT_ID=${TELEGRAM_PRESS_CHAT_ID:-7560535072}
+          EOF
+          echo "✓ .env updated"
+          SSH
+
+      - name: Run Prisma migration
+        run: |
+          ssh -i ~/.ssh/id_ed25519 root@204.168.180.175 \
+            "cd /opt/backlink-engine && docker compose exec -T bl-app npx prisma migrate deploy"
+
+      - name: Restart bl-app + run seed
+        if: ${{ !inputs.skip_seed }}
+        run: |
+          ssh -i ~/.ssh/id_ed25519 root@204.168.180.175 "bash -s" <<'SSH'
+          cd /opt/backlink-engine
+          docker compose restart bl-app
+          sleep 10
+          docker compose exec -T bl-app npx tsx prisma/seed-press-contacts.ts
+          SSH
+
+      - name: Health check
+        run: |
+          sleep 5
+          echo "=== /api/press/stats ==="
+          curl -sf http://204.168.180.175/api/press/stats | python3 -m json.tool || echo "(may need retries)"
+          echo ""
+          echo "=== /api/press/verify-inboxes ==="
+          curl -sf -X POST http://204.168.180.175/api/press/verify-inboxes | python3 -m json.tool || echo "(may need retries)"
+
+      - name: Cleanup SSH key
+        if: always()
+        run: rm -f ~/.ssh/id_ed25519
