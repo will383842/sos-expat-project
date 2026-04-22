@@ -25,6 +25,13 @@ const LEGACY_SEGMENT_ALIAS = {
   'consult-lawyer': 'pricing', 'sos-lawyer': 'pricing',
 };
 
+const DIRECTORY_ROLE_SLUGS = new Set([
+  'avocats', 'lawyers', 'abogados', 'anwaelte', 'advogados',
+  'advokaty', 'lushi', 'vakil', 'muhamun',
+  'expatries', 'expats', 'expatriados', 'expaty', 'haiwai',
+  'videshi', 'mughtaribun',
+]);
+
 function resolve(pathname) {
   const m = pathname.match(/^\/([a-z]{2})-([a-z]{2})\/([^\/]+)(\/.*)?$/i);
   if (!m) return null;
@@ -36,6 +43,10 @@ function resolve(pathname) {
   const canonicalLang = lang === 'ch' ? 'zh' : lang;
   const canon = LEGACY_LP_CANONICAL[canonicalLang];
   if (!canon) return null;
+  if (DIRECTORY_ROLE_SLUGS.has(segment)) {
+    const shortMatch = rest.match(/^\/([a-z]{1,2})$/i);
+    if (shortMatch) return `/${locale}/${segment}`;
+  }
   if (segment === 'country' && rest && canonicalLang !== 'en') {
     const c = canon.country;
     if (c && c !== 'country') return `/${locale}/${c}${rest}`;
@@ -109,6 +120,23 @@ const tests = [
   ['/fr-fr/avocat-thailande/julien-penal-fsx3c9', null],
   ['/en-us/lawyer-thailand/julien-criminal-fsx3c9', null],
   ['/fr-fr/avocat-belgique/marc-leroy-def456', null],
+  // ISO2 ≤ 2 chars directory slugs → listing root (P0-D suite)
+  ['/ar-sa/muhamun/kn', '/ar-sa/muhamun'],
+  ['/ar-sa/muhamun/km', '/ar-sa/muhamun'],
+  ['/de-de/anwaelte/bh', '/de-de/anwaelte'],
+  ['/en-us/lawyers/bo', '/en-us/lawyers'],
+  ['/es-es/abogados/cu', '/es-es/abogados'],
+  ['/fr-fr/avocats/tc', '/fr-fr/avocats'],
+  ['/hi-in/vakil/in', '/hi-in/vakil'],
+  ['/zh-cn/lushi/cn', '/zh-cn/lushi'],
+  ['/ru-ru/advokaty/ru', '/ru-ru/advokaty'],
+  // ISO2 short slug on role-singular (not in DIRECTORY_ROLE_SLUGS) → no redirect
+  ['/fr-fr/avocat-thailande/kn', null],  // singular, not in set
+  ['/en-us/lawyer-thailand/bo', null],
+  // Long slug on role-plural → no redirect (real country or real content)
+  ['/en-us/lawyers/thailand', null],
+  ['/fr-fr/avocats/france', null],
+  ['/ar-sa/muhamun/thaialand-long-slug', null],
   // Idempotency : URLs canoniques ne doivent pas rediriger
   ['/fr-fr/articles', null],
   ['/fr-fr/tarifs', null],

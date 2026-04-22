@@ -1749,6 +1749,21 @@ function legacyLPRedirect301(locationUrl) {
   });
 }
 
+// Directory role slugs (plural "lawyers" / "expats" per language) used by
+// the blog's DirectoryController. GSC drilldown lists ~86 pages like
+// /ar-sa/muhamun/kn, /de-de/anwaelte/bh, /en-us/lawyers/bo — ISO2 country
+// codes used as slugs on directory listings, with no real content. Ignored
+// by Google (all in "Detected, not indexed"). We 301 them to the directory
+// root (without country filter) to salvage any link equity.
+const DIRECTORY_ROLE_SLUGS = new Set([
+  // Lawyers
+  'avocats', 'lawyers', 'abogados', 'anwaelte', 'advogados',
+  'advokaty', 'lushi', 'vakil', 'muhamun',
+  // Expats
+  'expatries', 'expats', 'expatriados', 'expaty', 'haiwai',
+  'videshi', 'mughtaribun',
+]);
+
 function handleLegacyLPRedirect(pathname, url) {
   const m = pathname.match(/^\/([a-z]{2})-([a-z]{2})\/([^\/]+)(\/.*)?$/i);
   if (!m) return null;
@@ -1762,6 +1777,31 @@ function handleLegacyLPRedirect(pathname, url) {
   const canonicalLang = (lang === 'ch') ? 'zh' : lang;
   const canonicalForLang = LEGACY_LP_CANONICAL[canonicalLang];
   if (!canonicalForLang) return null;
+
+  // Case 0 (2026-04-22, P0-D suite, FAILSAFE ONLY):
+  // /{locale}/{role-plural}/{1-2-char-slug} → /{locale}/{role-plural} listing.
+  //
+  // In practice this case is intercepted earlier by
+  // handleBlogCrossLocaleRedirects' "country slug normalization" block
+  // (worker.js:1741+) which does something better: it maps ISO2 codes
+  // (kn, bo, bh, …) to the real localized country name (sant-kits,
+  // bolivia, bahrain, …) so the user lands on a page with actual
+  // content. We keep this block as a defensive failsafe: if Laravel's
+  // country_slug map ever misses an ISO2, at least the short-slug page
+  // won't 404 — it 301s to the directory listing root.
+  //
+  // Strict guards to avoid false positives:
+  //   (a) segment MUST be in DIRECTORY_ROLE_SLUGS (plural lawyers/expats)
+  //   (b) rest MUST match exactly /{1-2 lowercase chars} (no subpath)
+  // Consequence: real provider profile URLs like
+  // /fr-fr/avocat-thailande/julien-penal-fsx3c9 are untouched because
+  // `avocat-thailande` is singular and not in DIRECTORY_ROLE_SLUGS.
+  if (DIRECTORY_ROLE_SLUGS.has(segment)) {
+    const shortSlugMatch = rest.match(/^\/([a-z]{1,2})$/i);
+    if (shortSlugMatch) {
+      return legacyLPRedirect301(`${url.origin}/${locale}/${segment}${url.search}`);
+    }
+  }
 
   // Case 1: /{locale}/country/{slug} on non-EN locale → /{locale}/{canonical-country}/{slug}
   // (English uses `country` natively so /en-us/country/* is already canonical.)
