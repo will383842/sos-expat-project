@@ -1265,7 +1265,14 @@ const EDGE_CACHE_ENABLED = true;
 // entries contain the OLD schema. Bumping to v16 invalidates those
 // too so the first fresh fetch (now backed by a SPA build that DOES
 // contain the fix) lands in prod.
-const EDGE_CACHE_VERSION = 'v16';
+// v17 (2026-04-22, SEO audit): cache key now partitions by `variant` (bot vs
+// human) + emits `Vary: User-Agent, Accept-Language` on SSR/Blog responses.
+// Previous versions shared one cache entry across bot and human, which meant
+// a bot-rendered response could be served to a human (and vice-versa). This
+// forced repeated version bumps (v3→v16) whenever poisoning was observed.
+// Bumping to v17 invalidates all prior entries so the first fresh fetch lands
+// under the new partitioned key.
+const EDGE_CACHE_VERSION = 'v17';
 
 const EDGE_CACHE_TTL = {
   SSR_OK: 86400,   // 24h for valid pages
@@ -1275,14 +1282,20 @@ const EDGE_CACHE_TTL = {
   SITEMAP: 3600,   // 1h for sitemaps
 };
 
-function buildCacheKey(pathname, type) {
-  return `https://sos-expat.com/__edge-cache/${EDGE_CACHE_VERSION}/${type}${pathname}`;
+// Cache key variants — keep one entry per (bot|human) so bots and humans
+// never share rendered HTML. Blog & sitemap stay variant-less (same content
+// for everyone).
+const CACHE_VARIANTS = ['', 'bot'];
+
+function buildCacheKey(pathname, type, variant) {
+  const v = variant ? `/${variant}` : '';
+  return `https://sos-expat.com/__edge-cache/${EDGE_CACHE_VERSION}/${type}${v}${pathname}`;
 }
 
-async function edgeCacheGet(pathname, type) {
+async function edgeCacheGet(pathname, type, variant) {
   if (!EDGE_CACHE_ENABLED) return null;
   try {
-    const cacheKey = new Request(buildCacheKey(pathname, type));
+    const cacheKey = new Request(buildCacheKey(pathname, type, variant));
     const cached = await caches.default.match(cacheKey);
     if (cached) {
       const headers = new Headers(cached.headers);
@@ -1300,11 +1313,11 @@ async function edgeCacheGet(pathname, type) {
   }
 }
 
-async function edgeCachePut(pathname, type, response, ttlSeconds) {
+async function edgeCachePut(pathname, type, response, ttlSeconds, variant) {
   if (!EDGE_CACHE_ENABLED) return;
   try {
     const cache = caches.default;
-    const cacheKey = new Request(buildCacheKey(pathname, type));
+    const cacheKey = new Request(buildCacheKey(pathname, type, variant));
     const headers = new Headers(response.headers);
     // Remove conflicting cache headers from origin (Firebase sets cdn-cache-control: private)
     headers.delete('cdn-cache-control');
@@ -1951,6 +1964,10 @@ async function handleBlogProxy(request, pathname, url, ctx) {
       blogHeaders.delete('Pragma');
       blogHeaders.delete('Expires');
       blogHeaders.delete('Set-Cookie'); // Remove Laravel session cookies (XSRF-TOKEN, session)
+      // SEO FIX 2026-04-22 (P0-A): signal downstream caches that the body
+      // can depend on UA/locale in the future (currently identical bot/human
+      // but Vary future-proofs against Laravel negotiated responses).
+      blogHeaders.set('Vary', 'User-Agent, Accept-Language');
     }
 
     // FIX: Rewrite blog origin in HTML body so all internal links, canonical tags,
@@ -2772,9 +2789,13 @@ async function handleCachePurge(request, env) {
     if (body.paths && Array.isArray(body.paths)) {
       for (const path of body.paths) {
         for (const type of types) {
-          const key = buildCacheKey(path, type);
-          const deleted = await cache.delete(new Request(key));
-          if (deleted) purged.push(`${type}:${path}`);
+          // Purge every cache variant (bot-rendered and unpartitioned) so
+          // invalidation is complete after v17's key partitioning.
+          for (const variant of CACHE_VARIANTS) {
+            const key = buildCacheKey(path, type, variant);
+            const deleted = await cache.delete(new Request(key));
+            if (deleted) purged.push(`${type}:${variant || 'shared'}:${path}`);
+          }
         }
       }
     }
@@ -2792,7 +2813,8 @@ async function handleSSR(request, pathname, url, userAgent, ctx) {
   const botName = getBotName(userAgent);
 
   // ── L0: Edge Cache check (Cloudflare CDN) ──────────────────────────
-  const cached = await edgeCacheGet(pathname, 'ssr');
+  // Bot-variant cache: prevents serving SSR HTML to humans and vice-versa.
+  const cached = await edgeCacheGet(pathname, 'ssr', 'bot');
   if (cached) {
     // Enrich with bot-specific headers (not stored in cache)
     const headers = new Headers(cached.headers);
@@ -2848,20 +2870,42 @@ async function handleSSR(request, pathname, url, userAgent, ctx) {
       if (localeMatch) newHeaders.set('Content-Language', localeMatch[1]);
       newHeaders.set('Link', `<https://sos-expat.com${pathname}>; rel="canonical"`);
       newHeaders.set('Cache-Control', 'public, max-age=3600'); // 1h TTL for 404s
+      newHeaders.set('Vary', 'User-Agent, Accept-Language');
 
       const response404 = new Response(ssrResponse.body, {
         status: 404,
         statusText: 'Not Found',
         headers: newHeaders,
       });
-      // Cache 404s for 1h to avoid re-rendering
-      ctx.waitUntil(edgeCachePut(pathname, 'ssr', response404.clone(), EDGE_CACHE_TTL.SSR_404));
+      // Cache 404s for 1h to avoid re-rendering (bot variant)
+      ctx.waitUntil(edgeCachePut(pathname, 'ssr', response404.clone(), EDGE_CACHE_TTL.SSR_404, 'bot'));
       return response404;
     }
 
-    // If SSR returns a redirect (302) or 5xx, fall back to SPA
-    // This prevents: 1) redirect loops (SSR error → 302 to same domain → Worker → SSR → loop)
-    //                2) 5xx errors propagated to Google
+    // SEO FIX 2026-04-22 (P0-B): propagate SSR 3xx redirects directly to bots
+    // instead of force-masking them as SPA 200. Previous behavior produced
+    // `X-SSR-Original-Status: 301 + X-SSR-Fallback: true` on `/` (soft-404
+    // signal for Google). SSR now emits 301 only on legitimate cases
+    // (trailing slash, root → locale) so propagating is correct.
+    if (ssrResponse.status === 301 || ssrResponse.status === 302) {
+      const loc = ssrResponse.headers.get('Location');
+      if (loc) {
+        const redirHeaders = new Headers();
+        redirHeaders.set('Location', loc);
+        redirHeaders.set('Cache-Control', 'public, max-age=3600');
+        redirHeaders.set('X-Rendered-By', 'sos-expat-ssr');
+        redirHeaders.set('X-Bot-Detected', botName);
+        redirHeaders.set('Vary', 'User-Agent, Accept-Language');
+        return new Response(null, {
+          status: ssrResponse.status,
+          statusText: ssrResponse.statusText,
+          headers: redirHeaders,
+        });
+      }
+    }
+
+    // If SSR returns 5xx (or a 3xx without Location), fall back to SPA.
+    // Never propagate 5xx to Google — it burns the crawl budget.
     if (ssrResponse.status >= 300) {
       console.warn(`[WORKER] SSR returned ${ssrResponse.status} for ${pathname}, falling back to SPA`);
       const fallbackUrl = new URL(pathname, PAGES_ORIGIN);
@@ -2880,6 +2924,7 @@ async function handleSSR(request, pathname, url, userAgent, ctx) {
       }
       // SEO FIX: Add canonical Link header (prevents GSC "duplicate without canonical" warnings)
       spaHeaders.set('Link', `<https://sos-expat.com${pathname}>; rel="canonical"`);
+      spaHeaders.set('Vary', 'User-Agent, Accept-Language');
       return new Response(spaResponse.body, {
         status: spaResponse.ok || spaResponse.status === 404 ? 200 : spaResponse.status,
         statusText: 'OK',
@@ -2911,6 +2956,9 @@ async function handleSSR(request, pathname, url, userAgent, ctx) {
 
     // Override Cache-Control for bots (always public for edge caching)
     newHeaders.set('Cache-Control', 'public, max-age=3600, s-maxage=86400');
+    // SEO FIX 2026-04-22 (P0-A): Vary so CDNs / downstream caches don't
+    // serve this bot-rendered body to humans (and conversely).
+    newHeaders.set('Vary', 'User-Agent, Accept-Language');
 
     const response = new Response(ssrResponse.body, {
       status: ssrResponse.status,
@@ -2920,10 +2968,11 @@ async function handleSSR(request, pathname, url, userAgent, ctx) {
 
     // ── Store in edge cache (non-blocking via ctx.waitUntil) ──────────
     // Only cache 200 (valid pages) and 404 (detected by Puppeteer) — never 5xx
+    // Stored under the 'bot' variant so humans never hit this entry.
     if (ssrResponse.status === 200) {
-      ctx.waitUntil(edgeCachePut(pathname, 'ssr', response.clone(), EDGE_CACHE_TTL.SSR_OK));
+      ctx.waitUntil(edgeCachePut(pathname, 'ssr', response.clone(), EDGE_CACHE_TTL.SSR_OK, 'bot'));
     } else if (ssrResponse.status === 404) {
-      ctx.waitUntil(edgeCachePut(pathname, 'ssr', response.clone(), EDGE_CACHE_TTL.SSR_404));
+      ctx.waitUntil(edgeCachePut(pathname, 'ssr', response.clone(), EDGE_CACHE_TTL.SSR_404, 'bot'));
     }
 
     return response;

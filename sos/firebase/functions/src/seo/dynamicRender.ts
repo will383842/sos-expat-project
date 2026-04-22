@@ -347,7 +347,13 @@ async function renderPage(url: string): Promise<{ html: string; is404: boolean }
       // Phase 2: Wait for actual page content to load
       // Provider profiles need up to 15s for Firestore data (shortId query + profile data)
       // Static pages have no async data, so we check for provider markers first
-      const PHASE2_TIMEOUT = 20000; // 20 seconds for provider data (Firestore SDK cold start)
+      //
+      // SEO FIX 2026-04-22 (P0-E): bumped 20s → 35s. Firestore SDK cold start
+      // (cross-region nam7 ↔ europe-west1) regularly hits 10-15s on `renderForBotsV2`
+      // cold instances; a 20s budget caused Phase 2 to fire before the provider/article
+      // fetch resolved, leading to false 404s (marker evaluated on a transient state).
+      // 35s gives enough headroom while staying under Googlebot's typical 60-120s budget.
+      const PHASE2_TIMEOUT = 35000;
       try {
         await Promise.race([
           page.waitForSelector('[data-provider-loaded="true"]', { timeout: PHASE2_TIMEOUT }),
@@ -590,10 +596,16 @@ export const renderForBotsV2 = onRequest(
       return;
     }
 
-    // Redirect root "/" to locale-appropriate homepage for bots
-    // Prevents Puppeteer from rendering React's RootLocaleRedirect (which defaults to en-us)
-    // and caching English content under the root cache key.
-    // x-default = /en-us (English); other locales detected from Accept-Language header.
+    // Redirect root "/" to locale-appropriate homepage for bots.
+    // Prevents Puppeteer from rendering React's RootLocaleRedirect (which
+    // defaults to en-us) and caching English content under the root key.
+    //
+    // SEO FIX 2026-04-22 (P0-B): default fallback is now /fr-fr, matching
+    // the site's hreflang x-default (see sitemap profiles-*.xml where
+    // every entry declares `hreflang="x-default"` → /fr-fr/...). Previous
+    // fallback was /en-us, which made Googlebot without Accept-Language
+    // (or with unmapped languages) land on an English redirect that
+    // contradicted x-default — a soft-404-ish signal.
     if (requestPath === '/') {
       const ROOT_LOCALE_MAP: Record<string, string> = {
         'fr': '/fr-fr',
@@ -607,8 +619,8 @@ export const renderForBotsV2 = onRequest(
         'ar': '/ar-sa',
       };
       const acceptLanguage = req.headers['accept-language'] || '';
-      const primaryLang = acceptLanguage.split(',')[0]?.split(';')[0]?.split('-')[0]?.toLowerCase() || 'en';
-      const targetLocale = ROOT_LOCALE_MAP[primaryLang] || '/en-us';
+      const primaryLang = acceptLanguage.split(',')[0]?.split(';')[0]?.split('-')[0]?.toLowerCase() || '';
+      const targetLocale = ROOT_LOCALE_MAP[primaryLang] || '/fr-fr';
       res.redirect(301, `${SITE_URL}${targetLocale}`);
       return;
     }

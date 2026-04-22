@@ -322,25 +322,23 @@
   <link rel="shortcut icon" href="/favicon.ico" />
 
   <!-- 🌐 SOCIAL -->
-  <!-- SEO: Neutral English OG/Twitter fallback — React Helmet overrides with correct language per locale -->
+  <!-- SEO FIX 2026-04-22 (P0-F, option B): locale-dependent OG/Twitter fields
+       (og:title, og:description, og:locale, og:locale:alternate, twitter:title,
+       twitter:description) are NOT declared in the shell. They are injected by
+       React Helmet (SEOHead) per locale, so each of the 9 languages gets its
+       own correct values. Previously the shell hardcoded English — which was
+       wrong for 8 locales on 9; a French fallback would only shift that bias.
+       Here we keep only locale-neutral fields (type, url, image, site_name,
+       card, creator, site) which don't need translation. -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://sos-expat.com/" />
-  <meta property="og:title" content="SOS-Expat - Lawyer & Local Expert in Under 5 Min | 24/7 Assistance" />
-  <meta property="og:description"
-    content="Talk to a lawyer or local expert in your language in under 5 min. 197 countries, all languages. For expats, travelers, vacationers." />
   <meta property="og:image" content="https://sos-expat.com/og-image.webp" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="SOS-Expat.com - Talk to an expert anywhere in the world in under 5 minutes" />
-  <meta property="og:locale" content="en_US" />
-  <!-- og:locale overridden dynamically by SEOHead per page/language -->
   <meta property="og:site_name" content="SOS-Expat" />
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:url" content="https://sos-expat.com/" />
-  <meta name="twitter:title" content="SOS-Expat - Lawyer & Local Expert in Under 5 Min" />
-  <meta name="twitter:description"
-    content="24/7 mobile assistance for expats. Lawyers, local experts, emergencies. Talk to an expert in under 5 minutes." />
   <meta name="twitter:image" content="https://sos-expat.com/twitter-image.webp" />
   <meta name="twitter:creator" content="@sosexpat" />
   <meta name="twitter:site" content="@sosexpat" />
