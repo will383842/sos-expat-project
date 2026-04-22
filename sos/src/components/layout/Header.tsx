@@ -1673,7 +1673,7 @@ const Header: React.FC = () => {
   return (
     <>
       <header
-        className="fixed top-0 left-0 right-0 z-[70] md:select-none"
+        className="fixed top-0 left-0 right-0 z-[85] md:select-none"
         role="banner"
       >
         {/* ============================================================ */}
@@ -1813,8 +1813,11 @@ const Header: React.FC = () => {
         {/* ============================================================ */}
         {/* MOBILE HEADER */}
         {/* ============================================================ */}
-        {/* z-[70] mobile header — wizard sits at z-[80] but its backdrop starts below the header,
-            so header controls (language switch, menu, logo, SOS button) stay clickable during wizard steps. */}
+        {/* Mobile header wrapper — parent <header> is z-[85] so the whole header
+            stacks above the GuidedFilterWizard (z-[80]) + backdrop (z-[79]), which
+            is required for the hamburger menu (rendered inside this header) to be
+            visible when opened during the wizard flow. Cookie banner stays on top
+            at z-[100]. */}
         {/* safe-area-inset-top: compense l'encoche/Dynamic Island iPhone + cutout Android en mode PWA standalone */}
         <div className="lg:hidden bg-gray-900 shadow-xl relative z-[70]" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
           <div className="px-4 py-3 flex items-center justify-between">
