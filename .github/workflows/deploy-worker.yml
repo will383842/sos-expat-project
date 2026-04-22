@@ -1,12 +1,29 @@
 name: Deploy Cloudflare Worker
 
+# DISABLED 2026-04-22: CI CLOUDFLARE_API_TOKEN lacks `Workers Routes:Edit`
+# scope (9106 / 10000 auth errors on /workers/services and /workers/routes).
+# Regenerating a token with the correct scopes requires dashboard action;
+# until then, the Worker is deployed manually via `wrangler deploy` from a
+# developer machine (local OAuth token has the required scopes).
+#
+# To re-enable:
+#   1. Create a new API Token at https://dash.cloudflare.com/profile/api-tokens
+#      with scopes: Account.Workers Scripts:Edit + Account.Workers Routes:Edit
+#      + Zone.Cache Purge:Edit
+#   2. Update the CLOUDFLARE_API_TOKEN GitHub repo secret
+#   3. Uncomment the `on:` block below and remove this `on: workflow_dispatch`
+#
+# Manual deploy procedure (from sos-expat-project repo root):
+#   cd sos/cloudflare-worker && wrangler deploy
+#   cd sos && node scripts/warm-ssr-cache.js
+
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'sos/cloudflare-worker/**'
-  workflow_dispatch: # Allow manual trigger
+  workflow_dispatch: # Manual trigger only — auto-deploy disabled (see above)
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - 'sos/cloudflare-worker/**'
 
 jobs:
   deploy:
