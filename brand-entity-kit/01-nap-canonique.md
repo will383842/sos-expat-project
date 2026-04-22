@@ -6,57 +6,69 @@ partout sur le web pour consolider le signal d'entité auprès de Google.
 ⚠️ **RÈGLE D'OR** : même orthographe, même ponctuation, même ordre partout.
 La moindre différence (virgule, tiret, accent) réduit l'effet.
 
+> **Statut société 2026-04-22** : World Expat OÜ est en cours de création à
+> Tallinn. Tant que l'immatriculation au Äriregister n'est pas finalisée,
+> on n'affiche PAS de numéro d'enregistrement / TVA / date d'incorporation
+> — mieux vaut pas d'info que fausse info (Google + journalistes).
+
 ---
 
 ## Bloc NAP canonique — FR
 
 ```
 Nom : SOS-Expat
-Raison sociale : [À COMPLÉTER — ex. SOS-Expat OÜ]
-Forme juridique : [À COMPLÉTER — probablement OÜ (équivalent SARL en Estonie)]
-Adresse : [À COMPLÉTER — rue + numéro]
-Code postal : [À COMPLÉTER]
+Raison sociale : World Expat OÜ (société en cours de création, Tallinn)
+Forme juridique : OÜ (équivalent SARL en Estonie)
 Ville : Tallinn
 Pays : Estonie (EE)
-Registre commercial estonien (Äriregister) : [À COMPLÉTER — n° d'enregistrement 8 chiffres]
-N° TVA intracommunautaire : EE[À COMPLÉTER — 9 chiffres]
+Fondateur : Williams Jullin
 Site web : https://sos-expat.com
 Formulaire de contact : https://sos-expat.com/fr-fr/contact
-Formulaire presse : https://sos-expat.com/fr-fr/presse
+Page presse : https://sos-expat.com/presse
 Contact presse : contact@sos-expat.com
+LinkedIn : https://www.linkedin.com/company/sos-expat-com/
 ```
 
 ## Bloc NAP canonique — EN
 
 ```
 Name: SOS-Expat
-Legal name: [TO COMPLETE — e.g. SOS-Expat OÜ]
-Legal form: [TO COMPLETE — likely OÜ (Estonian LLC equivalent)]
-Address: [TO COMPLETE — street + number]
-Postal code: [TO COMPLETE]
+Legal name: World Expat OÜ (company formation in progress, Tallinn)
+Legal form: OÜ (Estonian private limited company)
 City: Tallinn
 Country: Estonia (EE)
-Estonian Business Register (Äriregister): [TO COMPLETE — 8-digit registration number]
-EU VAT: EE[TO COMPLETE — 9 digits]
+Founder: Williams Jullin
 Website: https://sos-expat.com
 Contact form: https://sos-expat.com/en-us/contact
-Press form: https://sos-expat.com/en-us/press
+Press page: https://sos-expat.com/presse
 Press contact: contact@sos-expat.com
+LinkedIn: https://www.linkedin.com/company/sos-expat-com/
 ```
 
 ## Bloc NAP canonique — ET (Estonien, pour registres locaux)
 
 ```
 Nimi: SOS-Expat
-Ärinimi: [TÄITA — nt SOS-Expat OÜ]
-Aadress: [TÄITA — täielik ametlik aadress]
+Ärinimi: World Expat OÜ (registreerimine pooleli)
 Linn: Tallinn
 Riik: Eesti (EE)
-Registrikood: [TÄITA — 8-kohaline]
-Käibemaksukohustuslase number: EE[TÄITA]
+Asutaja: Williams Jullin
 Veebileht: https://sos-expat.com
 Pressikontakt: contact@sos-expat.com
+LinkedIn: https://www.linkedin.com/company/sos-expat-com/
 ```
+
+---
+
+## À ajouter DÈS que la société est officiellement enregistrée
+
+Ces champs seront à compléter + rediffuser partout où le NAP est posé
+(annuaires, LinkedIn, Crunchbase, JSON-LD, Wikidata) :
+
+- `Adresse` : rue + numéro + code postal Tallinn
+- `Registrikood` : numéro Äriregister (8 chiffres)
+- `Käibemaksukohustuslase number` / VAT : `EE` + 9 chiffres
+- `Asutamise kuupäev` / foundingDate : date d'incorporation YYYY-MM-DD
 
 ---
 
@@ -106,7 +118,7 @@ Voir fichier `03-descriptions-courtes.md`.
 ```
 Facebook  : https://www.facebook.com/sosexpat
 Twitter/X : https://twitter.com/sosexpat
-LinkedIn  : https://www.linkedin.com/company/sos-expat
+LinkedIn  : https://www.linkedin.com/company/sos-expat-com/
 Instagram : https://www.instagram.com/sosexpat
 ```
 
@@ -128,8 +140,7 @@ fait via le formulaire du site dans les 9 langues. Cohérent UX ; sans
 impact SEO si bien documenté dans le JSON-LD (`contactPoint.url` plutôt
 que `contactPoint.email`).
 
-Email **presse uniquement** : `contact@sos-expat.com` (à confirmer — typo
-initiale reçue `contactsos-expat.com`).
+Email **presse / business uniquement** : `contact@sos-expat.com`.
 
 ## Téléphone — politique
 
@@ -144,10 +155,11 @@ initiale reçue `contactsos-expat.com`).
 
 ## Mise à jour du NAP — à faire par toi
 
-Remplace les `[À COMPLÉTER]` dans ce fichier avec les vraies valeurs, puis :
+Dès que le Äriregister confirme l'immatriculation de World Expat OÜ :
 
-1. Colle le NAP français dans les 30 annuaires français listés dans
+1. Complète les 4 champs manquants dans la section "À ajouter" ci-dessus
+2. Colle le NAP français dans les 30 annuaires français listés dans
    `11-nap-directories.md`
-2. Colle le NAP anglais dans les 30 annuaires internationaux
-3. Colle les NAP dans les 9 langues dans les annuaires multilingues
+3. Colle le NAP anglais dans les 30 annuaires internationaux
+4. Colle les NAP dans les 9 langues dans les annuaires multilingues
    (LinkedIn, Crunchbase, etc. gèrent plusieurs langues dans un profil)
