@@ -605,10 +605,16 @@ const GuidedFilterWizard: React.FC<GuidedFilterWizardProps> = ({
   // body has overflow:hidden + position:fixed overlay.
   return (
     <>
-    {/* Backdrop: blocks body scroll and interaction on iOS Safari */}
+    {/* Backdrop: blocks body scroll and interaction on iOS Safari.
+        Starts below the page header (same top offset as the wizard) so
+        the header's controls (language switch, menu, logo) stay clickable
+        during the 3 steps. */}
     <div
-      className="fixed inset-0 z-[79]"
-      style={{ touchAction: 'none' }}
+      className="fixed inset-x-0 bottom-0 z-[79]"
+      style={{
+        top: 'calc(76px + env(safe-area-inset-top, 0px))',
+        touchAction: 'none',
+      }}
       aria-hidden="true"
     />
     <div
