@@ -1143,14 +1143,22 @@ export const sitemapIndex = onRequest(
       // Per-sitemap lastmod. Previously all 638 sub-sitemaps were stamped with
       // the same `today` date, giving GSC no signal about which sub-sitemap
       // actually changed. Result: GSC processed only 2 of 638 children in the
-      // first several days, leaving ~25 000 URLs undiscovered. Honouring each
-      // sub-sitemap's own lastmod lets GSC prioritise fresh ones.
-      const addSitemap = (url: string, lastmod: string = today) => {
+      // first several days, leaving ~25 000 URLs undiscovered.
+      //
+      // SEO FIX 2026-04-22 (P1-I): `lastmod` is now OPTIONAL. If the caller
+      // does not provide a real last-modified date, we OMIT the <lastmod>
+      // tag instead of stamping `today`. Lying with today on every sub-sitemap
+      // gave GSC noise ("everything changed today") and it effectively
+      // ignored the signal. Omitting lets Google use its own crawl heuristic
+      // for Firebase-exclusive sub-sitemaps (profiles/listings/help/faq) while
+      // preserving the real lastmods parsed from the Laravel blog's sitemap.xml
+      // (see the block below around line 1220 where blogLastmod is honoured).
+      const addSitemap = (url: string, lastmod?: string) => {
         if (seenUrls.has(url)) return;
         seenUrls.add(url);
+        const lastmodTag = lastmod ? `\n    <lastmod>${lastmod}</lastmod>` : '';
         sitemapBlocks.push(`  <sitemap>
-    <loc>${url}</loc>
-    <lastmod>${lastmod}</lastmod>
+    <loc>${url}</loc>${lastmodTag}
   </sitemap>`);
       };
 
@@ -1220,9 +1228,14 @@ export const sitemapIndex = onRequest(
               // sub-sitemaps' format (sitemaps.org accepts both full W3C
               // datetime and bare date; staying uniform avoids false
               // positives in GSC's "no changes" comparison).
+              //
+              // SEO FIX 2026-04-22 (P1-I): fall back to `undefined` instead of
+              // `today` when Laravel didn't emit a lastmod — omitting the tag
+              // is more honest than stamping a fake date (Google is better at
+              // estimating freshness from its own crawl than from our lies).
               const normalizedLastmod = blogLastmod
                 ? blogLastmod.substring(0, 10)
-                : today;
+                : undefined;
               addSitemap(url, normalizedLastmod);
               if (seenUrls.size > before) blogCount++;
             }
