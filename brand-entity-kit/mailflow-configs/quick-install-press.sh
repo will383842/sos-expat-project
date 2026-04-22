@@ -34,13 +34,13 @@ fi
 echo ""
 
 echo "=== [3/5] Prisma migrate ==="
-docker compose exec -T bl-app npx prisma migrate deploy || docker compose run --rm bl-app npx prisma migrate deploy
+docker compose exec -T app npx prisma migrate deploy || docker compose run --rm app npx prisma migrate deploy
 echo ""
 
 echo "=== [4/5] Restart + seed ==="
-docker compose restart bl-app
+docker compose restart app
 sleep 12
-docker compose exec -T bl-app npx tsx prisma/seed-press-contacts.ts
+docker compose exec -T app npx tsx prisma/seed-press-contacts.ts
 echo ""
 
 echo "=== [5/5] Stats ==="
