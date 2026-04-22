@@ -683,8 +683,8 @@ const DefaultHelmet: React.FC<{ pathname: string }> = ({ pathname }) => {
   const getPageMetadata = (path: string) => {
     const metaMap: Record<string, { title: string; description: string; lang: string }> = {
       '/': {
-        title: 'SOS Expat - Lawyer & Local Expert in Under 5 Min | 24/7',
-        description: 'Talk to a lawyer or local expert in your language in under 5 min. 197 countries, all languages. For expats, travelers, vacationers.',
+        title: "SOS-Expat · Abroad? Lawyer or helpful expat on the phone in under 5 min",
+        description: "Abroad? A question, a worry, an emergency or just need some advice? Speak to a lawyer (in your language) or a helpful expat on the phone in under 5 min. 197 countries, 24/7. For travelers, tourists, expats, digital nomads, students and retirees.",
         lang: 'en',
       },
       '/login': {
