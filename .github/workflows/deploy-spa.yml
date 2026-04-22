@@ -1,32 +1,23 @@
 name: Deploy SPA to Cloudflare Pages
 
-# Fallback manual deploy for the sos/ React SPA when CF Pages auto-build
-# fails to pick up new commits. Introduced 2026-04-20 after commit 72faefc3
-# (Review schema itemReviewed fix) did not reach prod: CF Pages dashboard
-# showed a "recent deploy" but the served JS bundle hash never changed.
+# Manual fallback deploy for the sos/ React SPA.
 #
-# Safety profile:
-#  - Path filter: only triggers on sos/src, sos/public, sos/package*, vite config
-#  - Reuses existing CLOUDFLARE_API_TOKEN secret (already validated for Worker)
-#  - Build runs FIRST; if it fails, no deploy is attempted → prod untouched
-#  - Deploy uses --branch=main so it lands on the production alias alongside
-#    whatever the broken auto-build last produced (Pages keeps previous
-#    versions and can be rolled back with one click from the dashboard)
-#  - workflow_dispatch enabled for manual trigger without a code change
+# History:
+#  - 2026-04-20: Introduced with auto push-trigger after commit 72faefc3 did
+#    not reach prod via CF Pages auto-build.
+#  - 2026-04-22: Auto push-trigger DISABLED after it broke prod on commit
+#    4254b44c. Root cause: this GH Actions job runs `npm run build` without
+#    any VITE_FIREBASE_* env vars (they live in CF Pages project settings,
+#    not as GH secrets), so Vite inlines empty strings → runtime error
+#    "Configuration Firebase incomplète". CF Pages' own auto-build runs in
+#    the CF Pages environment where the project env vars are available, so
+#    it produces a valid bundle.
+#  - This workflow is kept as `workflow_dispatch`-only for the original
+#    fallback scenario. Before re-enabling the push trigger, add all
+#    VITE_* vars from .env.production as GitHub repo secrets and reference
+#    them in the Build step's `env:` block.
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'sos/src/**'
-      - 'sos/public/**'
-      - 'sos/package.json'
-      - 'sos/package-lock.json'
-      - 'sos/vite.config.ts'
-      - 'sos/index.html'
-      - 'sos/tsconfig*.json'
-      - 'sos/scripts/**'
-      - '.github/workflows/deploy-spa.yml'
   workflow_dispatch:
 
 jobs:
