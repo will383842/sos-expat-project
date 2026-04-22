@@ -1884,11 +1884,13 @@ const Header: React.FC = () => {
           </div>
 
           {/* MOBILE MENU */}
-          {/* z-[65] keeps menu above wizard (z-30) and sidedrawer (z-60) but below header (z-70) */}
+          {/* z-[85] sits above the GuidedFilterWizard (z-[80]) + its backdrop (z-[79])
+              so the menu is visible when opened during the wizard flow. Still below
+              the cookie banner (z-[100]) which must stay on top for GDPR compliance. */}
           {isMenuOpen && (
             <div
               id="mobile-menu"
-              className="fixed inset-x-0 bottom-0 overflow-hidden bg-gray-900 z-[75]"
+              className="fixed inset-x-0 bottom-0 overflow-hidden bg-gray-900 z-[85]"
               style={{ top: 'calc(76px + env(safe-area-inset-top, 0px))' }}
               role="dialog"
               aria-modal="true"
