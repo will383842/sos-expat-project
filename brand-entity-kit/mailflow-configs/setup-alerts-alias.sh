@@ -16,9 +16,23 @@
 
 set -e
 
+# 2026-04-22 UPDATE (owner feedback): alerts@sos-expat.com does NOT exist.
+# We use the existing contact@sos-expat.com as the Google Alerts delivery
+# inbox. This script is therefore NO-OP for now (kept for future use if
+# an alerts@ alias is preferred later). Run with --force to actually
+# create the alerts@ alias.
 DOMAIN="sos-expat.com"
 ALIAS_USER="alerts"
-FORWARD_TO="${FORWARD_TO:-presse@sos-expat.com}"
+FORWARD_TO="${FORWARD_TO:-contact@sos-expat.com}"
+
+if [ "${1:-}" != "--force" ]; then
+  echo "This script is disabled by default as of 2026-04-22."
+  echo "Google Alerts now deliver to the existing contact@sos-expat.com."
+  echo "No alias needed. Exit."
+  echo ""
+  echo "Re-run with --force if you want to create alerts@${DOMAIN} anyway."
+  exit 0
+fi
 
 VIRTUAL_FILE="/etc/postfix/virtual"
 BACKUP_FILE="/etc/postfix/virtual.bak.$(date +%s)"
