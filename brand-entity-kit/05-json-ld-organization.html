@@ -1,0 +1,161 @@
+<!--
+  JSON-LD Organization enrichi pour SOS-Expat.
+  À intégrer en remplacement du bloc actuel de sos/index.html (ligne ~106).
+
+  Version 2.0 — 2026-04-22
+  Ajouts vs v1.0 :
+  - alternateName (array 3 variantes)
+  - legalName (placeholder)
+  - foundingDate (placeholder)
+  - founder (placeholder)
+  - address (PostalAddress Tallinn, Estonia)
+  - taxID / vatID (placeholder)
+  - contactPoint.url (formulaire site — pas d'email public)
+  - knowsLanguage (9 langues, codes ISO 639-1)
+  - areaServed (Worldwide + liste optionnelle 197 pays)
+  - slogan (tagline canonique FR)
+  - foundingLocation (Tallinn)
+  - sameAs confirmés (FB/Twitter/LinkedIn/Instagram)
+  - aggregateRating : OMIS tant que pas d'avis publics (Trustpilot non)
+
+  ATTENTION : remplacer les [À COMPLÉTER] par les vraies valeurs avant publication.
+-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://sos-expat.com/#organization",
+  "name": "SOS-Expat",
+  "alternateName": [
+    "SOS Expat",
+    "sos-expat",
+    "SOS-Expat.com"
+  ],
+  "legalName": "[À COMPLÉTER — ex. SOS-Expat OÜ]",
+  "url": "https://sos-expat.com",
+  "logo": {
+    "@type": "ImageObject",
+    "@id": "https://sos-expat.com/#logo",
+    "url": "https://sos-expat.com/logo512.png",
+    "contentUrl": "https://sos-expat.com/logo512.png",
+    "width": 512,
+    "height": 512,
+    "caption": "SOS-Expat logo"
+  },
+  "image": "https://sos-expat.com/og-image.webp",
+  "description": "Parlez à un avocat ou expert local en moins de 5 min dans votre langue. 197 pays, 9 langues. Assistance 24/7 pour expatriés, voyageurs, vacanciers.",
+  "slogan": "Parlez à un avocat ou expert local en moins de 5 minutes, partout dans le monde.",
+  "foundingDate": "[À COMPLÉTER — format YYYY-MM-DD]",
+  "foundingLocation": {
+    "@type": "Place",
+    "name": "Tallinn, Estonie"
+  },
+  "founder": {
+    "@type": "Person",
+    "name": "[À COMPLÉTER — prénom nom fondateur]"
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "[À COMPLÉTER — rue et numéro]",
+    "postalCode": "[À COMPLÉTER]",
+    "addressLocality": "Tallinn",
+    "addressCountry": "EE"
+  },
+  "taxID": "[À COMPLÉTER — numéro d'enregistrement Äriregister 8 chiffres]",
+  "vatID": "EE[À COMPLÉTER — 9 chiffres après EE]",
+  "contactPoint": [
+    {
+      "@type": "ContactPoint",
+      "contactType": "customer support",
+      "url": "https://sos-expat.com/fr-fr/contact",
+      "availableLanguage": [
+        "French",
+        "English",
+        "Spanish",
+        "German",
+        "Portuguese",
+        "Russian",
+        "Chinese",
+        "Arabic",
+        "Hindi"
+      ],
+      "areaServed": "Worldwide"
+    },
+    {
+      "@type": "ContactPoint",
+      "contactType": "Press office",
+      "email": "contact@sos-expat.com",
+      "url": "https://sos-expat.com/fr-fr/presse",
+      "availableLanguage": [
+        "French",
+        "English",
+        "Spanish",
+        "German",
+        "Portuguese",
+        "Russian",
+        "Chinese",
+        "Arabic",
+        "Hindi"
+      ],
+      "areaServed": "Worldwide"
+    }
+  ],
+  "knowsLanguage": [
+    {
+      "@type": "Language",
+      "name": "French",
+      "alternateName": "fr"
+    },
+    {
+      "@type": "Language",
+      "name": "English",
+      "alternateName": "en"
+    },
+    {
+      "@type": "Language",
+      "name": "Spanish",
+      "alternateName": "es"
+    },
+    {
+      "@type": "Language",
+      "name": "German",
+      "alternateName": "de"
+    },
+    {
+      "@type": "Language",
+      "name": "Portuguese",
+      "alternateName": "pt"
+    },
+    {
+      "@type": "Language",
+      "name": "Russian",
+      "alternateName": "ru"
+    },
+    {
+      "@type": "Language",
+      "name": "Chinese",
+      "alternateName": "zh"
+    },
+    {
+      "@type": "Language",
+      "name": "Hindi",
+      "alternateName": "hi"
+    },
+    {
+      "@type": "Language",
+      "name": "Arabic",
+      "alternateName": "ar"
+    }
+  ],
+  "areaServed": {
+    "@type": "Place",
+    "name": "Worldwide"
+  },
+  "sameAs": [
+    "https://www.facebook.com/sosexpat",
+    "https://twitter.com/sosexpat",
+    "https://www.linkedin.com/company/sos-expat",
+    "https://www.instagram.com/sosexpat"
+  ]
+}
+</script>
