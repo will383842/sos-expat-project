@@ -1147,7 +1147,28 @@ const App: React.FC = () => {
   // Redirect root "/" to "/{locale}" preserving query params (?ref=, etc.)
   const RootLocaleRedirect: React.FC = () => {
     const loc = useLocation();
-    return <Navigate to={`/${getLocaleString(language)}${loc.search || ""}${loc.hash || ""}`} replace />;
+
+    // P0-1 fix (2026-04-23): in SSR (Puppeteer render for bots), `language`
+    // falls back to IntlProvider's defaultLocale="en" because there's no
+    // navigator.language / cookie / geolocation signal server-side.  That
+    // caused Googlebot to receive 301 `/` → `/en-us` even when visiting
+    // from a French query, breaking the brand SERP in France.
+    //
+    // On the server we force `/fr-fr` (the site's primary language and
+    // hreflang x-default target) so Google indexes the French home under
+    // the canonical URL.  On the client we keep the detected locale so
+    // real users still land on the language they actually speak.
+    const targetLocale =
+      typeof window === "undefined"
+        ? "fr-fr"
+        : getLocaleString(language);
+
+    return (
+      <Navigate
+        to={`/${targetLocale}${loc.search || ""}${loc.hash || ""}`}
+        replace
+      />
+    );
   };
 
   // New: Redirect any locale-prefixed admin path back to non-locale admin path
@@ -1176,7 +1197,7 @@ const App: React.FC = () => {
   
 
   return (
-    <IntlProvider locale={locale} messages={currentMessages} defaultLocale="en" >
+    <IntlProvider locale={locale} messages={currentMessages} defaultLocale="fr" >
       <OfflineBanner />
       <AdminViewBanner />
       <WizardProvider>
