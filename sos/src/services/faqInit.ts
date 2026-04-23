@@ -20,9 +20,9 @@ interface FAQSource {
 const DISCOVER_FAQS: FAQSource[] = [
   {
     question: "Qu'est-ce que SOS-Expat ?",
-    answer: "SOS-Expat est une plateforme de mise en relation qui offre un premier contact rapide avec des avocats spécialisés et des expats aidants locaux. Notre mission : apporter une première aide immédiate, personnalisée et multilingue à tout expatrié, voyageur ou vacancier, quelle que soit sa nationalité, sa langue ou son pays. Nous couvrons 197 pays et proposons nos services en 9 langues.",
+    answer: "SOS-Expat est la première plateforme mondiale qui connecte par téléphone, en moins de 5 minutes, les voyageurs, vacanciers, expatriés, digital nomades, étudiants et retraités à un avocat francophone ou à un expatrié aidant qui connaît le terrain. Une urgence, une question administrative, un doute ou un simple conseil — nous répondons à tous les besoins dans votre langue. Consultation payante à l'acte (avocat 49€/20 min, expatrié aidant 19€/30 min), sans abonnement ni engagement. 197 pays, 9 langues, 24h/24. Peu importe votre nationalité ou votre pays.",
     category: "discover",
-    tags: ["présentation", "plateforme", "mission", "expatriés", "voyageurs", "vacanciers"],
+    tags: ["présentation", "plateforme", "mission", "voyageurs", "vacanciers", "expatriés", "digital nomades", "étudiants", "retraités", "urgence", "tarifs"],
     order: 1,
     isActive: true,
     isFooter: true
