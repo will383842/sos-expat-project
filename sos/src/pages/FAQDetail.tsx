@@ -72,22 +72,26 @@ const FAQDetail: React.FC = () => {
     }
   }, [slug, faq]); // Re-run when slug changes or when faq is null
   
-  // Delay 404 display to give ref time to be set (setTimeout approach)
+  // P0-4 fix (2026-04-23): the old 10ms timer was way too short — Puppeteer's
+  // dynamicRender often snapshots the DOM before the FAQ loader resolves,
+  // catching data-page-not-found="true" and flagging the page as a 404 in
+  // Search Console even though the content exists.  Bumped to 5000ms which
+  // matches Puppeteer's own PHASE2 wait (also 5s in dynamicRender.ts:356
+  // after the 2026-04-22 timeout bump).  If the loader hasn't populated the
+  // faq state OR the ref after 5s, the document is genuinely missing.
   useEffect(() => {
     if (!loading && !faq && !faqDataRef.current) {
-      // Only show 404 after a delay to allow ref to be set
       const timer = setTimeout(() => {
-        // Double-check ref before showing 404
         if (!faqDataRef.current && !faq) {
           setShow404(true);
         } else {
           setShow404(false);
         }
-      }, 10); // 10ms delay to allow ref to be set
-      
+      }, 5000);
+
       return () => clearTimeout(timer);
     } else {
-      setShow404(false); // Cancel 404 if we have data
+      setShow404(false);
     }
   }, [loading, faq]);
 

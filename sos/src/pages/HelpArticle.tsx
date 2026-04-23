@@ -324,7 +324,14 @@ const HelpArticle: React.FC = () => {
     );
   }
 
-  if (notFound || !article) {
+  // P0-4 fix (2026-04-23): only render 404 when notFound flag is truly set by
+  // the loader (article fetch failed or returned null/not-found).  Previously
+  // we also entered this branch while `article === null` during the initial
+  // loading window, which caused the SSR Puppeteer to capture
+  // data-page-not-found="true" and register a false 404 in Search Console.
+  // The loading state is already handled above (spinner), so reaching here
+  // without `notFound === true` is a logic error — don't flag it as 404.
+  if (notFound) {
     return (
       <Layout>
         <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 flex items-center justify-center" data-page-not-found="true">

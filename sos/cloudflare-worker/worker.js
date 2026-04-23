@@ -1678,7 +1678,7 @@ async function handleHolidaysDomain(request, pathname, url, userAgent, ctx) {
         'Location': redirectUrl,
         'X-Worker-Active': 'true',
         'X-Worker-Redirect': 'holidays-to-expat',
-        'Cache-Control': 'public, max-age=31536000',
+        'Cache-Control': 'public, max-age=86400',
       },
     });
   }
@@ -1743,7 +1743,7 @@ function legacyLPRedirect301(locationUrl) {
       'Location': locationUrl,
       'X-Worker-Active': 'true',
       'X-Worker-Redirect': 'legacy-lp',
-      'Cache-Control': 'public, max-age=31536000',
+      'Cache-Control': 'public, max-age=86400',
       'Vary': 'User-Agent, Accept-Language',
     },
   });
@@ -1895,7 +1895,7 @@ if (blogCrossLocaleMatch) {
       console.log(`[WORKER] Blog cross-locale redirect: ${pathname} -> /${bclLang}-${bclCountry}/${correctSlug}${bclRest}`);
       return new Response(null, {
         status: 301,
-        headers: { 'Location': redirectUrl, 'X-Worker-Active': 'true', 'Cache-Control': 'public, max-age=31536000' },
+        headers: { 'Location': redirectUrl, 'X-Worker-Active': 'true', 'Cache-Control': 'public, max-age=86400' },
       });
     }
   }
@@ -1936,7 +1936,7 @@ if (countryNormMatch) {
           console.log(`[WORKER] Country slug fix: ${pathname} -> /${cnLang}-${cnCountry}/${cnRole}/${correctSlug}`);
           return new Response(null, {
             status: 301,
-            headers: { 'Location': redirectUrl, 'X-Worker-Active': 'true', 'Cache-Control': 'public, max-age=31536000' },
+            headers: { 'Location': redirectUrl, 'X-Worker-Active': 'true', 'Cache-Control': 'public, max-age=86400' },
           });
         }
       }
@@ -1974,7 +1974,7 @@ if (deepMatch) {
     console.log(`[WORKER] Deep sub-path fix: ${pathname} -> /${dmLang}-${dmCountry}/${dmSec}/${correctSubSec}/${correctCountry}`);
     return new Response(null, {
       status: 301,
-      headers: { 'Location': redirectUrl, 'X-Worker-Active': 'true', 'Cache-Control': 'public, max-age=31536000' },
+      headers: { 'Location': redirectUrl, 'X-Worker-Active': 'true', 'Cache-Control': 'public, max-age=86400' },
     });
   }
 }
@@ -2353,7 +2353,7 @@ if (trailingSlashLocaleMatch) {
       'Location': redirectUrl,
       'X-Worker-Active': 'true',
       'X-Worker-Redirect': 'trailing-slash',
-      'Cache-Control': 'public, max-age=31536000',
+      'Cache-Control': 'public, max-age=86400',
     },
   });
 }
@@ -2427,7 +2427,7 @@ if (localeMatch) {
       console.log(`[WORKER] Locale canonicalization: ${pathname} -> /${correctLocale}${restPath}`);
       return new Response(null, {
         status: 301,
-        headers: { 'Location': redirectUrl, 'X-Worker-Active': 'true', 'Cache-Control': 'public, max-age=31536000' },
+        headers: { 'Location': redirectUrl, 'X-Worker-Active': 'true', 'Cache-Control': 'public, max-age=86400' },
       });
     }
   }
@@ -2516,7 +2516,7 @@ if (localeMatch) {
       console.log(`[WORKER] Help center alias redirect: ${pathname} -> ${urlLang}-${urlCountry}${newRestPath}`);
       return new Response(null, {
         status: 301,
-        headers: { 'Location': redirectUrl, 'X-Worker-Active': 'true', 'Cache-Control': 'public, max-age=31536000' },
+        headers: { 'Location': redirectUrl, 'X-Worker-Active': 'true', 'Cache-Control': 'public, max-age=86400' },
       });
     }
 
@@ -2546,7 +2546,7 @@ if (localeMatch) {
       console.log(`[WORKER] Legacy slug alias redirect: ${pathname} -> ${urlLang}-${urlCountry}${newRestPath}`);
       return new Response(null, {
         status: 301,
-        headers: { 'Location': redirectUrl, 'X-Worker-Active': 'true', 'Cache-Control': 'public, max-age=31536000' },
+        headers: { 'Location': redirectUrl, 'X-Worker-Active': 'true', 'Cache-Control': 'public, max-age=86400' },
       });
     }
 
@@ -2593,7 +2593,7 @@ if (localeMatch) {
           console.log(`[WORKER] Cross-lang article redirect: ${pathname} -> /${canonicalArticleLang}-${correctCountry}/${correctSectionSlug}/${articleSlug}`);
           return new Response(null, {
             status: 301,
-            headers: { 'Location': redirectUrl, 'X-Worker-Active': 'true', 'Cache-Control': 'public, max-age=31536000' },
+            headers: { 'Location': redirectUrl, 'X-Worker-Active': 'true', 'Cache-Control': 'public, max-age=86400' },
           });
         }
       }
@@ -2625,7 +2625,7 @@ if (localeMatch) {
         console.log(`[WORKER] Accent normalization redirect: ${pathname} -> ${urlLang}-${urlCountry}${newRestPath}`);
         return new Response(null, {
           status: 301,
-          headers: { 'Location': redirectUrl, 'X-Worker-Active': 'true', 'Cache-Control': 'public, max-age=31536000' },
+          headers: { 'Location': redirectUrl, 'X-Worker-Active': 'true', 'Cache-Control': 'public, max-age=86400' },
         });
       }
 
@@ -2667,7 +2667,7 @@ if (localeMatch) {
         console.log(`[WORKER] Arabic Unicode→ASCII redirect: ${pathname} -> ${urlLang}-${urlCountry}${newRestPath}`);
         return new Response(null, {
           status: 301,
-          headers: { 'Location': redirectUrl, 'X-Worker-Active': 'true', 'Cache-Control': 'public, max-age=31536000' },
+          headers: { 'Location': redirectUrl, 'X-Worker-Active': 'true', 'Cache-Control': 'public, max-age=86400' },
         });
       }
     }
@@ -2772,7 +2772,7 @@ if (localeMatch) {
           console.log(`[WORKER] Cross-lang slug fix: ${pathname} -> /${urlLang}-${urlCountry}${newRestPath}`);
           return new Response(null, {
             status: 301,
-            headers: { 'Location': redirectUrl, 'X-Worker-Active': 'true', 'Cache-Control': 'public, max-age=31536000' },
+            headers: { 'Location': redirectUrl, 'X-Worker-Active': 'true', 'Cache-Control': 'public, max-age=86400' },
           });
         }
       }
@@ -2807,7 +2807,7 @@ if (lastSlug && HYPHEN_TO_SLASH_ROUTES[lastSlug]) {
   console.log(`[WORKER] Malformed route fix: ${pathname} -> ${fixedPath}`);
   return new Response(null, {
     status: 301,
-    headers: { 'Location': redirectUrl, 'X-Worker-Active': 'true', 'Cache-Control': 'public, max-age=31536000' },
+    headers: { 'Location': redirectUrl, 'X-Worker-Active': 'true', 'Cache-Control': 'public, max-age=86400' },
   });
 }
 
@@ -2820,7 +2820,7 @@ if (uppercaseLocaleMatch) {
   console.log(`[WORKER] Uppercase locale fix: ${pathname} -> ${fixedPath}`);
   return new Response(null, {
     status: 301,
-    headers: { 'Location': redirectUrl, 'X-Worker-Active': 'true', 'Cache-Control': 'public, max-age=31536000' },
+    headers: { 'Location': redirectUrl, 'X-Worker-Active': 'true', 'Cache-Control': 'public, max-age=86400' },
   });
 }
 
@@ -2836,7 +2836,7 @@ if (doubleLocaleMatch) {
     console.log(`[WORKER] Double-locale fix: ${pathname} -> ${fixedPath}`);
     return new Response(null, {
       status: 301,
-      headers: { 'Location': redirectUrl, 'X-Worker-Active': 'true', 'Cache-Control': 'public, max-age=31536000' },
+      headers: { 'Location': redirectUrl, 'X-Worker-Active': 'true', 'Cache-Control': 'public, max-age=86400' },
     });
   }
 }
@@ -2865,7 +2865,7 @@ if (legacyLocaleMatch) {
         'Location': redirectUrl,
         'X-Worker-Active': 'true',
         'X-Worker-Redirect': 'legacy-locale',
-        'Cache-Control': 'public, max-age=31536000',
+        'Cache-Control': 'public, max-age=86400',
       },
     });
   }
@@ -2896,7 +2896,7 @@ if (!isStaticAssetPath && !isSystemPath && !hasLocalePrefix && !isRootPath) {
       'Location': redirectUrl,
       'X-Worker-Active': 'true',
       'X-Worker-Redirect': 'no-locale',
-      'Cache-Control': 'public, max-age=31536000',
+      'Cache-Control': 'public, max-age=86400',
     },
   });
 }
