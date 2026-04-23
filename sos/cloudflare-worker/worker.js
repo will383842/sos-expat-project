@@ -2135,6 +2135,16 @@ async function handleBlogProxy(request, pathname, url, ctx) {
       blogHeaders.set('Location', location.replace(BLOG_ORIGIN, ''));
     }
 
+    // SEO FIX 2026-04-23 (P1-#6): blog Laravel doesn't emit Content-Language
+    // header. Derive it from the URL locale pattern so Google gets an explicit
+    // language signal on every blog response (complements <html lang> + hreflang).
+    // Normalize legacy 'ch' → 'zh' (internal code 'ch' is not a BCP 47 language tag).
+    const blogLocaleMatch = pathname.match(/^\/([a-z]{2})-[a-z]{2}(\/|$)/);
+    if (blogLocaleMatch && !blogHeaders.has('Content-Language')) {
+      const langCode = blogLocaleMatch[1] === 'ch' ? 'zh' : blogLocaleMatch[1];
+      blogHeaders.set('Content-Language', langCode);
+    }
+
     const isHtmlResponse = (blogHeaders.get('Content-Type') || '').includes('text/html');
 
     // FIX: Override Laravel's Cache-Control: private for cacheable GET 200 responses.

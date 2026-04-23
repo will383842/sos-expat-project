@@ -117,7 +117,7 @@ const RegisterLawyer: React.FC = () => {
         sameAs: [
           'https://www.facebook.com/sosexpat',
           'https://twitter.com/sosexpat',
-          'https://www.linkedin.com/company/sos-expat',
+          'https://www.linkedin.com/company/sos-expat-com/',
           'https://www.instagram.com/sosexpat',
         ],
         contactPoint: {

@@ -409,9 +409,10 @@ const Login: React.FC = () => {
               height: 512,
             },
             sameAs: [
-              "https://www.facebook.com/sos-expat",
-              "https://www.twitter.com/sos-expat",
-              "https://www.linkedin.com/company/sos-expat",
+              "https://www.facebook.com/sosexpat",
+              "https://twitter.com/sosexpat",
+              "https://www.linkedin.com/company/sos-expat-com/",
+              "https://www.instagram.com/sosexpat",
             ],
             contactPoint: {
               "@type": "ContactPoint",

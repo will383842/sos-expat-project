@@ -176,7 +176,7 @@ const PAGE_PATH = "/sos-appel";
 
 const SOCIAL_URLS = {
   facebook: "https://www.facebook.com/sosexpat",
-  linkedin: "https://www.linkedin.com/company/sosexpat",
+  linkedin: "https://www.linkedin.com/company/sos-expat-com/",
   twitter: "https://twitter.com/sosexpat",
   instagram: "https://www.instagram.com/sosexpat",
 } as const;

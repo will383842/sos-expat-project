@@ -2629,7 +2629,14 @@ const ProviderProfile: React.FC = () => {
     if (translation && !showOriginal && translation.seo?.metaTitle) return translation.seo.metaTitle;
     const brand = ' | SOS Expat';
     const langPart = languageDescriptor ? ` ${languageDescriptor}` : '';
-    const core = `${formatShortName(provider)} ${roleLabel}${langPart} ${intl.formatMessage({ id: "providerProfile.in" })} ${countryName}`;
+    // 2026-04-23 fix: avoid truncated titles like "Oleg F. Expert Expatrié francophone en | SOS Expat"
+    // when countryName is empty (composite country names not resolved, e.g. Trinité-et-Tobago, Émirats).
+    // Fallback: drop the "in {country}" segment entirely rather than leaving a dangling preposition.
+    const hasCountry = Boolean(countryName && countryName.trim());
+    const countryPart = hasCountry
+      ? ` ${intl.formatMessage({ id: "providerProfile.in" })} ${countryName}`
+      : '';
+    const core = `${formatShortName(provider)} ${roleLabel}${langPart}${countryPart}`;
     const maxCoreLength = 60 - brand.length;
     if (core.length <= maxCoreLength) return core + brand;
     const truncated = core.slice(0, maxCoreLength);

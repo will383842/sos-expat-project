@@ -518,9 +518,10 @@ const PasswordReset: React.FC = () => {
         "url": baseUrl,
         "logo": `${baseUrl}/sos-logo.webp`,
         "sameAs": [
-          "https://www.facebook.com/sos-expat",
-          "https://www.linkedin.com/company/sos-expat",
-          "https://twitter.com/sos-expat"
+          "https://www.facebook.com/sosexpat",
+          "https://www.linkedin.com/company/sos-expat-com/",
+          "https://twitter.com/sosexpat",
+          "https://www.instagram.com/sosexpat"
         ]
       },
       "publisher": {

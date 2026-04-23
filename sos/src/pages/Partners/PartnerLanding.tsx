@@ -155,9 +155,10 @@ const SEO_CONSTANTS = {
   OG_IMAGE_URL: 'https://sos-expat.com/og-image.webp',
   TWITTER_HANDLE: '@sosexpat',
   SOCIAL: {
-    facebook: 'https://facebook.com/sosexpat',
-    linkedin: 'https://linkedin.com/company/sosexpat',
+    facebook: 'https://www.facebook.com/sosexpat',
+    linkedin: 'https://www.linkedin.com/company/sos-expat-com/',
     twitter: 'https://twitter.com/sosexpat',
+    instagram: 'https://www.instagram.com/sosexpat',
   },
 } as const;
 

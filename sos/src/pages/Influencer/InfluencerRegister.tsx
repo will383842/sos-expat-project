@@ -170,7 +170,7 @@ const InfluencerRegister: React.FC = () => {
         name: 'SOS-Expat',
         url: 'https://sos-expat.com',
         logo: { '@type': 'ImageObject', url: 'https://sos-expat.com/logo.png', width: 512, height: 512 },
-        sameAs: ['https://www.facebook.com/sosexpat', 'https://twitter.com/sosexpat', 'https://www.linkedin.com/company/sos-expat', 'https://www.instagram.com/sosexpat'],
+        sameAs: ['https://www.facebook.com/sosexpat', 'https://twitter.com/sosexpat', 'https://www.linkedin.com/company/sos-expat-com/', 'https://www.instagram.com/sosexpat'],
         contactPoint: { '@type': 'ContactPoint', contactType: 'customer service', availableLanguage: ['fr','en','es','de','ru','hi','pt','zh','ar'] },
       }) }} />
       {/* HreflangLinks removed: handled globally in App.tsx L1086 */}

@@ -101,9 +101,9 @@ const LocalBusinessSchema: React.FC<LocalBusinessSchemaProps> = ({
   areaServed = ['Worldwide'],
   foundingDate = '2024',
   sameAs = [
-    'https://facebook.com/sosexpat',
+    'https://www.facebook.com/sosexpat',
     'https://twitter.com/sosexpat',
-    'https://linkedin.com/company/sosexpat',
+    'https://www.linkedin.com/company/sos-expat-com/',
     'https://www.instagram.com/sosexpat'
   ],
   inLanguage
