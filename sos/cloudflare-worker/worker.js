@@ -303,6 +303,17 @@ const BLOG_PATTERNS = [
   /^\/[a-z]{2}-[a-z]{2}\/expat-samachar(\/[^\/]+)?$/i,        // Hindi news
   /^\/[a-z]{2}-[a-z]{2}\/akhbar-mughtaribeen(\/[^\/]+)?$/i,   // Arabic news
 
+  // Author profile pages (E-E-A-T signature) — 2026-04-23
+  // Used by Google SGE / ChatGPT / Perplexity for source attribution
+  /^\/[a-z]{2}(-[a-z]{2})?\/auteurs(\/[^\/]+)?$/i,            // French + default
+  /^\/[a-z]{2}(-[a-z]{2})?\/authors(\/[^\/]+)?$/i,            // English
+  /^\/[a-z]{2}(-[a-z]{2})?\/autores(\/[^\/]+)?$/i,            // Spanish + Portuguese
+  /^\/[a-z]{2}(-[a-z]{2})?\/autoren(\/[^\/]+)?$/i,            // German
+  /^\/[a-z]{2}(-[a-z]{2})?\/avtory(\/[^\/]+)?$/i,             // Russian
+  /^\/[a-z]{2}(-[a-z]{2})?\/zuozhe(\/[^\/]+)?$/i,             // Chinese
+  /^\/[a-z]{2}(-[a-z]{2})?\/lekhak(\/[^\/]+)?$/i,             // Hindi
+  /^\/[a-z]{2}(-[a-z]{2})?\/muallifin(\/[^\/]+)?$/i,          // Arabic
+
   // Guides and resources - ALL LANGUAGES
   /^\/[a-z]{2}(-[a-z]{2})?\/guides\/[^\/]+$/i,                // Guides
   /^\/[a-z]{2}(-[a-z]{2})?\/guide\/[^\/]+$/i,                 // Guide (singular)
@@ -1036,6 +1047,13 @@ const SEARCH_SEGMENTS = new Set([
   'recherche', 'search', 'buscar', 'suche', 'pesquisa', 'poisk', 'sousuo', 'khoj', 'bahth',
 ]);
 
+// Authors/Auteurs (E-E-A-T signature pages) — Blog SSR (2026-04-23)
+// Laravel routes: /{locale}/auteurs/{slug} and /{locale}/authors/{slug}
+// Used for schema.org Person signals (Google SGE, ChatGPT, Perplexity citations)
+const AUTEURS_SEGMENTS = new Set([
+  'auteurs', 'authors', 'autores', 'autoren', 'avtory', 'zuozhe', 'lekhak', 'muallifin',
+]);
+
 // News segments (all 9 languages) -- listing + detail → Blog SSR
 // Source: Blog config/route-segments.php 'news'
 const NEWS_SEGMENTS = new Set([
@@ -1215,6 +1233,9 @@ function isBlogProxyPath(path) {
 
     // News: listing + detail → Blog SSR
     if (NEWS_SEGMENTS.has(segment)) return true;
+
+    // Authors (E-E-A-T signature pages): listing + detail → Blog SSR (2026-04-23)
+    if (AUTEURS_SEGMENTS.has(segment)) return true;
 
     // /{locale}/{translated-segment} = blog content (categories, tags, countries, vie-a-letranger)
     // This also handles 4-segment paths like /fr-fr/pays/thailande/expatriation
