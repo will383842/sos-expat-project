@@ -23,19 +23,7 @@ export const useStepValidation = ({ watch, currentStep }: UseStepValidationProps
     let progress = 0;
 
     switch (currentStep) {
-      case 1: // Name screen
-        const hasFirst = Boolean(values.firstName?.trim());
-
-        if (!hasFirst) errors.push('firstName');
-        progress = hasFirst ? 100 : 0;
-
-        return {
-          isValid: hasFirst,
-          errors,
-          progress,
-        };
-
-      case 2: // Country screen
+      case 1: // Country screen
         const hasCountry = Boolean(values.currentCountry?.trim());
         const isOther = values.currentCountry === OTHER_COUNTRY;
         const hasOtherCountry = Boolean(values.autrePays?.trim());
@@ -52,7 +40,7 @@ export const useStepValidation = ({ watch, currentStep }: UseStepValidationProps
           progress,
         };
 
-      case 3: // Description screen
+      case 2: // Description screen
         const descLength = values.description?.trim().length ?? 0;
         const descMin = 30;
 
@@ -66,7 +54,7 @@ export const useStepValidation = ({ watch, currentStep }: UseStepValidationProps
           progress,
         };
 
-      case 4: // Phone screen
+      case 3: // Phone screen
         const phone = values.clientPhone;
         let phoneValid = false;
 
@@ -88,7 +76,7 @@ export const useStepValidation = ({ watch, currentStep }: UseStepValidationProps
           progress,
         };
 
-      case 5: // Confirm screen
+      case 4: // Confirm screen
         const hasAccepted = Boolean(values.acceptTerms);
 
         if (!hasAccepted) errors.push('acceptTerms');

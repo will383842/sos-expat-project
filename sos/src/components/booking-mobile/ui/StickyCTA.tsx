@@ -24,22 +24,31 @@ export const StickyCTA: React.FC<StickyCTAProps> = ({ onSubmit }) => {
   const isLastStep = currentStep === totalSteps;
   const currencySymbol = detectUserCurrency() === 'eur' ? '€' : '$';
 
-  // Detect if keyboard is open to hide CTA
-  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  // iOS Safari keeps `position: fixed; bottom: 0` anchored to the layout
+  // viewport (below the keyboard) on older versions. Track the keyboard
+  // offset via visualViewport and translate the CTA so it stays visible
+  // above the keyboard on every step.
+  const [keyboardOffset, setKeyboardOffset] = useState(0);
 
   useEffect(() => {
-    // Use visualViewport API to detect keyboard
     const viewport = window.visualViewport;
     if (!viewport) return;
 
-    const handleResize = () => {
-      // If viewport height is significantly less than window height, keyboard is open
-      const keyboardOpen = viewport.height < window.innerHeight * 0.75;
-      setIsKeyboardOpen(keyboardOpen);
+    const update = () => {
+      const offset = Math.max(
+        0,
+        window.innerHeight - viewport.height - viewport.offsetTop
+      );
+      setKeyboardOffset(offset);
     };
 
-    viewport.addEventListener('resize', handleResize);
-    return () => viewport.removeEventListener('resize', handleResize);
+    update();
+    viewport.addEventListener('resize', update);
+    viewport.addEventListener('scroll', update);
+    return () => {
+      viewport.removeEventListener('resize', update);
+      viewport.removeEventListener('scroll', update);
+    };
   }, []);
 
   const handleNext = () => {
@@ -59,16 +68,13 @@ export const StickyCTA: React.FC<StickyCTAProps> = ({ onSubmit }) => {
     }
   };
 
-  // Hide CTA when keyboard is open
-  if (isKeyboardOpen) {
-    return null;
-  }
-
   return (
     <div
       className="fixed bottom-0 inset-x-0 z-50 bg-white border-t border-gray-200"
       style={{
         paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+        transform: keyboardOffset > 0 ? `translateY(-${keyboardOffset}px)` : undefined,
+        transition: 'transform 150ms ease-out',
       }}
     >
       <div className="p-3 flex gap-2">

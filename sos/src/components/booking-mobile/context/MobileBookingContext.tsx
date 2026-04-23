@@ -63,15 +63,14 @@ export interface MobileBookingContextValue {
 
 const MobileBookingContext = createContext<MobileBookingContextValue | null>(null);
 
-export const TOTAL_STEPS = 5;
+export const TOTAL_STEPS = 4;
 
 // Step validation rules
 const STEP_FIELDS: Record<number, (keyof BookingFormData)[]> = {
-  1: ['firstName'],
-  2: ['currentCountry'],
-  3: ['description'],
-  4: ['clientPhone'],
-  5: ['acceptTerms'],
+  1: ['currentCountry'],
+  2: ['description'],
+  3: ['clientPhone'],
+  4: ['acceptTerms'],
 };
 
 interface MobileBookingProviderProps {
@@ -146,18 +145,15 @@ export const MobileBookingProvider: React.FC<MobileBookingProviderProps> = ({
     const values = watched;
 
     switch (step) {
-      case 1: // Name
-        return Boolean(values.firstName?.trim());
-
-      case 2: // Country
+      case 1: // Country
         const hasCountry = Boolean(values.currentCountry?.trim());
         const otherOk = values.currentCountry !== OTHER_COUNTRY || Boolean(values.autrePays?.trim());
         return hasCountry && otherOk;
 
-      case 3: // Description
+      case 2: // Description
         return (values.description?.trim().length ?? 0) >= 30;
 
-      case 4: // Phone
+      case 3: // Phone
         if (!values.clientPhone) return false;
         try {
           const parsed = parsePhoneNumberFromString(values.clientPhone);
@@ -166,7 +162,7 @@ export const MobileBookingProvider: React.FC<MobileBookingProviderProps> = ({
           return false;
         }
 
-      case 5: // Terms
+      case 4: // Terms
         return Boolean(values.acceptTerms);
 
       default:
@@ -191,8 +187,8 @@ export const MobileBookingProvider: React.FC<MobileBookingProviderProps> = ({
 
   const goNextStep = useCallback(() => {
     if (currentStep < TOTAL_STEPS && isCurrentStepValid) {
-      // Haptic feedback on milestone
-      if (currentStep === 2 || currentStep === 4) {
+      // Haptic feedback on milestone (country and phone steps)
+      if (currentStep === 1 || currentStep === 3) {
         triggerHaptic('medium');
       } else {
         triggerHaptic('light');

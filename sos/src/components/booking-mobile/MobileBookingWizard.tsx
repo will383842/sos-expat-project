@@ -6,7 +6,6 @@ import { ProgressBar } from './ui/ProgressBar';
 import { StickyCTA } from './ui/StickyCTA';
 
 // Step screens
-import { Step1NameScreen } from './steps/Step1NameScreen';
 import { Step2CountryScreen } from './steps/Step2CountryScreen';
 import { Step4DescriptionScreen } from './steps/Step4DescriptionScreen';
 import { Step5PhoneScreen } from './steps/Step5PhoneScreen';
@@ -18,11 +17,10 @@ interface MobileBookingWizardProps {
 }
 
 const stepComponents: Record<number, React.FC> = {
-  1: Step1NameScreen,
-  2: Step2CountryScreen,
-  3: Step4DescriptionScreen,
-  4: Step5PhoneScreen,
-  5: Step6ConfirmScreen,
+  1: Step2CountryScreen,
+  2: Step4DescriptionScreen,
+  3: Step5PhoneScreen,
+  4: Step6ConfirmScreen,
 };
 
 export const MobileBookingWizard: React.FC<MobileBookingWizardProps> = ({
@@ -38,10 +36,10 @@ export const MobileBookingWizard: React.FC<MobileBookingWizardProps> = ({
     triggerHaptic,
   } = useMobileBooking();
 
-  // Preload the checkout page chunk when user reaches phone step (step 4)
+  // Preload the checkout page chunk when user reaches phone step (step 3)
   // so Stripe SDK starts loading before they finish the form
   useEffect(() => {
-    if (currentStep >= 4) {
+    if (currentStep >= 3) {
       import('../../pages/CallCheckoutWrapper').catch(() => {});
     }
   }, [currentStep]);
