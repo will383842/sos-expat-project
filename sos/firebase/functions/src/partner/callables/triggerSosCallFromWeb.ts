@@ -7,6 +7,7 @@ import {
   getPartnerEngineUrl,
   getPartnerEngineApiKey,
 } from '../../lib/secrets';
+import { scheduleCallTaskWithIdempotence } from '../../lib/tasks';
 
 /**
  * SOS-Call web trigger callable (called from sos-call.sos-expat.com Blade page).
@@ -26,6 +27,7 @@ interface TriggerSosCallRequest {
   providerType: 'lawyer' | 'expat';
   clientPhone: string;
   clientLanguage?: string;
+  clientCountry?: string; // ISO-2 of the country where client is located
 }
 
 interface CheckSessionResponse {
@@ -44,7 +46,7 @@ export const triggerSosCallFromWeb = onCall(
     cors: true,
   },
   async (request: CallableRequest<TriggerSosCallRequest>) => {
-    const { sosCallSessionToken, providerType, clientPhone, clientLanguage } = request.data || ({} as TriggerSosCallRequest);
+    const { sosCallSessionToken, providerType, clientPhone, clientLanguage, clientCountry } = request.data || ({} as TriggerSosCallRequest);
 
     if (!sosCallSessionToken || !providerType || !clientPhone) {
       throw new HttpsError(
@@ -90,62 +92,89 @@ export const triggerSosCallFromWeb = onCall(
 
     const db = admin.firestore();
 
-    // 2. Auto-select first available provider of the requested type
-    // Filter: type matches, isApproved=true, isVisible=true, not busy, supports language if provided
-    const profilesQuery = db
+    // 2. Pool of available providers of the requested type.
+    // We over-fetch (100) and score client-side to allow language + country
+    // match without needing a composite index for every combo.
+    const profilesSnap = await db
       .collection('sos_profiles')
       .where('type', '==', providerType)
       .where('isApproved', '==', true)
       .where('isVisible', '==', true)
-      .limit(50);
-
-    const profilesSnap = await profilesQuery.get();
+      .limit(100)
+      .get();
 
     if (profilesSnap.empty) {
-      throw new HttpsError('failed-precondition', `Aucun ${providerType === 'lawyer' ? 'avocat' : 'expert'} disponible actuellement`);
+      throw new HttpsError(
+        'failed-precondition',
+        `Aucun ${providerType === 'lawyer' ? 'avocat' : 'expert'} disponible actuellement`
+      );
     }
 
-    // Filter for available (not busy) + language match
     const requestedLang = (clientLanguage || 'fr').toLowerCase();
-    let candidate: FirebaseFirestore.QueryDocumentSnapshot | null = null;
+    const requestedCountry = (clientCountry || '').toUpperCase();
+
+    // Score each available provider, higher = better match.
+    type Candidate = {
+      doc: FirebaseFirestore.QueryDocumentSnapshot;
+      score: number;
+    };
+    const pool: Candidate[] = [];
 
     for (const doc of profilesSnap.docs) {
-      const data = doc.data();
-      const isBusy = data.isBusy === true || data.busyReason;
-      if (isBusy) continue;
+      const d = doc.data();
 
-      const langs = Array.isArray(data.languages) ? data.languages.map((l: string) => l.toLowerCase()) : [];
-      const langMatch = langs.length === 0 || langs.includes(requestedLang) || langs.includes('fr') || langs.includes('en');
+      // Reject busy / offline / no phone
+      if (d.isBusy === true || d.busyReason) continue;
+      const phone = d.phone || d.phoneNumber;
+      if (!phone) continue;
 
-      if (langMatch) {
-        candidate = doc;
-        break;
-      }
+      let score = 0;
+      // Country match (strongest signal — local knowledge)
+      const providerCountry = (d.currentCountryCode || d.country || '').toUpperCase();
+      if (requestedCountry && providerCountry === requestedCountry) score += 100;
+
+      // Language match
+      const langs: string[] = Array.isArray(d.languages)
+        ? d.languages.map((l: string) => String(l).toLowerCase())
+        : [];
+      if (langs.includes(requestedLang)) score += 50;
+      else if (langs.includes('en')) score += 10; // fallback English
+
+      // Rating bonus (0 to 20)
+      const rating = typeof d.rating === 'number' ? d.rating : 0;
+      score += Math.min(20, rating * 4);
+
+      // Activity bonus: fewer active calls recently = more available
+      const calls = typeof d.totalCallsLast30d === 'number' ? d.totalCallsLast30d : 0;
+      score += Math.max(0, 10 - Math.min(10, calls / 5));
+
+      // Tiny random jitter so equal scores rotate instead of always picking the same doc
+      score += Math.random();
+
+      pool.push({ doc, score });
     }
 
-    // Fallback: if no language match, pick the first available (ignore language)
-    if (!candidate) {
-      for (const doc of profilesSnap.docs) {
-        const data = doc.data();
-        if (!(data.isBusy === true || data.busyReason)) {
-          candidate = doc;
-          break;
-        }
-      }
+    if (pool.length === 0) {
+      throw new HttpsError(
+        'failed-precondition',
+        'Aucun prestataire disponible immédiatement. Réessayez dans quelques minutes.'
+      );
     }
 
-    if (!candidate) {
-      throw new HttpsError('failed-precondition', 'Aucun prestataire disponible immédiatement. Réessayez dans quelques minutes.');
-    }
-
-    const providerData = candidate.data();
-    const providerId = candidate.id;
+    pool.sort((a, b) => b.score - a.score);
+    const chosen = pool[0].doc;
+    const providerData = chosen.data();
+    const providerId = chosen.id;
     const providerPhone = providerData.phone || providerData.phoneNumber;
 
-    if (!providerPhone) {
-      logger.error('[triggerSosCallFromWeb] Selected provider has no phone', { providerId });
-      throw new HttpsError('failed-precondition', 'Prestataire sélectionné indisponible');
-    }
+    logger.info('[triggerSosCallFromWeb] Provider selected', {
+      providerId,
+      poolSize: pool.length,
+      topScore: pool[0].score.toFixed(2),
+      providerCountry: providerData.currentCountryCode || providerData.country,
+      requestedCountry,
+      requestedLang,
+    });
 
     // 3. Create call_sessions document
     const callSessionRef = db.collection('call_sessions').doc();
@@ -179,13 +208,49 @@ export const triggerSosCallFromWeb = onCall(
       },
     });
 
-    logger.info('[triggerSosCallFromWeb] Call scheduled', {
+    logger.info('[triggerSosCallFromWeb] Call session created', {
       callSessionId: callSessionRef.id,
       providerId,
       subscriberId: sessionData.subscriber_id,
     });
 
-    // 4. Log the call back to Partner Engine (non-blocking)
+    // 4. CRITICAL: enqueue the Cloud Task that actually rings both parties in 240s.
+    // Without this, the Firestore doc would stay 'scheduled' forever and no call
+    // would ever happen. This is the same function the standard paid flow uses.
+    try {
+      const schedulingResult = await scheduleCallTaskWithIdempotence(
+        callSessionRef.id,
+        240,
+        db
+      );
+      if (schedulingResult.skipped) {
+        logger.warn('[triggerSosCallFromWeb] Scheduling skipped (idempotence)', {
+          callSessionId: callSessionRef.id,
+          reason: schedulingResult.reason,
+        });
+      } else {
+        logger.info('[triggerSosCallFromWeb] Cloud Task enqueued', {
+          callSessionId: callSessionRef.id,
+          taskId: schedulingResult.taskId,
+        });
+      }
+    } catch (scheduleErr) {
+      logger.error('[triggerSosCallFromWeb] Failed to enqueue Cloud Task', {
+        callSessionId: callSessionRef.id,
+        error: scheduleErr instanceof Error ? scheduleErr.message : String(scheduleErr),
+      });
+      // Mark session as failed so the Blade page can surface the error
+      await callSessionRef.update({
+        status: 'failed',
+        failureReason: 'scheduling_failed',
+      });
+      throw new HttpsError(
+        'internal',
+        "Impossible de planifier l'appel. Veuillez réessayer dans quelques instants."
+      );
+    }
+
+    // 5. Log the call back to Partner Engine (non-blocking)
     fetch(`${getPartnerEngineUrl()}/api/sos-call/log`, {
       method: 'POST',
       headers: {
@@ -200,7 +265,7 @@ export const triggerSosCallFromWeb = onCall(
       }),
     }).catch((err) => logger.warn('[triggerSosCallFromWeb] /sos-call/log failed (non-blocking)', { err: err?.message }));
 
-    // 5. Return callSessionId + countdown info to the Blade page
+    // 6. Return callSessionId + countdown info to the Blade page
     return {
       success: true,
       callSessionId: callSessionRef.id,
@@ -208,6 +273,8 @@ export const triggerSosCallFromWeb = onCall(
       delaySeconds: 240,
       scheduledFor: scheduledAt.toMillis(),
       estimatedCallAt: scheduledAt.toMillis(),
+      providerDisplayName:
+        `${providerData.firstName || ''} ${providerData.lastName || ''}`.trim() || undefined,
       message: 'Un prestataire va vous appeler dans moins de 5 minutes.',
     };
   }
