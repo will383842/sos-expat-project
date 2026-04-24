@@ -20,7 +20,7 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Bot, Briefcase, Database, ExternalLink, Eye, Flame, GripVertical, ImageIcon, Link2, Mail, MessageSquare, Send, Server, Settings, Target, Users, UserSearch, Wrench } from "lucide-react";
+import { Bot, Briefcase, Building2, Database, ExternalLink, Eye, Flame, GripVertical, Headphones, ImageIcon, Link2, Mail, MessageSquare, PhoneCall, Send, Server, Settings, Target, Users, UserSearch, Wrench } from "lucide-react";
 
 const BACKLINK_ENGINE_URL = "https://backlinks.life-expat.com";
 const MAILWIZZ_FRONTEND_URL = "https://mail.sos-expat.com";
@@ -36,6 +36,9 @@ const WHATSAPP_CAMPAIGNS_URL = "https://whatsapp.life-expat.com";
 const CONVERSION_ENGINE_URL = "https://conversion.life-expat.com/admin/login";
 const APP_SURVEILLANCE_URL = "http://95.216.179.163:8097";
 const IMAGE_BANK_URL = "https://sos-expat.com/admin/image-bank";
+const PARTNER_ENGINE_ADMIN_URL = "https://admin.sos-expat.com";
+const SOS_CALL_URL = "https://sos-call.sos-expat.com";
+const PARTNER_ENGINE_API_URL = "https://partner-engine.sos-expat.com";
 
 const STORAGE_KEY = "admin-toolbox-order";
 
@@ -196,6 +199,33 @@ const defaultTools: ToolCard[] = [
     color: "bg-gray-800",
     status: "live",
     internalRoute: "/admin/toolbox/databases",
+  },
+  {
+    id: "partner-engine-admin",
+    titleKey: "Partner Engine Admin",
+    descriptionKey: "Console Filament : partenaires B2B, subscribers, factures SOS-Call, audit logs",
+    url: PARTNER_ENGINE_ADMIN_URL,
+    icon: <Building2 className="h-8 w-8" />,
+    color: "bg-blue-700",
+    status: "live",
+  },
+  {
+    id: "sos-call-public",
+    titleKey: "SOS-Call (page publique)",
+    descriptionKey: "Page d'activation pour les clients B2B qui tapent leur code partenaire (AXA-2026-X7K2P)",
+    url: SOS_CALL_URL,
+    icon: <PhoneCall className="h-8 w-8" />,
+    color: "bg-red-700",
+    status: "live",
+  },
+  {
+    id: "partner-engine-api",
+    titleKey: "Partner Engine API",
+    descriptionKey: "Endpoints REST v1 pour partenaires (subscribers, health) — auth par API key",
+    url: PARTNER_ENGINE_API_URL,
+    icon: <Headphones className="h-8 w-8" />,
+    color: "bg-slate-700",
+    status: "live",
   },
 ];
 

@@ -40,20 +40,18 @@ echo ""
 echo "→ Step 4/5: Deploying SOS-Call functions..."
 
 # List of functions to deploy
+# NOTE: chatter/influencer/blogger/groupAdmin/affiliate handlers are NOT deployed
+# as separate Cloud Functions — they were consolidated 2026-01 into one dispatcher
+# (consolidatedOnCallCompleted) which invokes them internally. My isSosCallFree
+# guards added to their handler files ARE active via this consolidated trigger.
 FUNCTIONS=(
     # New callables
     "functions:checkSosCallCode"
     "functions:triggerSosCallFromWeb"
     "functions:releaseProviderPayments"
-    # Modified functions (have isSosCallFree guards or branches)
+    # Modified: Stripe bypass when sosCallSessionToken present
     "functions:createAndScheduleCall"
-    # Modified triggers (SOS-Call bypass guards)
-    "functions:chatterOnCallCompleted"
-    "functions:influencerOnCallCompleted"
-    "functions:bloggerOnCallCompleted"
-    "functions:groupAdminOnCallCompleted"
-    "functions:affiliateOnCallCompleted"
-    "functions:partnerOnCallCompleted"
+    # Modified: dispatches to 5 handlers that now all check isSosCallFree
     "functions:consolidatedOnCallCompleted"
 )
 
