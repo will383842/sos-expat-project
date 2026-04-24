@@ -1004,10 +1004,10 @@ const LP_SEGMENTS = new Set([
   'expert', 'experto', 'experte', 'visheshagya', 'zhuanjia', 'mutakhasis',
   // Nationality — 9 languages
   'nationalite', 'nationality', 'nacionalidad', 'nationalitaet', 'nacionalidade', 'natsionalnost', 'guoji', 'rashtriyata', 'jinsiya',
-  // Lawyers partner recruitment — 9 languages
-  // (synced with LandingGenerationService::URL_SEGMENTS['lawyers'])
-  'devenir-partenaire', 'become-partner', 'ser-socio', 'partner-werden', 'tornar-parceiro',
-  'sajhidari-bane', 'chengwei-hezuo', 'stat-partnerom',
+  // NOTE: 'devenir-partenaire' / 'become-partner' / ... are CLAIMED by the React SPA
+  // (App.tsx: /devenir-partenaire → PartnerLanding.tsx, commercial partner program).
+  // Do NOT add them to LP_SEGMENTS — doing so proxies them to Laravel Blog SSR which
+  // returns 404 and makes the React page unreachable.
   // Helpers (expat helpers) recruitment — 9 languages
   // (synced with LandingGenerationService::URL_SEGMENTS['helpers'])
   'expats-aidants', 'expat-helpers', 'expats-ayudantes', 'expat-helfer', 'expats-ajudantes',
