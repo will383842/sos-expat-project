@@ -28,6 +28,13 @@ interface TriggerSosCallRequest {
   clientPhone: string;
   clientLanguage?: string;
   clientCountry?: string; // ISO-2 of the country where client is located
+  /**
+   * Optional explicit provider id chosen by the client in the SPA wizard.
+   * When provided, the backend verifies it (approved, visible, not busy,
+   * right type) and uses it directly. When absent, the auto-select scoring
+   * runs (used by the legacy direct-Blade flow).
+   */
+  providerId?: string;
 }
 
 interface CheckSessionResponse {
@@ -39,6 +46,139 @@ interface CheckSessionResponse {
   error?: string;
 }
 
+/**
+ * Common tail of the flow, shared between the explicit-providerId path
+ * (unified SPA wizard) and the auto-select path (legacy direct-Blade).
+ *
+ * Creates the call_sessions doc, enqueues the Cloud Task (critical — without
+ * it, nothing ever rings), logs back to Partner Engine, and returns the
+ * payload the Blade/SPA will use to show the countdown.
+ */
+async function finalizeCall(args: {
+  db: FirebaseFirestore.Firestore;
+  callSessionRef: FirebaseFirestore.DocumentReference;
+  providerId: string;
+  providerData: FirebaseFirestore.DocumentData;
+  providerPhone: string;
+  providerType: 'lawyer' | 'expat';
+  clientPhone: string;
+  clientLanguage?: string;
+  sessionData: CheckSessionResponse;
+  sosCallSessionToken: string;
+}) {
+  const {
+    db,
+    callSessionRef,
+    providerId,
+    providerData,
+    providerPhone,
+    providerType,
+    clientPhone,
+    clientLanguage,
+    sessionData,
+    sosCallSessionToken,
+  } = args;
+
+  const now = admin.firestore.Timestamp.now();
+  const scheduledAt = admin.firestore.Timestamp.fromMillis(Date.now() + 240 * 1000);
+
+  await callSessionRef.set({
+    id: callSessionRef.id,
+    providerId,
+    clientId: `subscriber:${sessionData.subscriber_id}`,
+    providerPhone,
+    clientPhone,
+    providerType,
+    serviceType: providerType === 'lawyer' ? 'lawyer_call' : 'expat_call',
+    status: 'scheduled',
+    isSosCallFree: true,
+    partnerSubscriberId: sessionData.subscriber_id,
+    partnerFirebaseId: sessionData.partner_firebase_id,
+    agreementId: sessionData.agreement_id,
+    createdAt: now,
+    scheduledFor: scheduledAt,
+    delaySeconds: 240,
+    clientLanguages: clientLanguage ? [clientLanguage] : ['fr'],
+    providerLanguages: providerData.languages || [],
+    amount: 0,
+    currency: 'EUR',
+    metadata: {
+      isSosCallFree: true,
+      sosCallSessionToken,
+      triggeredFromWeb: true,
+    },
+  });
+
+  logger.info('[triggerSosCallFromWeb] Call session created', {
+    callSessionId: callSessionRef.id,
+    providerId,
+    subscriberId: sessionData.subscriber_id,
+  });
+
+  try {
+    const schedulingResult = await scheduleCallTaskWithIdempotence(
+      callSessionRef.id,
+      240,
+      db
+    );
+    if (schedulingResult.skipped) {
+      logger.warn('[triggerSosCallFromWeb] Scheduling skipped (idempotence)', {
+        callSessionId: callSessionRef.id,
+        reason: schedulingResult.reason,
+      });
+    } else {
+      logger.info('[triggerSosCallFromWeb] Cloud Task enqueued', {
+        callSessionId: callSessionRef.id,
+        taskId: schedulingResult.taskId,
+      });
+    }
+  } catch (scheduleErr) {
+    logger.error('[triggerSosCallFromWeb] Failed to enqueue Cloud Task', {
+      callSessionId: callSessionRef.id,
+      error: scheduleErr instanceof Error ? scheduleErr.message : String(scheduleErr),
+    });
+    await callSessionRef.update({
+      status: 'failed',
+      failureReason: 'scheduling_failed',
+    });
+    throw new HttpsError(
+      'internal',
+      "Impossible de planifier l'appel. Veuillez réessayer dans quelques instants."
+    );
+  }
+
+  // Non-blocking log-back to Partner Engine
+  fetch(`${getPartnerEngineUrl()}/api/sos-call/log`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Engine-Secret': getPartnerEngineApiKey(),
+    },
+    body: JSON.stringify({
+      session_token: sosCallSessionToken,
+      call_session_id: callSessionRef.id,
+      call_type: providerType,
+      duration_seconds: 0,
+    }),
+  }).catch((err) =>
+    logger.warn('[triggerSosCallFromWeb] /sos-call/log failed (non-blocking)', {
+      err: err?.message,
+    })
+  );
+
+  return {
+    success: true,
+    callSessionId: callSessionRef.id,
+    providerType,
+    delaySeconds: 240,
+    scheduledFor: scheduledAt.toMillis(),
+    estimatedCallAt: scheduledAt.toMillis(),
+    providerDisplayName:
+      `${providerData.firstName || ''} ${providerData.lastName || ''}`.trim() || undefined,
+    message: 'Un prestataire va vous appeler dans moins de 5 minutes.',
+  };
+}
+
 export const triggerSosCallFromWeb = onCall(
   {
     region: 'us-central1',
@@ -46,7 +186,7 @@ export const triggerSosCallFromWeb = onCall(
     cors: true,
   },
   async (request: CallableRequest<TriggerSosCallRequest>) => {
-    const { sosCallSessionToken, providerType, clientPhone, clientLanguage, clientCountry } = request.data || ({} as TriggerSosCallRequest);
+    const { sosCallSessionToken, providerType, clientPhone, clientLanguage, clientCountry, providerId: requestedProviderId } = request.data || ({} as TriggerSosCallRequest);
 
     if (!sosCallSessionToken || !providerType || !clientPhone) {
       throw new HttpsError(
@@ -92,9 +232,57 @@ export const triggerSosCallFromWeb = onCall(
 
     const db = admin.firestore();
 
-    // 2. Pool of available providers of the requested type.
-    // We over-fetch (100) and score client-side to allow language + country
-    // match without needing a composite index for every combo.
+    // 2a. Fast path: if the client already chose a specific provider in the
+    // SPA wizard (unified flow), verify and use that one.
+    if (requestedProviderId && typeof requestedProviderId === 'string') {
+      const doc = await db.collection('sos_profiles').doc(requestedProviderId).get();
+      if (!doc.exists) {
+        throw new HttpsError('not-found', 'Prestataire introuvable. Veuillez en choisir un autre.');
+      }
+      const d = doc.data() || {};
+      if (d.type !== providerType) {
+        throw new HttpsError(
+          'invalid-argument',
+          `Le prestataire sélectionné n'est pas un ${providerType === 'lawyer' ? 'avocat' : 'expert'}.`
+        );
+      }
+      if (d.isApproved !== true || d.isVisible !== true) {
+        throw new HttpsError('failed-precondition', 'Ce prestataire n\'est plus disponible.');
+      }
+      if (d.isBusy === true || d.busyReason) {
+        throw new HttpsError(
+          'failed-precondition',
+          'Ce prestataire est occupé. Veuillez en choisir un autre.'
+        );
+      }
+      const phone = d.phone || d.phoneNumber;
+      if (!phone) {
+        throw new HttpsError('failed-precondition', 'Ce prestataire est injoignable. Veuillez en choisir un autre.');
+      }
+
+      // Short-circuit: skip the scoring pool, use this provider directly.
+      const providerData = d;
+      const providerId = doc.id;
+      const providerPhone = phone;
+
+      logger.info('[triggerSosCallFromWeb] Using client-chosen provider', { providerId });
+
+      return await finalizeCall({
+        db,
+        callSessionRef: db.collection('call_sessions').doc(),
+        providerId,
+        providerData,
+        providerPhone,
+        providerType,
+        clientPhone,
+        clientLanguage,
+        sessionData,
+        sosCallSessionToken,
+      });
+    }
+
+    // 2b. Auto-select pool: over-fetch and score client-side to allow language
+    // + country match without a composite index for every combination.
     const profilesSnap = await db
       .collection('sos_profiles')
       .where('type', '==', providerType)
@@ -167,7 +355,7 @@ export const triggerSosCallFromWeb = onCall(
     const providerId = chosen.id;
     const providerPhone = providerData.phone || providerData.phoneNumber;
 
-    logger.info('[triggerSosCallFromWeb] Provider selected', {
+    logger.info('[triggerSosCallFromWeb] Provider selected (auto)', {
       providerId,
       poolSize: pool.length,
       topScore: pool[0].score.toFixed(2),
@@ -176,106 +364,17 @@ export const triggerSosCallFromWeb = onCall(
       requestedLang,
     });
 
-    // 3. Create call_sessions document
-    const callSessionRef = db.collection('call_sessions').doc();
-    const now = admin.firestore.Timestamp.now();
-    const scheduledAt = admin.firestore.Timestamp.fromMillis(Date.now() + 240 * 1000);
-
-    await callSessionRef.set({
-      id: callSessionRef.id,
+    return await finalizeCall({
+      db,
+      callSessionRef: db.collection('call_sessions').doc(),
       providerId,
-      clientId: `subscriber:${sessionData.subscriber_id}`,
+      providerData,
       providerPhone,
+      providerType,
       clientPhone,
-      providerType,
-      serviceType: providerType === 'lawyer' ? 'lawyer_call' : 'expat_call',
-      status: 'scheduled',
-      isSosCallFree: true,
-      partnerSubscriberId: sessionData.subscriber_id,
-      partnerFirebaseId: sessionData.partner_firebase_id,
-      agreementId: sessionData.agreement_id,
-      createdAt: now,
-      scheduledFor: scheduledAt,
-      delaySeconds: 240,
-      clientLanguages: clientLanguage ? [clientLanguage] : ['fr'],
-      providerLanguages: providerData.languages || [],
-      amount: 0,
-      currency: 'EUR',
-      metadata: {
-        isSosCallFree: true,
-        sosCallSessionToken,
-        triggeredFromWeb: true,
-      },
+      clientLanguage,
+      sessionData,
+      sosCallSessionToken,
     });
-
-    logger.info('[triggerSosCallFromWeb] Call session created', {
-      callSessionId: callSessionRef.id,
-      providerId,
-      subscriberId: sessionData.subscriber_id,
-    });
-
-    // 4. CRITICAL: enqueue the Cloud Task that actually rings both parties in 240s.
-    // Without this, the Firestore doc would stay 'scheduled' forever and no call
-    // would ever happen. This is the same function the standard paid flow uses.
-    try {
-      const schedulingResult = await scheduleCallTaskWithIdempotence(
-        callSessionRef.id,
-        240,
-        db
-      );
-      if (schedulingResult.skipped) {
-        logger.warn('[triggerSosCallFromWeb] Scheduling skipped (idempotence)', {
-          callSessionId: callSessionRef.id,
-          reason: schedulingResult.reason,
-        });
-      } else {
-        logger.info('[triggerSosCallFromWeb] Cloud Task enqueued', {
-          callSessionId: callSessionRef.id,
-          taskId: schedulingResult.taskId,
-        });
-      }
-    } catch (scheduleErr) {
-      logger.error('[triggerSosCallFromWeb] Failed to enqueue Cloud Task', {
-        callSessionId: callSessionRef.id,
-        error: scheduleErr instanceof Error ? scheduleErr.message : String(scheduleErr),
-      });
-      // Mark session as failed so the Blade page can surface the error
-      await callSessionRef.update({
-        status: 'failed',
-        failureReason: 'scheduling_failed',
-      });
-      throw new HttpsError(
-        'internal',
-        "Impossible de planifier l'appel. Veuillez réessayer dans quelques instants."
-      );
-    }
-
-    // 5. Log the call back to Partner Engine (non-blocking)
-    fetch(`${getPartnerEngineUrl()}/api/sos-call/log`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Engine-Secret': getPartnerEngineApiKey(),
-      },
-      body: JSON.stringify({
-        session_token: sosCallSessionToken,
-        call_session_id: callSessionRef.id,
-        call_type: providerType,
-        duration_seconds: 0,
-      }),
-    }).catch((err) => logger.warn('[triggerSosCallFromWeb] /sos-call/log failed (non-blocking)', { err: err?.message }));
-
-    // 6. Return callSessionId + countdown info to the Blade page
-    return {
-      success: true,
-      callSessionId: callSessionRef.id,
-      providerType,
-      delaySeconds: 240,
-      scheduledFor: scheduledAt.toMillis(),
-      estimatedCallAt: scheduledAt.toMillis(),
-      providerDisplayName:
-        `${providerData.firstName || ''} ${providerData.lastName || ''}`.trim() || undefined,
-      message: 'Un prestataire va vous appeler dans moins de 5 minutes.',
-    };
   }
 );

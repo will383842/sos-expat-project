@@ -2173,6 +2173,10 @@ const BookingRequest: React.FC = () => {
   const [sosCallPartnerName, setSosCallPartnerName] = useState<string | null>(null);
   const [sosCallCallTypesAllowed, setSosCallCallTypesAllowed] = useState<string | null>(null);
   const [sosCallSubmitting, setSosCallSubmitting] = useState<boolean>(false);
+  // Gated mode: user arrived from sos-call.sos-expat.com with a validated token in URL.
+  // The code input UI is hidden, the banner replaces it, and the checkbox is locked ON.
+  const [sosCallGatedMode, setSosCallGatedMode] = useState<boolean>(false);
+  const [sosCallExpiredModal, setSosCallExpiredModal] = useState<boolean>(false);
 
   const partnerEngineBaseUrl = (import.meta as any).env?.VITE_PARTNER_ENGINE_URL || 'https://partner-engine.sos-expat.com';
 
@@ -2185,13 +2189,41 @@ const BookingRequest: React.FC = () => {
   }, []);
 
   const toggleSosCallCheckbox = useCallback((checked: boolean) => {
+    // In gated mode the checkbox is locked — user cannot uncheck.
+    if (sosCallGatedMode) return;
     setHasSosCallCode(checked);
     if (!checked) {
-      // Décoche → on efface tout, retour au flux Stripe normal
       setSosCallCodeInput("");
       resetSosCallCode();
     }
-  }, [resetSosCallCode]);
+  }, [resetSosCallCode, sosCallGatedMode]);
+
+  // Hydrate from URL params if the user landed here from sos-call.sos-expat.com.
+  // The Blade page redirects to /<locale>-<locale>/sos-appel?sosCallToken=XXX&partnerName=YYY
+  // after validating the code. We pre-fill state and lock the UI so the user
+  // doesn't have to re-enter their code.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('sosCallToken');
+    if (!token) return;
+    const partnerName = params.get('partnerName') || '';
+    const callTypesAllowed = params.get('callTypesAllowed') || 'both';
+
+    setSosCallSessionToken(token);
+    setSosCallPartnerName(partnerName || null);
+    setSosCallCallTypesAllowed(callTypesAllowed);
+    setSosCallValidated(true);
+    setHasSosCallCode(true);
+    setSosCallGatedMode(true);
+
+    // Persist in sessionStorage so reloads / back button keep the gated state
+    try {
+      sessionStorage.setItem('sosCall.token', token);
+      sessionStorage.setItem('sosCall.partnerName', partnerName);
+      sessionStorage.setItem('sosCall.callTypesAllowed', callTypesAllowed);
+    } catch (_) {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const validateSosCallCode = useCallback(async () => {
     const rawCode = (sosCallCodeInput || '').trim().toUpperCase();
@@ -3245,12 +3277,16 @@ const BookingRequest: React.FC = () => {
         // P1-7: Nettoyer l'autosave après soumission réussie
         try { sessionStorage.removeItem(BOOKING_AUTOSAVE_KEY); } catch {}
 
-        // ═══ SOS-Call subscriber branch (code validé + cochée) ═══
-        // → skip CallCheckout, appel Firebase direct avec sosCallSessionToken
-        if (hasSosCallCode && sosCallValidated && sosCallSessionToken && user?.uid) {
+        // ═══ SOS-Call subscriber branch (code validé ou mode gated via URL) ═══
+        // Two sub-cases:
+        //   a) Gated mode (anonymous B2B, came from sos-call.sos-expat.com):
+        //      no Firebase Auth available — use triggerSosCallFromWeb which
+        //      authenticates via the sosCallSessionToken itself.
+        //   b) Authenticated user checking the code inline: use the standard
+        //      createAndScheduleCall path with clientId = user.uid.
+        if (hasSosCallCode && sosCallValidated && sosCallSessionToken) {
           try {
             setSosCallSubmitting(true);
-            // Vérif type d'appel autorisé (lawyer_only / expat_only / both)
             const pType = (provider?.role || provider?.type || 'expat') as 'lawyer' | 'expat';
             const allowed = sosCallCallTypesAllowed || 'both';
             if (
@@ -3274,35 +3310,77 @@ const BookingRequest: React.FC = () => {
               return;
             }
 
-            const createAndScheduleCall: HttpsCallable<
-              Record<string, unknown>,
-              { success: boolean; callId?: string; message?: string }
-            > = httpsCallable(functions, 'createAndScheduleCall');
+            const useGatedFlow = sosCallGatedMode || !user?.uid;
 
-            const result = await createAndScheduleCall({
-              providerId: provider!.id,
-              clientId: user.uid,
-              providerPhone: providerPhoneE164,
-              clientPhone: clientPhoneE164,
-              serviceType: pType === 'lawyer' ? 'lawyer_call' : 'expat_call',
-              providerType: pType,
-              sosCallSessionToken,
-              // paymentIntentId + amount intentionnellement absents → bypass Stripe côté backend
-              clientLanguages: bookingRequest.clientLanguages || ['fr'],
-              providerLanguages: provider?.languagesSpoken || provider?.languages || ['fr'],
-              bookingTitle: bookingRequest.title || '',
-              bookingDescription: bookingRequest.description || '',
-              clientCurrentCountry: bookingRequest.clientCurrentCountry || '',
-              clientFirstName: bookingRequest.clientFirstName || '',
-              clientNationality: bookingRequest.clientNationality || '',
-            });
+            let callId: string | undefined;
+            try {
+              if (useGatedFlow) {
+                // Path A — anonymous, use triggerSosCallFromWeb (token-authenticated)
+                const triggerSosCallFromWeb: HttpsCallable<
+                  Record<string, unknown>,
+                  { success: boolean; callSessionId?: string; message?: string; providerDisplayName?: string }
+                > = httpsCallable(functions, 'triggerSosCallFromWeb');
 
-            if (!result?.data?.success) {
-              throw new Error(result?.data?.message || 'SCHEDULE_FAILED');
+                const result = await triggerSosCallFromWeb({
+                  sosCallSessionToken,
+                  providerType: pType,
+                  providerId: provider!.id,
+                  clientPhone: clientPhoneE164,
+                  clientLanguage: (bookingRequest.clientLanguages || ['fr'])[0],
+                  clientCountry: bookingRequest.clientCurrentCountry || '',
+                });
+                if (!result?.data?.success) {
+                  throw new Error(result?.data?.message || 'SCHEDULE_FAILED');
+                }
+                callId = result.data.callSessionId;
+              } else {
+                // Path B — authenticated user, use standard createAndScheduleCall
+                const createAndScheduleCall: HttpsCallable<
+                  Record<string, unknown>,
+                  { success: boolean; callId?: string; message?: string }
+                > = httpsCallable(functions, 'createAndScheduleCall');
+
+                const result = await createAndScheduleCall({
+                  providerId: provider!.id,
+                  clientId: user!.uid,
+                  providerPhone: providerPhoneE164,
+                  clientPhone: clientPhoneE164,
+                  serviceType: pType === 'lawyer' ? 'lawyer_call' : 'expat_call',
+                  providerType: pType,
+                  sosCallSessionToken,
+                  clientLanguages: bookingRequest.clientLanguages || ['fr'],
+                  providerLanguages: provider?.languagesSpoken || provider?.languages || ['fr'],
+                  bookingTitle: bookingRequest.title || '',
+                  bookingDescription: bookingRequest.description || '',
+                  clientCurrentCountry: bookingRequest.clientCurrentCountry || '',
+                  clientFirstName: bookingRequest.clientFirstName || '',
+                  clientNationality: bookingRequest.clientNationality || '',
+                });
+                if (!result?.data?.success) {
+                  throw new Error(result?.data?.message || 'SCHEDULE_FAILED');
+                }
+                callId = result.data.callId;
+              }
+            } catch (callableErr) {
+              const raw = callableErr instanceof Error ? callableErr.message : String(callableErr);
+              // Detect expired/invalid SOS-Call session and surface a dedicated modal.
+              if (
+                /expired|invalid.*session|Invalid or expired SOS-Call/i.test(raw) ||
+                /invalid.*token/i.test(raw)
+              ) {
+                setSosCallExpiredModal(true);
+                // Clear the stale token so the user can re-enter manually if they want
+                try {
+                  sessionStorage.removeItem('sosCall.token');
+                  sessionStorage.removeItem('sosCall.partnerName');
+                  sessionStorage.removeItem('sosCall.callTypesAllowed');
+                } catch {}
+                setSosCallSubmitting(false);
+                return;
+              }
+              throw callableErr;
             }
 
-            const callId = result.data.callId;
-            // PaymentSuccess lit ces données pour afficher le countdown
             try {
               sessionStorage.setItem('lastPaymentSuccess', JSON.stringify({
                 callId,
@@ -4498,6 +4576,28 @@ const BookingRequest: React.FC = () => {
               {/* ===== SOS-Call code (Mobile: Part of Step 3 / Desktop: Always visible) ===== */}
               {(!isMobile || currentStep === 3) && (
               <section className="p-4 md:p-6 border-t border-gray-100">
+                {sosCallGatedMode ? (
+                  // Gated mode: user came from sos-call.sos-expat.com with a valid token.
+                  // Hide the checkbox + input entirely; show a single branded banner.
+                  <div className="rounded-2xl border-2 border-green-300 bg-gradient-to-br from-green-50 to-emerald-50 p-4 md:p-5">
+                    <div className="flex items-start gap-3">
+                      <CheckCircle className="w-7 h-7 text-green-600 flex-shrink-0 mt-0.5" />
+                      <div className="flex-1">
+                        <div className="font-bold text-green-900 text-lg">
+                          Appel offert par votre partenaire
+                        </div>
+                        {sosCallPartnerName && (
+                          <div className="text-sm text-green-800 mt-1">
+                            Couvert par <strong>{sosCallPartnerName}</strong>. Aucun paiement ne vous sera demandé.
+                          </div>
+                        )}
+                        <div className="text-xs text-green-700 mt-2">
+                          Sélectionnez simplement le prestataire qui vous convient, remplissez vos coordonnées et déclenchez l'appel.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
                 <div className="rounded-2xl border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50 p-4 md:p-5">
                   <label className="flex items-start gap-3 cursor-pointer">
                     <input
@@ -4595,6 +4695,7 @@ const BookingRequest: React.FC = () => {
                     </div>
                   )}
                 </div>
+                )}
               </section>
               )}
 
@@ -4865,6 +4966,47 @@ const BookingRequest: React.FC = () => {
           />
         )}
       </div>
+
+      {/* SOS-Call session expired modal — surfaces when the backend rejects
+          the token at submit time (Redis TTL is 15 min). Give the user a
+          clear path back to sos-call.sos-expat.com to re-enter their code. */}
+      {sosCallExpiredModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center">
+                <svg className="w-6 h-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900">Session SOS-Call expirée</h3>
+            </div>
+            <p className="text-gray-600 mb-5">
+              Votre session a expiré (15 minutes d'inactivité). Veuillez ressaisir votre code partenaire pour relancer la procédure.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <button
+                type="button"
+                onClick={() => { window.location.href = 'https://sos-call.sos-expat.com/'; }}
+                className="flex-1 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold"
+              >
+                Retourner à SOS-Call
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setSosCallExpiredModal(false);
+                  setSosCallGatedMode(false);
+                  resetSosCallCode();
+                }}
+                className="flex-1 px-4 py-2.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg font-medium"
+              >
+                Saisir un autre code
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* BLOCAGE - Modal pour langue non partagée (impossible de continuer) */}
       {showLangMismatchWarning && (
