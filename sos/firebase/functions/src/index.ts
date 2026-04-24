@@ -3201,6 +3201,8 @@ export {
   trackPartnerClick,
   submitPartnerApplication,
   checkSosCallCode,
+  triggerSosCallFromWeb,
+  releaseProviderPayments,
   // Admin callables
   adminPartnersList,
   adminPartnerDetail,
