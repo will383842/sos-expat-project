@@ -2198,29 +2198,38 @@ const BookingRequest: React.FC = () => {
     }
   }, [resetSosCallCode, sosCallGatedMode]);
 
-  // Hydrate from URL params if the user landed here from sos-call.sos-expat.com.
-  // The Blade page redirects to /<locale>-<locale>/sos-appel?sosCallToken=XXX&partnerName=YYY
-  // after validating the code. We pre-fill state and lock the UI so the user
-  // doesn't have to re-enter their code.
+  // Hydrate from URL params (or sessionStorage fallback) if the user came
+  // from sos-call.sos-expat.com. React Router navigations drop query params
+  // when the user clicks through the wizard → provider → BookingRequest, so
+  // we fall back to sessionStorage that was written on the first /sos-appel
+  // hit.
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const token = params.get('sosCallToken');
+    let token = params.get('sosCallToken') || '';
+    let partnerName = params.get('partnerName') || '';
+    let callTypesAllowed = params.get('callTypesAllowed') || '';
+
+    if (!token) {
+      try {
+        token = sessionStorage.getItem('sosCall.token') || '';
+        partnerName = partnerName || sessionStorage.getItem('sosCall.partnerName') || '';
+        callTypesAllowed = callTypesAllowed || sessionStorage.getItem('sosCall.callTypesAllowed') || '';
+      } catch (_) {}
+    }
+
     if (!token) return;
-    const partnerName = params.get('partnerName') || '';
-    const callTypesAllowed = params.get('callTypesAllowed') || 'both';
 
     setSosCallSessionToken(token);
     setSosCallPartnerName(partnerName || null);
-    setSosCallCallTypesAllowed(callTypesAllowed);
+    setSosCallCallTypesAllowed(callTypesAllowed || 'both');
     setSosCallValidated(true);
     setHasSosCallCode(true);
     setSosCallGatedMode(true);
 
-    // Persist in sessionStorage so reloads / back button keep the gated state
     try {
       sessionStorage.setItem('sosCall.token', token);
-      sessionStorage.setItem('sosCall.partnerName', partnerName);
-      sessionStorage.setItem('sosCall.callTypesAllowed', callTypesAllowed);
+      if (partnerName) sessionStorage.setItem('sosCall.partnerName', partnerName);
+      if (callTypesAllowed) sessionStorage.setItem('sosCall.callTypesAllowed', callTypesAllowed);
     } catch (_) {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

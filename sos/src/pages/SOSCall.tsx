@@ -2140,13 +2140,46 @@ const SOSCall: React.FC = () => {
   // Protection contre le double-clic sur navigation
   const isNavigatingRef = useRef(false);
 
+  // B2B gate: if user lands here from sos-call.sos-expat.com redirect,
+  // the URL carries a sosCallToken + callTypesAllowed. We use it to hide
+  // the disallowed type in the wizard/filter bar and pre-select the allowed one.
+  // Also persist everything to sessionStorage so React Router navigations
+  // (that drop query params) still find the gate on BookingRequest.
+  const sosCallTokenFromUrl = searchParams.get("sosCallToken") || "";
+  const sosCallPartnerNameFromUrl = searchParams.get("partnerName") || "";
+  const callTypesAllowedRaw = (searchParams.get("callTypesAllowed") || "").toLowerCase();
+  const allowedTypes: "both" | "lawyer_only" | "expat_only" | undefined =
+    sosCallTokenFromUrl
+      ? callTypesAllowedRaw === "lawyer_only"
+        ? "lawyer_only"
+        : callTypesAllowedRaw === "expat_only"
+          ? "expat_only"
+          : "both"
+      : undefined;
+
+  // Persist the gate context as early as possible.
+  useEffect(() => {
+    if (!sosCallTokenFromUrl) return;
+    try {
+      sessionStorage.setItem("sosCall.token", sosCallTokenFromUrl);
+      sessionStorage.setItem("sosCall.partnerName", sosCallPartnerNameFromUrl);
+      sessionStorage.setItem("sosCall.callTypesAllowed", allowedTypes || "both");
+    } catch (_) {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sosCallTokenFromUrl]);
+
   // États filtres
   const [selectedType, setSelectedType] = useState<"all" | "lawyer" | "expat">(
-    searchParams.get("type") === "lawyer"
+    // Gate pré-sélectionne le seul type autorisé quand le partenaire restreint
+    allowedTypes === "lawyer_only"
       ? "lawyer"
-      : searchParams.get("type") === "expat"
+      : allowedTypes === "expat_only"
         ? "expat"
-        : "all"
+        : searchParams.get("type") === "lawyer"
+          ? "lawyer"
+          : searchParams.get("type") === "expat"
+            ? "expat"
+            : "all"
   );
   const [selectedCountryCode, setSelectedCountryCode] = useState<string>("all");
   const [selectedLanguageCodes, setSelectedLanguageCodes] = useState<string[]>([]); // Multi-langue support
@@ -3513,6 +3546,7 @@ const SOSCall: React.FC = () => {
                 onStatusChange={setStatusFilter}
                 onResetFilters={resetFilters}
                 activeFiltersCount={activeFiltersCount}
+                allowedTypes={allowedTypes}
               />
 
               {/* ========================================
@@ -4201,6 +4235,7 @@ const SOSCall: React.FC = () => {
         onComplete={handleWizardComplete}
         countryOptions={countryOptions}
         languageOptions={languageOptions}
+        allowedTypes={allowedTypes}
       />
 
       {/* ========================================

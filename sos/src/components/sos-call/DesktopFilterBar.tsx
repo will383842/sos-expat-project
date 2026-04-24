@@ -47,6 +47,10 @@ interface DesktopFilterBarProps {
   // Reset
   onResetFilters: () => void;
   activeFiltersCount: number;
+
+  // B2B restriction from partner plan — hides lawyer/expat options that are
+  // not allowed by the subscriber's partner agreement.
+  allowedTypes?: "both" | "lawyer_only" | "expat_only";
 }
 
 // ========================================
@@ -131,6 +135,7 @@ const DesktopFilterBar: React.FC<DesktopFilterBarProps> = ({
   onStatusChange,
   onResetFilters,
   activeFiltersCount,
+  allowedTypes,
 }) => {
   const intl = useIntl();
   const [openDropdown, setOpenDropdown] = useState<"type" | "country" | "language" | "status" | null>(null);
@@ -278,7 +283,13 @@ const DesktopFilterBar: React.FC<DesktopFilterBarProps> = ({
                 { value: "all" as const, icon: <Users className="w-4 h-4" />, label: <FormattedMessage id="filter.all" defaultMessage="Tous les experts" /> },
                 { value: "lawyer" as const, icon: <Scale className="w-4 h-4" />, label: <FormattedMessage id="filter.lawyer" defaultMessage="Avocats" /> },
                 { value: "expat" as const, icon: <Globe className="w-4 h-4" />, label: <FormattedMessage id="filter.expat" defaultMessage="Expatriés" /> },
-              ].map((option) => (
+              ]
+                .filter((option) => {
+                  if (allowedTypes === "lawyer_only") return option.value === "lawyer";
+                  if (allowedTypes === "expat_only") return option.value === "expat";
+                  return true;
+                })
+                .map((option) => (
                 <button
                   key={option.value}
                   onClick={() => {

@@ -22,6 +22,10 @@ interface GuidedFilterWizardProps {
   }) => void;
   countryOptions: { code: string; label: string }[];
   languageOptions: { code: string; label: string }[];
+  // B2B partner plan restriction (forwarded to TypeStep). When 'lawyer_only'
+  // or 'expat_only', the unavailable option is hidden and pre-selected for
+  // the user so they don't have to pick.
+  allowedTypes?: "both" | "lawyer_only" | "expat_only";
 }
 
 // ========================================
@@ -393,8 +397,11 @@ const LanguageStep: React.FC<{
 const TypeStep: React.FC<{
   selectedType: "all" | "lawyer" | "expat" | null;
   onSelect: (type: "all" | "lawyer" | "expat") => void;
-}> = ({ selectedType, onSelect }) => {
-  const typeOptions = [
+  // Optional B2B gating: 'lawyer_only' hides expat + all, 'expat_only' hides
+  // lawyer + all. 'both' (default) or undefined = no filtering.
+  allowedTypes?: "both" | "lawyer_only" | "expat_only";
+}> = ({ selectedType, onSelect, allowedTypes }) => {
+  const allOptions = [
     {
       value: "lawyer" as const,
       icon: Scale,
@@ -417,6 +424,13 @@ const TypeStep: React.FC<{
       iconBg: "bg-purple-500",
     },
   ];
+
+  const typeOptions =
+    allowedTypes === "lawyer_only"
+      ? allOptions.filter((o) => o.value === "lawyer")
+      : allowedTypes === "expat_only"
+        ? allOptions.filter((o) => o.value === "expat")
+        : allOptions;
 
   return (
     <>
@@ -481,6 +495,7 @@ const GuidedFilterWizard: React.FC<GuidedFilterWizardProps> = ({
   onComplete,
   countryOptions,
   languageOptions,
+  allowedTypes,
 }) => {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [selectedCountry, setSelectedCountry] = useState<string>("");
@@ -652,6 +667,7 @@ const GuidedFilterWizard: React.FC<GuidedFilterWizardProps> = ({
           <TypeStep
             selectedType={selectedType}
             onSelect={handleTypeSelect}
+            allowedTypes={allowedTypes}
           />
         )}
       </div>
