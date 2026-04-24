@@ -212,7 +212,7 @@ const defaultTools: ToolCard[] = [
   {
     id: "sos-call-public",
     titleKey: "SOS-Call (page publique)",
-    descriptionKey: "Page d'activation pour les clients B2B qui tapent leur code partenaire (AXA-2026-X7K2P)",
+    descriptionKey: "Page d'activation pour les clients B2B qui tapent leur code partenaire (format PREFIX-2026-XXXXX)",
     url: SOS_CALL_URL,
     icon: <PhoneCall className="h-8 w-8" />,
     color: "bg-red-700",
