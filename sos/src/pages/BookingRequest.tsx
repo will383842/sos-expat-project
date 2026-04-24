@@ -51,7 +51,8 @@ import languages, { getLanguageLabel, languagesData, type Language as AppLanguag
 import { LanguageUtils } from "../locales/languageMap";
 import { countriesData, getCountriesForLocale, resolveCountryName, OTHER_COUNTRY } from "../data/countries";
 
-import { db, auth } from "../config/firebase";
+import { db, auth, functions } from "../config/firebase";
+import { httpsCallable, type HttpsCallable } from "firebase/functions";
 import { doc, onSnapshot, getDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { fetchSignInMethodsForEmail } from "firebase/auth";
 
@@ -2161,6 +2162,81 @@ const BookingRequest: React.FC = () => {
   const [showLangMismatchWarning, setShowLangMismatchWarning] = useState(false);
   const [langMismatchAcknowledged, setLangMismatchAcknowledged] = useState(false);
 
+  // ===== SOS-Call code (forfait B2B — appel gratuit pour les subscribers) =====
+  // Réversible : l'utilisateur peut décocher / retaper un autre code même après validation.
+  const [hasSosCallCode, setHasSosCallCode] = useState<boolean>(false);
+  const [sosCallCodeInput, setSosCallCodeInput] = useState<string>("");
+  const [sosCallChecking, setSosCallChecking] = useState<boolean>(false);
+  const [sosCallValidated, setSosCallValidated] = useState<boolean>(false);
+  const [sosCallError, setSosCallError] = useState<string | null>(null);
+  const [sosCallSessionToken, setSosCallSessionToken] = useState<string | null>(null);
+  const [sosCallPartnerName, setSosCallPartnerName] = useState<string | null>(null);
+  const [sosCallCallTypesAllowed, setSosCallCallTypesAllowed] = useState<string | null>(null);
+  const [sosCallSubmitting, setSosCallSubmitting] = useState<boolean>(false);
+
+  const partnerEngineBaseUrl = (import.meta as any).env?.VITE_PARTNER_ENGINE_URL || 'https://partner-engine.sos-expat.com';
+
+  const resetSosCallCode = useCallback(() => {
+    setSosCallValidated(false);
+    setSosCallSessionToken(null);
+    setSosCallPartnerName(null);
+    setSosCallCallTypesAllowed(null);
+    setSosCallError(null);
+  }, []);
+
+  const toggleSosCallCheckbox = useCallback((checked: boolean) => {
+    setHasSosCallCode(checked);
+    if (!checked) {
+      // Décoche → on efface tout, retour au flux Stripe normal
+      setSosCallCodeInput("");
+      resetSosCallCode();
+    }
+  }, [resetSosCallCode]);
+
+  const validateSosCallCode = useCallback(async () => {
+    const rawCode = (sosCallCodeInput || '').trim().toUpperCase();
+    if (!rawCode) {
+      setSosCallError(intl.formatMessage({ id: 'bookingRequest.sosCall.codeRequired', defaultMessage: 'Veuillez saisir votre code.' }));
+      return;
+    }
+    setSosCallChecking(true);
+    setSosCallError(null);
+    try {
+      const res = await fetch(`${partnerEngineBaseUrl}/api/sos-call/check`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ code: rawCode }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || data?.status !== 'access_granted') {
+        const status = data?.status || 'not_found';
+        const messages: Record<string, string> = {
+          code_invalid: 'Code non reconnu. Vérifiez votre saisie.',
+          not_found: "Code introuvable. Contactez votre partenaire si vous pensez avoir un accès.",
+          expired: 'Votre accès a expiré. Contactez votre partenaire.',
+          quota_reached: "Vous avez utilisé tous vos appels pour ce mois.",
+          agreement_inactive: 'Service temporairement indisponible. Contactez votre partenaire.',
+          rate_limited: 'Trop de tentatives. Réessayez dans quelques minutes.',
+        };
+        setSosCallError(messages[status] || messages.not_found);
+        setSosCallValidated(false);
+        setSosCallSessionToken(null);
+        return;
+      }
+      // access_granted
+      setSosCallSessionToken(data.session_token || null);
+      setSosCallPartnerName(data.partner_name || null);
+      setSosCallCallTypesAllowed(data.call_types_allowed || 'both');
+      setSosCallValidated(true);
+      setSosCallError(null);
+    } catch (err) {
+      setSosCallError("Impossible de vérifier le code. Vérifiez votre connexion.");
+      setSosCallValidated(false);
+    } finally {
+      setSosCallChecking(false);
+    }
+  }, [sosCallCodeInput, partnerEngineBaseUrl, intl]);
+
   // ===== MOBILE WIZARD STATE =====
   const isMobile = useMediaQuery("(max-width: 820px)");
   const [currentStep, setCurrentStep] = useState(1);
@@ -3168,6 +3244,87 @@ const BookingRequest: React.FC = () => {
 
         // P1-7: Nettoyer l'autosave après soumission réussie
         try { sessionStorage.removeItem(BOOKING_AUTOSAVE_KEY); } catch {}
+
+        // ═══ SOS-Call subscriber branch (code validé + cochée) ═══
+        // → skip CallCheckout, appel Firebase direct avec sosCallSessionToken
+        if (hasSosCallCode && sosCallValidated && sosCallSessionToken && user?.uid) {
+          try {
+            setSosCallSubmitting(true);
+            // Vérif type d'appel autorisé (lawyer_only / expat_only / both)
+            const pType = (provider?.role || provider?.type || 'expat') as 'lawyer' | 'expat';
+            const allowed = sosCallCallTypesAllowed || 'both';
+            if (
+              (pType === 'lawyer' && allowed === 'expat_only') ||
+              (pType === 'expat' && allowed === 'lawyer_only')
+            ) {
+              setFormError(
+                pType === 'lawyer'
+                  ? "Votre forfait ne couvre pas les appels avec un avocat. Choisissez un expert expat."
+                  : "Votre forfait ne couvre pas les appels avec un expert. Choisissez un avocat."
+              );
+              setSosCallSubmitting(false);
+              return;
+            }
+
+            const providerPhoneE164 = (provider as any)?.phoneNumber || (provider as any)?.phone || '';
+            const clientPhoneE164 = bookingRequest.clientPhone;
+            if (!providerPhoneE164 || !clientPhoneE164) {
+              setFormError("Numéros de téléphone manquants. Contactez le support.");
+              setSosCallSubmitting(false);
+              return;
+            }
+
+            const createAndScheduleCall: HttpsCallable<
+              Record<string, unknown>,
+              { success: boolean; callId?: string; message?: string }
+            > = httpsCallable(functions, 'createAndScheduleCall');
+
+            const result = await createAndScheduleCall({
+              providerId: provider!.id,
+              clientId: user.uid,
+              providerPhone: providerPhoneE164,
+              clientPhone: clientPhoneE164,
+              serviceType: pType === 'lawyer' ? 'lawyer_call' : 'expat_call',
+              providerType: pType,
+              sosCallSessionToken,
+              // paymentIntentId + amount intentionnellement absents → bypass Stripe côté backend
+              clientLanguages: bookingRequest.clientLanguages || ['fr'],
+              providerLanguages: provider?.languagesSpoken || provider?.languages || ['fr'],
+              bookingTitle: bookingRequest.title || '',
+              bookingDescription: bookingRequest.description || '',
+              clientCurrentCountry: bookingRequest.clientCurrentCountry || '',
+              clientFirstName: bookingRequest.clientFirstName || '',
+              clientNationality: bookingRequest.clientNationality || '',
+            });
+
+            if (!result?.data?.success) {
+              throw new Error(result?.data?.message || 'SCHEDULE_FAILED');
+            }
+
+            const callId = result.data.callId;
+            // PaymentSuccess lit ces données pour afficher le countdown
+            try {
+              sessionStorage.setItem('lastPaymentSuccess', JSON.stringify({
+                callId,
+                providerId: provider!.id,
+                providerRole: provider?.role || provider?.type || 'expat',
+                serviceType: pType === 'lawyer' ? 'lawyer_call' : 'expat_call',
+                amount: 0,
+                isSosCallFree: true,
+                partnerName: sosCallPartnerName,
+              }));
+            } catch { /* ignore */ }
+
+            const successSlug = getTranslatedRouteSlug('payment-success', language as any);
+            navigate(`/${successSlug}${callId ? `?callId=${encodeURIComponent(callId)}` : ''}`, { replace: true });
+            return;
+          } catch (err) {
+            console.error('[BookingRequest] SOS-Call free scheduling failed', err);
+            setFormError("Impossible de programmer l'appel gratuit. Vérifiez votre code ou essayez le paiement classique.");
+            setSosCallSubmitting(false);
+            return;
+          }
+        }
 
         // Navigate only after successful write and verification
         navigate(`/call-checkout/${providerId}`);
@@ -4335,6 +4492,109 @@ const BookingRequest: React.FC = () => {
                   </div>
                 </div>
 
+              </section>
+              )}
+
+              {/* ===== SOS-Call code (Mobile: Part of Step 3 / Desktop: Always visible) ===== */}
+              {(!isMobile || currentStep === 3) && (
+              <section className="p-4 md:p-6 border-t border-gray-100">
+                <div className="rounded-2xl border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50 p-4 md:p-5">
+                  <label className="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={hasSosCallCode}
+                      onChange={(e) => toggleSosCallCheckbox(e.target.checked)}
+                      disabled={sosCallSubmitting}
+                      className="mt-1 w-5 h-5 rounded border-blue-400 text-blue-600 focus:ring-blue-500"
+                    />
+                    <div className="flex-1">
+                      <div className="font-semibold text-blue-900">
+                        J'ai un code SOS-Call
+                      </div>
+                      <div className="text-sm text-blue-800 mt-1">
+                        Si votre entreprise, banque ou assurance vous a fourni un code personnel,
+                        votre appel est offert — pas de paiement.
+                      </div>
+                    </div>
+                  </label>
+
+                  {hasSosCallCode && !sosCallValidated && (
+                    <div className="mt-4 space-y-3">
+                      <div>
+                        <label className="block text-sm font-medium text-blue-900 mb-1">
+                          Votre code (ex: AXA-2026-X7K2P)
+                        </label>
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={sosCallCodeInput}
+                            onChange={(e) => setSosCallCodeInput(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                e.preventDefault();
+                                validateSosCallCode();
+                              }
+                            }}
+                            disabled={sosCallChecking || sosCallSubmitting}
+                            placeholder="AXA-2026-X7K2P"
+                            className="flex-1 px-3 py-2 rounded-lg border border-blue-300 bg-white text-blue-900 font-mono uppercase focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            autoComplete="off"
+                            spellCheck={false}
+                          />
+                          <button
+                            type="button"
+                            onClick={validateSosCallCode}
+                            disabled={sosCallChecking || !sosCallCodeInput.trim()}
+                            className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm disabled:opacity-50"
+                          >
+                            {sosCallChecking ? (
+                              <span className="flex items-center gap-1"><Loader2 className="w-4 h-4 animate-spin" /> Vérification…</span>
+                            ) : (
+                              'Vérifier'
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                      {sosCallError && (
+                        <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-800">
+                          {sosCallError}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {hasSosCallCode && sosCallValidated && (
+                    <div className="mt-4 p-4 rounded-xl bg-green-50 border-2 border-green-200">
+                      <div className="flex items-start gap-3">
+                        <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
+                        <div className="flex-1">
+                          <div className="font-semibold text-green-900">
+                            Code validé — appel offert
+                          </div>
+                          <div className="text-sm text-green-800 mt-1">
+                            Couvert par <strong>{sosCallPartnerName}</strong>. Vous ne paierez rien.
+                          </div>
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            <button
+                              type="button"
+                              onClick={resetSosCallCode}
+                              className="text-sm px-3 py-1.5 rounded-lg bg-white hover:bg-gray-50 text-green-800 border border-green-300 font-medium"
+                            >
+                              Modifier le code
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => toggleSosCallCheckbox(false)}
+                              className="text-sm px-3 py-1.5 rounded-lg bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 font-medium"
+                            >
+                              Annuler et payer l'appel
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </section>
               )}
 

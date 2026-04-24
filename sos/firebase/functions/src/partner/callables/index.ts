@@ -18,3 +18,6 @@ export { partnerRequestWithdrawal } from "./partnerRequestWithdrawal";
 // Public callables (no auth required)
 export { trackPartnerClick } from "./trackPartnerClick";
 export { submitPartnerApplication } from "./submitPartnerApplication";
+export { checkSosCallCode } from "./checkSosCallCode";
+export { triggerSosCallFromWeb } from "./triggerSosCallFromWeb";
+export { releaseProviderPayments } from "./releaseProviderPaymentsForInvoice";

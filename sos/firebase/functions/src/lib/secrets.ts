@@ -314,6 +314,61 @@ export const TELEGRAM_ENGINE_API_KEY_SECRET = defineSecret("TELEGRAM_ENGINE_API_
 export const TELEGRAM_ENGINE_SECRETS = [TELEGRAM_ENGINE_URL_SECRET, TELEGRAM_ENGINE_API_KEY_SECRET];
 
 // ============================================================================
+// PARTNER ENGINE SECRETS (Laravel Engine for B2B partners + SOS-Call)
+// ============================================================================
+
+export const PARTNER_ENGINE_URL_SECRET = defineSecret("PARTNER_ENGINE_URL");
+export const PARTNER_ENGINE_API_KEY_SECRET = defineSecret("PARTNER_ENGINE_API_KEY");
+
+/** Partner Engine secrets for functions that call /sos-call/* or /webhooks/* */
+export const PARTNER_ENGINE_SECRETS = [PARTNER_ENGINE_URL_SECRET, PARTNER_ENGINE_API_KEY_SECRET];
+
+/**
+ * Get the Partner Engine base URL (e.g. https://partner-engine.sos-expat.com).
+ * Falls back to process.env.PARTNER_ENGINE_URL then to a production default.
+ */
+export function getPartnerEngineUrl(): string {
+  try {
+    const secretValue = PARTNER_ENGINE_URL_SECRET.value()?.trim();
+    if (secretValue && secretValue.length > 0) {
+      return secretValue.replace(/\/$/, ""); // strip trailing slash
+    }
+  } catch {
+    // Secret not available, try process.env
+  }
+
+  const envValue = process.env.PARTNER_ENGINE_URL?.trim();
+  if (envValue && envValue.length > 0) {
+    return envValue.replace(/\/$/, "");
+  }
+
+  // Production default
+  return "https://partner-engine.sos-expat.com";
+}
+
+/**
+ * Get the Partner Engine shared API key (X-Engine-Secret header).
+ */
+export function getPartnerEngineApiKey(): string {
+  try {
+    const secretValue = PARTNER_ENGINE_API_KEY_SECRET.value()?.trim();
+    if (secretValue && secretValue.length > 0) {
+      return secretValue;
+    }
+  } catch {
+    // Secret not available
+  }
+
+  const envValue = process.env.PARTNER_ENGINE_API_KEY?.trim();
+  if (envValue && envValue.length > 0) {
+    return envValue;
+  }
+
+  console.error(`[Secrets] PARTNER_ENGINE_API_KEY NOT FOUND`);
+  return "";
+}
+
+// ============================================================================
 // GETTERS WITH FALLBACK TO process.env (for emulator/local dev)
 // ============================================================================
 

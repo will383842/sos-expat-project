@@ -15,6 +15,7 @@ import {
   PartnerEarningsChart,
   PartnerRecentCommissions,
 } from '@/components/Partner';
+import PartnerSosCallSection from '@/components/Partner/SosCall/PartnerSosCallSection';
 import toast from 'react-hot-toast';
 import {
   MousePointerClick,
@@ -136,6 +137,9 @@ const PartnerDashboard: React.FC = () => {
           pendingBalance={partner.pendingBalance + partner.validatedBalance}
           totalEarned={partner.totalEarned}
         />
+
+        {/* SOS-Call section (only rendered if partner has sos_call_active=true) */}
+        <PartnerSosCallSection />
 
         {/* Stats Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">

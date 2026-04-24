@@ -3200,6 +3200,7 @@ export {
   // Public callables
   trackPartnerClick,
   submitPartnerApplication,
+  checkSosCallCode,
   // Admin callables
   adminPartnersList,
   adminPartnerDetail,

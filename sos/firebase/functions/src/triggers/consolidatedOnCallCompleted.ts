@@ -199,6 +199,9 @@ export const consolidatedOnCallCompleted = onDocumentUpdated(
             connectionFee: after.connectionFee || after.connection_fee || 0,
             duration: after.duration || after.call_duration || 0,
             isPaid: after.isPaid ?? after.is_paid ?? (after.paymentStatus === "paid"),
+            // 🆘 Propagate SOS-Call B2B bypass flag
+            isSosCallFree: after.isSosCallFree === true || after.metadata?.isSosCallFree === true,
+            partnerSubscriberId: after.partnerSubscriberId ?? null,
           },
         });
 

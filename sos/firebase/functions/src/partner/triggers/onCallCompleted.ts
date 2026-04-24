@@ -42,6 +42,20 @@ export async function handleCallCompleted(
 
   if (!wasNotPaid || !isNowPaid) return;
 
+  // ========================================
+  // SOS-Call B2B bypass: skip commission creation for free calls
+  // (partner pays a flat monthly fee via Partner Engine — no per-call commission)
+  // ========================================
+  const isSosCallFree = after.isSosCallFree === true || after.metadata?.isSosCallFree === true;
+  if (isSosCallFree) {
+    logger.info("[partnerOnCallCompleted] SOS-Call free — skip commission creation", {
+      sessionId,
+      partnerSubscriberId: after.partnerSubscriberId ?? after.metadata?.sosCallSubscriberId ?? null,
+      partnerFirebaseId: after.partnerFirebaseId ?? after.metadata?.sosCallPartnerFirebaseId ?? null,
+    });
+    return;
+  }
+
   const clientId = after.clientId || after.userId;
   const clientEmail = after.clientEmail || after.userEmail || "";
   const duration = after.duration || after.callDuration || 0;

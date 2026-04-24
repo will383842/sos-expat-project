@@ -525,3 +525,169 @@ export function adminUpdatePartnerSubscriber(
     body: data as Record<string, unknown>,
   });
 }
+
+// ══════════════════════════════════════════════════════════════
+// SOS-Call — Partner dashboard endpoints (Sprint 6)
+// ══════════════════════════════════════════════════════════════
+
+export interface SosCallKpis {
+  period: string;
+  active_subscribers: number;
+  calls_expert: number;
+  calls_lawyer: number;
+  total_calls: number;
+  usage_rate_percent: number;
+  estimated_invoice_amount: number;
+  billing_currency: string;
+}
+
+export interface SosCallTimelinePoint {
+  period: string;
+  calls_expert: number;
+  calls_lawyer: number;
+  total: number;
+}
+
+export interface SosCallBreakdown {
+  call_types: { type: string; count: number; percent: number }[];
+  top_countries: { country: string; count: number }[];
+}
+
+export interface SosCallHierarchyRow {
+  label: string;
+  subscribers_total: number;
+  subscribers_active: number;
+  calls_expert: number;
+  calls_lawyer: number;
+  calls_total: number;
+}
+
+export interface SosCallHierarchy {
+  dimension: 'group_label' | 'region' | 'department';
+  period: string;
+  rows: SosCallHierarchyRow[];
+  total_subscribers: number;
+  total_calls: number;
+}
+
+export interface SosCallTopSubscriber {
+  subscriber_id: number;
+  first_name: string | null;
+  last_name: string | null;
+  sos_call_code: string | null;
+  calls_expert: number;
+  calls_lawyer: number;
+  total: number;
+  percent_of_total: number;
+}
+
+export interface SosCallInvoice {
+  id: number;
+  invoice_number: string;
+  period: string;
+  active_subscribers: number;
+  billing_rate: number;
+  billing_currency: string;
+  total_amount: number;
+  status: 'pending' | 'paid' | 'overdue' | 'cancelled';
+  due_date: string;
+  paid_at: string | null;
+  paid_via: string | null;
+  pdf_path: string | null;
+  stripe_hosted_url: string | null;
+  created_at: string;
+}
+
+export function getSosCallKpis(period?: string): Promise<SosCallKpis> {
+  return apiCall<SosCallKpis>('/partner/sos-call/activity/kpis', {
+    params: period ? { period } : undefined,
+  });
+}
+
+export function getSosCallTimeline(months = 12): Promise<SosCallTimelinePoint[]> {
+  return apiCall<SosCallTimelinePoint[]>('/partner/sos-call/activity/timeline', {
+    params: { months: String(months) },
+  });
+}
+
+export function getSosCallBreakdown(period?: string): Promise<SosCallBreakdown> {
+  return apiCall<SosCallBreakdown>('/partner/sos-call/activity/breakdown', {
+    params: period ? { period } : undefined,
+  });
+}
+
+export function getSosCallHierarchy(
+  dimension: 'group_label' | 'region' | 'department' = 'group_label',
+  period: 'month' | '3months' | '12months' = 'month',
+): Promise<SosCallHierarchy> {
+  return apiCall<SosCallHierarchy>('/partner/sos-call/activity/hierarchy', {
+    params: { dimension, period },
+  });
+}
+
+export function getSosCallTopSubscribers(
+  period?: string,
+  limit = 20,
+): Promise<SosCallTopSubscriber[]> {
+  const p: Record<string, string> = { limit: String(limit) };
+  if (period) p.period = period;
+  return apiCall<SosCallTopSubscriber[]>('/partner/sos-call/activity/top-subscribers', { params: p });
+}
+
+export function getSosCallCallsHistory(params?: {
+  period?: string;
+  subscriber_id?: number;
+  provider_type?: 'expat' | 'lawyer';
+  page?: number;
+  per_page?: number;
+}): Promise<PaginatedResponse<SubscriberActivity>> {
+  const p: Record<string, string> = {};
+  if (params?.period) p.period = params.period;
+  if (params?.subscriber_id) p.subscriber_id = String(params.subscriber_id);
+  if (params?.provider_type) p.provider_type = params.provider_type;
+  if (params?.page) p.page = String(params.page);
+  if (params?.per_page) p.per_page = String(params.per_page);
+  return apiCall<PaginatedResponse<SubscriberActivity>>('/partner/sos-call/activity/calls', { params: p });
+}
+
+export async function exportSosCallCallsCsv(params?: {
+  period?: string;
+}): Promise<Blob> {
+  const token = await getAuthToken();
+  const url = new URL(`${getBaseUrl()}/partner/sos-call/activity/export`);
+  if (params?.period) url.searchParams.set('period', params.period);
+  const res = await fetch(url.toString(), {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error(`Export failed: ${res.status}`);
+  return res.blob();
+}
+
+export function listSosCallInvoices(params?: {
+  page?: number;
+  per_page?: number;
+  status?: string;
+}): Promise<PaginatedResponse<SosCallInvoice>> {
+  const p: Record<string, string> = {};
+  if (params?.page) p.page = String(params.page);
+  if (params?.per_page) p.per_page = String(params.per_page);
+  if (params?.status) p.status = params.status;
+  return apiCall<PaginatedResponse<SosCallInvoice>>('/partner/sos-call/invoices', { params: p });
+}
+
+export function getSosCallInvoice(id: number): Promise<SosCallInvoice> {
+  return apiCall<SosCallInvoice>(`/partner/sos-call/invoices/${id}`);
+}
+
+export async function downloadSosCallInvoicePdf(id: number): Promise<Blob> {
+  const token = await getAuthToken();
+  const res = await fetch(`${getBaseUrl()}/partner/sos-call/invoices/${id}/pdf`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error(`PDF download failed: ${res.status}`);
+  return res.blob();
+}
+
+function getBaseUrl(): string {
+  return import.meta.env.VITE_PARTNER_ENGINE_URL || 'https://partner-engine.sos-expat.com';
+}

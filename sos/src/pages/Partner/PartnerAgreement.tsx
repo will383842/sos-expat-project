@@ -8,6 +8,7 @@ import { useLocaleNavigate } from '@/multilingual-system';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePartner } from '@/hooks/usePartner';
 import { PartnerDashboardLayout } from '@/components/Partner';
+import PartnerSosCallSection from '@/components/Partner/SosCall/PartnerSosCallSection';
 import { getPartnerAgreement } from '@/services/partnerEngineApi';
 import type { Agreement } from '@/services/partnerEngineApi';
 import {
@@ -150,6 +151,9 @@ const PartnerAgreement: React.FC = () => {
             {status.label}
           </span>
         </div>
+
+        {/* SOS-Call section — visible uniquement si sos_call_active=true */}
+        <PartnerSosCallSection />
 
         {/* Agreement Name & Validity */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl border dark:border-gray-700 p-5 sm:p-6">

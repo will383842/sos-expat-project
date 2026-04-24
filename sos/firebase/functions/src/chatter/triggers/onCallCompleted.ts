@@ -56,6 +56,13 @@ interface CallSession {
   connectionFee?: number;
   totalAmount?: number;
   isPaid?: boolean;
+  isSosCallFree?: boolean;
+  partnerSubscriberId?: number | string | null;
+  metadata?: {
+    isSosCallFree?: boolean;
+    sosCallSessionToken?: string;
+    [key: string]: unknown;
+  };
   createdAt: Timestamp;
   completedAt?: Timestamp;
 }
@@ -99,6 +106,17 @@ export async function handleCallCompleted(
 
   const sessionId = event.params.sessionId;
   const session = afterData;
+
+  // 🆘 SOS-Call B2B bypass: no commission for free subscriber calls.
+  // The partner paid a flat monthly fee; no affiliate is entitled to a share.
+  const isSosCallFree = session.isSosCallFree === true || session.metadata?.isSosCallFree === true;
+  if (isSosCallFree) {
+    logger.info("[chatterOnCallCompleted] SOS-Call free — skip all commissions", {
+      sessionId,
+      partnerSubscriberId: session.partnerSubscriberId ?? null,
+    });
+    return;
+  }
 
   // P1-4 AUDIT FIX: Skip commissions for very short calls (< 60s)
   // Harmonized 2026-04-19 with unified/handleCallCompleted.ts (was 30s)

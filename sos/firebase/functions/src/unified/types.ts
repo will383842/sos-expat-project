@@ -339,6 +339,9 @@ export interface CommissionEventCallCompleted {
     connectionFee: number;
     duration: number;
     isPaid: boolean;
+    /** SOS-Call B2B bypass — if true, NO commission to any affiliate. */
+    isSosCallFree?: boolean;
+    partnerSubscriberId?: number | string | null;
   };
   shadowMode?: boolean;
 }

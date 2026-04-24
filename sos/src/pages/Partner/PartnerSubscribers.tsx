@@ -306,6 +306,9 @@ const PartnerSubscribers: React.FC = () => {
                         <FormattedMessage id="partner.subscribers.table.status" defaultMessage="Statut" />
                       </th>
                       <th className="px-6 py-3 text-left text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider hidden md:table-cell">
+                        <FormattedMessage id="partner.subscribers.table.sosCallCode" defaultMessage="Code SOS-Call" />
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider hidden md:table-cell">
                         <FormattedMessage id="partner.subscribers.table.registeredAt" defaultMessage="Inscrit le" />
                       </th>
                       <th className="px-6 py-3 text-left text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider hidden lg:table-cell">
@@ -335,6 +338,18 @@ const PartnerSubscribers: React.FC = () => {
                           <span className={`px-2 py-1 rounded-full text-xs ${STATUS_COLORS[sub.status] || ''}`}>
                             {getStatusLabel(sub.status)}
                           </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-xs font-mono text-gray-600 dark:text-gray-300 hidden md:table-cell">
+                          {(sub as any).sos_call_code ? (
+                            <button
+                              type="button"
+                              onClick={() => { try { navigator.clipboard.writeText((sub as any).sos_call_code); } catch {} }}
+                              title="Cliquer pour copier"
+                              className="hover:text-blue-600"
+                            >
+                              {(sub as any).sos_call_code}
+                            </button>
+                          ) : '-'}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm dark:text-white hidden md:table-cell">
                           {sub.registered_at ? new Date(sub.registered_at).toLocaleDateString() : sub.invited_at ? new Date(sub.invited_at).toLocaleDateString() : '-'}

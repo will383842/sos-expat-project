@@ -42,6 +42,12 @@ export async function handleCallCompleted(
 
   // ========== GUARDS ==========
 
+  // G0. SOS-Call B2B bypass — no commission for free subscriber calls (partner paid flat fee).
+  if (callSession.isSosCallFree === true) {
+    logger.info(`Skipping SOS-Call free (B2B subscriber) ${callSession.id}`);
+    return result;
+  }
+
   // G1. Call must be paid
   if (!callSession.isPaid) {
     logger.info(`Skipping unpaid call ${callSession.id}`);

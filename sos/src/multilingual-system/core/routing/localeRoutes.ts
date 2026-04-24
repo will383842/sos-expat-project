@@ -379,6 +379,8 @@ export type RouteKey =
   | "partner-agreement"   // /partner/accord -> /partner/agreement, etc.
   | "partner-suspended"  // /partner/suspendu -> /partner/suspended, etc.
   | "partner-telegram"   // /partner/telegram -> /partner/telegram, etc.
+  | "partner-invoices"   // /partner/factures -> /partner/invoices, etc. (SOS-Call)
+  | "partner-sos-call-activity" // /partner/activite-sos-call -> /partner/sos-call-activity, etc.
   | "press"              // /presse -> /press, /prensa, etc.
   // Public content pages (Redesign 2026)
   | "articles"           // /articles -> /articles, /articulos, etc.
@@ -1728,6 +1730,28 @@ const ROUTE_TRANSLATIONS: Record<RouteKey, Record<Language, string>> = {
     ch: "partner/telegram",
     hi: "partner/telegram",
     ar: "partner/telegram",
+  },
+  "partner-invoices": {
+    fr: "partner/factures",
+    en: "partner/invoices",
+    es: "partner/facturas",
+    de: "partner/rechnungen",
+    ru: "partner/scheta",
+    pt: "partner/faturas",
+    ch: "partner/fapiao",
+    hi: "partner/invoices",
+    ar: "partner/fawatir",
+  },
+  "partner-sos-call-activity": {
+    fr: "partner/activite-sos-call",
+    en: "partner/sos-call-activity",
+    es: "partner/actividad-sos-call",
+    de: "partner/sos-call-aktivitaet",
+    ru: "partner/sos-call-aktivnost",
+    pt: "partner/atividade-sos-call",
+    ch: "partner/sos-call-huodong",
+    hi: "partner/sos-call-gatividhi",
+    ar: "partner/nashat-sos-call",
   },
   "groupadmin-register": {
     fr: "groupadmin/inscription",

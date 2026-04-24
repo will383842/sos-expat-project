@@ -45,6 +45,12 @@ interface CallSession {
   providerId: string;
   duration?: number;
   isPaid?: boolean;
+  isSosCallFree?: boolean;
+  partnerSubscriberId?: number | string | null;
+  metadata?: {
+    isSosCallFree?: boolean;
+    [key: string]: unknown;
+  };
   completedAt?: Timestamp;
   groupAdminCommissionPaid?: boolean;
 }
@@ -70,6 +76,16 @@ export async function handleCallCompleted(
   const isNowPaid = afterData.status === "completed" && afterData.isPaid === true;
 
   if (!wasNotPaid || !isNowPaid) {
+    return;
+  }
+
+  // 🆘 SOS-Call B2B bypass: no groupAdmin commission for free subscriber calls.
+  const isSosCallFree = afterData.isSosCallFree === true || afterData.metadata?.isSosCallFree === true;
+  if (isSosCallFree) {
+    logger.info("[groupAdminOnCallCompleted] SOS-Call free — skip commission", {
+      sessionId: event.params.sessionId,
+      partnerSubscriberId: afterData.partnerSubscriberId ?? null,
+    });
     return;
   }
 

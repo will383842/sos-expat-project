@@ -29,6 +29,8 @@ import {
   Check,
   Users,
   FileText,
+  Receipt,
+  Activity,
 } from 'lucide-react';
 
 interface PartnerDashboardLayoutProps {
@@ -105,6 +107,21 @@ const PartnerDashboardLayout: React.FC<PartnerDashboardLayoutProps> = ({ childre
       label: intl.formatMessage({ id: 'partner.menu.payments', defaultMessage: 'Paiements' }),
       icon: <Wallet className="w-5 h-5" />,
       path: '/partner/paiements',
+    },
+    // SOS-Call menu items — visible only if this partner's agreement has sos_call_active=true.
+    // The pages themselves check access via their own data fetching; dimming an unavailable
+    // item would require wiring agreement.sos_call_active into this layout (deferred).
+    {
+      id: 'sos-call-invoices',
+      label: intl.formatMessage({ id: 'partner.menu.invoices', defaultMessage: 'Mes factures' }),
+      icon: <Receipt className="w-5 h-5" />,
+      path: '/partner/factures',
+    },
+    {
+      id: 'sos-call-activity',
+      label: intl.formatMessage({ id: 'partner.menu.sos_call_activity', defaultMessage: 'Activité SOS-Call' }),
+      icon: <Activity className="w-5 h-5" />,
+      path: '/partner/activite-sos-call',
     },
   ];
 

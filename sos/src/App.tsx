@@ -230,6 +230,8 @@ const PartnerSubscribers = lazy(() => import('./pages/Partner/PartnerSubscribers
 const PartnerAgreement = lazy(() => import('./pages/Partner/PartnerAgreement'));
 const PartnerSuspended = lazy(() => import('./pages/Partner/PartnerSuspended'));
 const PartnerTelegramOnboarding = lazy(() => import('./pages/Partner/PartnerTelegramOnboarding'));
+const PartnerInvoices = lazy(() => import('./pages/Partner/PartnerInvoices'));
+const PartnerSosCallActivity = lazy(() => import('./pages/Partner/PartnerSosCallActivity'));
 const PartnerLanding = lazy(() => import('./pages/Partners/PartnerLanding'));
 const PartnersPage = lazy(() => import('./pages/Partners/PartnersPage'));
 
@@ -631,6 +633,8 @@ const protectedUserRoutes: RouteConfig[] = [
   { path: "/partner/profil", component: PartnerProfile, protected: true, role: 'partner', translated: "partner-profile" },
   { path: "/partner/paiements", component: PartnerPayments, protected: true, role: 'partner', translated: "partner-payments" },
   { path: "/partner/suspendu", component: PartnerSuspended, protected: true, role: 'partner', translated: "partner-suspended" },
+  { path: "/partner/factures", component: PartnerInvoices, protected: true, role: 'partner', translated: "partner-invoices" },
+  { path: "/partner/activite-sos-call", component: PartnerSosCallActivity, protected: true, role: 'partner', translated: "partner-sos-call-activity" },
 ];
 
 // ====================================

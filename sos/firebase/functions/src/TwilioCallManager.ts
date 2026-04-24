@@ -165,6 +165,10 @@ export interface CallSessionState {
     providerSetOffline?: boolean;
     // P0-2 FIX: Provider country for gateway validation
     providerCountry?: string;
+    // 🆘 SOS-Call B2B bypass: flat-fee subscriber call, no Stripe capture needed
+    isSosCallFree?: boolean;
+    sosCallSessionToken?: string;
+    partnerSubscriberId?: number | string | null;
   };
 }
 
@@ -2670,7 +2674,68 @@ export class TwilioCallManager {
         logger.info(`💳 [PAYPAL DEBUG]   duration: ${duration}s (min: ${CALL_CONFIG.MIN_CALL_DURATION}s)`);
       }
 
-      const shouldCapture = this.shouldCapturePayment(callSession, duration);
+      // 🆘 SOS-Call B2B free call branch:
+      // - No Stripe/PayPal capture (nothing to capture — the B2B partner pays a monthly flat fee)
+      // - BUT the provider still earned their fixed fee (30€ lawyer / 10€ expat)
+      // - We write payment.providerAmount so the provider's earnings dashboard sees it
+      // - No affiliate commissions (blocked by isSosCallFree guards in onCallCompleted triggers)
+      // - Still run cooldown scheduling below so provider becomes available again after 5 min
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const sessionAny = callSession as any;
+      const isSosCallFree =
+        sessionAny.isSosCallFree === true ||
+        callSession.metadata?.isSosCallFree === true;
+
+      if (isSosCallFree) {
+        logger.info(`🆘 [${completionId}] SOS-Call B2B free call — hold provider payment until partner invoice is paid`);
+        if (duration >= CALL_CONFIG.MIN_CALL_DURATION) {
+          try {
+            const { getPricingConfig } = await import("./services/pricingService");
+            const pricingConfig = await getPricingConfig();
+            const serviceType = callSession.metadata?.providerType || "expat";
+            const providerAmount = pricingConfig[serviceType].eur.providerAmount;
+            const providerAmountCents = Math.round(providerAmount * 100);
+
+            // HOLD STATUS: provider amount is RECORDED but NOT YET WITHDRAWABLE.
+            // The provider is paid only when (a) the partner pays their monthly invoice
+            // AND (b) the 60-day commercial delay is elapsed.
+            // When ReleaseProviderPaymentsOnInvoicePaid runs, it flips this status to
+            // 'captured_sos_call_free' and sets releasedAt/availableForWithdrawalAt.
+            const now = admin.firestore.Timestamp.now();
+            await sessionRef.update({
+              "payment.status": "pending_partner_invoice", // not yet captured for the provider
+              "payment.providerAmount": providerAmount,
+              "payment.providerAmountCents": providerAmountCents,
+              "payment.gateway": "sos_call_free",
+              "payment.holdReason": "b2b_invoice_pending",
+              "payment.holdStartedAt": now,
+              // Earliest date the provider can withdraw (60 days from call).
+              // Effective unlock also requires the partner invoice to be paid.
+              "payment.availableFromDate": admin.firestore.Timestamp.fromMillis(
+                now.toMillis() + 60 * 24 * 60 * 60 * 1000
+              ),
+              "metadata.updatedAt": now,
+              // We do NOT set isPaid: true here — provider dashboards show "pending partner payment"
+            });
+
+            logger.info(
+              `🆘 [${completionId}] Provider amount recorded ${providerAmount}€ (${providerAmountCents} cents) — HELD until partner invoice paid + 60d delay`
+            );
+          } catch (payErr) {
+            logger.error(`🆘 [${completionId}] Failed to record provider hold for SOS-Call free`, payErr);
+          }
+        } else {
+          logger.info(`🆘 [${completionId}] SOS-Call free call too short (${duration}s) — no provider credit`);
+          await sessionRef.update({
+            "payment.status": "no_credit_short_call",
+            "payment.gateway": "sos_call_free",
+            "metadata.updatedAt": admin.firestore.Timestamp.now(),
+          });
+        }
+        // Skip capture/refund branch BUT continue to cooldown + logCallRecord below
+      }
+
+      const shouldCapture = !isSosCallFree && this.shouldCapturePayment(callSession, duration);
       logger.info(`📄 Should capture payment: ${shouldCapture}`);
 
       if (shouldCapture) {
@@ -2679,8 +2744,9 @@ export class TwilioCallManager {
           logger.info(`💳 [PAYPAL] Initiating PayPal capture for order: ${callSession.payment.paypalOrderId}`);
         }
         await this.capturePaymentForSession(sessionId);
-      } else {
+      } else if (!isSosCallFree) {
         // Call duration < MIN_CALL_DURATION (60s) or payment not authorized - refund the payment
+        // SOS-Call free calls skip this branch entirely (nothing to refund, no paymentIntent)
         logger.info(`📄 Call duration too short or payment not authorized - processing refund for session: ${sessionId}`);
         // P0 FIX: Use "early_disconnect" in refundReason so frontend shows correct message
         const refundReason = duration < CALL_CONFIG.MIN_CALL_DURATION
@@ -2690,7 +2756,7 @@ export class TwilioCallManager {
         // payment.status="processing" atomiquement (lignes 2583-2586 du lock anti-race).
         // Sans ce flag, processRefund voit "processing" (qu'on a nous-même écrit) et skip.
         await this.processRefund(sessionId, refundReason, { bypassProcessingCheck: true });
-        
+
         // Create invoices even for refunded calls (marked as refunded)
         const updatedSession = await this.getCallSession(sessionId);
         if (updatedSession && !updatedSession.metadata?.invoicesCreated) {

@@ -51,6 +51,9 @@ interface CreateCallRequest {
   clientCurrentCountry?: string;
   clientFirstName?: string;
   clientNationality?: string;
+  // SOS-Call (B2B flat-rate): optional session token from Partner Engine.
+  // When provided AND valid, bypasses Stripe paymentIntent validation entirely.
+  sosCallSessionToken?: string;
 }
 
 /**
@@ -217,7 +220,13 @@ export const createAndScheduleCallHTTPS = onCall(
         bookingDescription,
         clientCurrentCountry,
         clientFirstName,
-        clientNationality} = request.data;
+        clientNationality,
+        // SOS-Call B2B: optional session token (bypasses Stripe if valid)
+        sosCallSessionToken} = request.data;
+
+      // SOS-Call mode flag — set to true below if session token is verified with Partner Engine
+      let isSosCallFree = false;
+      let sosCallData: { subscriber_id?: number; partner_firebase_id?: string; agreement_id?: number } | null = null;
 
       // Normaliser la devise (eur ou usd, minuscule)
       const currency = (requestCurrency?.toLowerCase() || 'eur') as 'eur' | 'usd';
@@ -246,10 +255,12 @@ export const createAndScheduleCallHTTPS = onCall(
       if (!providerType) {
         missingFields.push('providerType');
       }
-      if (!paymentIntentId) {
-        missingFields.push('paymentIntentId');
+      // paymentIntentId is only required for standard (paid) calls, not for SOS-Call free calls
+      if (!paymentIntentId && !sosCallSessionToken) {
+        missingFields.push('paymentIntentId (ou sosCallSessionToken)');
       }
-      if (!amount || typeof amount !== 'number' || amount <= 0) {
+      // amount is only required for paid calls (SOS-Call = free)
+      if (!sosCallSessionToken && (!amount || typeof amount !== 'number' || amount <= 0)) {
         missingFields.push('amount (doit être un nombre positif)');
       }
 
@@ -427,50 +438,124 @@ export const createAndScheduleCallHTTPS = onCall(
       }
 
       // ========================================
-      // 7. VALIDATION DU PAYMENT INTENT (format + vérification Stripe)
+      // 7a. SOS-CALL BYPASS (B2B forfait mensuel)
       // ========================================
-      if (!paymentIntentId || !paymentIntentId.startsWith('pi_')) {
-        console.error(`❌ [${requestId}] PaymentIntent ID invalide:`, paymentIntentId);
-        throw new HttpsError(
-          'invalid-argument',
-          'PaymentIntent ID invalide ou manquant.'
-        );
+      // If a sosCallSessionToken is provided, verify it with the Partner Engine Laravel.
+      // If valid, SKIP the Stripe validation entirely — the partner pays a flat monthly
+      // fee and the client gets a free call.
+      if (sosCallSessionToken) {
+        try {
+          // Lazy import to avoid loading secrets when not needed for standard calls
+          const { getPartnerEngineUrl, getPartnerEngineApiKey } = await import('./lib/secrets');
+          const baseUrl = getPartnerEngineUrl();
+          const apiKey = getPartnerEngineApiKey();
+
+          if (!baseUrl || !apiKey) {
+            console.error(`❌ [${requestId}] Partner Engine config missing for SOS-Call bypass`);
+            throw new HttpsError('unavailable', 'SOS-Call unavailable: configuration missing');
+          }
+
+          const response = await fetch(`${baseUrl}/api/sos-call/check-session`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'X-Engine-Secret': apiKey,
+            },
+            body: JSON.stringify({
+              session_token: sosCallSessionToken,
+              call_type: providerType, // 'lawyer' or 'expat'
+            }),
+            signal: AbortSignal.timeout(5_000),
+          });
+
+          interface SosCallCheckSessionResponse {
+            valid?: boolean;
+            reason?: string;
+            subscriber_id?: number;
+            partner_firebase_id?: string;
+            agreement_id?: number;
+          }
+
+          const body = await response.json().catch(() => ({} as SosCallCheckSessionResponse)) as SosCallCheckSessionResponse;
+
+          if (!response.ok || !body?.valid) {
+            console.error(`❌ [${requestId}] SOS-Call session verification failed:`, body);
+            throw new HttpsError(
+              'failed-precondition',
+              'Votre session SOS-Call est invalide ou a expiré. Veuillez recommencer depuis sos-call.sos-expat.com'
+            );
+          }
+
+          isSosCallFree = true;
+          sosCallData = {
+            subscriber_id: body.subscriber_id,
+            partner_firebase_id: body.partner_firebase_id,
+            agreement_id: body.agreement_id,
+          };
+
+          console.log(`✅ [${requestId}] SOS-Call session verified — BYPASS Stripe`, {
+            subscriber_id: body.subscriber_id,
+            partner_firebase_id: body.partner_firebase_id,
+          });
+        } catch (sosCallError) {
+          if (sosCallError instanceof HttpsError) throw sosCallError;
+          console.error(`❌ [${requestId}] SOS-Call check-session error:`, sosCallError);
+          throw new HttpsError(
+            'unavailable',
+            'Impossible de vérifier votre accès SOS-Call. Veuillez réessayer.'
+          );
+        }
       }
 
-      // P0-3 AUDIT FIX: Verify PaymentIntent exists in Stripe and matches expected amount
-      // Without this check, an attacker could send a fabricated paymentIntentId and get a free call
-      try {
-        const pi = await stripeManager.retrievePaymentIntent(paymentIntentId);
-        const piStatus = pi.status;
-        const piAmount = pi.amount; // in cents
-
-        // Payment must be authorized (succeeded or requires_capture)
-        if (!['succeeded', 'requires_capture', 'processing'].includes(piStatus)) {
-          console.error(`❌ [${requestId}] PaymentIntent not authorized: status=${piStatus}`);
-          throw new HttpsError(
-            'failed-precondition',
-            'Le paiement n\'a pas été autorisé. Veuillez réessayer.'
-          );
-        }
-
-        // Verify amount matches (convert amount from euros to cents for comparison)
-        const expectedCents = Math.round(amount * 100);
-        if (Math.abs(piAmount - expectedCents) > 100) { // 1€ tolerance for rounding
-          console.error(`❌ [${requestId}] PaymentIntent amount mismatch: stripe=${piAmount} vs expected=${expectedCents}`);
+      // ========================================
+      // 7b. VALIDATION DU PAYMENT INTENT (format + vérification Stripe)
+      // Skipped entirely when isSosCallFree === true
+      // ========================================
+      if (!isSosCallFree) {
+        if (!paymentIntentId || !paymentIntentId.startsWith('pi_')) {
+          console.error(`❌ [${requestId}] PaymentIntent ID invalide:`, paymentIntentId);
           throw new HttpsError(
             'invalid-argument',
-            'Le montant du paiement ne correspond pas.'
+            'PaymentIntent ID invalide ou manquant.'
           );
         }
 
-        console.log(`✅ [${requestId}] PaymentIntent vérifié via Stripe: status=${piStatus}, amount=${piAmount}`);
-      } catch (stripeError) {
-        if (stripeError instanceof HttpsError) throw stripeError;
-        console.error(`❌ [${requestId}] Stripe PaymentIntent verification failed:`, stripeError);
-        throw new HttpsError(
-          'failed-precondition',
-          'Impossible de vérifier le paiement. Veuillez réessayer.'
-        );
+        // P0-3 AUDIT FIX: Verify PaymentIntent exists in Stripe and matches expected amount
+        // Without this check, an attacker could send a fabricated paymentIntentId and get a free call
+        try {
+          const pi = await stripeManager.retrievePaymentIntent(paymentIntentId);
+          const piStatus = pi.status;
+          const piAmount = pi.amount; // in cents
+
+          // Payment must be authorized (succeeded or requires_capture)
+          if (!['succeeded', 'requires_capture', 'processing'].includes(piStatus)) {
+            console.error(`❌ [${requestId}] PaymentIntent not authorized: status=${piStatus}`);
+            throw new HttpsError(
+              'failed-precondition',
+              'Le paiement n\'a pas été autorisé. Veuillez réessayer.'
+            );
+          }
+
+          // Verify amount matches (convert amount from euros to cents for comparison)
+          const expectedCents = Math.round(amount * 100);
+          if (Math.abs(piAmount - expectedCents) > 100) { // 1€ tolerance for rounding
+            console.error(`❌ [${requestId}] PaymentIntent amount mismatch: stripe=${piAmount} vs expected=${expectedCents}`);
+            throw new HttpsError(
+              'invalid-argument',
+              'Le montant du paiement ne correspond pas.'
+            );
+          }
+
+          console.log(`✅ [${requestId}] PaymentIntent vérifié via Stripe: status=${piStatus}, amount=${piAmount}`);
+        } catch (stripeError) {
+          if (stripeError instanceof HttpsError) throw stripeError;
+          console.error(`❌ [${requestId}] Stripe PaymentIntent verification failed:`, stripeError);
+          throw new HttpsError(
+            'failed-precondition',
+            'Impossible de vérifier le paiement. Veuillez réessayer.'
+          );
+        }
       }
 
       // ========================================
@@ -535,30 +620,91 @@ export const createAndScheduleCallHTTPS = onCall(
 
       // ========================================
       // 9. ÉCRITURE VERS LA COLLECTION PAYMENTS
+      // (skipped for SOS-Call free — no payment intent to link)
       // ========================================
-      try {
-        console.log(`💾 [${requestId}] Écriture vers collection payments - PaymentIntent: ${paymentIntentId}`);
-        
-        await admin.firestore()
-          .collection('payments')
-          .doc(paymentIntentId) // l'ID du PaymentIntent passé par le front
-          .set({ 
-            callSessionId: callSession.id, 
-            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-            // Ajout d'informations contextuelles utiles
-            amount: amount,
-            serviceType: serviceType,
-            clientId: clientId,
-            providerId: providerId,
-            status: 'call_session_created',
-            requestId: requestId
-          }, { merge: true });
+      if (!isSosCallFree && paymentIntentId) {
+        try {
+          console.log(`💾 [${requestId}] Écriture vers collection payments - PaymentIntent: ${paymentIntentId}`);
 
-        console.log(`✅ [${requestId}] Écriture payments réussie - Lien créé: ${paymentIntentId} → ${callSession.id}`);
-      } catch (paymentsError) {
-        console.error(`❌ [${requestId}] Erreur écriture payments:`, paymentsError);
-        // On ne fait pas échouer la fonction pour autant, juste un warning
-        console.warn(`⚠️ [${requestId}] Session créée mais lien payments échoué - webhook pourra toujours fonctionner`);
+          await admin.firestore()
+            .collection('payments')
+            .doc(paymentIntentId) // l'ID du PaymentIntent passé par le front
+            .set({
+              callSessionId: callSession.id,
+              updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+              // Ajout d'informations contextuelles utiles
+              amount: amount,
+              serviceType: serviceType,
+              clientId: clientId,
+              providerId: providerId,
+              status: 'call_session_created',
+              requestId: requestId
+            }, { merge: true });
+
+          console.log(`✅ [${requestId}] Écriture payments réussie - Lien créé: ${paymentIntentId} → ${callSession.id}`);
+        } catch (paymentsError) {
+          console.error(`❌ [${requestId}] Erreur écriture payments:`, paymentsError);
+          // On ne fait pas échouer la fonction pour autant, juste un warning
+          console.warn(`⚠️ [${requestId}] Session créée mais lien payments échoué - webhook pourra toujours fonctionner`);
+        }
+      } else if (isSosCallFree) {
+        // Mark call_sessions as SOS-Call free for downstream handlers (onCallCompleted will skip commission)
+        try {
+          await admin.firestore()
+            .collection('call_sessions')
+            .doc(callSession.id)
+            .set({
+              isSosCallFree: true,
+              partnerSubscriberId: sosCallData?.subscriber_id ?? null,
+              partnerFirebaseId: sosCallData?.partner_firebase_id ?? null,
+              partnerAgreementId: sosCallData?.agreement_id ?? null,
+              sosCallSessionToken: sosCallSessionToken,
+              metadata: {
+                isSosCallFree: true,
+                sosCallPartnerFirebaseId: sosCallData?.partner_firebase_id ?? null,
+                sosCallSubscriberId: sosCallData?.subscriber_id ?? null,
+              },
+              updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+            }, { merge: true });
+          console.log(`✅ [${requestId}] call_session marqué isSosCallFree=true (skip Stripe)`);
+        } catch (markErr) {
+          console.warn(`⚠️ [${requestId}] Could not mark call_session as SOS-Call free:`, markErr);
+        }
+
+        // Log the call to Partner Engine (non-blocking, best-effort)
+        try {
+          const { getPartnerEngineUrl, getPartnerEngineApiKey } = await import('./lib/secrets');
+          const baseUrl = getPartnerEngineUrl();
+          const apiKey = getPartnerEngineApiKey();
+
+          // Fire and forget — we don't want to block the call scheduling if Partner Engine is slow
+          fetch(`${baseUrl}/api/sos-call/log`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Engine-Secret': apiKey,
+            },
+            body: JSON.stringify({
+              session_token: sosCallSessionToken,
+              call_session_id: callSession.id,
+              call_type: providerType,
+              duration_seconds: 0, // will be updated by onCallCompleted trigger
+            }),
+            signal: AbortSignal.timeout(10_000),
+          }).then(async (res) => {
+            if (!res.ok) {
+              const text = await res.text().catch(() => '');
+              console.warn(`⚠️ [${requestId}] Partner Engine /sos-call/log returned ${res.status}: ${text}`);
+            } else {
+              console.log(`✅ [${requestId}] SOS-Call logged to Partner Engine`);
+            }
+          }).catch((err) => {
+            console.warn(`⚠️ [${requestId}] Partner Engine /sos-call/log failed (non-blocking):`, err?.message || err);
+          });
+        } catch (logErr) {
+          // Truly non-blocking — if we can't even load secrets, the call still goes through
+          console.warn(`⚠️ [${requestId}] Could not dispatch SOS-Call log:`, logErr);
+        }
       }
 
       // ========================================

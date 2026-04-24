@@ -56,6 +56,16 @@ export async function handleCallCompleted(
     return;
   }
 
+  // 🆘 SOS-Call B2B bypass: no affiliate commission for free subscriber calls.
+  const isSosCallFree = after.isSosCallFree === true || after.metadata?.isSosCallFree === true;
+  if (isSosCallFree) {
+    logger.info("[affiliateOnCallCompleted] SOS-Call free — skip commission", {
+      sessionId: event.params.sessionId,
+      partnerSubscriberId: after.partnerSubscriberId ?? null,
+    });
+    return;
+  }
+
   // P1-4 AUDIT FIX: Skip commissions for very short calls (< 60s)
   // Harmonized 2026-04-19 with unified/handleCallCompleted.ts (was 30s)
   const MIN_CALL_DURATION_FOR_COMMISSION = 60;
