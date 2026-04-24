@@ -3373,9 +3373,10 @@ const BookingRequest: React.FC = () => {
             } catch (callableErr) {
               const raw = callableErr instanceof Error ? callableErr.message : String(callableErr);
               // Detect expired/invalid SOS-Call session and surface a dedicated modal.
+              // Covers both English ("Invalid or expired SOS-Call session", "invalid token")
+              // and French ("Session invalide", "expirée") error messages from Firebase.
               if (
-                /expired|invalid.*session|Invalid or expired SOS-Call/i.test(raw) ||
-                /invalid.*token/i.test(raw)
+                /expired|expir[ée]|invalid.*session|session.*invalide|invalid.*token|token.*invalide|SOS-Call session/i.test(raw)
               ) {
                 setSosCallExpiredModal(true);
                 // Clear the stale token so the user can re-enter manually if they want
