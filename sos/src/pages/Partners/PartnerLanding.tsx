@@ -1125,9 +1125,9 @@ const PartnerLanding: React.FC = () => {
     {
       icon: Lock,
       titleId: 'partner.landing.v2.corporates.gdpr.title',
-      titleDefault: 'Conformité RGPD',
+      titleDefault: 'Conformité internationale',
       descId: 'partner.landing.v2.corporates.gdpr.desc',
-      descDefault: 'DPA inclus, hébergement européen, audit trail complet. Adapté aux services juridiques exigeants.',
+      descDefault: 'DPA conforme RGPD (UE), CCPA (Californie), LGPD (Brésil), PIPEDA (Canada), POPIA (Afrique du Sud), APP (Australie). Hébergement multi-régions, audit trail complet, sous-traitants identifiés. Adapté aux services juridiques exigeants partout dans le monde.',
     },
     {
       icon: Activity,
@@ -1315,10 +1315,10 @@ const PartnerLanding: React.FC = () => {
               </div>
 
               {/* Headline */}
-              <h1 id="partner-heading" className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.1] mb-6 tracking-tight">
+              <h1 id="partner-heading" className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.1] mb-8 tracking-tight">
                 <FormattedMessage
                   id="partner.landing.v2.hero.title"
-                  defaultMessage="Un service juridique et administratif complet pour vos clients {highlight}"
+                  defaultMessage="Un service juridique et pratique pour vos clients {highlight}"
                   values={{
                     highlight: (
                       <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
@@ -1329,11 +1329,11 @@ const PartnerLanding: React.FC = () => {
                 />
               </h1>
 
-              {/* Subtitle */}
-              <p className="text-lg md:text-xl lg:text-2xl text-gray-400 max-w-3xl mx-auto mb-10 leading-relaxed">
+              {/* Subtitle — broken into airy lines so it doesn't feel like a wall of text */}
+              <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-3xl mx-auto mb-12 leading-loose">
                 <FormattedMessage
                   id="partner.landing.v2.hero.subtitle"
-                  defaultMessage="Voyageurs, vacanciers, expatriés, étudiants, professionnels en mobilité : offrez à vos clients, membres ou abonnés un accès direct à des avocats et experts dans 197 pays, 24h/24. Une tâche en moins pour vos équipes, un service complémentaire d'exception pour votre communauté."
+                  defaultMessage="Voyageurs, vacanciers, touristes, digital nomades, expatriés, étudiants. Vos clients accèdent à des avocats et experts dans 197 pays, 24h/24. Une seule facture en fin de mois. Dashboard temps réel. Zéro logistique pour vos équipes."
                 />
               </p>
 
