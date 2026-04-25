@@ -5824,6 +5824,15 @@
         { "fieldPath": "payment.status", "order": "ASCENDING" },
         { "fieldPath": "completedAt", "order": "DESCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "call_sessions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "providerId", "order": "ASCENDING" },
+        { "fieldPath": "payment.status", "order": "ASCENDING" },
+        { "fieldPath": "payment.availableFromDate", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": [
