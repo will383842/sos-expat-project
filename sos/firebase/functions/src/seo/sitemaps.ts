@@ -5,6 +5,7 @@
 
 import { onRequest } from 'firebase-functions/v2/https';
 import * as admin from 'firebase-admin';
+import { COUNTRY_SLUG_TRANSLATIONS } from '../data/country-slug-translations';
 
 // Lazy initialization to avoid issues during deployment analysis
 const IS_DEPLOYMENT_ANALYSIS =
@@ -854,73 +855,16 @@ const NAME_TO_ISO: Record<string, string> = {
   'Taiwan': 'TW', 'Tanzania': 'TZ', 'Tunisia': 'TN', 'Turkey': 'TR',
 };
 
-/** Country slug per language for the most common countries */
-const COUNTRY_SLUGS: Record<string, Record<string, string>> = {
-  TH: { fr: 'thailande', en: 'thailand', es: 'tailandia', de: 'thailand', pt: 'tailandia', ru: 'tailand', zh: 'taiguo', ar: 'tailand', hi: 'thailand' },
-  FR: { fr: 'france', en: 'france', es: 'francia', de: 'frankreich', pt: 'franca', ru: 'frantsiya', zh: 'faguo', ar: 'faransa', hi: 'france' },
-  US: { fr: 'etats-unis', en: 'united-states', es: 'estados-unidos', de: 'vereinigte-staaten', pt: 'estados-unidos', ru: 'ssha', zh: 'meiguo', ar: 'al-wilayat-al-muttahida', hi: 'america' },
-  GB: { fr: 'royaume-uni', en: 'united-kingdom', es: 'reino-unido', de: 'vereinigtes-koenigreich', pt: 'reino-unido', ru: 'velikobritaniya', zh: 'yingguo', ar: 'al-mamlaka-al-muttahida', hi: 'britain' },
-  DE: { fr: 'allemagne', en: 'germany', es: 'alemania', de: 'deutschland', pt: 'alemanha', ru: 'germaniya', zh: 'deguo', ar: 'almanya', hi: 'germany' },
-  ES: { fr: 'espagne', en: 'spain', es: 'espana', de: 'spanien', pt: 'espanha', ru: 'ispaniya', zh: 'xibanya', ar: 'isbanya', hi: 'spain' },
-  IT: { fr: 'italie', en: 'italy', es: 'italia', de: 'italien', pt: 'italia', ru: 'italiya', zh: 'yidali', ar: 'italya', hi: 'italy' },
-  PT: { fr: 'portugal', en: 'portugal', es: 'portugal', de: 'portugal', pt: 'portugal', ru: 'portugaliya', zh: 'putaoya', ar: 'al-burtughal', hi: 'portugal' },
-  BR: { fr: 'bresil', en: 'brazil', es: 'brasil', de: 'brasilien', pt: 'brasil', ru: 'braziliya', zh: 'baxi', ar: 'al-brazil', hi: 'brazil' },
-  CA: { fr: 'canada', en: 'canada', es: 'canada', de: 'kanada', pt: 'canada', ru: 'kanada', zh: 'jianada', ar: 'kanada', hi: 'canada' },
-  AU: { fr: 'australie', en: 'australia', es: 'australia', de: 'australien', pt: 'australia', ru: 'avstraliya', zh: 'aodaliya', ar: 'ustralya', hi: 'australia' },
-  JP: { fr: 'japon', en: 'japan', es: 'japon', de: 'japan', pt: 'japao', ru: 'yaponiya', zh: 'riben', ar: 'al-yaban', hi: 'japan' },
-  CN: { fr: 'chine', en: 'china', es: 'china', de: 'china', pt: 'china', ru: 'kitay', zh: 'zhongguo', ar: 'al-sin', hi: 'china' },
-  IN: { fr: 'inde', en: 'india', es: 'india', de: 'indien', pt: 'india', ru: 'indiya', zh: 'yindu', ar: 'al-hind', hi: 'bharat' },
-  MA: { fr: 'maroc', en: 'morocco', es: 'marruecos', de: 'marokko', pt: 'marrocos', ru: 'marokko', zh: 'moluoge', ar: 'al-maghrib', hi: 'morocco' },
-  DZ: { fr: 'algerie', en: 'algeria', es: 'argelia', de: 'algerien', pt: 'argelia', ru: 'alzhir', zh: 'aerjiliya', ar: 'al-jazair', hi: 'algeria' },
-  TN: { fr: 'tunisie', en: 'tunisia', es: 'tunez', de: 'tunesien', pt: 'tunisia', ru: 'tunis', zh: 'tunisi', ar: 'tunis', hi: 'tunisia' },
-  SN: { fr: 'senegal', en: 'senegal', es: 'senegal', de: 'senegal', pt: 'senegal', ru: 'senegal', zh: 'saineijiaer', ar: 'al-sinighal', hi: 'senegal' },
-  CI: { fr: 'cote-d-ivoire', en: 'ivory-coast', es: 'costa-de-marfil', de: 'elfenbeinkueste', pt: 'costa-do-marfim', ru: 'kot-divuar', zh: 'ketediwa', ar: 'sahil-al-aaj', hi: 'ivory-coast' },
-  CM: { fr: 'cameroun', en: 'cameroon', es: 'camerun', de: 'kamerun', pt: 'camaroes', ru: 'kamerun', zh: 'kamailong', ar: 'al-kamirun', hi: 'cameroon' },
-  BE: { fr: 'belgique', en: 'belgium', es: 'belgica', de: 'belgien', pt: 'belgica', ru: 'belgiya', zh: 'bilishi', ar: 'beljika', hi: 'belgium' },
-  CH: { fr: 'suisse', en: 'switzerland', es: 'suiza', de: 'schweiz', pt: 'suica', ru: 'shveytsariya', zh: 'ruishi', ar: 'swisra', hi: 'switzerland' },
-  NL: { fr: 'pays-bas', en: 'netherlands', es: 'paises-bajos', de: 'niederlande', pt: 'paises-baixos', ru: 'niderlandy', zh: 'helan', ar: 'hulanda', hi: 'netherlands' },
-  MX: { fr: 'mexique', en: 'mexico', es: 'mexico', de: 'mexiko', pt: 'mexico', ru: 'meksika', zh: 'moxige', ar: 'al-maksik', hi: 'mexico' },
-  AE: { fr: 'emirats-arabes-unis', en: 'united-arab-emirates', es: 'emiratos-arabes-unidos', de: 'vereinigte-arabische-emirate', pt: 'emirados-arabes-unidos', ru: 'oae', zh: 'alianqiu', ar: 'al-imarat', hi: 'uae' },
-  SA: { fr: 'arabie-saoudite', en: 'saudi-arabia', es: 'arabia-saudita', de: 'saudi-arabien', pt: 'arabia-saudita', ru: 'saudovskaya-araviya', zh: 'shate', ar: 'al-saudiya', hi: 'saudi-arabia' },
-  EG: { fr: 'egypte', en: 'egypt', es: 'egipto', de: 'aegypten', pt: 'egito', ru: 'yegipet', zh: 'aiji', ar: 'misr', hi: 'egypt' },
-  RU: { fr: 'russie', en: 'russia', es: 'rusia', de: 'russland', pt: 'russia', ru: 'rossiya', zh: 'eluosi', ar: 'rusya', hi: 'russia' },
-  TR: { fr: 'turquie', en: 'turkey', es: 'turquia', de: 'tuerkei', pt: 'turquia', ru: 'turtsiya', zh: 'tuerqi', ar: 'turkya', hi: 'turkey' },
-  PH: { fr: 'philippines', en: 'philippines', es: 'filipinas', de: 'philippinen', pt: 'filipinas', ru: 'filippiny', zh: 'feilvbin', ar: 'al-filibin', hi: 'philippines' },
-  ID: { fr: 'indonesie', en: 'indonesia', es: 'indonesia', de: 'indonesien', pt: 'indonesia', ru: 'indoneziya', zh: 'yindunixiya', ar: 'indunisya', hi: 'indonesia' },
-  VN: { fr: 'vietnam', en: 'vietnam', es: 'vietnam', de: 'vietnam', pt: 'vietna', ru: 'vyetnam', zh: 'yuenan', ar: 'fitnam', hi: 'vietnam' },
-  KH: { fr: 'cambodge', en: 'cambodia', es: 'camboya', de: 'kambodscha', pt: 'camboja', ru: 'kambodzha', zh: 'jianpuzhai', ar: 'kambodya', hi: 'cambodia' },
-  SG: { fr: 'singapour', en: 'singapore', es: 'singapur', de: 'singapur', pt: 'singapura', ru: 'singapur', zh: 'xinjiapo', ar: 'singhafura', hi: 'singapore' },
-  MY: { fr: 'malaisie', en: 'malaysia', es: 'malasia', de: 'malaysia', pt: 'malasia', ru: 'malayziya', zh: 'malaixiya', ar: 'malizya', hi: 'malaysia' },
-  KR: { fr: 'coree-du-sud', en: 'south-korea', es: 'corea-del-sur', de: 'suedkorea', pt: 'coreia-do-sul', ru: 'yuzhnaya-koreya', zh: 'hanguo', ar: 'kurya-al-janubiya', hi: 'south-korea' },
-  SE: { fr: 'suede', en: 'sweden', es: 'suecia', de: 'schweden', pt: 'suecia', ru: 'shvetsiya', zh: 'ruidian', ar: 'al-swid', hi: 'sweden' },
-  NO: { fr: 'norvege', en: 'norway', es: 'noruega', de: 'norwegen', pt: 'noruega', ru: 'norvegiya', zh: 'nuowei', ar: 'al-nurwij', hi: 'norway' },
-  DK: { fr: 'danemark', en: 'denmark', es: 'dinamarca', de: 'daenemark', pt: 'dinamarca', ru: 'daniya', zh: 'danmai', ar: 'al-danimark', hi: 'denmark' },
-  FI: { fr: 'finlande', en: 'finland', es: 'finlandia', de: 'finnland', pt: 'finlandia', ru: 'finlyandiya', zh: 'fenlan', ar: 'finlanda', hi: 'finland' },
-  PL: { fr: 'pologne', en: 'poland', es: 'polonia', de: 'polen', pt: 'polonia', ru: 'polsha', zh: 'bolan', ar: 'bulanda', hi: 'poland' },
-  CZ: { fr: 'republique-tcheque', en: 'czech-republic', es: 'republica-checa', de: 'tschechien', pt: 'republica-checa', ru: 'chekhiya', zh: 'jieke', ar: 'al-tshik', hi: 'czech-republic' },
-  GR: { fr: 'grece', en: 'greece', es: 'grecia', de: 'griechenland', pt: 'grecia', ru: 'gretsiya', zh: 'xila', ar: 'al-yunan', hi: 'greece' },
-  HU: { fr: 'hongrie', en: 'hungary', es: 'hungria', de: 'ungarn', pt: 'hungria', ru: 'vengriya', zh: 'xiongyali', ar: 'al-majar', hi: 'hungary' },
-  RO: { fr: 'roumanie', en: 'romania', es: 'rumania', de: 'rumaenien', pt: 'romenia', ru: 'rumyniya', zh: 'luomaniya', ar: 'rumaniya', hi: 'romania' },
-  AT: { fr: 'autriche', en: 'austria', es: 'austria', de: 'oesterreich', pt: 'austria', ru: 'avstriya', zh: 'aodili', ar: 'al-namsa', hi: 'austria' },
-  IE: { fr: 'irlande', en: 'ireland', es: 'irlanda', de: 'irland', pt: 'irlanda', ru: 'irlandiya', zh: 'aierlan', ar: 'irlanda', hi: 'ireland' },
-  NZ: { fr: 'nouvelle-zelande', en: 'new-zealand', es: 'nueva-zelanda', de: 'neuseeland', pt: 'nova-zelandia', ru: 'novaya-zelandiya', zh: 'xinxilan', ar: 'nyuzilnda', hi: 'new-zealand' },
-  IL: { fr: 'israel', en: 'israel', es: 'israel', de: 'israel', pt: 'israel', ru: 'izrail', zh: 'yiselie', ar: 'israil', hi: 'israel' },
-  LB: { fr: 'liban', en: 'lebanon', es: 'libano', de: 'libanon', pt: 'libano', ru: 'livan', zh: 'libanen', ar: 'lubnan', hi: 'lebanon' },
-  QA: { fr: 'qatar', en: 'qatar', es: 'catar', de: 'katar', pt: 'catar', ru: 'katar', zh: 'kataer', ar: 'qatar', hi: 'qatar' },
-  CO: { fr: 'colombie', en: 'colombia', es: 'colombia', de: 'kolumbien', pt: 'colombia', ru: 'kolumbiya', zh: 'gelunbiya', ar: 'kulumbya', hi: 'colombia' },
-  AR: { fr: 'argentine', en: 'argentina', es: 'argentina', de: 'argentinien', pt: 'argentina', ru: 'argentina', zh: 'agenting', ar: 'al-arjantin', hi: 'argentina' },
-  CL: { fr: 'chili', en: 'chile', es: 'chile', de: 'chile', pt: 'chile', ru: 'chili', zh: 'zhili', ar: 'tshili', hi: 'chile' },
-  PE: { fr: 'perou', en: 'peru', es: 'peru', de: 'peru', pt: 'peru', ru: 'peru', zh: 'bilu', ar: 'biru', hi: 'peru' },
-  KE: { fr: 'kenya', en: 'kenya', es: 'kenia', de: 'kenia', pt: 'quenia', ru: 'keniya', zh: 'kenniya', ar: 'kinya', hi: 'kenya' },
-  MG: { fr: 'madagascar', en: 'madagascar', es: 'madagascar', de: 'madagaskar', pt: 'madagascar', ru: 'madagaskar', zh: 'madajiasijia', ar: 'madaghashqar', hi: 'madagascar' },
-  LU: { fr: 'luxembourg', en: 'luxembourg', es: 'luxemburgo', de: 'luxemburg', pt: 'luxemburgo', ru: 'lyuksemburg', zh: 'lusenbao', ar: 'luksumburgh', hi: 'luxembourg' },
-  HR: { fr: 'croatie', en: 'croatia', es: 'croacia', de: 'kroatien', pt: 'croacia', ru: 'khorvatiya', zh: 'keluodiya', ar: 'kurwatya', hi: 'croatia' },
-  PA: { fr: 'panama', en: 'panama', es: 'panama', de: 'panama', pt: 'panama', ru: 'panama', zh: 'banama', ar: 'banama', hi: 'panama' },
-  CR: { fr: 'costa-rica', en: 'costa-rica', es: 'costa-rica', de: 'costa-rica', pt: 'costa-rica', ru: 'kosta-rika', zh: 'gesidalijia', ar: 'kustarika', hi: 'costa-rica' },
-  EC: { fr: 'equateur', en: 'ecuador', es: 'ecuador', de: 'ecuador', pt: 'equador', ru: 'ekvador', zh: 'eguaduoer', ar: 'al-ikwadur', hi: 'ecuador' },
-  LK: { fr: 'sri-lanka', en: 'sri-lanka', es: 'sri-lanka', de: 'sri-lanka', pt: 'sri-lanka', ru: 'shri-lanka', zh: 'sililanka', ar: 'sirilanka', hi: 'sri-lanka' },
-  UA: { fr: 'ukraine', en: 'ukraine', es: 'ucrania', de: 'ukraine', pt: 'ucrania', ru: 'ukraina', zh: 'wukelan', ar: 'ukranya', hi: 'ukraine' },
-};
+/**
+ * Country slug per language. Source of truth: sos/src/data/country-slug-translations.ts
+ * (synced into sos/firebase/functions/src/data/country-slug-translations.ts).
+ *
+ * Previously this was an inline map of ~65 countries with an ISO-code fallback
+ * that produced redirecting URLs (/lawyers/cu, /anwaelte/bh, etc.) reported by
+ * GSC as "Page avec redirection". Now uses the full 248-country map and skips
+ * emission when an entry is missing.
+ */
+const COUNTRY_SLUGS = COUNTRY_SLUG_TRANSLATIONS;
 
 /** Role paths per language for lawyers */
 const LAWYER_PATHS: Record<string, string> = {
@@ -950,16 +894,17 @@ function normalizeCountryToISO(country: string): string | null {
 }
 
 /**
- * Get the country slug for a given ISO code and language.
- * Falls back to lowercase ISO code if no specific slug exists.
+ * Get the country slug for a given ISO code and language. Returns null when no
+ * canonical slug exists, so callers can skip URL emission instead of generating
+ * an ISO-code fallback (e.g. /lawyers/cu) that 301-redirects to the canonical
+ * (/lawyers/cuba) and shows up in GSC as "Page avec redirection".
  */
-function getCountrySlug(isoCode: string, lang: string): string {
+function getCountrySlug(isoCode: string, lang: string): string | null {
   const slugs = COUNTRY_SLUGS[isoCode];
+  if (!slugs) return null;
   // Chinese: internal code is 'ch' but COUNTRY_SLUGS uses 'zh' key
   const slugLang = lang === 'ch' ? 'zh' : lang;
-  if (slugs && slugs[slugLang]) return slugs[slugLang];
-  // Fallback: lowercase ISO code
-  return isoCode.toLowerCase();
+  return slugs[slugLang] || null;
 }
 
 /** Min number of qualified providers (score ≥ MIN_SEO_SCORE) for a country page to be in sitemap */
@@ -1050,32 +995,51 @@ export const sitemapCountryListings = onRequest(
         .sort((a, b) => a[0].localeCompare(b[0]));
 
       let urlCount = 0;
+      let skippedNoSlug = 0;
       const excludedByThreshold = countryTypeCounts.size - qualifiedEntries.length;
 
       qualifiedEntries.forEach(([entry, providerCount]) => {
         const [isoCode, type] = entry.split('_');
         const rolePaths = type === 'lawyer' ? LAWYER_PATHS : EXPAT_PATHS;
 
+        // Skip countries that aren't in COUNTRY_SLUGS at all — emitting a URL
+        // for them would only be possible via an ISO-code fallback (e.g.
+        // /lawyers/cu), which 301-redirects to the canonical and shows up in
+        // GSC as "Page avec redirection". The fr slug is always present in the
+        // synced map and is the fallback used for x-default below.
+        if (!COUNTRY_SLUGS[isoCode] || !COUNTRY_SLUGS[isoCode]['fr']) {
+          skippedNoSlug++;
+          return;
+        }
+
         // Dynamic priority based on provider count
         const priority = providerCount >= 5 ? '0.9' : '0.7';
 
         languagesToGenerate.forEach(lang => {
+          const countrySlug = getCountrySlug(isoCode, lang);
+          if (!countrySlug) return; // skip URLs for languages that lack a canonical slug
+
           const locale = getLocaleString(lang);
           const rolePath = rolePaths[lang] || rolePaths['en'];
-          const countrySlug = getCountrySlug(isoCode, lang);
           const url = `${SITE_URL}/${locale}/${rolePath}/${countrySlug}`;
 
-          // Generate hreflang for ALL languages (reciprocity required by Google)
-          const hreflangs = LANGUAGES.map(hrefLang => {
-            const hrefLocale = getLocaleString(hrefLang);
-            const hrefRolePath = rolePaths[hrefLang] || rolePaths['en'];
-            const hrefCountrySlug = getCountrySlug(isoCode, hrefLang);
-            return `    <xhtml:link rel="alternate" hreflang="${getHreflangCode(hrefLang)}" href="${escapeXml(`${SITE_URL}/${hrefLocale}/${hrefRolePath}/${hrefCountrySlug}`)}"/>`;
-          }).join('\n');
+          // Hreflang reciprocity: only emit alternates for languages that have
+          // their own canonical slug — silently dropping a hreflang is safer
+          // than pointing it at a redirecting URL.
+          const hreflangs = LANGUAGES
+            .map(hrefLang => {
+              const hrefCountrySlug = getCountrySlug(isoCode, hrefLang);
+              if (!hrefCountrySlug) return null;
+              const hrefLocale = getLocaleString(hrefLang);
+              const hrefRolePath = rolePaths[hrefLang] || rolePaths['en'];
+              return `    <xhtml:link rel="alternate" hreflang="${getHreflangCode(hrefLang)}" href="${escapeXml(`${SITE_URL}/${hrefLocale}/${hrefRolePath}/${hrefCountrySlug}`)}"/>`;
+            })
+            .filter((s): s is string => s !== null)
+            .join('\n');
 
           const defaultLocale = getLocaleString('fr');
           const defaultRolePath = rolePaths['fr'] || rolePaths['en'];
-          const defaultCountrySlug = getCountrySlug(isoCode, 'fr');
+          const defaultCountrySlug = getCountrySlug(isoCode, 'fr')!; // gated above
           const xDefaultUrl = `${SITE_URL}/${defaultLocale}/${defaultRolePath}/${defaultCountrySlug}`;
 
           urlBlocks.push(`  <url>
@@ -1099,7 +1063,7 @@ ${hreflangs}
       res.status(200).send(xml);
 
       const langLabel = filterLang ? ` (lang=${filterLang})` : ' (all langs)';
-      console.log(`✅ Sitemap country listings${langLabel}: ${qualifiedEntries.length} qualified combos (${excludedByThreshold} excluded, min ${minProviders} providers), ${urlCount} URLs from ${snapshot.docs.length} providers`);
+      console.log(`✅ Sitemap country listings${langLabel}: ${qualifiedEntries.length} qualified combos (${excludedByThreshold} excluded by threshold, ${skippedNoSlug} skipped no canonical slug, min ${minProviders} providers), ${urlCount} URLs from ${snapshot.docs.length} providers`);
 
     } catch (error: unknown) {
       const err = error as Error;
