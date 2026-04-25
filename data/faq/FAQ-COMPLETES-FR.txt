@@ -1,0 +1,857 @@
+# FAQ SOS-Expat — Liste complète (FR)
+# Générée le 2026-04-05
+# 75 FAQ
+
+════════════════════════════════════════════════════════════════
+ORDER 1 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/quest-ce-que-sos-expat
+
+Q: Qu'est-ce que SOS-Expat ?
+
+R: SOS-Expat est une plateforme de mise en relation qui offre un premier contact rapide avec des avocats spécialisés et des expats aidants locaux. Notre mission : apporter une première aide immédiate, personnalisée et multilingue à tout expatrié, voyageur ou vacancier, quelle que soit sa nationalité, sa langue ou son pays. Nous couvrons 197 pays et proposons nos services en 9 langues.
+
+════════════════════════════════════════════════════════════════
+ORDER 2 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/comment-fonctionne-la-plateforme
+
+Q: Comment fonctionne la plateforme ?
+
+R: SOS-Expat vous connecte à des prestataires pour un premier contact d'aide rapide :
+
+1. Créez votre compte gratuitement
+2. Choisissez un prestataire (avocat 49€/20min ou expat aidant 19€/30min)
+3. Effectuez un paiement unique (rémunération prestataire + frais de mise en relation)
+4. Soyez mis en relation immédiatement par téléphone
+5. Évaluez votre prestataire après l'appel
+
+Ces appels sont conçus pour apporter une première aide. Toute ouverture de dossier ou collaboration se poursuit directement avec le prestataire, en dehors de la plateforme.
+
+════════════════════════════════════════════════════════════════
+ORDER 5 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/quelle-difference-entre-avocat-et-expat-aidant
+
+Q: Quelle différence entre avocat et expat aidant ?
+
+R: SOS-Expat propose un premier contact rapide avec deux types de prestataires :
+
+• Avocat (49€ / 20 min) : Professionnel du droit diplômé, inscrit au barreau. Premier conseil juridique sur contrats, litiges, immigration, droit du travail...
+
+• Expat Aidant (19€ / 30 min) : Expatrié expérimenté vivant dans votre pays de destination. Premiers conseils pratiques sur démarches administratives, logement, culture locale...
+
+Ces appels constituent une première aide rapide. Si un suivi ou l'ouverture d'un dossier est nécessaire, cela se fait directement entre vous et le prestataire, en dehors de la plateforme SOS-Expat.
+
+════════════════════════════════════════════════════════════════
+ORDER 8 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/qui-sont-les-prestataires-sur-sos-expat
+
+Q: Qui sont les prestataires sur SOS-Expat ?
+
+R: Nos prestataires sont des professionnels vérifiés qui offrent un premier contact d'aide rapide :
+• Avocats : diplômés et inscrits au barreau de leur pays (49€/20min)
+• Expats aidants : expatriés expérimentés vivant depuis au moins 2 ans dans leur pays d'accueil (19€/30min)
+
+Tous passent par un processus de vérification (KYC) et sont notés par les utilisateurs. Les tarifs sont fixés par SOS-Expat, les prestataires ne fixent pas leurs propres prix.
+
+════════════════════════════════════════════════════════════════
+ORDER 11 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/pays-couverts-sos-expat-197-pays
+
+Q: Quels pays sont couverts par SOS-Expat ?
+
+R: SOS-Expat couvre 197 pays dans le monde entier, ce qui en fait l'un des services d'assistance aux expatriés les plus complets disponibles. Que vous soyez en Europe, en Amérique, en Afrique, au Moyen-Orient ou en Asie, un prestataire local peut vous répondre en moins de 5 minutes.
+
+Europe : tous les pays de l'UE, Suisse, Royaume-Uni, Turquie, pays des Balkans
+Amériques : États-Unis, Canada, Mexique, Brésil, Argentine, Colombie et plus de 30 autres pays
+Afrique : 54 pays couverts, dont Maroc, Côte d'Ivoire, Sénégal, Kenya, Afrique du Sud
+Moyen-Orient : Émirats arabes unis, Arabie Saoudite, Qatar, Koweït, Bahreïn, Liban
+Asie-Pacifique : Inde, Chine, Japon, Singapour, Thaïlande, Australie, Nouvelle-Zélande
+
+Cette couverture mondiale est rendue possible par notre réseau de prestataires locaux vérifiés — des avocats et des expatriés aidants qui connaissent parfaitement les réglementations, les démarches et les usages de leur pays. Au moment de votre recherche, vous pouvez filtrer par pays pour trouver le prestataire le plus adapté à votre situation.
+
+════════════════════════════════════════════════════════════════
+ORDER 12 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/langues-disponibles-sos-expat-9-langues
+
+Q: Dans quelles langues SOS-Expat est-il disponible ?
+
+R: SOS-Expat est disponible en 9 langues, couvrant les principaux groupes linguistiques du monde. L'interface, les profils des prestataires, les FAQ et les avis clients sont tous traduits dans ces langues pour vous offrir la meilleure expérience possible.
+
+🇫🇷 Français
+🇬🇧 Anglais
+🇪🇸 Espagnol
+🇩🇪 Allemand
+🇧🇷 Portugais
+🇷🇺 Russe
+🇮🇳 Hindi
+🇸🇦 Arabe
+🇨🇳 Chinois (mandarin)
+
+Lorsque vous vous connectez, la langue est automatiquement détectée selon les paramètres de votre navigateur. Vous pouvez à tout moment changer de langue via le sélecteur en haut de la page. Nos prestataires indiquent également les langues dans lesquelles ils peuvent vous répondre, ce qui vous permet de trouver quelqu'un qui parle votre langue maternelle.
+
+════════════════════════════════════════════════════════════════
+ORDER 13 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/connexion-expert-local-5-minutes-fonctionnement
+
+Q: Comment SOS-Expat connecte-t-il un expert local en moins de 5 minutes ?
+
+R: SOS-Expat fonctionne comme un service de mise en relation instantanée : vous choisissez un prestataire disponible, vous payez en ligne, et vous recevez un appel téléphonique en moins de 5 minutes. Voici le fonctionnement étape par étape :
+
+1. Choisissez votre pays et votre problème : sélectionnez le pays concerné et le type d'aide souhaité (juridique, administratif, logement, santé…)
+2. Consultez les profils disponibles : chaque prestataire affiche ses compétences, ses langues, ses avis clients et sa disponibilité en temps réel
+3. Sélectionnez un prestataire disponible : le statut vert indique qu'il est prêt à répondre immédiatement
+4. Effectuez le paiement sécurisé : par carte bancaire via Stripe, en quelques secondes
+5. Attendez l'appel : le prestataire vous rappelle directement sur votre numéro, généralement en moins de 5 minutes
+
+Il n'y a pas d'application à télécharger, pas de rendez-vous à fixer, pas d'attente en salle virtuelle. Notre réseau de prestataires est réparti dans 197 pays et actif 24h/24, 7j/7.
+
+════════════════════════════════════════════════════════════════
+ORDER 14 | Catégorie: clients
+URL: https://www.sos-expat.com/faq/avocat-urgence-dimanche-jour-ferie-expatrie
+
+Q: Peut-on contacter un avocat en urgence un dimanche soir ou un jour férié ?
+
+R: Oui, SOS-Expat est disponible 24h/24, 7j/7, y compris les dimanches, jours fériés et nuits. C'est précisément pour les situations d'urgence que le service a été conçu. Si vous faites face à une arrestation, une expulsion locative, une garde à vue, un accident ou un litige urgent à l'étranger, vous n'avez pas à attendre le lundi matin.
+
+Disponibilité permanente : nos avocats et experts sont actifs en dehors des horaires de bureau classiques
+Réponse en moins de 5 minutes : choisissez un prestataire avec le statut vert (disponible maintenant)
+Couverture mondiale : grâce aux fuseaux horaires, il y a toujours un prestataire actif quelque part dans le monde
+Appel direct : vous recevez un appel téléphonique, pas un chat ou un email
+
+Pour les urgences les plus critiques (arrestation, garde à vue), pensez à mentionner dès le début de l'appel la nature urgente de la situation pour que le prestataire adapte son accompagnement en conséquence.
+
+════════════════════════════════════════════════════════════════
+ORDER 15 | Catégorie: clients
+URL: https://www.sos-expat.com/faq/aide-refus-visa-probleme-immigration-avocat
+
+Q: SOS-Expat peut-il m'aider en cas de refus de visa ou de problème d'immigration ?
+
+R: Oui, l'immigration et les questions de visa font partie des spécialités les plus demandées sur SOS-Expat. Nos avocats spécialisés en droit de l'immigration peuvent vous conseiller immédiatement, que vous soyez encore dans votre pays d'origine ou déjà à l'étranger.
+
+Refus de visa : comprendre les motifs du refus, préparer un recours ou une nouvelle demande
+Titre de séjour : renouvellement, changement de statut, refus de carte de résidence
+Expulsion ou OQTF : que faire en cas d'obligation de quitter le territoire, recours possibles
+Naturalisation et citoyenneté : conditions, dossiers, délais
+Regroupement familial : procédures pour faire venir conjoint ou enfants
+Visa travail et entrepreneur : obtenir un visa de travail, créer une entreprise à l'étranger
+
+L'avocat vous donnera une analyse de votre situation en droit local et vous indiquera les démarches prioritaires à effectuer. Pour les cas urgents (OQTF, rétention administrative), la mise en relation est prioritaire.
+
+════════════════════════════════════════════════════════════════
+ORDER 16 | Catégorie: clients
+URL: https://www.sos-expat.com/faq/aide-logement-etranger-expat-location
+
+Q: Comment SOS-Expat peut-il m'aider pour trouver un logement à l'étranger ?
+
+R: SOS-Expat peut vous mettre en relation avec un expatrié aidant local qui connaît parfaitement le marché immobilier, les règles locales de location et les démarches administratives liées au logement dans votre pays de destination. Un appel de 30 minutes à 19€ peut vous éviter de nombreuses erreurs coûteuses.
+
+Trouver un logement à distance : les meilleures plateformes locales, les quartiers recommandés, les prix du marché
+Comprendre le contrat de bail local : clauses importantes, dépôt de garantie, durée, conditions de résiliation
+Droits et obligations du locataire : règles spécifiques à chaque pays (état des lieux, charges, préavis)
+Colocation et logement temporaire : options disponibles pour les premières semaines
+Litiges avec un propriétaire : loyer impayé, expulsion abusive, travaux non effectués — faire appel à un avocat local via SOS-Expat
+
+Notre réseau inclut des expatriés aidants qui sont eux-mêmes passés par l'expérience de s'installer dans un nouveau pays. Ils peuvent vous orienter concrètement sans remplacer un professionnel de l'immobilier.
+
+════════════════════════════════════════════════════════════════
+ORDER 17 | Catégorie: clients
+URL: https://www.sos-expat.com/faq/conseils-assurance-sante-couverture-medicale-etranger
+
+Q: Puis-je obtenir des conseils sur l'assurance santé ou la couverture médicale à l'étranger ?
+
+R: Oui, les questions de santé et d'assurance médicale à l'étranger font partie des sujets traités par les expatriés aidants sur SOS-Expat. Ces prestataires vivent ou ont vécu dans le pays concerné et peuvent vous orienter concrètement sur le système de santé local.
+
+Choisir une mutuelle ou assurance expatrié : quelles couvertures sont indispensables selon le pays
+Comprendre le système de santé local : sécurité sociale locale, remboursements, médecins conventionnés
+Trouver un médecin ou un hôpital francophone : contacts recommandés dans de nombreuses villes
+Accident ou hospitalisation d'urgence : comment être pris en charge, que dire à l'hôpital, gestion de la barrière de la langue
+Rapatriement médical : démarches à suivre si votre état de santé nécessite un retour dans votre pays d'origine
+
+Pour les questions purement médicales (diagnostic, traitement), SOS-Expat n'est pas un service médical et ne remplace pas un médecin. Mais pour les questions d'orientation, d'assurance et de démarches administratives liées à la santé, nos experts peuvent vous faire gagner un temps précieux.
+
+════════════════════════════════════════════════════════════════
+ORDER 18 | Catégorie: clients
+URL: https://www.sos-expat.com/faq/probleme-juridique-urgent-etranger-arrestation-fraude
+
+Q: Que faire si j'ai un problème juridique urgent à l'étranger (arrestation, litige, fraude) ?
+
+R: En cas de problème juridique urgent à l'étranger, agir vite et consulter un avocat local est essentiel. SOS-Expat vous permet de joindre un avocat spécialisé en droit local en moins de 5 minutes, 24h/24. Voici les situations les plus fréquentes :
+
+Arrestation ou garde à vue : droit de vous taire, droit à un avocat — l'avocat SOS-Expat peut vous expliquer vos droits dans le pays concerné et coordonner avec un cabinet local
+Litige commercial ou contrat : arnaque, non-paiement, rupture abusive de contrat — évaluation rapide de vos recours
+Fraude ou vol : déclaration à la police locale, démarches auprès de votre ambassade, blocage de comptes bancaires
+Accident de la route : que faire sur place, comment interagir avec la police locale, déclaration d'assurance
+Expulsion locative : procédure légale, délais, recours d'urgence
+Harcèlement ou menace : dépôt de plainte, mesures de protection
+
+Dans tous ces cas, ne signez aucun document avant d'avoir parlé à un avocat. SOS-Expat vous met en relation avec un professionnel qui connaît les droits et procédures locales.
+
+════════════════════════════════════════════════════════════════
+ORDER 19 | Catégorie: providers
+URL: https://www.sos-expat.com/faq/delai-approbation-prestataire-sos-expat
+
+Q: Combien de temps faut-il pour être approuvé comme prestataire sur SOS-Expat ?
+
+R: Le processus d'approbation sur SOS-Expat est entièrement en ligne. Une fois votre inscription terminée et vos documents transmis, l'équipe SOS-Expat examine votre dossier dans les meilleurs délais. Voici les étapes du processus :
+
+Étape 1 — Inscription : création de compte, choix du rôle (avocat ou expatrié aidant), informations personnelles
+Étape 2 — Vérification KYC : soumission d'une pièce d'identité valide (et d'un justificatif de qualifications pour les avocats)
+Étape 3 — Revue par l'équipe SOS-Expat : vérification manuelle des documents pour garantir la qualité du réseau
+Étape 4 — Activation du profil : vous recevez un email de confirmation, votre profil devient visible et vous pouvez recevoir vos premiers appels
+
+Une fois approuvé, vous pouvez immédiatement commencer à recevoir des appels et à générer des commissions. Votre profil affiche vos avis, vos langues et vos disponibilités en temps réel.
+
+════════════════════════════════════════════════════════════════
+ORDER 20 | Catégorie: providers
+URL: https://www.sos-expat.com/faq/choisir-horaires-disponibilite-prestataire
+
+Q: Puis-je choisir mes horaires de disponibilité en tant que prestataire ?
+
+R: Oui, SOS-Expat offre une flexibilité totale sur vos horaires de disponibilité. Vous gérez votre statut en temps réel depuis votre tableau de bord : disponible, occupé ou hors ligne. Il n'y a aucun planning fixe à respecter.
+
+Statut disponible : vous apparaissez dans les recherches et pouvez recevoir des appels. Votre profil s'affiche avec un indicateur vert
+Statut occupé : vous êtes temporairement indisponible (en appel, en réunion, etc.) sans être déconnecté
+Statut hors ligne : votre profil est masqué des recherches, aucun appel ne peut vous parvenir
+
+Vous pouvez passer d'un statut à l'autre en un clic, depuis n'importe quel appareil. Il n'y a pas de minimum d'heures à effectuer par semaine. Certains prestataires sont disponibles quelques heures par semaine, d'autres travaillent à temps plein sur la plateforme. La plateforme s'adapte à votre rythme de vie et à votre fuseau horaire.
+
+════════════════════════════════════════════════════════════════
+ORDER 21 | Catégorie: providers
+URL: https://www.sos-expat.com/faq/optimiser-profil-prestataire-recevoir-plus-appels
+
+Q: Comment optimiser son profil prestataire pour recevoir plus d'appels ?
+
+R: Un profil bien complété reçoit nettement plus d'appels qu'un profil incomplet. Voici les éléments clés pour maximiser votre visibilité sur SOS-Expat :
+
+Photo professionnelle : les profils avec une vraie photo inspirent confiance et sont plus souvent sélectionnés
+Biographie détaillée : décrivez votre expérience, vos spécialités et les pays dans lesquels vous pouvez aider (150 mots minimum)
+Langues complètes : ajoutez toutes les langues dans lesquelles vous pouvez répondre — c'est un critère de filtre essentiel pour les clients
+Disponibilité régulière : les prestataires actifs régulièrement remontent mieux dans les résultats de recherche
+Réponse rapide : répondre rapidement à l'appel entrant améliore votre note et encourage les clients à vous choisir à nouveau
+Avis clients positifs : après chaque appel, un email encourage le client à laisser un avis — la qualité de votre écoute fait la différence
+
+Le système de classement SOS-Expat tient compte de votre taux de réponse, de vos avis et de votre activité récente pour déterminer votre position dans les résultats de recherche.
+
+════════════════════════════════════════════════════════════════
+ORDER 22 | Catégorie: payments
+URL: https://www.sos-expat.com/faq/remboursement-appel-probleme-politique-sos-expat
+
+Q: Peut-on obtenir un remboursement si l'appel ne s'est pas bien déroulé ?
+
+R: SOS-Expat dispose d'une politique de remboursement pour les cas où l'appel ne s'est pas déroulé dans des conditions satisfaisantes. Voici les situations couvertes :
+
+Problème technique grave : si la qualité audio était inacceptable et empêchait la communication, un remboursement peut être accordé
+Appel non abouti : si le prestataire n'a pas rappelé dans les délais attendus, vous pouvez demander un remboursement ou un crédit
+Prestataire non qualifié : si le prestataire était manifestement incompétent pour votre problème, signalez-le via l'interface de notation
+
+En revanche, les remboursements ne sont pas accordés pour :
+
+Un appel correctement effectué dont la réponse ne correspondait pas à ce que vous espériez
+Un problème technique côté client (connexion internet, micro défaillant)
+
+Pour demander un remboursement, contactez le support via la page d'aide de votre compte dans les 48 heures suivant l'appel. Notre équipe examine chaque demande individuellement et vous répond dans les meilleurs délais.
+
+════════════════════════════════════════════════════════════════
+ORDER 23 | Catégorie: payments
+URL: https://www.sos-expat.com/faq/devise-facturation-appels-euros-sos-expat
+
+Q: Dans quelle devise sont facturés les appels sur SOS-Expat ?
+
+R: Les appels sur SOS-Expat sont facturés en euros (€). Les tarifs sont fixes et transparents : 49€ pour une session de 20 minutes avec un avocat, et 19€ pour une session de 30 minutes avec un expatrié aidant. Il n'y a pas de frais cachés ni de facturation à la minute.
+
+Paiement par carte bancaire : Visa, Mastercard, American Express, via la plateforme sécurisée Stripe
+Conversion automatique : si votre carte est libellée dans une autre devise (USD, GBP, CHF, etc.), votre banque effectue la conversion au taux du jour
+Frais de change : les éventuels frais de change sont appliqués par votre banque, pas par SOS-Expat
+Reçu automatique : un reçu de paiement en euros est envoyé par email après chaque appel
+
+SOS-Expat ne stocke jamais vos coordonnées bancaires : le traitement des paiements est entièrement délégué à Stripe, certifié PCI-DSS niveau 1.
+
+════════════════════════════════════════════════════════════════
+ORDER 24 | Catégorie: payments
+URL: https://www.sos-expat.com/faq/facture-officielle-appels-sos-expat
+
+Q: Puis-je obtenir une facture officielle pour mes appels SOS-Expat ?
+
+R: Oui, un reçu de paiement est automatiquement envoyé par email après chaque appel. Ce document contient toutes les informations nécessaires pour votre comptabilité ou vos notes de frais :
+
+Date et heure de la transaction
+Montant en euros (TTC)
+Description du service (session d'assistance téléphonique)
+Numéro de transaction unique
+Informations SOS-Expat (entreprise, adresse, TVA)
+
+Si vous avez besoin d'une facture plus formelle avec vos coordonnées professionnelles, vous pouvez en faire la demande auprès de notre support en précisant :
+
+Votre nom ou raison sociale
+Votre adresse de facturation
+Votre numéro de TVA intracommunautaire (si applicable)
+
+Pour les entreprises ou professionnels qui utilisent SOS-Expat régulièrement pour leurs équipes expatriées, des arrangements de facturation mensuelle peuvent être discutés avec notre équipe commerciale.
+
+════════════════════════════════════════════════════════════════
+ORDER 25 | Catégorie: account
+URL: https://www.sos-expat.com/faq/creer-compte-sos-expat-inscription
+
+Q: Comment créer un compte sur SOS-Expat ?
+
+R: Créer un compte sur SOS-Expat est gratuit et prend moins de 2 minutes. Vous n'avez pas besoin de télécharger une application : tout se passe sur le site web sos-expat.com.
+
+Étape 1 : cliquez sur "S'inscrire" en haut à droite de la page d'accueil
+Étape 2 : entrez votre adresse email et choisissez un mot de passe sécurisé
+Étape 3 : vérifiez votre email via le lien de confirmation envoyé
+Étape 4 : complétez votre profil (nom, pays, langue préférée)
+
+Une fois inscrit en tant que client, vous pouvez immédiatement parcourir les prestataires disponibles et passer votre premier appel. Aucune information de paiement n'est requise lors de l'inscription — vous ne payez qu'au moment de l'appel.
+
+Si vous souhaitez vous inscrire en tant que prestataire (avocat ou expatrié aidant), le processus est légèrement différent et nécessite une vérification d'identité (KYC). Consultez la section "Je suis prestataire" pour plus de détails.
+
+════════════════════════════════════════════════════════════════
+ORDER 26 | Catégorie: account
+URL: https://www.sos-expat.com/faq/protection-donnees-personnelles-rgpd-sos-expat
+
+Q: Comment SOS-Expat protège-t-il mes données personnelles ?
+
+R: SOS-Expat applique les normes les plus élevées en matière de protection des données personnelles, conformément au Règlement Général sur la Protection des Données (RGPD) de l'Union Européenne.
+
+Données collectées : uniquement les données nécessaires au fonctionnement du service (nom, email, pays, numéro de téléphone pour l'appel)
+Appels non enregistrés : vos conversations téléphoniques ne sont jamais enregistrées ni stockées
+Paiements sécurisés : vos coordonnées bancaires ne transitent jamais par nos serveurs — elles sont traitées directement par Stripe (certifié PCI-DSS niveau 1)
+Données chiffrées : toutes les données sont stockées de manière chiffrée sur des serveurs sécurisés
+Pas de revente de données : vos données personnelles ne sont jamais vendues ni partagées avec des tiers à des fins commerciales
+Vos droits RGPD : accès, rectification, suppression, portabilité et opposition — exercez-les à tout moment via votre compte ou par email
+
+Pour toute question relative à vos données, vous pouvez contacter notre délégué à la protection des données (DPO) via la page de contact.
+
+════════════════════════════════════════════════════════════════
+ORDER 27 | Catégorie: account
+URL: https://www.sos-expat.com/faq/supprimer-compte-sos-expat-rgpd
+
+Q: Comment supprimer définitivement mon compte SOS-Expat ?
+
+R: Vous avez le droit de demander la suppression de votre compte SOS-Expat à tout moment, conformément au RGPD (Article 17 — Droit à l'oubli). Voici la procédure :
+
+Depuis votre tableau de bord : accédez à l'onglet "Mes données (GDPR)" → section "Supprimer mon compte" → saisissez votre email de confirmation + cochez la case → cliquez "Demander la suppression"
+Par email : si vous ne pouvez pas vous connecter, envoyez une demande à notre support avec la mention "Demande de suppression de compte RGPD" et l'adresse email de votre compte
+
+Ce qui est supprimé lors de la clôture de votre compte :
+
+Votre profil et vos informations personnelles
+Votre historique d'appels (métadonnées)
+Vos préférences et paramètres
+
+Ce qui peut être conservé pour des raisons légales :
+
+Les données de transaction (factures, paiements) sont conservées conformément aux obligations comptables légales
+Les données nécessaires à la résolution de litiges en cours
+
+La suppression est traitée dans les meilleurs délais après validation de votre demande.
+
+════════════════════════════════════════════════════════════════
+ORDER 28 | Catégorie: technical
+URL: https://www.sos-expat.com/faq/connexion-internet-instable-appel-sos-expat
+
+Q: Que faire si ma connexion internet est instable pendant un appel SOS-Expat ?
+
+R: Les appels SOS-Expat sont des appels téléphoniques classiques — pas des appels VoIP ou vidéo. Cela signifie que la qualité de votre connexion internet n'a pas d'impact direct sur la qualité audio de l'appel. Le prestataire vous appelle sur votre numéro de téléphone ordinaire.
+
+Cependant, si vous rencontrez des problèmes liés à la connexion internet lors de la commande :
+
+Page de paiement qui ne charge pas : rechargez la page ou essayez avec une connexion plus stable (WiFi vs données mobiles)
+Confirmation de commande non reçue : vérifiez vos spams ou utilisez un réseau différent
+Problème lors de l'inscription : vérifiez votre connexion et videz le cache du navigateur
+
+Si vous vous trouvez dans un pays où l'accès à certains sites est restreint et que le site est difficile à charger, vous pouvez essayer :
+
+Utiliser un réseau mobile plutôt que le WiFi local
+Changer de navigateur web
+Contacter notre support pour une procédure alternative
+
+════════════════════════════════════════════════════════════════
+ORDER 29 | Catégorie: technical
+URL: https://www.sos-expat.com/faq/smartphone-sans-application-sos-expat-mobile
+
+Q: SOS-Expat fonctionne-t-il sur smartphone sans application à télécharger ?
+
+R: Oui, SOS-Expat est une application web progressive (PWA) entièrement accessible depuis le navigateur de votre smartphone, sans aucune installation requise. Il est compatible avec tous les appareils modernes.
+
+iPhone / iOS : fonctionne parfaitement sur Safari (iOS 14+). Vous pouvez ajouter le site à votre écran d'accueil pour une expérience proche d'une application native
+Android : compatible avec Chrome, Firefox et Samsung Internet. La fonctionnalité "Ajouter à l'écran d'accueil" crée un raccourci
+Tablette : interface optimisée pour les écrans tablette également
+
+L'interface est entièrement responsive et s'adapte à la taille de votre écran. Vous pouvez :
+
+Rechercher des prestataires disponibles
+Consulter les profils et les avis
+Payer par carte bancaire de manière sécurisée
+Recevoir l'appel directement sur votre numéro de téléphone
+
+Aucune permission spéciale (micro, caméra) n'est nécessaire puisque l'appel est reçu via votre réseau téléphonique habituel, pas via l'application.
+
+════════════════════════════════════════════════════════════════
+ORDER 30 | Catégorie: technical
+URL: https://www.sos-expat.com/faq/confidentialite-securite-appels-sos-expat
+
+Q: Les appels passés via SOS-Expat sont-ils confidentiels et sécurisés ?
+
+R: Oui, les appels via SOS-Expat sont strictement confidentiels. La confidentialité de vos échanges est une priorité absolue, notamment pour les sujets sensibles traités (droit, santé, immigration).
+
+Aucun enregistrement : les conversations téléphoniques ne sont jamais enregistrées ni stockées sur les serveurs de SOS-Expat
+Numéro masqué : votre numéro de téléphone n'est pas communiqué directement au prestataire — il transite via le système téléphonique sécurisé Twilio
+Secret professionnel : les avocats sont soumis au secret professionnel légal. Vos informations ne peuvent pas être divulguées à des tiers
+Connexion HTTPS : toutes les communications entre votre navigateur et nos serveurs sont chiffrées (TLS/SSL)
+Paiements sécurisés : traitement via Stripe, certifié PCI-DSS niveau 1
+Données minimales : seules les informations strictement nécessaires sont collectées et stockées
+
+SOS-Expat ne partage aucune information sur votre appel avec des tiers, des annonceurs ou des partenaires commerciaux.
+
+════════════════════════════════════════════════════════════════
+ORDER 31 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/sos-holidays-service-assistance-vacanciers
+
+Q: Qu'est-ce que SOS Holidays ?
+
+R: SOS Holidays est le service d'assistance dédié aux vacanciers et touristes de la plateforme SOS-Expat. Il vous connecte en moins de 5 minutes avec un expert local ou un avocat dans 197 pays, disponible 24h/24 et 7j/7. Que vous soyez victime d'une arnaque, confronté à un problème avec votre hôtel, bloqué après la perte d'un document ou face à une urgence médicale à l'étranger, SOS Holidays vous met en relation immédiate avec quelqu'un qui connaît les lois et usages locaux. Connexion téléphonique en moins de 5 minutes197 pays couvertsDisponible 24h/24, 7j/7Paiement sécurisé à l'appel, sans abonnementPrestataires vérifiés (KYC) Contrairement à une assurance voyage qui rembourse après coup, SOS Holidays vous fournit une aide concrète et immédiate au moment où vous en avez besoin.
+
+════════════════════════════════════════════════════════════════
+ORDER 32 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/sos-holidays-aide-arnaque-probleme-vacances
+
+Q: SOS Holidays peut-il m'aider si je vis une arnaque ou un problème pendant mes vacances ?
+
+R: Oui, SOS Holidays est conçu pour vous aider face aux situations difficiles en voyage. En moins de 5 minutes, vous êtes mis en relation avec un expert local ou un expatrié aidant qui connaît les lois et usages du pays où vous vous trouvez. SOS Holidays peut vous aider dans des situations comme : Arnaque touristique (faux guides, escroqueries à la location)Litige avec un hôtel ou une agence de voyageVol annulé ou retard important sans compensationProblème médical et orientation vers les bons servicesAccident et démarches avec les autorités localesPerte ou vol de documents (passeport, permis) Le prestataire vous explique vos droits selon la législation locale et vous guide sur les démarches à suivre. Vous payez uniquement l'appel (49€/20 min avec un avocat, 19€/30 min avec un expatrié aidant), sans engagement ni abonnement.
+
+════════════════════════════════════════════════════════════════
+ORDER 33 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/sos-holidays-voyage-affaires-etranger
+
+Q: SOS Holidays est-il utile pour les voyages d'affaires à l'étranger ?
+
+R: Oui, SOS Holidays est particulièrement adapté aux voyages d'affaires. Lors d'un déplacement professionnel, des imprévus peuvent compromettre votre mission : litige contractuel avec un partenaire local, problème douanier, question de droit du travail dans le pays d'accueil, ou simple urgence administrative. SOS Holidays vous donne accès en moins de 5 minutes à un expert local qui connaît la législation du pays. Litiges commerciaux ou contractuels avec des partenaires locauxQuestions douanières ou d'importation/exportationDroit du travail local en cas de mission longue duréeUrgences administratives (visa, documents professionnels)Orientation en cas d'accident ou d'hospitalisation Vous payez à l'appel (49€/20 min ou 19€/30 min), sans abonnement — idéal pour les voyageurs qui ne partent pas assez souvent pour justifier une couverture permanente.
+
+════════════════════════════════════════════════════════════════
+ORDER 34 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/sos-holidays-vs-consulat-difference
+
+Q: Quelle différence entre SOS Holidays et appeler son consulat ?
+
+R: Le consulat et SOS Holidays jouent des rôles complémentaires, mais très différents. Voici les principales différences : Disponibilité : Le consulat est ouvert aux horaires de bureau (souvent 9h-12h en semaine). SOS Holidays est disponible 24h/24, 7j/7.Délai de réponse : Le consulat peut mettre des heures à rappeler. SOS Holidays vous connecte en moins de 5 minutes.Expertise locale : Le consulat vous protège en tant que ressortissant, mais n'intervient pas dans vos litiges privés. SOS Holidays vous connecte avec un expert local (droit local, usages, démarches).Type d'aide : Le consulat aide pour les documents officiels d'urgence. SOS Holidays aide pour les litiges, questions juridiques locales, orientation pratique.Langue : Le consulat parle votre langue nationale. SOS Holidays est disponible en 9 langues. En cas d'urgence à l'étranger, les deux approches sont complémentaires : appelez SOS Holidays pour une aide immédiate et pratique, et votre consulat pour les démarches officielles.
+
+════════════════════════════════════════════════════════════════
+ORDER 35 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/sos-holidays-vs-assurance-voyage-complement
+
+Q: SOS Holidays remplace-t-il mon assurance voyage ?
+
+R: Non, SOS Holidays ne remplace pas une assurance voyage, mais les deux services sont complémentaires. L'assurance voyage vous rembourse après un sinistre. SOS Holidays vous aide au moment où le problème se pose, en temps réel. Assurance voyage : indemnise vos pertes après coup (vol de bagages, annulation, rapatriement médical). Procédure longue, dossier à monter, délai de remboursement.SOS Holidays : conseiller immédiat, guide sur vos droits, démarches locales à entreprendre, contact des bonnes autorités — tout de suite, en moins de 5 minutes. En pratique, SOS Holidays vous aide à maximiser vos chances d'obtenir remboursement de votre assurance en vous expliquant comment documenter la situation, quels recours exercer, et quelles autorités contacter. Les deux sont complémentaires : l'assurance couvre les pertes financières, SOS Holidays couvre l'aide humaine et juridique immédiate.
+
+════════════════════════════════════════════════════════════════
+ORDER 36 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/recontacter-meme-prestataire-appel-precedent
+
+Q: Puis-je recontacter le même prestataire que lors d'un appel précédent ?
+
+R: Oui, SOS-Expat vous permet de retrouver et de contacter directement un prestataire avec qui vous avez déjà travaillé. Chaque prestataire dispose d'une fiche de profil avec ses avis clients, ses spécialités et son statut de disponibilité en temps réel. Si le prestataire est disponible au moment où vous souhaitez l'appeler, vous pouvez le contacter directement depuis son profil. S'il est occupé ou hors ligne, vous pouvez consulter d'autres prestataires disponibles dans la même spécialité et le même pays. Cette fonctionnalité est particulièrement utile lorsque vous avez une situation complexe qui nécessite plusieurs échanges — le prestataire connaît déjà votre contexte et vous n'avez pas à tout réexpliquer. Chaque appel reste facturable séparément (49€/20 min ou 19€/30 min), sans abonnement.
+
+════════════════════════════════════════════════════════════════
+ORDER 37 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/choisir-prestataire-specialite-pays
+
+Q: Puis-je choisir un prestataire selon sa spécialité ou son pays ?
+
+R: Oui, la plateforme SOS-Expat vous permet de rechercher des prestataires selon plusieurs critères : Pays : trouvez un expert local dans le pays où vous vous trouvez ou souhaitez vous installerType de prestataire : avocat (droit local, litiges, immigration) ou expatrié aidant (démarches pratiques, vie quotidienne, orientation)Spécialité : droit immobilier, droit du travail, fiscalité, droit de la famille, immigration, etc.Disponibilité : les prestataires en ligne sont clairement identifiésAvis clients : chaque prestataire affiche les évaluations laissées par les clients précédents Ce système vous permet de trouver le profil le mieux adapté à votre situation spécifique plutôt que d'être mis en relation avec le premier disponible.
+
+════════════════════════════════════════════════════════════════
+ORDER 38 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/avis-prestataires-sos-expat-fonctionnement
+
+Q: Comment fonctionnent les avis sur les prestataires SOS-Expat ?
+
+R: Après chaque appel payant sur SOS-Expat, le client est invité à laisser un avis sur le prestataire qu'il a contacté. Ces avis sont visibles publiquement sur le profil du prestataire et permettent aux futurs clients de faire un choix éclairé. Les avis sont uniquement laissés par des clients ayant effectivement réalisé un appel payant — pas de faux avisChaque profil affiche la note moyenne et le nombre d'avis reçusLes avis contribuent à la visibilité du prestataire sur la plateformeLes prestataires avec de mauvais avis répétés peuvent être suspendus après révision Ce système de notation transparent garantit la qualité du service : les prestataires sont incités à fournir la meilleure aide possible à chaque appel. En tant que client, vous pouvez filtrer les prestataires par note pour choisir les mieux évalués.
+
+════════════════════════════════════════════════════════════════
+ORDER 39 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/prestataire-disponible-temps-reel-appel
+
+Q: Comment savoir si un prestataire est disponible pour un appel maintenant ?
+
+R: Sur SOS-Expat, la disponibilité des prestataires est affichée en temps réel sur leur profil. Chaque prestataire indique manuellement son statut : disponible (en ligne et prêt à recevoir des appels) ou indisponible. Un indicateur visuel sur la fiche du prestataire montre son statut en temps réelSur la page de recherche, vous pouvez filtrer pour n'afficher que les prestataires disponibles immédiatementSi aucun prestataire disponible ne correspond à vos critères, vous pouvez consulter d'autres profils dans des spécialités proches La plateforme couvre 197 pays et 9 langues, ce qui signifie qu'à n'importe quelle heure du jour ou de la nuit, des prestataires sont disponibles quelque part dans le monde pour vous aider — c'est ce qui rend le service disponible 24h/24, 7j/7.
+
+════════════════════════════════════════════════════════════════
+ORDER 40 | Catégorie: technical
+URL: https://www.sos-expat.com/faq/sos-expat-connexion-internet-lente-instable
+
+Q: SOS-Expat fonctionne-t-il avec une connexion internet lente ou instable ?
+
+R: SOS-Expat est une application web qui nécessite une connexion internet pour fonctionner. L'interface est conçue pour être légère et fonctionner sur des connexions de qualité modeste. Pour l'appel téléphonique lui-même, la plateforme utilise Twilio, un service de téléphonie sur IP robuste. L'interface (recherche, profils, paiement) fonctionne sur une connexion 3G ou Wi-Fi basiqueL'appel téléphonique lui-même passe par votre réseau téléphonique ou internet — une connexion stable améliore la qualité audioSi votre connexion est très mauvaise, le prestataire peut vous rappeler sur votre numéro de téléphone local En cas de difficulté de connexion dans un pays avec une infrastructure limitée, l'application reste accessible depuis n'importe quel navigateur, sans installation ni téléchargement.
+
+════════════════════════════════════════════════════════════════
+ORDER 41 | Catégorie: clients
+URL: https://www.sos-expat.com/faq/sos-expat-aide-visa-immigration
+
+Q: SOS-Expat peut-il m'aider pour une question de visa ou d'immigration ?
+
+R: Oui, les questions de visa et d'immigration font partie des cas d'usage les plus fréquents sur SOS-Expat. En vous connectant avec un avocat ou un expatrié aidant local, vous obtenez des informations précises sur la législation en vigueur dans le pays concerné. SOS-Expat peut vous aider pour : Comprendre les conditions d'obtention d'un visa de résidence ou de travailRépondre à un refus de visa et connaître les recours possiblesPréparer un dossier de régularisation ou de renouvellement de titre de séjourQuestions sur la naturalisation ou l'acquisition de la résidence permanenteSituations d'urgence : expulsion, rétention, convocation aux services d'immigrationRegroupement familial à l'étranger Les prestataires SOS-Expat sont des professionnels locaux qui pratiquent le droit local au quotidien — ils connaissent les délais réels, les formulaires requis et les pratiques des services d'immigration locaux.
+
+════════════════════════════════════════════════════════════════
+ORDER 42 | Catégorie: clients
+URL: https://www.sos-expat.com/faq/litige-proprietaire-locatif-etranger-sos-expat
+
+Q: Puis-je utiliser SOS-Expat pour un litige avec mon propriétaire à l'étranger ?
+
+R: Oui, les litiges locatifs à l'étranger sont un cas d'usage typique de SOS-Expat. Les règles du droit immobilier varient considérablement d'un pays à l'autre : dépôt de garantie, préavis, état des lieux, expulsion — chaque pays a ses propres lois et procédures. En moins de 5 minutes, vous êtes mis en relation avec un prestataire local qui connaît précisément la législation de votre pays de résidence. SOS-Expat peut vous aider pour : Refus de restitution du dépôt de garantieAugmentation de loyer abusiveExpulsion injustifiée ou procédure d'expulsionLogement non conforme ou non entretenuRésiliation anticipée de bail et pénalitésLitige avec une agence immobilière Un prestataire local vous explique vos droits selon le droit local et vous guide sur les démarches à entreprendre (mise en demeure, saisie d'une juridiction locale, médiation).
+
+════════════════════════════════════════════════════════════════
+ORDER 43 | Catégorie: clients
+URL: https://www.sos-expat.com/faq/probleme-employeur-droit-travail-etranger
+
+Q: SOS-Expat peut-il m'aider en cas de problème avec mon employeur à l'étranger ?
+
+R: Oui, les conflits liés au droit du travail à l'étranger sont parmi les situations les plus complexes auxquelles un expatrié peut faire face — et SOS-Expat est précisément conçu pour y répondre. Le droit du travail varie énormément selon les pays. Un prestataire local connaît les règles qui s'appliquent réellement. SOS-Expat peut vous aider pour : Licenciement abusif ou sans préavis légalNon-paiement de salaires ou d'heures supplémentairesContrat de travail non respectéHarcèlement moral ou discrimination au travailAccident du travail et droits à indemnisationConditions de travail illégalesFin de contrat et décompte des indemnités dues Rappel : les appels durent 20 minutes avec un avocat (49€) ou 30 minutes avec un expatrié aidant (19€). Pour une situation complexe, plusieurs appels peuvent être nécessaires.
+
+════════════════════════════════════════════════════════════════
+ORDER 44 | Catégorie: clients
+URL: https://www.sos-expat.com/faq/succession-internationale-aide-sos-expat
+
+Q: SOS-Expat peut-il m'aider pour une succession internationale ?
+
+R: Oui, les successions internationales sont des situations particulièrement complexes pour lesquelles un expert local est indispensable. Lorsqu'un proche décède à l'étranger ou possède des biens dans plusieurs pays, les règles applicables (droit de quel pays ? quelles taxes ?) sont souvent sources de confusion. Un prestataire SOS-Expat dans le pays concerné peut vous expliquer : Quelle loi s'applique à la succession (loi du pays de résidence, de nationalité ou de situation des biens)Les démarches locales pour ouvrir une successionLes droits de succession applicables dans ce paysLa validité d'un testament étranger dans le pays concernéLes démarches pour rapatrier des biens ou des fonds Une première consultation téléphonique (49€/20 min avec un avocat) vous permet de comprendre rapidement les enjeux avant d'engager des démarches plus longues.
+
+════════════════════════════════════════════════════════════════
+ORDER 45 | Catégorie: clients
+URL: https://www.sos-expat.com/faq/divorce-separation-etranger-sos-expat
+
+Q: SOS-Expat peut-il m'aider pour un divorce ou une séparation à l'étranger ?
+
+R: Oui, les situations de divorce ou de séparation à l'étranger sont parmi les cas les plus sensibles traités sur SOS-Expat. Le droit de la famille est l'un des domaines juridiques les plus variables d'un pays à l'autre. Un prestataire local peut vous informer sur : Les conditions et procédures de divorce dans le pays de résidenceLa garde des enfants selon le droit localLe partage des biens en cas de divorce internationalLa pension alimentaire et son recouvrement transfrontalierLa reconnaissance dans votre pays d'origine d'un divorce prononcé à l'étrangerLes droits de visite et l'enlèvement parental international Un premier appel avec un prestataire local vous permet de comprendre vos droits et d'évaluer vos options avant d'engager toute procédure formelle.
+
+════════════════════════════════════════════════════════════════
+ORDER 46 | Catégorie: clients
+URL: https://www.sos-expat.com/faq/entrepreneurs-creation-entreprise-etranger-sos-expat
+
+Q: SOS-Expat aide-t-il les entrepreneurs et créateurs d'entreprise à l'étranger ?
+
+R: Oui, les entrepreneurs expatriés représentent une part importante des utilisateurs de SOS-Expat. Créer une entreprise à l'étranger soulève des questions juridiques, fiscales et administratives spécifiques que seul un expert local maîtrise vraiment. SOS-Expat peut vous mettre en relation avec un prestataire local pour : Choisir la structure juridique adaptée (SA, SARL, succursale, auto-entrepreneur)Comprendre les obligations fiscales locales pour une entreprise étrangèreRédaction ou révision de contrats commerciaux locauxQuestions sur l'embauche de salariés locauxLitige commercial avec un partenaire ou fournisseur localObtention des licences et autorisations nécessaires Un premier appel vous permet d'orienter votre projet et de savoir si vous avez besoin d'un accompagnement plus approfondi.
+
+════════════════════════════════════════════════════════════════
+ORDER 47 | Catégorie: clients
+URL: https://www.sos-expat.com/faq/fiscalite-expatrie-double-imposition-sos-expat
+
+Q: SOS-Expat peut-il m'aider à comprendre ma situation fiscale en tant qu'expatrié ?
+
+R: Oui, la fiscalité des expatriés est l'une des questions les plus complexes et les plus fréquentes sur SOS-Expat. Entre résidence fiscale, conventions fiscales internationales, double imposition et obligations déclaratives, les règles varient selon chaque pays et chaque situation. Un prestataire local peut vous aider à comprendre : Dans quel pays vous êtes considéré comme résident fiscalSi une convention fiscale entre votre pays d'origine et votre pays de résidence s'applique à vousComment déclarer vos revenus dans les deux paysLes impôts locaux (revenus, patrimoine, plus-values) qui s'appliquent à votre situationLes optimisations légales disponibles dans le pays de résidence Un premier appel téléphonique (49€/20 min avec un avocat ou expert fiscal local) vous permet d'orienter votre situation avant de consulter un comptable pour les démarches formelles.
+
+════════════════════════════════════════════════════════════════
+ORDER 48 | Catégorie: clients
+URL: https://www.sos-expat.com/faq/retraite-protection-sociale-expatrie-sos-expat
+
+Q: SOS-Expat peut-il m'aider pour ma retraite ou ma protection sociale à l'étranger ?
+
+R: Oui, les questions liées à la retraite et à la protection sociale sont fréquentes sur SOS-Expat, en particulier pour les personnes qui ont travaillé dans plusieurs pays. Un prestataire local peut vous informer sur : Les systèmes de protection sociale du pays de résidence (assurance maladie, retraite, chômage)Les conventions bilatérales de sécurité sociale entre votre pays d'origine et votre pays de résidenceLa totalisation des périodes d'assurance pour le calcul de la retraiteLes démarches pour percevoir votre retraite d'un pays étrangerLa couverture maladie obligatoire ou facultative pour les expatriés Les règles varient énormément selon les pays et les accords bilatéraux en vigueur — un expert local est la meilleure source d'information précise pour votre situation.
+
+════════════════════════════════════════════════════════════════
+ORDER 49 | Catégorie: clients
+URL: https://www.sos-expat.com/faq/accident-etranger-droits-indemnisation-sos-expat
+
+Q: SOS-Expat peut-il m'aider après un accident à l'étranger ?
+
+R: Oui, après un accident à l'étranger, les premières heures sont cruciales pour protéger vos droits et obtenir une juste indemnisation. Un prestataire SOS-Expat peut vous guider immédiatement sur : Les démarches à effectuer immédiatement après l'accident (constat, police, hôpital)Vos droits à indemnisation selon la législation localeLa procédure pour déclarer l'accident à votre assurance et à l'assurance localeLes délais légaux à respecter pour ne pas perdre vos droitsEn cas d'accident de la route : comment faire un constat à l'étrangerEn cas de blessure grave : procédures médicales et rapatriement La rapidité d'action est essentielle dans ces situations : un appel en moins de 5 minutes peut vous éviter de perdre des droits importants.
+
+════════════════════════════════════════════════════════════════
+ORDER 50 | Catégorie: clients
+URL: https://www.sos-expat.com/faq/droits-enfants-expatries-etranger-sos-expat
+
+Q: SOS-Expat peut-il m'aider pour des questions concernant mes enfants à l'étranger ?
+
+R: Oui, les questions relatives aux enfants dans un contexte international sont parmi les plus sensibles sur SOS-Expat. Un prestataire local connaît les lois locales sur la protection de l'enfance et peut vous informer sur : Inscription scolaire et droit à l'éducation dans le pays de résidenceDroits de garde et de visite en cas de séparation internationaleEnlèvement parental international et procédures de retour (Convention de La Haye)Nationalité et documents de voyage des enfants bi-nationauxAdoption internationale et reconnaissance dans votre pays d'origineProtection sociale et couverture santé des enfants expatriés Les situations familiales impliquant des enfants dans un contexte international nécessitent souvent une expertise du droit local que peu de professionnels dans votre pays d'origine sont capables de fournir.
+
+════════════════════════════════════════════════════════════════
+ORDER 51 | Catégorie: clients
+URL: https://www.sos-expat.com/faq/nomades-numeriques-sos-expat-pays-visa-fiscal
+
+Q: SOS-Expat est-il utile pour les nomades numériques qui changent souvent de pays ?
+
+R: Oui, SOS-Expat est particulièrement adapté aux nomades numériques. Chaque pays présente ses propres règles en matière de visa, de fiscalité, de logement et de droit du travail — et ces règles changent en fonction de la durée de votre séjour. En moins de 5 minutes, vous accédez à un expert local dans n'importe lequel des 197 pays couverts par la plateforme. SOS-Expat peut vous aider pour : Comprendre les règles du visa touriste vs visa digital nomad dans chaque paysSavoir à partir de quand vous devenez résident fiscal dans un paysQuestions sur la domiciliation fiscale pour les personnes sans résidence fixeLitige avec un coworking ou un bailleur de courte duréeCouverture santé internationale pour les nomades Pas d'abonnement, paiement à l'appel : idéal pour des consultations ponctuelles au gré de vos déplacements.
+
+════════════════════════════════════════════════════════════════
+ORDER 52 | Catégorie: clients
+URL: https://www.sos-expat.com/faq/retraites-expatries-sos-expat-visa-fiscalite
+
+Q: SOS-Expat est-il adapté aux retraités qui vivent à l'étranger ?
+
+R: Oui, les retraités expatriés représentent une part importante des utilisateurs de SOS-Expat. Vivre à la retraite à l'étranger soulève des questions spécifiques que la plateforme peut aider à résoudre : Conditions de visa long séjour ou de retraité dans le pays choisiFiscalité de la retraite : dans quel pays payer ses impôts ?Perception de la retraite depuis l'étranger (démarches, compte bancaire local)Couverture maladie : accès au système de santé local ou assurance privéeDroit immobilier local pour acheter ou louerSuccession et protection du conjoint survivant à l'étranger SOS-Expat est accessible depuis n'importe quel navigateur, sans téléchargement — particulièrement adapté pour des personnes moins à l'aise avec la technologie, avec une interface simple et un appel téléphonique direct.
+
+════════════════════════════════════════════════════════════════
+ORDER 53 | Catégorie: clients
+URL: https://www.sos-expat.com/faq/etudiant-etranger-difficultes-aide-sos-expat
+
+Q: SOS-Expat peut-il aider un étudiant en difficulté à l'étranger ?
+
+R: Oui, les étudiants étrangers font face à des situations spécifiques pour lesquelles SOS-Expat est très utile. Loin de leur famille et souvent peu familiers avec les systèmes locaux, ils peuvent se retrouver démunis face à des problèmes administratifs, juridiques ou pratiques. SOS-Expat peut les aider pour : Problèmes de visa étudiant (renouvellement, conditions de travail autorisées)Litige avec un logement étudiant ou une résidence universitaireQuestions sur les droits des étudiants étrangers dans le pays d'accueilAccident ou agression et démarches à suivreDifficultés avec l'université ou l'établissement scolaireOrientation en cas d'urgence médicale Le service est disponible en 9 langues, ce qui permet aux étudiants de s'exprimer dans leur langue maternelle même à l'autre bout du monde.
+
+════════════════════════════════════════════════════════════════
+ORDER 54 | Catégorie: clients
+URL: https://www.sos-expat.com/faq/vol-annule-etranger-remboursement-sos-holidays
+
+Q: Mon vol a été annulé à l'étranger. SOS Holidays peut-il m'aider à obtenir un remboursement ?
+
+R: Oui, SOS Holidays peut vous aider à comprendre vos droits en cas de vol annulé à l'étranger. Les règles varient selon le pays où vous vous trouvez et la compagnie aérienne concernée. Un prestataire local peut vous expliquer : Vos droits légaux selon la législation locale (et éventuellement le Règlement européen 261/2004 si applicable)Le montant de l'indemnisation auquel vous avez droit selon les règles localesLes démarches à effectuer immédiatement (lettre de réclamation, délais)Comment contacter les autorités de l'aviation civile localeSi votre assurance voyage couvre l'annulation Important : les délais pour exercer vos recours peuvent être courts. Appelez SOS Holidays dès que possible après l'annulation pour ne pas perdre vos droits.
+
+════════════════════════════════════════════════════════════════
+ORDER 55 | Catégorie: clients
+URL: https://www.sos-expat.com/faq/hotel-non-conforme-litige-sos-holidays
+
+Q: Mon hôtel ne correspond pas à ce qui était prévu. SOS Holidays peut-il m'aider ?
+
+R: Oui, les litiges hôteliers à l'étranger sont un cas d'usage fréquent pour SOS Holidays. Chambre non conforme à la description, prestations manquantes, conditions insalubres, facturation abusive — les plaintes liées à l'hébergement touristique sont très courantes. Un prestataire local peut vous aider à : Comprendre vos droits selon la législation locale du tourismeRédiger une réclamation formelle auprès de l'hôtel ou de l'agence de voyageSavoir comment porter plainte auprès des autorités du tourisme localObtenir un remboursement partiel ou total si le service ne correspond pas à la descriptionIdentifier si votre assurance voyage ou votre carte bancaire vous couvre En général, agir rapidement (pendant le séjour ou le premier jour après) est essentiel pour documenter la situation et maximiser vos chances d'obtenir satisfaction.
+
+════════════════════════════════════════════════════════════════
+ORDER 56 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/sos-expat-couverture-thailande-asie-sud-est
+
+Q: SOS-Expat couvre-t-il la Thaïlande et les pays d'Asie du Sud-Est ?
+
+R: Oui, SOS-Expat couvre la Thaïlande et l'ensemble des pays d'Asie du Sud-Est, dont notamment la Thaïlande, l'Indonésie (Bali, Jakarta), le Vietnam, la Malaisie, les Philippines, Singapour, le Cambodge et le Myanmar. Cette région est l'une des destinations préférées des expatriés et retraités français. Des prestataires locaux (avocats et expatriés aidants) sont disponibles pour vous aider sur des sujets comme : Visa de retraite ou de tourisme de longue durée (Thailand Elite, visa O-A)Achat immobilier : les restrictions pour les étrangers en ThaïlandeContrats de bail et litiges locatifsDroit du travail local pour les expatriés salariésCréation d'entreprise en ThaïlandeQuestions médicales et systèmes de santé locaux
+
+════════════════════════════════════════════════════════════════
+ORDER 57 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/sos-expat-maroc-algerie-tunisie-maghreb
+
+Q: SOS-Expat est-il disponible pour les expatriés au Maroc, en Algérie ou en Tunisie ?
+
+R: Oui, SOS-Expat couvre le Maghreb et les pays d'Afrique du Nord, notamment le Maroc, l'Algérie, la Tunisie, la Libye et l'Égypte. Cette région attire de nombreux expatriés, notamment des ressortissants européens, canadiens et africains. Des prestataires locaux peuvent vous aider pour des questions spécifiques à ces pays comme : Droit de la propriété immobilière au Maroc (statut des étrangers, CRI)Résidence et visa long séjour en TunisieCréation d'entreprise et droit commercial localDroit du travail local pour les salariés expatriésQuestions fiscales liées à l'expatriation dans ces paysLitiges avec des partenaires commerciaux locaux La plateforme est disponible en arabe, ce qui facilite les échanges dans cette région.
+
+════════════════════════════════════════════════════════════════
+ORDER 58 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/sos-expat-pays-golfe-emirats-arabie-qatar
+
+Q: SOS-Expat est-il disponible dans les pays du Golfe (Émirats, Arabie Saoudite, Qatar) ?
+
+R: Oui, SOS-Expat couvre les pays du Golfe, dont les Émirats arabes unis (Dubai, Abu Dhabi), l'Arabie Saoudite, le Qatar, le Koweït, Bahreïn et Oman. Ces pays accueillent une large communauté d'expatriés et présentent des systèmes juridiques spécifiques (droit civil, droit islamique, zones franches). Des prestataires locaux peuvent vous aider pour : Conditions de travail et visa de travail dans ces paysDroit du travail local : contrats, résiliation, droits des salariésLitiges commerciaux dans les zones franches (DIFC, ADGM)Questions sur la kafala (système de parrainage)Droit immobilier : acheter à Dubai ou Abu DhabiFiscalité avantageuse : comment bénéficier du statut fiscal de ces pays
+
+════════════════════════════════════════════════════════════════
+ORDER 59 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/sos-expat-amerique-latine-mexique-bresil-argentine
+
+Q: SOS-Expat est-il disponible en Amérique Latine (Mexique, Brésil, Argentine) ?
+
+R: Oui, SOS-Expat est disponible dans toute l'Amérique Latine, notamment au Mexique, au Brésil, en Argentine, en Colombie, au Pérou, au Chili, en Uruguay et dans les pays d'Amérique Centrale. Ces pays attirent de nombreux expatriés et créateurs d'entreprises. Des prestataires locaux peuvent vous aider pour : Visa de résidence temporaire ou permanente (Mexique, Brésil, Argentine)Achat immobilier en tant qu'étranger : restrictions et procéduresCréation d'entreprise en Amérique LatineDroit du travail local et contratsFiscalité locale et conventions fiscalesLitiges commerciaux avec des partenaires locaux La plateforme est disponible en espagnol et en portugais, ce qui facilite la communication dans toute la région.
+
+════════════════════════════════════════════════════════════════
+ORDER 60 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/sos-expat-afrique-subsaharienne-couverture
+
+Q: SOS-Expat est-il disponible en Afrique subsaharienne ?
+
+R: Oui, SOS-Expat couvre l'ensemble de l'Afrique subsaharienne, incluant notamment le Sénégal, la Côte d'Ivoire, le Ghana, le Cameroun, le Gabon, le Congo, la République Démocratique du Congo, le Kenya, la Tanzanie, l'Éthiopie, le Rwanda, l'Afrique du Sud et le Nigeria. Cette région connaît une croissance importante de la communauté expatriée. Des prestataires locaux peuvent vous aider pour : Visas de résidence et de travail dans les différents paysCréation d'entreprise et droit commercial localAcquisition immobilière et foncière pour les étrangersDroit du travail et contrats d'expatriationLitiges avec l'administration localeQuestions sur la sécurité juridique des investissements La plateforme est disponible en français (langue officielle dans de nombreux pays d'Afrique subsaharienne), en anglais et en arabe.
+
+════════════════════════════════════════════════════════════════
+ORDER 61 | Catégorie: technical
+URL: https://www.sos-expat.com/faq/utiliser-sos-expat-sans-sim-locale-wifi
+
+Q: Puis-je utiliser SOS-Expat sans carte SIM locale dans le pays où je me trouve ?
+
+R: Oui, SOS-Expat fonctionne sans carte SIM locale. La plateforme est une application web accessible depuis n'importe quel navigateur (téléphone, tablette, ordinateur). Vous avez besoin uniquement d'une connexion internet — Wi-Fi d'hôtel, café, coworking, etc. Pour effectuer l'appel, plusieurs options sont disponibles : Appel via internet (VoIP) depuis l'application, sans numéro de téléphone localSi vous avez un numéro de téléphone (de votre pays d'origine), le prestataire peut vous rappeler dessusConnexion Wi-Fi d'hôtel, d'aéroport ou de café suffisante Vous n'avez pas besoin de télécharger une application : SOS-Expat fonctionne directement depuis votre navigateur. C'est particulièrement utile en voyage ou à l'arrivée dans un nouveau pays avant d'avoir obtenu une SIM locale.
+
+════════════════════════════════════════════════════════════════
+ORDER 62 | Catégorie: technical
+URL: https://www.sos-expat.com/faq/sos-expat-smartphone-basique-prepaye-compatible
+
+Q: SOS-Expat fonctionne-t-il sur un smartphone basique ou un téléphone prépayé ?
+
+R: Oui, SOS-Expat est conçu pour fonctionner sur n'importe quel appareil disposant d'un navigateur web et d'une connexion internet. Il n'y a pas d'application à télécharger — vous accédez au service directement depuis votre navigateur (Chrome, Safari, Firefox). Compatibilité : Smartphones Android et iOS, y compris les modèles entrée de gammeTablettesOrdinateurs portables et de bureauPas besoin de la dernière version du système d'exploitation La seule condition est d'avoir un navigateur à jour et une connexion internet suffisante pour charger les pages (3G minimum recommandée). Pour les personnes peu à l'aise avec la technologie, l'interface est conçue pour être simple et intuitive.
+
+════════════════════════════════════════════════════════════════
+ORDER 63 | Catégorie: account
+URL: https://www.sos-expat.com/faq/mettre-a-jour-numero-telephone-email-sos-expat
+
+Q: Comment mettre à jour mon numéro de téléphone ou mon adresse email sur SOS-Expat ?
+
+R: Vous pouvez mettre à jour vos informations de contact directement depuis votre tableau de bord SOS-Expat. Connectez-vous à votre compte, accédez à l'onglet 'Profil' ou 'Paramètres' de votre tableau de bord, puis modifiez votre numéro de téléphone ou votre adresse email. Un code de vérification vous sera envoyé pour confirmer le changement et sécuriser votre compte. Si vous changez souvent de pays, il est important de maintenir un numéro de téléphone à jour car : Il est utilisé par le prestataire pour vous appeler lors d'une mise en relationIl permet de recevoir les notifications liées à vos appelsIl contribue à la sécurité de votre compte (authentification) Si vous rencontrez un problème pour modifier vos coordonnées, contactez le support SOS-Expat depuis le formulaire de contact disponible sur la plateforme.
+
+════════════════════════════════════════════════════════════════
+ORDER 64 | Catégorie: account
+URL: https://www.sos-expat.com/faq/entreprise-salaries-expatries-sos-expat
+
+Q: Une entreprise peut-elle utiliser SOS-Expat pour ses salariés expatriés ?
+
+R: Oui, SOS-Expat est utilisé par des entreprises pour accompagner leurs salariés en mobilité internationale. Chaque employé crée son propre compte SOS-Expat et peut accéder au service selon ses besoins. La facturation est individuelle (à l'appel), ce qui permet à l'entreprise de rembourser les frais dans le cadre des notes de frais. SOS-Expat est particulièrement adapté pour : Les entreprises qui envoient des salariés en mission à l'étrangerLes groupes avec des filiales dans plusieurs paysLes PME qui n'ont pas de service juridique dédié pour chaque paysLes startups avec des équipes distribuées à l'international Pour des besoins spécifiques d'entreprise (volumes importants, facturation centralisée), vous pouvez contacter SOS-Expat via le formulaire de contact disponible sur la plateforme.
+
+════════════════════════════════════════════════════════════════
+ORDER 65 | Catégorie: account
+URL: https://www.sos-expat.com/faq/factures-appels-sos-expat-tableau-de-bord
+
+Q: Puis-je obtenir une facture pour mes appels sur SOS-Expat ?
+
+R: Oui, chaque appel payant sur SOS-Expat génère une facture accessible depuis votre tableau de bord. Connectez-vous à votre compte et accédez à l'onglet 'Factures' pour consulter et télécharger vos factures en format PDF. Les factures SOS-Expat incluent : La date et l'heure de l'appelLe montant facturé (49€ pour un appel avec avocat, 19€ pour un appel avec expatrié aidant)Les informations légales de SOS-Expat nécessaires pour la comptabilitéVotre nom et adresse de facturation Ces factures peuvent être utilisées pour les notes de frais professionnelles ou pour toute déduction fiscale applicable selon votre situation. Les factures sont conservées pendant 10 ans conformément aux obligations légales.
+
+════════════════════════════════════════════════════════════════
+ORDER 66 | Catégorie: clients
+URL: https://www.sos-expat.com/faq/prestataire-pas-appele-apres-paiement-sos-expat
+
+Q: Que faire si le prestataire ne m'a pas appelé après avoir payé sur SOS-Expat ?
+
+R: Si le prestataire ne vous a pas contacté dans les délais attendus après votre paiement, voici les étapes à suivre : Vérifiez votre numéro de téléphone : assurez-vous que le numéro enregistré dans votre profil est correct et joignableVérifiez les notifications : vous pouvez avoir reçu un message ou un appel manquéConsultez le statut de votre demande dans votre tableau de bordChoisissez un autre prestataire disponible : si le prestataire initial ne répond pas, vous pouvez contacter un autre prestataire dans la même spécialité En cas de problème de connexion ou si vous n'avez pas pu être joint, contactez le support SOS-Expat via le formulaire de contact de la plateforme. Les réclamations sont traitées rapidement et un remboursement peut être initié si l'appel n'a pas pu avoir lieu.
+
+════════════════════════════════════════════════════════════════
+ORDER 67 | Catégorie: providers
+URL: https://www.sos-expat.com/faq/pourquoi-devenir-prestataire-sos-expat
+
+Q: Pourquoi rejoindre SOS-Expat en tant que prestataire ?
+
+R: Rejoindre SOS-Expat en tant que prestataire vous permet de valoriser votre expertise locale auprès d'une clientèle internationale qui en a besoin. La plateforme connecte des expatriés du monde entier avec des professionnels locaux. En tant que prestataire, vous bénéficiez de : Clients qualifiés : des personnes qui ont déjà payé et qui ont un besoin réel et immédiatFlexibilité totale : vous choisissez quand vous êtes disponible, depuis n'importe quel paysRevenus complémentaires : 49€ pour 20 minutes avec un avocat, 19€ pour 30 minutes avec un expatrié aidantVisibilité internationale : votre profil est visible par des clients dans 197 paysAvis clients : construisez votre réputation grâce aux évaluations de vos clients Que vous soyez avocat souhaitant développer une clientèle internationale, ou expatrié disposant d'une expertise locale précieuse, SOS-Expat est une plateforme complémentaire à votre activité principale.
+
+════════════════════════════════════════════════════════════════
+ORDER 68 | Catégorie: providers
+URL: https://www.sos-expat.com/faq/revenus-gains-prestataire-sos-expat
+
+Q: Combien peut-on gagner en tant que prestataire sur SOS-Expat ?
+
+R: Les revenus d'un prestataire SOS-Expat dépendent du temps disponible et du nombre d'appels effectués. La structure tarifaire est claire : Avocat : 49€ par appel de 20 minutesExpatrié aidant : 19€ par appel de 30 minutes La rémunération nette perçue par le prestataire est calculée après déduction de la commission de la plateforme. Les gains varient selon : Votre taux de disponibilité (plus vous êtes disponible, plus vous recevez d'appels)La demande dans votre pays et spécialitéLa qualité de votre profil et vos avis clients (qui influencent votre visibilité) SOS-Expat est conçu comme une source de revenus complémentaires plutôt qu'un emploi à temps plein : vous choisissez votre disponibilité et acceptez les appels quand vous le souhaitez.
+
+════════════════════════════════════════════════════════════════
+ORDER 69 | Catégorie: providers
+URL: https://www.sos-expat.com/faq/prestataire-sos-expat-nimporte-quel-pays
+
+Q: Peut-on être prestataire SOS-Expat depuis n'importe quel pays du monde ?
+
+R: Oui, vous pouvez devenir prestataire SOS-Expat depuis n'importe quel pays couvert par la plateforme (197 pays). Vous exercez votre activité de conseil téléphonique depuis votre lieu de résidence actuel, sans avoir à vous déplacer. Conditions requises : Être un professionnel qualifié dans votre domaine (avocat avec barreau local, ou expatrié avec une expertise locale avérée)Parler une ou plusieurs des 9 langues de la plateformeDisposer d'un smartphone ou ordinateur avec connexion internetPasser le processus de vérification KYC de la plateforme Votre profil indique votre pays d'expertise et vos langues de consultation. Vous pouvez avoir une expertise sur plusieurs pays si vous avez résidé ou exercé dans plusieurs endroits. SOS-Expat est complémentaire à votre activité principale — vous l'activez quand vous êtes disponible.
+
+════════════════════════════════════════════════════════════════
+ORDER 73 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/sos-expat-vs-consulat-avantages-differences
+
+Q: Qu'est-ce que SOS-Expat apporte que mon consulat ne peut pas offrir ?
+
+R: SOS-Expat et votre consulat sont complémentaires, mais leurs rôles sont fondamentalement différents. Voici ce que SOS-Expat peut faire et que le consulat ne fait pas : Disponibilité 24/7 : le consulat ferme le soir, le week-end et les jours fériés. SOS-Expat est disponible à toute heure.Experts du droit local : le consulat représente votre pays d'origine. SOS-Expat vous connecte avec des professionnels qui connaissent le droit local du pays où vous vous trouvez.Litiges privés : le consulat n'intervient pas dans vos litiges locaux (propriétaire, employeur, voisin). SOS-Expat vous guide sur ces sujets.Réponse en moins de 5 minutes : le consulat peut prendre des heures ou des jours pour répondre.9 langues : le consulat parle votre langue nationale. SOS-Expat est multilingue. Résumé : le consulat vous protège comme ressortissant. SOS-Expat vous aide à vivre, travailler et résoudre des problèmes locaux là où vous êtes.
+
+════════════════════════════════════════════════════════════════
+ORDER 74 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/sos-expat-vs-seul-etranger-avantages
+
+Q: Pourquoi utiliser SOS-Expat plutôt que de me débrouiller seul à l'étranger ?
+
+R: Se débrouiller seul à l'étranger est souvent possible — mais dans certaines situations, les enjeux sont trop importants pour prendre des risques. Voici pourquoi SOS-Expat fait la différence : Droit local inconnu : ce qui est normal dans votre pays peut être illégal ailleurs, et vice versa. Un expert local connaît les règles réelles.Délais critiques : en droit, certains délais sont impératifs (contester un licenciement, réclamer une indemnité). Les manquer peut faire perdre définitivement vos droits.Langue et barrière culturelle : même si vous parlez la langue locale, comprendre les subtilités juridiques et administratives est une autre compétence.Avis clients vérifiés : contrairement à une recherche internet, les prestataires SOS-Expat ont été vérifiés (KYC) et évalués par des clients réels.Coût accessible : 19€ ou 49€ pour une consultation qui peut éviter des erreurs coûteuses vaut souvent bien plus.
+
+════════════════════════════════════════════════════════════════
+ORDER 75 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/sos-expat-vs-facebook-forums-expatries
+
+Q: Quelle différence entre SOS-Expat et les groupes Facebook ou forums d'expatriés ?
+
+R: Les groupes Facebook et forums d'expatriés sont des communautés utiles pour le partage d'expériences, mais ils ne peuvent pas remplacer un professionnel qualifié pour des questions juridiques ou administratives sérieuses. Voici les différences clés : Qualité de l'information : sur les forums, n'importe qui peut répondre. Sur SOS-Expat, vous parlez à un professionnel vérifié (KYC) avec une expertise avérée.Responsabilité : un avis donné sur un forum est anonyme et sans garantie. Un prestataire SOS-Expat est identifié et évalué par ses clients.Personnalisation : un forum donne des réponses génériques. SOS-Expat vous donne une réponse adaptée à votre situation spécifique, votre pays, votre statut.Avis clients vérifiés : les profils SOS-Expat affichent des avis de clients ayant réellement utilisé le service.Disponibilité : SOS-Expat répond en moins de 5 minutes, 24h/24 — pas en attente de réponse sur un forum.
+
+════════════════════════════════════════════════════════════════
+ORDER 78 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/garanties-qualite-prestataires-sos-expat-kyc
+
+Q: Quelles sont les garanties de qualité des prestataires sur SOS-Expat ?
+
+R: SOS-Expat met en place plusieurs mécanismes pour garantir la qualité des prestataires sur la plateforme : Vérification KYC : chaque prestataire est vérifié avant d'être accepté sur la plateforme (identité, qualifications professionnelles pour les avocats)Profil approuvé : les prestataires ne deviennent visibles aux clients qu'après approbation manuelle par l'équipe SOS-ExpatAvis clients authentiques : uniquement des clients ayant effectué un appel payant peuvent laisser un avis — pas de faux avis possiblesSystème de notation : les prestataires avec de mauvaises notes répétées peuvent être suspendus après révisionConfidentialité : les appels ne sont pas enregistrés, protégeant la confidentialité des échangesSupport client : en cas de problème avec un prestataire, le support SOS-Expat traite les réclamations Ces mécanismes garantissent que les prestataires actifs sur la plateforme sont des professionnels sérieux, motivés à fournir un service de qualité.
+
+════════════════════════════════════════════════════════════════
+ORDER 79 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/sos-expat-facile-utiliser-personnes-agees-technologie
+
+Q: SOS-Expat est-il facile à utiliser pour les personnes peu à l'aise avec la technologie ?
+
+R: Oui, SOS-Expat est conçu pour être accessible à tous, y compris aux personnes peu à l'aise avec les technologies numériques. Caractéristiques clés : Pas de téléchargement : SOS-Expat fonctionne directement depuis le navigateur de votre téléphone ou ordinateur — comme visiter un site webInterface simple : recherche de prestataire, profil, paiement et appel — tout est accessible en quelques clicsAccessible en 9 langues : l'interface et le service sont disponibles dans votre langue maternelleAppel téléphonique direct : une fois la mise en relation effectuée, vous parlez par téléphone — pas de vidéoconférence ou de messagerie compliquée Si un proche ou enfant de l'expatrié peut aider à configurer le compte la première fois, les utilisations suivantes sont très simples. SOS-Expat est particulièrement adapté aux retraités expatriés qui ont besoin d'aide ponctuelle sans maîtrise technologique avancée.
+
+════════════════════════════════════════════════════════════════
+ORDER 80 | Catégorie: discover
+URL: https://www.sos-expat.com/faq/protection-faux-prestataires-arnaque-sos-expat
+
+Q: Comment SOS-Expat protège-t-il contre les faux prestataires ou les arnaques ?
+
+R: La sécurité des utilisateurs est une priorité absolue de SOS-Expat. Plusieurs mécanismes sont en place pour protéger clients et prestataires : Vérification KYC obligatoire : chaque prestataire doit prouver son identité et ses qualifications avant d'être accepté sur la plateforme — les profils non vérifiés ne sont pas visiblesApprobation manuelle : les profils sont examinés par l'équipe SOS-Expat avant activationPaiement sécurisé via Stripe : les paiements sont traités par Stripe, leader mondial du paiement en ligne sécurisé — SOS-Expat ne stocke pas vos données bancairesNuméros masqués : lors de l'appel, les numéros de téléphone des deux parties sont masqués via Twilio — votre numéro n'est pas communiqué directement au prestataireAppels non enregistrés : les conversations restent confidentiellesSystème d'avis authentiques : seuls les clients ayant effectué un appel payant peuvent évaluer — impossible de gonfler les notes avec de faux avis
+
+════════════════════════════════════════════════════════════════
+ORDER 81 | Catégorie: clients
+URL: https://www.sos-expat.com/faq/combien-de-temps-dure-un-appel
+
+Q: Combien de temps dure un appel ?
+
+R: Les durées sont fixes et adaptées à un premier contact d'aide rapide :
+
+• Appel Avocat : 20 minutes pour 49€
+• Appel Expat Aidant : 30 minutes pour 19€
+
+Un compteur affiche le temps restant pendant l'appel. Ces appels permettent d'obtenir une première aide. Pour un suivi plus approfondi ou l'ouverture d'un dossier, vous pouvez poursuivre directement avec le prestataire en dehors de la plateforme.
+
+════════════════════════════════════════════════════════════════
+ORDER 82 | Catégorie: providers
+URL: https://www.sos-expat.com/faq/comment-devenir-prestataire
+
+Q: Comment devenir prestataire ?
+
+R: SOS-Expat est une plateforme de mise en relation pour des premiers contacts rapides avec des expatriés, voyageurs et vacanciers du monde entier.
+
+1. Cliquez sur "Devenir prestataire"
+2. Choisissez votre profil : Avocat ou Expat Aidant
+3. Remplissez le formulaire avec vos informations
+4. Téléchargez les documents requis (diplôme pour avocats, preuve de résidence pour expats)
+5. Complétez la vérification d'identité (KYC)
+6. Attendez la validation (généralement 24-48h)
+
+Note importante : Les tarifs sont définis par SOS-Expat (49€/20min pour avocats, 19€/30min pour expats). Vous n'avez pas à fixer vos propres tarifs.
+
+════════════════════════════════════════════════════════════════
+ORDER 83 | Catégorie: providers
+URL: https://www.sos-expat.com/faq/comment-suis-je-paye
+
+Q: Comment suis-je payé ?
+
+R: Les paiements sont effectués via Stripe Connect :
+• Après chaque appel réussi, votre rémunération est créditée sur votre compte Stripe
+• Les tarifs sont fixés par SOS-Expat : 49€ (20 min) pour avocats, 19€ (30 min) pour expats aidants
+• Le client fait un paiement unique, scindé entre votre rémunération et les frais de mise en relation SOS-Expat
+• Seuls les frais Stripe (~2.9%) sont déduits de votre part
+• Virements automatiques vers votre compte bancaire (quotidien, hebdomadaire ou mensuel)
+• Suivi de vos revenus dans votre tableau de bord
+
+════════════════════════════════════════════════════════════════
+ORDER 84 | Catégorie: providers
+URL: https://www.sos-expat.com/faq/comment-fonctionne-la-remuneration-sur-sos-expat
+
+Q: Comment fonctionne la rémunération sur SOS-Expat ?
+
+R: SOS-Expat est une plateforme de mise en relation pour des premiers contacts rapides. Le modèle est simple :
+
+• Tarifs fixes définis par SOS-Expat : 49€ (20 min avocat), 19€ (30 min expat aidant)
+• Le client fait un SEUL paiement qui comprend :
+  - Votre rémunération de prestataire
+  - Les frais de mise en relation SOS-Expat (couvrant Twilio, plateforme, fonctionnalités)
+• Seuls les frais de transaction Stripe (~2.9%) sont déduits de votre part
+
+Important : Ces appels sont un premier contact d'aide rapide. Si le client souhaite ouvrir un dossier ou poursuivre la collaboration, cela se fait directement avec vous, en dehors de la plateforme SOS-Expat.
+
+════════════════════════════════════════════════════════════════
+ORDER 85 | Catégorie: payments
+URL: https://www.sos-expat.com/faq/comment-fonctionne-le-paiement
+
+Q: Comment fonctionne le paiement ?
+
+R: Le paiement s'effectue avant la mise en relation, de manière 100% sécurisée via Stripe :
+
+1. Vous choisissez votre prestataire (avocat ou expat aidant)
+2. Vous effectuez un paiement unique (19€ ou 49€) qui comprend :
+   - La rémunération du prestataire
+   - Les frais de mise en relation SOS-Expat (Twilio, plateforme)
+3. Vous êtes mis en relation immédiatement par téléphone
+4. Si l'appel n'aboutit pas, remboursement automatique à 100%
+
+Ce premier contact vous permet d'obtenir une aide rapide. Toute suite (dossier, collaboration) se fait directement avec le prestataire, en dehors de SOS-Expat.
+
+════════════════════════════════════════════════════════════════
+ORDER 86 | Catégorie: payments
+URL: https://www.sos-expat.com/faq/quels-sont-les-tarifs
+
+Q: Quels sont les tarifs ?
+
+R: Nos tarifs sont simples, fixes et transparents :
+
+• Appel Avocat : 49€ pour 20 minutes de premier conseil juridique
+• Appel Expat Aidant : 19€ pour 30 minutes de premiers conseils pratiques
+
+Ce tarif unique comprend la rémunération du prestataire + les frais de mise en relation SOS-Expat. Aucun frais caché. Remboursement à 100% si l'appel n'aboutit pas.
+
+Ces appels sont conçus pour apporter une première aide rapide aux expatriés, voyageurs et vacanciers du monde entier.
+

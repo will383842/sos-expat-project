@@ -1,0 +1,23 @@
+# Disavow file for sos-expat.com
+# Generated: 2026-04-21
+# Purpose: disavow low-quality / suspicious referring domains that contribute to
+# the Moz Spam Score and have pointed hack-pattern URLs into the Moz/Google index.
+#
+# How to submit:
+#   https://search.google.com/search-console/disavow-links
+#   1. Select property: sos-expat.com
+#   2. Click "Disavow links"
+#   3. Upload this file (disavow.txt)
+#   4. Replaces any previous disavow file in Google's system.
+#
+# Format reference: https://support.google.com/webmasters/answer/2648487
+# One domain per line prefixed with "domain:" disavows all links from that domain.
+
+# --- Low-DA Spanish blogs linking with generic/unbranded anchors ---
+domain:marketingonlineparaartistas.blogspot.com
+domain:patriciaaraque.com
+
+# --- Add additional toxic domains below after reviewing Moz Link Explorer
+#     (Top followed links > Spam Score column). One per line.
+# domain:example-spam.xyz
+# domain:another-bad-domain.top
