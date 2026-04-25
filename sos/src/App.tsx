@@ -260,6 +260,7 @@ const translationLoaders: Record<string, () => Promise<Record<string, string>>> 
   hi: () => fetch('/helper/hi.json').then(r => r.json()),
   pt: () => fetch('/helper/pt.json').then(r => r.json()),
   ch: () => fetch('/helper/ch.json').then(r => r.json()),
+  zh: () => fetch('/helper/zh.json').then(r => r.json()),
   ar: () => fetch('/helper/ar.json').then(r => r.json()),
 };
 

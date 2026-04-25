@@ -12679,5 +12679,12 @@
   "wizard.step3.lawyer": "A lawyer",
   "wizard.step3.lawyer.desc": "Professional legal advice",
   "wizard.step3.subtitle": "Select the type of expert",
-  "wizard.step3.title": "Who would you like to contact?"
+  "wizard.step3.title": "Who would you like to contact?",
+  "admin.menu.unifiedCommissions": "Unified Commissions",
+  "admin.menu.unifiedCommissions.description": "Unified system for commissions, plans, rates, and individual overrides",
+  "footer.services.news": "Expat News",
+  "influencer.calculator.clickrate": "Link click-through rate",
+  "influencer.calculator.conversion": "Conversion rate (clicks → calls)",
+  "influencer.calculator.videos": "Videos/posts per month",
+  "influencer.calculator.views": "Average views per content"
 }

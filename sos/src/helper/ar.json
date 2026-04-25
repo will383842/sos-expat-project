@@ -12679,5 +12679,12 @@
   "press.nav.releases": "البيانات",
   "press.nav.seeAlso": "اكتشف أيضًا",
   "press.nav.testimonials": "شهادات العملاء",
-  "press.nav.title": "اكتشف أيضًا"
+  "press.nav.title": "اكتشف أيضًا",
+  "admin.menu.unifiedCommissions": "العمولات الموحدة",
+  "admin.menu.unifiedCommissions.description": "نظام موحد للعمولات والخطط والمعدلات والتجاوزات الفردية",
+  "footer.services.news": "أخبار المغتربين",
+  "admin.menu.partnersB2B": "B2B SOS-Call (مكاتب، بنوك)",
+  "admin.menu.partnersB2B.description": "وحدة تحكم Filament مخصصة لشركاء الاشتراك B2B (مكاتب المحاماة، البنوك، شركات التأمين)",
+  "footer.services.livingAbroad": "الحياة في الخارج",
+  "footer.services.surveysResults": "إحصائيات المغتربين"
 }

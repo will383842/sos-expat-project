@@ -3202,7 +3202,6 @@ export {
   submitPartnerApplication,
   checkSosCallCode,
   triggerSosCallFromWeb,
-  releaseProviderPayments,
   // Admin callables
   adminPartnersList,
   adminPartnerDetail,
@@ -3413,6 +3412,7 @@ export { consolidatedWeeklyCleanup } from './scheduled/consolidatedWeeklyCleanup
 export { consolidatedDailyEmails } from './scheduled/consolidatedDailyEmails';
 export { consolidatedSecurityDaily } from './scheduled/consolidatedSecurityDaily';
 export { systemHealthCheck } from './scheduled/systemHealthCheck';
+export { monitorTwilioCrypto } from './scheduled/monitorTwilioCrypto';
 
 // --- TWILIO : twilioRecordingWebhook manquant ---
 export { twilioRecordingWebhook } from './Webhooks/twilioWebhooks';

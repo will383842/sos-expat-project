@@ -2716,22 +2716,40 @@ export class TwilioCallManager {
             // partner to settle their monthly invoice — SOS-Expat takes that
             // commercial risk. The only constraint is the 30-day reserve
             // (commercial standard) before the funds become withdrawable.
-            const now = admin.firestore.Timestamp.now();
+            //
+            // P0-1 FIX 2026-04-25: All payment.* fields + isPaid are written
+            // atomically in a Firestore runTransaction so concurrent triggers
+            // (onCallCompleted, conference webhooks) never observe a partial
+            // intermediate state (e.g. status flipped but isPaid still false).
             const RESERVE_DAYS = 30;
-            await sessionRef.update({
-              "payment.status": "captured_sos_call_free",
-              "payment.providerAmount": providerAmount,
-              "payment.providerAmountCents": providerAmountCents,
-              "payment.currency": callCurrency,
-              "payment.gateway": "sos_call_free",
-              "payment.holdReason": "30d_b2b_reserve",
-              "payment.holdStartedAt": now,
-              // Earliest date the provider can withdraw (30 days from call).
-              "payment.availableFromDate": admin.firestore.Timestamp.fromMillis(
-                now.toMillis() + RESERVE_DAYS * 24 * 60 * 60 * 1000
-              ),
-              "isPaid": true,
-              "metadata.updatedAt": now,
+            await this.db.runTransaction(async (transaction) => {
+              const sessionDoc = await transaction.get(sessionRef);
+              if (!sessionDoc.exists) {
+                throw new Error(`Session ${sessionId} disappeared during B2B finalize`);
+              }
+              const currentStatus = sessionDoc.data()?.payment?.status;
+              if (currentStatus === "captured_sos_call_free") {
+                // Idempotent guard: another concurrent finalize already wrote
+                // the terminal state — skip without error.
+                logger.info(`🆘 [${completionId}] B2B finalize idempotent skip (already captured_sos_call_free)`);
+                return;
+              }
+              const now = admin.firestore.Timestamp.now();
+              transaction.update(sessionRef, {
+                "payment.status": "captured_sos_call_free",
+                "payment.providerAmount": providerAmount,
+                "payment.providerAmountCents": providerAmountCents,
+                "payment.currency": callCurrency,
+                "payment.gateway": "sos_call_free",
+                "payment.holdReason": "30d_b2b_reserve",
+                "payment.holdStartedAt": now,
+                // Earliest date the provider can withdraw (30 days from call).
+                "payment.availableFromDate": admin.firestore.Timestamp.fromMillis(
+                  now.toMillis() + RESERVE_DAYS * 24 * 60 * 60 * 1000
+                ),
+                "isPaid": true,
+                "metadata.updatedAt": now,
+              });
             });
 
             const currencySymbol = callCurrency === 'usd' ? '$' : '€';
@@ -2743,9 +2761,13 @@ export class TwilioCallManager {
           }
         } else {
           logger.info(`🆘 [${completionId}] SOS-Call free call too short (${duration}s) — no provider credit`);
+          // P1-4 FIX 2026-04-25: Mark isPaid=true even on too-short B2B calls so downstream
+          // triggers (onCallCompleted, client notifications) do NOT send "payment failed"
+          // emails to a B2B client who never owed anything (the partner pays the flat fee).
           await sessionRef.update({
             "payment.status": "no_credit_short_call",
             "payment.gateway": "sos_call_free",
+            "isPaid": true,
             "metadata.updatedAt": admin.firestore.Timestamp.now(),
           });
         }
@@ -3357,11 +3379,32 @@ export class TwilioCallManager {
         }
 
         // m3 AUDIT FIX: Release capture lock on failure
-        try {
+        // P2-2 FIX 2026-04-25: log lock-release failures and retry once with a
+        // short backoff so a transient network blip can't keep the lock alive
+        // for the full 2h TTL (which would block all subsequent capture
+        // attempts and leave the provider unpaid).
+        const releaseLock = async (attempt: number): Promise<void> => {
           await this.db.collection("call_sessions").doc(sessionId).update({
             captureLock: admin.firestore.FieldValue.delete(),
           });
-        } catch {}
+          if (attempt > 1) {
+            logger.info(`✅ [capturePayment] Capture lock released on retry #${attempt}`, { sessionId });
+          }
+        };
+        try {
+          await releaseLock(1);
+        } catch (lockErr) {
+          logger.error(`⚠️ [capturePayment] Failed to release capture lock (attempt 1)`, { sessionId, error: lockErr });
+          await new Promise((r) => setTimeout(r, 500));
+          try {
+            await releaseLock(2);
+          } catch (lockErr2) {
+            logger.error(
+              `❌ [capturePayment] Capture lock release failed twice — lock will TTL-expire after 2h. Manual intervention may be needed for sessionId=${sessionId}`,
+              { error: lockErr2 }
+            );
+          }
+        }
 
         return false;
       }

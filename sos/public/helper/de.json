@@ -12669,5 +12669,12 @@
   "press.nav.releases": "Pressemitteilungen",
   "press.nav.seeAlso": "Mehr entdecken",
   "press.nav.testimonials": "Erfahrungsberichte",
-  "press.nav.title": "Mehr entdecken"
+  "press.nav.title": "Mehr entdecken",
+  "admin.menu.unifiedCommissions": "Einheitliche Provisionen",
+  "admin.menu.unifiedCommissions.description": "Einheitliches System für Provisionen, Pläne, Sätze und individuelle Überschreibungen",
+  "footer.services.news": "Expat-Nachrichten",
+  "admin.menu.partnersB2B": "B2B SOS-Call (Kanzleien, Banken)",
+  "admin.menu.partnersB2B.description": "Dedizierte Filament-Konsole für B2B-Abonnementpartner (Kanzleien, Banken, Versicherungen)",
+  "footer.services.livingAbroad": "Leben im Ausland",
+  "footer.services.surveysResults": "Expat-Statistiken"
 }

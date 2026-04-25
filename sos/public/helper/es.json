@@ -12669,5 +12669,12 @@
   "press.nav.releases": "Comunicados de prensa",
   "press.nav.seeAlso": "Descubra también",
   "press.nav.testimonials": "Testimonios",
-  "press.nav.title": "Descubra también"
+  "press.nav.title": "Descubra también",
+  "admin.menu.unifiedCommissions": "Comisiones Unificadas",
+  "admin.menu.unifiedCommissions.description": "Sistema unificado de comisiones, planes, tarifas y anulaciones individuales",
+  "footer.services.news": "Noticias para Expatriados",
+  "admin.menu.partnersB2B": "B2B SOS-Call (despachos, bancos)",
+  "admin.menu.partnersB2B.description": "Consola Filament dedicada para socios B2B con suscripción SOS-Call (despachos, bancos, aseguradoras)",
+  "footer.services.livingAbroad": "Vida en el Extranjero",
+  "footer.services.surveysResults": "Estadísticas de Expatriados"
 }

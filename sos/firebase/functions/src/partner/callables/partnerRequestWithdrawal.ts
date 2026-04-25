@@ -18,6 +18,7 @@ import { getWithdrawalFee } from "../../services/feeCalculationService";
 import { sendWithdrawalConfirmation } from "../../telegram/withdrawalConfirmation";
 import { partnerConfig } from "../../lib/functionConfigs";
 import { TELEGRAM_SECRETS } from "../../lib/secrets";
+import { getPaymentMethodLabel } from "../../lib/paymentMethodLabels";
 import { checkRateLimit, RATE_LIMITS } from "../../lib/rateLimiter";
 
 function ensureInitialized() {
@@ -162,14 +163,16 @@ export const partnerRequestWithdrawal = onCall(
         updatedAt: Timestamp.now(),
       });
 
-      // 5. Send Telegram confirmation (double verification)
-      const methodLabels: Record<string, string> = {
-        paypal: "PayPal",
-        stripe: "Stripe",
-        wise: "Wise",
-        bank_transfer: "Virement bancaire",
-        mobile_money: "Mobile Money",
-      };
+      // P1-8 FIX 2026-04-25: localized payment-method label (9 langs).
+      const userLocaleRaw = (userDoc.data()?.preferredLanguage
+        || userDoc.data()?.language
+        || 'fr') as string;
+      // Partner withdrawals can also be paid via paypal/stripe; keep those non-localized
+      // (proper nouns) but route bank_transfer/mobile_money/wise through the i18n util.
+      const partnerSpecificLabels: Record<string, string> = { paypal: "PayPal", stripe: "Stripe" };
+      const paymentMethodLabel =
+        partnerSpecificLabels[input.paymentMethodId]
+        || getPaymentMethodLabel(input.paymentMethodId, userLocaleRaw, input.paymentMethodId);
 
       const confirmResult = await sendWithdrawalConfirmation({
         withdrawalId: withdrawal.id,
@@ -177,7 +180,7 @@ export const partnerRequestWithdrawal = onCall(
         role: "partner",
         collection: "payment_withdrawals",
         amount: input.amount,
-        paymentMethod: methodLabels[input.paymentMethodId] || input.paymentMethodId,
+        paymentMethod: paymentMethodLabel,
         telegramId,
       });
 

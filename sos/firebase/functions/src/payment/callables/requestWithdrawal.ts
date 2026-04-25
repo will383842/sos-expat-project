@@ -18,6 +18,7 @@ import { sendWithdrawalConfirmation, WithdrawalConfirmationRole } from '../../te
 import { TELEGRAM_SECRETS } from '../../lib/secrets';
 import { ALLOWED_ORIGINS } from "../../lib/functionConfigs";
 import { checkRateLimit, RATE_LIMITS } from "../../lib/rateLimiter";
+import { getPaymentMethodLabel } from "../../lib/paymentMethodLabels";
 
 // Lazy initialization
 function ensureInitialized() {
@@ -233,13 +234,15 @@ export const requestWithdrawal = onCall(
         affiliate: 'affiliate',
       };
 
-      // Resolve human-readable payment method label
-      const methodTypeLabels: Record<string, string> = {
-        bank_transfer: 'Virement bancaire',
-        mobile_money: 'Mobile Money',
-        wise: 'Wise',
-      };
-      const paymentMethodLabel = methodTypeLabels[withdrawal.methodType] || withdrawal.methodType || input.paymentMethodId;
+      // P1-8 FIX 2026-04-25: localized via shared util (lib/paymentMethodLabels).
+      const userLocaleRaw = (userDoc.data()?.preferredLanguage
+        || userDoc.data()?.language
+        || 'fr') as string;
+      const paymentMethodLabel = getPaymentMethodLabel(
+        withdrawal.methodType,
+        userLocaleRaw,
+        input.paymentMethodId,
+      );
 
       const confirmResult = await sendWithdrawalConfirmation({
         withdrawalId: withdrawal.id,

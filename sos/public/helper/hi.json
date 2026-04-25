@@ -12669,5 +12669,12 @@
   "press.nav.releases": "प्रेस विज्ञप्तियाँ",
   "press.nav.seeAlso": "और जानें",
   "press.nav.testimonials": "प्रशंसापत्र",
-  "press.nav.title": "और जानें"
+  "press.nav.title": "और जानें",
+  "admin.menu.unifiedCommissions": "एकीकृत कमीशन",
+  "admin.menu.unifiedCommissions.description": "कमीशन, योजनाओं, दरों और व्यक्तिगत ओवरराइड के लिए एकीकृत प्रणाली",
+  "footer.services.news": "प्रवासी समाचार",
+  "admin.menu.partnersB2B": "B2B SOS-Call (फर्म, बैंक)",
+  "admin.menu.partnersB2B.description": "B2B सदस्यता भागीदारों के लिए समर्पित Filament कंसोल (कानून फर्म, बैंक, बीमाकर्ता)",
+  "footer.services.livingAbroad": "विदेश में जीवन",
+  "footer.services.surveysResults": "प्रवासी आंकड़े"
 }

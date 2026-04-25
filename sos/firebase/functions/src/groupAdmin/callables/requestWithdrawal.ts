@@ -35,6 +35,7 @@ import { COLLECTIONS } from "../../payment/services/paymentService";
 import { sendWithdrawalConfirmation } from "../../telegram/withdrawalConfirmation";
 import { TELEGRAM_SECRETS } from "../../lib/secrets";
 import { ALLOWED_ORIGINS } from "../../lib/functionConfigs";
+import { getPaymentMethodLabel } from "../../lib/paymentMethodLabels";
 
 // Lazy initialization
 function ensureInitialized() {
@@ -315,20 +316,17 @@ export const requestGroupAdminWithdrawal = onCall(
         collection: "payment_withdrawals",
       });
 
-      // Payment method label for Telegram message
-      const methodLabels: Record<GroupAdminPaymentMethod, string> = {
-        wise: "Wise",
-        mobile_money: "Mobile Money",
-        bank_transfer: "Virement bancaire",
-      };
-
+      // P1-8 FIX 2026-04-25: localized payment-method label (9 langs).
+      const userLocaleRaw = (userDoc.data()?.preferredLanguage
+        || userDoc.data()?.language
+        || 'fr') as string;
       const confirmResult = await sendWithdrawalConfirmation({
         withdrawalId,
         userId,
         role: "groupAdmin",
         collection: "payment_withdrawals",
         amount: input.amount,
-        paymentMethod: methodLabels[input.paymentMethod] || input.paymentMethod,
+        paymentMethod: getPaymentMethodLabel(input.paymentMethod, userLocaleRaw, input.paymentMethod),
         telegramId,
       });
 

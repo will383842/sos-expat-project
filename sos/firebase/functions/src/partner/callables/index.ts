@@ -20,4 +20,6 @@ export { trackPartnerClick } from "./trackPartnerClick";
 export { submitPartnerApplication } from "./submitPartnerApplication";
 export { checkSosCallCode } from "./checkSosCallCode";
 export { triggerSosCallFromWeb } from "./triggerSosCallFromWeb";
-export { releaseProviderPayments } from "./releaseProviderPaymentsForInvoice";
+// P1-1 FIX 2026-04-25: removed releaseProviderPayments (was dead code).
+// Business model is "immediate-credit + 30-day reserve, SOS-Expat absorbs partner-default risk",
+// so the invoice-gated release flow is intentionally not used.

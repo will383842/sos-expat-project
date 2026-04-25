@@ -9,6 +9,9 @@ import {
 } from '../../lib/secrets';
 import { scheduleCallTaskWithIdempotence } from '../../lib/tasks';
 import { partnerConfig } from '../../lib/functionConfigs';
+import { decryptPhoneNumber } from '../../utils/encryption';
+import { getCountryName } from '../../utils/countryUtils';
+import { getB2BProviderAmount } from '../../services/pricingService';
 
 /**
  * SOS-Call web trigger callable (called from sos-call.sos-expat.com Blade page).
@@ -52,6 +55,13 @@ interface CheckSessionResponse {
   partner_firebase_id?: string;
   agreement_id?: number;
   client_first_name?: string;
+  /**
+   * Optional: partner display name (e.g. "BNP Paribas", "AXA Assistance").
+   * When the Partner Engine /check-session endpoint returns it, we surface
+   * it in the provider SMS so the provider knows which partner sent the
+   * client. Falls back to a generic "Partenaire" label when missing.
+   */
+  partner_name?: string;
   error?: string;
 }
 
@@ -68,6 +78,24 @@ const USD_ZONE_COUNTRIES = new Set([
 function deriveCurrencyFromCountry(country?: string): 'eur' | 'usd' {
   if (!country) return 'eur';
   return USD_ZONE_COUNTRIES.has(country.toUpperCase()) ? 'usd' : 'eur';
+}
+
+/**
+ * Map of ISO 639-1 codes to native language names — same set as the standard
+ * createAndScheduleCallFunction so the provider SMS reads the same regardless
+ * of whether the call came from the B2C SPA or the B2B Blade page.
+ */
+const LANGUAGE_NAMES: Record<string, string> = {
+  fr: 'Français', en: 'English', es: 'Español', de: 'Deutsch', pt: 'Português',
+  ru: 'Русский', ar: 'العربية', hi: 'हिन्दी', ch: '中文', zh: '中文',
+  it: 'Italiano', nl: 'Nederlands', pl: 'Polski', tr: 'Türkçe', ja: '日本語', ko: '한국어',
+};
+
+function formatLanguages(languages: string[]): string {
+  if (!languages || languages.length === 0) return 'Non spécifié';
+  return languages
+    .map((code) => LANGUAGE_NAMES[code.toLowerCase()] || code.toUpperCase())
+    .join(', ');
 }
 
 /**
@@ -116,6 +144,18 @@ async function finalizeCall(args: {
   //   2. Fallback: derive from clientCountry (USD-zone whitelist) for legacy
   //      callers and the standalone Blade page that doesn't run the SPA hook
   //   3. Final fallback inside deriveCurrencyFromCountry: 'eur'
+  //
+  // P1-5 FIX 2026-04-25: log a structured warning whenever clientCurrency is
+  // missing so we can quantify the incidence in production. Once the SPA is
+  // reliably passing it from every entry point, this can be promoted to a
+  // throw HttpsError('invalid-argument') for stricter contract enforcement.
+  if (!clientCurrency) {
+    logger.warn("[triggerSosCallFromWeb] clientCurrency missing — derived from country", {
+      clientCountry: clientCountry || null,
+      derivedCurrency: deriveCurrencyFromCountry(clientCountry),
+      sosCallSessionToken: sosCallSessionToken ? "present" : "missing",
+    });
+  }
   const callCurrency: 'eur' | 'usd' = clientCurrency || deriveCurrencyFromCountry(clientCountry);
 
   await callSessionRef.set({
@@ -185,6 +225,95 @@ async function finalizeCall(args: {
       'internal',
       "Impossible de planifier l'appel. Veuillez réessayer dans quelques instants."
     );
+  }
+
+  // Provider notification (booking_paid_provider) — same SMS template as the
+  // standard B2C flow so the provider can prepare for the call. The B2B path
+  // previously skipped this, leaving providers in the dark on SOS-Call calls.
+  // Non-blocking: a failure here MUST NOT break the call scheduling.
+  try {
+    const serviceType = providerType === 'lawyer' ? 'lawyer_call' : 'expat_call';
+    const providerEmail = providerData.email || null;
+    let decryptedProviderPhone = providerPhone;
+    if (typeof providerPhone === 'string' && providerPhone.startsWith('enc:')) {
+      try {
+        decryptedProviderPhone = decryptPhoneNumber(providerPhone);
+      } catch (e) {
+        logger.warn('[triggerSosCallFromWeb] provider phone decrypt failed', {
+          err: e instanceof Error ? e.message : String(e),
+        });
+      }
+    }
+
+    const language = clientLanguage || 'fr';
+    const clientFirstName = sessionData.client_first_name || 'Client';
+    const rawInterventionCountry = clientCountry || providerData.country || 'N/A';
+    const interventionCountry = getCountryName(rawInterventionCountry) || rawInterventionCountry;
+    const partnerLabel = sessionData.partner_name || 'Partenaire';
+    const baseTitle = providerType === 'lawyer' ? 'Consultation avocat' : 'Consultation expat';
+    const title = `[B2B] ${baseTitle}`;
+    const description = `Appel offert via ${partnerLabel} (forfait B2B mensuel — le client ne paie rien).`;
+    const clientLanguagesFormatted = formatLanguages([language]);
+    const providerAmount = await getB2BProviderAmount(
+      serviceType as 'lawyer' | 'expat',
+      callCurrency
+    );
+    const currencySymbol = callCurrency === 'usd' ? '$' : '€';
+
+    if (providerId) {
+      await db.collection('message_events').add({
+        eventId: 'booking_paid_provider',
+        locale: language,
+        to: {
+          uid: providerId,
+          email: providerEmail,
+          phone: decryptedProviderPhone || null,
+        },
+        context: {
+          callSessionId: callSessionRef.id,
+          client: {
+            firstName: clientFirstName,
+            name: clientFirstName,
+            nationality: 'N/A',
+          },
+          request: {
+            country: interventionCountry,
+            title,
+            description,
+          },
+          booking: {
+            amount: providerAmount,
+            currency: callCurrency.toUpperCase(),
+          },
+          earnings: {
+            amount: providerAmount,
+            symbol: currencySymbol,
+            formatted: `${providerAmount}${currencySymbol}`,
+          },
+          clientName: clientFirstName,
+          clientCountry: interventionCountry,
+          clientLanguage: language,
+          clientLanguages: [language],
+          clientLanguagesFormatted,
+          providerEarnings: providerAmount,
+          currencySymbol,
+          title,
+          description,
+          scheduledTime: scheduledAt.toDate().toISOString(),
+          isSosCallFree: true,
+        },
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+      logger.info('[triggerSosCallFromWeb] Provider notification created', {
+        callSessionId: callSessionRef.id,
+        providerId,
+      });
+    }
+  } catch (notifErr) {
+    logger.error('[triggerSosCallFromWeb] Provider notification failed (non-blocking)', {
+      callSessionId: callSessionRef.id,
+      err: notifErr instanceof Error ? notifErr.message : String(notifErr),
+    });
   }
 
   // Non-blocking log-back to Partner Engine

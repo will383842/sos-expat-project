@@ -23,7 +23,6 @@ export {
   submitPartnerApplication,
   checkSosCallCode,
   triggerSosCallFromWeb,
-  releaseProviderPayments,
 } from "./callables";
 
 // Admin callables

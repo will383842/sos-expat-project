@@ -11,18 +11,21 @@ const path = require("path");
 // Compte Stripe: 51RFHjp (SOS Expat)
 // =============================================================================
 
-const STRIPE_KEYS = {
-  // Clé LIVE pour production
-  LIVE: 'pk_live_51RFHjpDF7L3utQbN09AgPttk7wz8NDyeD7pJZvYae2LJBHOYW4Eg9HWZpX6vKtZMXZltD2fjEf9EnZL4agxgOpHL00TBow1FdT',
-  // Clé TEST pour développement (même compte)
-  TEST: 'pk_test_51RFHjpDF7L3utQbN7DNWM0zdUWGuwmwTvRLP0GhXYVbpQIzDDEfb7RFjDs9egAN7BYhyvX3JCQMtK3CliZFAI3ew00jhRzLul2',
-};
-
-// Sélection de la clé via variable d'environnement ou mode
+// P2-1 FIX 2026-04-25: Stripe publishable keys are no longer hardcoded.
+// They MUST be provided via env vars when this script runs (CI/CD or local).
+//   - STRIPE_PUBLIC_KEY_LIVE  : pk_live_… (production)
+//   - STRIPE_PUBLIC_KEY_TEST  : pk_test_… (development)
+// Backward compat: STRIPE_PUBLIC_KEY_FOR_FRONTEND or VITE_STRIPE_PUBLIC_KEY take precedence.
 const isProduction = process.env.NODE_ENV === 'production';
 const STRIPE_PUBLIC_KEY = process.env.STRIPE_PUBLIC_KEY_FOR_FRONTEND
   || process.env.VITE_STRIPE_PUBLIC_KEY
-  || (isProduction ? STRIPE_KEYS.LIVE : STRIPE_KEYS.TEST);
+  || (isProduction ? process.env.STRIPE_PUBLIC_KEY_LIVE : process.env.STRIPE_PUBLIC_KEY_TEST);
+
+if (!STRIPE_PUBLIC_KEY) {
+  console.error('❌ ERREUR: aucune clé Stripe publique fournie.');
+  console.error('   Définir STRIPE_PUBLIC_KEY_LIVE (prod) ou STRIPE_PUBLIC_KEY_TEST (dev) dans l\'environnement.');
+  process.exit(1);
+}
 
 // Validation: s'assurer que c'est bien une clé publique (pk_*)
 if (!STRIPE_PUBLIC_KEY.startsWith('pk_')) {

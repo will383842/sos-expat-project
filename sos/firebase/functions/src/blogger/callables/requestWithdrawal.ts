@@ -32,6 +32,7 @@ import {
 } from "../../payment/types";
 import { sendWithdrawalConfirmation, WithdrawalConfirmationRole } from "../../telegram/withdrawalConfirmation";
 import { TELEGRAM_SECRETS } from "../../lib/secrets";
+import { getPaymentMethodLabel } from "../../lib/paymentMethodLabels";
 import { ALLOWED_ORIGINS } from "../../lib/functionConfigs";
 
 // ============================================================================
@@ -253,18 +254,17 @@ export const bloggerRequestWithdrawal = onCall(
 
       // 12. Send Telegram confirmation
       const telegramId = userDoc.data()?.telegramId as number;
-      const methodLabels: Record<string, string> = {
-        bank_transfer: "Virement bancaire",
-        mobile_money: "Mobile Money",
-        wise: "Wise",
-      };
+      // P1-8 FIX 2026-04-25: localized payment-method label (9 langs).
+      const userLocaleRaw = (userDoc.data()?.preferredLanguage
+        || userDoc.data()?.language
+        || 'fr') as string;
       const confirmResult = await sendWithdrawalConfirmation({
         withdrawalId: withdrawal.id,
         userId: uid,
         role: "blogger" as WithdrawalConfirmationRole,
         collection: "payment_withdrawals",
         amount: withdrawalAmount,
-        paymentMethod: methodLabels[input.paymentMethod] || input.paymentMethod,
+        paymentMethod: getPaymentMethodLabel(input.paymentMethod, userLocaleRaw, input.paymentMethod),
         telegramId,
       });
 

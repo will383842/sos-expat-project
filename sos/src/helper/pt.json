@@ -12679,5 +12679,12 @@
   "press.nav.releases": "Comunicados de imprensa",
   "press.nav.seeAlso": "Descubra também",
   "press.nav.testimonials": "Testemunhos",
-  "press.nav.title": "Descubra também"
+  "press.nav.title": "Descubra também",
+  "admin.menu.unifiedCommissions": "Comissões Unificadas",
+  "admin.menu.unifiedCommissions.description": "Sistema unificado de comissões, planos, taxas e substituições individuais",
+  "footer.services.news": "Notícias para Expatriados",
+  "admin.menu.partnersB2B": "B2B SOS-Call (escritórios, bancos)",
+  "admin.menu.partnersB2B.description": "Console Filament dedicado para parceiros B2B com assinatura SOS-Call (escritórios, bancos, seguradoras)",
+  "footer.services.livingAbroad": "Vida no Estrangeiro",
+  "footer.services.surveysResults": "Estatísticas de Expatriados"
 }

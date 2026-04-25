@@ -12669,5 +12669,12 @@
   "press.nav.releases": "Пресс-релизы",
   "press.nav.seeAlso": "Узнайте больше",
   "press.nav.testimonials": "Отзывы",
-  "press.nav.title": "Узнайте больше"
+  "press.nav.title": "Узнайте больше",
+  "admin.menu.unifiedCommissions": "Объединённые комиссии",
+  "admin.menu.unifiedCommissions.description": "Единая система комиссий, тарифных планов, ставок и индивидуальных переопределений",
+  "footer.services.news": "Новости для экспатов",
+  "admin.menu.partnersB2B": "B2B SOS-Call (фирмы, банки)",
+  "admin.menu.partnersB2B.description": "Специализированная консоль Filament для B2B-партнёров по подписке SOS-Call (юридические фирмы, банки, страховые компании)",
+  "footer.services.livingAbroad": "Жизнь за рубежом",
+  "footer.services.surveysResults": "Статистика экспатов"
 }
