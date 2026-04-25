@@ -381,6 +381,7 @@ export type RouteKey =
   | "partner-telegram"   // /partner/telegram -> /partner/telegram, etc.
   | "partner-invoices"   // /partner/factures -> /partner/invoices, etc. (SOS-Call)
   | "partner-sos-call-activity" // /partner/activite-sos-call -> /partner/sos-call-activity, etc.
+  | "partner-legal-documents" // /partner/documents-legaux -> /partner/legal-documents, etc.
   | "press"              // /presse -> /press, /prensa, etc.
   // Public content pages (Redesign 2026)
   | "articles"           // /articles -> /articles, /articulos, etc.
@@ -1752,6 +1753,17 @@ const ROUTE_TRANSLATIONS: Record<RouteKey, Record<Language, string>> = {
     ch: "partner/sos-call-huodong",
     hi: "partner/sos-call-gatividhi",
     ar: "partner/nashat-sos-call",
+  },
+  "partner-legal-documents": {
+    fr: "partner/documents-legaux",
+    en: "partner/legal-documents",
+    es: "partner/documentos-legales",
+    de: "partner/rechtsdokumente",
+    ru: "partner/yuridicheskie-dokumenty",
+    pt: "partner/documentos-legais",
+    ch: "partner/falv-wenjian",
+    hi: "partner/kanooni-dastavej",
+    ar: "partner/wathaiq-qanuniya",
   },
   "groupadmin-register": {
     fr: "groupadmin/inscription",

@@ -331,10 +331,10 @@ const HelpArticle: React.FC = () => {
   // data-page-not-found="true" and register a false 404 in Search Console.
   // The loading state is already handled above (spinner), so reaching here
   // without `notFound === true` is a logic error — don't flag it as 404.
-  if (notFound) {
+  if (notFound || !article) {
     return (
       <Layout>
-        <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 flex items-center justify-center" data-page-not-found="true">
+        <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 flex items-center justify-center" data-page-not-found={notFound ? "true" : undefined}>
           <div className="text-center">
             <h1 className="text-4xl font-bold text-white mb-4">404</h1>
             <p className="text-white/80 mb-6">
