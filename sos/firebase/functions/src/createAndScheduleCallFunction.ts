@@ -648,17 +648,22 @@ export const createAndScheduleCallHTTPS = onCall(
           console.warn(`⚠️ [${requestId}] Session créée mais lien payments échoué - webhook pourra toujours fonctionner`);
         }
       } else if (isSosCallFree) {
-        // Derive the call currency from the client country (USD-zone → 'usd',
-        // else → 'eur'). Same heuristic as triggerSosCallFromWeb so that a
-        // logged-in US client using the B2B checkbox is paid the USD B2B
-        // rate at the end of the call (handleCallCompleted reads
-        // call_session.currency).
+        // Currency precedence (matches the direct flow exactly):
+        //   1. Frontend-passed currency (= what detectUserCurrency() resolved
+        //      from the user's localStorage choice or their navigator.language).
+        //      This is the SAME source of truth used for direct payments, so
+        //      a US client paying $55 in direct mode also gets $20 in B2B mode.
+        //   2. Fallback: derive from clientCurrentCountry for legacy callers.
+        //   3. Final fallback: 'eur'.
         const USD_ZONE_COUNTRIES = new Set([
           'US', 'CA', 'AU', 'NZ', 'SG', 'HK', 'PH',
           'AE', 'IL', 'BR', 'MX', 'AR', 'CL', 'CO', 'PE',
         ]);
         const cc = (clientCurrentCountry || '').toUpperCase();
-        const callCurrency = USD_ZONE_COUNTRIES.has(cc) ? 'usd' : 'eur';
+        const fallbackFromCountry = USD_ZONE_COUNTRIES.has(cc) ? 'usd' : 'eur';
+        const callCurrency: 'eur' | 'usd' = (currency === 'usd' || currency === 'eur')
+          ? currency
+          : fallbackFromCountry;
 
         // Mark call_sessions as SOS-Call free for downstream handlers (onCallCompleted will skip commission)
         try {

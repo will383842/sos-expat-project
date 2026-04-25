@@ -30,6 +30,14 @@ interface TriggerSosCallRequest {
   clientLanguage?: string;
   clientCountry?: string; // ISO-2 of the country where client is located
   /**
+   * Currency the client picked (or that was detected for them) on the SPA.
+   * When provided, this is the source of truth — the backend uses it as-is.
+   * When absent, falls back to deriving from clientCountry (USD-zone or EUR).
+   * Mirrors the existing detectUserCurrency() flow in the direct booking,
+   * so a client who picked USD on /sos-appel keeps USD on B2B too.
+   */
+  clientCurrency?: 'eur' | 'usd';
+  /**
    * Optional explicit provider id chosen by the client in the SPA wizard.
    * When provided, the backend verifies it (approved, visible, not busy,
    * right type) and uses it directly. When absent, the auto-select scoring
@@ -80,6 +88,7 @@ async function finalizeCall(args: {
   clientPhone: string;
   clientLanguage?: string;
   clientCountry?: string;
+  clientCurrency?: 'eur' | 'usd';
   sessionData: CheckSessionResponse;
   sosCallSessionToken: string;
 }) {
@@ -93,6 +102,7 @@ async function finalizeCall(args: {
     clientPhone,
     clientLanguage,
     clientCountry,
+    clientCurrency,
     sessionData,
     sosCallSessionToken,
   } = args;
@@ -100,10 +110,13 @@ async function finalizeCall(args: {
   const now = admin.firestore.Timestamp.now();
   const scheduledAt = admin.firestore.Timestamp.fromMillis(Date.now() + 240 * 1000);
 
-  // Derive the call currency from the client country so the provider is
-  // later credited at the right B2B rate (USD-zone clients → 'usd' rate,
-  // others → 'eur' rate).
-  const callCurrency = deriveCurrencyFromCountry(clientCountry);
+  // Currency precedence:
+  //   1. Frontend-passed clientCurrency (matches what the user picked or
+  //      what detectUserCurrency() resolved on the SPA — single source of truth)
+  //   2. Fallback: derive from clientCountry (USD-zone whitelist) for legacy
+  //      callers and the standalone Blade page that doesn't run the SPA hook
+  //   3. Final fallback inside deriveCurrencyFromCountry: 'eur'
+  const callCurrency: 'eur' | 'usd' = clientCurrency || deriveCurrencyFromCountry(clientCountry);
 
   await callSessionRef.set({
     id: callSessionRef.id,
@@ -213,7 +226,7 @@ export const triggerSosCallFromWeb = onCall(
     timeoutSeconds: 30,
   },
   async (request: CallableRequest<TriggerSosCallRequest>) => {
-    const { sosCallSessionToken, providerType, clientPhone, clientLanguage, clientCountry, providerId: requestedProviderId } = request.data || ({} as TriggerSosCallRequest);
+    const { sosCallSessionToken, providerType, clientPhone, clientLanguage, clientCountry, clientCurrency, providerId: requestedProviderId } = request.data || ({} as TriggerSosCallRequest);
 
     if (!sosCallSessionToken || !providerType || !clientPhone) {
       throw new HttpsError(
@@ -304,6 +317,7 @@ export const triggerSosCallFromWeb = onCall(
         clientPhone,
         clientLanguage,
         clientCountry,
+        clientCurrency,
         sessionData,
         sosCallSessionToken,
       });
@@ -401,6 +415,8 @@ export const triggerSosCallFromWeb = onCall(
       providerType,
       clientPhone,
       clientLanguage,
+      clientCountry,
+      clientCurrency,
       sessionData,
       sosCallSessionToken,
     });

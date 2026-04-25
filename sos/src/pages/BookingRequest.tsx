@@ -3337,6 +3337,11 @@ const BookingRequest: React.FC = () => {
 
             let callId: string | undefined;
             try {
+              // Currency picked by the user (or detected from their localStorage /
+              // browser language) — same source of truth as the direct flow.
+              // Backend will use this directly for the B2B rate lookup.
+              const sosCallCurrency = detectUserCurrency();
+
               if (useGatedFlow) {
                 // Path A — anonymous, use triggerSosCallFromWeb (token-authenticated)
                 const triggerSosCallFromWeb: HttpsCallable<
@@ -3351,6 +3356,7 @@ const BookingRequest: React.FC = () => {
                   clientPhone: clientPhoneE164,
                   clientLanguage: (bookingRequest.clientLanguages || ['fr'])[0],
                   clientCountry: bookingRequest.clientCurrentCountry || '',
+                  clientCurrency: sosCallCurrency,
                 });
                 if (!result?.data?.success) {
                   throw new Error(result?.data?.message || 'SCHEDULE_FAILED');
@@ -3371,15 +3377,14 @@ const BookingRequest: React.FC = () => {
                   serviceType: pType === 'lawyer' ? 'lawyer_call' : 'expat_call',
                   providerType: pType,
                   sosCallSessionToken,
+                  // Currency is the single source of truth for the B2B rate
+                  // (matches the direct flow which passes the same field).
+                  currency: sosCallCurrency,
                   clientLanguages: bookingRequest.clientLanguages || ['fr'],
                   providerLanguages: provider?.languagesSpoken || provider?.languages || ['fr'],
                   bookingTitle: bookingRequest.title || '',
                   bookingDescription: bookingRequest.description || '',
                   clientCurrentCountry: bookingRequest.clientCurrentCountry || '',
-                  // P2 FIX: pass clientCountry so backend can derive currency for B2B
-                  // (US-zone → USD rate, else EUR rate). Without this, a logged-in
-                  // US user using the B2B checkbox would be paid at the EUR rate.
-                  clientCountry: bookingRequest.clientCurrentCountry || '',
                   clientFirstName: bookingRequest.clientFirstName || '',
                   clientNationality: bookingRequest.clientNationality || '',
                 });
@@ -3690,6 +3695,8 @@ const BookingRequest: React.FC = () => {
                 { success: boolean; callSessionId?: string; message?: string; providerDisplayName?: string }
               > = httpsCallable(functions, 'triggerSosCallFromWeb');
 
+              const sosCallCurrencyMobile = detectUserCurrency();
+
               const result = await triggerSosCallFromWeb({
                 sosCallSessionToken,
                 providerType: pType,
@@ -3697,6 +3704,7 @@ const BookingRequest: React.FC = () => {
                 clientPhone: clientPhoneE164,
                 clientLanguage: (bookingRequest.clientLanguages || ['fr'])[0],
                 clientCountry: bookingRequest.clientCurrentCountry || '',
+                clientCurrency: sosCallCurrencyMobile,
               });
               if (!result?.data?.success) {
                 throw new Error(result?.data?.message || 'SCHEDULE_FAILED');
@@ -3708,6 +3716,8 @@ const BookingRequest: React.FC = () => {
                 { success: boolean; callId?: string; message?: string }
               > = httpsCallable(functions, 'createAndScheduleCall');
 
+              const sosCallCurrencyMobileB = detectUserCurrency();
+
               const result = await createAndScheduleCall({
                 providerId: provider!.id,
                 clientId: user!.uid,
@@ -3716,6 +3726,8 @@ const BookingRequest: React.FC = () => {
                 serviceType: pType === 'lawyer' ? 'lawyer_call' : 'expat_call',
                 providerType: pType,
                 sosCallSessionToken,
+                // Match direct-flow currency contract for B2B rate lookup.
+                currency: sosCallCurrencyMobileB,
                 clientLanguages: bookingRequest.clientLanguages || ['fr'],
                 providerLanguages: provider?.languagesSpoken || provider?.languages || ['fr'],
                 bookingTitle: bookingRequest.title || '',
