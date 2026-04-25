@@ -178,6 +178,17 @@ const AdminPricing: React.FC = () => {
     },
   });
 
+  // B2B provider rates (SOS-Call free calls — partner pays a monthly flat fee).
+  // Different from the direct rate: configurable separately per service+currency.
+  // Stored in admin_config/pricing.{service}.b2b.{currency}.providerAmount.
+  // Default = 70% of the direct rate (admin can adjust).
+  const [b2bBase, setB2bBase] = useState<
+    Record<ServiceKind, Record<Currency, number>>
+  >({
+    expat: { eur: 7, usd: 7 },     // 70% of 10
+    lawyer: { eur: 21, usd: 21 },  // 70% of 30
+  });
+
   // promo
   const [promo, setPromo] = useState<
     Record<ServiceKind, Record<Currency, PricingOverrideNode>>
@@ -282,6 +293,19 @@ const AdminPricing: React.FC = () => {
     });
     setBase(b);
 
+    // B2B provider rates — read from data.{service}.b2b.{currency}.providerAmount
+    const b2b = { ...b2bBase };
+    (["expat", "lawyer"] as ServiceKind[]).forEach((s) => {
+      (["eur", "usd"] as Currency[]).forEach((c) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const b2bNode = (data?.[s] as any)?.b2b?.[c];
+        if (b2bNode && typeof b2bNode.providerAmount === "number") {
+          b2b[s][c] = Number(b2bNode.providerAmount);
+        }
+      });
+    });
+    setB2bBase(b2b);
+
     // Promo
     const p = { ...promo };
     (["expat", "lawyer"] as ServiceKind[]).forEach((s) => {
@@ -345,10 +369,19 @@ const AdminPricing: React.FC = () => {
         duration: Number(selBase.duration),
       };
 
+      // Save direct rate AND B2B rate together (B2B applies to SOS-Call
+      // free calls covered by a partner contract — separate provider amount).
+      const newB2BAmount = Number(b2bBase[service][currency]);
+
       await setDoc(
         doc(db, "admin_config", "pricing"),
         {
-          [service]: { [currency]: newNode },
+          [service]: {
+            [currency]: newNode,
+            b2b: {
+              [currency]: { providerAmount: newB2BAmount },
+            },
+          },
           updatedAt: serverTimestamp(),
           updatedBy: user?.uid ?? "admin",
           // P2-1 FIX: Audit trail — who changed what, when, and the previous values
@@ -359,7 +392,7 @@ const AdminPricing: React.FC = () => {
             service,
             currency,
             previousValues: prevNode,
-            newValues: newNode,
+            newValues: { ...newNode, b2bProviderAmount: newB2BAmount },
           }),
         },
         { merge: true }
@@ -845,7 +878,7 @@ const AdminPricing: React.FC = () => {
                 </div>
               </div>
 
-              {/* Part prestataire */}
+              {/* Part prestataire (tarif direct — client paie via Stripe/PayPal) */}
               <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
                 <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
                   {intl.formatMessage({ id: "admin.pricing.providerShare" })}
@@ -874,6 +907,43 @@ const AdminPricing: React.FC = () => {
                     {currency.toUpperCase()}
                   </span>
                 </div>
+              </div>
+
+              {/* Part prestataire — TARIF B2B (appel via partenaire, client ne paie pas) */}
+              <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
+                <label className="block text-xs font-medium text-amber-700 uppercase tracking-wider mb-2">
+                  {intl.formatMessage({
+                    id: "admin.pricing.providerShareB2B",
+                    defaultMessage: "Part prestataire B2B",
+                  })}
+                </label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    min={0}
+                    step="0.01"
+                    value={b2bBase[service][currency]}
+                    onChange={(e) => {
+                      const v = parseFloat(e.target.value || "0");
+                      setB2bBase((prev) => {
+                        const next = { ...prev };
+                        next[service][currency] = Math.max(0, v);
+                        return next;
+                      });
+                    }}
+                    className="w-full bg-white border border-amber-300 rounded-lg px-4 py-3 text-lg font-semibold text-amber-900 focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+                  />
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-500 text-sm">
+                    {currency.toUpperCase()}
+                  </span>
+                </div>
+                <p className="mt-2 text-xs text-amber-700 leading-snug">
+                  {intl.formatMessage({
+                    id: "admin.pricing.providerShareB2BHint",
+                    defaultMessage:
+                      "Tarif appliqué quand le client passe par un contrat partenaire (forfait mensuel B2B). Le prestataire est crédité dès la fin de l'appel, retirable après 30 jours.",
+                  })}
+                </p>
               </div>
 
               {/* Total client */}

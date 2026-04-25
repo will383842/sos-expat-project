@@ -36,6 +36,9 @@ interface EarningsSummary {
   totalPayoutsFormatted: string;
   reservedAmount: number;
   reservedAmountFormatted: string;
+  // SOS-Call B2B earnings under the 30-day commercial reserve
+  reservedB2BAmount?: number;
+  reservedB2BAmountFormatted?: string;
   pendingKycAmount: number;
   pendingKycAmountFormatted: string;
   totalCalls: number;
@@ -290,6 +293,33 @@ export default function ProviderEarnings({ className = "", compact = false }: Pr
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {/* B2B 30-day reserve banner — surfaces SOS-Call free earnings still
+            locked under the commercial reserve. We highlight it because the
+            amount is INCLUDED in totalEarnings but EXCLUDED from
+            availableBalance, which would otherwise look like a discrepancy. */}
+        {summary.reservedB2BAmount !== undefined && summary.reservedB2BAmount > 0 && (
+          <div className="mt-4 p-4 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border border-amber-200 dark:border-amber-700/40">
+            <div className="flex items-start gap-3">
+              <Clock className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <div className="font-semibold text-amber-900 dark:text-amber-200">
+                  <FormattedMessage
+                    id="dashboard.earnings.b2bReserveTitle"
+                    defaultMessage="Réserve B2B 30 jours"
+                  />
+                  : <span className="text-amber-700 dark:text-amber-300">{summary.reservedB2BAmountFormatted}</span>
+                </div>
+                <div className="text-xs text-amber-800 dark:text-amber-300 mt-1">
+                  <FormattedMessage
+                    id="dashboard.earnings.b2bReserveDesc"
+                    defaultMessage="Vos appels couverts par contrat partenaire sont crédités au tarif B2B et seront retirables 30 jours après chaque appel."
+                  />
+                </div>
+              </div>
             </div>
           </div>
         )}

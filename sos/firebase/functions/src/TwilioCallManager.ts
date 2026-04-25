@@ -2687,42 +2687,43 @@ export class TwilioCallManager {
         callSession.metadata?.isSosCallFree === true;
 
       if (isSosCallFree) {
-        logger.info(`🆘 [${completionId}] SOS-Call B2B free call — hold provider payment until partner invoice is paid`);
+        logger.info(`🆘 [${completionId}] SOS-Call B2B free call — credit provider at B2B rate, 30-day reserve`);
         if (duration >= CALL_CONFIG.MIN_CALL_DURATION) {
           try {
-            const { getPricingConfig } = await import("./services/pricingService");
-            const pricingConfig = await getPricingConfig();
+            const { getB2BProviderAmount } = await import("./services/pricingService");
             const serviceType = callSession.metadata?.providerType || "expat";
-            const providerAmount = pricingConfig[serviceType].eur.providerAmount;
+            // Use the B2B provider rate (configured in /admin/pricing,
+            // falls back to 70% of the direct rate). This is INDEPENDENT
+            // of the standard rate billed to direct-paying clients.
+            const providerAmount = await getB2BProviderAmount(serviceType as 'lawyer' | 'expat', 'eur');
             const providerAmountCents = Math.round(providerAmount * 100);
 
-            // HOLD STATUS: provider amount is RECORDED but NOT YET WITHDRAWABLE.
-            // The provider is paid only when (a) the partner pays their monthly invoice
-            // AND (b) the 60-day commercial delay is elapsed.
-            // When ReleaseProviderPaymentsOnInvoicePaid runs, it flips this status to
-            // 'captured_sos_call_free' and sets releasedAt/availableForWithdrawalAt.
+            // PROVIDER PAID IMMEDIATELY at B2B rate. We do NOT wait for the
+            // partner to settle their monthly invoice — SOS-Expat takes that
+            // commercial risk. The only constraint is the 30-day reserve
+            // (commercial standard) before the funds become withdrawable.
             const now = admin.firestore.Timestamp.now();
+            const RESERVE_DAYS = 30;
             await sessionRef.update({
-              "payment.status": "pending_partner_invoice", // not yet captured for the provider
+              "payment.status": "captured_sos_call_free",
               "payment.providerAmount": providerAmount,
               "payment.providerAmountCents": providerAmountCents,
               "payment.gateway": "sos_call_free",
-              "payment.holdReason": "b2b_invoice_pending",
+              "payment.holdReason": "30d_b2b_reserve",
               "payment.holdStartedAt": now,
-              // Earliest date the provider can withdraw (60 days from call).
-              // Effective unlock also requires the partner invoice to be paid.
+              // Earliest date the provider can withdraw (30 days from call).
               "payment.availableFromDate": admin.firestore.Timestamp.fromMillis(
-                now.toMillis() + 60 * 24 * 60 * 60 * 1000
+                now.toMillis() + RESERVE_DAYS * 24 * 60 * 60 * 1000
               ),
+              "isPaid": true,
               "metadata.updatedAt": now,
-              // We do NOT set isPaid: true here — provider dashboards show "pending partner payment"
             });
 
             logger.info(
-              `🆘 [${completionId}] Provider amount recorded ${providerAmount}€ (${providerAmountCents} cents) — HELD until partner invoice paid + 60d delay`
+              `🆘 [${completionId}] Provider credited ${providerAmount}€ (${providerAmountCents} cents) at B2B rate — 30-day reserve, partner invoice handled separately`
             );
           } catch (payErr) {
-            logger.error(`🆘 [${completionId}] Failed to record provider hold for SOS-Call free`, payErr);
+            logger.error(`🆘 [${completionId}] Failed to credit provider for SOS-Call free`, payErr);
           }
         } else {
           logger.info(`🆘 [${completionId}] SOS-Call free call too short (${duration}s) — no provider credit`);

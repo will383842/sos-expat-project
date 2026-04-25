@@ -27,6 +27,12 @@ interface EarningsSummary {
   totalPayoutsFormatted: string;
   reservedAmount: number; // P1 FIX: Montant réservé (disputes)
   reservedAmountFormatted: string;
+  // SOS-Call B2B earnings still under the 30-day commercial reserve
+  // (status='captured_sos_call_free' + availableFromDate > now).
+  // Already counted in totalEarnings, but EXCLUDED from availableBalance
+  // until the reserve expires.
+  reservedB2BAmount: number;
+  reservedB2BAmountFormatted: string;
   // Montant en attente de KYC (pending_transfers avec status pending_kyc)
   pendingKycAmount: number;
   pendingKycAmountFormatted: string;
@@ -251,9 +257,32 @@ export class ProviderEarningsService {
       const paypalVerified = providerData?.paypalEmailVerified === true;
       const kycComplete = stripeKycComplete || paypalVerified;
 
+      // ===== SOS-Call B2B 30-day reserve =====
+      // B2B free calls credit the provider immediately at the B2B rate
+      // (status='captured_sos_call_free') but the funds are locked for 30
+      // days (commercial reserve). Sum sessions still under reserve so we
+      // can subtract them from availableBalance and surface the locked
+      // amount in the dashboard.
+      const nowTs = admin.firestore.Timestamp.now();
+      const b2bReservedSnapshot = await this.db
+        .collection("call_sessions")
+        .where("providerId", "==", providerId)
+        .where("payment.status", "==", "captured_sos_call_free")
+        .where("payment.availableFromDate", ">", nowTs)
+        .limit(QUERY_LIMIT)
+        .get();
+
+      let reservedB2BAmount = 0;
+      b2bReservedSnapshot.docs.forEach((doc) => {
+        const session = doc.data();
+        if (session.payment?.providerAmount) {
+          reservedB2BAmount += session.payment.providerAmount;
+        }
+      });
+
       // Calculer le solde disponible correctement:
-      // totalEarnings - payouts déjà effectués + adjustments - montants réservés
-      const availableBalance = totalEarnings - totalPayouts + adjustmentsTotal - reservedAmount;
+      // totalEarnings - payouts déjà effectués + adjustments - dispute reserves - B2B 30d reserve
+      const availableBalance = totalEarnings - totalPayouts + adjustmentsTotal - reservedAmount - reservedB2BAmount;
       const averageEarningPerCall = successfulCalls > 0 ? totalEarnings / successfulCalls : 0;
 
       const summary: EarningsSummary = {
@@ -267,6 +296,8 @@ export class ProviderEarningsService {
         totalPayoutsFormatted: this.formatCurrency(totalPayouts, "EUR"),
         reservedAmount,
         reservedAmountFormatted: this.formatCurrency(reservedAmount, "EUR"),
+        reservedB2BAmount,
+        reservedB2BAmountFormatted: this.formatCurrency(reservedB2BAmount, "EUR"),
         pendingKycAmount,
         pendingKycAmountFormatted: this.formatCurrency(pendingKycAmount, "EUR"),
         totalCalls,

@@ -9,27 +9,71 @@ export interface ServiceConfig {
   currency: string;
 }
 
+/**
+ * B2B provider rates (SOS-Call free calls — partner pays a monthly flat fee).
+ * Only `providerAmount` is configurable; the other ServiceConfig fields don't
+ * apply (no client-facing total, no connectionFee since no client payment).
+ */
+export interface B2BProviderRate {
+  providerAmount: number;
+}
+
 export interface PricingConfig {
   lawyer: {
     eur: ServiceConfig;
     usd: ServiceConfig;
+    b2b?: {
+      eur?: B2BProviderRate;
+      usd?: B2BProviderRate;
+    };
   };
   expat: {
     eur: ServiceConfig;
     usd: ServiceConfig;
+    b2b?: {
+      eur?: B2BProviderRate;
+      usd?: B2BProviderRate;
+    };
   };
 }
 
 // Configuration par défaut (fallback backend) - lawyer: 20min, expat: 30min
+// B2B fallback = 70% of direct rate (admin can override in /admin/pricing)
 const DEFAULT_PRICING_CONFIG: PricingConfig = {
   lawyer: {
     eur: { totalAmount: 49, connectionFeeAmount: 19, providerAmount: 30, duration: 20, currency: 'eur' },
-    usd: { totalAmount: 55, connectionFeeAmount: 25, providerAmount: 30, duration: 20, currency: 'usd' }
+    usd: { totalAmount: 55, connectionFeeAmount: 25, providerAmount: 30, duration: 20, currency: 'usd' },
+    b2b: {
+      eur: { providerAmount: 21 }, // 70% of 30
+      usd: { providerAmount: 21 }
+    }
   },
   expat: {
     eur: { totalAmount: 19, connectionFeeAmount: 9, providerAmount: 10, duration: 30, currency: 'eur' },
-    usd: { totalAmount: 25, connectionFeeAmount: 15, providerAmount: 10, duration: 30, currency: 'usd' }
+    usd: { totalAmount: 25, connectionFeeAmount: 15, providerAmount: 10, duration: 30, currency: 'usd' },
+    b2b: {
+      eur: { providerAmount: 7 }, // 70% of 10
+      usd: { providerAmount: 7 }
+    }
   }
+};
+
+/**
+ * Provider amount for a B2B SOS-Call free call.
+ * Falls back to 70% of the direct rate if no admin override is configured.
+ */
+export const getB2BProviderAmount = async (
+  serviceType: 'lawyer' | 'expat',
+  currency: 'eur' | 'usd' = 'eur'
+): Promise<number> => {
+  const config = await getPricingConfig();
+  const override = config[serviceType]?.b2b?.[currency]?.providerAmount;
+  if (typeof override === 'number' && override > 0) {
+    return override;
+  }
+  // Fallback: 70% of the standard direct rate
+  const directRate = config[serviceType][currency].providerAmount;
+  return Math.round(directRate * 0.7 * 100) / 100;
 };
 
 /**
