@@ -723,12 +723,12 @@ const PartnerLanding: React.FC = () => {
   // ======= SEO Meta Data =======
   const seoData = useMemo(() => ({
     title: intl.formatMessage({ id: 'partner.landing.v2.seo.title', defaultMessage: 'Programme Partenaire B2B - SOS-Expat | Assistance Juridique Expatriés' }),
-    description: intl.formatMessage({ id: 'partner.landing.v2.seo.description', defaultMessage: 'Devenez partenaire SOS-Expat et offrez à vos clients voyageurs, vacanciers et expatriés un accès à des avocats et experts dans 197 pays. Accord sur mesure, outils d\'intégration, dashboard temps réel.' }),
-    keywords: intl.formatMessage({ id: 'seo.partner.keywords', defaultMessage: 'partenaire SOS Expat, programme partenariat B2B voyageurs vacanciers expatriés, assistance juridique internationale, assurance voyage, agence de voyage partenaire, tour-opérateur, comité d\'entreprise, ambassade partenaire, assurance expatrié, relocation, association expatriés, avocat international, aide administrative à l\'étranger, accord B2B sur mesure, service mobilité internationale entreprise' }),
-    ogTitle: intl.formatMessage({ id: 'seo.partner.ogTitle', defaultMessage: 'Programme Partenaire SOS-Expat | Offrez un Service Juridique d\'Exception à Vos Clients Expatriés' }),
-    ogDescription: intl.formatMessage({ id: 'seo.partner.ogDescription', defaultMessage: 'Recommandez SOS-Expat à vos clients à l\'étranger — voyageurs, vacanciers, expatriés : avocats et experts dans 197 pays, 9 langues, 24/7. Accord de partenariat sur mesure, outils d\'intégration, account manager dédié.' }),
-    twitterTitle: intl.formatMessage({ id: 'seo.partner.twitterTitle', defaultMessage: 'Partenaire SOS-Expat | Assistance Juridique Expatriés B2B' }),
-    twitterDescription: intl.formatMessage({ id: 'seo.partner.twitterDescription', defaultMessage: 'Ambassades, entreprises, agences de voyage, comités d\'entreprise, assurances, associations : offrez à vos clients à l\'étranger — voyageurs, vacanciers, expatriés — un accès à des avocats et experts dans 197 pays. Widget, lien, QR code. Dashboard temps réel.' }),
+    description: intl.formatMessage({ id: 'partner.landing.v2.seo.description', defaultMessage: 'Vos clients à l\'étranger sont mis en relation par téléphone en moins de 5 minutes avec un avocat ou un expatrié aidant. 197 pays, 24h/24, toutes les langues. Voyageurs, vacanciers, digital nomades, expatriés. Forfait mensuel B2B, API REST, dashboard temps réel.' }),
+    keywords: intl.formatMessage({ id: 'seo.partner.keywords', defaultMessage: 'mise en relation téléphone avocat expatrié 5 minutes, partenaire SOS Expat, programme partenariat B2B voyageurs vacanciers digital nomades expatriés, assistance téléphonique internationale 24/7, urgence à l\'étranger, agence de voyage partenaire, tour-opérateur, comité d\'entreprise CSE, assurance voyage, ambassade partenaire, banque partenaire, accord B2B sur mesure, service mobilité internationale entreprise' }),
+    ogTitle: intl.formatMessage({ id: 'seo.partner.ogTitle', defaultMessage: 'Programme Partenaire SOS-Expat | Avocat ou Expatrié au Téléphone en 5 Minutes pour Vos Clients à l\'Étranger' }),
+    ogDescription: intl.formatMessage({ id: 'seo.partner.ogDescription', defaultMessage: 'Vos clients voyageurs, vacanciers, digital nomades ou expatriés joignent un avocat ou un expatrié aidant par téléphone en moins de 5 minutes. 197 pays, 24/7, toutes les langues. Accord de partenariat sur mesure, outils d\'intégration, account manager dédié.' }),
+    twitterTitle: intl.formatMessage({ id: 'seo.partner.twitterTitle', defaultMessage: 'Partenaire SOS-Expat | Avocat ou Expatrié au Téléphone en 5 min B2B' }),
+    twitterDescription: intl.formatMessage({ id: 'seo.partner.twitterDescription', defaultMessage: 'Tour-opérateurs, agences de voyage, comités d\'entreprise, assurances, ambassades, banques, associations : vos clients à l\'étranger joignent un avocat ou un expatrié aidant par téléphone en moins de 5 minutes. 197 pays, 24/7, toutes les langues. Widget, lien, QR code.' }),
   }), [intl]);
 
   // ======= JSON-LD Schema.org — Organization (enriched, with @id) =======
@@ -1318,11 +1318,11 @@ const PartnerLanding: React.FC = () => {
               <h1 id="partner-heading" className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.1] mb-8 tracking-tight">
                 <FormattedMessage
                   id="partner.landing.v2.hero.title"
-                  defaultMessage="Un service juridique et pratique pour vos clients {highlight}"
+                  defaultMessage="Un avocat ou un expatrié aidant au téléphone en {highlight}"
                   values={{
                     highlight: (
                       <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                        {intl.formatMessage({ id: 'partner.landing.v2.hero.highlight', defaultMessage: 'à l\'étranger' })}
+                        {intl.formatMessage({ id: 'partner.landing.v2.hero.highlight', defaultMessage: 'moins de 5 minutes' })}
                       </span>
                     ),
                   }}
@@ -1333,7 +1333,7 @@ const PartnerLanding: React.FC = () => {
               <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-3xl mx-auto mb-12 leading-loose">
                 <FormattedMessage
                   id="partner.landing.v2.hero.subtitle"
-                  defaultMessage="Voyageurs, vacanciers, touristes, digital nomades, expatriés, étudiants. Vos clients accèdent à des avocats et experts dans 197 pays, 24h/24. Une seule facture en fin de mois. Dashboard temps réel. Zéro logistique pour vos équipes."
+                  defaultMessage="Voyageurs, vacanciers, touristes, digital nomades, expatriés, étudiants. Pour tout besoin ou urgence à l'étranger, vos clients sont mis en relation par téléphone avec un avocat ou un expatrié aidant. 24h/24, 197 pays, dans toutes les langues. Dashboard temps réel. Zéro logistique pour vos équipes."
                 />
               </p>
 
@@ -1351,7 +1351,7 @@ const PartnerLanding: React.FC = () => {
               <div className="mt-14 flex flex-wrap justify-center gap-6 md:gap-10">
                 {[
                   { icon: Globe, text: intl.formatMessage({ id: 'partner.landing.v2.hero.trust.countries', defaultMessage: '197 pays' }) },
-                  { icon: Languages, text: intl.formatMessage({ id: 'partner.landing.v2.hero.trust.languages', defaultMessage: '9 langues' }) },
+                  { icon: Languages, text: intl.formatMessage({ id: 'partner.landing.v2.hero.trust.languages', defaultMessage: 'Toutes les langues' }) },
                   { icon: Clock, text: intl.formatMessage({ id: 'partner.landing.v2.hero.trust.availability', defaultMessage: '24/7' }) },
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-2 text-gray-400">
