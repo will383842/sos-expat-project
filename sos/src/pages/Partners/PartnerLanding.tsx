@@ -723,12 +723,12 @@ const PartnerLanding: React.FC = () => {
   // ======= SEO Meta Data =======
   const seoData = useMemo(() => ({
     title: intl.formatMessage({ id: 'partner.landing.v2.seo.title', defaultMessage: 'Programme Partenaire B2B - SOS-Expat | Assistance Juridique Expatriés' }),
-    description: intl.formatMessage({ id: 'partner.landing.v2.seo.description', defaultMessage: 'Devenez partenaire SOS-Expat et offrez à vos clients un accès à des avocats et experts expatriation dans 197 pays. Accord sur mesure, outils d\'intégration, dashboard temps réel.' }),
-    keywords: intl.formatMessage({ id: 'seo.partner.keywords', defaultMessage: 'partenaire SOS Expat, programme partenariat B2B expatriés, assistance juridique internationale, widget intégration, ambassade partenaire, assurance expatrié, relocation, association expatriés, avocat expatrié, aide administrative internationale, accord B2B sur mesure, service expatriation entreprise' }),
+    description: intl.formatMessage({ id: 'partner.landing.v2.seo.description', defaultMessage: 'Devenez partenaire SOS-Expat et offrez à vos clients voyageurs, vacanciers et expatriés un accès à des avocats et experts dans 197 pays. Accord sur mesure, outils d\'intégration, dashboard temps réel.' }),
+    keywords: intl.formatMessage({ id: 'seo.partner.keywords', defaultMessage: 'partenaire SOS Expat, programme partenariat B2B voyageurs vacanciers expatriés, assistance juridique internationale, assurance voyage, agence de voyage partenaire, tour-opérateur, comité d\'entreprise, ambassade partenaire, assurance expatrié, relocation, association expatriés, avocat international, aide administrative à l\'étranger, accord B2B sur mesure, service mobilité internationale entreprise' }),
     ogTitle: intl.formatMessage({ id: 'seo.partner.ogTitle', defaultMessage: 'Programme Partenaire SOS-Expat | Offrez un Service Juridique d\'Exception à Vos Clients Expatriés' }),
-    ogDescription: intl.formatMessage({ id: 'seo.partner.ogDescription', defaultMessage: 'Recommandez SOS-Expat à vos clients expatriés : avocats et experts dans 197 pays, 9 langues, 24/7. Accord de partenariat sur mesure, outils d\'intégration, account manager dédié.' }),
+    ogDescription: intl.formatMessage({ id: 'seo.partner.ogDescription', defaultMessage: 'Recommandez SOS-Expat à vos clients à l\'étranger — voyageurs, vacanciers, expatriés : avocats et experts dans 197 pays, 9 langues, 24/7. Accord de partenariat sur mesure, outils d\'intégration, account manager dédié.' }),
     twitterTitle: intl.formatMessage({ id: 'seo.partner.twitterTitle', defaultMessage: 'Partenaire SOS-Expat | Assistance Juridique Expatriés B2B' }),
-    twitterDescription: intl.formatMessage({ id: 'seo.partner.twitterDescription', defaultMessage: 'Ambassades, entreprises, associations : offrez à vos clients expatriés un accès à des avocats et experts dans 197 pays. Widget, lien, QR code. Dashboard temps réel.' }),
+    twitterDescription: intl.formatMessage({ id: 'seo.partner.twitterDescription', defaultMessage: 'Ambassades, entreprises, agences de voyage, comités d\'entreprise, assurances, associations : offrez à vos clients à l\'étranger — voyageurs, vacanciers, expatriés — un accès à des avocats et experts dans 197 pays. Widget, lien, QR code. Dashboard temps réel.' }),
   }), [intl]);
 
   // ======= JSON-LD Schema.org — Organization (enriched, with @id) =======
@@ -994,8 +994,8 @@ const PartnerLanding: React.FC = () => {
     { icon: CreditCard, titleId: 'partner.landing.v2.profiles.banking', titleDefault: 'Banks & fintech' },
     { icon: Heart, titleId: 'partner.landing.v2.profiles.association', titleDefault: 'Federations & associations' },
     { icon: Truck, titleId: 'partner.landing.v2.profiles.relocation', titleDefault: 'Movers & relocation' },
-    { icon: Plane, titleId: 'partner.landing.v2.profiles.travel', titleDefault: 'Bespoke travel & cruises' },
-    { icon: Building2, titleId: 'partner.landing.v2.profiles.realestate', titleDefault: 'Expat real estate' },
+    { icon: Plane, titleId: 'partner.landing.v2.profiles.travel', titleDefault: 'Travel agencies, tour operators & cruises' },
+    { icon: Building2, titleId: 'partner.landing.v2.profiles.realestate', titleDefault: 'International real estate' },
     { icon: Scale, titleId: 'partner.landing.v2.profiles.legal', titleDefault: 'Law firms' },
     { icon: GraduationCap, titleId: 'partner.landing.v2.profiles.education', titleDefault: 'Schools & universities' },
     { icon: Briefcase, titleId: 'partner.landing.v2.profiles.corporate', titleDefault: 'International groups' },
@@ -1322,7 +1322,7 @@ const PartnerLanding: React.FC = () => {
                   values={{
                     highlight: (
                       <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                        {intl.formatMessage({ id: 'partner.landing.v2.hero.highlight', defaultMessage: 'expatriés' })}
+                        {intl.formatMessage({ id: 'partner.landing.v2.hero.highlight', defaultMessage: 'à l\'étranger' })}
                       </span>
                     ),
                   }}
@@ -1333,7 +1333,7 @@ const PartnerLanding: React.FC = () => {
               <p className="text-lg md:text-xl lg:text-2xl text-gray-400 max-w-3xl mx-auto mb-10 leading-relaxed">
                 <FormattedMessage
                   id="partner.landing.v2.hero.subtitle"
-                  defaultMessage="Offrez à vos clients, membres ou abonnés un accès direct à des avocats et experts expatriation dans 197 pays, 24h/24. Une tâche en moins pour vos équipes, un service complémentaire d'exception pour votre communauté."
+                  defaultMessage="Voyageurs, vacanciers, expatriés, étudiants, professionnels en mobilité : offrez à vos clients, membres ou abonnés un accès direct à des avocats et experts dans 197 pays, 24h/24. Une tâche en moins pour vos équipes, un service complémentaire d'exception pour votre communauté."
                 />
               </p>
 
@@ -1526,7 +1526,7 @@ const PartnerLanding: React.FC = () => {
             <p className="text-gray-400 text-center max-w-2xl mx-auto mb-14 text-lg">
               <FormattedMessage
                 id="partner.landing.v2.profiles.subtitle"
-                defaultMessage="Entreprises, ambassades, consulats, associations, institutions — toute organisation en contact avec des expatriés, voyageurs ou professionnels en mobilité internationale, partout dans le monde."
+                defaultMessage="Entreprises, agences de voyage, tour-opérateurs, comités d'entreprise, assurances, ambassades, consulats, associations, institutions — toute organisation en contact avec des voyageurs, vacanciers, expatriés, étudiants ou professionnels en mobilité internationale, partout dans le monde."
               />
             </p>
 
