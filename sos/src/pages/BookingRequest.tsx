@@ -3617,6 +3617,127 @@ const BookingRequest: React.FC = () => {
         durationForDisplay
       );
 
+      // ═══ SOS-Call subscriber branch (code validé ou mode gated via URL) ═══
+      // Mirror of the desktop onSubmit branch. Without this, a mobile B2B
+      // subscriber would land on /call-checkout/ and see the Stripe screen
+      // even though their partner covers the call. Runs BEFORE the uid check
+      // because gated-mode (sos-call.sos-expat.com) users can be anonymous
+      // — the sosCallSessionToken authenticates them server-side.
+      if (hasSosCallCode && sosCallValidated && sosCallSessionToken) {
+        try {
+          setSosCallSubmitting(true);
+          const pType = (provider?.role || provider?.type || 'expat') as 'lawyer' | 'expat';
+          const allowed = sosCallCallTypesAllowed || 'both';
+          if (
+            (pType === 'lawyer' && allowed === 'expat_only') ||
+            (pType === 'expat' && allowed === 'lawyer_only')
+          ) {
+            setFormError(
+              pType === 'lawyer'
+                ? "Votre forfait ne couvre pas les appels avec un avocat. Choisissez un expert expat."
+                : "Votre forfait ne couvre pas les appels avec un expert. Choisissez un avocat."
+            );
+            setSosCallSubmitting(false);
+            return;
+          }
+
+          const providerPhoneE164 = (provider as any)?.phoneNumber || (provider as any)?.phone || '';
+          const clientPhoneE164 = bookingRequest.clientPhone;
+          if (!providerPhoneE164 || !clientPhoneE164) {
+            setFormError("Numéros de téléphone manquants. Contactez le support.");
+            setSosCallSubmitting(false);
+            return;
+          }
+
+          const useGatedFlow = sosCallGatedMode || !user?.uid;
+          let callId: string | undefined;
+
+          try {
+            if (useGatedFlow) {
+              const triggerSosCallFromWeb: HttpsCallable<
+                Record<string, unknown>,
+                { success: boolean; callSessionId?: string; message?: string; providerDisplayName?: string }
+              > = httpsCallable(functions, 'triggerSosCallFromWeb');
+
+              const result = await triggerSosCallFromWeb({
+                sosCallSessionToken,
+                providerType: pType,
+                providerId: provider!.id,
+                clientPhone: clientPhoneE164,
+                clientLanguage: (bookingRequest.clientLanguages || ['fr'])[0],
+                clientCountry: bookingRequest.clientCurrentCountry || '',
+              });
+              if (!result?.data?.success) {
+                throw new Error(result?.data?.message || 'SCHEDULE_FAILED');
+              }
+              callId = result.data.callSessionId;
+            } else {
+              const createAndScheduleCall: HttpsCallable<
+                Record<string, unknown>,
+                { success: boolean; callId?: string; message?: string }
+              > = httpsCallable(functions, 'createAndScheduleCall');
+
+              const result = await createAndScheduleCall({
+                providerId: provider!.id,
+                clientId: user!.uid,
+                providerPhone: providerPhoneE164,
+                clientPhone: clientPhoneE164,
+                serviceType: pType === 'lawyer' ? 'lawyer_call' : 'expat_call',
+                providerType: pType,
+                sosCallSessionToken,
+                clientLanguages: bookingRequest.clientLanguages || ['fr'],
+                providerLanguages: provider?.languagesSpoken || provider?.languages || ['fr'],
+                bookingTitle: bookingRequest.title || '',
+                bookingDescription: bookingRequest.description || '',
+                clientCurrentCountry: bookingRequest.clientCurrentCountry || '',
+                clientFirstName: bookingRequest.clientFirstName || '',
+                clientNationality: bookingRequest.clientNationality || '',
+              });
+              if (!result?.data?.success) {
+                throw new Error(result?.data?.message || 'SCHEDULE_FAILED');
+              }
+              callId = result.data.callId;
+            }
+          } catch (callableErr) {
+            const raw = callableErr instanceof Error ? callableErr.message : String(callableErr);
+            if (
+              /expired|expir[ée]|invalid.*session|session.*invalide|invalid.*token|token.*invalide|SOS-Call session/i.test(raw)
+            ) {
+              setSosCallExpiredModal(true);
+              try {
+                sessionStorage.removeItem('sosCall.token');
+                sessionStorage.removeItem('sosCall.partnerName');
+                sessionStorage.removeItem('sosCall.callTypesAllowed');
+              } catch {}
+              setSosCallSubmitting(false);
+              return;
+            }
+            throw callableErr;
+          }
+
+          try {
+            sessionStorage.setItem('lastPaymentSuccess', JSON.stringify({
+              callId,
+              providerId: provider!.id,
+              providerRole: provider?.role || provider?.type || 'expat',
+              serviceType: pType === 'lawyer' ? 'lawyer_call' : 'expat_call',
+              amount: 0,
+              isSosCallFree: true,
+              partnerName: sosCallPartnerName,
+            }));
+          } catch { /* ignore */ }
+
+          const successSlug = getTranslatedRouteSlug('payment-success', language as any);
+          navigate(`/${successSlug}${callId ? `?callId=${encodeURIComponent(callId)}` : ''}`, { replace: true });
+          return;
+        } catch (err) {
+          console.error('[BookingRequest mobile] SOS-Call free scheduling failed', err);
+          setFormError("Impossible de programmer l'appel gratuit. Vérifiez votre code ou essayez le paiement classique.");
+          setSosCallSubmitting(false);
+          return;
+        }
+      }
+
       const uid = (user as MinimalUser)?.uid;
       if (!uid) {
         setFormError("Session expirée. Reconnectez-vous.");

@@ -8,6 +8,7 @@ import {
   getPartnerEngineApiKey,
 } from '../../lib/secrets';
 import { scheduleCallTaskWithIdempotence } from '../../lib/tasks';
+import { partnerConfig } from '../../lib/functionConfigs';
 
 /**
  * SOS-Call web trigger callable (called from sos-call.sos-expat.com Blade page).
@@ -181,9 +182,9 @@ async function finalizeCall(args: {
 
 export const triggerSosCallFromWeb = onCall(
   {
-    region: 'us-central1',
+    ...partnerConfig,
     secrets: [PARTNER_ENGINE_URL_SECRET, PARTNER_ENGINE_API_KEY_SECRET],
-    cors: true,
+    timeoutSeconds: 30,
   },
   async (request: CallableRequest<TriggerSosCallRequest>) => {
     const { sosCallSessionToken, providerType, clientPhone, clientLanguage, clientCountry, providerId: requestedProviderId } = request.data || ({} as TriggerSosCallRequest);
