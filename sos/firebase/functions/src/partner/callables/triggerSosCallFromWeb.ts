@@ -252,7 +252,7 @@ async function finalizeCall(args: {
     const partnerLabel = sessionData.partner_name || 'Partenaire';
     const baseTitle = providerType === 'lawyer' ? 'Consultation avocat' : 'Consultation expat';
     const title = `[B2B] ${baseTitle}`;
-    const description = `Appel offert via ${partnerLabel} (forfait B2B mensuel — le client ne paie rien).`;
+    const description = `Appel pris en charge par ${partnerLabel} (forfait B2B mensuel — le client ne paie rien).`;
     const clientLanguagesFormatted = formatLanguages([language]);
     const providerAmount = await getB2BProviderAmount(
       serviceType as 'lawyer' | 'expat',

@@ -1225,7 +1225,7 @@ const SuccessPayment: React.FC = () => {
                   {intl.formatMessage(
                     {
                       id: "success.partnerContract",
-                      defaultMessage: "Appel par contrat {partnerName}",
+                      defaultMessage: "Appel pris en charge par {partnerName}",
                     },
                     { partnerName: paymentData.partnerName }
                   )}

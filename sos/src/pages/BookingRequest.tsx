@@ -4759,11 +4759,13 @@ const BookingRequest: React.FC = () => {
                       <CheckCircle className="w-7 h-7 text-green-600 flex-shrink-0 mt-0.5" />
                       <div className="flex-1">
                         <div className="font-bold text-green-900 text-lg">
-                          Appel offert par votre partenaire
+                          {sosCallPartnerName
+                            ? <>Appel pris en charge par <strong>{sosCallPartnerName}</strong></>
+                            : 'Appel pris en charge par votre partenaire'}
                         </div>
                         {sosCallPartnerName && (
                           <div className="text-sm text-green-800 mt-1">
-                            Couvert par <strong>{sosCallPartnerName}</strong>. Aucun paiement ne vous sera demandé.
+                            Aucun paiement ne vous sera demandé.
                           </div>
                         )}
                         <div className="text-xs text-green-700 mt-2">
@@ -4788,7 +4790,7 @@ const BookingRequest: React.FC = () => {
                       </div>
                       <div className="text-sm text-blue-800 mt-1">
                         Si votre entreprise, banque ou assurance vous a fourni un code personnel,
-                        votre appel est offert — pas de paiement.
+                        votre appel est pris en charge par votre partenaire — pas de paiement.
                       </div>
                     </div>
                   </label>
@@ -4844,10 +4846,12 @@ const BookingRequest: React.FC = () => {
                         <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
                         <div className="flex-1">
                           <div className="font-semibold text-green-900">
-                            Code validé — appel offert
+                            {sosCallPartnerName
+                              ? <>Code validé — appel pris en charge par <strong>{sosCallPartnerName}</strong></>
+                              : 'Code validé — appel pris en charge par votre partenaire'}
                           </div>
                           <div className="text-sm text-green-800 mt-1">
-                            Couvert par <strong>{sosCallPartnerName}</strong>. Vous ne paierez rien.
+                            Vous ne paierez rien.
                           </div>
                           <div className="mt-3 flex flex-wrap gap-2">
                             <button
