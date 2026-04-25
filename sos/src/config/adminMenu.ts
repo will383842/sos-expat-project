@@ -75,6 +75,8 @@ import {
   // Press icons
   Newspaper,
   Image,
+  // B2B icons
+  Building2,
   // Social republication icons
   Share2,
   Linkedin,
@@ -1099,6 +1101,14 @@ export const adminMenuTree: AdminMenuItem[] = [
                 icon: TrendingUp,
               },
             ],
+          },
+          // Sous-section : B2B SOS-Call (cabinets, banques, assurances) — console Filament dédiée
+          {
+            id: "partners-b2b",
+            labelKey: "admin.menu.partnersB2B",
+            path: "/admin/partners-b2b",
+            icon: Building2,
+            descriptionKey: "admin.menu.partnersB2B.description",
           },
         ],
       },

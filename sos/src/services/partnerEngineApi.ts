@@ -123,7 +123,7 @@ export interface MonthlyStats {
 // ══════════════════════════════════════════════════════════════
 
 const BASE_URL =
-  import.meta.env.VITE_PARTNER_ENGINE_URL || 'https://partner-engine.life-expat.com';
+  import.meta.env.VITE_PARTNER_ENGINE_URL || 'https://partner-engine.sos-expat.com';
 
 async function getAuthToken(): Promise<string> {
   const user = auth.currentUser;
@@ -575,14 +575,21 @@ export interface SosCallHierarchy {
 }
 
 export interface SosCallTopSubscriber {
-  subscriber_id: number;
-  first_name: string | null;
-  last_name: string | null;
+  id: number;
+  full_name: string;
+  email: string | null;
   sos_call_code: string | null;
+  country: string | null;
   calls_expert: number;
   calls_lawyer: number;
-  total: number;
+  total_calls: number;
   percent_of_total: number;
+}
+
+export interface SosCallTopSubscribersResponse {
+  period: string;
+  total_calls: number;
+  subscribers: SosCallTopSubscriber[];
 }
 
 export interface SosCallInvoice {
@@ -630,13 +637,17 @@ export function getSosCallHierarchy(
   });
 }
 
-export function getSosCallTopSubscribers(
+export async function getSosCallTopSubscribers(
   period?: string,
   limit = 20,
 ): Promise<SosCallTopSubscriber[]> {
   const p: Record<string, string> = { limit: String(limit) };
   if (period) p.period = period;
-  return apiCall<SosCallTopSubscriber[]>('/partner/sos-call/activity/top-subscribers', { params: p });
+  const response = await apiCall<SosCallTopSubscribersResponse>(
+    '/partner/sos-call/activity/top-subscribers',
+    { params: p },
+  );
+  return response.subscribers ?? [];
 }
 
 export function getSosCallCallsHistory(params?: {
@@ -659,7 +670,7 @@ export async function exportSosCallCallsCsv(params?: {
   period?: string;
 }): Promise<Blob> {
   const token = await getAuthToken();
-  const url = new URL(`${getBaseUrl()}/partner/sos-call/activity/export`);
+  const url = new URL(`${getBaseUrl()}/api/partner/sos-call/activity/export`);
   if (params?.period) url.searchParams.set('period', params.period);
   const res = await fetch(url.toString(), {
     headers: { Authorization: `Bearer ${token}` },
@@ -686,7 +697,7 @@ export function getSosCallInvoice(id: number): Promise<SosCallInvoice> {
 
 export async function downloadSosCallInvoicePdf(id: number): Promise<Blob> {
   const token = await getAuthToken();
-  const res = await fetch(`${getBaseUrl()}/partner/sos-call/invoices/${id}/pdf`, {
+  const res = await fetch(`${getBaseUrl()}/api/partner/sos-call/invoices/${id}/pdf`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!res.ok) throw new Error(`PDF download failed: ${res.status}`);

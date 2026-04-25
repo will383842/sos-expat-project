@@ -2960,6 +2960,8 @@
   "admin.menu.partnersPayments": "Paiements",
   "admin.menu.partnersPromotions": "Promotions Partenaires",
   "admin.menu.partnersStats": "Statistiques",
+  "admin.menu.partnersB2B": "B2B SOS-Call (cabinets, banques)",
+  "admin.menu.partnersB2B.description": "Console Filament dédiée pour les partenaires B2B sur abonnement SOS-Call (cabinets, banques, assurances)",
   "admin.menu.partnersWidgets": "Widgets",
   "admin.menu.partnersWidgets.description": "Widgets promotionnels pour partenaires",
   "admin.menu.partnerships": "Partenariat",

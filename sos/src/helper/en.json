@@ -2960,6 +2960,8 @@
   "admin.menu.partnersPayments": "Payments",
   "admin.menu.partnersPromotions": "Partner Promotions",
   "admin.menu.partnersStats": "Statistics",
+  "admin.menu.partnersB2B": "B2B SOS-Call (firms, banks)",
+  "admin.menu.partnersB2B.description": "Dedicated Filament console for B2B partners on SOS-Call subscription (law firms, banks, insurance)",
   "admin.menu.partnersWidgets": "Widgets",
   "admin.menu.partnersWidgets.description": "Promotional widgets for partners",
   "admin.menu.partnerships": "Partnership",

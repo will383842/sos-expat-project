@@ -259,12 +259,12 @@ const PartnerSosCallActivity: React.FC = () => {
                 </thead>
                 <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                   {topSubscribers.map((s) => (
-                    <tr key={s.subscriber_id}>
-                      <td className="py-2 pr-3">{[s.first_name, s.last_name].filter(Boolean).join(' ') || '—'}</td>
+                    <tr key={s.id}>
+                      <td className="py-2 pr-3">{s.full_name || '—'}</td>
                       <td className="py-2 pr-3 font-mono text-xs">{s.sos_call_code || '—'}</td>
                       <td className="py-2 pr-3">{s.calls_expert}</td>
                       <td className="py-2 pr-3">{s.calls_lawyer}</td>
-                      <td className="py-2 pr-3 font-semibold">{s.total}</td>
+                      <td className="py-2 pr-3 font-semibold">{s.total_calls}</td>
                       <td className="py-2">{s.percent_of_total?.toFixed(1) ?? 0}%</td>
                     </tr>
                   ))}
