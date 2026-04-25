@@ -1215,18 +1215,36 @@ const SuccessPayment: React.FC = () => {
           </div>
 
           <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
-            {/* Badge statut */}
-            <div className="inline-flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-full pl-6 pr-6 py-3 border border-white/20 mb-8">
-              <CheckCircle className="w-5 h-5 text-green-400" />
-              <span className="text-white font-semibold">
-                {/* {t.paymentSuccessful} */}
-                {intl.formatMessage({ id: "success.paymentSuccessful" })}
-              </span>
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-            </div>
+            {/* Badge statut — partner-contract banner replaces the "Paiement
+                effectué" badge when the call is covered by a B2B SOS-Call
+                contract (no payment was made). */}
+            {paymentData?.isSosCallFree && paymentData?.partnerName ? (
+              <div className="inline-flex items-center space-x-3 bg-gradient-to-r from-emerald-500/30 to-green-500/30 backdrop-blur-sm rounded-full pl-6 pr-6 py-3 border border-emerald-400/40 mb-8">
+                <CheckCircle className="w-5 h-5 text-emerald-300" />
+                <span className="text-white font-semibold">
+                  {intl.formatMessage(
+                    {
+                      id: "success.partnerContract",
+                      defaultMessage: "Appel par contrat {partnerName}",
+                    },
+                    { partnerName: paymentData.partnerName }
+                  )}
+                </span>
+                <div className="w-2 h-2 bg-emerald-300 rounded-full animate-pulse" />
+              </div>
+            ) : (
+              <div className="inline-flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-full pl-6 pr-6 py-3 border border-white/20 mb-8">
+                <CheckCircle className="w-5 h-5 text-green-400" />
+                <span className="text-white font-semibold">
+                  {/* {t.paymentSuccessful} */}
+                  {intl.formatMessage({ id: "success.paymentSuccessful" })}
+                </span>
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+              </div>
+            )}
 
-            {/* Timestamp paiement si présent */}
-            {paymentTimestamp && (
+            {/* Timestamp paiement — only shown for actual paid calls */}
+            {paymentTimestamp && !paymentData?.isSosCallFree && (
               <div className="mb-6 text-center">
                 <div className="inline-flex items-center space-x-2 bg-white/5 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10">
                   <Clock className="w-4 h-4 text-gray-300" />

@@ -3286,6 +3286,20 @@ const BookingRequest: React.FC = () => {
         // P1-7: Nettoyer l'autosave après soumission réussie
         try { sessionStorage.removeItem(BOOKING_AUTOSAVE_KEY); } catch {}
 
+        // ═══ SOS-Call submit guard ═══
+        // If the user ticked "J'ai un code SOS-Call" but never successfully
+        // validated the code (sosCallValidated=false), refuse to submit — we
+        // would otherwise fall through to /call-checkout/ and the user would
+        // be charged via Stripe/PayPal even though they expected a free B2B
+        // call. They must either validate the code or uncheck the box.
+        if (hasSosCallCode && !sosCallValidated) {
+          setFormError(intl.formatMessage({
+            id: 'bookingRequest.sosCall.mustValidate',
+            defaultMessage: "Vérifiez votre code SOS-Call avant de continuer, ou décochez la case si vous préférez payer normalement.",
+          }));
+          return;
+        }
+
         // ═══ SOS-Call subscriber branch (code validé ou mode gated via URL) ═══
         // Two sub-cases:
         //   a) Gated mode (anonymous B2B, came from sos-call.sos-expat.com):
@@ -3400,6 +3414,7 @@ const BookingRequest: React.FC = () => {
                 amount: 0,
                 isSosCallFree: true,
                 partnerName: sosCallPartnerName,
+                savedAt: Date.now(),
               }));
             } catch { /* ignore */ }
 
@@ -3617,6 +3632,18 @@ const BookingRequest: React.FC = () => {
         durationForDisplay
       );
 
+      // ═══ SOS-Call submit guard (mobile mirror) ═══
+      // Same protection as the desktop onSubmit: if the checkbox is ticked
+      // but the code was never validated, block submit instead of falling
+      // through to the paid Stripe/PayPal flow.
+      if (hasSosCallCode && !sosCallValidated) {
+        setFormError(intl.formatMessage({
+          id: 'bookingRequest.sosCall.mustValidate',
+          defaultMessage: "Vérifiez votre code SOS-Call avant de continuer, ou décochez la case si vous préférez payer normalement.",
+        }));
+        return;
+      }
+
       // ═══ SOS-Call subscriber branch (code validé ou mode gated via URL) ═══
       // Mirror of the desktop onSubmit branch. Without this, a mobile B2B
       // subscriber would land on /call-checkout/ and see the Stripe screen
@@ -3724,6 +3751,7 @@ const BookingRequest: React.FC = () => {
               amount: 0,
               isSosCallFree: true,
               partnerName: sosCallPartnerName,
+              savedAt: Date.now(),
             }));
           } catch { /* ignore */ }
 
@@ -4935,12 +4963,14 @@ const BookingRequest: React.FC = () => {
                   fullWidth
                   size="large"
                   className={`${
-                    Object.values(validFlags).every(Boolean)
+                    Object.values(validFlags).every(Boolean) && !(hasSosCallCode && !sosCallValidated)
                       ? `bg-gradient-to-r ${THEME.button} hover:opacity-95 transform hover:scale-[1.01] active:scale-[0.98] shadow-lg shadow-red-500/25`
                       : "bg-gray-400 cursor-not-allowed"
                   } text-white font-bold py-4 sm:py-4 px-4 sm:px-8 rounded-2xl sm:rounded-xl transition-all duration-200 ease-out text-base sm:text-lg touch-manipulation min-h-[58px] sm:min-h-[56px]`}
                   disabled={
-                    isSubmitting || !Object.values(validFlags).every(Boolean)
+                    isSubmitting ||
+                    !Object.values(validFlags).every(Boolean) ||
+                    (hasSosCallCode && !sosCallValidated)
                   }
                 >
                   {isSubmitting ? (
