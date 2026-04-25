@@ -2691,11 +2691,25 @@ export class TwilioCallManager {
         if (duration >= CALL_CONFIG.MIN_CALL_DURATION) {
           try {
             const { getB2BProviderAmount } = await import("./services/pricingService");
-            const serviceType = callSession.metadata?.providerType || "expat";
-            // Use the B2B provider rate (configured in /admin/pricing,
-            // falls back to 70% of the direct rate). This is INDEPENDENT
-            // of the standard rate billed to direct-paying clients.
-            const providerAmount = await getB2BProviderAmount(serviceType as 'lawyer' | 'expat', 'eur');
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const serviceType = callSession.metadata?.providerType || (callSession as any).providerType || "expat";
+            // Resolve the call currency from the session (set by triggerSosCallFromWeb
+            // based on the client country: US-zone → 'usd', else → 'eur').
+            // Falls back to 'eur' for legacy sessions without a currency field.
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const sessionPayment = (callSession.payment as any) || {};
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const callCurrency = ((callSession as any).currency || sessionPayment.currency || 'eur')
+              .toString()
+              .toLowerCase() as 'eur' | 'usd';
+            // Use the B2B provider rate matching the call currency
+            // (configured in /admin/pricing, falls back to 70% of the direct
+            // rate). This is INDEPENDENT of the standard rate billed to
+            // direct-paying clients.
+            const providerAmount = await getB2BProviderAmount(
+              serviceType as 'lawyer' | 'expat',
+              callCurrency
+            );
             const providerAmountCents = Math.round(providerAmount * 100);
 
             // PROVIDER PAID IMMEDIATELY at B2B rate. We do NOT wait for the
@@ -2708,6 +2722,7 @@ export class TwilioCallManager {
               "payment.status": "captured_sos_call_free",
               "payment.providerAmount": providerAmount,
               "payment.providerAmountCents": providerAmountCents,
+              "payment.currency": callCurrency,
               "payment.gateway": "sos_call_free",
               "payment.holdReason": "30d_b2b_reserve",
               "payment.holdStartedAt": now,
@@ -2719,8 +2734,9 @@ export class TwilioCallManager {
               "metadata.updatedAt": now,
             });
 
+            const currencySymbol = callCurrency === 'usd' ? '$' : '€';
             logger.info(
-              `🆘 [${completionId}] Provider credited ${providerAmount}€ (${providerAmountCents} cents) at B2B rate — 30-day reserve, partner invoice handled separately`
+              `🆘 [${completionId}] Provider credited ${providerAmount}${currencySymbol} (${providerAmountCents} cents, ${callCurrency.toUpperCase()}) at B2B rate — 30-day reserve, partner invoice handled separately`
             );
           } catch (payErr) {
             logger.error(`🆘 [${completionId}] Failed to credit provider for SOS-Call free`, payErr);

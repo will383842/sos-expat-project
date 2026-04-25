@@ -48,6 +48,21 @@ interface CheckSessionResponse {
 }
 
 /**
+ * USD-zone country list. Any country NOT in this set falls back to EUR.
+ * Kept short and conservative — the goal is just to credit the provider
+ * in the right currency when a US/CAD/etc client uses a B2B partner code.
+ */
+const USD_ZONE_COUNTRIES = new Set([
+  'US', 'CA', 'AU', 'NZ', 'SG', 'HK', 'PH',
+  'AE', 'IL', 'BR', 'MX', 'AR', 'CL', 'CO', 'PE',
+]);
+
+function deriveCurrencyFromCountry(country?: string): 'eur' | 'usd' {
+  if (!country) return 'eur';
+  return USD_ZONE_COUNTRIES.has(country.toUpperCase()) ? 'usd' : 'eur';
+}
+
+/**
  * Common tail of the flow, shared between the explicit-providerId path
  * (unified SPA wizard) and the auto-select path (legacy direct-Blade).
  *
@@ -64,6 +79,7 @@ async function finalizeCall(args: {
   providerType: 'lawyer' | 'expat';
   clientPhone: string;
   clientLanguage?: string;
+  clientCountry?: string;
   sessionData: CheckSessionResponse;
   sosCallSessionToken: string;
 }) {
@@ -76,12 +92,18 @@ async function finalizeCall(args: {
     providerType,
     clientPhone,
     clientLanguage,
+    clientCountry,
     sessionData,
     sosCallSessionToken,
   } = args;
 
   const now = admin.firestore.Timestamp.now();
   const scheduledAt = admin.firestore.Timestamp.fromMillis(Date.now() + 240 * 1000);
+
+  // Derive the call currency from the client country so the provider is
+  // later credited at the right B2B rate (USD-zone clients → 'usd' rate,
+  // others → 'eur' rate).
+  const callCurrency = deriveCurrencyFromCountry(clientCountry);
 
   await callSessionRef.set({
     id: callSessionRef.id,
@@ -102,11 +124,15 @@ async function finalizeCall(args: {
     clientLanguages: clientLanguage ? [clientLanguage] : ['fr'],
     providerLanguages: providerData.languages || [],
     amount: 0,
-    currency: 'EUR',
+    currency: callCurrency,
+    payment: {
+      currency: callCurrency,
+    },
     metadata: {
       isSosCallFree: true,
       sosCallSessionToken,
       triggeredFromWeb: true,
+      clientCountry: clientCountry || null,
     },
   });
 
@@ -277,6 +303,7 @@ export const triggerSosCallFromWeb = onCall(
         providerType,
         clientPhone,
         clientLanguage,
+        clientCountry,
         sessionData,
         sosCallSessionToken,
       });
