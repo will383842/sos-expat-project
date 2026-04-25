@@ -1335,7 +1335,7 @@ const PartnerLanding: React.FC = () => {
               <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-3xl mx-auto mb-12 leading-loose">
                 <FormattedMessage
                   id="partner.landing.v2.hero.subtitle"
-                  defaultMessage="Voyageurs, vacanciers, touristes, digital nomades, expatriés, étudiants : pour tout besoin ou urgence à l'étranger, vos clients joignent par téléphone un avocat qui parle leur langue. Ou un expatrié aidant local pour les démarches pratiques. 24h/24, 7j/7, toute l'année, jours fériés inclus, dans 197 pays. Une offre exceptionnelle qui différencie votre marque, sans aucune logistique pour vos équipes."
+                  defaultMessage="Offrez à vos clients la tranquillité d'esprit où qu'ils soient dans le monde. Voyageurs, vacanciers, touristes, digital nomades, expatriés, étudiants : pour tout besoin ou urgence à l'étranger, ils joignent par téléphone un avocat qui parle leur langue. Ou un expatrié aidant local pour les démarches pratiques. 24h/24, 7j/7, toute l'année, jours fériés inclus, dans 197 pays. Une offre exceptionnelle qui différencie votre marque, sans aucune logistique pour vos équipes."
                 />
               </p>
 
