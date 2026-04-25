@@ -161,6 +161,11 @@ interface CallSession {
     isReal?: boolean;     // true = from Twilio API, false = estimated
     updatedAt?: any;      // Timestamp when costs were last updated
   };
+  // B2B SOS-Call fields (set when call comes via partner subscription, free for the client)
+  isSosCallFree?: boolean;
+  partnerFirebaseId?: string;
+  partnerSubscriberId?: number;
+  agreementId?: number;
 }
 
 interface SessionFilters {
@@ -169,6 +174,7 @@ interface SessionFilters {
   dateRange: string;
   paymentStatus: string;
   providerType: string;
+  origin: 'all' | 'b2c' | 'b2b';
 }
 
 interface SessionStats {
@@ -180,6 +186,8 @@ interface SessionStats {
   averageDuration: number;
   successRate: number;
   totalDuration: number;
+  b2bSessions: number;       // Calls coming from a partner subscription (free for client)
+  directSessions: number;    // Calls where the client paid directly via Stripe/PayPal
 }
 
 // ============ COMPOSANTS UTILITAIRES ============
@@ -454,7 +462,8 @@ const AdminCallsSessions: React.FC = () => {
     serviceType: 'all',
     dateRange: '7d',
     paymentStatus: 'all',
-    providerType: 'all'
+    providerType: 'all',
+    origin: 'all'
   });
 
   const ITEMS_PER_PAGE = 25;
@@ -524,7 +533,7 @@ const AdminCallsSessions: React.FC = () => {
     constraints.push(orderBy('metadata.createdAt', sortOrder));
 
     // Limite - charger plus pour compenser le filtrage côté client
-    const loadLimit = (filters.serviceType !== 'all' || filters.providerType !== 'all' || filters.paymentStatus !== 'all')
+    const loadLimit = (filters.serviceType !== 'all' || filters.providerType !== 'all' || filters.paymentStatus !== 'all' || filters.origin !== 'all')
       ? ITEMS_PER_PAGE * 3  // Charger plus si filtrage côté client nécessaire
       : ITEMS_PER_PAGE;
     constraints.push(limit(loadLimit));
@@ -550,6 +559,13 @@ const AdminCallsSessions: React.FC = () => {
       }
       // Filtre statut de paiement
       if (filters.paymentStatus !== 'all' && session.payment.status !== filters.paymentStatus) {
+        return false;
+      }
+      // Filtre origine (B2B SOS-Call partenaire vs B2C direct)
+      if (filters.origin === 'b2b' && session.isSosCallFree !== true) {
+        return false;
+      }
+      if (filters.origin === 'b2c' && session.isSosCallFree === true) {
         return false;
       }
       return true;
@@ -799,6 +815,9 @@ const AdminCallsSessions: React.FC = () => {
 
       const successRate = allSessions.length > 0 ? (completed.length / allSessions.length) * 100 : 0;
 
+      const b2bSessions = allSessions.filter(s => s.isSosCallFree === true).length;
+      const directSessions = allSessions.length - b2bSessions;
+
       setSessionStats({
         totalSessions: allSessions.length,
         completedSessions: completed.length,
@@ -807,7 +826,9 @@ const AdminCallsSessions: React.FC = () => {
         totalRevenue,
         averageDuration,
         successRate,
-        totalDuration
+        totalDuration,
+        b2bSessions,
+        directSessions
       });
 
     } catch (error) {
@@ -851,6 +872,10 @@ const AdminCallsSessions: React.FC = () => {
 
     const csvData = sessions.map(session => ({
       'Session ID': session.id,
+      'Origine': session.isSosCallFree === true ? 'B2B (partenaire)' : 'Direct (client paie)',
+      'Partenaire ID': session.partnerFirebaseId || '',
+      'Subscriber ID': session.partnerSubscriberId ?? '',
+      'Agreement ID': session.agreementId ?? '',
       'Statut': session.status,
       'Type Service': session.metadata.serviceType,
       'Type Prestataire': session.metadata.providerType,
@@ -967,7 +992,7 @@ const AdminCallsSessions: React.FC = () => {
 
           {/* Statistiques rapides */}
           {sessionStats && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -976,6 +1001,33 @@ const AdminCallsSessions: React.FC = () => {
                   </div>
                   <div className="p-3 rounded-full bg-blue-100">
                     <Phone className="w-6 h-6 text-blue-600" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">
+                      {intl.formatMessage({ id: 'admin.callSessions.originBreakdown', defaultMessage: 'Origine' })}
+                    </p>
+                    <div className="mt-1 flex items-baseline gap-3">
+                      <span className="text-lg font-bold text-gray-700" title={intl.formatMessage({ id: 'admin.callSessions.originDirect', defaultMessage: 'Direct (client paie)' })}>
+                        💳 {sessionStats.directSessions}
+                      </span>
+                      <span className="text-gray-300">/</span>
+                      <span className="text-lg font-bold text-orange-700" title={intl.formatMessage({ id: 'admin.callSessions.originPartner', defaultMessage: 'Partenaire B2B (offert)' })}>
+                        🤝 {sessionStats.b2bSessions}
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {sessionStats.totalSessions > 0
+                        ? `${((sessionStats.b2bSessions / sessionStats.totalSessions) * 100).toFixed(0)}% B2B`
+                        : '—'}
+                    </p>
+                  </div>
+                  <div className="p-3 rounded-full bg-orange-100">
+                    <Users className="w-6 h-6 text-orange-600" />
                   </div>
                 </div>
               </div>
@@ -1122,15 +1174,34 @@ const AdminCallsSessions: React.FC = () => {
                 </div>
               </div>
 
-              {/* Bouton reset filtres */}
-              <div className="flex items-end">
+              {/* Filtre origine (B2B partenaire vs B2C direct) */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {intl.formatMessage({ id: 'admin.callSessions.origin', defaultMessage: 'Origine' })}
+                </label>
+                <select
+                  value={filters.origin}
+                  onChange={(e) => setFilters(prev => ({ ...prev, origin: e.target.value as 'all' | 'b2c' | 'b2b' }))}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="all">{intl.formatMessage({ id: 'admin.callSessions.originAll', defaultMessage: 'Toutes origines' })}</option>
+                  <option value="b2c">💳 {intl.formatMessage({ id: 'admin.callSessions.originDirect', defaultMessage: 'Direct (client paie)' })}</option>
+                  <option value="b2b">🤝 {intl.formatMessage({ id: 'admin.callSessions.originPartner', defaultMessage: 'Partenaire B2B (offert)' })}</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Troisième ligne : reset filtres */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div className="md:col-start-3 flex items-end">
                 <button
                   onClick={() => setFilters({
                     status: 'all',
                     serviceType: 'all',
                     dateRange: '7d',
                     paymentStatus: 'all',
-                    providerType: 'all'
+                    providerType: 'all',
+                    origin: 'all'
                   })}
                   className="w-full px-3 py-2 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
@@ -1205,6 +1276,18 @@ const AdminCallsSessions: React.FC = () => {
                               ? `⚖️ ${intl.formatMessage({ id: 'admin.callSessions.lawyer', defaultMessage: 'Avocat' })}`
                               : `🌍 ${intl.formatMessage({ id: 'admin.callSessions.expat', defaultMessage: 'Expatrié' })}`}
                           </div>
+                          {session.isSosCallFree === true ? (
+                            <div
+                              className="mt-1 inline-flex items-center px-1.5 py-0.5 rounded text-xs font-bold bg-orange-100 text-orange-800 border border-orange-300"
+                              title={`Partenaire: ${session.partnerFirebaseId || 'N/A'} · Subscriber: ${session.partnerSubscriberId || 'N/A'} · Agreement: ${session.agreementId || 'N/A'}`}
+                            >
+                              🤝 B2B
+                            </div>
+                          ) : (
+                            <div className="mt-1 inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">
+                              💳 Direct
+                            </div>
+                          )}
                         </div>
                       </td>
                       
