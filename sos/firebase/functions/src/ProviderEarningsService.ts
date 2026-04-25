@@ -98,10 +98,12 @@ export class ProviderEarningsService {
 
     try {
       // Récupérer les sessions avec paiement capturé (with limit)
+      // 'captured_sos_call_free' = SOS-Call B2B paid by partner monthly invoice;
+      // provider earned the call fee even though the end client paid €0.
       const sessionsSnapshot = await this.db
         .collection("call_sessions")
         .where("providerId", "==", providerId)
-        .where("payment.status", "in", ["captured", "succeeded"])
+        .where("payment.status", "in", ["captured", "succeeded", "captured_sos_call_free"])
         .orderBy("completedAt", "desc")
         .limit(QUERY_LIMIT)
         .get();
@@ -305,10 +307,12 @@ export class ProviderEarningsService {
 
     try {
       // Récupérer les sessions (earnings)
+      // Include 'captured_sos_call_free' so SOS-Call B2B earnings appear in the
+      // provider's transaction history once the partner has paid their invoice.
       let sessionsQuery = this.db
         .collection("call_sessions")
         .where("providerId", "==", providerId)
-        .where("payment.status", "in", ["captured", "succeeded", "refunded"])
+        .where("payment.status", "in", ["captured", "succeeded", "refunded", "captured_sos_call_free"])
         .orderBy("completedAt", "desc")
         .limit(limit);
 
@@ -411,7 +415,7 @@ export class ProviderEarningsService {
       const sessionsSnapshot = await this.db
         .collection("call_sessions")
         .where("providerId", "==", providerId)
-        .where("payment.status", "in", ["captured", "succeeded"])
+        .where("payment.status", "in", ["captured", "succeeded", "captured_sos_call_free"])
         .where("completedAt", ">=", startDate)
         .get();
 
