@@ -98,6 +98,34 @@ function formatLanguages(languages: string[]): string {
 }
 
 /**
+ * Locales for which a message_templates JSON file exists. Used to ensure we
+ * never try to send a notification in a language that has no translation.
+ */
+const SUPPORTED_NOTIF_LOCALES = new Set(['fr', 'en', 'es', 'de', 'pt', 'ru', 'ar', 'hi', 'ch']);
+
+/**
+ * Resolve the locale for the provider notification (SMS/email/inapp).
+ * The provider should receive the message in THEIR OWN language, not the
+ * client's. Falls back to English if the provider's preferred language isn't
+ * in the supported set.
+ */
+function resolveProviderLocale(providerData: any): string {
+  if (!providerData) return 'en';
+  const candidates: unknown[] = [
+    providerData.preferredLanguage,
+    providerData.language,
+    Array.isArray(providerData.languages) ? providerData.languages[0] : null,
+  ];
+  for (const c of candidates) {
+    if (typeof c !== 'string' || !c) continue;
+    const lc = c.toLowerCase();
+    const normalised = lc === 'zh' ? 'ch' : lc;
+    if (SUPPORTED_NOTIF_LOCALES.has(normalised)) return normalised;
+  }
+  return 'en';
+}
+
+/**
  * Retourne le symbole de devise approprié
  */
 function getCurrencySymbol(currency: string): string {
@@ -921,9 +949,13 @@ export const createAndScheduleCallHTTPS = onCall(
           // P0 FIX: Use booking_paid_provider template which has SMS enabled
           // Template variables: {{client.firstName}}, {{request.country}}, {{request.title}},
           //                     {{request.description}}, {{booking.amount}}, {{booking.currency}}
+          // The provider should receive the SMS in THEIR OWN language, falling
+          // back to English if their preferred language isn't translated.
+          const providerLocale = resolveProviderLocale(providerDocData);
+          console.log(`📨 [${requestId}]   - providerLocale resolved: ${providerLocale} (provider preferredLanguage: ${providerDocData?.preferredLanguage}, languages: ${JSON.stringify(providerDocData?.languages)})`);
           const providerEventData = {
             eventId: 'booking_paid_provider',  // Changed from call.scheduled.provider (sms:false) to booking_paid_provider (sms:true)
-            locale: language,
+            locale: providerLocale,
             to: {
               uid: providerId || null,
               email: providerEmail || null,

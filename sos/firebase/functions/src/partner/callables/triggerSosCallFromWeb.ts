@@ -99,6 +99,34 @@ function formatLanguages(languages: string[]): string {
 }
 
 /**
+ * Locales supported by the message_templates JSON files. Used to resolve a
+ * provider's preferred SMS locale and fall back to English if their language
+ * is not (yet) translated.
+ */
+const SUPPORTED_LOCALES = new Set(['fr', 'en', 'es', 'de', 'pt', 'ru', 'ar', 'hi', 'ch']);
+
+/**
+ * Resolve the locale to use for the provider notification (SMS/email/inapp).
+ * Tries preferredLanguage / language / languages[0] in order. Normalises
+ * 'zh' → 'ch' (legacy alias). Falls back to 'en' if none is supported.
+ */
+function resolveProviderLocale(providerData: FirebaseFirestore.DocumentData | undefined): string {
+  if (!providerData) return 'en';
+  const candidates: unknown[] = [
+    providerData.preferredLanguage,
+    providerData.language,
+    Array.isArray(providerData.languages) ? providerData.languages[0] : null,
+  ];
+  for (const c of candidates) {
+    if (typeof c !== 'string' || !c) continue;
+    const lc = c.toLowerCase();
+    const normalised = lc === 'zh' ? 'ch' : lc;
+    if (SUPPORTED_LOCALES.has(normalised)) return normalised;
+  }
+  return 'en';
+}
+
+/**
  * Common tail of the flow, shared between the explicit-providerId path
  * (unified SPA wizard) and the auto-select path (legacy direct-Blade).
  *
@@ -246,6 +274,11 @@ async function finalizeCall(args: {
     }
 
     const language = clientLanguage || 'fr';
+    // Provider receives the SMS in their OWN language (with English fallback when
+    // their preferred language is not in the supported set). The client language
+    // stays available below as `clientLanguagesFormatted` so the provider still
+    // sees which language the client speaks in the message body.
+    const providerLocale = resolveProviderLocale(providerData);
     const clientFirstName = sessionData.client_first_name || 'Client';
     const rawInterventionCountry = clientCountry || providerData.country || 'N/A';
     const interventionCountry = getCountryName(rawInterventionCountry) || rawInterventionCountry;
@@ -263,7 +296,7 @@ async function finalizeCall(args: {
     if (providerId) {
       await db.collection('message_events').add({
         eventId: 'booking_paid_provider',
-        locale: language,
+        locale: providerLocale,
         to: {
           uid: providerId,
           email: providerEmail,
