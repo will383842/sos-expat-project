@@ -648,6 +648,18 @@ export const createAndScheduleCallHTTPS = onCall(
           console.warn(`⚠️ [${requestId}] Session créée mais lien payments échoué - webhook pourra toujours fonctionner`);
         }
       } else if (isSosCallFree) {
+        // Derive the call currency from the client country (USD-zone → 'usd',
+        // else → 'eur'). Same heuristic as triggerSosCallFromWeb so that a
+        // logged-in US client using the B2B checkbox is paid the USD B2B
+        // rate at the end of the call (handleCallCompleted reads
+        // call_session.currency).
+        const USD_ZONE_COUNTRIES = new Set([
+          'US', 'CA', 'AU', 'NZ', 'SG', 'HK', 'PH',
+          'AE', 'IL', 'BR', 'MX', 'AR', 'CL', 'CO', 'PE',
+        ]);
+        const cc = (clientCurrentCountry || '').toUpperCase();
+        const callCurrency = USD_ZONE_COUNTRIES.has(cc) ? 'usd' : 'eur';
+
         // Mark call_sessions as SOS-Call free for downstream handlers (onCallCompleted will skip commission)
         try {
           await admin.firestore()
@@ -655,6 +667,10 @@ export const createAndScheduleCallHTTPS = onCall(
             .doc(callSession.id)
             .set({
               isSosCallFree: true,
+              currency: callCurrency,
+              payment: {
+                currency: callCurrency,
+              },
               partnerSubscriberId: sosCallData?.subscriber_id ?? null,
               partnerFirebaseId: sosCallData?.partner_firebase_id ?? null,
               partnerAgreementId: sosCallData?.agreement_id ?? null,
@@ -663,10 +679,11 @@ export const createAndScheduleCallHTTPS = onCall(
                 isSosCallFree: true,
                 sosCallPartnerFirebaseId: sosCallData?.partner_firebase_id ?? null,
                 sosCallSubscriberId: sosCallData?.subscriber_id ?? null,
+                clientCountry: cc || null,
               },
               updatedAt: admin.firestore.FieldValue.serverTimestamp(),
             }, { merge: true });
-          console.log(`✅ [${requestId}] call_session marqué isSosCallFree=true (skip Stripe)`);
+          console.log(`✅ [${requestId}] call_session marqué isSosCallFree=true (skip Stripe), currency=${callCurrency.toUpperCase()}`);
         } catch (markErr) {
           console.warn(`⚠️ [${requestId}] Could not mark call_session as SOS-Call free:`, markErr);
         }

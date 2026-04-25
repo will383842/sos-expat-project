@@ -3376,6 +3376,10 @@ const BookingRequest: React.FC = () => {
                   bookingTitle: bookingRequest.title || '',
                   bookingDescription: bookingRequest.description || '',
                   clientCurrentCountry: bookingRequest.clientCurrentCountry || '',
+                  // P2 FIX: pass clientCountry so backend can derive currency for B2B
+                  // (US-zone → USD rate, else EUR rate). Without this, a logged-in
+                  // US user using the B2B checkbox would be paid at the EUR rate.
+                  clientCountry: bookingRequest.clientCurrentCountry || '',
                   clientFirstName: bookingRequest.clientFirstName || '',
                   clientNationality: bookingRequest.clientNationality || '',
                 });
