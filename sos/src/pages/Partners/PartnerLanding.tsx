@@ -35,7 +35,7 @@ import {
   Loader2,
   ExternalLink,
   Briefcase,
-  Palette,
+  Mail,
   Clock,
   CreditCard,
   Building2,
@@ -845,7 +845,7 @@ const PartnerLanding: React.FC = () => {
         '@type': 'HowToStep',
         'position': 3,
         'name': intl.formatMessage({ id: 'partner.landing.v2.steps.integrate.title', defaultMessage: 'Intégrez' }),
-        'text': intl.formatMessage({ id: 'partner.landing.v2.steps.integrate.desc', defaultMessage: 'Partagez votre lien, QR code ou intégrez notre widget.' }),
+        'text': intl.formatMessage({ id: 'partner.landing.v2.steps.integrate.desc', defaultMessage: 'Ajoutez vos clients un par un, importez-les en CSV ou synchronisez via l\'API REST. Chaque client reçoit automatiquement son email d\'activation avec son code d\'accès.' }),
         'image': 'https://sos-expat.com/og-image.webp',
       },
       {
@@ -944,7 +944,7 @@ const PartnerLanding: React.FC = () => {
       titleId: 'partner.landing.v2.value.tools.title',
       titleDefault: 'Outils clés en main',
       descId: 'partner.landing.v2.value.tools.desc',
-      descDefault: 'Widget intégrable, lien affilié, QR code, dashboard de suivi et un account manager dédié pour piloter votre partenariat.',
+      descDefault: 'API REST avec bulk import, dashboard partenaire pour ajouter et suivre vos clients en temps réel, email d\'activation automatique personnalisable à votre marque, et un account manager unique pour piloter le partenariat.',
     },
   ];
 
@@ -972,7 +972,7 @@ const PartnerLanding: React.FC = () => {
       titleId: 'partner.landing.v2.steps.integrate.title',
       titleDefault: 'Intégrez',
       descId: 'partner.landing.v2.steps.integrate.desc',
-      descDefault: 'Partagez votre lien, QR code ou intégrez notre widget sur votre site. Notre équipe vous accompagne.',
+      descDefault: 'Ajoutez vos clients un par un, importez-les en CSV ou synchronisez depuis votre CRM via l\'API REST. Chaque client reçoit ensuite automatiquement son email d\'activation avec son code d\'accès personnel. Notre équipe technique vous accompagne.',
     },
     {
       icon: TrendingUp,
@@ -1026,11 +1026,11 @@ const PartnerLanding: React.FC = () => {
       descDefault: 'Suivez les appels, durées et KPI consolidés en direct depuis votre tableau de bord partenaire.',
     },
     {
-      icon: Palette,
+      icon: Mail,
       titleId: 'partner.landing.v2.advantages.widget.title',
-      titleDefault: 'Widget personnalisable',
+      titleDefault: "Email d'activation automatique",
       descId: 'partner.landing.v2.advantages.widget.desc',
-      descDefault: 'Widget, lien dédié, QR code : choisissez le format qui convient à votre activité. Tout est personnalisable.',
+      descDefault: "Chacun de vos clients reçoit automatiquement un email avec son code d'accès personnel et le lien pour appeler. Templates personnalisables à votre marque, en 9 langues.",
     },
     {
       icon: HeadphonesIcon,
@@ -1581,7 +1581,7 @@ const PartnerLanding: React.FC = () => {
             <p className="text-gray-400 text-center max-w-2xl mx-auto mb-14 text-base md:text-lg leading-relaxed">
               <FormattedMessage
                 id="partner.landing.v2.corporates.subtitle"
-                defaultMessage="Indépendants, démarrez en quelques heures avec un widget, un lien dédié ou un QR code. Grands groupes, branchez l'API REST, importez vos clients en bulk et pilotez plusieurs cabinets dans un dashboard unifié."
+                defaultMessage="Indépendants, ajoutez vos clients un par un ou par CSV depuis le dashboard : SOS-Expat envoie automatiquement à chaque client son email d'activation avec son code d'accès. Grands groupes, branchez l'API REST pour synchroniser depuis votre CRM (jusqu'à 500 clients par appel) et pilotez plusieurs cabinets dans un dashboard unifié."
               />
             </p>
 
