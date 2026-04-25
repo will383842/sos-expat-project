@@ -79,7 +79,7 @@ const TermsClients: React.FC = () => {
     fr: {
       title: "CGU Clients",
       subtitle: "Conditions générales d'utilisation pour les clients",
-      lastUpdated: "Version 3.0 – Dernière mise à jour : 1er février 2026",
+      lastUpdated: "Version 3.1 – Dernière mise à jour : 25 avril 2026",
       loading: "Chargement...",
       languageToggle: "Changer de langue",
       keyFeatures: "Points clés",
@@ -102,7 +102,7 @@ const TermsClients: React.FC = () => {
     en: {
       title: "Client Terms",
       subtitle: "General terms of use for customers",
-      lastUpdated: "Version 3.0 – Last updated: February 1, 2026",
+      lastUpdated: "Version 3.1 – Last updated: April 25, 2026",
       loading: "Loading...",
       languageToggle: "Switch language",
       keyFeatures: "Key features",
@@ -125,7 +125,7 @@ const TermsClients: React.FC = () => {
     es: {
       title: "Términos del Cliente",
       subtitle: "Condiciones generales de uso para clientes",
-      lastUpdated: "Versión 3.0 – Última actualización: 1 de febrero de 2026",
+      lastUpdated: "Versión 3.1 – Última actualización: 25 de abril de 2026",
       loading: "Cargando...",
       languageToggle: "Cambiar idioma",
       keyFeatures: "Características clave",
@@ -148,7 +148,7 @@ const TermsClients: React.FC = () => {
     de: {
       title: "Kundenbedingungen",
       subtitle: "Allgemeine Nutzungsbedingungen für Kunden",
-      lastUpdated: "Version 3.0 – Letzte Aktualisierung: 1. Februar 2026",
+      lastUpdated: "Version 3.1 – Letzte Aktualisierung: 25. April 2026",
       loading: "Wird geladen...",
       languageToggle: "Sprache wechseln",
       keyFeatures: "Wichtige Merkmale",
@@ -171,7 +171,7 @@ const TermsClients: React.FC = () => {
     ru: {
       title: "Условия для клиентов",
       subtitle: "Общие условия использования для клиентов",
-      lastUpdated: "Версия 3.0 – Последнее обновление: 1 февраля 2026",
+      lastUpdated: "Версия 3.1 – Последнее обновление: 25 апреля 2026",
       loading: "Загрузка...",
       languageToggle: "Сменить язык",
       keyFeatures: "Ключевые особенности",
@@ -194,7 +194,7 @@ const TermsClients: React.FC = () => {
     hi: {
       title: "ग्राहक शर्तें",
       subtitle: "ग्राहकों के लिए सामान्य उपयोग की शर्तें",
-      lastUpdated: "संस्करण 3.0 – अंतिम अपडेट: 1 फ़रवरी 2026",
+      lastUpdated: "संस्करण 3.1 – अंतिम अपडेट: 25 अप्रैल 2026",
       loading: "लोड हो रहा है...",
       languageToggle: "भाषा बदलें",
       keyFeatures: "मुख्य विशेषताएं",
@@ -217,7 +217,7 @@ const TermsClients: React.FC = () => {
     pt: {
       title: "Termos do Cliente",
       subtitle: "Condições gerais de uso para clientes",
-      lastUpdated: "Versão 3.0 – Última atualização: 1 de fevereiro de 2026",
+      lastUpdated: "Versão 3.1 – Última atualização: 25 de abril de 2026",
       loading: "Carregando...",
       languageToggle: "Mudar idioma",
       keyFeatures: "Características principais",
@@ -240,7 +240,7 @@ const TermsClients: React.FC = () => {
     ar: {
       title: "شروط العملاء",
       subtitle: "الشروط العامة للعملاء",
-      lastUpdated: "الإصدار 3.0 – آخر تحديث: 1 فبراير 2026",
+      lastUpdated: "الإصدار 3.1 – آخر تحديث: 25 أبريل 2026",
       loading: "جارٍ التحميل...",
       languageToggle: "غيّر اللغة",
       keyFeatures: "الميزات الرئيسية",
@@ -263,7 +263,7 @@ const TermsClients: React.FC = () => {
     ch: {
       title: "客户条款",
       subtitle: "客户通用使用条款",
-      lastUpdated: "版本 3.0 – 最后更新：2026年2月1日",
+      lastUpdated: "版本 3.1 – 最后更新：2026年4月25日",
       loading: "加载中...",
       languageToggle: "切换语言",
       keyFeatures: "主要功能",
@@ -480,7 +480,7 @@ const TermsClients: React.FC = () => {
 
 **SOS Expat** एक सेवा है जो **WorldExpat OÜ** द्वारा संचालित है, जो एस्टोनियाई कानून के तहत एक कंपनी है (कंपनी रजिस्टर संख्या 16885621), जिसका पंजीकृत कार्यालय Harju maakond, Tallinn, Kesklinna linnaosa, Tornimäe tn 3/5/7, 10145, एस्टोनिया में स्थित है ("**प्लेटफ़ॉर्म**", "**SOS**", "**SOS Expat**", "**हम**")।
 
-**संस्करण 3.0 – अंतिम अपडेट: 1 फरवरी 2026**
+**संस्करण 3.1 – अंतिम अपडेट: 25 अप्रैल 2026**
 
 ---
 
@@ -728,7 +728,7 @@ const TermsClients: React.FC = () => {
 
 **SOS Expat** est un service opéré par **WorldExpat OÜ**, société de droit estonien (registre des sociétés n° 16885621), dont le siège social est situé Harju maakond, Tallinn, Kesklinna linnaosa, Tornimäe tn 3/5/7, 10145, Estonie (la « **Plateforme** », « **SOS** », « **SOS Expat** », « **nous** »).
 
-**Version 3.0 – Dernière mise à jour : 1er février 2026**
+**Version 3.1 – Dernière mise à jour : 25 avril 2026**
 
 ---
 
@@ -766,7 +766,7 @@ const TermsClients: React.FC = () => {
 - (g) Pour les **personnes morales** : le représentant dispose des pouvoirs nécessaires pour engager la société.
 Toute fausse déclaration peut entraîner la suspension ou la fermeture du compte, sans préjudice de toute action en réparation.
 
-2.4. **Usage conforme.** Le Client s'interdit toute utilisation illicite ou abusive (fraude, contenu illégal, harcèlement, atteinte aux droits de tiers, détournement des flux de paiement, usurpation d'identité, etc.). **SOS Expat n'est pas un service d'urgence** : aucun usage pour des situations médicales, vitales ou d'urgence immédiate.
+2.4. **Usage conforme et bonne foi.** Le Client s'interdit toute utilisation illicite ou abusive (fraude, contenu illégal, harcèlement, atteinte aux droits de tiers, détournement des flux de paiement, usurpation d'identité, etc.) et **s'engage à n'utiliser la Plateforme qu'à des fins légitimes et de bonne foi**, en présentant honnêtement sa situation au Prestataire. La Plateforme **n'est pas destinée** à : (i) obtenir un avis frauduleux ou utilisé dans un but illicite ; (ii) tester ou évaluer le Prestataire à son insu ; (iii) collecter des conseils de plusieurs Prestataires sans intention sérieuse de prestation. **SOS Expat n'est pas un service d'urgence** : aucun usage pour des situations médicales, vitales ou d'urgence immédiate (police, pompiers, SAMU, ambassades en péril). En cas d'urgence, le Client doit contacter immédiatement les services d'urgence locaux.
 
 2.5. **Sécurité du compte.** Le Client protège ses identifiants de connexion. Toute activité réalisée via son compte est réputée effectuée par lui. En cas de suspicion de compromission, le Client doit immédiatement modifier son mot de passe et en informer SOS Expat.
 
@@ -776,11 +776,11 @@ Toute fausse déclaration peut entraîner la suspension ou la fermeture du compt
 
 ## 3. Nature des services réservables
 
-3.1. **Appels avec Avocats.** Consultations courtes d’orientation (par ex. 20 minutes). L’Avocat demeure seul responsable de ses conseils et du respect de sa déontologie/lois locales.
+3.1. **Appels avec Avocats — Caractère non formel.** Consultations courtes d'orientation (par ex. 20 minutes). L'Avocat demeure seul responsable de ses conseils et du respect de sa déontologie/lois locales. **Le Client reconnaît expressément que la consultation téléphonique réalisée via la Plateforme constitue une orientation juridique de premier niveau et NE remplace PAS une relation avocat-client formelle et complète** (analyse approfondie d'un dossier, étude de pièces, représentation en justice, rédaction d'actes, suivi continu). Pour tout dossier nécessitant une prise en charge complète, le Client doit conclure une convention d'honoraires distincte avec l'Avocat ou tout autre professionnel habilité, hors Plateforme. Aucun lien d'**avocat-client formel** au sens des règles déontologiques et procédurales locales (mandat, lettre de mission, convention d'honoraires) n'est établi par la seule mise en relation.
 
-3.2. **Appels avec Aidants.** Aide non réglementée (orientation pratique, traduction informelle, contacts locaux…). Aucun conseil juridique/médical/réglementé sans licence locale adéquate.
+3.2. **Appels avec Aidants — Aide non réglementée.** Aide non réglementée (orientation pratique, traduction informelle, contacts locaux, partage d'expérience d'expatrié…). **Aucun conseil juridique, médical, fiscal, financier, immobilier ou réglementé** sans licence locale adéquate. Le Client reconnaît que l'Aidant n'est **pas** un professionnel réglementé et que l'échange relève d'un partage d'expérience d'expatrié, sans valeur juridique ou médicale contraignante.
 
-3.3. **Aucune garantie.** Nous ne garantissons ni l’issue, ni la qualité, ni l’adéquation à un besoin particulier, ni la disponibilité des prestataires.
+3.3. **Aucune garantie de résultat.** SOS Expat ne garantit ni l'issue, ni la qualité, ni l'exactitude, ni l'adéquation à un besoin particulier, ni la disponibilité des Prestataires. Le Client est seul juge de la pertinence de toute information reçue et reste libre de la faire vérifier par un autre professionnel.
 
 ---
 
@@ -829,11 +829,17 @@ Le Client voit le **prix total TTC** avant de confirmer sa réservation.
 
 7.1. **Paiement unique & répartition.** Le Client règle un paiement unique via la Plateforme couvrant (i) la part Prestataire et (ii) les frais de mise en relation. SOS (ou son prestataire de paiement) encaisse, déduit ses frais, puis reverse le solde au Prestataire.
 
-7.2. **Sécurité.** Les paiements transitent par des prestataires de paiement tiers. Des contrôles KYC/LCB-FT peuvent s’appliquer.
+7.2. **Sécurité des paiements & PCI-DSS.** Les paiements transitent **exclusivement** par des prestataires de paiement tiers certifiés **PCI-DSS** (Payment Card Industry Data Security Standard) :
+- **Stripe Payments Europe Ltd.** (Irlande, UE) — certifié **PCI-DSS niveau 1** ;
+- **PayPal (Europe) S.à r.l. et Cie, S.C.A.** (Luxembourg, UE) — certifié **PCI-DSS**.
 
-7.3. **Rétrofacturations/contestation.** En cas de litige de paiement, SOS peut transmettre au prestataire de paiement les données strictement nécessaires et suspendre des services/paiements liés.
+**SOS Expat ne collecte, ne traite ni ne stocke aucune donnée de carte bancaire** (numéro de carte, CVV, date d'expiration). Ces données sont saisies directement chez le prestataire de paiement choisi par le Client et transitent via une connexion sécurisée TLS. Des contrôles **KYC / LCB-FT** (Know Your Customer / Lutte contre le Blanchiment et le Financement du Terrorisme) peuvent s'appliquer pour les transactions concernées, conformément aux obligations légales européennes et internationales.
+
+7.3. **Rétrofacturations/contestation.** En cas de litige de paiement, SOS peut transmettre au prestataire de paiement les données strictement nécessaires et suspendre des services/paiements liés. Toute **chargeback** abusive ou de mauvaise foi peut entraîner la suspension du compte et une réclamation des sommes dues, sans préjudice de tout recours.
 
 7.4. **Compensation.** Si un remboursement est accordé au Client, la part correspondante est prélevée sur le prestataire concerné ; SOS peut compenser sur ses paiements futurs.
+
+7.5. **Devises et conversion.** Les paiements peuvent être proposés en plusieurs devises. Les **frais de change** appliqués par le prestataire de paiement ou la banque émettrice du Client sont à la charge du Client et SOS Expat n'a aucun contrôle sur les taux pratiqués.
 
 ---
 
@@ -853,11 +859,13 @@ Le Client voit le **prix total TTC** avant de confirmer sa réservation.
 
 ## 9. Comportements, sécurité et contenus
 
-9.1. **Respect.** Le Client s’engage à un comportement respectueux, à ne pas enregistrer ni diffuser l’échange sans consentement légalement requis, et à ne pas solliciter d’actes illégaux.
+9.1. **Respect & interdiction d'enregistrer.** Le Client s'engage à un comportement respectueux, à **ne pas enregistrer, ne pas filmer, ne pas retranscrire intégralement ni diffuser** l'échange (audio, vidéo, capture d'écran) sans consentement préalable et explicite du Prestataire et conformément aux lois locales applicables. Toute violation peut entraîner la suspension immédiate du compte et l'engagement de la responsabilité civile et/ou pénale du Client.
 
-9.2. **Contenus fournis.** Les informations transmises doivent être loyales, exactes et licites. Le Client garantit SOS et le Prestataire contre toute réclamation liée à des contenus illégaux qu’il fournirait.
+9.2. **Enregistrement par SOS Expat.** **Par défaut, SOS Expat n'enregistre PAS le contenu audio des appels** entre Client et Prestataire. Seules les **métadonnées techniques** sont conservées : horodatage, durée, identifiants de session, statut de connexion. SOS Expat **se réserve toutefois la possibilité** d'activer un enregistrement audio temporaire dans des cas strictement limités : (i) suspicion de fraude, (ii) signalement d'abus ou de comportement illicite, (iii) instruction d'une autorité judiciaire compétente, (iv) protection des intérêts vitaux d'une personne. Dans ces cas, le Client en sera informé en début d'appel et l'enregistrement sera conservé au maximum **six (6) mois** (sauf prolongation imposée par une procédure judiciaire), conformément aux recommandations de la CNIL et au RGPD.
 
-9.3. **Signalement.** Tout abus peut être signalé via le formulaire de contact.
+9.3. **Contenus fournis.** Les informations transmises doivent être loyales, exactes et licites. Le Client garantit SOS et le Prestataire contre toute réclamation liée à des contenus illégaux qu'il fournirait.
+
+9.4. **Signalement.** Tout abus peut être signalé via le formulaire de contact. SOS Expat traite les signalements dans un délai raisonnable et peut suspendre tout compte ou prestation en cas de manquement présumé, sans préjudice de toute action ultérieure.
 
 ---
 
@@ -978,7 +986,7 @@ En cas de fermeture, les réservations en cours peuvent être annulées et rembo
 
 **SOS Expat** is a service operated by **WorldExpat OÜ**, a company incorporated under Estonian law (company registry no. 16885621), with its registered office at Harju maakond, Tallinn, Kesklinna linnaosa, Tornimäe tn 3/5/7, 10145, Estonia (the "**Platform**," "**SOS**," "**SOS Expat**," "**we**").
 
-**Version 3.0 – Last updated: February 1, 2026**
+**Version 3.1 – Last updated: April 25, 2026**
 
 ---
 
@@ -1016,7 +1024,7 @@ En cas de fermeture, les réservations en cours peuvent être annulées et rembo
 - (g) For **legal entities**: the representative has the necessary authority to bind the company.
 Any false declaration may result in suspension or closure of the account, without prejudice to any claim for damages.
 
-2.4. **Proper Use.** The Client shall not engage in any unlawful or abusive use (fraud, illegal content, harassment, infringement of third-party rights, payment diversion, identity theft, etc.). **SOS Expat is not an emergency service**: no use for medical, life-threatening, or immediate emergency situations.
+2.4. **Proper Use & Good Faith.** The Client shall not engage in any unlawful or abusive use (fraud, illegal content, harassment, infringement of third-party rights, payment diversion, identity theft, etc.) and **undertakes to use the Platform solely for legitimate purposes and in good faith**, presenting their situation honestly to the Provider. The Platform is **not intended** for: (i) obtaining fraudulent advice or advice used for illicit purposes; (ii) testing or evaluating Providers without their knowledge; (iii) collecting advice from multiple Providers without serious intent to engage. **SOS Expat is not an emergency service**: no use for medical, life-threatening, or immediate emergency situations (police, fire, ambulance, embassies in distress). In an emergency, the Client must immediately contact local emergency services.
 
 2.5. **Account Security.** The Client protects their login credentials. Any activity carried out via their account is deemed to have been performed by them. In case of suspected compromise, the Client must immediately change their password and inform SOS Expat.
 
@@ -1026,11 +1034,11 @@ Any false declaration may result in suspension or closure of the account, withou
 
 ## 3. Nature of Bookable Services
 
-3.1. **Calls with Lawyers.** Short orientation consultations (e.g., 20 minutes). The Lawyer remains solely responsible for their advice and compliance with their professional ethics/local laws.
+3.1. **Calls with Lawyers — Non-Formal Nature.** Short orientation consultations (e.g., 20 minutes). The Lawyer remains solely responsible for their advice and compliance with their professional ethics/local laws. **The Client expressly acknowledges that the phone consultation provided through the Platform constitutes first-level legal orientation and does NOT replace a formal and complete attorney-client relationship** (in-depth case analysis, document review, court representation, drafting of legal acts, ongoing follow-up). For any matter requiring full handling, the Client must enter into a separate engagement letter with the Lawyer or another duly authorized professional, outside the Platform. **No formal attorney-client relationship** within the meaning of local ethical and procedural rules (mandate, engagement letter, fee agreement) is established by the mere connection.
 
-3.2. **Calls with Helpers.** Unregulated assistance (practical guidance, informal translation, local contacts...). No legal/medical/regulated advice without appropriate local license.
+3.2. **Calls with Helpers — Unregulated Assistance.** Unregulated assistance (practical guidance, informal translation, local contacts, expat experience sharing...). **No legal, medical, tax, financial, real estate, or regulated advice** without an appropriate local license. The Client acknowledges that the Helper is **not** a regulated professional and that the exchange is an expatriate experience sharing, with no binding legal or medical value.
 
-3.3. **No Guarantee.** We do not guarantee outcome, quality, suitability for specific needs, or provider availability.
+3.3. **No Guarantee of Outcome.** SOS Expat does not guarantee the outcome, quality, accuracy, suitability for specific needs, or availability of Providers. The Client is the sole judge of the relevance of any information received and remains free to have it verified by another professional.
 
 ---
 
@@ -1079,11 +1087,17 @@ The Client sees the **total price including taxes** before confirming their book
 
 7.1. **Single Payment & Allocation.** The Client makes a single payment via the Platform covering (i) the Provider's share and (ii) the connection fee. SOS (or its payment provider) collects, deducts its fees, and transfers the balance to the Provider.
 
-7.2. **Security.** Payments are processed by third-party payment providers. KYC/AML controls may apply.
+7.2. **Payment Security & PCI-DSS.** Payments are processed **exclusively** by third-party payment providers certified **PCI-DSS** (Payment Card Industry Data Security Standard):
+- **Stripe Payments Europe Ltd.** (Ireland, EU) — **PCI-DSS Level 1** certified;
+- **PayPal (Europe) S.à r.l. et Cie, S.C.A.** (Luxembourg, EU) — **PCI-DSS** certified.
 
-7.3. **Chargebacks/Disputes.** In case of payment dispute, SOS may provide strictly necessary data to the payment provider and suspend related services/payments.
+**SOS Expat does NOT collect, process, or store any card data** (card number, CVV, expiry date). This data is entered directly with the payment provider chosen by the Client and transmitted via a secure TLS connection. **KYC / AML** (Know Your Customer / Anti-Money Laundering) controls may apply to relevant transactions, in compliance with European and international legal obligations.
+
+7.3. **Chargebacks/Disputes.** In case of payment dispute, SOS may provide strictly necessary data to the payment provider and suspend related services/payments. Any **abusive or bad-faith chargeback** may result in account suspension and a claim for the amounts due, without prejudice to any other remedy.
 
 7.4. **Compensation.** If a refund is granted to the Client, the corresponding share is deducted from the relevant provider; SOS may offset against future payments.
+
+7.5. **Currencies and Conversion.** Payments may be offered in multiple currencies. **Foreign exchange fees** charged by the payment provider or the Client's issuing bank are borne by the Client and SOS Expat has no control over the exchange rates applied.
 
 ---
 
@@ -1103,11 +1117,13 @@ The Client sees the **total price including taxes** before confirming their book
 
 ## 9. Behavior, Security, and Content
 
-9.1. **Respect.** The Client agrees to behave respectfully, not record or share exchanges without legally required consent, and not solicit illegal acts.
+9.1. **Respect & Recording Prohibition.** The Client agrees to behave respectfully and to **not record, film, fully transcribe, or share** the exchange (audio, video, screenshot) without the **prior and explicit consent** of the Provider and in compliance with applicable local laws. Any breach may result in immediate account suspension and engage the Client's civil and/or criminal liability.
 
-9.2. **Provided Content.** Information provided must be honest, accurate, and lawful. The Client indemnifies SOS and the Provider against claims related to illegal content they provide.
+9.2. **Recording by SOS Expat.** **By default, SOS Expat does NOT record the audio content** of calls between Client and Provider. Only **technical metadata** is retained: timestamps, duration, session identifiers, connection status. SOS Expat **reserves the right** to enable temporary audio recording in strictly limited cases: (i) suspicion of fraud, (ii) report of abuse or unlawful behavior, (iii) order from a competent judicial authority, (iv) protection of vital interests of a person. In such cases, the Client will be informed at the start of the call and the recording will be retained for a maximum of **six (6) months** (unless extended by judicial proceedings), in line with CNIL recommendations and GDPR.
 
-9.3. **Reporting.** Any abuse can be reported via the contact form.
+9.3. **Provided Content.** Information provided must be honest, accurate, and lawful. The Client indemnifies SOS and the Provider against claims related to illegal content they provide.
+
+9.4. **Reporting.** Any abuse can be reported via the contact form. SOS Expat handles reports within a reasonable time and may suspend any account or service in case of suspected breach, without prejudice to any further action.
 
 ---
 
@@ -1228,7 +1244,7 @@ In case of closure, pending bookings may be canceled and refunded, except in cas
 
 **SOS Expat** es un servicio operado por **WorldExpat OÜ**, sociedad de derecho estonio (registro mercantil n.º 16885621), con domicilio social en Harju maakond, Tallinn, Kesklinna linnaosa, Tornimäe tn 3/5/7, 10145, Estonia (la "**Plataforma**", "**SOS**", "**SOS Expat**", "**nosotros**").
 
-**Versión 3.0 – Última actualización: 1 de febrero de 2026**
+**Versión 3.1 – Última actualización: 25 de abril de 2026**
 
 ---
 
@@ -1478,7 +1494,7 @@ En caso de cierre, las reservas en curso podrán cancelarse y reembolsarse, salv
 
 **SOS Expat** ist ein Dienst, der von **WorldExpat OÜ** betrieben wird, einer Gesellschaft estnischen Rechts (Handelsregister Nr. 16885621) mit Sitz in Harju maakond, Tallinn, Kesklinna linnaosa, Tornimäe tn 3/5/7, 10145, Estland (die "**Plattform**", "**SOS**", "**SOS Expat**", "**wir**").
 
-**Version 3.0 – Letzte Aktualisierung: 1. Februar 2026**
+**Version 3.1 – Letzte Aktualisierung: 25. April 2026**
 
 ---
 
@@ -1726,7 +1742,7 @@ Bei Schließung können laufende Buchungen storniert und erstattet werden, auße
 
 **SOS Expat** — это сервис, управляемый компанией **WorldExpat OÜ**, зарегистрированной по эстонскому праву (регистрационный номер компании 16885621), с юридическим адресом: Harju maakond, Tallinn, Kesklinna linnaosa, Tornimäe tn 3/5/7, 10145, Эстония («**Платформа**», «**SOS**», «**SOS Expat**», «**мы**»)
 
-**Версия 3.0 – Последнее обновление: 1 февраля 2026 г.**
+**Версия 3.1 – Последнее обновление: 25 апреля 2026 г.**
 
 ---
 
@@ -1978,7 +1994,7 @@ const defaultPt = `
 **SOS Expat** é um serviço operado pela **WorldExpat OÜ**, sociedade de direito estoniano (registro comercial n.º 16885621), com sede em Harju maakond, Tallinn, Kesklinna linnaosa, Tornimäe tn 3/5/7, 10145, Estônia (a "**Plataforma**", "**SOS**", "**SOS Expat**", "**nós**")
 
 
-**Versão 3.0 – Última atualização: 1 de fevereiro de 2026**
+**Versão 3.1 – Última atualização: 25 de abril de 2026**
 
 
 ---
@@ -2260,7 +2276,7 @@ const defaultCh = `
 
 **SOS Expat** 是由 **WorldExpat OÜ** 运营的服务，WorldExpat OÜ 是一家爱沙尼亚法律下的公司（商业登记号 16885621），注册地址位于 Harju maakond, Tallinn, Kesklinna linnaosa, Tornimäe tn 3/5/7, 10145, 爱沙尼亚（以下简称"**平台**"、"**SOS**"、"**SOS Expat**"、"**我们**"）。
 
-**版本 3.0 – 最后更新：2026年2月1日**
+**版本 3.1 – 最后更新：2026年4月25日**
 
 ---
 
@@ -2511,7 +2527,7 @@ const defaultCh = `
 
 **SOS Expat** هي خدمة تديرها **WorldExpat OÜ**، شركة إستونية (السجل التجاري رقم 16885621)، مقرها Harju maakond, Tallinn, Kesklinna linnaosa, Tornimäe tn 3/5/7, 10145، إستونيا ("**المنصة**"، "**SOS**"، "**SOS Expat**"، "**نحن**").
 
-**الإصدار 3.0 – آخر تحديث: 1 فبراير 2026**
+**الإصدار 3.1 – آخر تحديث: 25 أبريل 2026**
 
 ---
 

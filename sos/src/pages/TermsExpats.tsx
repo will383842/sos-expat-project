@@ -100,7 +100,7 @@ const TermsExpats: React.FC = () => {
     fr: {
       title: "CGU Expatriés Aidants",
       subtitle: "Conditions générales d'utilisation pour les expatriés aidants",
-      lastUpdated: "Version 2.2 – Dernière mise à jour : 16 juin 2025",
+      lastUpdated: "Version 3.1 – Dernière mise à jour : 25 avril 2026",
       loading: "Chargement...",
       joinNetwork: "Rejoindre le réseau",
       trustedByHelpers: "Déjà 1K+ expatriés aidants nous font confiance",
@@ -143,7 +143,7 @@ const TermsExpats: React.FC = () => {
     en: {
       title: "Expat Helper Terms",
       subtitle: "Terms of Use for expatriate helpers",
-      lastUpdated: "Version 2.2 – Last updated: 16 June 2025",
+      lastUpdated: "Version 3.1 – Last updated: April 25, 2026",
       loading: "Loading...",
       joinNetwork: "Join the network",
       trustedByHelpers: "Already 1K+ expat helpers trust us",
@@ -185,7 +185,7 @@ const TermsExpats: React.FC = () => {
     es: {
       title: "Términos para Ayudantes Expat",
       subtitle: "Términos de uso para ayudantes de expatriados",
-      lastUpdated: "Versión 2.2 – Última actualización: 16 de junio de 2025",
+      lastUpdated: "Versión 3.1 – Última actualización: 25 de abril de 2026",
       loading: "Cargando...",
       joinNetwork: "Únete a la red",
       trustedByHelpers: "Ya más de 1K+ ayudantes expat confían en nosotros",
@@ -228,7 +228,7 @@ const TermsExpats: React.FC = () => {
     de: {
       title: "Expat-Helfer Bedingungen",
       subtitle: "Nutzungsbedingungen für Expatriate-Helfer",
-      lastUpdated: "Version 3.0 – Letzte Aktualisierung: 1. Februar 2026",
+      lastUpdated: "Version 3.1 – Letzte Aktualisierung: 25. April 2026",
       loading: "Lädt...",
       joinNetwork: "Dem Netzwerk beitreten",
       trustedByHelpers: "Bereits über 1K+ Expat-Helfer vertrauen uns",
@@ -271,7 +271,7 @@ const TermsExpats: React.FC = () => {
     ru: {
       title: "Условия для помощников эмигрантов",
       subtitle: "Условия использования для помощников эмигрантов",
-      lastUpdated: "Версия 2.2 – Последнее обновление: 16 июня 2025 г.",
+      lastUpdated: "Версия 3.1 – Последнее обновление: 25 апреля 2026 г.",
       loading: "Загрузка...",
       joinNetwork: "Присоединиться к сети",
       trustedByHelpers: "Уже более 1K+ помощников эмигрантов доверяют нам",
@@ -314,7 +314,7 @@ const TermsExpats: React.FC = () => {
     hi: {
       title: "एक्सपैट हेल्पर शर्तें",
       subtitle: "प्रवासी सहायकों के लिए उपयोग की शर्तें",
-      lastUpdated: "संस्करण 2.2 – अंतिम अपडेट: 16 जून 2025",
+      lastUpdated: "संस्करण 3.1 – अंतिम अपडेट: 25 अप्रैल 2026",
       loading: "लोड हो रहा है...",
       joinNetwork: "नेटवर्क में शामिल हों",
       trustedByHelpers: "पहले से ही 1K+ एक्सपैट हेल्पर्स हम पर भरोसा करते हैं",
@@ -357,7 +357,7 @@ const TermsExpats: React.FC = () => {
     ch: {
       title: "外籍助手服务条款",
       subtitle: "外籍助手使用条款",
-      lastUpdated: "版本 2.2 – 最后更新：2025年6月16日",
+      lastUpdated: "版本 3.1 – 最后更新：2026年4月25日",
       loading: "加载中...",
       joinNetwork: "加入网络",
       trustedByHelpers: "已有超过 1,000 名外籍助手信任我们",
@@ -399,7 +399,7 @@ const TermsExpats: React.FC = () => {
     ar: {
       title: "شروط مساعدي المغتربين",
       subtitle: "شروط الاستخدام لمساعدي المغتربين",
-      lastUpdated: "الإصدار 2.2 – آخر تحديث: 16 يونيو 2025",
+      lastUpdated: "الإصدار 3.1 – آخر تحديث: 25 أبريل 2026",
       loading: "جارٍ التحميل...",
       joinNetwork: "انضم إلى الشبكة",
       trustedByHelpers: "يثق بنا بالفعل أكثر من 1000+ مساعد مغترب",
@@ -441,7 +441,7 @@ const TermsExpats: React.FC = () => {
     pt: {
       title: "Termos para Ajudantes Expat",
       subtitle: "Termos de uso para ajudantes de expatriados",
-      lastUpdated: "Versão 2.2 – Última atualização: 16 de junho de 2025",
+      lastUpdated: "Versão 3.1 – Última atualização: 25 de abril de 2026",
       loading: "Carregando...",
       joinNetwork: "Junte-se à rede",
       trustedByHelpers: "Já mais de 1K+ ajudantes expat confiam em nós",
@@ -679,7 +679,7 @@ const TermsExpats: React.FC = () => {
 
 **SOS Expat d'WorldExpat OÜ** (la « **Plateforme** », « **SOS** », « **nous** »)
 
-**Version 2.2 – Dernière mise à jour : 16 juin 2025**
+**Version 3.1 – Dernière mise à jour : 25 avril 2026**
 
 ---
 
@@ -771,7 +771,7 @@ const TermsExpats: React.FC = () => {
 
 7.2. **Paiement unique & répartition.** L'Utilisateur effectue **un paiement unique** via la Plateforme couvrant (i) la **rémunération de l'Aidant** (telle que convenue) et (ii) les **Frais de Mise en relation** d'SOS Expat. SOS Expat (ou son Prestataire) encaisse, **déduit** ses frais, puis **reverse** le solde à l'Aidant. L'Aidant **autorise** ces déductions et répartitions.
 
-7.3. **Frais bancaires du Prestataire de paiement.** Le Prestataire de paiement (Stripe, PayPal ou équivalent) prélève des frais de traitement sur chaque transaction. **Ces frais bancaires sont intégralement à la charge de l'Aidant** et sont automatiquement déduits du montant qui lui est reversé. Le détail de ces frais est disponible dans les conditions du Prestataire de paiement et dans le tableau de bord de l'Aidant pour chaque transaction.
+7.3. **Frais bancaires du Prestataire de paiement.** Le Prestataire de paiement — **Stripe Payments Europe Ltd.** (Irlande, UE, certifié PCI-DSS niveau 1) **ou PayPal (Europe) S.à r.l. et Cie, S.C.A.** (Luxembourg, UE, certifié PCI-DSS), selon le pays de résidence et la disponibilité — prélève des frais de traitement sur chaque transaction. **Ces frais bancaires sont intégralement à la charge de l'Aidant** et sont automatiquement déduits du montant qui lui est reversé. Le détail de ces frais est disponible dans les conditions du Prestataire de paiement (Stripe : stripe.com/fr/pricing ; PayPal : paypal.com/fr/webapps/mpp/merchant-fees) et dans le tableau de bord de l'Aidant pour chaque transaction.
 
 7.4. **Frais de change et conversion de devises.** Lorsque la devise de paiement de l'Utilisateur diffère de la devise du compte bancaire de l'Aidant, des **frais de conversion de devises** sont appliqués par le Prestataire de paiement. **Ces frais de change sont intégralement à la charge de l'Aidant** et sont déduits du montant qui lui est reversé.
 
@@ -793,7 +793,7 @@ const TermsExpats: React.FC = () => {
 
 ## 8. Paiements – KYC/LCB-FT – Sanctions
 
-8.1. **Prestataires de paiement.** Les paiements sont traités par des **Prestataires tiers** (Stripe, etc.). L'Aidant accepte leurs conditions générales et leurs processus de vérification **KYC/LCB-FT** (Know Your Customer / Lutte contre le Blanchiment et le Financement du Terrorisme).
+8.1. **Prestataires de paiement.** Les paiements sont traités **exclusivement** par des Prestataires tiers certifiés **PCI-DSS** : **Stripe Payments Europe Ltd.** (Irlande, UE) et/ou **PayPal (Europe) S.à r.l. et Cie, S.C.A.** (Luxembourg, UE). Le choix du Prestataire dépend du pays de résidence/d'exercice de l'Aidant (Stripe couvre actuellement 44 pays, PayPal 150+ pays). L'Aidant **accepte expressément** les conditions générales et les processus de vérification **KYC/LCB-FT** (Know Your Customer / Lutte contre le Blanchiment et le Financement du Terrorisme) du ou des Prestataires applicables. **SOS Expat n'a aucun rôle de banque, d'établissement de paiement ou d'établissement de crédit** ; SOS Expat n'est qu'un client commercial des Prestataires de paiement précités.
 
 8.2. **KYC obligatoire pour recevoir les versements.** L'Aidant **doit compléter avec succès** la procédure de vérification d'identité (KYC) auprès du Prestataire de paiement **avant** de pouvoir recevoir tout versement. **Aucun paiement ne sera effectué** tant que le KYC n'est pas validé. SOS Expat décline toute responsabilité pour les retards de paiement liés à un KYC incomplet ou refusé.
 
@@ -883,7 +883,13 @@ La Plateforme, ses marques, logos, bases de données et contenus sont protégés
 
 13.1. **Anti-corruption.** L'Aidant s'engage à ne pas offrir, promettre ou verser de pots-de-vin ou avantages indus à des agents publics ou privés. Il respecte les lois anti-corruption applicables (FCPA, UK Bribery Act, loi Sapin II, etc.).
 
-13.2. **Confidentialité des échanges.** Les échanges réalisés via la Plateforme (messages, appels téléphoniques) sont **confidentiels**. L'Aidant s'interdit de les enregistrer, divulguer ou utiliser à d'autres fins que la prestation convenue, sauf autorisation écrite ou obligation légale.
+13.2. **Confidentialité des échanges et politique d'enregistrement.** Les échanges réalisés via la Plateforme (messages, appels téléphoniques) sont **confidentiels**.
+
+**Politique d'enregistrement :**
+- (a) **Par défaut**, SOS Expat **n'enregistre PAS le contenu audio** des appels entre Aidant et Utilisateur. Seules les **métadonnées techniques** sont conservées (horodatage, durée, identifiants Twilio, statut) à des fins de facturation, anti-fraude et résolution de litiges techniques ;
+- (b) SOS Expat **se réserve la possibilité** d'activer un enregistrement audio dans des cas strictement limités : suspicion de fraude, signalement d'abus, instruction d'une autorité judiciaire compétente, protection d'intérêts vitaux. Les parties seront informées en début d'appel ;
+- (c) Lorsqu'un enregistrement est activé, il est conservé au maximum **six (6) mois** (sauf prolongation imposée par une procédure judiciaire), conformément aux recommandations CNIL et au RGPD ;
+- (d) **L'Aidant s'interdit lui-même** d'enregistrer, retranscrire intégralement, divulguer ou utiliser les échanges à d'autres fins que la prestation convenue, sauf autorisation écrite de l'Utilisateur ou obligation légale. Toute violation peut entraîner la suspension immédiate du compte et l'engagement de la responsabilité civile et/ou pénale de l'Aidant.
 
 13.3. **Non-sollicitation.** Pendant la durée des CGU et **douze (12) mois** après leur résiliation, l'Aidant s'interdit de solliciter directement les Utilisateurs rencontrés via la Plateforme pour éviter les Frais de Mise en relation.
 
@@ -905,7 +911,7 @@ La Plateforme, ses marques, logos, bases de données et contenus sont protégés
 
 14.4. **Interprétation.** Les intitulés sont indicatifs. Aucune règle **contra proferentem**.
 
-14.5. **Langues.** Des traductions peuvent être fournies ; **le français prévaut** pour l'interprétation.
+14.5. **Langues.** Des traductions peuvent être fournies à titre informatif ; **l'anglais prévaut** pour l'interprétation en cas de divergence (cohérence avec les CGU Avocats et Clients).
 
 14.6. **Nullité partielle.** Si une stipulation est nulle/inapplicable, le reste demeure en vigueur ; remplaçable par une stipulation valide d'effet équivalent lorsque possible.
 
@@ -924,7 +930,7 @@ Pour toute question ou demande légale, contactez-nous :
 
 **SOS Expat by WorldExpat OÜ** (the "**Platform**", "**SOS**", "**we**")
 
-**Version 2.2 – Last updated: 16 June 2025**
+**Version 3.1 – Last updated: April 25, 2026**
 
 ---
 
@@ -1030,7 +1036,7 @@ Pour toute question ou demande légale, contactez-nous :
 
 ## 8. Payments – KYC/AML – Sanctions
 
-8.1. **Payment Providers.** Payments are processed by **third-party Providers** (Stripe, etc.). The Helper agrees to their terms and conditions and their **KYC/AML** (Know Your Customer / Anti-Money Laundering) verification processes.
+8.1. **Payment Providers.** Payments are processed **exclusively** by **PCI-DSS certified** third-party Providers: **Stripe Payments Europe Ltd.** (Ireland, EU) and/or **PayPal (Europe) S.à r.l. et Cie, S.C.A.** (Luxembourg, EU). The applicable Provider depends on the Helper's country of residence/practice (Stripe currently covers 44 countries, PayPal 150+ countries). The Helper **expressly agrees** to the terms and conditions and the **KYC/AML** (Know Your Customer / Anti-Money Laundering) verification processes of the applicable Provider(s). **SOS Expat is NOT a bank, payment institution, or credit institution**; SOS Expat is solely a commercial customer of the aforementioned Payment Providers.
 
 8.2. **KYC required to receive payments.** The Helper **must successfully complete** the identity verification process (KYC) with the Payment Provider **before** receiving any payment. **No payment will be made** until KYC is validated. SOS Expat disclaims any responsibility for payment delays related to incomplete or rejected KYC.
 
@@ -1120,7 +1126,13 @@ The Platform, its trademarks, logos, databases, and content are protected. No ri
 
 13.1. **Anti-corruption.** The Helper agrees not to offer, promise, or pay bribes or undue benefits to public or private officials. The Helper complies with applicable anti-corruption laws (FCPA, UK Bribery Act, Sapin II Act, etc.).
 
-13.2. **Confidentiality of communications.** Communications made through the Platform (messages, calls, videos) are **confidential**. The Helper shall not record, disclose, or use them for purposes other than the agreed service, except with written authorization or legal obligation.
+13.2. **Confidentiality of communications and recording policy.** Communications made through the Platform (messages, calls, videos) are **confidential**.
+
+**Recording policy:**
+- (a) **By default**, SOS Expat **does NOT record the audio content** of calls between Helper and User. Only **technical metadata** is retained (timestamp, duration, Twilio identifiers, status) for billing, anti-fraud, and technical dispute resolution purposes;
+- (b) SOS Expat **reserves the right** to enable audio recording in strictly limited cases: suspicion of fraud, abuse report, order from a competent judicial authority, protection of vital interests. The parties will be informed at the start of the call;
+- (c) When a recording is enabled, it is retained for a maximum of **six (6) months** (unless extended by judicial proceedings), in line with CNIL recommendations and GDPR;
+- (d) **The Helper is themselves prohibited** from recording, fully transcribing, disclosing, or using the exchanges for any purpose other than the agreed service, except with the User's written authorization or by legal obligation. Any breach may result in immediate account suspension and engage the Helper's civil and/or criminal liability.
 
 13.3. **Non-solicitation.** During the term of these Terms and **twelve (12) months** after termination, the Helper shall not directly solicit Users met through the Platform to avoid Connection Fees.
 
@@ -1142,7 +1154,7 @@ The Platform, its trademarks, logos, databases, and content are protected. No ri
 
 14.4. **Interpretation**: Headings are for convenience only. No **contra proferentem** rule applies.
 
-14.5. **Languages**: Translations may be provided; French prevails for interpretation.
+14.5. **Languages**: Translations may be provided for informational purposes; **English prevails** for interpretation in case of discrepancy (consistent with the Lawyer and Client Terms).
 
 14.6. **Severability**: If any provision is invalid/unenforceable, the remainder remains effective; it may be replaced by a valid provision of equivalent effect where possible.
 
@@ -1160,7 +1172,7 @@ For any question or legal request, please contact us:
 
 **SOS Expat d'WorldExpat OÜ** (далее « **Платформа** », « **SOS** », « **мы** »)
 
-**Версия 2.2 – Последнее обновление: 16 июня 2025 года**
+**Версия 3.1 – Последнее обновление: 25 апреля 2026 года**
 
 ---
 
@@ -1347,7 +1359,7 @@ For any question or legal request, please contact us:
 
 **SOS Expat by WorldExpat OÜ** (यहाँ “**प्लेटफ़ॉर्म**”, “**SOS**”, “**हम**” के रूप में संदर्भित है)
 
-**संस्करण 2.2 – अंतिम अद्यतन: 16 जून 2025**
+**संस्करण 3.1 – अंतिम अद्यतन: 25 अप्रैल 2026**
 
 ---
 
@@ -1537,7 +1549,7 @@ For any question or legal request, please contact us:
 **SOS Expat por WorldExpat OÜ** (la "**Plataforma**", "**SOS**", "**nosotros**")
 
 
-**Versión 2.2 – Última actualización: 16 de junio de 2025**
+**Versión 3.1 – Última actualización: 25 de abril de 2026**
 
 
 ---
@@ -1733,7 +1745,7 @@ La **Plataforma**, sus **marcas, logotipos, bases de datos y contenidos** están
 
 12.4. **Interpretación:** Los títulos son indicativos. No se aplica la regla *contra proferentem*.
 
-12.5. **Idiomas:** Pueden proporcionarse traducciones; el francés prevalece para fines de interpretación.
+12.5. **Idiomas:** Pueden proporcionarse traducciones con fines informativos; **el inglés prevalece** para fines de interpretación en caso de discrepancia (coherente con los Términos de Abogados y Clientes).
 
 12.6. **Nulidad parcial:** Si alguna disposición es nula o inaplicable, el resto permanece vigente; podrá reemplazarse por una disposición válida de efecto equivalente siempre que sea posible.
 
@@ -1752,7 +1764,7 @@ Para cualquier pregunta o solicitud legal, contáctenos:
 
 **SOS Expat von WorldExpat OÜ** (estnische Gesellschaft, Registernr. 16885621, Sitz: Harju maakond, Tallinn, Kesklinna linnaosa, Tornimäe tn 3/5/7, 10145, Estland) – nachfolgend die « **Plattform** », « **SOS** », « **wir** »
 
-**Version 3.0 – Letzte Aktualisierung: 1. Februar 2026**
+**Version 3.1 – Letzte Aktualisierung: 25. April 2026**
 
 ---
 
@@ -2104,7 +2116,7 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 **SOS Expat by WorldExpat OÜ（“**平台**”、“**SOS**”、“**我们**”） 
 
-**版本 2.2 – 最后更新：2025 年 6 月 16 日**
+**版本 3.1 – 最后更新：2026 年 4 月 25 日**
 
 ## 1. 定义
 
@@ -2290,7 +2302,7 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 **SOS Expat** هي خدمة تديرها **WorldExpat OÜ**، شركة مسجلة وفق القانون الإستوني (سجل الشركات رقم 16885621)، ومقرها الرئيسي في Harju maakond, Tallinn, Kesklinna linnaosa, Tornimäe tn 3/5/7, 10145، إستونيا (يُشار إليها فيما يلي بـ"**المنصة**" أو "**SOS**" أو "**SOS Expat**" أو "**نحن**").
 
-**الإصدار 3.0 – آخر تحديث: 1 فبراير 2026**
+**الإصدار 3.1 – آخر تحديث: 25 أبريل 2026**
 
 ---
 
@@ -2630,7 +2642,7 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 **SOS Expat by WorldExpat OÜ** (doravante denominado “**Plataforma**”, “**SOS**” ou “**nós**”)
 
-**Versão 2.2 – Última atualização: 16 de junho de 2025**
+**Versão 3.1 – Última atualização: 25 de abril de 2026**
 
 ---
 

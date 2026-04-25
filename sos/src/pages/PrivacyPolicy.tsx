@@ -667,16 +667,36 @@ const PrivacyPolicy: React.FC = () => {
 
 **${t.lastUpdated}**
 
+**डेटा नियंत्रक**: WorldExpat OÜ (एस्टोनियाई कंपनी), तालिन, एस्टोनिया। लागू कानूनी ढांचा: **विनियमन (EU) 2016/679 (GDPR)**।
+
 ---
 
 ## 1. ${t.dataCollection}
-हम केवल **सख्ती से आवश्यक** डेटा एकत्र करते हैं ताकि हमारी सेवाएं प्रदान की जा सकें (संपर्क विवरण, तकनीकी मेटाडेटा, अनुरोध विवरण)।
+हम केवल **सख्ती से आवश्यक** डेटा एकत्र करते हैं:
+- **पहचान और संपर्क**: नाम, ईमेल, फोन, देश;
+- **भुगतान डेटा**: **PCI-DSS** प्रमाणित प्रदाताओं (Stripe और PayPal) द्वारा **विशेष रूप से** संसाधित। **SOS Expat किसी भी कार्ड डेटा को संग्रहीत नहीं करता**;
+- **कॉल मेटाडेटा**: समय, अवधि (कॉल **सामग्री डिफ़ॉल्ट रूप से रिकॉर्ड नहीं की जाती**);
+- **कनेक्शन डेटा**: IP, सत्र, user-agent;
+- **अनुरोध सामग्री**।
 
 ## 2. ${t.dataProtection}
-**ट्रांज़िट** और **स्टोरेज** में एन्क्रिप्शन जहां संभव हो। मजबूत तकनीकी और संगठनात्मक सुरक्षा उपाय।
+**ट्रांज़िट** (TLS 1.2+) और **स्टोरेज** में एन्क्रिप्शन जहां संभव हो। **उल्लंघन की 72 घंटे के भीतर अधिसूचना** (GDPR अनु. 33)।
 
 ## 3. ${t.dataSharing}
-कोई **डेटा पुनर्विक्रय** नहीं। सेवा प्रदान करने के लिए **सत्यापित** प्रोसेसर के साथ सीमित साझाकरण।
+
+### 3.1. कोई पुनर्विक्रय नहीं
+कोई **डेटा व्यापार** नहीं।
+
+### 3.2. प्रोसेसर (GDPR अनु. 28)
+अधिकृत प्रोसेसरों की सूची, **डेटा प्रोसेसिंग समझौतों (DPA)** के तहत:
+- **Stripe Payments Europe Ltd.** — भुगतान, KYC/AML — आयरलैंड (EU) + USA
+- **PayPal (Europe) S.à r.l.** — वैकल्पिक भुगतान, अंतरराष्ट्रीय स्थानांतरण — लक्ज़मबर्ग (EU)
+- **Twilio Inc.** — टेलीफोनी, IVR, SMS — USA (DPF)
+- **Google Cloud / Firebase (Google Ireland)** — होस्टिंग, डेटाबेस, प्रमाणीकरण — EU + USA
+- **Cloudflare Inc.** — CDN, anti-DDoS, सुरक्षा — वैश्विक (DPF)
+- **Zoho Corporation B.V.** — व्यावसायिक मेल, समर्थन — EU / भारत
+
+सभी प्रदाता **EU मानक संविदात्मक खंडों** या **Data Privacy Framework** के तहत हैं।
 
 ## 4. ${t.yourRights}
 - ${t.rights[0]}
@@ -684,6 +704,8 @@ const PrivacyPolicy: React.FC = () => {
 - ${t.rights[2]}
 - ${t.rights[3]}
 - ${t.rights[4]}
+
+**अवधारण**: अनुबंधात्मक संबंध की अवधि + वैधानिक सीमा अवधि (5-10 वर्ष)।
 
 ---
 
@@ -697,16 +719,42 @@ https://sos-expat.com/contact
 
 **${t.lastUpdated}**
 
+**Responsable de traitement** : WorldExpat OÜ (société de droit estonien), Tallinn, Estonie. Cadre juridique applicable : **Règlement (UE) 2016/679 (RGPD / GDPR)** et législations locales équivalentes.
+
 ---
 
 ## 1. ${t.dataCollection}
-Nous collectons les **données strictement nécessaires** à la fourniture de nos services (coordonnées, métadonnées techniques, détails de la demande).
+Nous collectons les **données strictement nécessaires** à la fourniture de nos services :
+- **Identité et contact** : nom, prénom, email, téléphone, pays de résidence ;
+- **Données de paiement** : traitées **exclusivement** par nos prestataires de paiement certifiés **PCI-DSS** (Stripe et PayPal). **SOS Expat ne stocke aucune donnée de carte bancaire** ;
+- **Métadonnées d'appel** : horodatage, durée, identifiants techniques (les **contenus** d'appel ne sont **pas enregistrés** par défaut) ;
+- **Données de connexion** : adresse IP, identifiant de session, user-agent, journaux d'accès ;
+- **Contenu de la demande** : objet et description fournis par l'utilisateur.
 
 ## 2. ${t.dataProtection}
-Chiffrement **en transit** et **au repos** lorsque possible. Mesures techniques et organisationnelles renforcées.
+Chiffrement **en transit** (TLS 1.2+) et **au repos** lorsque possible. Mesures techniques et organisationnelles renforcées (contrôle d'accès, audits, journalisation, principe de minimisation). **Notification des violations sous 72h** conformément à l'article 33 RGPD.
 
 ## 3. ${t.dataSharing}
-Aucun **commerce des données**. Partage limité à des prestataires **vérifiés** pour l'exécution du service.
+
+### 3.1. Aucune revente
+Aucun **commerce des données**. Aucune cession à des tiers à des fins publicitaires.
+
+### 3.2. Sous-traitants (article 28 RGPD)
+Nous partageons strictement le minimum nécessaire avec les sous-traitants suivants, sous **contrats de sous-traitance (DPA)** conformes au RGPD :
+
+| Sous-traitant | Finalité | Localisation des données | Garanties |
+|---|---|---|---|
+| **Stripe Payments Europe Ltd.** | Encaissement des paiements, KYC/LCB-FT, versements aux prestataires | Irlande (UE) + USA | Clauses contractuelles types UE, certification PCI-DSS niveau 1 |
+| **PayPal (Europe) S.à r.l. et Cie, S.C.A.** | Paiement alternatif client, versements internationaux aux prestataires | Luxembourg (UE) | Clauses contractuelles types UE, certification PCI-DSS |
+| **Twilio Inc.** | Mise en relation téléphonique (acheminement d'appel, IVR, SMS, conférence) | USA (DPF Data Privacy Framework) | DPF, clauses contractuelles types UE |
+| **Google Cloud / Firebase (Google Ireland Ltd.)** | Hébergement applicatif, base de données, authentification, fonctions serverless | UE (europe-west1, europe-west3) + USA (us-central1, nam7) | Clauses contractuelles types UE, certifications ISO 27001/27017/27018, SOC 2 |
+| **Cloudflare Inc.** | CDN, protection anti-DDoS, sécurité applicative, edge cache | Mondial (DPF) | DPF, clauses contractuelles types UE |
+| **Zoho Corporation B.V.** | Messagerie professionnelle, support, transactionnel | UE / Inde | Clauses contractuelles types UE |
+
+La liste ci-dessus est **mise à jour** en cas de changement matériel. Aucun nouveau sous-traitant n'est ajouté sans information préalable.
+
+### 3.3. Transferts internationaux
+Les transferts de données hors EEE sont encadrés par des **clauses contractuelles types** approuvées par la Commission européenne, des **décisions d'adéquation**, ou le **Data Privacy Framework** (USA).
 
 ## 4. ${t.yourRights}
 - ${t.rights[0]}
@@ -714,6 +762,8 @@ Aucun **commerce des données**. Partage limité à des prestataires **vérifié
 - ${t.rights[2]}
 - ${t.rights[3]}
 - ${t.rights[4]}
+
+**Conservation** : données conservées pendant la durée de la relation contractuelle, puis archivées pendant les durées légales de prescription (généralement 5 à 10 ans selon le type de donnée et l'obligation légale applicable). Les **journaux d'acceptation des CGU** sont conservés 10 ans (preuve eIDAS).
 
 ---
 
@@ -726,16 +776,42 @@ https://sos-expat.com/contact
 
 **${t.lastUpdated}**
 
+**Data Controller**: WorldExpat OÜ (Estonian company), Tallinn, Estonia. Applicable legal framework: **Regulation (EU) 2016/679 (GDPR)** and equivalent local laws.
+
 ---
 
 ## 1. ${t.dataCollection}
-We only collect **strictly necessary** data to deliver our services (contact details, technical metadata, request details).
+We collect only **strictly necessary** data to deliver our services:
+- **Identity & contact**: first name, last name, email, phone, country of residence;
+- **Payment data**: processed **exclusively** by our **PCI-DSS certified** payment providers (Stripe and PayPal). **SOS Expat does NOT store any card data**;
+- **Call metadata**: timestamps, duration, technical identifiers (call **contents are NOT recorded by default**);
+- **Connection data**: IP address, session ID, user-agent, access logs;
+- **Request content**: subject and description provided by the user.
 
 ## 2. ${t.dataProtection}
-Encryption **in transit** and **at rest** where possible. Strong technical and organizational safeguards.
+Encryption **in transit** (TLS 1.2+) and **at rest** where possible. Strong technical and organizational safeguards (access controls, audits, logging, data minimization). **Breach notification within 72h** as required by GDPR article 33.
 
 ## 3. ${t.dataSharing}
-No **data resale**. Limited sharing with **vetted** processors to provide the service.
+
+### 3.1. No resale
+No **data trading**. No sharing with third parties for advertising purposes.
+
+### 3.2. Processors (GDPR article 28)
+We share strictly the minimum necessary with the following processors, under **Data Processing Agreements (DPAs)** compliant with GDPR:
+
+| Processor | Purpose | Data location | Safeguards |
+|---|---|---|---|
+| **Stripe Payments Europe Ltd.** | Payment collection, KYC/AML, payouts to providers | Ireland (EU) + USA | EU SCCs, PCI-DSS Level 1 |
+| **PayPal (Europe) S.à r.l. et Cie, S.C.A.** | Alternative client payment, international payouts | Luxembourg (EU) | EU SCCs, PCI-DSS |
+| **Twilio Inc.** | Phone connection (call routing, IVR, SMS, conference) | USA (DPF Data Privacy Framework) | DPF, EU SCCs |
+| **Google Cloud / Firebase (Google Ireland Ltd.)** | Application hosting, database, authentication, serverless functions | EU (europe-west1, europe-west3) + USA (us-central1, nam7) | EU SCCs, ISO 27001/27017/27018, SOC 2 |
+| **Cloudflare Inc.** | CDN, anti-DDoS, application security, edge cache | Global (DPF) | DPF, EU SCCs |
+| **Zoho Corporation B.V.** | Business email, support, transactional messages | EU / India | EU SCCs |
+
+This list is **updated** in case of material change. No new processor is added without prior notice.
+
+### 3.3. International transfers
+Transfers of data outside the EEA are governed by **EU Standard Contractual Clauses** approved by the European Commission, **adequacy decisions**, or the **Data Privacy Framework** (USA).
 
 ## 4. ${t.yourRights}
 - ${t.rights[0]}
@@ -743,6 +819,8 @@ No **data resale**. Limited sharing with **vetted** processors to provide the se
 - ${t.rights[2]}
 - ${t.rights[3]}
 - ${t.rights[4]}
+
+**Retention**: data is kept for the duration of the contractual relationship, then archived for statutory limitation periods (generally 5 to 10 years depending on data type and applicable legal obligation). **Terms acceptance logs** are kept for 10 years (eIDAS evidence).
 
 ---
 
@@ -751,54 +829,40 @@ https://sos-expat.com/contact
 `;
 
 const defaultCh = `
-  ${t.title}
-
-  ${t.lastUpdated}
-
-  1. ${t.dataCollection}
-
-  我们仅收集为提供服务所严格必要的数据（联系方式、技术元数据、请求详情）。
-
-  2. ${t.dataProtection}
-
-  在可能的情况下，对数据进行传输中和静态存储时的加密。采用严格的技术和组织安全措施。
-
-  3. ${t.dataSharing}
-
-  不进行数据转售。仅与经过审查的处理方有限共享，以提供服务。
-
-  4. ${t.yourRights}
-
-  ${t.rights[0]}
-
-  ${t.rights[1]}
-
-  ${t.rights[2]}
-
-  ${t.rights[3]}
-
-  ${t.rights[4]}
-
-  5. ${t.contact}
-
-  https://sos-expat.com/contact
-`
-
-const defaultEs = `
-# Política de Privacidad
+# ${t.title}
 
 **${t.lastUpdated}**
+
+**数据控制者**：WorldExpat OÜ（爱沙尼亚公司），塔林，爱沙尼亚。适用法律框架：**欧盟法规 2016/679 (GDPR)**。
 
 ---
 
 ## 1. ${t.dataCollection}
-Solo recopilamos los datos **estrictamente necesarios** para proporcionar nuestros servicios (datos de contacto, metadatos técnicos, detalles de la solicitud).
+我们仅收集**严格必要**的数据：
+- **身份和联系方式**：姓名、电子邮件、电话、国家；
+- **支付数据**：**仅由** **PCI-DSS** 认证的提供商（Stripe 和 PayPal）处理。**SOS Expat 不存储任何银行卡数据**；
+- **通话元数据**：时间戳、时长（通话**内容默认不录制**）；
+- **连接数据**：IP、会话、user-agent；
+- **请求内容**。
 
 ## 2. ${t.dataProtection}
-Cifrado **en tránsito** y **en reposo** cuando sea posible. Fuertes salvaguardas técnicas y organizativas.
+**传输中**（TLS 1.2+）和**静态存储时**加密（在可能的情况下）。**违规通知 72 小时内**（GDPR 第 33 条）。
 
 ## 3. ${t.dataSharing}
-Sin **reventa de datos**. Compartición limitada con procesadores **verificados** para proporcionar el servicio.
+
+### 3.1. 不进行转售
+不进行**数据交易**。
+
+### 3.2. 处理方（GDPR 第 28 条）
+根据**数据处理协议 (DPA)** 授权的处理方列表：
+- **Stripe Payments Europe Ltd.** — 支付、KYC/AML — 爱尔兰（欧盟）+ 美国
+- **PayPal (Europe) S.à r.l.** — 替代支付、国际转账 — 卢森堡（欧盟）
+- **Twilio Inc.** — 电话、IVR、SMS — 美国 (DPF)
+- **Google Cloud / Firebase (Google Ireland)** — 主机托管、数据库、身份验证 — 欧盟 + 美国
+- **Cloudflare Inc.** — CDN、anti-DDoS、安全 — 全球 (DPF)
+- **Zoho Corporation B.V.** — 商务邮件、支持 — 欧盟 / 印度
+
+所有提供商均受**欧盟标准合同条款**或**数据隐私框架**约束。
 
 ## 4. ${t.yourRights}
 - ${t.rights[0]}
@@ -806,6 +870,59 @@ Sin **reventa de datos**. Compartición limitada con procesadores **verificados*
 - ${t.rights[2]}
 - ${t.rights[3]}
 - ${t.rights[4]}
+
+**保留期**：合同关系期间 + 法定时效期间（5-10 年）。
+
+---
+
+## 5. ${t.contact}
+https://sos-expat.com/contact
+`
+
+const defaultEs = `
+# Política de Privacidad
+
+**${t.lastUpdated}**
+
+**Responsable del tratamiento**: WorldExpat OÜ (sociedad estonia), Tallin, Estonia. Marco legal aplicable: **Reglamento (UE) 2016/679 (RGPD / GDPR)**.
+
+---
+
+## 1. ${t.dataCollection}
+Solo recopilamos datos **estrictamente necesarios** para proporcionar nuestros servicios:
+- **Identidad y contacto**: nombre, email, teléfono, país;
+- **Datos de pago**: procesados **exclusivamente** por nuestros proveedores certificados **PCI-DSS** (Stripe y PayPal). **SOS Expat no almacena datos de tarjetas**;
+- **Metadatos de llamada**: horarios, duración, identificadores técnicos (los **contenidos** no se graban por defecto);
+- **Datos de conexión**: IP, sesión, user-agent;
+- **Contenido de la solicitud**.
+
+## 2. ${t.dataProtection}
+Cifrado **en tránsito** (TLS 1.2+) y **en reposo** cuando sea posible. **Notificación de violaciones en 72h** (RGPD art. 33).
+
+## 3. ${t.dataSharing}
+
+### 3.1. Sin reventa
+Sin **comercio de datos**.
+
+### 3.2. Subcontratistas (RGPD art. 28)
+Lista de subcontratistas autorizados, sujetos a **acuerdos de tratamiento (DPA)**:
+- **Stripe Payments Europe Ltd.** — pagos, KYC/AML — Irlanda (UE) + EE.UU.
+- **PayPal (Europe) S.à r.l.** — pagos alternativos, transferencias internacionales — Luxemburgo (UE)
+- **Twilio Inc.** — telefonía, IVR, SMS — EE.UU. (DPF)
+- **Google Cloud / Firebase (Google Ireland)** — hosting, base de datos, autenticación — UE + EE.UU.
+- **Cloudflare Inc.** — CDN, anti-DDoS, seguridad — global (DPF)
+- **Zoho Corporation B.V.** — correo electrónico, soporte — UE / India
+
+Todos los proveedores firmaron **Cláusulas Contractuales Tipo de la UE** o están bajo **Data Privacy Framework**.
+
+## 4. ${t.yourRights}
+- ${t.rights[0]}
+- ${t.rights[1]}
+- ${t.rights[2]}
+- ${t.rights[3]}
+- ${t.rights[4]}
+
+**Conservación**: durante la relación contractual + plazos de prescripción legales (5-10 años).
 
 ---
 
@@ -818,16 +935,36 @@ const defaultDe = `
 
 **${t.lastUpdated}**
 
+**Verantwortlicher**: WorldExpat OÜ (estnische Gesellschaft), Tallinn, Estland. Geltender Rechtsrahmen: **Verordnung (EU) 2016/679 (DSGVO / GDPR)**.
+
 ---
 
 ## 1. ${t.dataCollection}
-Wir erheben nur **streng notwendige** Daten zur Erbringung unserer Dienstleistungen (Kontaktdaten, technische Metadaten, Anfragedetails).
+Wir erheben nur **streng notwendige** Daten:
+- **Identität & Kontakt**: Name, E-Mail, Telefon, Land;
+- **Zahlungsdaten**: ausschließlich von **PCI-DSS-zertifizierten** Anbietern (Stripe und PayPal) verarbeitet. **SOS Expat speichert KEINE Kartendaten**;
+- **Anrufmetadaten**: Zeitstempel, Dauer (Anrufinhalte werden **nicht** standardmäßig aufgezeichnet);
+- **Verbindungsdaten**: IP, Sitzung, User-Agent;
+- **Anfrageinhalt**.
 
 ## 2. ${t.dataProtection}
-Verschlüsselung **während der Übertragung** und **im Ruhezustand** wo möglich. Starke technische und organisatorische Schutzmaßnahmen.
+Verschlüsselung **in Transit** (TLS 1.2+) und **at Rest** wo möglich. **Meldung von Datenschutzverletzungen innerhalb von 72h** (DSGVO Art. 33).
 
 ## 3. ${t.dataSharing}
-Kein **Datenverkauf**. Begrenzte Weitergabe an **geprüfte** Auftragsverarbeiter zur Serviceerbringung.
+
+### 3.1. Kein Verkauf
+Kein **Datenhandel**.
+
+### 3.2. Auftragsverarbeiter (DSGVO Art. 28)
+Liste autorisierter Auftragsverarbeiter unter **Datenverarbeitungsverträgen (DPA)**:
+- **Stripe Payments Europe Ltd.** — Zahlungen, KYC/AML — Irland (EU) + USA
+- **PayPal (Europe) S.à r.l.** — alternative Zahlungen, internationale Auszahlungen — Luxemburg (EU)
+- **Twilio Inc.** — Telefonie, IVR, SMS — USA (DPF)
+- **Google Cloud / Firebase (Google Ireland)** — Hosting, Datenbank, Auth — EU + USA
+- **Cloudflare Inc.** — CDN, Anti-DDoS, Sicherheit — global (DPF)
+- **Zoho Corporation B.V.** — Geschäftsmail, Support — EU / Indien
+
+Alle Anbieter unter **EU-Standardvertragsklauseln** oder **Data Privacy Framework**.
 
 ## 4. ${t.yourRights}
 - ${t.rights[0]}
@@ -835,6 +972,8 @@ Kein **Datenverkauf**. Begrenzte Weitergabe an **geprüfte** Auftragsverarbeiter
 - ${t.rights[2]}
 - ${t.rights[3]}
 - ${t.rights[4]}
+
+**Aufbewahrung**: während der Vertragsbeziehung + gesetzliche Verjährungsfristen (5–10 Jahre).
 
 ---
 
@@ -847,16 +986,36 @@ const defaultPt = `
 
 **${t.lastUpdated}**
 
+**Responsável pelo tratamento**: WorldExpat OÜ (sociedade estoniana), Tallinn, Estônia. Marco legal aplicável: **Regulamento (UE) 2016/679 (RGPD / GDPR)**.
+
 ---
 
 ## 1. ${t.dataCollection}
-Coletamos apenas os dados **estritamente necessários** para fornecer nossos serviços (dados de contato, metadados técnicos, detalhes da solicitação).
+Coletamos apenas os dados **estritamente necessários**:
+- **Identidade e contato**: nome, e-mail, telefone, país;
+- **Dados de pagamento**: processados **exclusivamente** por provedores certificados **PCI-DSS** (Stripe e PayPal). **SOS Expat NÃO armazena dados de cartão**;
+- **Metadados de chamada**: horários, duração (os **conteúdos** não são gravados por padrão);
+- **Dados de conexão**: IP, sessão, user-agent;
+- **Conteúdo da solicitação**.
 
 ## 2. ${t.dataProtection}
-Criptografia **em trânsito** e **em repouso** quando possível. Fortes salvaguardas técnicas e organizacionais.
+Criptografia **em trânsito** (TLS 1.2+) e **em repouso** quando possível. **Notificação de violações em 72h** (RGPD art. 33).
 
 ## 3. ${t.dataSharing}
-Sem **revenda de dados**. Compartilhamento limitado com processadores **verificados** para fornecer o serviço.
+
+### 3.1. Sem revenda
+Sem **comércio de dados**.
+
+### 3.2. Subcontratantes (RGPD art. 28)
+Lista de subcontratantes autorizados, sob **Acordos de Tratamento (DPA)**:
+- **Stripe Payments Europe Ltd.** — pagamentos, KYC/AML — Irlanda (UE) + EUA
+- **PayPal (Europe) S.à r.l.** — pagamentos alternativos, transferências internacionais — Luxemburgo (UE)
+- **Twilio Inc.** — telefonia, IVR, SMS — EUA (DPF)
+- **Google Cloud / Firebase (Google Ireland)** — hospedagem, banco de dados, autenticação — UE + EUA
+- **Cloudflare Inc.** — CDN, anti-DDoS, segurança — global (DPF)
+- **Zoho Corporation B.V.** — e-mail corporativo, suporte — UE / Índia
+
+Todos os provedores assinaram **Cláusulas Contratuais Padrão da UE** ou estão sob **Data Privacy Framework**.
 
 ## 4. ${t.yourRights}
 - ${t.rights[0]}
@@ -864,6 +1023,8 @@ Sem **revenda de dados**. Compartilhamento limitado com processadores **verifica
 - ${t.rights[2]}
 - ${t.rights[3]}
 - ${t.rights[4]}
+
+**Conservação**: durante a relação contratual + prazos de prescrição legais (5-10 anos).
 
 ---
 
@@ -876,16 +1037,36 @@ const defaultRu = `
 
 **${t.lastUpdated}**
 
+**Контролёр данных**: WorldExpat OÜ (эстонская компания), Таллин, Эстония. Применимая правовая база: **Регламент (ЕС) 2016/679 (GDPR / РОПД)**.
+
 ---
 
 ## 1. ${t.dataCollection}
-Мы собираем только **строго необходимые** данные для предоставления наших услуг (контактные данные, технические метаданные, детали запроса).
+Мы собираем только **строго необходимые** данные:
+- **Идентификация и контакт**: имя, email, телефон, страна;
+- **Платёжные данные**: обрабатываются **исключительно** сертифицированными **PCI-DSS** провайдерами (Stripe и PayPal). **SOS Expat НЕ хранит данные банковских карт**;
+- **Метаданные звонков**: время, длительность (**содержание** не записывается по умолчанию);
+- **Данные подключения**: IP, сессия, user-agent;
+- **Содержание запроса**.
 
 ## 2. ${t.dataProtection}
-Шифрование **при передаче** и **при хранении** где возможно. Строгие технические и организационные меры защиты.
+Шифрование **при передаче** (TLS 1.2+) и **при хранении** где возможно. **Уведомление о нарушениях в течение 72ч** (GDPR ст. 33).
 
 ## 3. ${t.dataSharing}
-Никакой **перепродажи данных**. Ограниченный обмен с **проверенными** обработчиками для предоставления услуги.
+
+### 3.1. Без перепродажи
+Никакой **торговли данными**.
+
+### 3.2. Субподрядчики (GDPR ст. 28)
+Список авторизованных субподрядчиков по **соглашениям об обработке данных (DPA)**:
+- **Stripe Payments Europe Ltd.** — платежи, KYC/AML — Ирландия (ЕС) + США
+- **PayPal (Europe) S.à r.l.** — альтернативные платежи, международные переводы — Люксембург (ЕС)
+- **Twilio Inc.** — телефония, IVR, SMS — США (DPF)
+- **Google Cloud / Firebase (Google Ireland)** — хостинг, БД, аутентификация — ЕС + США
+- **Cloudflare Inc.** — CDN, анти-DDoS, безопасность — глобально (DPF)
+- **Zoho Corporation B.V.** — корпоративная почта, поддержка — ЕС / Индия
+
+Все провайдеры под **Стандартными договорными положениями ЕС** или **Data Privacy Framework**.
 
 ## 4. ${t.yourRights}
 - ${t.rights[0]}
@@ -893,6 +1074,8 @@ const defaultRu = `
 - ${t.rights[2]}
 - ${t.rights[3]}
 - ${t.rights[4]}
+
+**Хранение**: на время действия договора + установленные законом сроки давности (5–10 лет).
 
 ---
 
@@ -905,16 +1088,36 @@ const defaultAr = `
 
 **${t.lastUpdated}**
 
+**المسؤول عن المعالجة**: WorldExpat OÜ (شركة إستونية)، تالين، إستونيا. الإطار القانوني المطبق: **اللائحة (الاتحاد الأوروبي) 2016/679 (اللائحة العامة لحماية البيانات / GDPR)**.
+
 ---
 
 ## 1. ${t.dataCollection}
-نجمع فقط البيانات **الضرورية للغاية** لتقديم خدماتنا (بيانات الاتصال، البيانات الوصفية التقنية، تفاصيل الطلب).
+نجمع فقط البيانات **الضرورية للغاية**:
+- **الهوية والاتصال**: الاسم، البريد الإلكتروني، الهاتف، البلد؛
+- **بيانات الدفع**: تتم معالجتها **حصرياً** من قبل مزودين معتمدين **PCI-DSS** (Stripe و PayPal). **SOS Expat لا يخزن أي بيانات بطاقات**؛
+- **بيانات تعريف المكالمة**: الطوابع الزمنية، المدة (**محتويات** المكالمات لا تُسجَّل بشكل افتراضي)؛
+- **بيانات الاتصال**: عنوان IP، الجلسة، user-agent؛
+- **محتوى الطلب**.
 
 ## 2. ${t.dataProtection}
-تشفير **أثناء النقل** و**أثناء التخزين** حيثما أمكن. إجراءات حماية تقنية وتنظيمية قوية.
+تشفير **أثناء النقل** (TLS 1.2+) و**أثناء التخزين** حيثما أمكن. **الإخطار بالاختراقات خلال 72 ساعة** (GDPR م. 33).
 
 ## 3. ${t.dataSharing}
-لا **إعادة بيع للبيانات**. مشاركة محدودة مع معالجين **معتمدين** لتقديم الخدمة.
+
+### 3.1. لا إعادة بيع
+لا **تجارة في البيانات**.
+
+### 3.2. المعالجون من الباطن (GDPR م. 28)
+قائمة المعالجين المعتمدين بموجب **اتفاقيات معالجة البيانات (DPA)**:
+- **Stripe Payments Europe Ltd.** — المدفوعات، KYC/AML — أيرلندا (الاتحاد الأوروبي) + الولايات المتحدة
+- **PayPal (Europe) S.à r.l.** — مدفوعات بديلة، تحويلات دولية — لوكسمبورغ (الاتحاد الأوروبي)
+- **Twilio Inc.** — الاتصالات الهاتفية، IVR، SMS — الولايات المتحدة (DPF)
+- **Google Cloud / Firebase (Google Ireland)** — الاستضافة، قاعدة البيانات، المصادقة — الاتحاد الأوروبي + الولايات المتحدة
+- **Cloudflare Inc.** — CDN، مكافحة DDoS، الأمن — عالمي (DPF)
+- **Zoho Corporation B.V.** — البريد المهني، الدعم — الاتحاد الأوروبي / الهند
+
+جميع المزودين بموجب **البنود التعاقدية النموذجية للاتحاد الأوروبي** أو **إطار خصوصية البيانات**.
 
 ## 4. ${t.yourRights}
 - ${t.rights[0]}
@@ -922,6 +1125,8 @@ const defaultAr = `
 - ${t.rights[2]}
 - ${t.rights[3]}
 - ${t.rights[4]}
+
+**الاحتفاظ**: طوال مدة العلاقة التعاقدية + فترات التقادم القانونية (5-10 سنوات).
 
 ---
 

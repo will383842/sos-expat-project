@@ -90,7 +90,7 @@ const TermsLawyers: React.FC = () => {
       title: "CGU Avocats",
       subtitle:
         "Conditions générales d'utilisation pour les avocats prestataires",
-      lastUpdated: "Version 3.0 – Dernière mise à jour : 1er février 2026",
+      lastUpdated: "Version 3.1 – Dernière mise à jour : 25 avril 2026",
       loading: "Chargement...",
       joinNetwork: "Rejoindre le réseau",
       trustedByExperts: "Déjà 2K+ avocats nous font confiance",
@@ -133,7 +133,7 @@ const TermsLawyers: React.FC = () => {
     en: {
       title: "Lawyer Terms",
       subtitle: "Terms of Use for lawyer providers",
-      lastUpdated: "Version 3.0 – Last updated: February 1, 2026",
+      lastUpdated: "Version 3.1 – Last updated: April 25, 2026",
       loading: "Loading...",
       joinNetwork: "Join the network",
       trustedByExperts: "Already 2K+ lawyers trust us",
@@ -176,7 +176,7 @@ const TermsLawyers: React.FC = () => {
     es: {
       title: "Términos para Abogados",
       subtitle: "Condiciones generales de uso para abogados proveedores",
-      lastUpdated: "Versión 3.0 – Última actualización: 1 de febrero de 2026",
+      lastUpdated: "Versión 3.1 – Última actualización: 25 de abril de 2026",
       loading: "Cargando...",
       joinNetwork: "Únete a la red",
       trustedByExperts: "Más de 2.000 abogados ya confían en nosotros",
@@ -219,7 +219,7 @@ const TermsLawyers: React.FC = () => {
     ru: {
       title: "Условия для адвокатов",
       subtitle: "Условия использования для адвокатов-поставщиков услуг",
-      lastUpdated: "Версия 3.0 – Последнее обновление: 1 февраля 2026",
+      lastUpdated: "Версия 3.1 – Последнее обновление: 25 апреля 2026",
       loading: "Загрузка...",
       joinNetwork: "Присоединиться к сети",
       trustedByExperts: "Уже более 2000+ адвокатов доверяют нам",
@@ -263,7 +263,7 @@ const TermsLawyers: React.FC = () => {
     de: {
       title: "Anwaltsbedingungen",
       subtitle: "Allgemeine Nutzungsbedingungen für Anwaltsdienstleister",
-      lastUpdated: "Version 3.0 – Letzte Aktualisierung: 1. Februar 2026",
+      lastUpdated: "Version 3.1 – Letzte Aktualisierung: 25. April 2026",
       loading: "Wird geladen...",
       joinNetwork: "Netzwerk beitreten",
       trustedByExperts: "Bereits 2000+ Anwälte vertrauen uns",
@@ -306,7 +306,7 @@ const TermsLawyers: React.FC = () => {
     hi: {
       title: "वकील शर्तें",
       subtitle: "वकील सेवा प्रदाताओं के लिए सामान्य उपयोग की शर्तें",
-      lastUpdated: "संस्करण 3.0 – अंतिम अपडेट: 1 फ़रवरी 2026",
+      lastUpdated: "संस्करण 3.1 – अंतिम अपडेट: 25 अप्रैल 2026",
       loading: "लोड हो रहा है...",
       joinNetwork: "नेटवर्क में शामिल हों",
       trustedByExperts: "पहले से 2000+ वकील हमारे पर विश्वास करते हैं",
@@ -350,7 +350,7 @@ const TermsLawyers: React.FC = () => {
       title: "Termos para Advogados",
       subtitle:
         "Condições gerais de uso para advogados prestadores de serviços",
-      lastUpdated: "Versão 3.0 – Última atualização: 1 de fevereiro de 2026",
+      lastUpdated: "Versão 3.1 – Última atualização: 25 de abril de 2026",
       loading: "Carregando...",
       joinNetwork: "Junte-se à rede",
       trustedByExperts: "Já 2000+ advogados confiam em nós",
@@ -393,7 +393,7 @@ const TermsLawyers: React.FC = () => {
     ch: {
       title: "律师使用条款",
       subtitle: "为律师服务提供者制定的一般使用条款",
-      lastUpdated: "版本 3.0 – 最近更新：2026年2月1日",
+      lastUpdated: "版本 3.1 – 最近更新：2026年4月25日",
       loading: "加载中...",
       joinNetwork: "加入网络",
       trustedByExperts: "已有超过2,000名律师信任我们",
@@ -435,7 +435,7 @@ const TermsLawyers: React.FC = () => {
     ar: {
       title: "شروط استخدام المحامين",
       subtitle: "الشروط العامة لاستخدام مقدمي خدمات المحاماة",
-      lastUpdated: "الإصدار 3.0 – آخر تحديث: 1 فبراير 2026",
+      lastUpdated: "الإصدار 3.1 – آخر تحديث: 25 أبريل 2026",
       loading: "جارٍ التحميل...",
       joinNetwork: "انضم إلى الشبكة",
       trustedByExperts: "أكثر من 2000 محامٍ يثقون بنا",
@@ -671,7 +671,7 @@ const TermsLawyers: React.FC = () => {
 
 **SOS Expat d'WorldExpat OÜ** (la « **Plateforme** », « **SOS** », « **nous** »)
 
-**Version 3.0 – Dernière mise à jour : 1er février 2026**
+**Version 3.1 – Dernière mise à jour : 25 avril 2026**
 
 ---
 
@@ -794,7 +794,14 @@ Le bannissement est **définitif et irrévocable**. L'Avocat banni ne peut crée
 
 5.1. **Conflits d'intérêts.** L'Avocat effectue un screening approprié avant tout conseil. En cas de conflit, il se retire et en informe l'Utilisateur.
 
-5.2. **Secret professionnel & confidentialité.** L'Avocat respecte la confidentialité/secret professionnel selon le droit applicable du Pays d'Intervention. Les échanges ne sont pas enregistrés par SOS, sauf obligations légales.
+5.2. **Secret professionnel & confidentialité.** L'Avocat respecte la confidentialité et le secret professionnel selon le droit applicable du Pays d'Intervention.
+
+**Enregistrement des appels — politique générale :**
+- (a) **Par défaut**, SOS Expat **n'enregistre PAS le contenu audio** des appels entre Avocat et Utilisateur. Seules les **métadonnées techniques** sont conservées (horodatage, durée, identifiants Twilio, statut de connexion) à des fins de facturation, anti-fraude et résolution de litiges techniques ;
+- (b) SOS Expat **se réserve la possibilité** d'activer un enregistrement audio dans des cas strictement limités : suspicion de fraude, signalement d'abus, instruction d'une autorité judiciaire compétente, protection d'intérêts vitaux. Dans ces cas, les parties seront informées en début d'appel ;
+- (c) Lorsqu'un enregistrement est activé, il est conservé au maximum **six (6) mois** (sauf prolongation imposée par une procédure judiciaire), conformément aux recommandations CNIL et au RGPD ;
+- (d) **L'Avocat s'interdit lui-même** d'enregistrer, transcrire intégralement, divulguer ou utiliser les échanges à d'autres fins que la prestation convenue, sauf autorisation écrite de l'Utilisateur ou obligation légale ;
+- (e) **Le secret professionnel demeure intact** : tout enregistrement éventuel par SOS Expat ne saurait être utilisé contre l'Avocat ou l'Utilisateur en violation des règles déontologiques applicables au secret professionnel.
 
 5.3. **Non-contournement.** SOS Expat ne perçoit aucune commission sur les honoraires. Chaque nouvelle Mise en relation avec un nouvel Utilisateur via la Plateforme donne lieu aux Frais de Mise en relation. Il est interdit de contourner la Plateforme pour éviter ces frais lors d'une nouvelle introduction.
 
@@ -824,7 +831,7 @@ Le bannissement est **définitif et irrévocable**. L'Avocat banni ne peut crée
 
 L'Avocat autorise expressément SOS Expat à procéder à ces déductions avant tout reversement. **Le montant exact qui sera reversé à l'Avocat est affiché dans son tableau de bord avant et après chaque transaction.**
 
-7.3. **Frais bancaires du Prestataire de paiement.** Le Prestataire de paiement (Stripe ou équivalent) prélève des frais de traitement sur chaque transaction. **Ces frais bancaires sont intégralement à la charge de l'Avocat** et sont automatiquement déduits du montant qui lui est reversé. Le détail de ces frais est disponible dans les conditions du Prestataire de paiement et dans le tableau de bord de l'Avocat pour chaque transaction.
+7.3. **Frais bancaires du Prestataire de paiement.** Le Prestataire de paiement — **Stripe Payments Europe Ltd.** (Irlande, UE, certifié PCI-DSS niveau 1) **ou PayPal (Europe) S.à r.l. et Cie, S.C.A.** (Luxembourg, UE, certifié PCI-DSS), selon le pays de résidence et la disponibilité — prélève des frais de traitement sur chaque transaction. **Ces frais bancaires sont intégralement à la charge de l'Avocat** et sont automatiquement déduits du montant qui lui est reversé. Le détail de ces frais est disponible dans les conditions du Prestataire de paiement (Stripe : stripe.com/fr/pricing ; PayPal : paypal.com/fr/webapps/mpp/merchant-fees) et dans le tableau de bord de l'Avocat pour chaque transaction.
 
 7.4. **Frais de change et conversion de devises.** Lorsque la devise de paiement de l'Utilisateur diffère de la devise du compte bancaire de l'Avocat, des **frais de conversion de devises** sont appliqués par le Prestataire de paiement. **Ces frais de change sont intégralement à la charge de l'Avocat** et sont déduits du montant qui lui est reversé. Les taux de change appliqués sont ceux du Prestataire de paiement au moment du transfert. L'Avocat reconnaît et accepte expressément que SOS Expat n'a aucun contrôle sur ces taux de change et décline toute responsabilité quant aux fluctuations de devises ou aux frais appliqués par le Prestataire.
 
@@ -848,7 +855,7 @@ L'Avocat autorise expressément SOS Expat à procéder à ces déductions avant 
 
 ## 8. Paiements – KYC/LCB-FT – Sanctions
 
-8.1. Les paiements sont traités par des Prestataires tiers. L'Avocat accepte leurs conditions et processus KYC/LCB-FT.
+8.1. **Prestataires de paiement.** Les paiements sont traités **exclusivement** par des Prestataires tiers certifiés **PCI-DSS** : **Stripe Payments Europe Ltd.** (Irlande, UE) et/ou **PayPal (Europe) S.à r.l. et Cie, S.C.A.** (Luxembourg, UE). Le choix du Prestataire dépend du pays de résidence/d'exercice de l'Avocat (Stripe couvre actuellement 44 pays, PayPal 150+ pays). L'Avocat **accepte expressément** les conditions générales et les processus KYC/LCB-FT du ou des Prestataires applicables. **SOS Expat n'a aucun rôle de banque, d'établissement de paiement ou d'établissement de crédit** ; SOS Expat n'est qu'un client commercial des Prestataires de paiement précités.
 
 8.2. SOS Expat peut différer, retenir ou annuler des paiements en cas de soupçon de fraude, de non-conformité ou d'injonction légale.
 
@@ -862,7 +869,7 @@ SOS Expat se réserve le droit de **restreindre ou bloquer immédiatement l'acc�
 
 ### Fonds non réclamés et vérification KYC
 
-8.4. **Obligation de compléter le processus de vérification (KYC).** Pour recevoir les paiements issus des prestations réalisées via la Plateforme, l'Avocat s'engage à compléter le processus de vérification d'identité (KYC - Know Your Customer) auprès de notre partenaire de paiement Stripe dans les meilleurs délais suivant son inscription. L'Avocat reconnaît que l'absence de vérification KYC complète empêche techniquement le versement des fonds sur son compte bancaire.
+8.4. **Obligation de compléter le processus de vérification (KYC).** Pour recevoir les paiements issus des prestations réalisées via la Plateforme, l'Avocat s'engage à compléter le processus de vérification d'identité (KYC - Know Your Customer) auprès du Prestataire de paiement applicable (**Stripe** ou **PayPal**, selon son pays de résidence) dans les meilleurs délais suivant son inscription. L'Avocat reconnaît que l'absence de vérification KYC complète empêche techniquement le versement des fonds sur son compte bancaire ou compte PayPal.
 
 8.5. **Conservation des fonds en attente.** Lorsqu'un paiement est effectué par un Utilisateur pour une prestation réalisée par un Avocat n'ayant pas complété sa vérification KYC, les fonds correspondant à la part de l'Avocat (déduction faite des frais de mise en relation de la Plateforme) sont conservés en attente sur un compte séquestre. La Plateforme s'engage à :
 - Notifier l'Avocat par email de l'existence de fonds en attente ;
@@ -1012,7 +1019,7 @@ Pour toute question ou demande légale : **https://sos-expat.com/contact**
 
 **SOS Expat by WorldExpat OÜ** (the "**Platform**", "**SOS**", "**we**")
 
-**Version 3.0 – Last updated: February 1, 2026**
+**Version 3.1 – Last updated: April 25, 2026**
 
 ---
 
@@ -1135,7 +1142,14 @@ Banning is **permanent and irrevocable**. A banned Lawyer cannot create a new ac
 
 5.1. **Conflicts of interest.** The Lawyer conducts appropriate screening before any advice. In case of conflict, they withdraw and inform the User.
 
-5.2. **Professional secrecy & confidentiality.** The Lawyer respects confidentiality/professional secrecy according to the applicable law of the Country of Intervention. Exchanges are not recorded by SOS, except as required by law.
+5.2. **Professional secrecy & confidentiality.** The Lawyer respects confidentiality and professional secrecy in accordance with the applicable law of the Country of Intervention.
+
+**Call recording — general policy:**
+- (a) **By default**, SOS Expat **does NOT record the audio content** of calls between Lawyer and User. Only **technical metadata** is retained (timestamp, duration, Twilio identifiers, connection status) for billing, anti-fraud, and technical dispute resolution purposes;
+- (b) SOS Expat **reserves the right** to enable audio recording in strictly limited cases: suspicion of fraud, abuse report, order from a competent judicial authority, protection of vital interests. In such cases, the parties will be informed at the start of the call;
+- (c) When a recording is enabled, it is retained for a maximum of **six (6) months** (unless extended by judicial proceedings), in line with CNIL recommendations and GDPR;
+- (d) **The Lawyer is themselves prohibited** from recording, fully transcribing, disclosing, or using the exchanges for any purpose other than the agreed service, except with the User's written authorization or by legal obligation;
+- (e) **Professional secrecy remains intact**: any recording by SOS Expat may not be used against the Lawyer or User in violation of the ethical rules applicable to professional secrecy.
 
 5.3. **Non-circumvention.** SOS Expat does not receive any commission on fees. Each new Connection with a new User via the Platform incurs Connection Fees. Circumventing the Platform to avoid these fees for a new introduction is prohibited.
 
@@ -1165,7 +1179,7 @@ Banning is **permanent and irrevocable**. A banned Lawyer cannot create a new ac
 
 The Lawyer expressly authorizes SOS Expat to make these deductions before any transfer. **The exact amount to be transferred to the Lawyer is displayed in their dashboard before and after each transaction.**
 
-7.3. **Payment Provider Bank Fees.** The Payment Provider (Stripe or equivalent) charges processing fees on each transaction. **These bank fees are entirely borne by the Lawyer** and are automatically deducted from the amount transferred to them. Details of these fees are available in the Payment Provider's terms and in the Lawyer's dashboard for each transaction.
+7.3. **Payment Provider Bank Fees.** The Payment Provider — **Stripe Payments Europe Ltd.** (Ireland, EU, PCI-DSS Level 1 certified) **or PayPal (Europe) S.à r.l. et Cie, S.C.A.** (Luxembourg, EU, PCI-DSS certified), depending on the country of residence and availability — charges processing fees on each transaction. **These bank fees are entirely borne by the Lawyer** and are automatically deducted from the amount transferred to them. Details of these fees are available in the Payment Provider's terms (Stripe: stripe.com/pricing; PayPal: paypal.com/webapps/mpp/merchant-fees) and in the Lawyer's dashboard for each transaction.
 
 7.4. **Currency Exchange and Conversion Fees.** When the User's payment currency differs from the Lawyer's bank account currency, **currency conversion fees** are applied by the Payment Provider. **These exchange fees are entirely borne by the Lawyer** and are deducted from the amount transferred to them. The exchange rates applied are those of the Payment Provider at the time of transfer. The Lawyer acknowledges and expressly accepts that SOS Expat has no control over these exchange rates and disclaims any liability for currency fluctuations or fees applied by the Provider.
 
@@ -1187,7 +1201,7 @@ The Lawyer expressly authorizes SOS Expat to make these deductions before any tr
 
 ## 8. Payments – KYC/AML – Sanctions
 
-8.1. Payments are processed by third-party Providers. The Lawyer agrees to their KYC/AML terms and processes.
+8.1. **Payment Providers.** Payments are processed **exclusively** by **PCI-DSS certified** third-party Providers: **Stripe Payments Europe Ltd.** (Ireland, EU) and/or **PayPal (Europe) S.à r.l. et Cie, S.C.A.** (Luxembourg, EU). The applicable Provider depends on the Lawyer's country of residence/practice (Stripe currently covers 44 countries, PayPal 150+ countries). The Lawyer **expressly agrees** to the terms and KYC/AML processes of the applicable Provider(s). **SOS Expat is NOT a bank, payment institution, or credit institution**; SOS Expat is solely a commercial customer of the aforementioned Payment Providers.
 
 8.2. SOS Expat may defer, withhold, or cancel payments in case of suspected fraud, non-compliance, or legal order.
 
@@ -1201,7 +1215,7 @@ SOS Expat reserves the right to **immediately restrict or block access** to the 
 
 ### Unclaimed Funds and KYC Verification
 
-8.4. **Obligation to complete the verification process (KYC).** To receive payments from services provided through the Platform, the Lawyer agrees to complete the identity verification process (KYC - Know Your Customer) with our payment partner Stripe as soon as possible following registration. The Lawyer acknowledges that failure to complete KYC verification technically prevents the transfer of funds to their bank account.
+8.4. **Obligation to complete the verification process (KYC).** To receive payments from services provided through the Platform, the Lawyer agrees to complete the identity verification process (KYC - Know Your Customer) with the applicable Payment Provider (**Stripe** or **PayPal**, depending on the country of residence) as soon as possible following registration. The Lawyer acknowledges that failure to complete KYC verification technically prevents the transfer of funds to their bank account or PayPal account.
 
 8.5. **Holding of pending funds.** When a payment is made by a User for a service provided by a Lawyer who has not completed KYC verification, the funds corresponding to the Lawyer's share (after deduction of the Platform's connection fees) are held in escrow. The Platform commits to:
 - Notify the Lawyer by email of the existence of pending funds;
@@ -1351,7 +1365,7 @@ For any legal question or request: **https://sos-expat.com/contact**
 
 **SOS Expat de WorldExpat OÜ** (la « **Plataforma** », « **SOS** », « **nosotros** »)
 
-**Versión 3.0 – Última actualización: 1 de febrero de 2026**
+**Versión 3.1 – Última actualización: 25 de abril de 2026**
 
 ---
 
@@ -1690,7 +1704,7 @@ Para cualquier pregunta o solicitud legal: **https://sos-expat.com/contact**
 
 **SOS Expat от WorldExpat OÜ** (далее « **Платформа** », « **SOS** », « **мы** »)
 
-**Версия 3.0 – Последнее обновление: 1 февраля 2026 г.**
+**Версия 3.1 – Последнее обновление: 25 апреля 2026 г.**
 
 ---
 
@@ -2029,7 +2043,7 @@ SOS Expat оставляет за собой право **немедленно �
 
 **SOS Expat von WorldExpat OÜ** (die « **Plattform** », « **SOS** », « **wir** »)
 
-**Version 3.0 – Letzte Aktualisierung: 1. Februar 2026**
+**Version 3.1 – Letzte Aktualisierung: 25. April 2026**
 
 ---
 
@@ -2368,7 +2382,7 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 **WorldExpat OÜ द्वारा SOS Expat** ( " **प्लेटफ़ॉर्म** ", " **SOS** ", " **हम** " )
 
-**संस्करण 3.0 – अंतिम अद्यतन: 1 फ़रवरी 2026**
+**संस्करण 3.1 – अंतिम अद्यतन: 25 अप्रैल 2026**
 
 ---
 
@@ -2707,7 +2721,7 @@ SOS Expat किसी भी प्रतिबंध या प्रतिब
 
 **SOS Expat da WorldExpat OÜ** (a « **Plataforma** », « **SOS** », « **nós** »)
 
-**Versão 3.0 – Última atualização: 1 de fevereiro de 2026**
+**Versão 3.1 – Última atualização: 25 de abril de 2026**
 
 ---
 
@@ -3046,7 +3060,7 @@ Para qualquer questão ou pedido legal: **https://sos-expat.com/contact**
 
 **WorldExpat OÜ 的 SOS Expat**（"**平台**"、"**SOS**"、"**我们**"）
 
-**版本 3.0 – 最后更新日期：2026年2月1日**
+**版本 3.1 – 最后更新日期：2026年4月25日**
 
 ---
 
@@ -3384,7 +3398,7 @@ SOS Expat保留**立即限制或阻止**在任何受制裁或禁运地区或对�
 
 **SOS Expat التابعة لشركة WorldExpat OÜ** (المشار إليها بـ «**المنصّة**»، «**SOS**»، «**نحن**»)
 
-**الإصدار 3.0 – آخر تحديث: 1 فبراير 2026**
+**الإصدار 3.1 – آخر تحديث: 25 أبريل 2026**
 
 ---
 
