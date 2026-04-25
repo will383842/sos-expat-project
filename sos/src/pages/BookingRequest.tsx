@@ -37,6 +37,7 @@ import {
   Eye,
   EyeOff,
   Loader2,
+  AlertTriangle,
 } from "lucide-react";
 
 import { useForm, Controller, SubmitHandler, useWatch } from "react-hook-form";
@@ -4834,7 +4835,29 @@ const BookingRequest: React.FC = () => {
                       </div>
                       {sosCallError && (
                         <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-800">
-                          {sosCallError}
+                          <div className="flex items-start gap-2">
+                            <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                            <div className="flex-1">{sosCallError}</div>
+                          </div>
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setSosCallError(null);
+                                setSosCallCodeInput('');
+                              }}
+                              className="text-xs px-3 py-1.5 rounded-lg bg-white hover:bg-red-50 text-red-800 border border-red-300 font-medium"
+                            >
+                              Réessayer
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => toggleSosCallCheckbox(false)}
+                              className="text-xs px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white border border-blue-700 font-semibold"
+                            >
+                              Continuer sans code (payer l'appel)
+                            </button>
+                          </div>
                         </div>
                       )}
                     </div>
