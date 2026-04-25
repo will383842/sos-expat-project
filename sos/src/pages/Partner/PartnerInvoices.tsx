@@ -164,7 +164,19 @@ const PartnerInvoices: React.FC = () => {
                       <td className="p-3 font-mono text-xs">{inv.invoice_number}</td>
                       <td className="p-3">{inv.period}</td>
                       <td className="p-3">{inv.active_subscribers}</td>
-                      <td className="p-3 font-semibold">{formatAmount(Number(inv.total_amount), inv.billing_currency)}</td>
+                      <td className="p-3">
+                        <div className="font-semibold">{formatAmount(Number(inv.total_amount), inv.billing_currency)}</div>
+                        {inv.pricing_tier && (
+                          <div className="text-[10px] text-gray-500 mt-0.5">
+                            Palier {inv.pricing_tier.min}–{inv.pricing_tier.max ?? '∞'}
+                          </div>
+                        )}
+                        {!inv.pricing_tier && Number(inv.monthly_base_fee || 0) > 0 && Number(inv.billing_rate || 0) > 0 && (
+                          <div className="text-[10px] text-gray-500 mt-0.5">
+                            Forfait + {inv.active_subscribers} × {formatAmount(Number(inv.billing_rate), inv.billing_currency)}
+                          </div>
+                        )}
+                      </td>
                       <td className="p-3">
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${STATUS_STYLES[inv.status]}`}>
                           {STATUS_LABELS[inv.status]}
