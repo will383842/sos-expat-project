@@ -1923,7 +1923,7 @@ Der Ausschluss ist **endgültig und unwiderruflich**. Ein ausgeschlossener Helfe
 
 Der Helfer ermächtigt SOS Expat ausdrücklich, diese Abzüge vor jeder Überweisung vorzunehmen. **Der genaue Betrag, der an den Helfer überwiesen wird, wird in seinem Dashboard vor und nach jeder Transaktion angezeigt.**
 
-7.3. **Bankgebühren des Zahlungsdienstleisters.** Der Zahlungsdienstleister (Stripe oder Äquivalent) erhebt Bearbeitungsgebühren für jede Transaktion. **Diese Bankgebühren gehen vollständig zulasten des Helfers** und werden automatisch von dem ihm überwiesenen Betrag abgezogen. Details zu diesen Gebühren sind in den Bedingungen des Zahlungsdienstleisters und im Dashboard des Helfers für jede Transaktion verfügbar.
+7.3. **Bankgebühren des Zahlungsdienstleisters.** Der Zahlungsdienstleister — **Stripe Payments Europe Ltd.** (Irland, EU, PCI-DSS Level 1 zertifiziert) **oder PayPal (Europe) S.à r.l. et Cie, S.C.A.** (Luxemburg, EU, PCI-DSS zertifiziert), abhängig vom Wohnsitzland und Verfügbarkeit — erhebt Bearbeitungsgebühren für jede Transaktion. **Diese Bankgebühren gehen vollständig zulasten des Helfers** und werden automatisch von dem ihm überwiesenen Betrag abgezogen.
 
 7.4. **Wechselkurs- und Währungsumrechnungsgebühren.** Wenn die Zahlungswährung des Nutzers von der Währung des Bankkontos des Helfers abweicht, werden vom Zahlungsdienstleister **Währungsumrechnungsgebühren** erhoben. **Diese Wechselgebühren gehen vollständig zulasten des Helfers** und werden von dem ihm überwiesenen Betrag abgezogen. Die angewandten Wechselkurse sind die des Zahlungsdienstleisters zum Zeitpunkt der Überweisung. Der Helfer erkennt an und akzeptiert ausdrücklich, dass SOS Expat keine Kontrolle über diese Wechselkurse hat und jede Haftung für Währungsschwankungen oder vom Dienstleister erhobene Gebühren ablehnt.
 
@@ -2065,7 +2065,13 @@ Der Schiedsspruch ist für die Parteien **endgültig und bindend**. Die Parteien
 
 13.1. **Antikorruption.** Der Helfer verpflichtet sich, keine Bestechungsgelder oder unzulässige Vorteile an öffentliche oder private Amtsträger anzubieten, zu versprechen oder zu zahlen. Er hält die geltenden Antikorruptionsgesetze ein (FCPA, UK Bribery Act, Sapin-II-Gesetz usw.).
 
-13.2. **Vertraulichkeit der Kommunikation.** Die über die Plattform geführte Kommunikation (Nachrichten, Telefonate) ist **vertraulich**. Der Helfer verpflichtet sich, diese nicht aufzuzeichnen, offenzulegen oder für andere Zwecke als die vereinbarte Leistung zu verwenden, es sei denn, es liegt eine schriftliche Genehmigung oder eine gesetzliche Verpflichtung vor.
+13.2. **Vertraulichkeit der Kommunikation und Aufzeichnungsrichtlinie.** Die über die Plattform geführte Kommunikation (Nachrichten, Telefonate) ist **vertraulich**.
+
+**Aufzeichnungsrichtlinie:**
+- (a) **Standardmäßig** zeichnet SOS Expat den Audio-Inhalt der Anrufe zwischen Helfer und Nutzer **NICHT auf**. Es werden nur **technische Metadaten** für Abrechnung, Betrugsbekämpfung und Lösung technischer Streitigkeiten gespeichert;
+- (b) SOS Expat **behält sich das Recht vor**, eine vorübergehende Audio-Aufzeichnung in streng begrenzten Fällen zu aktivieren (Betrugsverdacht, Missbrauchsmeldung, Gerichtsanordnung, Schutz lebenswichtiger Interessen). Die Parteien werden zu Beginn des Anrufs informiert;
+- (c) Wenn eine Aufzeichnung aktiviert wird, wird sie höchstens **sechs (6) Monate** aufbewahrt, gemäß DSGVO;
+- (d) **Der Helfer selbst ist verpflichtet**, die Gespräche nicht aufzuzeichnen, vollständig zu transkribieren, offenzulegen oder zu anderen Zwecken als der vereinbarten Dienstleistung zu verwenden, außer mit schriftlicher Genehmigung des Nutzers oder gesetzlicher Verpflichtung. Jeder Verstoß kann zur sofortigen Kontosperrung und zur zivil- und/oder strafrechtlichen Haftung des Helfers führen.
 
 13.3. **Abwerbeverbot.** Während der Laufzeit dieser AGB und **zwölf (12) Monate** nach deren Beendigung darf der Helfer Nutzer, die er über die Plattform kennengelernt hat, nicht direkt abwerben, um die Vermittlungsgebühren zu umgehen.
 
@@ -2478,7 +2484,7 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 ## 8. المدفوعات – KYC/مكافحة غسل الأموال – العقوبات
 
-8.1. **مزودو الدفع.** تتم معالجة المدفوعات بواسطة **مزودين خارجيين** (Stripe، إلخ). يقبل المساعد شروطهم وإجراءات التحقق **KYC/مكافحة غسل الأموال** الخاصة بهم.
+8.1. **مزودو الدفع.** تتم معالجة المدفوعات **حصرياً** من قبل مزودين خارجيين معتمدين **PCI-DSS**: **Stripe Payments Europe Ltd.** (أيرلندا، الاتحاد الأوروبي) و/أو **PayPal (Europe) S.à r.l. et Cie, S.C.A.** (لوكسمبورغ، الاتحاد الأوروبي). يعتمد المزود المطبق على بلد إقامة/ممارسة المساعد (Stripe يغطي 44 دولة، PayPal أكثر من 150 دولة). **يقبل المساعد صراحة** الشروط العامة وإجراءات التحقق **KYC/AML** للمزود(ين) المطبق(ين). **SOS Expat ليست بنكاً أو مؤسسة دفع أو مؤسسة ائتمان**؛ SOS Expat هي فقط عميل تجاري لمزودي الدفع المذكورين.
 
 8.2. يجوز لـ SOS Expat تأجيل أو حجز أو إلغاء المدفوعات في حالة الاشتباه في الاحتيال أو عدم الامتثال أو الأمر القانوني.
 
@@ -2590,7 +2596,13 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 13.1. **مكافحة الفساد.** يلتزم المساعد بعدم تقديم أو وعد أو دفع رشاوى أو مزايا غير مشروعة لموظفين عموميين أو خاصين. يلتزم بقوانين مكافحة الفساد المعمول بها (FCPA، قانون الرشوة البريطاني، قانون سابان الثاني، إلخ).
 
-13.2. **سرية الاتصالات.** الاتصالات التي تتم عبر المنصة (الرسائل، المكالمات الهاتفية) **سرية**. يمتنع المساعد عن تسجيلها أو إفشائها أو استخدامها لأغراض أخرى غير الخدمة المتفق عليها، إلا بإذن كتابي أو التزام قانوني.
+13.2. **سرية الاتصالات وسياسة التسجيل.** الاتصالات التي تتم عبر المنصة (الرسائل، المكالمات الهاتفية) **سرية**.
+
+**سياسة التسجيل:**
+- (a) **بشكل افتراضي**، **لا تسجل SOS Expat المحتوى الصوتي** للمكالمات بين المساعد والمستخدم. تُحفظ فقط **البيانات الوصفية التقنية** لأغراض الفوترة ومكافحة الاحتيال وحل النزاعات التقنية؛
+- (b) **تحتفظ SOS Expat بالحق** في تفعيل تسجيل صوتي مؤقت في حالات محدودة بشكل صارم (الاشتباه في احتيال، الإبلاغ عن إساءة، أمر قضائي، حماية المصالح الحيوية). سيتم إعلام الأطراف في بداية المكالمة؛
+- (c) عند تفعيل التسجيل، يُحفظ لمدة أقصاها **ستة (6) أشهر**، وفقاً للائحة العامة لحماية البيانات؛
+- (d) **يلتزم المساعد بنفسه** بعدم تسجيل أو تدوين كامل أو إفشاء أو استخدام التبادلات لأغراض غير الخدمة المتفق عليها، إلا بإذن مكتوب من المستخدم أو التزام قانوني. أي مخالفة قد تؤدي إلى تعليق الحساب فوراً وإشراك المسؤولية المدنية و/أو الجنائية للمساعد.
 
 13.3. **عدم الاستقطاب.** خلال مدة هذه الشروط و**اثني عشر (12) شهراً** بعد إنهائها، يمتنع المساعد عن استقطاب المستخدمين الذين تعرف عليهم عبر المنصة مباشرةً لتجنب رسوم التوصيل.
 

@@ -518,7 +518,7 @@ const TermsClients: React.FC = () => {
 - (g) **कानूनी संस्थाओं** के लिए: प्रतिनिधि के पास कंपनी को बाध्य करने की शक्तियां हैं।
 कोई भी झूठी घोषणा खाते के निलंबन का कारण बन सकती है।
 
-2.4. **अनुरूप उपयोग।** ग्राहक किसी भी अवैध या अपमानजनक उपयोग (धोखाधड़ी, अवैध सामग्री, उत्पीड़न, पहचान चोरी, आदि) से बचेगा। **SOS Expat आपातकालीन सेवा नहीं है**।
+2.4. **अनुरूप उपयोग और सद्भावना।** ग्राहक किसी भी अवैध या अपमानजनक उपयोग (धोखाधड़ी, अवैध सामग्री, उत्पीड़न, तीसरे पक्ष के अधिकारों का उल्लंघन, भुगतान प्रवाह का दुरुपयोग, पहचान चोरी, आदि) से बचेगा और **प्लेटफ़ॉर्म का उपयोग केवल वैध उद्देश्यों और सद्भावना से करने का वचन देता है**, सेवा प्रदाता को अपनी स्थिति ईमानदारी से प्रस्तुत करते हुए। प्लेटफ़ॉर्म **इरादा नहीं है**: (i) धोखाधड़ी की सलाह या अवैध उद्देश्यों के लिए उपयोग की सलाह प्राप्त करने हेतु; (ii) सेवा प्रदाता का बिना उनकी जानकारी के परीक्षण या मूल्यांकन करने हेतु; (iii) गंभीर सेवा इरादे के बिना कई सेवा प्रदाताओं से सलाह एकत्र करने हेतु। **SOS Expat आपातकालीन सेवा नहीं है**: चिकित्सा, जीवन-घातक या तत्काल आपातकालीन स्थितियों (पुलिस, अग्निशमन, एम्बुलेंस, संकट में दूतावास) के लिए कोई उपयोग नहीं। आपातकाल में, ग्राहक को तुरंत स्थानीय आपातकालीन सेवाओं से संपर्क करना चाहिए।
 
 2.5. **खाता सुरक्षा।** ग्राहक अपने लॉगिन क्रेडेंशियल्स की सुरक्षा करता है। उसके खाते के माध्यम से की गई कोई भी गतिविधि उसके द्वारा की गई मानी जाती है।
 
@@ -528,11 +528,11 @@ const TermsClients: React.FC = () => {
 
 ## 3. बुक करने योग्य सेवाओं की प्रकृति
 
-3.1. **वकीलों के साथ कॉल।** संक्षिप्त मार्गदर्शन परामर्श (जैसे 20 मिनट)। वकील अपनी सलाह और अपने आचार संहिता/स्थानीय कानूनों के अनुपालन के लिए पूर्ण रूप से जिम्मेदार है।
+3.1. **वकीलों के साथ कॉल — गैर-औपचारिक प्रकृति।** संक्षिप्त मार्गदर्शन परामर्श (जैसे 20 मिनट)। वकील अपनी सलाह और अपने आचार संहिता/स्थानीय कानूनों के अनुपालन के लिए पूर्ण रूप से जिम्मेदार है। **ग्राहक स्पष्ट रूप से स्वीकार करता है कि प्लेटफ़ॉर्म के माध्यम से प्रदान किया गया फोन परामर्श प्रथम-स्तरीय कानूनी मार्गदर्शन है और एक औपचारिक और पूर्ण वकील-ग्राहक संबंध को प्रतिस्थापित नहीं करता है** (गहन मामले का विश्लेषण, दस्तावेज़ समीक्षा, अदालत में प्रतिनिधित्व, कानूनी कृत्यों का प्रारूपण, निरंतर अनुवर्ती)। पूर्ण प्रबंधन की आवश्यकता वाले किसी भी मामले के लिए, ग्राहक को वकील या किसी अन्य विधिवत अधिकृत पेशेवर के साथ प्लेटफ़ॉर्म से बाहर एक अलग नियुक्ति समझौता करना होगा। केवल कनेक्शन से **कोई औपचारिक वकील-ग्राहक संबंध स्थापित नहीं होता** स्थानीय आचार और प्रक्रियात्मक नियमों के अर्थ में (अधिदेश, नियुक्ति पत्र, शुल्क समझौता)।
 
-3.2. **सहायकों के साथ कॉल।** अनियमित सहायता (व्यावहारिक मार्गदर्शन, अनौपचारिक अनुवाद, स्थानीय संपर्क...)। उपयुक्त स्थानीय लाइसेंस के बिना कोई कानूनी/चिकित्सा/विनियमित सलाह नहीं।
+3.2. **सहायकों के साथ कॉल — अनियमित सहायता।** अनियमित सहायता (व्यावहारिक मार्गदर्शन, अनौपचारिक अनुवाद, स्थानीय संपर्क, प्रवासी अनुभव साझाकरण...)। उपयुक्त स्थानीय लाइसेंस के बिना **कोई कानूनी, चिकित्सा, कर, वित्तीय, अचल संपत्ति या विनियमित सलाह नहीं**। ग्राहक स्वीकार करता है कि सहायक एक विनियमित पेशेवर **नहीं** है और कि आदान-प्रदान बाध्यकारी कानूनी या चिकित्सा मूल्य के बिना प्रवासी अनुभव साझाकरण है।
 
-3.3. **कोई गारंटी नहीं।** हम परिणाम, गुणवत्ता, किसी विशेष आवश्यकता के लिए उपयुक्तता, या सेवा प्रदाताओं की उपलब्धता की गारंटी नहीं देते।
+3.3. **परिणाम की कोई गारंटी नहीं।** SOS Expat परिणाम, गुणवत्ता, सटीकता, किसी विशेष आवश्यकता के लिए उपयुक्तता, या सेवा प्रदाताओं की उपलब्धता की गारंटी नहीं देता। ग्राहक प्राप्त किसी भी जानकारी की प्रासंगिकता का एकमात्र निर्णायक है और उसे किसी अन्य पेशेवर से सत्यापित कराने के लिए स्वतंत्र है।
 
 ---
 
@@ -579,9 +579,13 @@ const TermsClients: React.FC = () => {
 
 7.1. **सिंगल पेमेंट और वितरण।** ग्राहक एक कुल राशि का भुगतान करता है। SOS Vermittlungsgebühr काटकर शेष सेवा प्रदाता को देता है।
 
-7.2. **सुरक्षा।** भुगतान बाहरी प्रदाता के माध्यम से होते हैं। KYC/AML जांच हो सकती है।
+7.2. **भुगतान सुरक्षा और PCI-DSS।** भुगतान **विशेष रूप से** **PCI-DSS** (Payment Card Industry Data Security Standard) प्रमाणित तृतीय-पक्ष भुगतान प्रदाताओं के माध्यम से संसाधित होते हैं:
+- **Stripe Payments Europe Ltd.** (आयरलैंड, EU) — **PCI-DSS स्तर 1** प्रमाणित;
+- **PayPal (Europe) S.à r.l. et Cie, S.C.A.** (लक्ज़मबर्ग, EU) — **PCI-DSS** प्रमाणित।
 
-7.3. **भुगतान विवाद।** SOS केवल आवश्यक डेटा भुगतान प्रदाता को देगा।
+**SOS Expat किसी भी कार्ड डेटा को एकत्र, संसाधित या संग्रहीत नहीं करता** (कार्ड नंबर, CVV, समाप्ति तिथि)। यह डेटा सीधे ग्राहक द्वारा चुने गए भुगतान प्रदाता के पास दर्ज किया जाता है और सुरक्षित TLS कनेक्शन के माध्यम से प्रसारित होता है। यूरोपीय और अंतर्राष्ट्रीय कानूनी दायित्वों के अनुसार प्रासंगिक लेनदेन पर **KYC/AML** जांच लागू हो सकती है।
+
+7.3. **चार्जबैक/विवाद।** भुगतान विवाद के मामले में, SOS भुगतान प्रदाता को कड़ाई से आवश्यक डेटा प्रदान कर सकता है और संबंधित सेवाओं/भुगतानों को निलंबित कर सकता है। कोई भी **दुर्भावनापूर्ण या बेईमान चार्जबैक** खाता निलंबन और देय राशि के दावे का परिणाम हो सकता है।
 
 7.4. **मुआवजा।** रिफंड में सेवा प्रदाता की राशि काटी जा सकती है।
 
@@ -601,11 +605,13 @@ const TermsClients: React.FC = () => {
 
 ## 9. व्यवहार, सुरक्षा और सामग्री
 
-9.1. **सम्मान।** ग्राहक को सम्मानजनक व्यवहार करना चाहिए और अवैध रिकॉर्डिंग/साझा नहीं करनी चाहिए।
+9.1. **सम्मान और रिकॉर्डिंग का निषेध।** ग्राहक सम्मानजनक व्यवहार करने और सेवा प्रदाता की **पूर्व और स्पष्ट सहमति** के बिना और लागू स्थानीय कानूनों के अनुसार आदान-प्रदान (ऑडियो, वीडियो, स्क्रीनशॉट) को **रिकॉर्ड न करने, फिल्म न करने, पूरी तरह से लिप्यंतरण न करने या प्रसारित न करने** के लिए सहमत है। किसी भी उल्लंघन से तत्काल खाता निलंबन हो सकता है और ग्राहक की सिविल और/या आपराधिक देयता हो सकती है।
 
-9.2. **प्रदान की गई सामग्री।** सामग्री सही, कानूनी और सटीक होनी चाहिए। ग्राहक SOS और सेवा प्रदाता को किसी दावे से मुक्त रखेगा।
+9.2. **SOS Expat द्वारा रिकॉर्डिंग।** **डिफ़ॉल्ट रूप से, SOS Expat ग्राहक और सेवा प्रदाता के बीच कॉल की ऑडियो सामग्री रिकॉर्ड नहीं करता**। केवल **तकनीकी मेटाडेटा** बनाए रखे जाते हैं: टाइमस्टैम्प, अवधि, सत्र पहचानकर्ता, कनेक्शन स्थिति। SOS Expat **सख्ती से सीमित मामलों** में अस्थायी ऑडियो रिकॉर्डिंग सक्षम करने का **अधिकार सुरक्षित रखता है**: (i) धोखाधड़ी का संदेह, (ii) दुरुपयोग या अवैध व्यवहार की रिपोर्ट, (iii) सक्षम न्यायिक प्राधिकरण का आदेश, (iv) किसी व्यक्ति के महत्वपूर्ण हितों की सुरक्षा। ऐसे मामलों में, ग्राहक को कॉल की शुरुआत में सूचित किया जाएगा और रिकॉर्डिंग अधिकतम **छह (6) महीने** के लिए संग्रहीत की जाएगी (न्यायिक कार्यवाही द्वारा विस्तार के अधीन), GDPR के अनुसार।
 
-9.3. **शिकायत।** दुरुपयोग प्लेटफ़ॉर्म पर रिपोर्ट किया जा सकता है।
+9.3. **प्रदान की गई सामग्री।** सामग्री सही, कानूनी और सटीक होनी चाहिए। ग्राहक SOS और सेवा प्रदाता को किसी दावे से मुक्त रखेगा।
+
+9.4. **शिकायत।** दुरुपयोग प्लेटफ़ॉर्म पर संपर्क फॉर्म के माध्यम से रिपोर्ट किया जा सकता है।
 
 ---
 
@@ -1282,7 +1288,7 @@ In case of closure, pending bookings may be canceled and refunded, except in cas
 - (g) Para **personas jurídicas**: el representante dispone de los poderes necesarios para obligar a la sociedad.
 Cualquier declaración falsa puede dar lugar a la suspensión o cierre de la cuenta, sin perjuicio de cualquier acción de indemnización.
 
-2.4. **Uso conforme.** El Cliente se abstendrá de cualquier uso ilícito o abusivo (fraude, contenido ilegal, acoso, vulneración de derechos de terceros, desvío de flujos de pago, suplantación de identidad, etc.). **SOS Expat no es un servicio de emergencias**: no se permite su uso para situaciones médicas, vitales o de emergencia inmediata.
+2.4. **Uso conforme y buena fe.** El Cliente se abstendrá de cualquier uso ilícito o abusivo (fraude, contenido ilegal, acoso, vulneración de derechos de terceros, desvío de flujos de pago, suplantación de identidad, etc.) y **se compromete a utilizar la Plataforma exclusivamente con fines legítimos y de buena fe**, presentando honestamente su situación al Prestador. La Plataforma **no está destinada** a: (i) obtener un consejo fraudulento o utilizado con fines ilícitos; (ii) probar o evaluar al Prestador a sus espaldas; (iii) recopilar consejos de varios Prestadores sin intención seria de contratación. **SOS Expat no es un servicio de emergencias**: no se permite su uso para situaciones médicas, vitales o de emergencia inmediata (policía, bomberos, servicios médicos, embajadas en peligro). En caso de emergencia, el Cliente debe contactar inmediatamente con los servicios de emergencia locales.
 
 2.5. **Seguridad de la cuenta.** El Cliente protege sus credenciales de acceso. Toda actividad realizada a través de su cuenta se considera efectuada por él. En caso de sospecha de compromiso, el Cliente debe cambiar inmediatamente su contraseña e informar a SOS Expat.
 
@@ -1292,11 +1298,11 @@ Cualquier declaración falsa puede dar lugar a la suspensión o cierre de la cue
 
 ## 3. Naturaleza de los servicios reservables
 
-3.1. **Llamadas con Abogados.** Consultas breves de orientación (p. ej., 20 minutos). El Abogado es el único responsable de sus consejos y del cumplimiento de su deontología y leyes locales.
+3.1. **Llamadas con Abogados — Carácter no formal.** Consultas breves de orientación (p. ej., 20 minutos). El Abogado es el único responsable de sus consejos y del cumplimiento de su deontología y leyes locales. **El Cliente reconoce expresamente que la consulta telefónica realizada a través de la Plataforma constituye una orientación jurídica de primer nivel y NO sustituye una relación abogado-cliente formal y completa** (análisis profundo del expediente, estudio de documentos, representación judicial, redacción de actos, seguimiento continuo). Para cualquier asunto que requiera una gestión completa, el Cliente debe celebrar un acuerdo de honorarios separado con el Abogado u otro profesional debidamente habilitado, fuera de la Plataforma. La mera puesta en contacto **no establece ningún vínculo abogado-cliente formal** en el sentido de las normas deontológicas y procesales locales (mandato, carta de encargo, acuerdo de honorarios).
 
-3.2. **Llamadas con Ayudantes.** Asistencia no regulada (orientación práctica, traducción informal, contactos locales…). No se proporciona asesoramiento jurídico, médico o regulado sin la licencia local adecuada.
+3.2. **Llamadas con Ayudantes — Asistencia no regulada.** Asistencia no regulada (orientación práctica, traducción informal, contactos locales, intercambio de experiencia de expatriado…). **No se proporciona ningún asesoramiento jurídico, médico, fiscal, financiero, inmobiliario ni regulado** sin la licencia local adecuada. El Cliente reconoce que el Ayudante **no** es un profesional regulado y que el intercambio constituye un compartir de experiencia de expatriado, sin valor jurídico ni médico vinculante.
 
-3.3. **Sin garantía.** No garantizamos el resultado, la calidad, la adecuación a una necesidad particular ni la disponibilidad de los prestadores.
+3.3. **Sin garantía de resultado.** SOS Expat no garantiza el resultado, la calidad, la exactitud, la adecuación a una necesidad particular ni la disponibilidad de los Prestadores. El Cliente es el único juez de la pertinencia de cualquier información recibida y queda libre de hacerla verificar por otro profesional.
 
 ---
 
@@ -1345,9 +1351,13 @@ El Cliente ve el **precio total con impuestos incluidos** antes de confirmar su 
 
 7.1. **Pago único y distribución.** El Cliente realiza un pago único a través de la Plataforma que cubre (i) la parte del Prestador y (ii) las tarifas de intermediación. SOS (o su proveedor de pago) cobra, deduce sus comisiones y transfiere el saldo al Prestador.
 
-7.2. **Seguridad.** Los pagos se procesan a través de proveedores de pago externos. Pueden aplicarse controles KYC/PBC-FT.
+7.2. **Seguridad de los pagos y PCI-DSS.** Los pagos se procesan **exclusivamente** a través de proveedores de pago externos certificados **PCI-DSS** (Payment Card Industry Data Security Standard):
+- **Stripe Payments Europe Ltd.** (Irlanda, UE) — certificado **PCI-DSS Nivel 1**;
+- **PayPal (Europe) S.à r.l. et Cie, S.C.A.** (Luxemburgo, UE) — certificado **PCI-DSS**.
 
-7.3. **Devoluciones de cargo/disputas.** En caso de disputa de pago, SOS puede facilitar al proveedor de pago los datos estrictamente necesarios y suspender servicios/pagos relacionados.
+**SOS Expat no recopila, no procesa ni almacena ningún dato de tarjeta bancaria** (número de tarjeta, CVV, fecha de caducidad). Estos datos se introducen directamente con el proveedor de pago elegido por el Cliente y transitan a través de una conexión segura TLS. Pueden aplicarse controles **KYC/PBC-FT** (Conozca a su Cliente / Prevención del Blanqueo de Capitales y la Financiación del Terrorismo) para las transacciones afectadas, conforme a las obligaciones legales europeas e internacionales.
+
+7.3. **Devoluciones de cargo/disputas.** En caso de disputa de pago, SOS puede facilitar al proveedor de pago los datos estrictamente necesarios y suspender servicios/pagos relacionados. Cualquier **chargeback abusiva o de mala fe** puede dar lugar a la suspensión de la cuenta y a una reclamación de las cantidades adeudadas, sin perjuicio de cualquier recurso ulterior.
 
 7.4. **Compensación.** Si se concede un reembolso al Cliente, la parte correspondiente se deduce del prestador implicado; SOS puede compensar en sus pagos futuros.
 
@@ -1369,11 +1379,13 @@ El Cliente ve el **precio total con impuestos incluidos** antes de confirmar su 
 
 ## 9. Comportamiento, seguridad y contenidos
 
-9.1. **Respeto.** El Cliente se compromete a comportarse respetuosamente, a no grabar ni difundir el intercambio sin el consentimiento legalmente requerido, y a no solicitar actos ilegales.
+9.1. **Respeto y prohibición de grabar.** El Cliente se compromete a comportarse respetuosamente y a **no grabar, no filmar, no transcribir íntegramente ni difundir** el intercambio (audio, vídeo, captura de pantalla) sin el **consentimiento previo y explícito** del Prestador y conforme a las leyes locales aplicables. Cualquier infracción puede dar lugar a la suspensión inmediata de la cuenta y comprometer la responsabilidad civil y/o penal del Cliente.
 
-9.2. **Contenidos proporcionados.** La información transmitida debe ser leal, exacta y lícita. El Cliente garantiza a SOS y al Prestador frente a cualquier reclamación relacionada con contenidos ilegales que proporcione.
+9.2. **Grabación por SOS Expat.** **Por defecto, SOS Expat NO graba el contenido audio** de las llamadas entre Cliente y Prestador. Solo se conservan los **metadatos técnicos**: marca de tiempo, duración, identificadores de sesión, estado de conexión. SOS Expat **se reserva el derecho** de activar una grabación audio temporal en casos estrictamente limitados: (i) sospecha de fraude, (ii) denuncia de abuso o comportamiento ilegal, (iii) orden de una autoridad judicial competente, (iv) protección de los intereses vitales de una persona. En tales casos, el Cliente será informado al inicio de la llamada y la grabación se conservará durante un máximo de **seis (6) meses** (salvo prórroga impuesta por procedimiento judicial), conforme a las recomendaciones de la AEPD/CNIL y al RGPD.
 
-9.3. **Denuncia.** Cualquier abuso puede denunciarse a través del formulario de contacto.
+9.3. **Contenidos proporcionados.** La información transmitida debe ser leal, exacta y lícita. El Cliente garantiza a SOS y al Prestador frente a cualquier reclamación relacionada con contenidos ilegales que proporcione.
+
+9.4. **Denuncia.** Cualquier abuso puede denunciarse a través del formulario de contacto. SOS Expat tramita las denuncias en un plazo razonable y puede suspender cualquier cuenta o prestación en caso de presunta infracción, sin perjuicio de cualquier acción ulterior.
 
 ---
 
@@ -1532,7 +1544,7 @@ En caso de cierre, las reservas en curso podrán cancelarse y reembolsarse, salv
 - (g) Bei **juristischen Personen**: der Vertreter über die erforderlichen Befugnisse verfügt, das Unternehmen zu binden.
 Falsche Angaben können zur Aussetzung oder Schließung des Kontos führen, unbeschadet etwaiger Schadensersatzansprüche.
 
-2.4. **Ordnungsgemäße Nutzung.** Der Kunde unterlässt jede rechtswidrige oder missbräuchliche Nutzung (Betrug, illegale Inhalte, Belästigung, Verletzung von Rechten Dritter, Umleitung von Zahlungsströmen, Identitätsdiebstahl usw.). **SOS Expat ist kein Notdienst**: keine Nutzung für medizinische, lebensbedrohliche oder unmittelbare Notfallsituationen.
+2.4. **Ordnungsgemäße Nutzung und Treu und Glauben.** Der Kunde unterlässt jede rechtswidrige oder missbräuchliche Nutzung (Betrug, illegale Inhalte, Belästigung, Verletzung von Rechten Dritter, Umleitung von Zahlungsströmen, Identitätsdiebstahl usw.) und **verpflichtet sich, die Plattform ausschließlich zu legitimen Zwecken und in gutem Glauben zu nutzen**, indem er seine Situation dem Dienstleister ehrlich darlegt. Die Plattform ist **nicht bestimmt** für: (i) das Erlangen betrügerischer Beratung oder Beratung zu rechtswidrigen Zwecken; (ii) das heimliche Testen oder Bewerten des Dienstleisters; (iii) das Sammeln von Beratung mehrerer Dienstleister ohne ernsthafte Beauftragungsabsicht. **SOS Expat ist kein Notdienst**: keine Nutzung für medizinische, lebensbedrohliche oder unmittelbare Notfallsituationen (Polizei, Feuerwehr, Rettungsdienst, Botschaften in Gefahr). Im Notfall muss der Kunde unverzüglich die örtlichen Notdienste kontaktieren.
 
 2.5. **Kontosicherheit.** Der Kunde schützt seine Zugangsdaten. Jede über sein Konto durchgeführte Aktivität gilt als von ihm ausgeführt. Bei Verdacht auf Kompromittierung muss der Kunde unverzüglich sein Passwort ändern und SOS Expat informieren.
 
@@ -1542,11 +1554,11 @@ Falsche Angaben können zur Aussetzung oder Schließung des Kontos führen, unbe
 
 ## 3. Art der buchbaren Dienstleistungen
 
-3.1. **Anwaltliche Beratung.** Kurze Beratungen (z. B. 20 Minuten). Der Anwalt ist allein verantwortlich für seine Ratschläge und die Einhaltung beruflicher und gesetzlicher Vorschriften.
+3.1. **Anwaltliche Beratung — Unverbindlicher Charakter.** Kurze orientierende Beratungen (z. B. 20 Minuten). Der Anwalt ist allein verantwortlich für seine Ratschläge und die Einhaltung beruflicher und gesetzlicher Vorschriften. **Der Kunde erkennt ausdrücklich an, dass die über die Plattform erbrachte telefonische Beratung eine erste rechtliche Orientierung darstellt und KEINE formelle und vollständige Anwalt-Mandant-Beziehung ersetzt** (eingehende Aktenanalyse, Dokumentenprüfung, Gerichtsvertretung, Erstellung von Schriftsätzen, fortlaufende Betreuung). Für jede Angelegenheit, die eine vollständige Bearbeitung erfordert, muss der Kunde eine separate Honorarvereinbarung mit dem Anwalt oder einem anderen ordnungsgemäß autorisierten Fachmann außerhalb der Plattform abschließen. Allein durch die Vermittlung wird **keine formelle Anwalt-Mandant-Beziehung** im Sinne der lokalen berufsrechtlichen und prozessualen Regeln (Mandat, Auftragsschreiben, Honorarvereinbarung) begründet.
 
-3.2. **Helfer-Dienstleistungen.** Unqualifizierte Unterstützung (praktische Hilfe, informelle Übersetzungen, lokale Kontakte etc.). Rechts-, medizinische oder regulierte Beratung wird nur von lizenzierten Fachkräften bereitgestellt.
+3.2. **Helfer-Dienstleistungen — Nicht regulierte Hilfe.** Unqualifizierte Unterstützung (praktische Hilfe, informelle Übersetzungen, lokale Kontakte, Erfahrungsaustausch von Expatriierten etc.). **Keine rechtliche, medizinische, steuerliche, finanzielle, immobilienbezogene oder regulierte Beratung** ohne entsprechende lokale Lizenz. Der Kunde erkennt an, dass der Helfer **kein** regulierter Fachmann ist und der Austausch ein Erfahrungsaustausch von Expatriierten ohne verbindlichen rechtlichen oder medizinischen Wert darstellt.
 
-3.3. **Keine Garantie.** Wir übernehmen keine Garantie für Ergebnisse, Qualität, Eignung für bestimmte Bedürfnisse oder Verfügbarkeit der Dienstleister.
+3.3. **Keine Erfolgsgarantie.** SOS Expat übernimmt keine Garantie für Ergebnisse, Qualität, Genauigkeit, Eignung für bestimmte Bedürfnisse oder Verfügbarkeit der Dienstleister. Der Kunde ist allein zuständig für die Beurteilung der Relevanz der erhaltenen Informationen und kann diese jederzeit von einem anderen Fachmann überprüfen lassen.
 
 ---
 
@@ -1592,9 +1604,13 @@ Falsche Angaben können zur Aussetzung oder Schließung des Kontos führen, unbe
 
 7.1. **Einzelzahlung und Verteilung.** Der Kunde zahlt eine Gesamtzahlung über die Plattform, die (i) den Anteil des Dienstleisters und (ii) die Vermittlungsgebühr abdeckt. SOS (oder Zahlungsanbieter) zieht die Gebühr ab und überweist den Rest an den Dienstleister.
 
-7.2. **Sicherheit.** Zahlungen erfolgen über externe Zahlungsanbieter. KYC/AML-Prüfungen können erfolgen.
+7.2. **Zahlungssicherheit & PCI-DSS.** Zahlungen werden **ausschließlich** über **PCI-DSS-zertifizierte** externe Zahlungsanbieter abgewickelt:
+- **Stripe Payments Europe Ltd.** (Irland, EU) — **PCI-DSS Level 1** zertifiziert;
+- **PayPal (Europe) S.à r.l. et Cie, S.C.A.** (Luxemburg, EU) — **PCI-DSS** zertifiziert.
 
-7.3. **Zahlungsstreitigkeiten.** Bei Streitigkeiten kann SOS dem Zahlungsanbieter nur notwendige Daten zur Verfügung stellen und Dienste/Zahlungen aussetzen.
+**SOS Expat erfasst, verarbeitet und speichert KEINE Kartendaten** (Kartennummer, CVV, Ablaufdatum). Diese Daten werden direkt beim vom Kunden gewählten Zahlungsanbieter eingegeben und über eine sichere TLS-Verbindung übertragen. **KYC/AML**-Prüfungen (Know Your Customer / Anti-Geldwäsche) können auf relevante Transaktionen angewandt werden, gemäß den europäischen und internationalen rechtlichen Verpflichtungen.
+
+7.3. **Zahlungsstreitigkeiten/Chargebacks.** Bei Streitigkeiten kann SOS dem Zahlungsanbieter nur notwendige Daten zur Verfügung stellen und Dienste/Zahlungen aussetzen. Jeder **missbräuchliche oder bösgläubige Chargeback** kann zur Kontosperrung und einer Forderung der geschuldeten Beträge führen, unbeschadet weiterer Rechtsmittel.
 
 7.4. **Entschädigung.** Bei Rückerstattungen wird der Dienstleisteranteil abgezogen; SOS kann künftige Zahlungen anrechnen.
 
@@ -1617,11 +1633,13 @@ Falsche Angaben können zur Aussetzung oder Schließung des Kontos führen, unbe
 
 ## 9. Verhalten, Sicherheit und Inhalte
 
-9.1. **Respekt.** Der Kunde verpflichtet sich zu respektvollem Verhalten, keine Aufzeichnungen oder Weitergabe ohne gesetzliche Zustimmung und keine Aufforderung zu rechtswidrigen Handlungen.
+9.1. **Respekt & Aufzeichnungsverbot.** Der Kunde verpflichtet sich zu respektvollem Verhalten und darf den Austausch (Audio, Video, Screenshot) **nicht aufzeichnen, nicht filmen, nicht vollständig transkribieren und nicht weitergeben** ohne **vorherige und ausdrückliche Zustimmung** des Dienstleisters und unter Einhaltung der geltenden lokalen Gesetze. Jeder Verstoß kann zur sofortigen Kontosperrung und zur zivil- und/oder strafrechtlichen Haftung des Kunden führen.
 
-9.2. **Bereitgestellte Inhalte.** Informationen müssen wahr, korrekt und legal sein. Der Kunde stellt SOS und Dienstleister frei von Ansprüchen im Zusammenhang mit rechtswidrigen Inhalten.
+9.2. **Aufzeichnung durch SOS Expat.** **Standardmäßig zeichnet SOS Expat den Audio-Inhalt** der Anrufe zwischen Kunde und Dienstleister **NICHT auf**. Es werden nur **technische Metadaten** gespeichert: Zeitstempel, Dauer, Sitzungs-ID, Verbindungsstatus. SOS Expat **behält sich das Recht vor**, eine vorübergehende Audio-Aufzeichnung in streng begrenzten Fällen zu aktivieren: (i) Betrugsverdacht, (ii) Meldung von Missbrauch oder rechtswidrigem Verhalten, (iii) Anordnung einer zuständigen Justizbehörde, (iv) Schutz lebenswichtiger Interessen einer Person. In diesen Fällen wird der Kunde zu Beginn des Anrufs informiert und die Aufzeichnung wird höchstens **sechs (6) Monate** aufbewahrt (vorbehaltlich Verlängerung durch ein Gerichtsverfahren), gemäß den Empfehlungen der zuständigen Datenschutzbehörde und der DSGVO.
 
-9.3. **Beschwerden.** Missbrauch kann über das Kontaktformular gemeldet werden.
+9.3. **Bereitgestellte Inhalte.** Informationen müssen wahr, korrekt und legal sein. Der Kunde stellt SOS und Dienstleister frei von Ansprüchen im Zusammenhang mit rechtswidrigen Inhalten.
+
+9.4. **Beschwerden.** Missbrauch kann über das Kontaktformular gemeldet werden. SOS Expat bearbeitet Meldungen innerhalb angemessener Zeit und kann jedes Konto oder jede Leistung bei mutmaßlichem Verstoß aussetzen, unbeschadet weiterer Maßnahmen.
 
 ---
 
@@ -1780,7 +1798,7 @@ Bei Schließung können laufende Buchungen storniert und erstattet werden, auße
 - (g) Для **юридических лиц**: представитель имеет необходимые полномочия.
 Любое ложное заявление может повлечь приостановку или закрытие учётной записи.
 
-2.4. **Надлежащее использование.** Клиент не должен использовать Платформу незаконно или злоумышленно (мошенничество, незаконный контент, домогательства, хищение личных данных и т.д.). **SOS Expat не является службой экстренной помощи**.
+2.4. **Надлежащее использование и добросовестность.** Клиент не должен использовать Платформу незаконно или злоумышленно (мошенничество, незаконный контент, домогательства, нарушение прав третьих лиц, отвлечение платёжных потоков, хищение личных данных и т.д.) и **обязуется использовать Платформу исключительно в законных целях и добросовестно**, честно представляя свою ситуацию Поставщику. Платформа **не предназначена** для: (i) получения мошеннических консультаций или консультаций для незаконных целей; (ii) скрытного тестирования или оценки Поставщика; (iii) сбора советов от нескольких Поставщиков без серьёзного намерения заключить договор. **SOS Expat не является службой экстренной помощи**: запрещено использование для медицинских, угрожающих жизни или непосредственных экстренных ситуаций (полиция, пожарная служба, скорая помощь, посольства в опасности). В случае чрезвычайной ситуации Клиент должен немедленно обратиться в местные службы экстренной помощи.
 
 2.5. **Безопасность учётной записи.** Клиент защищает свои учётные данные. Любая активность через его учётную запись считается совершённой им.
 
@@ -1790,11 +1808,11 @@ Bei Schließung können laufende Buchungen storniert und erstattet werden, auße
 
 ## 3. Характер услуг, доступных для бронирования
 
-3.1. **Консультации с юристами.** Краткие консультации (например, 20 минут). Юрист несёт полную ответственность за свои советы и соблюдение профессиональной этики и местного законодательства.
+3.1. **Консультации с юристами — Неформальный характер.** Краткие ориентирующие консультации (например, 20 минут). Юрист несёт полную ответственность за свои советы и соблюдение профессиональной этики и местного законодательства. **Клиент прямо признаёт, что телефонная консультация, предоставляемая через Платформу, представляет собой первичную юридическую ориентацию и НЕ заменяет формальные и полноценные отношения адвокат-клиент** (углублённый анализ дела, изучение документов, представление в суде, составление актов, постоянное сопровождение). Для любого дела, требующего полного ведения, Клиент должен заключить отдельное соглашение о гонораре с Юристом или другим должным образом уполномоченным специалистом вне Платформы. Простое соединение **не устанавливает никаких формальных отношений адвокат-клиент** в смысле местных деонтологических и процессуальных правил (мандат, письмо-поручение, соглашение о гонораре).
 
-3.2. **Консультации с помощниками.** Неквалифицированная поддержка (практическая помощь, неформальный перевод, контакты на месте и др.). Юридические, медицинские или регулируемые консультации предоставляются только при наличии соответствующей лицензии.
+3.2. **Консультации с помощниками — Нерегулируемая помощь.** Нерегулируемая помощь (практические рекомендации, неформальный перевод, местные контакты, обмен опытом экспата...). **Никаких юридических, медицинских, налоговых, финансовых, риелторских или регулируемых консультаций** без соответствующей местной лицензии. Клиент признаёт, что Помощник **не** является регулируемым специалистом и что обмен представляет собой обмен опытом экспата без обязательной юридической или медицинской ценности.
 
-3.3. **Без гарантии.** Мы не гарантируем результаты, качество, соответствие конкретным потребностям или доступность поставщиков услуг.
+3.3. **Без гарантии результата.** SOS Expat не гарантирует результаты, качество, точность, соответствие конкретным потребностям или доступность Поставщиков. Клиент является единственным судьёй уместности любой полученной информации и волен проверить её у другого специалиста.
 
 ---
 
@@ -1843,9 +1861,13 @@ Bei Schließung können laufende Buchungen storniert und erstattet werden, auße
 
 7.1. **Единый платёж и распределение.** Клиент осуществляет единый платёж через Платформу, покрывающий (i) долю Поставщика и (ii) комиссию за соединение. SOS (или платёжный провайдер) списывает платёж, удерживает комиссию и переводит остаток Поставщику.
 
-7.2. **Безопасность.** Платежи проходят через внешние платёжные провайдеры. Могут применяться проверки KYC/AML.
+7.2. **Безопасность платежей и PCI-DSS.** Платежи обрабатываются **исключительно** сертифицированными по **PCI-DSS** (Payment Card Industry Data Security Standard) платёжными провайдерами:
+- **Stripe Payments Europe Ltd.** (Ирландия, ЕС) — сертификат **PCI-DSS Уровень 1**;
+- **PayPal (Europe) S.à r.l. et Cie, S.C.A.** (Люксембург, ЕС) — сертификат **PCI-DSS**.
 
-7.3. **Споры по платежам.** В случае спора SOS может предоставить платёжному провайдеру только необходимые данные и приостановить связанные услуги/платежи.
+**SOS Expat не собирает, не обрабатывает и не хранит данные банковских карт** (номер карты, CVV, срок действия). Эти данные вводятся непосредственно у платёжного провайдера, выбранного Клиентом, и передаются по защищённому соединению TLS. Проверки **KYC/AML** (Know Your Customer / противодействие отмыванию денег) могут применяться к соответствующим транзакциям согласно европейским и международным правовым обязательствам.
+
+7.3. **Чарджбэки/споры.** В случае спора SOS может предоставить платёжному провайдеру только необходимые данные и приостановить связанные услуги/платежи. Любой **злоупотребительный или недобросовестный чарджбэк** может привести к блокировке счёта и требованию возврата причитающихся сумм без ущерба для других средств правовой защиты.
 
 7.4. **Компенсация.** При возврате суммы часть, относящаяся к Поставщику, вычитается; SOS может компенсировать будущие платежи.
 
@@ -1868,11 +1890,13 @@ Bei Schließung können laufende Buchungen storniert und erstattet werden, auße
 
 ## 9. Поведение, безопасность и контент
 
-9.1. **Уважение.** Клиент обязуется вести себя уважительно, не записывать и не распространять обмен без законного согласия и не запрашивать незаконные действия.
+9.1. **Уважение и запрет на запись.** Клиент обязуется вести себя уважительно и **не записывать, не снимать, не транскрибировать полностью и не распространять** обмен (аудио, видео, скриншот) без **предварительного и явного согласия** Поставщика и в соответствии с применимым местным законодательством. Любое нарушение может повлечь немедленную блокировку счёта и гражданскую и/или уголовную ответственность Клиента.
 
-9.2. **Предоставленный контент.** Информация должна быть правдивой, точной и законной. Клиент компенсирует SOS и Поставщика за любые претензии, связанные с незаконным контентом.
+9.2. **Запись со стороны SOS Expat.** **По умолчанию SOS Expat НЕ записывает аудио-содержание** звонков между Клиентом и Поставщиком. Сохраняются только **технические метаданные**: метка времени, длительность, идентификаторы сессии, статус соединения. SOS Expat **оставляет за собой право** активировать временную аудиозапись в строго ограниченных случаях: (i) подозрение в мошенничестве, (ii) сообщение о злоупотреблении или незаконном поведении, (iii) предписание компетентного судебного органа, (iv) защита жизненно важных интересов человека. В этих случаях Клиент будет проинформирован в начале звонка, и запись будет храниться максимум **шесть (6) месяцев** (за исключением продления судебным процессом), в соответствии с рекомендациями надзорного органа по защите данных и GDPR.
 
-9.3. **Жалобы.** Любые злоупотребления могут быть сообщены через форму обратной связи.
+9.3. **Предоставленный контент.** Информация должна быть правдивой, точной и законной. Клиент компенсирует SOS и Поставщика за любые претензии, связанные с незаконным контентом.
+
+9.4. **Жалобы.** Любые злоупотребления могут быть сообщены через форму обратной связи. SOS Expat обрабатывает сообщения в разумный срок и может приостановить любой счёт или услугу при подозрении на нарушение, без ущерба для дальнейших действий.
 
 ---
 
@@ -2030,7 +2054,7 @@ const defaultPt = `
 2.3. **Uso conforme.** O Cliente se proíbe de qualquer uso ilícito ou abusivo (fraude, conteúdo ilegal, assédio, violação de direitos de terceiros, desvio de fluxos de pagamento, etc.). Nenhum uso para situações médicas ou vitais de emergência; SOS não é um serviço de emergência.
 
 
-2.4. **Disponibilidade.** A Plataforma é fornecida "no estado em que se encontra": nenhuma disponibilidade ininterrupta é garantida (manutenção, incidentes, força maior).
+2.4. **Uso conforme e boa-fé.** O Cliente abster-se-á de qualquer uso ilícito ou abusivo (fraude, conteúdo ilegal, assédio, violação de direitos de terceiros, desvio de fluxos de pagamento, usurpação de identidade, etc.) e **compromete-se a utilizar a Plataforma exclusivamente para fins legítimos e de boa-fé**, apresentando honestamente a sua situação ao Prestador. A Plataforma **não se destina** a: (i) obter aconselhamento fraudulento ou utilizado para fins ilícitos; (ii) testar ou avaliar o Prestador à sua revelia; (iii) recolher conselhos de vários Prestadores sem intenção séria de prestação. **SOS Expat não é um serviço de emergência**: nenhum uso para situações médicas, vitais ou de emergência imediata (polícia, bombeiros, INEM, embaixadas em perigo). Em caso de emergência, o Cliente deve contactar imediatamente os serviços de emergência locais.
 
 
 ---
@@ -2039,13 +2063,13 @@ const defaultPt = `
 ## 3. Natureza dos serviços reserváveis
 
 
-3.1. **Chamadas com Advogados.** Consultas breves de orientação (ex. 20 minutos). O Advogado permanece exclusivamente responsável por seus conselhos e conformidade com sua deontologia/leis locais.
+3.1. **Chamadas com Advogados — Caráter não formal.** Consultas breves de orientação (ex. 20 minutos). O Advogado permanece exclusivamente responsável pelos seus conselhos e conformidade com a sua deontologia/leis locais. **O Cliente reconhece expressamente que a consulta telefónica realizada através da Plataforma constitui uma orientação jurídica de primeiro nível e NÃO substitui uma relação advogado-cliente formal e completa** (análise aprofundada do processo, estudo de documentos, representação em tribunal, redação de atos, acompanhamento contínuo). Para qualquer matéria que exija uma gestão completa, o Cliente deve celebrar um acordo de honorários separado com o Advogado ou outro profissional devidamente habilitado, fora da Plataforma. A simples ligação **não estabelece qualquer vínculo advogado-cliente formal** no sentido das regras deontológicas e processuais locais (mandato, carta de encargo, acordo de honorários).
 
 
-3.2. **Chamadas com Assistentes.** Ajuda não regulamentada (orientação prática, tradução informal, contatos locais...). Nenhum conselho jurídico/médico/regulamentado sem licença local adequada.
+3.2. **Chamadas com Assistentes — Ajuda não regulamentada.** Ajuda não regulamentada (orientação prática, tradução informal, contactos locais, partilha de experiência de expatriado...). **Nenhum aconselhamento jurídico, médico, fiscal, financeiro, imobiliário ou regulamentado** sem licença local adequada. O Cliente reconhece que o Assistente **não** é um profissional regulamentado e que a troca constitui uma partilha de experiência de expatriado, sem valor jurídico ou médico vinculativo.
 
 
-3.3. **Sem garantias.** Não garantimos nem o resultado, nem a qualidade, nem a adequação a uma necessidade particular, nem a disponibilidade dos prestadores.
+3.3. **Sem garantia de resultado.** SOS Expat não garante nem o resultado, nem a qualidade, nem a exatidão, nem a adequação a uma necessidade particular, nem a disponibilidade dos Prestadores. O Cliente é o único juiz da pertinência de qualquer informação recebida e permanece livre de a fazer verificar por outro profissional.
 
 
 ---
@@ -2110,10 +2134,14 @@ O Cliente vê o **preço total com impostos** antes de confirmar sua reserva.
 7.1. **Pagamento único & divisão.** O Cliente efetua um pagamento único via Plataforma cobrindo (i) a parte do Prestador e (ii) as taxas de conexão. SOS (ou seu processador de pagamento) coleta, deduz suas taxas, depois remete o saldo ao Prestador.
 
 
-7.2. **Segurança.** Os pagamentos transitam por processadores de pagamento de terceiros. Controles KYC/AML podem se aplicar.
+7.2. **Segurança dos pagamentos & PCI-DSS.** Os pagamentos transitam **exclusivamente** por processadores de pagamento de terceiros certificados **PCI-DSS** (Payment Card Industry Data Security Standard):
+- **Stripe Payments Europe Ltd.** (Irlanda, UE) — certificado **PCI-DSS Nível 1**;
+- **PayPal (Europe) S.à r.l. et Cie, S.C.A.** (Luxemburgo, UE) — certificado **PCI-DSS**.
+
+**SOS Expat não recolhe, não processa nem armazena qualquer dado de cartão bancário** (número de cartão, CVV, data de validade). Estes dados são introduzidos diretamente junto do processador de pagamento escolhido pelo Cliente e transitam por uma ligação segura TLS. Controlos **KYC/AML** podem aplicar-se às transações relevantes.
 
 
-7.3. **Contestações/disputa.** Em caso de disputa de pagamento, SOS pode transmitir ao processador de pagamento os dados estritamente necessários e suspender serviços/pagamentos relacionados.
+7.3. **Contestações/chargebacks.** Em caso de disputa de pagamento, SOS pode transmitir ao processador de pagamento os dados estritamente necessários e suspender serviços/pagamentos relacionados. Qualquer **chargeback abusivo ou de má-fé** pode resultar na suspensão da conta e numa reclamação dos montantes devidos, sem prejuízo de qualquer recurso ulterior.
 
 
 7.4. **Compensação.** Se um reembolso for concedido ao Cliente, a parte correspondente é deduzida do prestador envolvido; SOS pode compensar sobre seus pagamentos futuros.
@@ -2145,13 +2173,16 @@ O Cliente vê o **preço total com impostos** antes de confirmar sua reserva.
 ## 9. Comportamentos, segurança e conteúdos
 
 
-9.1. **Respeito.** O Cliente se compromete a um comportamento respeitoso, não gravar nem difundir o intercâmbio sem consentimento legalmente exigido, e não solicitar atos ilegais.
+9.1. **Respeito e proibição de gravar.** O Cliente compromete-se a um comportamento respeitoso e a **não gravar, não filmar, não transcrever integralmente nem difundir** a troca (áudio, vídeo, captura de ecrã) sem o **consentimento prévio e explícito** do Prestador e em conformidade com as leis locais aplicáveis. Qualquer infração pode resultar na suspensão imediata da conta e na responsabilidade civil e/ou criminal do Cliente.
 
 
-9.2. **Conteúdos fornecidos.** As informações transmitidas devem ser leais, exatas e lícitas. O Cliente garante à SOS e ao Prestador contra qualquer reclamação relacionada a conteúdos ilegais que fornecesse.
+9.2. **Gravação pela SOS Expat.** **Por defeito, a SOS Expat NÃO grava o conteúdo áudio** das chamadas entre Cliente e Prestador. Apenas os **metadados técnicos** são conservados: data e hora, duração, identificadores de sessão, estado de conexão. A SOS Expat **reserva-se o direito** de ativar uma gravação áudio temporária em casos estritamente limitados (suspeita de fraude, denúncia de abuso, ordem judicial, proteção de interesses vitais). Nestes casos, o Cliente será informado no início da chamada e a gravação será conservada por um máximo de **seis (6) meses**, conforme o RGPD.
 
 
-9.3. **Denúncia.** Qualquer abuso pode ser denunciado via formulário de contato.
+9.3. **Conteúdos fornecidos.** As informações transmitidas devem ser leais, exatas e lícitas. O Cliente garante à SOS e ao Prestador contra qualquer reclamação relacionada a conteúdos ilegais que fornecesse.
+
+
+9.4. **Denúncia.** Qualquer abuso pode ser denunciado via formulário de contacto.
 
 
 ---
@@ -2314,7 +2345,7 @@ const defaultCh = `
 - (g) 对于**法人实体**：代表人拥有代表公司行事的必要授权。
 任何虚假声明可能导致账户暂停或关闭，且不影响任何损害赔偿请求。
 
-2.4. **合规使用。** 客户不得进行任何非法或滥用性使用（欺诈、非法内容、骚扰、侵犯第三方权利、转移支付流、身份盗用等）。**SOS Expat 不是紧急服务**：不得用于任何医疗、生命威胁或紧急情况。
+2.4. **合规使用与诚信原则。** 客户不得进行任何非法或滥用性使用（欺诈、非法内容、骚扰、侵犯第三方权利、转移支付流、身份盗用等），并**承诺仅出于合法目的和诚信使用平台**，向服务提供商如实陈述其情况。平台**不适用于**：(i) 获取欺诈性建议或用于非法目的的建议；(ii) 在服务提供商不知情的情况下测试或评估其；(iii) 在没有真正服务意图的情况下从多个服务提供商收集建议。**SOS Expat 不是紧急服务**：不得用于任何医疗、生命威胁或紧急情况（警察、消防、救护车、处于危险中的大使馆）。在紧急情况下，客户必须立即联系当地紧急服务。
 
 2.5. **账户安全。** 客户保护其登录凭据。通过其账户进行的任何活动均视为由其本人进行。如怀疑账户被盗用，客户必须立即更改密码并通知 SOS Expat。
 
@@ -2324,11 +2355,11 @@ const defaultCh = `
 
 ## 3. 可预订服务的性质
 
-3.1. **与律师通话。** 简短的指导性咨询（例如 20 分钟）。律师对其建议及遵守其职业道德/当地法律负全部责任。
+3.1. **与律师通话——非正式性质。** 简短的指导性咨询（例如 20 分钟）。律师对其建议及遵守其职业道德/当地法律负全部责任。**客户明确承认通过平台提供的电话咨询构成初级法律指导，并不能取代正式和完整的律师-客户关系**（深入案件分析、文件审查、出庭代理、起草法律文书、持续跟进）。对于任何需要全面处理的事宜，客户必须与律师或其他正式授权的专业人士在平台之外签订单独的委托协议。仅通过连接**不会建立任何正式的律师-客户关系**，即当地职业道德和程序规则意义上的关系（委托、委托函、收费协议）。
 
-3.2. **与援助人员通话。** 非受监管的援助（实用指导、非正式翻译、当地联系人等）。未持有适当当地执照，不提供法律/医疗/受监管建议。
+3.2. **与援助人员通话——非受监管的援助。** 非受监管的援助（实用指导、非正式翻译、当地联系人、外籍人士经验分享等）。未持有适当当地执照，**不提供任何法律、医疗、税务、金融、房地产或受监管建议**。客户承认援助人员**不是**受监管的专业人士，且交流构成外籍人士经验分享，不具有约束性的法律或医疗价值。
 
-3.3. **不作保证。** 我们不保证结果、质量、是否适合特定需求或服务提供商的可用性。
+3.3. **不保证结果。** SOS Expat 不保证结果、质量、准确性、是否适合特定需求或服务提供商的可用性。客户是所收到任何信息相关性的唯一判断者，并可自由地由另一位专业人士进行核实。
 
 ---
 
@@ -2377,9 +2408,13 @@ const defaultCh = `
 
 7.1. **单次付款与分配。** 客户通过平台进行单次付款，涵盖 (i) 服务提供商份额和 (ii) 连接费用。SOS（或其支付服务提供商）收款、扣除其费用，然后将余额转给服务提供商。
 
-7.2. **安全。** 付款由第三方支付服务提供商处理。可能适用 KYC/反洗钱控制。
+7.2. **支付安全与 PCI-DSS。** 付款**仅**由 **PCI-DSS** (Payment Card Industry Data Security Standard) 认证的第三方支付服务提供商处理：
+- **Stripe Payments Europe Ltd.**（爱尔兰，欧盟）— **PCI-DSS Level 1** 认证；
+- **PayPal (Europe) S.à r.l. et Cie, S.C.A.**（卢森堡，欧盟）— **PCI-DSS** 认证。
 
-7.3. **退单/争议。** 如发生付款争议，SOS 可向支付服务提供商传输必要数据，并暂停相关服务/付款。
+**SOS Expat 不收集、不处理也不存储任何银行卡数据**（卡号、CVV、有效期）。这些数据直接由客户选择的支付服务提供商录入，并通过安全的 TLS 连接传输。可能根据欧洲和国际法律义务对相关交易适用 **KYC/AML**（了解你的客户/反洗钱）控制。
+
+7.3. **退单/争议。** 如发生付款争议，SOS 可向支付服务提供商传输必要数据，并暂停相关服务/付款。任何**滥用性或恶意的退单**可能导致账户暂停和应付款的索赔，且不影响其他追索权。
 
 7.4. **抵销。** 如果向客户退款，相应份额将从相关服务提供商处扣除；SOS 可从其未来付款中抵销。
 
@@ -2401,11 +2436,13 @@ const defaultCh = `
 
 ## 9. 行为、安全与内容
 
-9.1. **尊重。** 客户承诺行为尊重，未经法律要求的同意不得录制或传播交流内容，不得请求非法行为。
+9.1. **尊重与录制禁令。** 客户承诺行为尊重，未经服务提供商的**事先和明确同意**且依据适用的当地法律，**不得录制、不得拍摄、不得完整转录或传播**交流内容（音频、视频、屏幕截图）。任何违反行为可能导致立即暂停账户并使客户承担民事和/或刑事责任。
 
-9.2. **提供的内容。** 传输的信息必须忠实、准确且合法。客户就其提供的任何非法内容向 SOS 和服务提供商提供担保，使其免受相关索赔。
+9.2. **SOS Expat 的录制。** **默认情况下，SOS Expat 不录制**客户和服务提供商之间通话的音频内容。仅保留**技术元数据**：时间戳、时长、会话标识符、连接状态。在严格限定的情况下，SOS Expat **保留**启用临时音频录制的权利：(i) 怀疑欺诈，(ii) 滥用或非法行为的报告，(iii) 主管司法机关的命令，(iv) 保护人员的重大利益。在这种情况下，客户将在通话开始时被告知，录制最多保留**六 (6) 个月**（除非司法程序要求延长），符合 GDPR 规定。
 
-9.3. **举报。** 任何滥用行为可通过联系表单举报。
+9.3. **提供的内容。** 传输的信息必须忠实、准确且合法。客户就其提供的任何非法内容向 SOS 和服务提供商提供担保，使其免受相关索赔。
+
+9.4. **举报。** 任何滥用行为可通过联系表单举报。
 
 ---
 
@@ -2565,7 +2602,7 @@ const defaultCh = `
 - (ز) بالنسبة لـ**الأشخاص الاعتباريين**: يملك الممثل الصلاحيات اللازمة للتصرف نيابة عن الشركة.
 قد يؤدي أي إقرار كاذب إلى تعليق أو إغلاق الحساب، دون المساس بأي دعوى تعويض.
 
-2.4. **الاستخدام المتوافق.** يُحظر على العميل أي استخدام غير قانوني أو تعسفي (احتيال، محتوى غير قانوني، مضايقة، انتهاك حقوق الغير، تحويل تدفقات الدفع، انتحال الهوية، إلخ). **SOS Expat ليست خدمة طوارئ**: لا يجوز استخدامها للحالات الطبية أو المهددة للحياة أو حالات الطوارئ الفورية.
+2.4. **الاستخدام المتوافق وحسن النية.** يُحظر على العميل أي استخدام غير قانوني أو تعسفي (احتيال، محتوى غير قانوني، مضايقة، انتهاك حقوق الغير، تحويل تدفقات الدفع، انتحال الهوية، إلخ) **ويتعهد باستخدام المنصة حصرياً لأغراض مشروعة وبحسن نية**، مع تقديم وضعه بصدق إلى مقدم الخدمة. **لا تهدف المنصة** إلى: (i) الحصول على نصائح احتيالية أو نصائح مستخدمة لأغراض غير قانونية؛ (ii) اختبار أو تقييم مقدم الخدمة دون علمه؛ (iii) جمع نصائح من عدة مقدمي خدمات دون نية جادة في التعاقد. **SOS Expat ليست خدمة طوارئ**: لا يجوز استخدامها للحالات الطبية أو المهددة للحياة أو حالات الطوارئ الفورية (الشرطة، الإطفاء، الإسعاف، السفارات في خطر). في حالة الطوارئ، يجب على العميل الاتصال فوراً بخدمات الطوارئ المحلية.
 
 2.5. **أمان الحساب.** يحمي العميل بيانات تسجيل الدخول الخاصة به. يُعتبر أي نشاط يتم عبر حسابه صادراً عنه. في حالة الاشتباه في اختراق الحساب، يجب على العميل تغيير كلمة المرور فوراً وإخطار SOS Expat.
 
@@ -2575,11 +2612,11 @@ const defaultCh = `
 
 ## 3. طبيعة الخدمات القابلة للحجز
 
-3.1. **المكالمات مع المحامين.** استشارات توجيهية قصيرة (مثل 20 دقيقة). يظل المحامي مسؤولاً وحده عن نصائحه والامتثال لأخلاقياته المهنية/القوانين المحلية.
+3.1. **المكالمات مع المحامين — طابع غير رسمي.** استشارات توجيهية قصيرة (مثل 20 دقيقة). يظل المحامي مسؤولاً وحده عن نصائحه والامتثال لأخلاقياته المهنية/القوانين المحلية. **يقر العميل صراحة بأن الاستشارة الهاتفية المقدمة عبر المنصة تشكل توجيهاً قانونياً من المستوى الأول ولا تحل محل علاقة محامٍ-موكل رسمية وكاملة** (تحليل معمق للملف، دراسة الوثائق، التمثيل أمام المحاكم، صياغة الوثائق، المتابعة المستمرة). لأي قضية تتطلب معالجة كاملة، يجب على العميل إبرام اتفاقية أتعاب منفصلة مع المحامي أو أي محترف آخر مرخص له، خارج المنصة. مجرد التواصل **لا يُنشئ أي علاقة محامٍ-موكل رسمية** بمعنى القواعد الأخلاقية والإجرائية المحلية (تفويض، خطاب تكليف، اتفاقية أتعاب).
 
-3.2. **المكالمات مع المساعدين.** مساعدة غير منظمة (إرشادات عملية، ترجمة غير رسمية، جهات اتصال محلية...). لا يُقدم أي استشارة قانونية/طبية/منظمة بدون ترخيص محلي مناسب.
+3.2. **المكالمات مع المساعدين — مساعدة غير منظمة.** مساعدة غير منظمة (إرشادات عملية، ترجمة غير رسمية، جهات اتصال محلية، تبادل خبرات المغترب...). **لا يُقدم أي استشارة قانونية أو طبية أو ضريبية أو مالية أو عقارية أو منظمة** بدون ترخيص محلي مناسب. يقر العميل بأن المساعد **ليس** محترفاً منظماً وأن التبادل يشكل تبادل خبرات مغترب، دون قيمة قانونية أو طبية ملزمة.
 
-3.3. **بدون ضمانات.** لا نضمن النتيجة أو الجودة أو الملاءمة لاحتياجات معينة أو توفر مقدمي الخدمات.
+3.3. **بدون ضمان للنتيجة.** لا تضمن SOS Expat النتيجة أو الجودة أو الدقة أو الملاءمة لاحتياجات معينة أو توفر مقدمي الخدمات. العميل هو الحكم الوحيد على أهمية أي معلومة يتلقاها ويظل حراً في التحقق منها لدى محترف آخر.
 
 ---
 
@@ -2628,9 +2665,13 @@ const defaultCh = `
 
 7.1. **دفع موحد وتوزيع.** يقوم العميل بدفع واحد عبر المنصة يغطي (أ) حصة مقدم الخدمة و(ب) رسوم الربط. تجمع SOS (أو مزود الدفع الخاص بها)، تخصم رسومها، ثم تحول الرصيد إلى مقدم الخدمة.
 
-7.2. **الأمان.** تتم معالجة المدفوعات عبر مزودي دفع من طرف ثالث. قد تُطبق عمليات التحقق من هوية العميل (KYC)/مكافحة غسيل الأموال (AML).
+7.2. **أمان المدفوعات و PCI-DSS.** تتم معالجة المدفوعات **حصرياً** عبر مزودي دفع من طرف ثالث معتمدين **PCI-DSS** (Payment Card Industry Data Security Standard):
+- **Stripe Payments Europe Ltd.** (أيرلندا، الاتحاد الأوروبي) — معتمد **PCI-DSS المستوى 1**؛
+- **PayPal (Europe) S.à r.l. et Cie, S.C.A.** (لوكسمبورغ، الاتحاد الأوروبي) — معتمد **PCI-DSS**.
 
-7.3. **رد المبالغ/النزاعات.** في حالة نزاع بشأن الدفع، يمكن لـ SOS نقل البيانات الضرورية إلى مزود الدفع وتعليق الخدمات/المدفوعات ذات الصلة.
+**SOS Expat لا تجمع ولا تعالج ولا تخزن أي بيانات بطاقة بنكية** (رقم البطاقة، CVV، تاريخ انتهاء الصلاحية). يتم إدخال هذه البيانات مباشرة لدى مزود الدفع الذي يختاره العميل وتنتقل عبر اتصال TLS آمن. قد تُطبق عمليات التحقق **KYC/AML** (اعرف عميلك / مكافحة غسيل الأموال) على المعاملات المعنية، وفقاً للالتزامات القانونية الأوروبية والدولية.
+
+7.3. **رد المبالغ/النزاعات.** في حالة نزاع بشأن الدفع، يمكن لـ SOS نقل البيانات الضرورية إلى مزود الدفع وتعليق الخدمات/المدفوعات ذات الصلة. أي **رد مبالغ تعسفي أو بسوء نية** قد يؤدي إلى تعليق الحساب والمطالبة بالمبالغ المستحقة، دون الإخلال بأي حق آخر في الانتصاف.
 
 7.4. **المقاصة.** إذا مُنح استرداد للعميل، يُخصم الجزء المقابل من مقدم الخدمة المعني؛ يمكن لـ SOS المقاصة من مدفوعاته المستقبلية.
 
@@ -2652,11 +2693,13 @@ const defaultCh = `
 
 ## 9. السلوك والأمان والمحتوى
 
-9.1. **الاحترام.** يلتزم العميل بسلوك محترم، وعدم تسجيل أو نشر التبادل بدون الموافقة المطلوبة قانوناً، وعدم طلب أعمال غير قانونية.
+9.1. **الاحترام وحظر التسجيل.** يلتزم العميل بسلوك محترم وبعدم **تسجيل أو تصوير أو تدوين كامل أو نشر** التبادل (صوت، فيديو، لقطة شاشة) بدون **الموافقة المسبقة والصريحة** لمقدم الخدمة وفقاً للقوانين المحلية المعمول بها. أي مخالفة قد تؤدي إلى تعليق الحساب فوراً وإشراك المسؤولية المدنية و/أو الجنائية للعميل.
 
-9.2. **المحتوى المقدم.** يجب أن تكون المعلومات المنقولة نزيهة ودقيقة وقانونية. يضمن العميل SOS ومقدم الخدمة ضد أي مطالبة تتعلق بمحتويات غير قانونية قدمها.
+9.2. **التسجيل من قِبل SOS Expat.** **بشكل افتراضي، لا تسجل SOS Expat المحتوى الصوتي** للمكالمات بين العميل ومقدم الخدمة. تُحفظ فقط **البيانات الوصفية التقنية**: الطابع الزمني، المدة، معرفات الجلسة، حالة الاتصال. **تحتفظ SOS Expat بالحق** في تفعيل تسجيل صوتي مؤقت في حالات محدودة بشكل صارم: (i) الاشتباه في احتيال، (ii) الإبلاغ عن إساءة استخدام أو سلوك غير قانوني، (iii) أمر من سلطة قضائية مختصة، (iv) حماية المصالح الحيوية لشخص ما. في هذه الحالات، سيتم إعلام العميل في بداية المكالمة وسيتم الاحتفاظ بالتسجيل لمدة أقصاها **ستة (6) أشهر** (ما لم يتم التمديد بموجب إجراءات قضائية)، وفقاً للائحة العامة لحماية البيانات.
 
-9.3. **الإبلاغ.** يمكن الإبلاغ عن أي إساءة عبر نموذج الاتصال.
+9.3. **المحتوى المقدم.** يجب أن تكون المعلومات المنقولة نزيهة ودقيقة وقانونية. يضمن العميل SOS ومقدم الخدمة ضد أي مطالبة تتعلق بمحتويات غير قانونية قدمها.
+
+9.4. **الإبلاغ.** يمكن الإبلاغ عن أي إساءة عبر نموذج الاتصال.
 
 ---
 
