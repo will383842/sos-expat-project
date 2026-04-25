@@ -164,3 +164,15 @@ sos/full_users.json
 
 # Press dossier — source design assets (logos servis depuis le VPS Laravel)
 sos-expat-press-dossier-a-jour/
+
+# ================================
+# Audits & dumps temporaires (HTML scrappé, headers, wrangler-out, etc.)
+# ================================
+/tmp/
+**/wrangler-out/
+Automatisation Landing Pages/
+
+# ================================
+# Logs de session Claude Code (perso, jamais en git)
+# ================================
+CONVERSATION-*.md
