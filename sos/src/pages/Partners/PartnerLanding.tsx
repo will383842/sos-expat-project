@@ -27,13 +27,11 @@ import {
   Globe,
   DollarSign,
   BarChart3,
-  Link2,
   Users,
   Shield,
   TrendingUp,
   Zap,
   HeadphonesIcon,
-  Award,
   Loader2,
   ExternalLink,
   Briefcase,
@@ -44,17 +42,22 @@ import {
   Plane,
   Scale,
   Heart,
-  Megaphone,
   GraduationCap,
   Handshake,
   MessageSquare,
   Code,
-  Timer,
   Languages,
   PhoneCall,
   Landmark,
+  Truck,
+  Network,
+  FileText,
+  Lock,
+  Receipt,
+  Activity,
+  Layers,
+  PieChart,
 } from 'lucide-react';
-import ImageBankSection from '@/components/ImageBankSection';
 
 // ============================================================================
 // STYLES
@@ -778,15 +781,19 @@ const PartnerLanding: React.FC = () => {
   }), [language]);
 
   // ======= JSON-LD — FAQPage (8 FAQ items from the page) =======
+  // 2026-04-25 refactor: list explicit IDs instead of iterating 1..8 because
+  // q6 (rémunération) and q8 (réduction) were removed and replaced by q9 (invoicing)
+  // and q10 (e-signature). Hard-coding the IDs keeps Schema.org output consistent.
+  const FAQ_ID_LIST = [1, 2, 3, 4, 5, 7, 9, 10] as const;
   const jsonLdFAQ = useMemo(() => ({
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    'mainEntity': Array.from({ length: 8 }, (_, i) => ({
+    'mainEntity': FAQ_ID_LIST.map((n) => ({
       '@type': 'Question',
-      'name': intl.formatMessage({ id: `partner.landing.v2.faq.q${i + 1}` }),
+      'name': intl.formatMessage({ id: `partner.landing.v2.faq.q${n}` }),
       'acceptedAnswer': {
         '@type': 'Answer',
-        'text': intl.formatMessage({ id: `partner.landing.v2.faq.a${i + 1}` }),
+        'text': intl.formatMessage({ id: `partner.landing.v2.faq.a${n}` }),
       },
     })),
   }), [intl]);
@@ -815,7 +822,7 @@ const PartnerLanding: React.FC = () => {
   const jsonLdHowTo = useMemo(() => ({
     '@context': 'https://schema.org',
     '@type': 'HowTo',
-    'name': intl.formatMessage({ id: 'partner.landing.v2.hero.badge', defaultMessage: 'Programme Partenaire Premium' }),
+    'name': intl.formatMessage({ id: 'partner.landing.v2.hero.badge', defaultMessage: 'SOS-Call for Business' }),
     'description': seoData.description,
     'image': 'https://sos-expat.com/og-image.webp',
     'totalTime': 'PT10M',
@@ -929,7 +936,7 @@ const PartnerLanding: React.FC = () => {
       titleId: 'partner.landing.v2.value.custom.title',
       titleDefault: 'Un partenariat sur mesure',
       descId: 'partner.landing.v2.value.custom.desc',
-      descDefault: 'Chaque collaboration est unique. Nous construisons ensemble un accord adapté à vos objectifs : commissions, réductions pour vos clients, co-branding, ou toute formule qui vous convient.',
+      descDefault: "Chaque collaboration est unique. Nous construisons ensemble les termes du partenariat : volume, mode d'accès pour vos clients, segmentation, personnalisation, conditions commerciales. Forfait flexible et adapté à votre taille.",
     },
     {
       icon: Code,
@@ -978,62 +985,156 @@ const PartnerLanding: React.FC = () => {
   ];
 
   // ---- Partner profiles ----
+  // Aligned with the actual prospect list (SOS-Expat-Cibles-EXHAUSTIF.xlsx, 168 targets, 17 segments).
+  // "Médias & presse" was intentionally removed: media outlets belong to the blogger/influencer
+  // program, not the B2B SOS-Call for Business subscription program represented on this page.
   const partnerProfiles = [
-    { icon: Landmark, titleId: 'partner.landing.v2.profiles.embassy', titleDefault: 'Ambassades & consulats' },
-    { icon: Building2, titleId: 'partner.landing.v2.profiles.realestate', titleDefault: 'Agences immobilières' },
-    { icon: CreditCard, titleId: 'partner.landing.v2.profiles.banking', titleDefault: 'Banques & fintech' },
-    { icon: Shield, titleId: 'partner.landing.v2.profiles.insurance', titleDefault: 'Compagnies d\'assurance' },
-    { icon: Plane, titleId: 'partner.landing.v2.profiles.relocation', titleDefault: 'Cabinets de relocation' },
-    { icon: Scale, titleId: 'partner.landing.v2.profiles.legal', titleDefault: 'Cabinets d\'avocats' },
-    { icon: Heart, titleId: 'partner.landing.v2.profiles.association', titleDefault: 'Associations (toutes nationalités)' },
-    { icon: Megaphone, titleId: 'partner.landing.v2.profiles.media', titleDefault: 'Médias & presse' },
-    { icon: GraduationCap, titleId: 'partner.landing.v2.profiles.education', titleDefault: 'Écoles & universités' },
-    { icon: Briefcase, titleId: 'partner.landing.v2.profiles.corporate', titleDefault: 'Entreprises internationales' },
+    { icon: Landmark, titleId: 'partner.landing.v2.profiles.embassy', titleDefault: 'Embassies & consulates' },
+    { icon: Shield, titleId: 'partner.landing.v2.profiles.insurance', titleDefault: 'Insurers & brokers' },
+    { icon: CreditCard, titleId: 'partner.landing.v2.profiles.banking', titleDefault: 'Banks & fintech' },
+    { icon: Heart, titleId: 'partner.landing.v2.profiles.association', titleDefault: 'Federations & associations' },
+    { icon: Truck, titleId: 'partner.landing.v2.profiles.relocation', titleDefault: 'Movers & relocation' },
+    { icon: Plane, titleId: 'partner.landing.v2.profiles.travel', titleDefault: 'Bespoke travel & cruises' },
+    { icon: Building2, titleId: 'partner.landing.v2.profiles.realestate', titleDefault: 'Expat real estate' },
+    { icon: Scale, titleId: 'partner.landing.v2.profiles.legal', titleDefault: 'Law firms' },
+    { icon: GraduationCap, titleId: 'partner.landing.v2.profiles.education', titleDefault: 'Schools & universities' },
+    { icon: Briefcase, titleId: 'partner.landing.v2.profiles.corporate', titleDefault: 'International groups' },
   ];
 
   // ---- Advantages ----
+  // 2026-04-25 refactor: aligned with the B2B SOS-Call for Business program.
+  // Removed: "Réduction pour votre audience" (commission-program promise, not part
+  // of the B2B subscription model represented on this page).
+  // Added:   "API REST + bulk import" advantage for corporate prospects.
+  // Reframed:"Paiement rapide" → "Facturation simple" (the partner pays an invoice,
+  //          they do not receive payouts on this program).
   const advantages = [
     {
       icon: DollarSign,
       titleId: 'partner.landing.v2.advantages.commission.title',
-      titleDefault: 'Accord flexible et négocié',
+      titleDefault: 'Forfait flexible et négocié',
       descId: 'partner.landing.v2.advantages.commission.desc',
-      descDefault: 'Pas de formule imposée. Nous adaptons les termes du partenariat à vos objectifs : commissions, avantages clients, visibilité croisée.',
+      descDefault: "Pas de formule imposée. Nous adaptons les termes du partenariat à votre volume et vos objectifs : per-member, forfait, paliers, ou sur-mesure.",
     },
     {
       icon: BarChart3,
       titleId: 'partner.landing.v2.advantages.dashboard.title',
       titleDefault: 'Dashboard temps réel',
       descId: 'partner.landing.v2.advantages.dashboard.desc',
-      descDefault: 'Suivez vos clics, appels et revenus en direct depuis votre tableau de bord partenaire.',
+      descDefault: 'Suivez les appels, durées et KPI consolidés en direct depuis votre tableau de bord partenaire.',
     },
     {
       icon: Palette,
       titleId: 'partner.landing.v2.advantages.widget.title',
       titleDefault: 'Widget personnalisable',
       descId: 'partner.landing.v2.advantages.widget.desc',
-      descDefault: 'Widget, lien affilié, QR code : choisissez le format qui convient à votre activité. Tout est personnalisable.',
+      descDefault: 'Widget, lien dédié, QR code : choisissez le format qui convient à votre activité. Tout est personnalisable.',
     },
     {
       icon: HeadphonesIcon,
       titleId: 'partner.landing.v2.advantages.manager.title',
       titleDefault: 'Account manager dédié',
       descId: 'partner.landing.v2.advantages.manager.desc',
-      descDefault: 'Un interlocuteur unique pour répondre à vos questions, optimiser vos performances et vous accompagner.',
+      descDefault: "Un interlocuteur unique pour répondre à vos questions, optimiser votre intégration et vous accompagner.",
     },
     {
-      icon: Award,
-      titleId: 'partner.landing.v2.advantages.discount.title',
-      titleDefault: 'Réduction pour votre audience',
-      descId: 'partner.landing.v2.advantages.discount.desc',
-      descDefault: 'Offrez une valeur ajoutée à vos clients avec une réduction négociée sur les appels SOS-Expat.',
+      icon: Code,
+      titleId: 'partner.landing.v2.advantages.api.title',
+      titleDefault: 'API REST + bulk import',
+      descId: 'partner.landing.v2.advantages.api.desc',
+      descDefault: "Synchronisez vos clients depuis votre CRM ou ERP. Bearer key, scopes, jusqu'à 500 clients importés par appel API.",
     },
     {
-      icon: CreditCard,
+      icon: Receipt,
       titleId: 'partner.landing.v2.advantages.payment.title',
-      titleDefault: 'Paiement rapide',
+      titleDefault: 'Facturation simple',
       descId: 'partner.landing.v2.advantages.payment.desc',
-      descDefault: 'Recevez vos commissions par Wise, PayPal, virement bancaire ou Mobile Money. À vous de choisir.',
+      descDefault: 'Une facture unique en fin de mois. Paiement net 15 jours par défaut, ou conditions négociées. Carte, virement, prélèvement.',
+    },
+  ];
+
+  // ---- Pricing formulas (3 formules + sur-mesure) ----
+  // Public framing — actual € amounts are negotiated 1:1 (kept off the public page).
+  // Maps to InvoiceService.calculateInvoiceData billing modes:
+  //   permember = (a) per-member, flat = (b) flat fee, tiered = (d) tiered, custom = (c)/(e) hybrid.
+  const formulas = [
+    {
+      icon: Users,
+      gradient: 'from-cyan-500 to-blue-500',
+      titleId: 'partner.landing.v2.formulas.permember.title',
+      titleDefault: 'Per-member',
+      descId: 'partner.landing.v2.formulas.permember.desc',
+      descDefault: 'Vous payez par client actif. Idéal si votre volume monte progressivement.',
+    },
+    {
+      icon: Layers,
+      gradient: 'from-blue-500 to-indigo-500',
+      titleId: 'partner.landing.v2.formulas.flat.title',
+      titleDefault: 'Forfait fixe',
+      descId: 'partner.landing.v2.formulas.flat.desc',
+      descDefault: 'Un montant mensuel fixe quel que soit votre volume. Idéal pour budgets prévisibles.',
+    },
+    {
+      icon: PieChart,
+      gradient: 'from-indigo-500 to-purple-500',
+      titleId: 'partner.landing.v2.formulas.tiered.title',
+      titleDefault: 'Paliers',
+      descId: 'partner.landing.v2.formulas.tiered.desc',
+      descDefault: 'Tarif dégressif par tranches de clients. Idéal pour les gros volumes.',
+    },
+    {
+      icon: Handshake,
+      gradient: 'from-purple-500 to-pink-500',
+      titleId: 'partner.landing.v2.formulas.custom.title',
+      titleDefault: 'Sur-mesure',
+      descId: 'partner.landing.v2.formulas.custom.desc',
+      descDefault: 'Hybride, contrat-cadre, conditions spécifiques : on construit avec vous.',
+    },
+  ];
+
+  // ---- Corporates block (high-volume, integration-ready) ----
+  const corporateFeatures = [
+    {
+      icon: Code,
+      titleId: 'partner.landing.v2.corporates.api.title',
+      titleDefault: 'API REST',
+      descId: 'partner.landing.v2.corporates.api.desc',
+      descDefault: "Bearer key, scopes par usage. Bulk import jusqu'à 500 clients par appel API. Idéal pour synchronisation depuis votre CRM.",
+    },
+    {
+      icon: Network,
+      titleId: 'partner.landing.v2.corporates.hierarchy.title',
+      titleDefault: 'Hiérarchie multi-cabinet',
+      descId: 'partner.landing.v2.corporates.hierarchy.desc',
+      descDefault: 'Scoping par cabinet, région, département. Chaque branch manager pilote son périmètre dans son dashboard.',
+    },
+    {
+      icon: Receipt,
+      titleId: 'partner.landing.v2.corporates.invoice.title',
+      titleDefault: 'Facturation fin de mois',
+      descId: 'partner.landing.v2.corporates.invoice.desc',
+      descDefault: 'Une facture unique mensuelle, paiement net 15 jours (ou conditions négociées). Carte bancaire, virement, prélèvement.',
+    },
+    {
+      icon: FileText,
+      titleId: 'partner.landing.v2.corporates.legal.title',
+      titleDefault: 'Signature électronique CGV',
+      descId: 'partner.landing.v2.corporates.legal.desc',
+      descDefault: 'CGV B2B, DPA, Order Form signés en ligne avec preuve probante (IP, horodatage, hash SHA-256, PDF archivés).',
+    },
+    {
+      icon: Lock,
+      titleId: 'partner.landing.v2.corporates.gdpr.title',
+      titleDefault: 'Conformité RGPD',
+      descId: 'partner.landing.v2.corporates.gdpr.desc',
+      descDefault: 'DPA inclus, hébergement européen, audit trail complet. Adapté aux services juridiques exigeants.',
+    },
+    {
+      icon: Activity,
+      titleId: 'partner.landing.v2.corporates.tracking.title',
+      titleDefault: 'Suivi temps réel',
+      descId: 'partner.landing.v2.corporates.tracking.desc',
+      descDefault: "Dashboard live : nombre d'appels, durée, KPI consolidés. Export CSV. API events pour intégration BI interne.",
     },
   ];
 
@@ -1066,15 +1167,18 @@ const PartnerLanding: React.FC = () => {
   ];
 
   // ---- FAQ (8 questions) ----
+  // 2026-04-25 refactor: q6 (rémunération/commissions) and q8 (réduction client) removed
+  // because they referred to the affiliate/commission program. Replaced by q9 (invoicing)
+  // and q10 (e-signature CGV) which match the B2B SOS-Call subscription model shown here.
   const faqKeys = [
     { q: 'partner.landing.v2.faq.q1', a: 'partner.landing.v2.faq.a1' },
     { q: 'partner.landing.v2.faq.q2', a: 'partner.landing.v2.faq.a2' },
     { q: 'partner.landing.v2.faq.q3', a: 'partner.landing.v2.faq.a3' },
     { q: 'partner.landing.v2.faq.q4', a: 'partner.landing.v2.faq.a4' },
     { q: 'partner.landing.v2.faq.q5', a: 'partner.landing.v2.faq.a5' },
-    { q: 'partner.landing.v2.faq.q6', a: 'partner.landing.v2.faq.a6' },
     { q: 'partner.landing.v2.faq.q7', a: 'partner.landing.v2.faq.a7' },
-    { q: 'partner.landing.v2.faq.q8', a: 'partner.landing.v2.faq.a8' },
+    { q: 'partner.landing.v2.faq.q9', a: 'partner.landing.v2.faq.a9' },
+    { q: 'partner.landing.v2.faq.q10', a: 'partner.landing.v2.faq.a10' },
   ];
 
   return (
@@ -1207,7 +1311,7 @@ const PartnerLanding: React.FC = () => {
               {/* Badge */}
               <div className="inline-flex items-center gap-2 px-5 py-2.5 glass-card rounded-full text-cyan-400 text-sm font-semibold mb-8">
                 <Zap className="w-4 h-4" />
-                <FormattedMessage id="partner.landing.v2.hero.badge" defaultMessage="Programme Partenaire Premium" />
+                <FormattedMessage id="partner.landing.v2.hero.badge" defaultMessage="SOS-Call for Business" />
               </div>
 
               {/* Headline */}
@@ -1323,6 +1427,48 @@ const PartnerLanding: React.FC = () => {
         </section>
 
         {/* ================================================================
+            SECTION 3.5 — TROIS FORMULES TARIFAIRES
+        ================================================================ */}
+        <section className="section-content section-lazy" aria-labelledby="formulas-heading">
+          <div className="max-w-6xl mx-auto">
+            <p className="text-sm font-semibold uppercase tracking-widest text-cyan-400 text-center mb-4">
+              <FormattedMessage id="partner.landing.v2.formulas.overline" defaultMessage="Trois formules, un seul forfait mensuel" />
+            </p>
+            <h2 id="formulas-heading" className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-6">
+              <FormattedMessage id="partner.landing.v2.formulas.title" defaultMessage="Une tarification adaptée à votre volume" />
+            </h2>
+            <p className="text-gray-400 text-center max-w-3xl mx-auto mb-14 text-lg">
+              <FormattedMessage
+                id="partner.landing.v2.formulas.subtitle"
+                defaultMessage="Un seul forfait mensuel pour offrir le service à vos clients. Trois modes de facturation au choix, plus du sur-mesure si besoin. Tarifs négociés ensemble."
+              />
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {formulas.map((f, i) => {
+                const Icon = f.icon;
+                return (
+                  <div
+                    key={i}
+                    className="glass-card rounded-2xl p-7 transition-all duration-300 hover:scale-[1.02] hover:border-cyan-500/30 group"
+                  >
+                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${f.gradient} flex items-center justify-center mb-5 shadow-lg`}>
+                      <Icon className="w-6 h-6 text-white" />
+                    </div>
+                    <h3 className="text-lg font-semibold mb-2">
+                      <FormattedMessage id={f.titleId} defaultMessage={f.titleDefault} />
+                    </h3>
+                    <p className="text-gray-400 text-sm leading-relaxed">
+                      <FormattedMessage id={f.descId} defaultMessage={f.descDefault} />
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* ================================================================
             SECTION 4 — COMMENT CA MARCHE
         ================================================================ */}
         <section
@@ -1417,6 +1563,45 @@ const PartnerLanding: React.FC = () => {
         </section>
 
         {/* ================================================================
+            SECTION 5.5 — POUR LES CORPORATES (high-volume integration)
+        ================================================================ */}
+        <section
+          className="section-content section-lazy bg-gradient-to-b from-black via-gray-950 to-black"
+          aria-labelledby="corporates-heading"
+        >
+          <div className="max-w-6xl mx-auto">
+            <p className="text-sm font-semibold uppercase tracking-widest text-cyan-400 text-center mb-4">
+              <FormattedMessage id="partner.landing.v2.corporates.overline" defaultMessage="Pour les volumes importants" />
+            </p>
+            <h2 id="corporates-heading" className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-14">
+              <FormattedMessage id="partner.landing.v2.corporates.title" defaultMessage="Conçu pour s'intégrer chez les grands groupes" />
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {corporateFeatures.map((feat, i) => {
+                const Icon = feat.icon;
+                return (
+                  <div
+                    key={i}
+                    className="glass-card rounded-2xl p-7 transition-all duration-300 hover:scale-[1.02] hover:border-cyan-500/30 group"
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-cyan-500/20 to-blue-500/20 flex items-center justify-center mb-5 group-hover:from-cyan-500/30 group-hover:to-blue-500/30 transition-colors">
+                      <Icon className="w-6 h-6 text-cyan-400" />
+                    </div>
+                    <h3 className="text-lg font-semibold mb-2">
+                      <FormattedMessage id={feat.titleId} defaultMessage={feat.titleDefault} />
+                    </h3>
+                    <p className="text-gray-400 text-sm leading-relaxed">
+                      <FormattedMessage id={feat.descId} defaultMessage={feat.descDefault} />
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* ================================================================
             SECTION 6 — AVANTAGES
         ================================================================ */}
         <section
@@ -1476,15 +1661,6 @@ const PartnerLanding: React.FC = () => {
                 ))}
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* ================================================================
-            IMAGE BANK — Free images for partners
-        ================================================================ */}
-        <section className="section-content">
-          <div className="max-w-4xl mx-auto">
-            <ImageBankSection accent="amber" />
           </div>
         </section>
 
