@@ -1095,8 +1095,6 @@ export const sitemapIndex = onRequest(
   },
   async (_req, res) => {
     try {
-      const today = new Date().toISOString().split('T')[0];
-
       // All language codes used in sitemap file names (URL-safe)
       const LANG_CODES = ['fr', 'en', 'es', 'de', 'pt', 'ru', 'zh', 'ar', 'hi'];
 
