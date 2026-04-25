@@ -14,6 +14,7 @@ import {
   PartnerStatsCard,
   PartnerEarningsChart,
   PartnerRecentCommissions,
+  LegalDocumentsBanner,
 } from '@/components/Partner';
 import PartnerSosCallSection from '@/components/Partner/SosCall/PartnerSosCallSection';
 import toast from 'react-hot-toast';
@@ -102,6 +103,9 @@ const PartnerDashboard: React.FC = () => {
   return (
     <PartnerDashboardLayout>
       <div className="space-y-6">
+        {/* Legal documents alert (only renders if action is required) */}
+        <LegalDocumentsBanner />
+
         {/* Welcome Header */}
         <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-6 text-white">
           <div className="flex items-start justify-between gap-4">

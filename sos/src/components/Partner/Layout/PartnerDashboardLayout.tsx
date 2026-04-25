@@ -31,6 +31,7 @@ import {
   FileText,
   Receipt,
   Activity,
+  ScrollText,
 } from 'lucide-react';
 
 interface PartnerDashboardLayoutProps {
@@ -122,6 +123,12 @@ const PartnerDashboardLayout: React.FC<PartnerDashboardLayoutProps> = ({ childre
       label: intl.formatMessage({ id: 'partner.menu.sos_call_activity', defaultMessage: 'Activité SOS-Call' }),
       icon: <Activity className="w-5 h-5" />,
       path: '/partner/activite-sos-call',
+    },
+    {
+      id: 'legal-documents',
+      label: intl.formatMessage({ id: 'partner.menu.legal_documents', defaultMessage: 'Documents légaux' }),
+      icon: <ScrollText className="w-5 h-5" />,
+      path: '/partner/documents-legaux',
     },
   ];
 

@@ -716,3 +716,118 @@ export async function downloadSosCallInvoicePdf(id: number): Promise<Blob> {
 function getBaseUrl(): string {
   return import.meta.env.VITE_PARTNER_ENGINE_URL || 'https://partner-engine.sos-expat.com';
 }
+
+// ══════════════════════════════════════════════════════════════
+// LEGAL DOCUMENTS — Partner-side click-wrap signature
+// ══════════════════════════════════════════════════════════════
+
+export type LegalDocumentKind = 'cgv_b2b' | 'dpa' | 'order_form';
+
+export type LegalDocumentStatus =
+  | 'draft'
+  | 'pending_admin_validation'
+  | 'ready_for_signature'
+  | 'signed'
+  | 'superseded';
+
+export type LegalAgreementStatus =
+  | 'not_generated'
+  | 'draft'
+  | 'pending_admin_validation'
+  | 'ready_for_signature'
+  | 'partially_signed'
+  | 'signed'
+  | 'superseded'
+  | 'override';
+
+export interface LegalDocumentSummary {
+  id: number;
+  kind: LegalDocumentKind;
+  title: string;
+  language: string;
+  status: LegalDocumentStatus;
+  template_version: string | null;
+  pdf_hash: string | null;
+  pdf_available: boolean;
+  has_custom_clauses: boolean;
+  generated_at: string | null;
+  sent_for_signature_at: string | null;
+  signed_at: string | null;
+  signed_by_email: string | null;
+  signed_by_name: string | null;
+  signed_pdf_hash: string | null;
+  acceptance_id: number | null;
+}
+
+export interface LegalDocumentsListResponse {
+  agreement: {
+    id: number;
+    partner_name: string;
+    legal_status: LegalAgreementStatus;
+    legal_signed_at: string | null;
+    legal_override: boolean;
+    partner_legal_language: string;
+  } | null;
+  legal_status: LegalAgreementStatus;
+  documents: LegalDocumentSummary[];
+}
+
+export interface LegalDocumentDetail {
+  document: LegalDocumentSummary;
+  rendered_html: string;
+}
+
+export interface LegalSignatureResult {
+  success: true;
+  document: LegalDocumentSummary;
+  acceptance_id: number;
+  pdf_hash: string;
+}
+
+export function listPartnerLegalDocuments(): Promise<LegalDocumentsListResponse> {
+  return apiCall<LegalDocumentsListResponse>('/partner/legal-documents');
+}
+
+export function getPartnerLegalDocument(id: number): Promise<LegalDocumentDetail> {
+  return apiCall<LegalDocumentDetail>(`/partner/legal-documents/${id}`);
+}
+
+export function signPartnerLegalDocument(
+  id: number,
+  payload: {
+    signer_name?: string;
+    signer_email?: string;
+  } = {},
+): Promise<LegalSignatureResult> {
+  return apiCall<LegalSignatureResult>(`/partner/legal-documents/${id}/sign`, {
+    method: 'POST',
+    body: { ...payload, accept: true, confirm_read: true },
+  });
+}
+
+export async function downloadPartnerLegalDocumentPdf(id: number): Promise<Blob> {
+  const token = await getAuthToken();
+  const res = await fetch(`${getBaseUrl()}/api/partner/legal-documents/${id}/pdf`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error(`PDF download failed: ${res.status}`);
+  return res.blob();
+}
+
+export interface LegalDocumentProof {
+  document_kind: LegalDocumentKind;
+  document_title: string;
+  document_version: string;
+  pdf_hash: string;
+  signed_pdf_hash: string | null;
+  signed_at: string;
+  signed_by_email: string;
+  signed_by_name: string | null;
+  signature_method: string;
+  acceptance_ip: string;
+  acceptance_id: number;
+}
+
+export function getPartnerLegalDocumentProof(id: number): Promise<LegalDocumentProof> {
+  return apiCall<LegalDocumentProof>(`/partner/legal-documents/${id}/proof`);
+}
