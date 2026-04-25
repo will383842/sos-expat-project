@@ -723,12 +723,12 @@ const PartnerLanding: React.FC = () => {
   // ======= SEO Meta Data =======
   const seoData = useMemo(() => ({
     title: intl.formatMessage({ id: 'partner.landing.v2.seo.title', defaultMessage: 'Programme Partenaire B2B - SOS-Expat | Assistance Juridique Expatriés' }),
-    description: intl.formatMessage({ id: 'partner.landing.v2.seo.description', defaultMessage: 'Vos clients à l\'étranger sont mis en relation par téléphone en moins de 5 minutes avec un avocat ou un expatrié aidant. 197 pays, 24h/24, toutes les langues. Voyageurs, vacanciers, digital nomades, expatriés. Forfait mensuel B2B, API REST, dashboard temps réel.' }),
-    keywords: intl.formatMessage({ id: 'seo.partner.keywords', defaultMessage: 'mise en relation téléphone avocat expatrié 5 minutes, partenaire SOS Expat, programme partenariat B2B voyageurs vacanciers digital nomades expatriés, assistance téléphonique internationale 24/7, urgence à l\'étranger, agence de voyage partenaire, tour-opérateur, comité d\'entreprise CSE, assurance voyage, ambassade partenaire, banque partenaire, accord B2B sur mesure, service mobilité internationale entreprise' }),
-    ogTitle: intl.formatMessage({ id: 'seo.partner.ogTitle', defaultMessage: 'Programme Partenaire SOS-Expat | Avocat ou Expatrié au Téléphone en 5 Minutes pour Vos Clients à l\'Étranger' }),
-    ogDescription: intl.formatMessage({ id: 'seo.partner.ogDescription', defaultMessage: 'Vos clients voyageurs, vacanciers, digital nomades ou expatriés joignent un avocat ou un expatrié aidant par téléphone en moins de 5 minutes. 197 pays, 24/7, toutes les langues. Accord de partenariat sur mesure, outils d\'intégration, account manager dédié.' }),
-    twitterTitle: intl.formatMessage({ id: 'seo.partner.twitterTitle', defaultMessage: 'Partenaire SOS-Expat | Avocat ou Expatrié au Téléphone en 5 min B2B' }),
-    twitterDescription: intl.formatMessage({ id: 'seo.partner.twitterDescription', defaultMessage: 'Tour-opérateurs, agences de voyage, comités d\'entreprise, assurances, ambassades, banques, associations : vos clients à l\'étranger joignent un avocat ou un expatrié aidant par téléphone en moins de 5 minutes. 197 pays, 24/7, toutes les langues. Widget, lien, QR code.' }),
+    description: intl.formatMessage({ id: 'partner.landing.v2.seo.description', defaultMessage: 'Une offre exceptionnelle pour différencier votre marque : où qu\'ils soient dans le monde, vos clients joignent un avocat qui parle leur langue en moins de 5 minutes par téléphone. 197 pays, 24h/24. Voyageurs, vacanciers, digital nomades, expatriés. Forfait mensuel B2B, API REST, dashboard temps réel.' }),
+    keywords: intl.formatMessage({ id: 'seo.partner.keywords', defaultMessage: 'avocat dans leur langue 5 minutes, mise en relation téléphone avocat international urgence, partenaire SOS Expat, programme partenariat B2B voyageurs vacanciers digital nomades expatriés, assistance téléphonique internationale 24/7, urgence à l\'étranger, agence de voyage partenaire, tour-opérateur, comité d\'entreprise CSE, assurance voyage, ambassade partenaire, banque partenaire, accord B2B sur mesure, offre exceptionnelle marque' }),
+    ogTitle: intl.formatMessage({ id: 'seo.partner.ogTitle', defaultMessage: 'Programme Partenaire SOS-Expat | Un Avocat dans Leur Langue, Où Qu\'ils Soient, en 5 Minutes' }),
+    ogDescription: intl.formatMessage({ id: 'seo.partner.ogDescription', defaultMessage: 'Une offre exceptionnelle à proposer à vos clients : où qu\'ils soient dans le monde, ils joignent un avocat qui parle leur langue en moins de 5 minutes par téléphone. Voyageurs, vacanciers, digital nomades, expatriés. 197 pays, 24/7. Accord de partenariat sur mesure, outils d\'intégration, account manager dédié.' }),
+    twitterTitle: intl.formatMessage({ id: 'seo.partner.twitterTitle', defaultMessage: 'Partenaire SOS-Expat | Un Avocat dans Leur Langue, Où Qu\'ils Soient, en 5 min' }),
+    twitterDescription: intl.formatMessage({ id: 'seo.partner.twitterDescription', defaultMessage: 'Une offre exceptionnelle pour différencier votre marque : où qu\'ils soient dans le monde, vos clients joignent un avocat qui parle leur langue par téléphone en moins de 5 minutes. 197 pays, 24/7. Tour-opérateurs, CSE, assurances, ambassades, banques, associations.' }),
   }), [intl]);
 
   // ======= JSON-LD Schema.org — Organization (enriched, with @id) =======
@@ -1318,7 +1318,7 @@ const PartnerLanding: React.FC = () => {
               <h1 id="partner-heading" className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.1] mb-8 tracking-tight">
                 <FormattedMessage
                   id="partner.landing.v2.hero.title"
-                  defaultMessage="Un avocat ou un expatrié aidant au téléphone en {highlight}"
+                  defaultMessage="Où qu'ils soient dans le monde, un avocat dans leur langue en {highlight}"
                   values={{
                     highlight: (
                       <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
@@ -1333,7 +1333,7 @@ const PartnerLanding: React.FC = () => {
               <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-3xl mx-auto mb-12 leading-loose">
                 <FormattedMessage
                   id="partner.landing.v2.hero.subtitle"
-                  defaultMessage="Voyageurs, vacanciers, touristes, digital nomades, expatriés, étudiants. Pour tout besoin ou urgence à l'étranger, vos clients sont mis en relation par téléphone avec un avocat ou un expatrié aidant. 24h/24, 197 pays, dans toutes les langues. Dashboard temps réel. Zéro logistique pour vos équipes."
+                  defaultMessage="Voyageurs, vacanciers, touristes, digital nomades, expatriés, étudiants : pour tout besoin ou urgence à l'étranger, vos clients joignent par téléphone un avocat qui parle leur langue. Ou un expatrié aidant local pour les démarches pratiques. 24h/24, dans 197 pays. Une offre exceptionnelle qui différencie votre marque, sans aucune logistique pour vos équipes."
                 />
               </p>
 
