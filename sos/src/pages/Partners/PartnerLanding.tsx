@@ -999,6 +999,8 @@ const PartnerLanding: React.FC = () => {
     { icon: Scale, titleId: 'partner.landing.v2.profiles.legal', titleDefault: 'Law firms' },
     { icon: GraduationCap, titleId: 'partner.landing.v2.profiles.education', titleDefault: 'Schools & universities' },
     { icon: Briefcase, titleId: 'partner.landing.v2.profiles.corporate', titleDefault: 'International groups' },
+    { icon: Handshake, titleId: 'partner.landing.v2.profiles.independent', titleDefault: 'Cabinets & agences indépendants' },
+    { icon: Users, titleId: 'partner.landing.v2.profiles.smb', titleDefault: 'Commerçants, TPE & freelances' },
   ];
 
   // ---- Advantages ----
@@ -1333,7 +1335,7 @@ const PartnerLanding: React.FC = () => {
               <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-3xl mx-auto mb-12 leading-loose">
                 <FormattedMessage
                   id="partner.landing.v2.hero.subtitle"
-                  defaultMessage="Voyageurs, vacanciers, touristes, digital nomades, expatriés, étudiants : pour tout besoin ou urgence à l'étranger, vos clients joignent par téléphone un avocat qui parle leur langue. Ou un expatrié aidant local pour les démarches pratiques. 24h/24, dans 197 pays. Une offre exceptionnelle qui différencie votre marque, sans aucune logistique pour vos équipes."
+                  defaultMessage="Voyageurs, vacanciers, touristes, digital nomades, expatriés, étudiants : pour tout besoin ou urgence à l'étranger, vos clients joignent par téléphone un avocat qui parle leur langue. Ou un expatrié aidant local pour les démarches pratiques. 24h/24, 7j/7, toute l'année, jours fériés inclus, dans 197 pays. Une offre exceptionnelle qui différencie votre marque, sans aucune logistique pour vos équipes."
                 />
               </p>
 
@@ -1352,7 +1354,7 @@ const PartnerLanding: React.FC = () => {
                 {[
                   { icon: Globe, text: intl.formatMessage({ id: 'partner.landing.v2.hero.trust.countries', defaultMessage: '197 pays' }) },
                   { icon: Languages, text: intl.formatMessage({ id: 'partner.landing.v2.hero.trust.languages', defaultMessage: 'Toutes les langues' }) },
-                  { icon: Clock, text: intl.formatMessage({ id: 'partner.landing.v2.hero.trust.availability', defaultMessage: '24/7' }) },
+                  { icon: Clock, text: intl.formatMessage({ id: 'partner.landing.v2.hero.trust.availability', defaultMessage: '24/7 · 365 j/an' }) },
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-2 text-gray-400">
                     <item.icon className="w-5 h-5 text-cyan-400" />
@@ -1530,7 +1532,7 @@ const PartnerLanding: React.FC = () => {
               />
             </p>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
               {partnerProfiles.map((profile, i) => {
                 const Icon = profile.icon;
                 return (
@@ -1571,11 +1573,17 @@ const PartnerLanding: React.FC = () => {
         >
           <div className="max-w-6xl mx-auto">
             <p className="text-sm font-semibold uppercase tracking-widest text-cyan-400 text-center mb-4">
-              <FormattedMessage id="partner.landing.v2.corporates.overline" defaultMessage="Pour les volumes importants" />
+              <FormattedMessage id="partner.landing.v2.corporates.overline" defaultMessage="Pour toutes les tailles" />
             </p>
-            <h2 id="corporates-heading" className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-14">
-              <FormattedMessage id="partner.landing.v2.corporates.title" defaultMessage="Conçu pour s'intégrer chez les grands groupes" />
+            <h2 id="corporates-heading" className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-6">
+              <FormattedMessage id="partner.landing.v2.corporates.title" defaultMessage="Du cabinet indépendant au grand groupe" />
             </h2>
+            <p className="text-gray-400 text-center max-w-2xl mx-auto mb-14 text-base md:text-lg leading-relaxed">
+              <FormattedMessage
+                id="partner.landing.v2.corporates.subtitle"
+                defaultMessage="Indépendants, démarrez en quelques heures avec un widget, un lien dédié ou un QR code. Grands groupes, branchez l'API REST, importez vos clients en bulk et pilotez plusieurs cabinets dans un dashboard unifié."
+              />
+            </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {corporateFeatures.map((feat, i) => {
