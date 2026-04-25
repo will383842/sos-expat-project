@@ -266,8 +266,29 @@ export const initializeGoogleAds = (): void => {
 // Enhanced Conversions - Donnees utilisateur
 // ============================================================================
 
-// Stockage des donnees utilisateur hashees
-let storedUserData: Record<string, string> = {};
+// Stockage des donnees utilisateur hashees (persistant via sessionStorage
+// pour survivre aux reloads entre setGoogleAdsUserData et trackGoogleAdsPurchase).
+// Les donnees stockees sont deja hashees en SHA256 (pas de PII en clair).
+const USER_DATA_STORAGE_KEY = 'sos_gads_user_data';
+
+const readStoredUserData = (): Record<string, string> => {
+  if (typeof window === 'undefined') return {};
+  try {
+    const raw = sessionStorage.getItem(USER_DATA_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+};
+
+const writeStoredUserData = (data: Record<string, string>): void => {
+  if (typeof window === 'undefined') return;
+  try {
+    sessionStorage.setItem(USER_DATA_STORAGE_KEY, JSON.stringify(data));
+  } catch {
+    // storage unavailable (private mode, quota) — fail silently
+  }
+};
 
 /**
  * Stocke les donnees utilisateur pour Enhanced Conversions
@@ -363,7 +384,7 @@ export const setGoogleAdsUserData = async (userData: {
       delete enhancedData.address;
     }
 
-    storedUserData = enhancedData;
+    writeStoredUserData(enhancedData);
 
     if (process.env.NODE_ENV === 'development') {
       console.log('%c[GoogleAds] Enhanced Conversions - User data stored:', 'color: #4285F4; font-weight: bold', {
@@ -380,13 +401,77 @@ export const setGoogleAdsUserData = async (userData: {
 /**
  * Recupere les donnees utilisateur stockees
  */
-export const getStoredUserData = (): Record<string, string> => storedUserData;
+export const getStoredUserData = (): Record<string, string> => readStoredUserData();
+
+/**
+ * Genere un rapport de validation des donnees Enhanced Conversions.
+ * Equivalent de getAdvancedMatchingReport() pour Meta — utile pour diagnostiquer
+ * la qualite des donnees envoyees a Google Ads.
+ */
+export const getEnhancedConversionsReport = (): {
+  fieldsProvided: number;
+  fieldsValid: number;
+  matchRateEstimate: 'excellent' | 'good' | 'fair' | 'poor';
+  details: Record<string, boolean>;
+  recommendations: string[];
+} => {
+  const data = readStoredUserData();
+  const address = (data as unknown as { address?: Record<string, string> }).address || {};
+  const details: Record<string, boolean> = {
+    email: !!data.sha256_email_address,
+    phone: !!data.sha256_phone_number,
+    firstName: !!address.sha256_first_name,
+    lastName: !!address.sha256_last_name,
+    city: !!address.city,
+    region: !!address.region,
+    postalCode: !!address.postal_code,
+    country: !!address.country,
+    gclid: !!getGoogleClickId(),
+  };
+
+  const fieldsValid = Object.values(details).filter(Boolean).length;
+  const recommendations: string[] = [];
+
+  // Score: email 40, phone 30, name 15, address 10, gclid 5
+  let matchScore = 0;
+  if (details.email) matchScore += 40;
+  if (details.phone) matchScore += 30;
+  if (details.firstName && details.lastName) matchScore += 15;
+  if (details.city || details.postalCode) matchScore += 10;
+  if (details.gclid) matchScore += 5;
+
+  let matchRateEstimate: 'excellent' | 'good' | 'fair' | 'poor';
+  if (matchScore >= 80) matchRateEstimate = 'excellent';
+  else if (matchScore >= 55) matchRateEstimate = 'good';
+  else if (matchScore >= 30) matchRateEstimate = 'fair';
+  else matchRateEstimate = 'poor';
+
+  if (!details.email) recommendations.push('Email manquant - champ le plus important pour le matching');
+  if (!details.phone) recommendations.push('Telephone manquant - ameliore significativement le match rate');
+  if (!details.firstName || !details.lastName) recommendations.push('Nom/Prenom manquant - aide au matching cross-platform');
+  if (!details.city && !details.postalCode) recommendations.push('Adresse (ville/CP) manquante - aide a la deduplication');
+  if (!details.gclid) recommendations.push('GCLID manquant - verifier que le user vient bien d\'une campagne Google Ads');
+
+  return {
+    fieldsProvided: Object.keys(data).length,
+    fieldsValid,
+    matchRateEstimate,
+    details,
+    recommendations,
+  };
+};
 
 /**
  * Efface les donnees utilisateur (deconnexion)
  */
 export const clearGoogleAdsUserData = (): void => {
-  storedUserData = {};
+  if (typeof window !== 'undefined') {
+    try {
+      sessionStorage.removeItem(USER_DATA_STORAGE_KEY);
+    } catch {
+      // ignore
+    }
+  }
   if (process.env.NODE_ENV === 'development') {
     console.log('%c[GoogleAds] User data cleared', 'color: #4285F4; font-weight: bold');
   }
@@ -436,7 +521,7 @@ export const trackGoogleAdsPurchase = (params: {
         currency: params.currency.toUpperCase(),
         transaction_id: params.transaction_id || params.order_id || eventID,
         // Enhanced Conversions
-        ...storedUserData,
+        ...readStoredUserData(),
       });
     }
 
@@ -495,7 +580,7 @@ export const trackGoogleAdsLead = (params?: {
         value: params?.value || 0,
         currency: params?.currency || 'EUR',
         // Enhanced Conversions
-        ...storedUserData,
+        ...readStoredUserData(),
       });
     }
 
@@ -623,7 +708,7 @@ export const trackGoogleAdsSignUp = (params?: {
       window.gtag('event', 'conversion', {
         send_to: `${GOOGLE_ADS_CONVERSION_ID}/${CONVERSION_LABELS.signup}`,
         // Enhanced Conversions
-        ...storedUserData,
+        ...readStoredUserData(),
       });
     }
 
@@ -775,8 +860,16 @@ export const googleAdsDiagnostic = (): void => {
 
   // Enhanced Conversions
   console.log('\n%c Enhanced Conversions:', 'font-weight: bold');
-  console.log('  User Data Stored:', Object.keys(storedUserData).length > 0);
-  console.log('  Fields:', Object.keys(storedUserData));
+  const currentUserData = readStoredUserData();
+  console.log('  User Data Stored:', Object.keys(currentUserData).length > 0);
+  console.log('  Fields:', Object.keys(currentUserData));
+  const ecReport = getEnhancedConversionsReport();
+  console.log('  Match Rate Estimate:', ecReport.matchRateEstimate.toUpperCase());
+  console.log('  Fields Valid:', ecReport.fieldsValid);
+  if (ecReport.recommendations.length > 0) {
+    console.log('  Recommendations:');
+    ecReport.recommendations.forEach((r, i) => console.log(`    ${i + 1}. ${r}`));
+  }
 
   // Network requests
   console.log('\n%c Network Requests:', 'font-weight: bold');
@@ -805,7 +898,7 @@ export const googleAdsDiagnostic = (): void => {
   if (!hasMarketingConsent()) {
     console.log('  4. User has not accepted marketing cookies');
   }
-  if (Object.keys(storedUserData).length === 0) {
+  if (Object.keys(readStoredUserData()).length === 0) {
     console.log('  5. No user data for Enhanced Conversions - call setGoogleAdsUserData()');
   }
 
@@ -829,6 +922,7 @@ export default {
   // User Data
   setGoogleAdsUserData,
   getStoredUserData,
+  getEnhancedConversionsReport,
   clearGoogleAdsUserData,
 
   // Tracking

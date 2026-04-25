@@ -23,6 +23,7 @@ declare global {
     fbq: ((...args: unknown[]) => void) | undefined;
     _fbq: unknown;
     __metaMarketingGranted?: boolean;
+    metaPixelDiagnostic?: () => void;
   }
 }
 
@@ -660,8 +661,29 @@ export const updateMetaPixelConsent = (granted: boolean): void => {
   }
 };
 
-// Stockage des donnees utilisateur pour Advanced Matching (evite re-init du pixel)
-let storedUserData: Record<string, string> = {};
+// Stockage des donnees utilisateur pour Advanced Matching (persistant via sessionStorage
+// pour survivre aux reloads / navigations entre setMetaPixelUserData et les events trackMeta*).
+// Les donnees stockees sont deja hashees en SHA256 (sauf country/fbp/fbc qui ne sont pas PII).
+const USER_DATA_STORAGE_KEY = 'sos_meta_user_data';
+
+const readStoredUserData = (): Record<string, string> => {
+  if (typeof window === 'undefined') return {};
+  try {
+    const raw = sessionStorage.getItem(USER_DATA_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+};
+
+const writeStoredUserData = (data: Record<string, string>): void => {
+  if (typeof window === 'undefined') return;
+  try {
+    sessionStorage.setItem(USER_DATA_STORAGE_KEY, JSON.stringify(data));
+  } catch {
+    // storage unavailable (private mode, quota) — fail silently
+  }
+};
 
 /**
  * Advanced Matching - Stocke les donnees utilisateur pour les evenements Meta
@@ -770,7 +792,7 @@ export const setMetaPixelUserData = async (userData: {
     }
 
     // Stocker les donnees hashees pour utilisation ulterieure (pas de re-init du pixel)
-    storedUserData = advancedMatchingData;
+    writeStoredUserData(advancedMatchingData);
 
     if (process.env.NODE_ENV === 'development') {
       console.log('%c[MetaPixel] Advanced Matching - User data stored (SHA256 hashed):', 'color: #1877F2; font-weight: bold', {
@@ -802,7 +824,8 @@ export const setMetaPixelUserData = async (userData: {
  * Data is stored locally for CAPI server-side use
  */
 export const applyMetaPixelUserData = (): void => {
-  if (Object.keys(storedUserData).length === 0) {
+  const currentData = readStoredUserData();
+  if (Object.keys(currentData).length === 0) {
     if (process.env.NODE_ENV === 'development') {
       console.log('[MetaPixel] Pas de donnees utilisateur stockees');
     }
@@ -813,8 +836,8 @@ export const applyMetaPixelUserData = (): void => {
   // L'Advanced Matching est gere via CAPI (metaConversionsApi.ts)
   if (process.env.NODE_ENV === 'development') {
     console.log('%c[MetaPixel] User data stored for CAPI:', 'color: #1877F2; font-weight: bold;', {
-      fieldsCount: Object.keys(storedUserData).length,
-      fields: Object.keys(storedUserData),
+      fieldsCount: Object.keys(currentData).length,
+      fields: Object.keys(currentData),
     });
   }
 };
@@ -822,7 +845,7 @@ export const applyMetaPixelUserData = (): void => {
 /**
  * Recupere les donnees utilisateur stockees pour Advanced Matching
  */
-export const getStoredUserData = (): Record<string, string> => storedUserData;
+export const getStoredUserData = (): Record<string, string> => readStoredUserData();
 
 /**
  * Genere un rapport de validation des donnees Advanced Matching
@@ -837,7 +860,7 @@ export const getAdvancedMatchingReport = (): {
   details: Record<string, boolean>;
   recommendations: string[];
 } => {
-  const data = storedUserData;
+  const data = readStoredUserData();
   const details: Record<string, boolean> = {
     email: !!data.em,
     phone: !!data.ph,
@@ -907,12 +930,110 @@ export const getAdvancedMatchingReport = (): {
  */
 export const clearMetaPixelUserData = (): void => {
   // Effacer les donnees stockees localement
-  storedUserData = {};
+  if (typeof window !== 'undefined') {
+    try {
+      sessionStorage.removeItem(USER_DATA_STORAGE_KEY);
+    } catch {
+      // ignore
+    }
+  }
 
   if (process.env.NODE_ENV === 'development') {
     console.log('%c[MetaPixel] User data cleared', 'color: #1877F2; font-weight: bold');
   }
 };
+
+// ============================================================================
+// Diagnostic
+// ============================================================================
+
+/**
+ * Fonction de diagnostic pour verifier l'etat du Meta Pixel.
+ * Appelez window.metaPixelDiagnostic() dans la console.
+ */
+export const metaPixelDiagnostic = (): void => {
+  if (typeof window === 'undefined') {
+    console.log('Not in browser environment');
+    return;
+  }
+
+  console.log('%c Meta Pixel Diagnostic Report ', 'background: #1877F2; color: white; font-weight: bold; padding: 4px 8px;');
+  console.log('================================');
+
+  // Configuration
+  console.log('\n%c Configuration:', 'font-weight: bold');
+  console.log('  Pixel ID:', PIXEL_ID);
+  console.log('  fbq Available:', isFbqAvailable());
+
+  // fbq state
+  const fbq = window.fbq as (((...args: unknown[]) => void) & { getState?: () => unknown }) | undefined;
+  if (fbq && typeof fbq.getState === 'function') {
+    try {
+      const state = fbq.getState() as { pixels?: Array<{ id: string }> } | undefined;
+      const pixels = state?.pixels || [];
+      console.log('  Pixels initialized:', pixels.length);
+      pixels.forEach((p, i) => console.log(`    ${i + 1}. ${p.id}`));
+    } catch {
+      console.log('  Pixels initialized: (could not read state)');
+    }
+  }
+
+  // Consent
+  console.log('\n%c Consentement:', 'font-weight: bold');
+  console.log('  Marketing Consent (localStorage):', hasMarketingConsent() ? 'GRANTED' : 'DENIED');
+  console.log('  Internal Flag:', window.__metaMarketingGranted);
+
+  // Meta identifiers (cookies)
+  console.log('\n%c Meta Identifiers (cookies):', 'font-weight: bold');
+  const metaIds = getMetaIdentifiers();
+  console.log('  fbp:', metaIds.fbp || 'Not found');
+  console.log('  fbc:', metaIds.fbc || 'Not found');
+
+  // Advanced Matching
+  console.log('\n%c Advanced Matching:', 'font-weight: bold');
+  const report = getAdvancedMatchingReport();
+  console.log('  Match Rate Estimate:', report.matchRateEstimate.toUpperCase());
+  console.log('  Fields Provided:', report.fieldsProvided);
+  console.log('  Fields Valid:', report.fieldsValid);
+  console.log('  Details:', report.details);
+  if (report.recommendations.length > 0) {
+    console.log('  Recommendations:');
+    report.recommendations.forEach((r, i) => console.log(`    ${i + 1}. ${r}`));
+  }
+
+  // Network requests
+  console.log('\n%c Network Requests:', 'font-weight: bold');
+  const requests = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
+  const fbRequests = requests.filter((r) =>
+    r.name.includes('facebook.com/tr') ||
+    r.name.includes('connect.facebook.net') ||
+    r.name.includes('graph.facebook.com')
+  );
+  console.log('  Meta Requests:', fbRequests.length);
+  fbRequests.slice(-3).forEach((req, i) => {
+    console.log(`    ${i + 1}. ${req.name.substring(0, 100)}...`);
+  });
+
+  // Storage
+  console.log('\n%c SessionStorage:', 'font-weight: bold');
+  try {
+    const stored = sessionStorage.getItem(USER_DATA_STORAGE_KEY);
+    console.log('  User Data Stored:', stored ? 'YES' : 'NO');
+    if (stored) {
+      const data = JSON.parse(stored) as Record<string, string>;
+      console.log('  Stored Fields:', Object.keys(data));
+    }
+  } catch {
+    console.log('  (sessionStorage unavailable)');
+  }
+
+  console.log('\n================================');
+};
+
+// Exposer la fonction de diagnostic globalement
+if (typeof window !== 'undefined') {
+  window.metaPixelDiagnostic = metaPixelDiagnostic;
+}
 
 // Export default pour faciliter l'import
 export default {
@@ -939,5 +1060,6 @@ export default {
   getStoredUserData,
   getMetaIdentifiers,
   getAdvancedMatchingReport,
+  metaPixelDiagnostic,
   PIXEL_ID,
 };
