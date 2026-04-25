@@ -530,6 +530,12 @@ export function adminUpdatePartnerSubscriber(
 // SOS-Call — Partner dashboard endpoints (Sprint 6)
 // ══════════════════════════════════════════════════════════════
 
+export interface PricingTier {
+  min: number;
+  max: number | null;
+  amount: number;
+}
+
 export interface SosCallKpis {
   period: string;
   active_subscribers: number;
@@ -542,6 +548,8 @@ export interface SosCallKpis {
   billing_currency: string;
   billing_rate: number;
   monthly_base_fee: number;
+  pricing_tier: PricingTier | null;
+  pricing_source: 'flat' | 'tier';
   next_invoice_date: string;
 }
 
@@ -599,6 +607,7 @@ export interface SosCallInvoice {
   active_subscribers: number;
   billing_rate: number;
   monthly_base_fee: number;
+  pricing_tier: PricingTier | null;
   billing_currency: string;
   total_amount: number;
   status: 'pending' | 'paid' | 'overdue' | 'cancelled';

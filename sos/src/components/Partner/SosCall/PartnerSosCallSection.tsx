@@ -106,7 +106,13 @@ export const PartnerSosCallSection: React.FC<{ className?: string }> = ({ classN
           </div>
           {(kpis.monthly_base_fee || 0) > 0 && (
             <div className="text-[11px] text-gray-500 mt-1">
-              Forfait {fmt(kpis.monthly_base_fee, kpis.billing_currency || 'EUR')}
+              {kpis.pricing_tier ? (
+                <>
+                  Palier {kpis.pricing_tier.min}–{kpis.pricing_tier.max ?? '∞'} : {fmt(kpis.monthly_base_fee, kpis.billing_currency || 'EUR')}
+                </>
+              ) : (
+                <>Forfait {fmt(kpis.monthly_base_fee, kpis.billing_currency || 'EUR')}</>
+              )}
               {(kpis.billing_rate || 0) > 0 && (
                 <> + {kpis.active_subscribers} × {fmt(kpis.billing_rate, kpis.billing_currency || 'EUR')}</>
               )}
