@@ -257,6 +257,20 @@ export class ProviderEarningsService {
       const paypalVerified = providerData?.paypalEmailVerified === true;
       const kycComplete = stripeKycComplete || paypalVerified;
 
+      // Derive provider currency from their country (USD-zone → USD, else EUR).
+      // Falls back to EUR if no country is set. The same heuristic as in
+      // triggerSosCallFromWeb so a US provider sees "$" and a French one "€".
+      const USD_ZONE_COUNTRIES = new Set([
+        "US", "CA", "AU", "NZ", "SG", "HK", "PH",
+        "AE", "IL", "BR", "MX", "AR", "CL", "CO", "PE",
+      ]);
+      const providerCountry = (
+        providerData?.currentCountryCode ||
+        providerData?.country ||
+        ""
+      ).toString().toUpperCase();
+      const providerCurrency = USD_ZONE_COUNTRIES.has(providerCountry) ? "USD" : "EUR";
+
       // ===== SOS-Call B2B 30-day reserve =====
       // B2B free calls credit the provider immediately at the B2B rate
       // (status='captured_sos_call_free') but the funds are locked for 30
@@ -287,23 +301,23 @@ export class ProviderEarningsService {
 
       const summary: EarningsSummary = {
         totalEarnings,
-        totalEarningsFormatted: this.formatCurrency(totalEarnings, "EUR"),
+        totalEarningsFormatted: this.formatCurrency(totalEarnings, providerCurrency),
         pendingEarnings,
-        pendingEarningsFormatted: this.formatCurrency(pendingEarnings, "EUR"),
+        pendingEarningsFormatted: this.formatCurrency(pendingEarnings, providerCurrency),
         availableBalance: Math.max(0, availableBalance), // Ne pas afficher de solde négatif
-        availableBalanceFormatted: this.formatCurrency(Math.max(0, availableBalance), "EUR"),
+        availableBalanceFormatted: this.formatCurrency(Math.max(0, availableBalance), providerCurrency),
         totalPayouts,
-        totalPayoutsFormatted: this.formatCurrency(totalPayouts, "EUR"),
+        totalPayoutsFormatted: this.formatCurrency(totalPayouts, providerCurrency),
         reservedAmount,
-        reservedAmountFormatted: this.formatCurrency(reservedAmount, "EUR"),
+        reservedAmountFormatted: this.formatCurrency(reservedAmount, providerCurrency),
         reservedB2BAmount,
-        reservedB2BAmountFormatted: this.formatCurrency(reservedB2BAmount, "EUR"),
+        reservedB2BAmountFormatted: this.formatCurrency(reservedB2BAmount, providerCurrency),
         pendingKycAmount,
-        pendingKycAmountFormatted: this.formatCurrency(pendingKycAmount, "EUR"),
+        pendingKycAmountFormatted: this.formatCurrency(pendingKycAmount, providerCurrency),
         totalCalls,
         successfulCalls,
         averageEarningPerCall: Math.round(averageEarningPerCall * 100) / 100,
-        currency: "EUR",
+        currency: providerCurrency,
         lastUpdated: new Date().toISOString(),
         kycComplete,
       };
