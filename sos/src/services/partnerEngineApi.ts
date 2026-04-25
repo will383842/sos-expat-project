@@ -536,9 +536,13 @@ export interface SosCallKpis {
   calls_expert: number;
   calls_lawyer: number;
   total_calls: number;
+  unique_callers: number;
   usage_rate_percent: number;
-  estimated_invoice_amount: number;
+  estimated_invoice: number;
   billing_currency: string;
+  billing_rate: number;
+  monthly_base_fee: number;
+  next_invoice_date: string;
 }
 
 export interface SosCallTimelinePoint {
@@ -587,6 +591,7 @@ export interface SosCallInvoice {
   period: string;
   active_subscribers: number;
   billing_rate: number;
+  monthly_base_fee: number;
   billing_currency: string;
   total_amount: number;
   status: 'pending' | 'paid' | 'overdue' | 'cancelled';

@@ -102,8 +102,16 @@ export const PartnerSosCallSection: React.FC<{ className?: string }> = ({ classN
         <div className={CARD}>
           <div className="text-xs uppercase tracking-wide text-gray-500">Facture estimée</div>
           <div className="mt-1 text-2xl font-bold text-emerald-600">
-            {fmt(kpis.estimated_invoice_amount || 0, kpis.billing_currency || 'EUR')}
+            {fmt(kpis.estimated_invoice || 0, kpis.billing_currency || 'EUR')}
           </div>
+          {(kpis.monthly_base_fee || 0) > 0 && (
+            <div className="text-[11px] text-gray-500 mt-1">
+              Forfait {fmt(kpis.monthly_base_fee, kpis.billing_currency || 'EUR')}
+              {(kpis.billing_rate || 0) > 0 && (
+                <> + {kpis.active_subscribers} × {fmt(kpis.billing_rate, kpis.billing_currency || 'EUR')}</>
+              )}
+            </div>
+          )}
         </div>
       </div>
 

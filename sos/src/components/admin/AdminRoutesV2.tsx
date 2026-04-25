@@ -542,16 +542,9 @@ const AdminTrainingModules = lazy(
 );
 
 // ===== LAZY IMPORTS - B2B =====
-const AdminB2BAccounts = lazy(
-  () => import("../../pages/admin/AdminB2BAccounts")
-);
-const AdminB2BMembers = lazy(() => import("../../pages/admin/AdminB2BMembers"));
-const AdminB2BPricing = lazy(() => import("../../pages/admin/AdminB2BPricing"));
-const AdminB2BBilling = lazy(() => import("../../pages/admin/AdminB2BBilling"));
-const AdminB2BInvoices = lazy(
-  () => import("../../pages/admin/AdminB2BInvoices")
-);
-const AdminB2BReports = lazy(() => import("../../pages/admin/AdminB2BReports"));
+// B2B partner administration is handled in the Partner Engine Filament console
+// (https://admin.sos-expat.com). This single hub page surfaces deep-links into it.
+const AdminB2BHub = lazy(() => import("../../pages/admin/AdminB2BHub"));
 
 // ===== LAZY IMPORTS - MONITORING =====
 const AdminEmailHealth = lazy(() => import("../../pages/admin/AdminEmailHealth"));
@@ -1253,52 +1246,12 @@ const AdminRoutesV2: React.FC = () => {
         }
       />
 
-      {/* 🏢 B2B */}
+      {/* 🏢 B2B - hub vers Partner Engine Filament admin */}
       <Route
-        path="b2b/accounts"
+        path="partners-b2b"
         element={
           <Suspense fallback={<LoadingSpinner />}>
-            <AdminB2BAccounts />
-          </Suspense>
-        }
-      />
-      <Route
-        path="b2b/members"
-        element={
-          <Suspense fallback={<LoadingSpinner />}>
-            <AdminB2BMembers />
-          </Suspense>
-        }
-      />
-      <Route
-        path="b2b/pricing"
-        element={
-          <Suspense fallback={<LoadingSpinner />}>
-            <AdminB2BPricing />
-          </Suspense>
-        }
-      />
-      <Route
-        path="b2b/billing"
-        element={
-          <Suspense fallback={<LoadingSpinner />}>
-            <AdminB2BBilling />
-          </Suspense>
-        }
-      />
-      <Route
-        path="b2b/invoices"
-        element={
-          <Suspense fallback={<LoadingSpinner />}>
-            <AdminB2BInvoices />
-          </Suspense>
-        }
-      />
-      <Route
-        path="b2b/reports"
-        element={
-          <Suspense fallback={<LoadingSpinner />}>
-            <AdminB2BReports />
+            <AdminB2BHub />
           </Suspense>
         }
       />
@@ -2248,12 +2201,7 @@ export const useAdminRouteValidation = () => {
       "/admin/affiliates/payouts",
       "/admin/affiliates/reports",
       "/admin/affiliates/fraud",
-      "/admin/b2b/accounts",
-      "/admin/b2b/members",
-      "/admin/b2b/pricing",
-      "/admin/b2b/billing",
-      "/admin/b2b/invoices",
-      "/admin/b2b/reports",
+      "/admin/partners-b2b",
       "/admin/chatters",
       "/admin/chatters/:chatterId",
       "/admin/chatters/payments",
