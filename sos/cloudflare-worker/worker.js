@@ -1192,8 +1192,26 @@ function isBlogProxyPath(path) {
   // Blog fonts (preloaded in HTML head)
   if (path.startsWith('/fonts/')) return true;
 
-  // Admin panel
-  if (path.startsWith('/admin')) return true;
+  // Admin panel — Laravel Blog admin ONLY (whitelist).
+  // The React SPA owns /admin/* at large (dashboard, users, finance, comms, partners,
+  // chatters, influencers, bloggers, group-admins, marketing, payments, toolbox, ia,
+  // settings, reports, security, aaaprofiles, etc. — see AdminRoutesV2.tsx).
+  // Only these specific prefixes are served by Laravel (Blog_sos-expat_frontend
+  // routes/web.php, verified against `php artisan route:list --path=admin` on prod).
+  // DO NOT replace this whitelist with a blanket `path.startsWith('/admin')` —
+  // it makes every React admin page (e.g. /admin/aaaprofiles) return a 404 from
+  // Laravel because Laravel doesn't know those routes.
+  if (
+    path === '/admin/login' ||
+    path === '/admin/logout' ||
+    path.startsWith('/admin/articles') ||
+    path.startsWith('/admin/affiliate-links') ||
+    path.startsWith('/admin/external-links') ||
+    path.startsWith('/admin/redirects') ||
+    path.startsWith('/admin/fiches') ||
+    path.startsWith('/admin/tools') ||
+    path.startsWith('/admin/image-bank')
+  ) return true;
 
   // Tool API endpoints
   if (path.startsWith('/api/v1/tool-')) return true;
