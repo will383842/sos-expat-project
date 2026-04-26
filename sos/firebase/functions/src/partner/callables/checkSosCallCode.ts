@@ -37,7 +37,6 @@ export const checkSosCallCode = onCall(
     ...partnerConfig,
     secrets: [PARTNER_ENGINE_URL_SECRET, PARTNER_ENGINE_API_KEY_SECRET],
     timeoutSeconds: 30,
-    memory: "256MiB",
   },
   async (request) => {
     const data = request.data as {

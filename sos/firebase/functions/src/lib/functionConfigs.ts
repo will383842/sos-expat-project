@@ -218,11 +218,17 @@ export const seoGenerationConfig = {
 /**
  * Partner config — for partner user-facing callables (us-central1)
  * Same region as other affiliates for Firestore latency optimization.
+ *
+ * 512MiB / 0.167 cpu (gen2 ratio cap) — the deployed bundle drags in
+ * CallScheduler/Twilio at cold start and OOMs at 256MiB (observed
+ * 266MiB used → instance killed → CORS headers stripped → browser
+ * reports false-positive "preflight blocked"). Same hardening
+ * applied to trackCAPIEvent.
  */
 export const partnerConfig = {
   region: "us-central1" as const,
-  memory: "256MiB" as const,
-  cpu: 0.083,
+  memory: "512MiB" as const,
+  cpu: 0.167,
   maxInstances: 1,
   minInstances: 0,
   concurrency: 1,
