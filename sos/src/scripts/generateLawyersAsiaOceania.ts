@@ -556,8 +556,6 @@ async function auditExistingMaleAaaLawyers(targets: TargetCountry[]): Promise<{
   /** Map { code: nbProfilsManquants } pour atteindre le minimum requis par pays */
   deficitByCountry: Record<string, number>;
 }> {
-  console.log('🔍 Audit des profils AAA existants...');
-
   const snap = await getDocs(query(
     collection(db, 'users'),
     where('isAAA', '==', true),
@@ -590,20 +588,6 @@ async function auditExistingMaleAaaLawyers(targets: TargetCountry[]): Promise<{
     if (existing < min) deficitByCountry[t.code] = min - existing;
   }
 
-  const missingCount = Object.keys(deficitByCountry).length;
-  const totalToCreate = Object.values(deficitByCountry).reduce((a, b) => a + b, 0);
-
-  console.log(`   • Total avocats AAA en base: ${snap.size}`);
-  console.log(`   • Avocats AAA masculins francophones: ${matchingMaleFr}`);
-  console.log(`   • Pays cibles: ${targets.length}`);
-  console.log(`   • Pays cibles atteignant leur minimum: ${targets.length - missingCount}`);
-  console.log(`   • Pays cibles en déficit: ${missingCount}`);
-  console.log(`   • Profils à créer pour combler: ${totalToCreate}`);
-  if (missingCount > 0) {
-    const detail = Object.entries(deficitByCountry).map(([k, v]) => `${k}(+${v})`).join(', ');
-    console.log(`   • Détail: ${detail}`);
-  }
-
   return { totalAaaLawyers: snap.size, matchingMaleFr, byCountry, deficitByCountry };
 }
 
@@ -611,44 +595,73 @@ async function auditExistingMaleAaaLawyers(targets: TargetCountry[]): Promise<{
 // FONCTION PRINCIPALE
 // =============================================================================
 
+export interface AaaReport {
+  mode: 'dry-run' | 'execute';
+  totalAaaLawyers: number;
+  matchingMaleFrInBase: number;
+  targets: number;
+  okCountries: string[];
+  partialCountries: string[];
+  missingCountries: string[];
+  perCountry: Array<{ code: string; nameFr: string; existing: number; min: number; status: 'ok' | 'partial' | 'missing' }>;
+  totalToCreate: number;
+  created?: number;
+  errors?: number;
+  uniqueReviewsUsed?: number;
+  message: string;
+}
+
 export async function generateLawyersAsiaOceania(
   options: { dryRun?: boolean } = {}
-): Promise<void> {
+): Promise<AaaReport> {
   const dryRun = options.dryRun !== false;
-
-  console.log('='.repeat(72));
-  console.log(' AAA LAWYERS — ASIE (sauf Chine) + AUSTRALIE');
-  console.log(` Mode: ${dryRun ? '🔬 DRY-RUN (vérification)' : '⚡ EXÉCUTION (création)'}`);
-  console.log(' Profils: masculins | Langue intervention: français uniquement');
-  console.log(' Inscription: 2026-02-10 → 2026-03-30');
-  console.log('='.repeat(72));
-
   const targets = getTargetCountries();
-  console.log(`\n🌏 ${targets.length} pays cibles\n`);
 
-  // Étape 1 : Audit
+  // Étape 1 : Audit (pas de console.log — drop_console est actif en prod)
   const audit = await auditExistingMaleAaaLawyers(targets);
 
+  // Calcul du détail par pays
+  const perCountry = targets.map(t => {
+    const existing = audit.byCountry[t.code] || 0;
+    const min = MIN_PER_COUNTRY[t.code] ?? DEFAULT_MIN;
+    let status: 'ok' | 'partial' | 'missing';
+    if (existing >= min) status = 'ok';
+    else if (existing === 0) status = 'missing';
+    else status = 'partial';
+    return { code: t.code, nameFr: t.nameFr, existing, min, status };
+  });
+
+  const okCountries = perCountry.filter(c => c.status === 'ok').map(c => `${c.code} (${c.existing}/${c.min})`);
+  const partialCountries = perCountry.filter(c => c.status === 'partial').map(c => `${c.code} (${c.existing}/${c.min})`);
+  const missingCountries = perCountry.filter(c => c.status === 'missing').map(c => `${c.code} (0/${c.min})`);
+  const totalToCreate = Object.values(audit.deficitByCountry).reduce((a, b) => a + b, 0);
+
   if (dryRun) {
-    console.log('\n📋 Détail couverture par pays cible:');
-    for (const t of targets) {
-      const n = audit.byCountry[t.code] || 0;
-      const min = MIN_PER_COUNTRY[t.code] ?? DEFAULT_MIN;
-      const ok = n >= min;
-      const flag = ok ? '✅' : (n === 0 ? '❌' : '🟡');
-      const minTag = min > 1 ? ` [min=${min}]` : '';
-      console.log(`   ${flag} ${t.code} ${t.nameFr.padEnd(28)} ${n}/${min} avocat(s) AAA mâle FR${minTag}`);
-    }
-    console.log('\nℹ️  DRY-RUN — aucune écriture. Pour créer:');
-    console.log('   generateLawyersAsiaOceania({ dryRun: false })');
-    console.log('='.repeat(72));
-    return;
+    return {
+      mode: 'dry-run',
+      totalAaaLawyers: audit.totalAaaLawyers,
+      matchingMaleFrInBase: audit.matchingMaleFr,
+      targets: targets.length,
+      okCountries, partialCountries, missingCountries, perCountry,
+      totalToCreate,
+      message: totalToCreate === 0
+        ? '✅ Tous les pays cibles atteignent déjà leur minimum requis. Rien à créer.'
+        : `${totalToCreate} profil(s) à créer. Pour exécuter: generateLawyersAsiaOceania({ dryRun: false })`,
+    };
   }
 
   const deficitEntries = Object.entries(audit.deficitByCountry);
   if (deficitEntries.length === 0) {
-    console.log('\n✅ Tous les pays cibles atteignent leur minimum (TH/VN inclus). Rien à faire.');
-    return;
+    return {
+      mode: 'execute',
+      totalAaaLawyers: audit.totalAaaLawyers,
+      matchingMaleFrInBase: audit.matchingMaleFr,
+      targets: targets.length,
+      okCountries, partialCountries, missingCountries, perCountry,
+      totalToCreate: 0,
+      created: 0, errors: 0, uniqueReviewsUsed: 0,
+      message: '✅ Tous les pays cibles atteignent leur minimum (TH/VN inclus). Rien à faire.',
+    };
   }
 
   // Étape 2 : Génération
@@ -690,14 +703,12 @@ export async function generateLawyersAsiaOceania(
     profilesToCreate.push({ mainCountry: main, allCountries });
   }
 
-  console.log(`\n👤 ${profilesToCreate.length} profils à créer\n`);
-
-  // Set global pour unicité des avis (cumule avec ce que la session précédente a déjà utilisé n'est pas garanti,
-  // mais au sein de cette exécution oui ; on échantillonne suffisamment large pour minimiser collisions DB)
+  // Set global pour unicité des avis au sein de cette exécution
   const usedCommentsGlobal = new Set<string>();
 
   let success = 0;
   let errors = 0;
+  let lastErrorMessage = '';
 
   for (let i = 0; i < profilesToCreate.length; i++) {
     const profile = profilesToCreate[i];
@@ -946,22 +957,27 @@ export async function generateLawyersAsiaOceania(
       }
 
       success++;
-      const list = practiceCountryCodes.join(',');
-      console.log(`✓ [${i + 1}/${profilesToCreate.length}] ${fullName.padEnd(30)} | ${main.code} | pays: ${list.padEnd(12)} | ${reviewCount} avis | ${rating}★`);
       await new Promise(r => setTimeout(r, 35));
 
     } catch (err) {
       errors++;
-      console.error(`✗ ERREUR ${main.nameFr}:`, (err as Error).message);
+      // On garde l'erreur en mémoire pour le rapport
+      lastErrorMessage = (err as Error).message;
     }
   }
 
-  const newlyCovered = Object.keys(audit.deficitByCountry).length;
-  console.log('\n' + '='.repeat(72));
-  console.log(` TERMINÉ — ${success} avocat(s) AAA créé(s) | ${errors} erreur(s)`);
-  console.log(` Avis uniques utilisés cette session: ${usedCommentsGlobal.size}`);
-  console.log(` Pays cibles initialement en déficit comblés: ${newlyCovered}`);
-  console.log('='.repeat(72));
+  return {
+    mode: 'execute',
+    totalAaaLawyers: audit.totalAaaLawyers,
+    matchingMaleFrInBase: audit.matchingMaleFr,
+    targets: targets.length,
+    okCountries, partialCountries, missingCountries, perCountry,
+    totalToCreate,
+    created: success,
+    errors,
+    uniqueReviewsUsed: usedCommentsGlobal.size,
+    message: `Création terminée — ${success}/${profilesToCreate.length} profils créés, ${errors} erreur(s)${lastErrorMessage ? ` (dernière: ${lastErrorMessage})` : ''}`,
+  };
 }
 
 // =============================================================================
@@ -970,9 +986,6 @@ export async function generateLawyersAsiaOceania(
 
 if (typeof window !== 'undefined') {
   (window as any).generateLawyersAsiaOceania = generateLawyersAsiaOceania;
-  console.log('\n🌏 generateLawyersAsiaOceania disponible :');
-  console.log('   • generateLawyersAsiaOceania({ dryRun: true })  → vérifier');
-  console.log('   • generateLawyersAsiaOceania({ dryRun: false }) → créer\n');
 }
 
 export default generateLawyersAsiaOceania;
