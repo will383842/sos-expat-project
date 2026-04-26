@@ -12702,5 +12702,6 @@
   "partner.landing.v2.faq.q9": "Comment se passe la facturation ?",
   "partner.landing.v2.faq.a9": "Une facture unique est émise en fin de mois pour le mois écoulé, conformément à l'Order Form signé. Paiement net 15 jours par défaut, ou conditions négociées. Carte bancaire, virement bancaire ou prélèvement SEPA. Reçu fiscal et factures archivées dans votre dashboard partenaire.",
   "partner.landing.v2.faq.q10": "Les CGV et le DPA sont-ils signés en ligne ?",
-  "partner.landing.v2.faq.a10": "Oui. CGV B2B, DPA RGPD et Order Form sont signés électroniquement avec preuve probante (IP, horodatage, hash SHA-256, archivage PDF). Conforme eIDAS. Si votre service juridique préfère des contrats papier, nous fournissons aussi cette option (override admin)."
+  "partner.landing.v2.faq.a10": "Oui. CGV B2B, DPA RGPD et Order Form sont signés électroniquement avec preuve probante (IP, horodatage, hash SHA-256, archivage PDF). Conforme eIDAS. Si votre service juridique préfère des contrats papier, nous fournissons aussi cette option (override admin).",
+  "success.partnerContract": "Appel pris en charge par {partnerName}"
 }

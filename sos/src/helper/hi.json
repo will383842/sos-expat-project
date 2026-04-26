@@ -12714,5 +12714,6 @@
   "partner.landing.v2.faq.a10": "Yes. B2B Terms, GDPR DPA and Order Form are signed electronically with audit trail (IP, timestamp, SHA-256 hash, PDF archive). eIDAS-compliant. If your legal department prefers paper contracts, we also offer that option (admin override).",
   "partner.landing.v2.profiles.independent": "स्वतंत्र फ़र्म और एजेंसियाँ",
   "partner.landing.v2.profiles.smb": "व्यापारी, छोटे व्यवसाय और फ्रीलांसर",
-  "partner.landing.v2.corporates.subtitle": "स्वतंत्र, अपने ग्राहकों को डैशबोर्ड से एक-एक करके या CSV द्वारा जोड़ें: SOS-Expat स्वचालित रूप से प्रत्येक ग्राहक को उसके एक्सेस कोड के साथ एक्टिवेशन ईमेल भेजता है। बड़े समूह, अपने CRM से सिंक्रोनाइज़ करने के लिए REST API से जुड़ें (प्रति कॉल 500 ग्राहकों तक) और एकीकृत डैशबोर्ड में कई फ़र्मों का प्रबंधन करें।"
+  "partner.landing.v2.corporates.subtitle": "स्वतंत्र, अपने ग्राहकों को डैशबोर्ड से एक-एक करके या CSV द्वारा जोड़ें: SOS-Expat स्वचालित रूप से प्रत्येक ग्राहक को उसके एक्सेस कोड के साथ एक्टिवेशन ईमेल भेजता है। बड़े समूह, अपने CRM से सिंक्रोनाइज़ करने के लिए REST API से जुड़ें (प्रति कॉल 500 ग्राहकों तक) और एकीकृत डैशबोर्ड में कई फ़र्मों का प्रबंधन करें।",
+  "success.partnerContract": "कॉल का खर्च {partnerName} द्वारा वहन किया गया"
 }

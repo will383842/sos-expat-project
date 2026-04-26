@@ -12704,5 +12704,6 @@
   "partner.landing.v2.faq.a10": "Yes. B2B Terms, GDPR DPA and Order Form are signed electronically with audit trail (IP, timestamp, SHA-256 hash, PDF archive). eIDAS-compliant. If your legal department prefers paper contracts, we also offer that option (admin override).",
   "partner.landing.v2.profiles.independent": "独立事务所与机构",
   "partner.landing.v2.profiles.smb": "商户、中小企业与自由职业者",
-  "partner.landing.v2.corporates.subtitle": "独立事务所:从仪表盘逐个或通过 CSV 添加客户,SOS-Expat 自动向每位客户发送带访问代码的激活邮件。大型集团:接入 REST API 与 CRM 同步(单次调用最多 500 个客户),并在统一仪表盘中管理多个事务所。"
+  "partner.landing.v2.corporates.subtitle": "独立事务所:从仪表盘逐个或通过 CSV 添加客户,SOS-Expat 自动向每位客户发送带访问代码的激活邮件。大型集团:接入 REST API 与 CRM 同步(单次调用最多 500 个客户),并在统一仪表盘中管理多个事务所。",
+  "success.partnerContract": "通话由 {partnerName} 承担"
 }

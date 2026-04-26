@@ -12,7 +12,10 @@ jobs:
   deploy:
     name: Deploy to Firebase
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    # 120min: previous 45min was always cancelled mid-incremental-pass on a
+    # 800+ functions repo (each pass takes ~25-35min with rate-limit backoff,
+    # MAX_PASSES=6 needs ample headroom).
+    timeout-minutes: 120
 
     steps:
       - name: Checkout code

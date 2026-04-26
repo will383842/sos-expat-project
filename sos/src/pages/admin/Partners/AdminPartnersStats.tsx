@@ -161,6 +161,35 @@ const AdminPartnersStats: React.FC = () => {
           </button>
         </div>
 
+        {/* B2B SOS-Call info banner — clarifies what this page shows vs the B2B partner system */}
+        <div className="rounded-2xl border border-orange-200 dark:border-orange-500/30 bg-orange-50/60 dark:bg-orange-500/10 p-4 flex items-start gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500/20 to-amber-500/20 flex items-center justify-center flex-shrink-0">
+            <Phone className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+          </div>
+          <div className="flex-1 text-sm">
+            <div className="font-semibold text-gray-900 dark:text-white mb-1">
+              <FormattedMessage id="admin.partners.stats.b2bBanner.title" defaultMessage="Cette page concerne les partenaires affiliés (chatters, influenceurs, blogueurs)" />
+            </div>
+            <div className="text-gray-700 dark:text-gray-300">
+              <FormattedMessage
+                id="admin.partners.stats.b2bBanner.body"
+                defaultMessage="Pour le suivi des appels B2B SOS-Call (forfait mensuel partenaires entreprises), filtrez par origine 🤝 B2B sur la page {link}. La gestion administrative des partenaires B2B est dans la console Filament Partner Engine."
+                values={{
+                  link: (
+                    <button
+                      type="button"
+                      onClick={() => navigate('/admin/calls/sessions')}
+                      className="underline hover:text-orange-600 dark:hover:text-orange-400 font-medium"
+                    >
+                      <FormattedMessage id="admin.partners.stats.b2bBanner.link" defaultMessage="Sessions d'appels" />
+                    </button>
+                  ),
+                }}
+              />
+            </div>
+          </div>
+        </div>
+
         {/* Stat Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {STAT_CARDS.map((stat, i) => {

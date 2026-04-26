@@ -103,14 +103,16 @@ function formatLanguages(languages: string[]): string {
  * provider's preferred SMS locale and fall back to English if their language
  * is not (yet) translated.
  */
-const SUPPORTED_LOCALES = new Set(['fr', 'en', 'es', 'de', 'pt', 'ru', 'ar', 'hi', 'ch']);
+export const SUPPORTED_LOCALES = new Set(['fr', 'en', 'es', 'de', 'pt', 'ru', 'ar', 'hi', 'ch']);
 
 /**
  * Resolve the locale to use for the provider notification (SMS/email/inapp).
  * Tries preferredLanguage / language / languages[0] in order. Normalises
  * 'zh' → 'ch' (legacy alias). Falls back to 'en' if none is supported.
+ *
+ * Exported for unit testing.
  */
-function resolveProviderLocale(providerData: FirebaseFirestore.DocumentData | undefined): string {
+export function resolveProviderLocale(providerData: FirebaseFirestore.DocumentData | undefined): string {
   if (!providerData) return 'en';
   const candidates: unknown[] = [
     providerData.preferredLanguage,
