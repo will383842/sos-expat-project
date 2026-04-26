@@ -84,14 +84,11 @@ export const submitPartnerApplication = onCall(
     if (!input?.email || !validateEmail(input.email)) {
       throw new HttpsError("invalid-argument", "Valid email is required");
     }
-    if (!input?.websiteUrl || !validateWebsiteUrl(input.websiteUrl)) {
-      throw new HttpsError("invalid-argument", "Valid website URL (https://) is required");
+    if (input?.websiteUrl && !validateWebsiteUrl(input.websiteUrl)) {
+      throw new HttpsError("invalid-argument", "Website URL must start with https://");
     }
-    if (!input?.websiteName?.trim()) {
-      throw new HttpsError("invalid-argument", "Website name is required");
-    }
-    if (!input?.websiteCategory || !validateCategory(input.websiteCategory)) {
-      throw new HttpsError("invalid-argument", "Valid website category is required");
+    if (input?.websiteCategory && !validateCategory(input.websiteCategory)) {
+      throw new HttpsError("invalid-argument", "Invalid website category");
     }
     if (!input?.country || input.country.length !== 2) {
       throw new HttpsError("invalid-argument", "Valid 2-letter country code is required");
@@ -111,8 +108,8 @@ export const submitPartnerApplication = onCall(
     if (input.firstName.trim().length > 50 || input.lastName.trim().length > 50) {
       throw new HttpsError("invalid-argument", "Name must be less than 50 characters");
     }
-    if (input.websiteName.trim().length > 100) {
-      throw new HttpsError("invalid-argument", "Website name must be less than 100 characters");
+    if (input.websiteName && input.websiteName.trim().length > 100) {
+      throw new HttpsError("invalid-argument", "Organization name must be less than 100 characters");
     }
     if (input.websiteDescription && input.websiteDescription.length > 2000) {
       throw new HttpsError("invalid-argument", "Website description must be less than 2000 characters");
@@ -123,7 +120,10 @@ export const submitPartnerApplication = onCall(
 
     try {
       const normalizedEmail = input.email.toLowerCase().trim();
-      const normalizedUrl = input.websiteUrl.toLowerCase().trim().replace(/\/+$/, "");
+      const normalizedUrl = input.websiteUrl
+        ? input.websiteUrl.toLowerCase().trim().replace(/\/+$/, "")
+        : "";
+      const organizationName = input.websiteName?.trim() || "";
 
       // 3. Check for duplicate pending/contacted application
       const duplicateEmailSnap = await db
@@ -140,18 +140,20 @@ export const submitPartnerApplication = onCall(
         );
       }
 
-      const duplicateUrlSnap = await db
-        .collection("partner_applications")
-        .where("websiteUrl", "==", normalizedUrl)
-        .where("status", "in", ["pending", "contacted"])
-        .limit(1)
-        .get();
+      if (normalizedUrl) {
+        const duplicateUrlSnap = await db
+          .collection("partner_applications")
+          .where("websiteUrl", "==", normalizedUrl)
+          .where("status", "in", ["pending", "contacted"])
+          .limit(1)
+          .get();
 
-      if (!duplicateUrlSnap.empty) {
-        throw new HttpsError(
-          "already-exists",
-          "An application with this website is already being reviewed"
-        );
+        if (!duplicateUrlSnap.empty) {
+          throw new HttpsError(
+            "already-exists",
+            "An application with this website is already being reviewed"
+          );
+        }
       }
 
       // 4. Create application
@@ -169,8 +171,8 @@ export const submitPartnerApplication = onCall(
         language: input.language,
 
         websiteUrl: normalizedUrl,
-        websiteName: sanitizeText(input.websiteName.trim()),
-        websiteCategory: input.websiteCategory,
+        websiteName: sanitizeText(organizationName),
+        websiteCategory: input.websiteCategory ?? ("other" as PartnerApplication["websiteCategory"]),
         websiteTraffic: input.websiteTraffic,
         websiteDescription: input.websiteDescription
           ? sanitizeText(input.websiteDescription)
@@ -189,17 +191,18 @@ export const submitPartnerApplication = onCall(
 
       // 5. Create admin notification
       const adminNotifRef = db.collection("admin_notifications").doc();
+      const orgLabel = organizationName || normalizedEmail;
       await adminNotifRef.set({
         id: adminNotifRef.id,
         type: "partner_application",
         title: "New Partner Application",
-        message: `${input.firstName} ${input.lastName} (${input.websiteName}) has applied to become a partner.`,
+        message: `${input.firstName} ${input.lastName} (${orgLabel}) has applied to become a partner.`,
         data: {
           applicationId: appRef.id,
           email: normalizedEmail,
-          websiteUrl: normalizedUrl,
-          websiteName: input.websiteName.trim(),
-          category: input.websiteCategory,
+          ...(normalizedUrl ? { websiteUrl: normalizedUrl } : {}),
+          ...(organizationName ? { websiteName: organizationName } : {}),
+          ...(input.websiteCategory ? { category: input.websiteCategory } : {}),
         },
         isRead: false,
         createdAt: now,
@@ -214,13 +217,11 @@ export const submitPartnerApplication = onCall(
         lastName: sanitizeText(input.lastName.trim()),
         email: normalizedEmail,
         phone: input.phone?.trim() || null,
-        subject: `Candidature partenaire — ${input.websiteName.trim()}`,
+        subject: `Candidature partenaire — ${orgLabel}`,
         message: [
-          `Entreprise/Site : ${input.websiteName.trim()}`,
-          `URL : ${normalizedUrl}`,
-          `Catégorie : ${input.websiteCategory}`,
-          input.websiteTraffic ? `Trafic : ${input.websiteTraffic}` : null,
-          input.websiteDescription ? `Description : ${input.websiteDescription}` : null,
+          organizationName ? `Organisation : ${organizationName}` : null,
+          `Pays : ${input.country.toUpperCase()}`,
+          `Langue : ${input.language}`,
           input.message ? `\nMessage :\n${input.message}` : null,
         ].filter(Boolean).join("\n"),
         category: "partner",
@@ -235,9 +236,7 @@ export const submitPartnerApplication = onCall(
         createdAt: now,
         metadata: {
           partnerApplicationId: appRef.id,
-          websiteName: input.websiteName.trim(),
-          websiteUrl: normalizedUrl,
-          websiteCategory: input.websiteCategory,
+          ...(organizationName ? { websiteName: organizationName } : {}),
           country: input.country.toUpperCase(),
           language: input.language,
         },

@@ -19,6 +19,9 @@ import HreflangLinks from '@/multilingual-system/components/HrefLang/HreflangLin
 import BreadcrumbSchema from '@/components/seo/BreadcrumbSchema';
 import { getLocaleString, getTranslatedRouteSlug } from '@/multilingual-system/core/routing/localeRoutes';
 import { useApp } from '@/contexts/AppContext';
+import { countriesData } from '@/data/countries';
+import { getCountryName } from '@/utils/countryUtils';
+import { languagesData, type SupportedLocale } from '@/data/languages-spoken';
 import {
   ArrowRight,
   Check,
@@ -130,23 +133,29 @@ const globalStyles = `
 // ============================================================================
 // CONSTANTS
 // ============================================================================
-const CATEGORIES = [
-  'expatriation', 'travel', 'legal', 'finance', 'insurance',
-  'relocation', 'education', 'media', 'association', 'corporate', 'other',
-] as const;
+// Backend SupportedPartnerLanguage uses 'zh' (NOT 'ch'). The form sends 'zh'
+// to satisfy backend validation, even though the app's UI locale uses 'ch'.
+const FORM_LANGUAGES = ['fr', 'en', 'es', 'de', 'pt', 'ar', 'zh', 'ru', 'hi'] as const;
+type FormLanguage = typeof FORM_LANGUAGES[number];
 
-const TRAFFIC_TIERS = [
-  'lt10k', '10k-50k', '50k-100k', '100k-500k', '500k-1m', 'gt1m',
-] as const;
+// Map app UI locale (which uses 'ch' for Chinese) to the locale field used by
+// countriesData / languagesData lookups.
+const COUNTRY_NAME_LOCALES = ['fr', 'en', 'es', 'de', 'pt', 'zh', 'ar', 'ru'] as const;
+type CountryNameLocale = typeof COUNTRY_NAME_LOCALES[number];
 
-const COUNTRIES = [
-  'AF','AL','DZ','AR','AU','AT','BE','BR','CA','CL','CN','CO','CZ','DK','EG',
-  'FI','FR','DE','GR','HU','IN','ID','IE','IL','IT','JP','KE','KR','MA','MX',
-  'NL','NZ','NG','NO','PK','PH','PL','PT','RO','RU','SA','SG','ZA','ES','SE',
-  'CH','TH','TR','AE','GB','US','VN',
-];
+function uiLocaleToCountryLocale(locale: string): CountryNameLocale {
+  if (locale === 'ch') return 'zh';
+  if ((COUNTRY_NAME_LOCALES as readonly string[]).includes(locale)) {
+    return locale as CountryNameLocale;
+  }
+  return 'en';
+}
 
-const LANGUAGES = ['fr','en','es','de','pt','ar','ch','ru','hi'] as const;
+function uiLocaleToLanguageLabelLocale(locale: string): SupportedLocale {
+  // languagesData uses 'ch' (matches the app convention).
+  const supported: SupportedLocale[] = ['fr', 'en', 'es', 'ru', 'de', 'hi', 'pt', 'ch', 'ar'];
+  return (supported.includes(locale as SupportedLocale) ? locale : 'en') as SupportedLocale;
+}
 
 // ============================================================================
 // SEO CONSTANTS (same pattern as Home.tsx for unification)
@@ -335,11 +344,7 @@ interface FormData {
   phone: string;
   country: string;
   language: string;
-  websiteUrl: string;
-  websiteName: string;
-  websiteCategory: string;
-  websiteTraffic: string;
-  websiteDescription: string;
+  organizationName: string;
   message: string;
 }
 
@@ -350,16 +355,13 @@ const INITIAL_FORM: FormData = {
   phone: '',
   country: '',
   language: '',
-  websiteUrl: '',
-  websiteName: '',
-  websiteCategory: '',
-  websiteTraffic: '',
-  websiteDescription: '',
+  organizationName: '',
   message: '',
 };
 
 const ApplicationForm: React.FC = () => {
   const intl = useIntl();
+  const { language: uiLanguage } = useApp();
   const [form, setForm] = useState<FormData>(INITIAL_FORM);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -370,6 +372,33 @@ const ApplicationForm: React.FC = () => {
     setError(null);
   };
 
+  // Localised, alphabetically-sorted country list (priority-1 countries first).
+  const countryOptions = useMemo(() => {
+    const locale = uiLocaleToCountryLocale(uiLanguage as string);
+    const items = countriesData
+      .filter(c => c.code !== 'SEPARATOR' && !c.disabled)
+      .map(c => ({
+        code: c.code,
+        name: getCountryName(c.code, locale),
+        priority: c.priority ?? 3,
+      }));
+    return items.sort((a, b) => {
+      if (a.priority !== b.priority) return a.priority - b.priority;
+      return a.name.localeCompare(b.name, locale);
+    });
+  }, [uiLanguage]);
+
+  // Localised language list, restricted to the 9 backend-supported codes.
+  const languageOptions = useMemo(() => {
+    const labelLocale = uiLocaleToLanguageLabelLocale(uiLanguage as string);
+    return FORM_LANGUAGES.map((code) => {
+      // languagesData uses 'zh' as the code for Chinese — same as our form code.
+      const lang = languagesData.find(l => l.code === code);
+      const label = lang?.labels?.[labelLocale] || lang?.name || code;
+      return { code: code as FormLanguage, label };
+    }).sort((a, b) => a.label.localeCompare(b.label));
+  }, [uiLanguage]);
+
   const validate = (): string | null => {
     if (!form.firstName.trim()) return intl.formatMessage({ id: 'partner.landing.form.error.firstName', defaultMessage: 'First name is required' });
     if (!form.lastName.trim()) return intl.formatMessage({ id: 'partner.landing.form.error.lastName', defaultMessage: 'Last name is required' });
@@ -377,12 +406,7 @@ const ApplicationForm: React.FC = () => {
       return intl.formatMessage({ id: 'partner.landing.form.error.email', defaultMessage: 'Valid email is required' });
     if (!form.country) return intl.formatMessage({ id: 'partner.landing.form.error.country', defaultMessage: 'Country is required' });
     if (!form.language) return intl.formatMessage({ id: 'partner.landing.form.error.language', defaultMessage: 'Language is required' });
-    if (form.websiteUrl.trim() && !form.websiteUrl.startsWith('https://'))
-      return intl.formatMessage({ id: 'partner.landing.form.error.websiteUrl', defaultMessage: 'Website URL must start with https://' });
-    if (!form.websiteName.trim()) return intl.formatMessage({ id: 'partner.landing.form.error.websiteName', defaultMessage: 'Website name is required' });
-    if (!form.websiteCategory) return intl.formatMessage({ id: 'partner.landing.form.error.category', defaultMessage: 'Category is required' });
-    if (form.websiteDescription.length > 500)
-      return intl.formatMessage({ id: 'partner.landing.form.error.descriptionTooLong', defaultMessage: 'Description must be under 500 characters' });
+    if (!form.organizationName.trim()) return intl.formatMessage({ id: 'partner.landing.form.error.organizationName', defaultMessage: 'Organization name is required' });
     if (form.message.length > 1000)
       return intl.formatMessage({ id: 'partner.landing.form.error.messageTooLong', defaultMessage: 'Message must be under 1000 characters' });
     return null;
@@ -408,11 +432,7 @@ const ApplicationForm: React.FC = () => {
         phone: form.phone.trim() || undefined,
         country: form.country,
         language: form.language,
-        websiteUrl: form.websiteUrl.trim() || undefined,
-        websiteName: form.websiteName.trim(),
-        websiteCategory: form.websiteCategory,
-        websiteTraffic: form.websiteTraffic || undefined,
-        websiteDescription: form.websiteDescription.trim() || undefined,
+        websiteName: form.organizationName.trim(),
         message: form.message.trim() || undefined,
       });
       setSubmitted(true);
@@ -530,8 +550,8 @@ const ApplicationForm: React.FC = () => {
             required
           >
             <option value="">{intl.formatMessage({ id: 'partner.landing.form.selectCountry', defaultMessage: 'Select a country' })}</option>
-            {COUNTRIES.map(c => (
-              <option key={c} value={c}>{c}</option>
+            {countryOptions.map(c => (
+              <option key={c.code} value={c.code}>{c.name}</option>
             ))}
           </select>
         </div>
@@ -548,104 +568,27 @@ const ApplicationForm: React.FC = () => {
             required
           >
             <option value="">{intl.formatMessage({ id: 'partner.landing.form.selectLanguage', defaultMessage: 'Select a language' })}</option>
-            {LANGUAGES.map(l => (
-              <option key={l} value={l}>{l}</option>
+            {languageOptions.map(l => (
+              <option key={l.code} value={l.code}>{l.label}</option>
             ))}
           </select>
         </div>
       </div>
 
-      {/* Website URL + name */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label htmlFor="pf-websiteUrl" className={labelClass}>
-            <FormattedMessage id="partner.landing.form.websiteUrl" defaultMessage="Website URL" />
-          </label>
-          <input
-            id="pf-websiteUrl"
-            type="url"
-            name="websiteUrl"
-            value={form.websiteUrl}
-            onChange={handleChange}
-            placeholder="https://"
-            className={inputClass}
-            autoComplete="url"
-          />
-        </div>
-        <div>
-          <label htmlFor="pf-websiteName" className={labelClass}>
-            <FormattedMessage id="partner.landing.form.websiteName" defaultMessage="Website name" /> *
-          </label>
-          <input
-            id="pf-websiteName"
-            type="text"
-            name="websiteName"
-            value={form.websiteName}
-            onChange={handleChange}
-            className={inputClass}
-            required
-            autoComplete="organization"
-          />
-        </div>
-      </div>
-
-      {/* Category + traffic */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label htmlFor="pf-category" className={labelClass}>
-            <FormattedMessage id="partner.landing.form.category" defaultMessage="Website category" /> *
-          </label>
-          <select
-            id="pf-category"
-            name="websiteCategory"
-            value={form.websiteCategory}
-            onChange={handleChange}
-            className={selectClass}
-            required
-          >
-            <option value="">{intl.formatMessage({ id: 'partner.landing.form.selectCategory', defaultMessage: 'Select a category' })}</option>
-            {CATEGORIES.map(c => (
-              <option key={c} value={c}>
-                {intl.formatMessage({ id: `partner.landing.category.${c}`, defaultMessage: c })}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label htmlFor="pf-traffic" className={labelClass}>
-            <FormattedMessage id="partner.landing.form.traffic" defaultMessage="Monthly traffic" />
-          </label>
-          <select
-            id="pf-traffic"
-            name="websiteTraffic"
-            value={form.websiteTraffic}
-            onChange={handleChange}
-            className={selectClass}
-          >
-            <option value="">{intl.formatMessage({ id: 'partner.landing.form.selectTraffic', defaultMessage: 'Select traffic tier' })}</option>
-            {TRAFFIC_TIERS.map(t => (
-              <option key={t} value={t}>
-                {intl.formatMessage({ id: `partner.landing.traffic.${t}`, defaultMessage: t })}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      {/* Website description */}
+      {/* Organization / company name */}
       <div>
-        <label htmlFor="pf-description" className={labelClass}>
-          <FormattedMessage id="partner.landing.form.websiteDescription" defaultMessage="Website description" />
-          <span className="text-gray-500 ml-2">({form.websiteDescription.length}/500)</span>
+        <label htmlFor="pf-organizationName" className={labelClass}>
+          <FormattedMessage id="partner.landing.form.organizationName" defaultMessage="Nom de l'organisation" /> *
         </label>
-        <textarea
-          id="pf-description"
-          name="websiteDescription"
-          value={form.websiteDescription}
+        <input
+          id="pf-organizationName"
+          type="text"
+          name="organizationName"
+          value={form.organizationName}
           onChange={handleChange}
-          maxLength={500}
-          rows={3}
           className={inputClass}
+          required
+          autoComplete="organization"
         />
       </div>
 
@@ -1753,10 +1696,9 @@ const PartnerLanding: React.FC = () => {
             aria-modal="true"
             aria-labelledby="modal-heading"
           >
-            {/* Backdrop */}
+            {/* Backdrop — visual only; closing requires the X button */}
             <div
               className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-              onClick={closeContactModal}
               aria-hidden="true"
             />
 
