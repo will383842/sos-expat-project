@@ -52,7 +52,7 @@ import languages, { getLanguageLabel, languagesData, type Language as AppLanguag
 import { LanguageUtils } from "../locales/languageMap";
 import { countriesData, getCountriesForLocale, resolveCountryName, OTHER_COUNTRY } from "../data/countries";
 
-import { db, auth, functions } from "../config/firebase";
+import { db, auth, functions, functionsAffiliate } from "../config/firebase";
 import { httpsCallable, type HttpsCallable } from "firebase/functions";
 import { doc, onSnapshot, getDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { fetchSignInMethodsForEmail } from "firebase/auth";
@@ -3345,10 +3345,11 @@ const BookingRequest: React.FC = () => {
 
               if (useGatedFlow) {
                 // Path A — anonymous, use triggerSosCallFromWeb (token-authenticated)
+                // Deployed in us-central1 (partnerConfig) — must use functionsAffiliate
                 const triggerSosCallFromWeb: HttpsCallable<
                   Record<string, unknown>,
                   { success: boolean; callSessionId?: string; message?: string; providerDisplayName?: string }
-                > = httpsCallable(functions, 'triggerSosCallFromWeb');
+                > = httpsCallable(functionsAffiliate, 'triggerSosCallFromWeb');
 
                 const result = await triggerSosCallFromWeb({
                   sosCallSessionToken,
@@ -3691,10 +3692,11 @@ const BookingRequest: React.FC = () => {
 
           try {
             if (useGatedFlow) {
+              // Deployed in us-central1 (partnerConfig) — must use functionsAffiliate
               const triggerSosCallFromWeb: HttpsCallable<
                 Record<string, unknown>,
                 { success: boolean; callSessionId?: string; message?: string; providerDisplayName?: string }
-              > = httpsCallable(functions, 'triggerSosCallFromWeb');
+              > = httpsCallable(functionsAffiliate, 'triggerSosCallFromWeb');
 
               const sosCallCurrencyMobile = detectUserCurrency();
 

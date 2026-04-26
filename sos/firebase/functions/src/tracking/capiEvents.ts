@@ -106,7 +106,11 @@ function checkRateLimit(ip: string): boolean {
 export const trackCAPIEvent = onRequest(
   {
     region: REGION,
-    cpu: 0.083,
+    // 512MiB needed because the deployed bundle drags in Twilio/CallScheduler
+    // and OOMs at 256MiB cold start (observed 263MiB used). cpu bumped to 0.167
+    // because Cloud Run gen2 caps cpu/mem ratio (256MiB → 0.083, 512MiB → 0.167).
+    cpu: 0.167,
+    memory: "512MiB",
     cors: ALLOWED_ORIGINS,
     maxInstances: 10,
     secrets: [META_CAPI_TOKEN],
