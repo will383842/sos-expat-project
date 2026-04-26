@@ -1090,9 +1090,197 @@ export async function fixAaaPhonesAsiaOceania(
   };
 }
 
+// =============================================================================
+// VÉRIFICATION + AUTO-FIX : description manquante + avis manquants
+// =============================================================================
+
+export interface VerifyReport {
+  mode: 'dry-run' | 'execute';
+  scanned: number;
+  inScope: number;
+  okComplete: number;
+  missingDescription: Array<{ uid: string; country?: string }>;
+  missingReviews: Array<{ uid: string; expected: number; actual: number; country?: string }>;
+  fixedDescription: number;
+  reviewsAdded: number;
+  errors: number;
+  message: string;
+}
+
+export async function verifyAaaProfilesAsiaOceania(
+  options: { dryRun?: boolean } = {}
+): Promise<VerifyReport> {
+  const dryRun = options.dryRun !== false;
+  const targets = getTargetCountries();
+  const targetCodes = new Set<string>(targets.map(t => t.code));
+
+  const usersSnap = await getDocs(query(
+    collection(db, 'users'),
+    where('isAAA', '==', true),
+    where('role', '==', 'lawyer')
+  ));
+
+  let scanned = 0;
+  let inScope = 0;
+  let okComplete = 0;
+  let fixedDescription = 0;
+  let reviewsAdded = 0;
+  let errors = 0;
+  const missingDescription: Array<{ uid: string; country?: string }> = [];
+  const missingReviews: Array<{ uid: string; expected: number; actual: number; country?: string }> = [];
+  const usedComments = new Set<string>();
+
+  for (const d of usersSnap.docs) {
+    scanned++;
+    const p: any = d.data();
+
+    // Scope strict : profils créés par notre générateur, couvrant Asie/AU
+    if (!d.id.startsWith('aaa_lawyer_')) continue;
+    const practice: string[] = p.practiceCountries || p.operatingCountries || p.interventionCountries || [];
+    if (!practice.some((c: string) => targetCodes.has(c))) continue;
+
+    inScope++;
+
+    // 1) Vérification description
+    const descStr = typeof p.description === 'string' ? p.description.trim() : '';
+    const bioFr = (p.bio && typeof p.bio === 'object' && typeof p.bio.fr === 'string') ? p.bio.fr.trim() : '';
+    const hasDescription = !!descStr || !!bioFr;
+    let descIssue = false;
+    if (!hasDescription) {
+      missingDescription.push({ uid: d.id, country: p.country });
+      descIssue = true;
+    } else if (!descStr && bioFr) {
+      // bio.fr existe mais description est vide — corrigeable
+      missingDescription.push({ uid: d.id, country: p.country });
+      descIssue = true;
+    }
+
+    // 2) Vérification avis réels en base
+    const expected = Number(p.reviewCount || 0);
+    let actual = 0;
+    try {
+      const reviewsSnap = await getDocs(query(
+        collection(db, 'reviews'),
+        where('providerId', '==', d.id),
+        where('status', '==', 'published'),
+        where('isPublic', '==', true),
+      ));
+      actual = reviewsSnap.size;
+    } catch (e) {
+      errors++;
+    }
+
+    let revIssue = false;
+    if (expected > 0 && actual < expected) {
+      missingReviews.push({ uid: d.id, expected, actual, country: p.country });
+      revIssue = true;
+    }
+
+    if (!descIssue && !revIssue) {
+      okComplete++;
+      continue;
+    }
+
+    if (dryRun) continue;
+
+    // 3) Mode exécution : on corrige
+    try {
+      // Fix description : copier bio.fr → description si description vide
+      if (descIssue) {
+        const useStr = bioFr || descStr;
+        if (useStr) {
+          const updates: any = { description: useStr };
+          // Si bio.fr manque mais description existe, on remplit bio
+          if (!bioFr && descStr) {
+            updates.bio = { fr: descStr, en: descStr };
+          }
+          await updateDoc(doc(db, 'users', d.id), updates);
+          const sosRef = doc(db, 'sos_profiles', d.id);
+          const sosSnap = await getDoc(sosRef);
+          if (sosSnap.exists()) await updateDoc(sosRef, updates);
+          fixedDescription++;
+        }
+      }
+
+      // Fix avis : compléter pour atteindre reviewCount
+      if (revIssue) {
+        const toAdd = expected - actual;
+        const main = targets.find(t => t.code === p.country) || { code: p.country, nameFr: p.country, nameEn: p.country };
+        const cityFr = CITIES_FR[main.code] || (main as any).nameFr || main.code;
+        const prep = prepPays((main as any).nameFr || main.code, main.code);
+        const specialties: string[] = Array.isArray(p.specialties) && p.specialties.length ? p.specialties : ['IMMI_VISAS_PERMIS_SEJOUR'];
+
+        const renderReview = (template: string, specialtyCode: string): string => {
+          const specLabel = SPECIALTY_LABELS_FR[specialtyCode] || specialtyCode.toLowerCase();
+          return template
+            .replace(/\{ville\}/g, cityFr)
+            .replace(/\{pays\}/g, (main as any).nameFr || main.code)
+            .replace(/\{prep_pays\}/g, prep)
+            .replace(/\{specialty\}/g, specLabel);
+        };
+
+        const createdAtDate = p.createdAt && typeof p.createdAt.toDate === 'function'
+          ? p.createdAt.toDate()
+          : new Date('2026-02-15');
+        const daysSinceCreation = Math.max(1, Math.floor((Date.now() - createdAtDate.getTime()) / (1000 * 60 * 60 * 24)));
+
+        for (let j = 0; j < toAdd; j++) {
+          let rendered = '';
+          let attempts = 0;
+          do {
+            const tpl = randomChoice(REVIEW_TEMPLATES);
+            rendered = renderReview(tpl, randomChoice(specialties));
+            attempts++;
+          } while (usedComments.has(rendered) && attempts < 60);
+          if (usedComments.has(rendered)) {
+            rendered = renderReview(`${randomChoice(REVIEW_TEMPLATES)} (${main.code}-${j}-${Date.now()})`, specialties[0]);
+          }
+          usedComments.add(rendered);
+
+          const clientNames = getNamesByCountry('France');
+          const cFirst = randomChoice([...clientNames.male, ...clientNames.female]);
+          const cLast = randomChoice(clientNames.lastNames);
+          const reviewDate = new Date(createdAtDate.getTime() + ((actual + j) / Math.max(1, expected)) * daysSinceCreation * 24 * 60 * 60 * 1000);
+
+          await addDoc(collection(db, 'reviews'), {
+            providerId: d.id,
+            clientId: `client_fix_${Date.now()}_${j}_${Math.random().toString(36).slice(2, 6)}`,
+            clientName: `${cFirst} ${cLast}`,
+            authorName: `${cFirst} ${cLast}`,
+            clientCountry: 'France',
+            rating: randomReviewRating(),
+            comment: rendered,
+            isPublic: true,
+            status: 'published',
+            serviceType: 'lawyer_call',
+            createdAt: Timestamp.fromDate(reviewDate),
+            helpfulVotes: randomInt(0, 18),
+            verified: true,
+          });
+          reviewsAdded++;
+          await new Promise(r => setTimeout(r, 25));
+        }
+      }
+    } catch (err) {
+      errors++;
+    }
+  }
+
+  return {
+    mode: dryRun ? 'dry-run' : 'execute',
+    scanned, inScope, okComplete,
+    missingDescription, missingReviews,
+    fixedDescription, reviewsAdded, errors,
+    message: dryRun
+      ? `${inScope} profil(s) en scope. ${missingDescription.length} sans description correcte, ${missingReviews.length} avec avis manquants. Pour corriger: verifyAaaProfilesAsiaOceania({ dryRun: false })`
+      : `${fixedDescription} description(s) corrigée(s), ${reviewsAdded} avis ajouté(s), ${errors} erreur(s)`,
+  };
+}
+
 if (typeof window !== 'undefined') {
   (window as any).generateLawyersAsiaOceania = generateLawyersAsiaOceania;
   (window as any).fixAaaPhonesAsiaOceania = fixAaaPhonesAsiaOceania;
+  (window as any).verifyAaaProfilesAsiaOceania = verifyAaaProfilesAsiaOceania;
 }
 
 export default generateLawyersAsiaOceania;
