@@ -91,6 +91,12 @@ import {
   type BookingFormData as MobileBookingFormData,
 } from "@/components/booking-mobile";
 
+// Slim B2B booking page — used when the user lands with a partner code
+// (sos-call.sos-expat.com gated flow). Hard-mounted via the dispatcher at the
+// bottom of this file so the existing 4800-line B2C tree is never built for
+// these users (no payment block, no "card" copy, provider already chosen).
+import BookingRequestB2B from "./BookingRequestB2B";
+
 /** ===== Types complémentaires ===== */
 type LangKey = keyof typeof I18N;
 type BookingLanguage = AppLanguage;
@@ -2077,7 +2083,7 @@ const sanitizeInput = (input: string): string =>
   sanitizeText(input, { trim: true });
 
 /** ===== Page (RHF) ===== */
-const BookingRequest: React.FC = () => {
+const BookingRequestB2CInner: React.FC = () => {
   const intl = useIntl();
   const { providerId } = useParams<{ providerId: string }>();
   const navigate = useLocaleNavigate();
@@ -5284,6 +5290,35 @@ const BookingRequest: React.FC = () => {
       )}
     </Layout>
   );
+};
+
+/**
+ * Synchronously decide whether the visitor came from the B2B partner gated
+ * flow (sos-call.sos-expat.com). When the URL carries `?sosCallToken=…` (or
+ * a previous visit stored one in sessionStorage), we mount the slim B2B page
+ * which is built around "provider already chosen, partner pays" instead of
+ * the full 4800-line B2C journey with payment, provider search, etc.
+ *
+ * The check runs once via useState's lazy initializer so the gated/non-gated
+ * verdict is pinned for the lifetime of the component — switching mid-session
+ * would violate the rules of hooks (different hook trees per render).
+ */
+const detectGatedB2B = (): boolean => {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("sosCallToken")) return true;
+    return !!sessionStorage.getItem("sosCall.token");
+  } catch {
+    return false;
+  }
+};
+
+const BookingRequest: React.FC = () => {
+  const [isGatedB2B] = useState<boolean>(() => detectGatedB2B());
+  if (isGatedB2B) {
+    return <BookingRequestB2B />;
+  }
+  return <BookingRequestB2CInner />;
 };
 
 export default BookingRequest;
