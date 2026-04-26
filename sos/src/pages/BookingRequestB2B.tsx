@@ -123,9 +123,26 @@ const BookingRequestB2B: React.FC = () => {
   const [clientPhone, setClientPhone] = useState<string>(
     () => (user as any)?.phoneNumber || ""
   );
-  const [clientCountry, setClientCountry] = useState<string>(
-    () => (user as any)?.country || ""
-  );
+  // Pre-fill country from (priority order):
+  //   1. wizardFilters.country (set by /sos-appel wizard step 1 when the user
+  //      filtered providers by country — that's the country their help
+  //      request is about)
+  //   2. user.country (logged-in profile)
+  //   3. empty (user must pick)
+  const [clientCountry, setClientCountry] = useState<string>(() => {
+    try {
+      const raw = sessionStorage.getItem("wizardFilters");
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed?.country && typeof parsed.country === "string") {
+          return parsed.country;
+        }
+      }
+    } catch {
+      /* ignore sessionStorage failures */
+    }
+    return (user as any)?.country || "";
+  });
   const [clientLanguage, setClientLanguage] = useState<string>(locale);
   const [consent, setConsent] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState(false);
