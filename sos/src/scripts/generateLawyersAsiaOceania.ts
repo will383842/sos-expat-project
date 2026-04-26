@@ -769,18 +769,13 @@ export async function generateLawyersAsiaOceania(
 
       const practiceCountryCodes = profile.allCountries.map(c => c.code);
 
-      // Téléphone aligné au pays principal (phoneCode de countriesData)
-      const countryRow: any = countriesData.find((c: any) => c.code === main.code);
-      const localPhoneCode: string = (countryRow && countryRow.phoneCode) || '+33';
-      const localPhoneNumber = `${localPhoneCode}${randomInt(100000000, 999999999)}`;
-
       const profileData: any = {
         // Identité
         uid, firstName, lastName, fullName, displayName: fullName, email,
         gender: 'male',
 
-        // Contact (numéro local au pays de résidence)
-        phone: localPhoneNumber, phoneCountryCode: localPhoneCode,
+        // Contact — numéro standard SOS-Expat pour tous les profils AAA (convention projet)
+        phone: '+33743331201', phoneCountryCode: '+33',
 
         // Localisation
         country: main.code, currentCountry: main.code, residenceCountry: main.code,
@@ -984,8 +979,120 @@ export async function generateLawyersAsiaOceania(
 // EXPOSITION CONSOLE
 // =============================================================================
 
+// =============================================================================
+// RATTRAPAGE : aligne le téléphone des AAA Asie/AU sur +33743331201
+// =============================================================================
+//
+// Cible STRICTE pour ne toucher AUCUN profil non concerné :
+//   - isAAA === true
+//   - role === 'lawyer'
+//   - UID commence par 'aaa_lawyer_' (convention de notre générateur)
+//   - practiceCountries contient au moins un code Asie-cible OU 'AU'
+//   - phone !== '+33743331201' (skip ceux déjà bons → idempotent)
+//
+// Met à jour ${'users'} ET ${'sos_profiles'} (où existe) pour rester cohérent.
+// =============================================================================
+
+import { updateDoc, getDoc } from 'firebase/firestore';
+
+export interface FixPhoneReport {
+  mode: 'dry-run' | 'execute';
+  scanned: number;
+  matchingTargets: number;
+  alreadyOk: number;
+  toFix: number;
+  fixed: number;
+  errors: number;
+  sampleToFix: Array<{ uid: string; currentPhone: string; mainCountry?: string }>;
+  message: string;
+}
+
+export async function fixAaaPhonesAsiaOceania(
+  options: { dryRun?: boolean } = {}
+): Promise<FixPhoneReport> {
+  const dryRun = options.dryRun !== false;
+  const targets = getTargetCountries();
+  const targetCodes = new Set<string>(targets.map(t => t.code));
+
+  const STANDARD_PHONE = '+33743331201';
+  const STANDARD_CODE = '+33';
+
+  const snap = await getDocs(query(
+    collection(db, 'users'),
+    where('isAAA', '==', true),
+    where('role', '==', 'lawyer')
+  ));
+
+  let scanned = 0;
+  let matchingTargets = 0;
+  let alreadyOk = 0;
+  let fixed = 0;
+  let errors = 0;
+  const toFix: Array<{ uid: string; currentPhone: string; mainCountry?: string }> = [];
+
+  for (const d of snap.docs) {
+    scanned++;
+    const p: any = d.data();
+
+    // Doit être un profil de notre générateur
+    if (!d.id.startsWith('aaa_lawyer_')) continue;
+
+    const practice: string[] = p.practiceCountries || p.operatingCountries || p.interventionCountries || [];
+    const intersects = practice.some((c: string) => targetCodes.has(c));
+    if (!intersects) continue;
+
+    matchingTargets++;
+
+    if (p.phone === STANDARD_PHONE && p.phoneCountryCode === STANDARD_CODE) {
+      alreadyOk++;
+      continue;
+    }
+
+    toFix.push({ uid: d.id, currentPhone: p.phone || '(vide)', mainCountry: p.country });
+
+    if (!dryRun) {
+      try {
+        await updateDoc(doc(db, 'users', d.id), {
+          phone: STANDARD_PHONE,
+          phoneCountryCode: STANDARD_CODE,
+          phoneNumber: STANDARD_PHONE,
+        });
+        // Aligner sos_profiles si le doc existe
+        const sosRef = doc(db, 'sos_profiles', d.id);
+        const sosSnap = await getDoc(sosRef);
+        if (sosSnap.exists()) {
+          await updateDoc(sosRef, {
+            phone: STANDARD_PHONE,
+            phoneCountryCode: STANDARD_CODE,
+            phoneNumber: STANDARD_PHONE,
+          });
+        }
+        fixed++;
+      } catch (err) {
+        errors++;
+      }
+      await new Promise(r => setTimeout(r, 25));
+    }
+  }
+
+  return {
+    mode: dryRun ? 'dry-run' : 'execute',
+    scanned,
+    matchingTargets,
+    alreadyOk,
+    toFix: toFix.length,
+    fixed,
+    errors,
+    sampleToFix: toFix.slice(0, 10),
+    message: dryRun
+      ? `${toFix.length} profil(s) à corriger. Pour exécuter: fixAaaPhonesAsiaOceania({ dryRun: false })`
+      : `${fixed}/${toFix.length} profil(s) téléphone alignés sur ${STANDARD_PHONE}, ${errors} erreur(s)`,
+  };
+}
+
 if (typeof window !== 'undefined') {
   (window as any).generateLawyersAsiaOceania = generateLawyersAsiaOceania;
+  (window as any).fixAaaPhonesAsiaOceania = fixAaaPhonesAsiaOceania;
 }
 
 export default generateLawyersAsiaOceania;
