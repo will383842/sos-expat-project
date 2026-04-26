@@ -722,7 +722,7 @@ const BookingRequestB2B: React.FC = () => {
                 >
                   <FormattedMessage
                     id="bookingB2B.form.country.label"
-                    defaultMessage="Pays où vous vous trouvez"
+                    defaultMessage="Pays concerné par votre demande d'aide"
                   />
                 </label>
                 <div className="relative">

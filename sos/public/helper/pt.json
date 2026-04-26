@@ -12716,7 +12716,7 @@
   "bookingB2B.providerCard.expat": "Especialista expatriado",
   "bookingB2B.form.phone.label": "O seu número de telefone",
   "bookingB2B.form.phone.hint": "O especialista ligará para este número em menos de 5 minutos.",
-  "bookingB2B.form.country.label": "País onde se encontra",
+  "bookingB2B.form.country.label": "País a que se refere o seu pedido de ajuda",
   "bookingB2B.form.country.placeholder": "— Selecione —",
   "bookingB2B.form.language.label": "Idioma da chamada",
   "bookingB2B.form.consent": "Aceito os <terms>termos de utilização</terms> e a <privacy>política de privacidade</privacy>.",

@@ -12726,7 +12726,7 @@
   "bookingB2B.providerCard.expat": "外派专家",
   "bookingB2B.form.phone.label": "您的电话号码",
   "bookingB2B.form.phone.hint": "专家将在 5 分钟内拨打此号码与您联系。",
-  "bookingB2B.form.country.label": "您当前所在的国家",
+  "bookingB2B.form.country.label": "您求助所涉及的国家",
   "bookingB2B.form.country.placeholder": "— 请选择 —",
   "bookingB2B.form.language.label": "通话语言",
   "bookingB2B.form.consent": "我接受<terms>使用条款</terms>和<privacy>隐私政策</privacy>。",

@@ -12726,7 +12726,7 @@
   "bookingB2B.providerCard.expat": "प्रवासी विशेषज्ञ",
   "bookingB2B.form.phone.label": "आपका फ़ोन नंबर",
   "bookingB2B.form.phone.hint": "विशेषज्ञ आपको इस नंबर पर 5 मिनट से कम में कॉल करेंगे।",
-  "bookingB2B.form.country.label": "वह देश जहां आप कॉल कर रहे हैं",
+  "bookingB2B.form.country.label": "वह देश जिससे आपका सहायता अनुरोध संबंधित है",
   "bookingB2B.form.country.placeholder": "— चुनें —",
   "bookingB2B.form.language.label": "कॉल की भाषा",
   "bookingB2B.form.consent": "मैं <terms>उपयोग की शर्तें</terms> और <privacy>गोपनीयता नीति</privacy> स्वीकार करता हूँ।",

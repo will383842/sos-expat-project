@@ -12726,7 +12726,7 @@
   "bookingB2B.providerCard.expat": "Expat-Experte",
   "bookingB2B.form.phone.label": "Ihre Telefonnummer",
   "bookingB2B.form.phone.hint": "Der Experte ruft Sie unter dieser Nummer in weniger als 5 Minuten an.",
-  "bookingB2B.form.country.label": "Land, in dem Sie sich befinden",
+  "bookingB2B.form.country.label": "Land, das Ihre Hilfeanfrage betrifft",
   "bookingB2B.form.country.placeholder": "— Auswählen —",
   "bookingB2B.form.language.label": "Sprache des Anrufs",
   "bookingB2B.form.consent": "Ich akzeptiere die <terms>Nutzungsbedingungen</terms> und die <privacy>Datenschutzerklärung</privacy>.",

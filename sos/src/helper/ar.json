@@ -12726,7 +12726,7 @@
   "bookingB2B.providerCard.expat": "خبير مغترب",
   "bookingB2B.form.phone.label": "رقم هاتفكم",
   "bookingB2B.form.phone.hint": "سيتصل بكم الخبير على هذا الرقم في أقل من 5 دقائق.",
-  "bookingB2B.form.country.label": "البلد الذي تتصلون منه",
+  "bookingB2B.form.country.label": "البلد المعني بطلب المساعدة",
   "bookingB2B.form.country.placeholder": "— اختاروا —",
   "bookingB2B.form.language.label": "لغة المكالمة",
   "bookingB2B.form.consent": "أوافق على <terms>شروط الاستخدام</terms> و<privacy>سياسة الخصوصية</privacy>.",
