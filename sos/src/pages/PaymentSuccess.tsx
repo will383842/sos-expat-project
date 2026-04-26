@@ -138,6 +138,10 @@ const SuccessPayment: React.FC = () => {
     }
 
     // Priorité 2: URL params (rétrocompatibilité avec anciens liens / F5 après expiration)
+    // sosCall=1 & partnerName surface the B2B SOS-Call marker after the
+    // 30s sessionStorage cleanup, so a F5 mid-countdown still renders the
+    // partner banner + keeps the timer running.
+    const urlIsSosCallFree = searchParams.get("sosCall") === "1";
     const urlData = {
       callId: searchParams.get("callId"),
       paymentIntentId: searchParams.get("paymentIntentId"),
@@ -148,6 +152,8 @@ const SuccessPayment: React.FC = () => {
       amount: searchParams.get("amount"),
       duration: searchParams.get("duration"),
       providerRole: searchParams.get("providerRole"),
+      isSosCallFree: urlIsSosCallFree || undefined,
+      partnerName: searchParams.get("partnerName") || undefined,
     };
 
     if (urlData.callId || urlData.paymentIntentId) {
@@ -1072,6 +1078,11 @@ const SuccessPayment: React.FC = () => {
   useEffect(() => {
     // Ne tracker qu'une seule fois et seulement si on a les donnees necessaires
     if (purchaseTracked) return;
+    // Skip Meta/Google Ads Purchase tracking for B2B SOS-Call (free for the
+    // client — partner foots the bill). Without this guard, a F5 mid-countdown
+    // would surface paidAmount=49 from the selectedProvider fallback and emit
+    // a phantom 49€ Purchase event for a call the client never paid for.
+    if (paymentData?.isSosCallFree) return;
     if (!order?.amount && !paidAmount) return;
     if (!orderId && !callId) return;
 
@@ -1171,7 +1182,7 @@ const SuccessPayment: React.FC = () => {
         callId,
       });
     }
-  }, [order?.amount, paidAmount, orderId, callId, isLawyer, orderCurrency, purchaseTracked]);
+  }, [order?.amount, paidAmount, orderId, callId, isLawyer, orderCurrency, purchaseTracked, paymentData?.isSosCallFree]);
 
   const C = orderCurrency === "eur" ? "€" : "$";
 

@@ -443,10 +443,14 @@ const BookingRequestB2B: React.FC = () => {
         "payment-success",
         locale as any
       );
-      navigate(
-        `/${successSlug}${callId ? `?callId=${encodeURIComponent(callId)}` : ""}`,
-        { replace: true }
-      );
+      // Persist B2B markers in the URL so F5 / multi-tab / cold opens still
+      // identify the call as SOS-Call free even after the sessionStorage
+      // payload is purged (30s cleanup on PaymentSuccess).
+      const successParams = new URLSearchParams();
+      if (callId) successParams.set("callId", callId);
+      successParams.set("sosCall", "1");
+      if (session.partnerName) successParams.set("partnerName", session.partnerName);
+      navigate(`/${successSlug}?${successParams.toString()}`, { replace: true });
     } catch (err) {
       const raw = err instanceof Error ? err.message : String(err);
       if (
