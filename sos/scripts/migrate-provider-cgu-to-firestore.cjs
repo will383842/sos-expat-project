@@ -22,7 +22,7 @@ const path = require('path');
 const admin = require('firebase-admin');
 
 const APPLY = process.argv.includes('--apply');
-const NEW_VERSION = '3.0';
+const NEW_VERSION = '3.2';
 
 // Initialize Firebase Admin with service account
 const SERVICE_ACCOUNT_PATH = path.join(

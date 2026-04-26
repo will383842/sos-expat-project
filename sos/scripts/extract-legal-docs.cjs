@@ -145,7 +145,7 @@ function main() {
           title: titles[type]?.[doc.lang] || `${type} - ${doc.lang}`,
           content: doc.content,
           isActive: true,
-          version: '3.1',
+          version: '3.2',
         });
       }
     } catch (error) {

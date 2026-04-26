@@ -416,7 +416,7 @@ const ExpatRegisterForm: React.FC<ExpatRegisterFormProps> = ({
         preferredLanguage: form.preferredLanguage,
         termsAccepted: form.acceptTerms,
         termsAcceptedAt: new Date().toISOString(),
-        termsVersion: '3.0',
+        termsVersion: '3.2',
         termsType: 'terms_expats',
         termsAcceptanceMeta: {
           userAgent: navigator.userAgent,

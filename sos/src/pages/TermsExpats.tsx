@@ -100,7 +100,7 @@ const TermsExpats: React.FC = () => {
     fr: {
       title: "CGU Expatriés Aidants",
       subtitle: "Conditions générales d'utilisation pour les expatriés aidants",
-      lastUpdated: "Version 3.1 – Dernière mise à jour : 25 avril 2026",
+      lastUpdated: "Version 3.2 – Dernière mise à jour : 26 avril 2026",
       loading: "Chargement...",
       joinNetwork: "Rejoindre le réseau",
       trustedByHelpers: "Déjà 1K+ expatriés aidants nous font confiance",
@@ -143,7 +143,7 @@ const TermsExpats: React.FC = () => {
     en: {
       title: "Expat Helper Terms",
       subtitle: "Terms of Use for expatriate helpers",
-      lastUpdated: "Version 3.1 – Last updated: April 25, 2026",
+      lastUpdated: "Version 3.2 – Last updated: April 26, 2026",
       loading: "Loading...",
       joinNetwork: "Join the network",
       trustedByHelpers: "Already 1K+ expat helpers trust us",
@@ -185,7 +185,7 @@ const TermsExpats: React.FC = () => {
     es: {
       title: "Términos para Ayudantes Expat",
       subtitle: "Términos de uso para ayudantes de expatriados",
-      lastUpdated: "Versión 3.1 – Última actualización: 25 de abril de 2026",
+      lastUpdated: "Versión 3.2 – Última actualización: 26 de abril de 2026",
       loading: "Cargando...",
       joinNetwork: "Únete a la red",
       trustedByHelpers: "Ya más de 1K+ ayudantes expat confían en nosotros",
@@ -228,7 +228,7 @@ const TermsExpats: React.FC = () => {
     de: {
       title: "Expat-Helfer Bedingungen",
       subtitle: "Nutzungsbedingungen für Expatriate-Helfer",
-      lastUpdated: "Version 3.1 – Letzte Aktualisierung: 25. April 2026",
+      lastUpdated: "Version 3.2 – Letzte Aktualisierung: 26. April 2026",
       loading: "Lädt...",
       joinNetwork: "Dem Netzwerk beitreten",
       trustedByHelpers: "Bereits über 1K+ Expat-Helfer vertrauen uns",
@@ -271,7 +271,7 @@ const TermsExpats: React.FC = () => {
     ru: {
       title: "Условия для помощников эмигрантов",
       subtitle: "Условия использования для помощников эмигрантов",
-      lastUpdated: "Версия 3.1 – Последнее обновление: 25 апреля 2026 г.",
+      lastUpdated: "Версия 3.2 – Последнее обновление: 26 апреля 2026 г.",
       loading: "Загрузка...",
       joinNetwork: "Присоединиться к сети",
       trustedByHelpers: "Уже более 1K+ помощников эмигрантов доверяют нам",
@@ -314,7 +314,7 @@ const TermsExpats: React.FC = () => {
     hi: {
       title: "एक्सपैट हेल्पर शर्तें",
       subtitle: "प्रवासी सहायकों के लिए उपयोग की शर्तें",
-      lastUpdated: "संस्करण 3.1 – अंतिम अपडेट: 25 अप्रैल 2026",
+      lastUpdated: "संस्करण 3.2 – अंतिम अपडेट: 26 अप्रैल 2026",
       loading: "लोड हो रहा है...",
       joinNetwork: "नेटवर्क में शामिल हों",
       trustedByHelpers: "पहले से ही 1K+ एक्सपैट हेल्पर्स हम पर भरोसा करते हैं",
@@ -357,7 +357,7 @@ const TermsExpats: React.FC = () => {
     ch: {
       title: "外籍助手服务条款",
       subtitle: "外籍助手使用条款",
-      lastUpdated: "版本 3.1 – 最后更新：2026年4月25日",
+      lastUpdated: "版本 3.2 – 最后更新：2026年4月26日",
       loading: "加载中...",
       joinNetwork: "加入网络",
       trustedByHelpers: "已有超过 1,000 名外籍助手信任我们",
@@ -399,7 +399,7 @@ const TermsExpats: React.FC = () => {
     ar: {
       title: "شروط مساعدي المغتربين",
       subtitle: "شروط الاستخدام لمساعدي المغتربين",
-      lastUpdated: "الإصدار 3.1 – آخر تحديث: 25 أبريل 2026",
+      lastUpdated: "الإصدار 3.2 – آخر تحديث: 26 أبريل 2026",
       loading: "جارٍ التحميل...",
       joinNetwork: "انضم إلى الشبكة",
       trustedByHelpers: "يثق بنا بالفعل أكثر من 1000+ مساعد مغترب",
@@ -441,7 +441,7 @@ const TermsExpats: React.FC = () => {
     pt: {
       title: "Termos para Ajudantes Expat",
       subtitle: "Termos de uso para ajudantes de expatriados",
-      lastUpdated: "Versão 3.1 – Última atualização: 25 de abril de 2026",
+      lastUpdated: "Versão 3.2 – Última atualização: 26 de abril de 2026",
       loading: "Carregando...",
       joinNetwork: "Junte-se à rede",
       trustedByHelpers: "Já mais de 1K+ ajudantes expat confiam em nós",
@@ -679,7 +679,7 @@ const TermsExpats: React.FC = () => {
 
 **SOS Expat d'WorldExpat OÜ** (la « **Plateforme** », « **SOS** », « **nous** »)
 
-**Version 3.1 – Dernière mise à jour : 25 avril 2026**
+**Version 3.2 – Dernière mise à jour : 26 avril 2026**
 
 ---
 
@@ -693,9 +693,11 @@ const TermsExpats: React.FC = () => {
 
 **Pays d'Intervention** : la juridiction principalement visée par la demande de l'Utilisateur au moment de la Mise en relation ; à défaut, le pays de résidence de l'Utilisateur à la date de la demande.
 
-**Frais de Mise en relation** : frais fixes dus à SOS par Mise en relation (art. 7), dont le montant est défini dans le **barème en vigueur consultable dans le tableau de bord de l'Aidant**, susceptibles d'évolution et/ou de **barèmes locaux** par pays/devise, avec effet prospectif.
+**Frais de Mise en relation** : rémunération **due par l'Utilisateur à SOS Expat** pour chaque Mise en relation (art. 7), au titre du seul service technique de mise en relation fourni par la Plateforme. Ces frais ne constituent en aucun cas une commission, rétrocession ou partage de la rémunération de l'Aidant. Leur montant est défini dans le **barème en vigueur**, consultable dans l'espace personnel de l'Aidant et de l'Utilisateur. SOS Expat peut modifier ce barème dans les conditions prévues à l'article 2.4.
 
 **Prestataire(s) de paiement** : services tiers traitant les encaissements et la répartition des fonds.
+
+**Partenaire B2B** : toute personne morale (entreprise, association, mutuelle, comité d'entreprise, organisation, etc.) ayant conclu avec SOS Expat un contrat-cadre distinct prévoyant qu'elle finance, en tout ou partie, les Frais de Mise en relation pour ses membres, salariés ou bénéficiaires (les « **Utilisateurs B2B** »). Une **Mise en relation B2B** est une Mise en relation déclenchée par un Utilisateur B2B au titre d'un tel contrat-cadre. Par opposition, une **Mise en relation B2C** est déclenchée par un Utilisateur qui paie directement les Frais de Mise en relation.
 
 ---
 
@@ -707,7 +709,7 @@ const TermsExpats: React.FC = () => {
 
 2.3. **Acceptation électronique (click-wrap).** L'inscription et/ou l'usage de la Plateforme valent acceptation des CGU, signature électronique et consentement contractuel. SOS peut conserver des preuves techniques (horodatage, identifiants).
 
-2.4. **Modifications.** SOS peut mettre à jour les CGU et/ou les barèmes de frais (par pays/devise) avec **effet prospectif** par publication sur la Plateforme. L'usage continu vaut acceptation.
+2.4. **Modifications (préavis P2B).** SOS Expat peut mettre à jour les CGU et/ou le barème des frais à tout moment, sous réserve d'un **préavis minimum de quinze (15) jours** notifié à l'Aidant sur support durable (email à l'adresse enregistrée et publication dans l'espace personnel), conformément à l'article 3 du Règlement (UE) 2019/1150 (« P2B »). Le préavis peut être réduit ou supprimé : (i) lorsque la modification est imposée par la loi ou par une décision d'autorité compétente ; (ii) pour des raisons impérieuses de sécurité ou de prévention de la fraude ; ou (iii) pour les corrections matérielles ou typographiques sans incidence économique. Pendant la période de préavis, l'Aidant peut **résilier sans pénalité** sa relation avec la Plateforme. À défaut de résiliation, la poursuite de l'usage de la Plateforme à l'expiration du préavis vaut acceptation.
 
 2.5. **Capacité professionnelle (B2B).** L'Aidant déclare agir **exclusivement à des fins professionnelles** ; les régimes de protection des consommateurs ne s'appliquent pas à la relation SOS Expat–Aidant.
 
@@ -727,6 +729,17 @@ const TermsExpats: React.FC = () => {
 
 3.6. **Confidentialité.** L'Aidant protège les informations des Utilisateurs et s'abstient de les divulguer, sauf obligation légale ou consentement.
 
+3.7. **Déclarations et garanties de l'Aidant.** En s'inscrivant sur la Plateforme, l'Aidant déclare et garantit expressément que :
+- (a) Il est **majeur** selon le droit de son pays de résidence et dispose de la **pleine capacité juridique** pour contracter et exercer son activité ;
+- (b) Il dispose, ou s'engage à disposer **avant toute prestation**, de **toutes les autorisations** requises par le droit du Pays d'Intervention pour exercer son activité (visa, permis de travail, enregistrement d'activité indépendante / auto-entreprise / freelance / micro-entreprise selon les pays, immatriculation fiscale et sociale, licences sectorielles le cas échéant) ;
+- (c) Il **ne fournira aucun service relevant d'une profession réglementée** (avocat, notaire, médecin, expert-comptable, conseiller financier ou en investissement, agent immobilier, etc.) sans détenir le titre/la licence locale requis ; il oriente l'Utilisateur vers un professionnel dûment habilité dès lors qu'une question relève d'une telle profession ;
+- (d) Il **n'est pas frappé d'une interdiction d'exercer** une activité professionnelle ou commerciale dans son pays de résidence, ni dans le Pays d'Intervention ;
+- (e) Il ne figure sur **aucune liste de sanctions** internationale (OFAC/SDN, UE, ONU, HMT) ;
+- (f) Toutes les informations fournies lors de l'inscription sont **exactes, complètes et à jour** et il s'engage à **informer immédiatement** SOS Expat de tout changement les affectant ;
+- (g) Il **assume seul l'intégralité de la responsabilité** liée au respect, dans chaque Pays d'Intervention, des règles applicables à son activité (immigration, droit du travail / du travail indépendant, fiscalité, protection du consommateur, données personnelles, publicité/démarchage, sécurité des personnes, déontologies sectorielles).
+
+Toute fausse déclaration constitue une violation grave des CGU pouvant entraîner la suspension immédiate ou la résiliation du compte, sans préjudice de toute action en réparation.
+
 ---
 
 ## 4. Compte, vérifications et sécurité
@@ -740,6 +753,8 @@ const TermsExpats: React.FC = () => {
 4.4. **Inactivité & résiliation.** En cas d'**inactivité supérieure à 365 jours**, le compte peut être désactivé automatiquement après notification. L'Aidant peut fermer son compte à tout moment après avoir honoré ses obligations en cours. SOS Expat peut suspendre ou résilier un compte pour violation des CGU, sans préjudice d'autres recours.
 
 4.5. **Communications électroniques.** L'Aidant consent à recevoir toute notification relative aux CGU par voie électronique (email, notification in-app, publication sur la Plateforme).
+
+4.6. **Système interne de traitement des réclamations (Règlement P2B).** Conformément à l'article 11 du Règlement (UE) 2019/1150, SOS Expat met à la disposition de l'Aidant un **système interne de traitement des réclamations gratuit**, accessible via le formulaire de contact (https://sos-expat.com/contact). SOS Expat s'engage à : (i) **accuser réception** de toute réclamation sous **sept (7) jours ouvrés** ; (ii) traiter la réclamation **avec sérieux et sans discrimination, dans un délai raisonnable** (en règle générale **trente (30) jours**) ; (iii) communiquer à l'Aidant le résultat **motivé** du traitement, dans un langage clair et compréhensible, indiquant les voies de recours ultérieures (médiation à l'art. 12.5, arbitrage à l'art. 12.2) ; (iv) tenir des **statistiques agrégées** sur le fonctionnement de ce système, accessibles annuellement.
 
 ---
 
@@ -767,15 +782,21 @@ const TermsExpats: React.FC = () => {
 
 ## 7. Frais, paiement unique et taxes
 
-7.1. **Frais de Mise en relation (forfait).** Les frais sont définis dans le **barème en vigueur consultable dans le tableau de bord de l'Aidant**, par Mise en relation, hors taxes et hors frais du Prestataire de paiement. SOS Expat peut modifier ces montants et/ou publier des **barèmes locaux** par pays/devise, avec effet prospectif.
+7.1. **Frais de Mise en relation (rémunération de la Plateforme).** Les Frais de Mise en relation rémunèrent **exclusivement le service technique de mise en relation** fourni par SOS Expat à l'**Utilisateur**. Ils sont **dus par l'Utilisateur**, et **non par l'Aidant**. Leur montant est défini dans la **grille tarifaire en vigueur**, consultable dans l'espace personnel de l'Aidant, par Mise en relation, hors taxes et hors frais du Prestataire de paiement. Toute modification du barème intervient dans les conditions de l'article 2.4 (préavis minimum quinze (15) jours).
 
-7.2. **Paiement unique & répartition.** L'Utilisateur effectue **un paiement unique** via la Plateforme couvrant (i) la **rémunération de l'Aidant** (telle que convenue) et (ii) les **Frais de Mise en relation** d'SOS Expat. SOS Expat (ou son Prestataire) encaisse, **déduit** ses frais, puis **reverse** le solde à l'Aidant. L'Aidant **autorise** ces déductions et répartitions.
+7.2. **Caractérisation juridique du paiement — deux dettes distinctes et indépendantes.** Le paiement effectué par l'Utilisateur via la Plateforme se décompose **juridiquement en deux dettes distinctes et indépendantes**, malgré leur règlement par un encaissement unique pour des raisons de commodité opérationnelle :
+- (a) **Dette « Mise en relation »** : somme **due par l'Utilisateur à SOS Expat** au titre du service technique de mise en relation (Frais de Mise en relation, art. 7.1) ;
+- (b) **Dette « Rémunération Aidant »** : somme **due par l'Utilisateur à l'Aidant** au titre de la prestation convenue entre eux. Le contenu, la qualité, le résultat, ainsi que la facturation détaillée, relèvent **exclusivement** de la relation Aidant–Utilisateur, hors Plateforme (art. 6 et 13.5).
+
+**SOS Expat ne perçoit, ne réclame et n'a droit à aucune commission, rétrocession, partage, pourcentage ou fraction quelconque de la rémunération de l'Aidant. Les Frais de Mise en relation constituent la seule rémunération de SOS Expat et proviennent exclusivement de la dette de l'Utilisateur visée au (a).**
+
+Le Prestataire de paiement, agissant pour la part (b) en qualité d'**agent payeur de l'Aidant**, reverse à ce dernier la rémunération perçue, sous déduction des seuls frais bancaires de traitement et, le cas échéant, des frais de conversion de devise (art. 7.3 et 7.4). **Le montant net que l'Aidant percevra est affiché dans son tableau de bord avant et après chaque transaction**, lui permettant d'accepter ou de refuser la mise en relation en toute connaissance de cause.
 
 7.3. **Frais bancaires du Prestataire de paiement.** Le Prestataire de paiement — **Stripe Payments Europe Ltd.** (Irlande, UE, certifié PCI-DSS niveau 1) **ou PayPal (Europe) S.à r.l. et Cie, S.C.A.** (Luxembourg, UE, certifié PCI-DSS), selon le pays de résidence et la disponibilité — prélève des frais de traitement sur chaque transaction. **Ces frais bancaires sont intégralement à la charge de l'Aidant** et sont automatiquement déduits du montant qui lui est reversé. Le détail de ces frais est disponible dans les conditions du Prestataire de paiement (Stripe : stripe.com/fr/pricing ; PayPal : paypal.com/fr/webapps/mpp/merchant-fees) et dans le tableau de bord de l'Aidant pour chaque transaction.
 
 7.4. **Frais de change et conversion de devises.** Lorsque la devise de paiement de l'Utilisateur diffère de la devise du compte bancaire de l'Aidant, des **frais de conversion de devises** sont appliqués par le Prestataire de paiement. **Ces frais de change sont intégralement à la charge de l'Aidant** et sont déduits du montant qui lui est reversé.
 
-7.5. **Calcul du montant net reversé.** Le montant net reversé à l'Aidant est calculé selon la formule : **Montant payé par l'Utilisateur − Frais de Mise en relation − Frais bancaires du Prestataire − Frais de change (le cas échéant)**. Le montant exact varie selon les frais en vigueur au moment de la transaction.
+7.5. **Calcul du montant net reversé à l'Aidant.** Le montant net reversé à l'Aidant correspond à la **dette « Rémunération Aidant »** due par l'Utilisateur (art. 7.2.b), sous déduction **uniquement** : (i) des **frais bancaires** du Prestataire de paiement applicables à la part « Rémunération Aidant » (art. 7.3) et (ii) le cas échéant, des **frais de conversion de devise** (art. 7.4). **Les Frais de Mise en relation (art. 7.2.a) ne sont en aucun cas déduits de la rémunération de l'Aidant** : ils sont prélevés au titre d'une dette distincte de l'Utilisateur envers SOS Expat. **L'Aidant est informé du montant exact qu'il percevra dans son tableau de bord avant chaque prestation et peut ainsi décider en toute connaissance de cause d'accepter ou non la mise en relation.**
 
 7.6. **Durée minimale d'appel et paiement.** **Aucun paiement n'est dû ni effectué** lorsque la durée effective de l'appel entre l'Utilisateur et l'Aidant est **inférieure à soixante (60) secondes**. Dans ce cas, l'autorisation de paiement est automatiquement annulée, l'Utilisateur n'est pas débité, et aucune rémunération n'est versée à l'Aidant. Cette règle s'applique quels que soient les motifs de la brièveté de l'appel (déconnexion technique, raccrochage anticipé, indisponibilité, etc.).
 
@@ -789,6 +810,40 @@ const TermsExpats: React.FC = () => {
 
 7.11. **Compensation.** SOS Expat peut compenser toute somme due par l'Aidant avec toute somme payable à l'Aidant.
 
+7.12. **Délais de paiement de l'Aidant selon le canal.** Sous réserve de la complétion du processus KYC (article 8), les délais de versement de la rémunération nette de l'Aidant diffèrent selon le canal de la Mise en relation :
+- (a) **Mises en relation B2C** (paiement direct par l'Utilisateur) : la rémunération de l'Aidant est mise en paiement **immédiatement à l'issue de l'appel** par le Prestataire de paiement, sous réserve uniquement des délais techniques de traitement bancaire, anti-fraude et de capture du paiement propres au Prestataire (typiquement de un (1) à sept (7) jours ouvrés selon le pays de l'Aidant et la maturité de son compte chez le Prestataire) ;
+- (b) **Mises en relation B2B** (paiement par le Partenaire B2B) : compte tenu du modèle de facturation différée applicable au Partenaire B2B (facturation mensuelle ou « net-30 »), la rémunération de l'Aidant est versée **dans un délai de trente (30) jours** suivant la date de l'appel ;
+- (c) Dans tous les cas, le paiement peut être suspendu en cas de litige, de réclamation de l'Utilisateur ou du Partenaire, de vérification KYC/LCB-FT en cours, ou de toute autre circonstance prévue aux présentes CGU.
+
+7.13. **Déclaration fiscale automatique (Directive DAC7 — UE 2021/514).** L'Aidant résidant dans un État membre de l'Union européenne est informé que SOS Expat, en sa qualité d'opérateur de plateforme déclarant, est tenue de **déclarer annuellement** aux autorités fiscales compétentes (au titre de la Directive (UE) 2021/514 dite « DAC7 ») les informations relatives aux Aidants actifs résidant dans l'UE, à savoir notamment : nom, adresse, identifiant fiscal (TIN), État de résidence, montant total des contreparties perçues via la Plateforme et nombre de Mises en relation, ventilés par trimestre civil. L'Aidant s'engage à fournir et à tenir à jour ces informations dans son espace personnel. Le défaut de communication ou de mise à jour peut entraîner la suspension des paiements jusqu'à régularisation, conformément aux dispositions DAC7.
+
+7.14. **Canal B2B — Mises en relation via un Partenaire B2B.**
+
+(a) **Périmètre.** Une Mise en relation B2B est déclenchée par un Utilisateur B2B, bénéficiaire d'un contrat-cadre conclu entre SOS Expat et un Partenaire B2B (art. 1).
+
+(b) **Adaptation des deux dettes.** Le mécanisme des deux dettes (art. 7.2) s'applique comme suit en B2B :
+- la **dette « Mise en relation »** est due par le **Partenaire B2B** à SOS Expat (en tout ou partie selon le contrat-cadre), de sorte que l'**Utilisateur B2B ne paie en règle générale rien**, ou ne paie qu'un éventuel ticket modérateur à SOS Expat ;
+- la **dette « Rémunération Aidant »** demeure due par l'**Utilisateur final** à l'**Aidant**, sauf clause expresse du contrat-cadre prévoyant une prise en charge totale ou partielle par le Partenaire B2B (auquel cas le Partenaire devient redevable de la part prise en charge envers l'Aidant, via le mécanisme d'agent payeur de l'art. 7.2).
+
+(c) **Tarifs Aidant distincts B2C / B2B — l'Aidant l'accepte expressément.** L'Aidant **reconnaît et accepte expressément** que **la rémunération nette qu'il perçoit pour une Mise en relation B2B peut différer**, à la hausse ou à la baisse, **de celle perçue pour une Mise en relation B2C** (par exemple : tarif forfaitaire négocié avec le Partenaire, prise en compte d'un volume garanti, prise en charge totale ou partielle par le Partenaire, ou réduction consentie au Partenaire). Le **canal d'origine (B2C ou B2B)** et le **montant exact** que l'Aidant percevra sont **affichés dans son tableau de bord avant chaque Mise en relation**. **Aucune obligation d'acceptation** ne pèse sur l'Aidant à raison du canal ou du tarif proposé.
+
+(d) **Inopposabilité du contrat-cadre B2B à l'Aidant.** Les stipulations du contrat-cadre conclu entre SOS Expat et le Partenaire B2B **ne sont pas opposables à l'Aidant** ; seules les présentes CGU et les informations affichées dans le tableau de bord régissent la relation entre SOS Expat et l'Aidant à l'occasion d'une Mise en relation B2B.
+
+(e) **Toute autre stipulation des présentes CGU s'applique** aux Mises en relation B2B.
+
+(f) **Barèmes en vigueur à la date des présentes (à titre indicatif).** Au jour de la dernière mise à jour des présentes CGU, les barèmes nets de rémunération de l'Aidant sont les suivants :
+- **Mise en relation B2C** : **trente euros (30 €) ou trente dollars US (30 USD)** net par Mise en relation acceptée et exécutée, selon la devise du règlement ;
+- **Mise en relation B2B** : **vingt euros (20 €) ou vingt dollars US (20 USD)** net par Mise en relation acceptée et exécutée, selon la devise du règlement.
+
+Ces montants sont **indicatifs** et reflètent le barème en vigueur à la date de mise à jour des présentes CGU. Le **barème actualisé** est en permanence consultable dans le tableau de bord de l'Aidant avant chaque Mise en relation. Toute évolution est soumise au préavis de quinze (15) jours prévu à l'article 7.15.
+
+7.15. **Modification du barème de rémunération de l'Aidant.** SOS Expat se réserve le droit de **modifier à tout moment le barème de rémunération nette de l'Aidant**, qu'il s'agisse :
+- (i) du **barème B2C** — par modification des Frais de Mise en relation ou de leur structure (qui se répercute sur le net perçu par l'Aidant) ;
+- (ii) du **barème B2B** — par modification de la rémunération forfaitaire ou variable applicable aux Mises en relation B2B ;
+- (iii) ou de toute autre composante de la rémunération nette (par exemple : devises, paliers de volume, paliers d'ancienneté).
+
+Toute modification est soumise au **préavis minimum de quinze (15) jours** prévu à l'article 2.4, notifié à l'Aidant sur support durable. Pendant la période de préavis, l'Aidant peut **résilier sans pénalité** sa relation avec la Plateforme ou continuer à **refuser au cas par cas** les Mises en relation dont la rémunération ne lui conviendrait plus, étant rappelé que **l'Aidant n'est jamais tenu d'accepter une Mise en relation**. **Les Mises en relation déjà acceptées avant l'expiration du préavis demeurent rémunérées au tarif en vigueur à la date d'acceptation.** À défaut de résiliation, la poursuite de l'usage de la Plateforme à l'expiration du préavis vaut acceptation du nouveau barème.
+
 ---
 
 ## 8. Paiements – KYC/LCB-FT – Sanctions
@@ -799,7 +854,7 @@ const TermsExpats: React.FC = () => {
 
 8.3. **Rétention et annulation.** SOS Expat peut **différer, retenir ou annuler** des paiements en cas de : (i) soupçon de fraude, (ii) non-conformité aux CGU ou aux lois, (iii) injonction légale ou administrative, (iv) défaut de KYC, (v) violation des règles de sanctions internationales.
 
-8.4. **Sanctions et embargos.** L'accès à la Plateforme et aux services de paiement peut être **restreint** dans des territoires soumis à **sanctions ou embargos** (UE, USA, ONU, OFAC). L'Aidant déclare **ne figurer sur aucune liste de sanctions** et respecter les **contrôles export** applicables.
+8.4. **Sanctions et embargos.** L'accès à la Plateforme et aux services de paiement peut être **restreint ou bloqué** dans tout **pays ou territoire faisant l'objet d'un embargo global ou de mesures restrictives complètes** au titre des lois et règlements applicables, en particulier ceux des Prestataires de paiement, de l'Union européenne, des Nations unies, de l'OFAC (États-Unis), du HMT (Royaume-Uni) ou de toute autre autorité compétente. La liste à jour de ces pays et territoires est tenue par les autorités précitées et fait foi ; SOS Expat n'établit ni ne publie sa propre liste géopolitique. L'Aidant déclare **ne figurer sur aucune liste de sanctions** internationale (OFAC/SDN, UE, ONU, HMT) et **respecter les contrôles export** applicables.
 
 8.5. **Coopération légale.** L'Aidant s'engage à coopérer avec SOS Expat et les autorités compétentes en cas d'enquête relative au blanchiment d'argent, au financement du terrorisme ou à toute autre infraction financière.
 
@@ -810,14 +865,14 @@ const TermsExpats: React.FC = () => {
 - Envoyer des rappels réguliers (à 7 jours, 30 jours, 60 jours, 90 jours, 120 jours et 150 jours) ;
 - Fournir à l'Aidant tous les moyens nécessaires pour compléter sa vérification KYC.
 
-8.7. **Fonds non réclamés et déchéance.** À défaut de vérification KYC complète dans un délai de **cent quatre-vingts (180) jours** à compter du premier paiement mis en attente, et malgré les notifications prévues à l'article 8.6, les fonds seront considérés comme **abandonnés** par l'Aidant. L'Aidant reconnaît et accepte expressément que :
-- (a) Les fonds non réclamés dans ce délai seront définitivement acquis à la Plateforme à titre d'indemnité forfaitaire pour frais de gestion, conservation et tentatives de contact ;
-- (b) Cette acquisition est la contrepartie des coûts administratifs supportés par la Plateforme pour la gestion des fonds non réclamés ;
-- (c) Il renonce expressément à toute réclamation sur ces fonds passé le délai de 180 jours.
+8.7. **Fonds en attente prolongée — frais de gestion et transfert aux autorités compétentes.** Lorsque la vérification KYC n'est pas complétée dans un délai de **cent quatre-vingts (180) jours** à compter du premier paiement mis en attente, et malgré les notifications prévues à l'article 8.6 :
+- (a) **Frais de gestion forfaitaires.** SOS Expat peut prélever sur les fonds en attente des **frais de gestion forfaitaires raisonnables, plafonnés à dix pour cent (10 %) du montant retenu**, couvrant strictement les coûts administratifs effectifs de conservation, de tentatives de contact et de traitement comptable ;
+- (b) **Conservation prolongée.** Le solde demeure conservé sur le compte de cantonnement du Prestataire de paiement (ou consigné par SOS Expat si les conditions techniques l'exigent). L'Aidant peut, à tout moment durant cette phase, compléter son KYC et réclamer les fonds ;
+- (c) **Transfert aux autorités compétentes (déshérence).** À l'expiration d'un délai global de **cinq (5) ans** à compter du premier paiement mis en attente, à défaut de réclamation valide, les fonds résiduels sont **transférés à l'autorité compétente du pays de résidence de l'Aidant** au titre des règles applicables aux fonds en déshérence (par exemple, en France, à la Caisse des dépôts au titre de la loi Eckert ; aux États-Unis, au programme d'unclaimed property de l'État compétent ; au Royaume-Uni, au Dormant Assets Scheme ; et de manière générale au mécanisme local équivalent). **SOS Expat ne s'approprie en aucun cas ces fonds résiduels.**
 
-8.8. **Réclamation exceptionnelle.** Par dérogation à l'article 8.7, l'Aidant peut adresser une demande de réclamation motivée dans un délai maximum de **douze (12) mois** suivant l'expiration du délai de 180 jours, uniquement dans les cas suivants : incapacité médicale documentée, force majeure dûment justifiée, ou erreur technique imputable à la Plateforme. La Plateforme examinera la demande sous 30 jours et se réserve le droit d'accepter ou de refuser la réclamation. En cas d'acceptation, des frais de traitement de **vingt pour cent (20%)** seront retenus sur le montant restitué.
+8.8. **Réclamation pendant la conservation prolongée.** L'Aidant peut, à tout moment durant la phase de conservation prolongée (b), adresser une demande de réclamation motivée à SOS Expat via le formulaire de contact, accompagnée d'une **vérification KYC complète** (le KYC étant une condition technique imposée par le Prestataire de paiement et par les obligations LCB-FT). SOS Expat examine la demande sous **trente (30) jours**. En cas d'acceptation, les fonds sont reversés sous déduction des seuls frais de gestion mentionnés au (a). En cas de force majeure dûment justifiée ou d'incapacité médicale documentée, ces frais peuvent être réduits ou supprimés à la discrétion raisonnable de SOS Expat.
 
-8.9. **Acceptation expresse.** En s'inscrivant sur la Plateforme en tant qu'Aidant, celui-ci déclare avoir pris connaissance des présentes conditions relatives aux fonds non réclamés et les accepte expressément. Cette acceptation constitue une condition essentielle et déterminante de l'accès au statut de prestataire sur la Plateforme.
+8.9. **Acceptation expresse.** En s'inscrivant sur la Plateforme, l'Aidant déclare avoir pris connaissance des modalités du présent article 8 et les accepte expressément. Cette acceptation est une condition essentielle d'accès au statut de prestataire.
 
 ---
 
@@ -867,7 +922,7 @@ La Plateforme, ses marques, logos, bases de données et contenus sont protégés
 
 ## 12. Droit applicable – Arbitrage – Juridiction estonienne – Actions collectives
 
-12.1. **Droit matériel** : pour chaque Mise en relation, la relation **SOS Expat–Aidant** est régie par les **lois du Pays d'Intervention**, sous réserve des règles d'ordre public locales et des normes internationales impératives. **À titre supplétif et pour l'interprétation/validité des présentes CGU ainsi que pour toute question non régie par le droit du Pays d'Intervention, le droit estonien s'applique.**
+12.1. **Droit applicable et primauté de la conformité locale.** Pour chaque Mise en relation, la relation **SOS Expat–Aidant** est régie par les **lois du Pays d'Intervention**, sous réserve des règles d'ordre public locales et des normes internationales impératives. **À titre supplétif** et pour l'interprétation/validité des présentes CGU ainsi que pour toute question non régie par le droit du Pays d'Intervention, le **droit estonien** s'applique. **Pour éviter toute ambiguïté**, les règles impératives applicables à l'activité de l'Aidant dans le Pays d'Intervention (immigration, droit du travail/du travail indépendant, fiscalité, protection du consommateur, données personnelles, publicité/démarchage, sécurité des personnes, déontologies sectorielles le cas échéant) sont **réputées d'ordre public** et **priment** sur toute stipulation contraire ou ambiguë des présentes CGU. Aucune clause des CGU ne saurait être interprétée comme imposant ou autorisant l'Aidant à adopter un comportement contraire à ces règles ; en cas de conflit, l'Aidant s'abstient et en informe SOS Expat sans délai.
 
 12.2. **Arbitrage CCI obligatoire** : tout litige SOS Expat/Aidant est résolu **définitivement** selon le Règlement d'Arbitrage de la **CCI**. **Siège : Tallinn (Estonie)**. **Langue : français.** Le tribunal applique le **droit matériel** défini à l'art. 12.1. Procédure **confidentielle**.
 
@@ -875,7 +930,9 @@ La Plateforme, ses marques, logos, bases de données et contenus sont protégés
 
 12.4. **Compétence exclusive des tribunaux d'Estonie** : pour toute demande **non arbitrable**, l'**exécution** des sentences ou les **mesures urgentes**, les tribunaux estoniens (compétents à Tallinn) ont compétence **exclusive**. L'Aidant renonce à toute objection de forum/non-convenance.
 
-12.5. **Médiation préalable.** Avant tout arbitrage, les parties s'engagent à tenter de résoudre le litige à l'amiable par **négociation de bonne foi** pendant un délai de **trente (30) jours** à compter de la notification écrite du différend.
+12.5. **Médiation préalable obligatoire et médiateurs identifiés (Règlement P2B).** Avant tout arbitrage, les parties s'engagent à tenter de résoudre le litige à l'amiable par **négociation de bonne foi** pendant un délai de **trente (30) jours** à compter de la notification écrite du différend, envoyée par email avec accusé de réception à l'adresse de contact de l'autre partie. Conformément à l'article 12 du Règlement (UE) 2019/1150, SOS Expat identifie au moins **deux (2) médiateurs spécialisés**, indépendants et raisonnablement accessibles, parmi lesquels l'Aidant peut choisir : **(i) le Centre de Médiation et d'Arbitrage de Paris (CMAP) — cmap.fr** ; et **(ii) le WIPO Arbitration and Mediation Center (Genève) — wipo.int/amc**. SOS Expat supporte une **part raisonnable des frais de médiation**, appréciée de bonne foi au cas par cas, en particulier lorsque le litige est de faible montant. L'échec de la médiation est une condition préalable à l'introduction d'une demande d'arbitrage.
+
+12.6. **Prescription.** Toute action ou réclamation de l'Aidant contre SOS Expat doit être introduite dans le **délai le plus court entre trois (3) ans** à compter de la survenance du fait générateur **et le délai légal applicable** dans la juridiction de l'Aidant, sous peine de forclusion. La présente clause n'a ni pour objet ni pour effet de réduire en deçà du minimum impératif les délais de prescription qui seraient inopposables à toute réduction conventionnelle dans la juridiction concernée ; en pareil cas, le délai légal local s'applique.
 
 ---
 
@@ -887,8 +944,8 @@ La Plateforme, ses marques, logos, bases de données et contenus sont protégés
 
 **Politique d'enregistrement :**
 - (a) **Par défaut**, SOS Expat **n'enregistre PAS le contenu audio** des appels entre Aidant et Utilisateur. Seules les **métadonnées techniques** sont conservées (horodatage, durée, identifiants Twilio, statut) à des fins de facturation, anti-fraude et résolution de litiges techniques ;
-- (b) SOS Expat **se réserve la possibilité** d'activer un enregistrement audio dans des cas strictement limités : suspicion de fraude, signalement d'abus, instruction d'une autorité judiciaire compétente, protection d'intérêts vitaux. Les parties seront informées en début d'appel ;
-- (c) Lorsqu'un enregistrement est activé, il est conservé au maximum **six (6) mois** (sauf prolongation imposée par une procédure judiciaire), conformément aux recommandations CNIL et au RGPD ;
+- (b) SOS Expat **n'active aucun enregistrement audio sans le consentement explicite, préalable et séparé de l'Aidant ET de l'Utilisateur**, manifesté avant le début de l'appel par une action positive distincte. Aucun enregistrement ne peut être déclenché unilatéralement par SOS Expat, à la seule exception d'une **réquisition régulière émanant d'une autorité judiciaire compétente du pays de l'Aidant ou de l'Utilisateur**, présentant les garanties d'ordre public requises par cette juridiction ;
+- (c) Lorsqu'un enregistrement est exceptionnellement activé dans le cadre du (b), il est conservé pour la durée strictement nécessaire à sa finalité, dans la limite maximale de **six (6) mois** (sauf prolongation imposée par une procédure judiciaire en cours), conformément au RGPD et aux recommandations des autorités locales de protection des données ;
 - (d) **L'Aidant s'interdit lui-même** d'enregistrer, retranscrire intégralement, divulguer ou utiliser les échanges à d'autres fins que la prestation convenue, sauf autorisation écrite de l'Utilisateur ou obligation légale. Toute violation peut entraîner la suspension immédiate du compte et l'engagement de la responsabilité civile et/ou pénale de l'Aidant.
 
 13.3. **Non-sollicitation.** Pendant la durée des CGU et **douze (12) mois** après leur résiliation, l'Aidant s'interdit de solliciter directement les Utilisateurs rencontrés via la Plateforme pour éviter les Frais de Mise en relation.
@@ -930,7 +987,7 @@ Pour toute question ou demande légale, contactez-nous :
 
 **SOS Expat by WorldExpat OÜ** (the "**Platform**", "**SOS**", "**we**")
 
-**Version 3.1 – Last updated: April 25, 2026**
+**Version 3.2 – Last updated: April 26, 2026**
 
 ---
 
@@ -944,9 +1001,11 @@ Pour toute question ou demande légale, contactez-nous :
 
 **Country of Operation:** the jurisdiction primarily targeted by the User’s request at the time of Connection; failing that, the User’s country of residence at the date of the request.
 
-**Connection Fee:** fixed fee payable to SOS per Connection (art. 7), the amount of which is defined in the **current fee schedule available in the Helper's dashboard**, subject to change and/or **local rate schedules** by country/currency, with prospective effect.
+**Connection Fee:** remuneration **owed by the User to SOS Expat** for each Connection (art. 7), as compensation for the technical connection service provided by the Platform. The Connection Fee in no event constitutes a commission, kickback, or share of the Helper's remuneration. Its amount is defined in the **current fee schedule**, accessible in the personal dashboard of the Helper and the User. SOS Expat may modify the schedule under the conditions of article 2.4.
 
 **Payment Service Providers:** third-party services processing payments and fund distribution.
+
+**B2B Partner:** any legal entity (company, association, mutual fund, works council, organization, etc.) having entered into a separate framework agreement with SOS Expat under which it finances, in whole or in part, the Connection Fees for its members, employees, or beneficiaries (the "**B2B Users**"). A **B2B Connection** is a Connection initiated by a B2B User under such a framework agreement. By contrast, a **B2C Connection** is initiated by a User who pays the Connection Fees directly.
 
 ---
 
@@ -958,7 +1017,7 @@ Pour toute question ou demande légale, contactez-nous :
 
 2.3. **Electronic acceptance (click-wrap):** Registration and/or use of the Platform constitutes acceptance of these Terms, electronic signature, and contractual consent. SOS may retain technical evidence (timestamps, identifiers).
 
-2.4. **Modifications:** SOS may update the Terms and/or fee schedules (by country/currency) with prospective effect by publishing them on the Platform. Continued use constitutes acceptance.
+2.4. **Modifications (P2B notice period):** SOS Expat may update the Terms and/or fee schedules at any time, subject to a **minimum notice period of fifteen (15) days** notified to the Helper on a durable medium (email to the registered address and publication in the personal dashboard), in accordance with article 3 of Regulation (EU) 2019/1150 ("P2B"). The notice period may be reduced or waived: (i) when the modification is required by law or by a decision of a competent authority; (ii) for compelling security or fraud prevention reasons; or (iii) for material or typographical corrections without economic impact. During the notice period, the Helper may **terminate the relationship without penalty**. Failing termination, continued use of the Platform after the notice period constitutes acceptance.
 
 2.5. **Professional capacity (B2B):** The Helper declares to act solely for professional purposes; consumer protection regimes do not apply to the SOS Expat–Helper relationship.
 
@@ -978,6 +1037,17 @@ Pour toute question ou demande légale, contactez-nous :
 
 3.6. **Confidentiality:** The Helper protects Users’ information and shall not disclose it except where legally required or with consent.
 
+3.7. **Helper Declarations and Warranties.** By registering on the Platform, the Helper expressly declares and warrants that:
+- (a) They are of **legal age** under the law of their country of residence and have **full legal capacity** to contract and carry out their activity;
+- (b) They hold, or undertake to hold **before any service is performed**, **all authorizations** required by the law of the Country of Operation to carry out their activity (visa, work permit, registration of self-employed/freelance/micro-enterprise activity as applicable, fiscal and social registration, sectoral licenses where applicable);
+- (c) They **will not provide any service falling within a regulated profession** (lawyer, notary, doctor, certified accountant, financial or investment advisor, real estate agent, etc.) without holding the required local title/license; they direct the User to a duly licensed professional whenever a question relates to such a profession;
+- (d) They are **not subject to any prohibition from carrying out** a professional or commercial activity in their country of residence, nor in the Country of Operation;
+- (e) They do not appear on **any Sanctions List** (OFAC/SDN, EU, UN, HMT);
+- (f) All information provided during registration is **accurate, complete, and up to date** and they undertake to **immediately inform** SOS Expat of any change affecting them;
+- (g) They **bear sole and full responsibility** for compliance, in each Country of Operation, with the rules applicable to their activity (immigration, employment / self-employment law, taxation, consumer protection, personal data, advertising/solicitation, personal safety, sectoral ethics).
+
+Any false declaration constitutes a serious violation of the Terms that may result in immediate suspension or termination of the account, without prejudice to any action for damages.
+
 ---
 
 ## 4. Account, verification, and security
@@ -991,6 +1061,8 @@ Pour toute question ou demande légale, contactez-nous :
 4.4. **Inactivity & termination.** After **365 days of inactivity**, the account may be automatically deactivated following notification. The Helper may close their account at any time after fulfilling their outstanding obligations. SOS Expat may suspend or terminate an account for violation of the Terms, without prejudice to other remedies.
 
 4.5. **Electronic communications.** The Helper consents to receive any notifications related to the Terms by electronic means (email, in-app notification, publication on the Platform).
+
+4.6. **Internal Complaint-Handling System (P2B Regulation).** In accordance with article 11 of Regulation (EU) 2019/1150, SOS Expat provides the Helper with a **free internal complaint-handling system**, accessible via the contact form (https://sos-expat.com/contact). SOS Expat undertakes to: (i) **acknowledge receipt** of any complaint within **seven (7) business days**; (ii) handle the complaint **seriously and without discrimination, within a reasonable time** (as a rule **thirty (30) days**); (iii) communicate the **reasoned outcome** to the Helper in clear and understandable language, indicating subsequent remedies (mediation under art. 12.5, arbitration under art. 12.2); (iv) maintain **aggregated statistics** on the operation of this system, made available annually.
 
 ---
 
@@ -1018,9 +1090,15 @@ Pour toute question ou demande légale, contactez-nous :
 
 ## 7. Fees, Single Payment and Taxes
 
-7.1. **Connection Fee (flat rate).** The Connection Fee is defined in the **current fee schedule available in the Helper's dashboard**, per Connection, excluding taxes and Payment Provider fees. SOS Expat may modify these amounts and/or publish local rate schedules by country/currency, with prospective effect.
+7.1. **Connection Fee (Platform remuneration).** The Connection Fee compensates **exclusively the technical connection service** provided by SOS Expat to the **User**. It is **owed by the User**, and **not by the Helper**. Its amount is defined in the **current fee schedule** accessible in the Helper's personal dashboard, per Connection, excluding taxes and Payment Provider fees. Any modification of the fee schedule is made under the conditions of article 2.4 (minimum fifteen (15) days notice).
 
-7.2. **Single payment & distribution:** The User makes a single payment via the Platform covering (i) the Helper’s remuneration (as agreed) and (ii) SOS Expat’s Connection Fee. SOS Expat (or its Provider) collects, deducts its fee, and transfers the remaining balance to the Helper. The Helper authorizes such deductions and allocations.
+7.2. **Legal characterization of the payment — two separate and independent debts.** The payment made by the User via the Platform is **legally composed of two separate and independent debts**, despite being settled through a single technical collection for operational convenience:
+- (a) **"Connection" debt:** amount **owed by the User to SOS Expat** for the technical connection service (Connection Fees, art. 7.1);
+- (b) **"Helper Remuneration" debt:** amount **owed by the User to the Helper** for the service agreed between them. The content, quality, outcome, and detailed billing are governed **exclusively** by the Helper–User relationship, off-Platform (art. 6 and 13.5).
+
+**SOS Expat does not receive, claim or have any right to any commission, kickback, share, percentage or fraction whatsoever of the Helper's remuneration. The Connection Fees constitute the sole remuneration of SOS Expat and are derived exclusively from the User's debt referred to in (a).**
+
+The Payment Provider, acting in respect of part (b) as **paying agent of the Helper**, transfers to the latter the remuneration collected, after deducting only its own banking processing fees and, where applicable, currency conversion fees. **The exact net amount the Helper will receive is displayed in their dashboard before and after each transaction**, allowing the Helper to accept or decline the connection on a fully informed basis.
 
 7.3. **Due and non-refundable:** The Connection Fee is due as soon as the Connection is made and non-refundable (except at SOS Expat’s discretionary goodwill in case of a failure solely attributable to the Platform and to the extent permitted by law).
 
@@ -1032,6 +1110,40 @@ Pour toute question ou demande légale, contactez-nous :
 
 7.7. **Set-off** SOS Expat may offset any amount owed by the Helper against any amount payable to the Helper.
 
+7.8. **Helper Payment Timelines by Channel.** Subject to completion of the KYC process (article 8), the timelines for paying the Helper's net remuneration vary by channel:
+- (a) **B2C Connections** (direct payment by the User): the Helper's remuneration is **released for payment immediately upon completion of the call** by the Payment Provider, subject only to the Provider's technical banking, anti-fraud and capture processing delays (typically one (1) to seven (7) business days depending on the Helper's country and account maturity with the Provider);
+- (b) **B2B Connections** (payment by the B2B Partner): given the B2B Partner's deferred billing model (monthly invoicing or "net-30"), the Helper's remuneration is paid **within thirty (30) days** after the call;
+- (c) In all cases, payment may be suspended in case of dispute, User or Partner claim, ongoing KYC/AML verification, or any other circumstance provided in these Terms.
+
+7.9. **Automatic Tax Reporting (DAC7 Directive — EU 2021/514).** Helpers resident in a European Union Member State are informed that SOS Expat, in its capacity as a reporting platform operator, is required to **annually report** to the competent tax authorities (under Directive (EU) 2021/514 known as "DAC7") information relating to active Helpers resident in the EU, in particular: name, address, taxpayer identification number (TIN), Member State of residence, total consideration received via the Platform and number of Connections, broken down by calendar quarter. The Helper undertakes to provide and keep up to date this information in their personal dashboard. Failure to provide or update may result in the suspension of payments until rectification, in accordance with DAC7 provisions.
+
+7.10. **B2B Channel — Connections via a B2B Partner.**
+
+(a) **Scope.** A B2B Connection is initiated by a B2B User who benefits from a framework agreement entered into between SOS Expat and a B2B Partner (art. 1).
+
+(b) **Adaptation of the two debts.** The two-debt mechanism (art. 7.2) applies in B2B as follows:
+- the **"Connection" debt** is owed by the **B2B Partner** to SOS Expat (in whole or in part under the framework agreement), so that the **B2B User generally pays nothing**, or pays only a possible co-payment to SOS Expat;
+- the **"Helper Remuneration" debt** remains owed by the **end User** to the **Helper**, unless the framework agreement expressly provides for full or partial coverage by the B2B Partner (in which case the Partner becomes liable for the covered portion towards the Helper, via the paying agent mechanism of art. 7.2).
+
+(c) **Distinct Helper remuneration B2C / B2B — the Helper expressly accepts.** The Helper **acknowledges and expressly accepts** that **the net remuneration they receive for a B2B Connection may differ**, upwards or downwards, **from that received for a B2C Connection** (e.g., flat fee negotiated with the Partner, guaranteed volume considerations, full or partial coverage by the Partner, or discount granted to the Partner). The **channel of origin (B2C or B2B)** and the **exact amount** the Helper will receive are **displayed in their dashboard before each Connection**. **No obligation to accept** is imposed on the Helper based on the channel or the proposed rate.
+
+(d) **B2B framework agreement not binding on the Helper.** The provisions of the framework agreement entered into between SOS Expat and the B2B Partner are **not binding on the Helper**; only these Terms and the information displayed in the Helper's dashboard govern the relationship between SOS Expat and the Helper in the context of a B2B Connection.
+
+(e) **All other provisions of these Terms apply** to B2B Connections.
+
+(f) **Current schedules as of the date hereof (for information).** As of the date of the latest update of these Terms, the Helper's net remuneration schedules are as follows:
+- **B2C Connection**: **thirty euros (€30) or thirty US dollars (US$30)** net per Connection accepted and performed, depending on the settlement currency;
+- **B2B Connection**: **twenty euros (€20) or twenty US dollars (US$20)** net per Connection accepted and performed, depending on the settlement currency.
+
+These amounts are **indicative** and reflect the schedule in force on the date of the latest update of these Terms. The **current schedule** is permanently accessible in the Helper's dashboard before each Connection. Any change is subject to the fifteen (15) day notice period set out in article 7.11.
+
+7.11. **Modification of the Helper Remuneration Schedule.** SOS Expat reserves the right to **modify at any time the schedule of net remuneration of the Helper**, whether:
+- (i) the **B2C schedule** — by modifying the Connection Fees or their structure (which impacts the net amount received by the Helper);
+- (ii) the **B2B schedule** — by modifying the flat or variable remuneration applicable to B2B Connections;
+- (iii) or any other component of the net remuneration.
+
+Any modification is subject to the **minimum fifteen (15) day notice period** provided in article 2.4, notified to the Helper on a durable medium. During the notice period, the Helper may **terminate the relationship without penalty** or continue to **decline on a case-by-case basis** Connections whose remuneration would no longer suit them, it being recalled that **the Helper is never required to accept a Connection**. **Connections already accepted before expiry of the notice remain remunerated at the rate in force on the acceptance date.** Failing termination, continued use of the Platform after the notice period constitutes acceptance of the new schedule.
+
 ---
 
 ## 8. Payments – KYC/AML – Sanctions
@@ -1042,7 +1154,7 @@ Pour toute question ou demande légale, contactez-nous :
 
 8.3. **Retention and cancellation.** SOS Expat may **defer, withhold, or cancel** payments in case of: (i) suspected fraud, (ii) non-compliance with Terms or laws, (iii) legal or administrative order, (iv) KYC failure, (v) violation of international sanctions rules.
 
-8.4. **Sanctions and embargoes.** Access to the Platform and payment services may be **restricted** in territories subject to **sanctions or embargoes** (EU, USA, UN, OFAC). The Helper declares **not to appear on any sanctions list** and to comply with applicable **export controls**.
+8.4. **Sanctions and embargoes.** Access to the Platform and payment services may be **restricted or blocked** in any **country or territory subject to a comprehensive embargo or full restrictive measures** under the laws and regulations applicable to the Payment Providers, the European Union, the United Nations, OFAC (United States), HMT (United Kingdom) or any other competent authority. The current list of such countries and territories is maintained by the aforementioned authorities and shall prevail; SOS Expat does not maintain or publish its own geopolitical list. The Helper declares **not to appear on any Sanctions List** (OFAC/SDN, EU, UN, HMT) and to comply with applicable **export controls**.
 
 8.5. **Legal cooperation.** The Helper agrees to cooperate with SOS Expat and competent authorities in case of investigation related to money laundering, terrorist financing, or any other financial offense.
 
@@ -1053,14 +1165,14 @@ Pour toute question ou demande légale, contactez-nous :
 - Send regular reminders (at 7 days, 30 days, 60 days, 90 days, 120 days, and 150 days);
 - Provide the Helper with all necessary means to complete their KYC verification.
 
-8.7. **Unclaimed funds and forfeiture.** If KYC verification is not completed within **one hundred and eighty (180) days** from the first payment placed on hold, and despite the notifications provided in article 8.6, the funds shall be considered **abandoned** by the Helper. The Helper expressly acknowledges and accepts that:
-- (a) Unclaimed funds within this period shall be definitively acquired by the Platform as a lump-sum indemnity for management, custody, and contact attempt costs;
-- (b) This acquisition compensates for the administrative costs borne by the Platform for managing unclaimed funds;
-- (c) They expressly waive any claim to these funds after the 180-day period.
+8.7. **Funds in extended hold — management fees and transfer to competent authorities.** If KYC verification is not completed within **one hundred and eighty (180) days** from the first payment placed on hold, and despite the notifications provided in article 8.6:
+- (a) **Lump-sum management fees.** SOS Expat may deduct from the funds in hold **reasonable lump-sum management fees, capped at ten percent (10%) of the amount retained**, strictly covering effective administrative costs of custody, contact attempts and accounting processing;
+- (b) **Extended custody.** The balance remains held on the Payment Provider's segregated account (or escrowed by SOS Expat where technical conditions so require). The Helper may, at any time during this phase, complete KYC and claim the funds;
+- (c) **Transfer to competent authorities (escheat / unclaimed property).** Upon expiry of an overall period of **five (5) years** from the first payment placed on hold, in the absence of a valid claim, the residual funds are **transferred to the competent authority of the Helper's country of residence** under applicable rules on unclaimed property (for example, in France, to the Caisse des Dépôts under the Eckert Act; in the United States, to the relevant State's unclaimed property program; in the United Kingdom, to the Dormant Assets Scheme; and generally to the equivalent local mechanism). **SOS Expat in no event appropriates these residual funds.**
 
-8.8. **Exceptional claim.** Notwithstanding article 8.7, the Helper may submit a substantiated claim within a maximum of **twelve (12) months** following the expiration of the 180-day period, only in the following cases: documented medical incapacity, duly justified force majeure, or technical error attributable to the Platform. The Platform will review the request within 30 days and reserves the right to accept or reject the claim. If accepted, a processing fee of **twenty percent (20%)** will be deducted from the refunded amount.
+8.8. **Claim during extended custody.** The Helper may, at any time during the extended custody phase (b), submit a substantiated claim to SOS Expat via the contact form, accompanied by **complete KYC verification** (KYC being a technical condition imposed by the Payment Provider and AML/CFT obligations). SOS Expat will review the request within **thirty (30) days**. If accepted, the funds are transferred net of only the management fees referred to in (a). In case of duly justified force majeure or documented medical incapacity, these fees may be reduced or waived at SOS Expat's reasonable discretion.
 
-8.9. **Express acceptance.** By registering on the Platform as a Helper, they declare that they have read these conditions relating to unclaimed funds and expressly accept them. This acceptance constitutes an essential and determining condition for access to provider status on the Platform.
+8.9. **Express acceptance.** By registering on the Platform, the Helper declares that they have read the provisions of this article 8 and expressly accept them. This acceptance constitutes an essential condition for access to provider status.
 
 ---
 
@@ -1110,7 +1222,7 @@ The Platform, its trademarks, logos, databases, and content are protected. No ri
 
 ## 12. Governing law – Arbitration – Estonian jurisdiction – Class action waiver
 
-12.1. **Substantive law:** for each Connection, the SOS Expat–Helper relationship is governed by the **laws of the Country of Operation**, subject to local public policy and mandatory international norms. Supplementarily, and for interpretation/validity of these Terms as well as any issue not governed by the law of the Country of Operation, Estonian law applies.
+12.1. **Governing law and primacy of local compliance.** For each Connection, the SOS Expat–Helper relationship is governed by the **laws of the Country of Operation**, subject to local public policy and mandatory international norms. **Supplementarily**, and for interpretation/validity of these Terms as well as any issue not governed by the law of the Country of Operation, **Estonian law** applies. **For the avoidance of doubt**, the mandatory rules applicable to the Helper's activity in the Country of Operation (immigration, employment / self-employment law, taxation, consumer protection, personal data, advertising/solicitation, personal safety, sectoral ethics where applicable) are deemed to be **mandatory rules of public policy** and **prevail** over any contrary or ambiguous provision of these Terms. No provision of these Terms shall be construed as requiring or permitting the Helper to engage in conduct contrary to such rules; in case of conflict, the Helper shall refrain and shall promptly inform SOS Expat.
 
 12.2. **Mandatory ICC arbitration:** any dispute between SOS Expat and the Helper shall be finally resolved under the ICC Arbitration Rules. Seat: Tallinn (Estonia). Language: French. The tribunal shall apply the substantive law defined in art. 12.1. Proceedings are confidential.
 
@@ -1118,7 +1230,9 @@ The Platform, its trademarks, logos, databases, and content are protected. No ri
 
 12.4. **Exclusive jurisdiction of Estonian courts:** for any non-arbitrable matters, enforcement of awards, or urgent measures, Estonian courts (competent in Tallinn) have exclusive jurisdiction. The Helper waives any objection of forum or non-convenience.
 
-12.5. **Pre-arbitration mediation.** Before any arbitration, the parties agree to attempt to resolve the dispute amicably through **good faith negotiation** for a period of **thirty (30) days** from written notice of the dispute.
+12.5. **Mandatory Pre-Arbitration Mediation and identified mediators (P2B Regulation).** Before any arbitration, the parties agree to attempt to resolve the dispute amicably through **good faith negotiation** for a period of **thirty (30) days** from written notice of the dispute, sent by email with acknowledgment of receipt to the contact address of the other party. In accordance with article 12 of Regulation (EU) 2019/1150, SOS Expat identifies at least **two (2) specialized, independent and reasonably accessible mediators**, from among which the Helper may choose: **(i) the Centre de Médiation et d'Arbitrage de Paris (CMAP) — cmap.fr**; and **(ii) the WIPO Arbitration and Mediation Center (Geneva) — wipo.int/amc**. SOS Expat bears a **reasonable share of the mediation costs**, assessed in good faith on a case-by-case basis, in particular where the dispute is of low value. Failure of mediation is a prerequisite for filing an arbitration request.
+
+12.6. **Limitation Period.** Any action or claim by the Helper against SOS Expat must be brought within the **shorter of three (3) years** from the occurrence of the triggering event **and the applicable statutory limitation period** in the Helper's jurisdiction, failing which it shall be time-barred. This clause is neither intended nor designed to reduce, below the mandatory statutory minimum, any limitation period that would not be subject to contractual reduction in the relevant jurisdiction; in such case the local statutory period applies.
 
 ---
 
@@ -1130,8 +1244,8 @@ The Platform, its trademarks, logos, databases, and content are protected. No ri
 
 **Recording policy:**
 - (a) **By default**, SOS Expat **does NOT record the audio content** of calls between Helper and User. Only **technical metadata** is retained (timestamp, duration, Twilio identifiers, status) for billing, anti-fraud, and technical dispute resolution purposes;
-- (b) SOS Expat **reserves the right** to enable audio recording in strictly limited cases: suspicion of fraud, abuse report, order from a competent judicial authority, protection of vital interests. The parties will be informed at the start of the call;
-- (c) When a recording is enabled, it is retained for a maximum of **six (6) months** (unless extended by judicial proceedings), in line with CNIL recommendations and GDPR;
+- (b) SOS Expat **does not enable any audio recording without the explicit, prior and separate consent of both the Helper AND the User**, expressed before the start of the call by a distinct positive action. No recording may be triggered unilaterally by SOS Expat, except pursuant to a **valid order issued by a competent judicial authority of the country of the Helper or the User**, providing the public-policy safeguards required by that jurisdiction;
+- (c) Where a recording is exceptionally enabled under (b), it is retained for the duration strictly necessary for its purpose, capped at a maximum of **six (6) months** (unless extended by ongoing judicial proceedings), in accordance with GDPR and the recommendations of local data-protection authorities;
 - (d) **The Helper is themselves prohibited** from recording, fully transcribing, disclosing, or using the exchanges for any purpose other than the agreed service, except with the User's written authorization or by legal obligation. Any breach may result in immediate account suspension and engage the Helper's civil and/or criminal liability.
 
 13.3. **Non-solicitation.** During the term of these Terms and **twelve (12) months** after termination, the Helper shall not directly solicit Users met through the Platform to avoid Connection Fees.
@@ -1172,7 +1286,7 @@ For any question or legal request, please contact us:
 
 **SOS Expat d'WorldExpat OÜ** (далее « **Платформа** », « **SOS** », « **мы** »)
 
-**Версия 3.1 – Последнее обновление: 25 апреля 2026 года**
+**Версия 3.2 – Последнее обновление: 26 апреля 2026 года**
 
 ---
 
@@ -1186,9 +1300,11 @@ For any question or legal request, please contact us:
 
 **Страна деятельности**: юрисдикция, преимущественно затрагиваемая запросом Пользователя в момент Связи; в противном случае – страна проживания Пользователя на дату запроса.
 
-**Плата за Связь**: фиксированная плата, подлежащая уплате SOS за Связь (ст. 7): **19 €**, если оплата в **EUR**, или **25 $ USD**, если оплата в **USD**, с возможной корректировкой и/или **локальными тарифами** по странам/валютам с перспективным действием.
+**Плата за Связь**: **вознаграждение, причитающееся Пользователем SOS Expat** за каждую Связь (ст. 7), за единственный технический сервис связи, предоставляемый Платформой. Эта плата ни в коем случае не является комиссией, ретроцессией или разделом вознаграждения Помощника. Её размер определяется в **действующем тарифе**, доступном в личном кабинете Помощника и Пользователя. SOS Expat может изменять этот тариф в условиях, предусмотренных статьёй 2.4.
 
 **Поставщик(и) платежей**: сторонние сервисы, обрабатывающие платежи и распределение средств.
+
+**B2B-партнёр**: любое юридическое лицо (компания, ассоциация, страховая касса, рабочий совет, организация и т.д.), заключившее с SOS Expat отдельный рамочный договор, предусматривающий, что оно полностью или частично финансирует Плату за Связь для своих членов, сотрудников или бенефициаров (« **B2B-Пользователи** »). **B2B-Связь** — это Связь, инициированная B2B-Пользователем в соответствии с таким рамочным договором. В отличие от этого, **B2C-Связь** инициируется Пользователем, который непосредственно оплачивает Плату за Связь.
 
 ---
 
@@ -1200,7 +1316,7 @@ For any question or legal request, please contact us:
 
 2.3. **Электронное согласие (click-wrap).** Регистрация и/или использование Платформы означает принятие ОУС, электронную подпись и контрактное согласие. SOS может сохранять технические доказательства (отметки времени, идентификаторы).
 
-2.4. **Изменения.** SOS может обновлять ОУС и/или тарифы (по странам/валютам) с **перспективным действием**, публикуя их на Платформе. Продолжение использования означает согласие.
+2.4. **Изменения (P2B-уведомление).** SOS Expat может обновлять ОУС и/или тариф в любое время, при условии **минимального уведомления за пятнадцать (15) дней**, направленного Помощнику на надёжном носителе (электронная почта на зарегистрированный адрес и публикация в личном кабинете), в соответствии со ст. 3 Регламента (ЕС) 2019/1150 (« P2B »). Уведомление может быть сокращено или отменено: (i) когда изменение продиктовано законом или решением компетентного органа; (ii) по неотложным причинам безопасности или предотвращения мошенничества; или (iii) для материальных или типографских исправлений без экономических последствий. В период уведомления Помощник может **расторгнуть без штрафа** отношения с Платформой. При отсутствии расторжения продолжение использования Платформы по истечении уведомления означает согласие.
 
 2.5. **Профессиональная компетенция (B2B).** Помощник заявляет, что действует **исключительно в профессиональных целях**; нормы защиты потребителей не применяются к отношениям SOS Expat–Помощник.
 
@@ -1220,6 +1336,17 @@ For any question or legal request, please contact us:
 
 3.6. **Конфиденциальность.** Помощник защищает информацию Пользователей и воздерживается от ее раскрытия, за исключением случаев, предусмотренных законом или с согласия.
 
+3.7. **Заявления и гарантии Помощника.** При регистрации на Платформе Помощник прямо заявляет и гарантирует, что:
+- (a) Он является **совершеннолетним** по праву страны его проживания и обладает **полной правоспособностью** для заключения договоров и осуществления своей деятельности;
+- (b) Он располагает или обязуется располагать **до начала любой услуги** **всеми разрешениями**, требуемыми правом Страны деятельности (виза, разрешение на работу, регистрация деятельности независимого лица / самозанятость / freelance / микропредприятие в зависимости от страны, налоговая и социальная регистрация, отраслевые лицензии при необходимости);
+- (c) Он **не будет оказывать никаких услуг, относящихся к регулируемой профессии** (адвокат, нотариус, врач, эксперт-бухгалтер, финансовый или инвестиционный консультант, агент по недвижимости и т.д.), без обладания необходимым местным титулом/лицензией; он направляет Пользователя к должным образом уполномоченному специалисту, когда вопрос касается такой профессии;
+- (d) В отношении него **не действует запрет на ведение** профессиональной или коммерческой деятельности;
+- (e) Он не значится **ни в одном международном санкционном списке** (OFAC/SDN, ЕС, ООН, HMT);
+- (f) Вся информация, предоставленная при регистрации, является **точной, полной и актуальной**, и он обязуется **немедленно информировать** SOS Expat о любых изменениях, затрагивающих эти сведения;
+- (g) Он **самостоятельно несёт всю полноту ответственности** за соблюдение в каждой Стране деятельности правил, применимых к его деятельности.
+
+Любое ложное заявление является серьёзным нарушением ОУС, которое может повлечь немедленное приостановление или расторжение аккаунта, без ущерба для любого иска о возмещении.
+
 ---
 
 ## 4. Аккаунт, проверки и безопасность
@@ -1233,6 +1360,8 @@ For any question or legal request, please contact us:
 4.4. **Неактивность и расторжение.** После **365 дней неактивности** аккаунт может быть автоматически деактивирован после уведомления. Помощник может закрыть свой аккаунт в любое время после выполнения своих текущих обязательств. SOS Expat может приостановить или расторгнуть аккаунт за нарушение Условий, без ущерба для других средств правовой защиты.
 
 4.5. **Электронные сообщения.** Помощник соглашается получать любые уведомления, связанные с Условиями, электронными средствами (электронная почта, уведомление в приложении, публикация на Платформе).
+
+4.6. **Внутренняя система рассмотрения жалоб (Регламент P2B).** В соответствии со статьёй 11 Регламента (ЕС) 2019/1150 SOS Expat предоставляет Помощнику **бесплатную внутреннюю систему рассмотрения жалоб**, доступную через контактную форму (https://sos-expat.com/contact). SOS Expat обязуется: (i) **подтвердить получение** в течение **семи (7) рабочих дней**; (ii) рассматривать жалобу **серьёзно и без дискриминации, в разумный срок** (как правило, **тридцать (30) дней**); (iii) сообщать Помощнику **мотивированный** результат; (iv) вести ежегодную **агрегированную статистику**.
 
 ---
 
@@ -1260,9 +1389,15 @@ For any question or legal request, please contact us:
 
 ## 7. Плата, единоразовая оплата и налоги
 
-7.1. **Плата за Связь (фиксированная).** **19 € (EUR)** **или** **25 $ (USD)** **за Связь**, без учета налогов и комиссии Поставщика платежей. SOS Expat может изменять эти суммы и/или публиковать **локальные тарифы** по странам/валютам с перспективным действием.
+7.1. **Плата за Связь (вознаграждение Платформы).** Плата за Связь оплачивает **исключительно технический сервис связи**, предоставленный SOS Expat **Пользователю**. Она **причитается Пользователем**, а **не Помощником**. Её размер определяется в **действующей тарифной сетке**, доступной в личном кабинете Помощника, за каждую Связь, без учёта налогов и комиссий Поставщика платежей. Любое изменение тарифа происходит в условиях статьи 2.4 (минимальное уведомление за пятнадцать (15) дней).
 
-7.2. **Единоразовая оплата и распределение.** Пользователь осуществляет **единый платеж** через Платформу, включающий (i) **вознаграждение Помощника** (согласованное) и (ii) **Плату за Связь** SOS Expat. SOS Expat (или его Поставщик) получает платеж, **вычитает** свои комиссии, а оставшееся **переводит Помощнику**. Помощник **согласен** с этими вычетами и распределением.
+7.2. **Юридическая характеристика платежа — два отдельных и независимых долга.** Платёж, осуществляемый Пользователем через Платформу, **юридически разделяется на два отдельных и независимых долга**, несмотря на их погашение единым платежом по соображениям операционного удобства:
+- (a) **Долг « Связь »**: сумма, **причитающаяся Пользователем SOS Expat** за технический сервис связи (Плата за Связь, ст. 7.1);
+- (b) **Долг « Вознаграждение Помощника »**: сумма, **причитающаяся Пользователем Помощнику** за услугу, согласованную между ними. Содержание, качество, результат, а также детальная фактурация, относятся **исключительно** к отношениям Помощник–Пользователь, вне Платформы.
+
+**SOS Expat не получает, не требует и не имеет права на какую-либо комиссию, ретроцессию, разделение, процент или какую-либо часть вознаграждения Помощника. Плата за Связь является единственным вознаграждением SOS Expat и поступает исключительно из долга Пользователя, указанного в (a).**
+
+Поставщик платежей, действуя для части (b) в качестве **платёжного агента Помощника**, перечисляет последнему полученное вознаграждение, за вычетом только банковских комиссий обработки и, при необходимости, комиссий за конверсию валюты. **Чистая сумма, которую получит Помощник, отображается в его панели управления до и после каждой транзакции.**
 
 7.3. **Сроки и невозвратность.** Плата за Связь **должна быть уплачена сразу** при Связи и **не подлежит возврату** (за исключением дискреционных действий SOS Expat в случае неудачи, полностью связанной с Платформой и **в пределах, разрешенных законом**).
 
@@ -1273,6 +1408,23 @@ For any question or legal request, please contact us:
 7.6. **Налоги.** Помощник остается ответственным за **все применимые налоги** (НДС, подоходный налог, социальное страхование и т.д.). SOS Expat собирает/перечисляет, если требуется, НДС/местный эквивалент с Платы за Связь.
 
 7.7. **Компенсация.** SOS Expat может компенсировать любую сумму, подлежащую Помощником, с любой суммы, подлежащей выплате Помощнику.
+
+7.8. **Сроки выплаты Помощнику в зависимости от канала.** При условии завершения процесса KYC (ст. 8):
+- (a) **B2C-Связи** (прямой платёж Пользователя): вознаграждение направляется на выплату **немедленно по окончании звонка** Поставщиком платежей, с учётом только технических задержек (обычно от 1 до 7 рабочих дней в зависимости от страны и зрелости счёта);
+- (b) **B2B-Связи** (платёж B2B-партнёра): с учётом модели отсроченного выставления счетов партнёру (ежемесячного или « net-30 ») вознаграждение выплачивается **в срок тридцати (30) дней** после звонка;
+- (c) Возможна приостановка в случае спора, претензии, текущей KYC-проверки или иных обстоятельств, предусмотренных ОУС.
+
+7.9. **Автоматическая налоговая декларация (Директива DAC7 — ЕС 2021/514).** Помощник, проживающий в государстве-члене ЕС, информируется о том, что SOS Expat в качестве оператора декларирующей платформы обязана **ежегодно декларировать** компетентным налоговым органам (на основании Директивы (ЕС) 2021/514 « DAC7 ») информацию о Помощниках-резидентах ЕС: имя, адрес, налоговый идентификатор (TIN), государство проживания, общая сумма, полученная через Платформу, и количество Связей, по кварталам. Помощник предоставляет и поддерживает эти данные в актуальном состоянии. Невыполнение может повлечь приостановку платежей.
+
+7.10. **B2B-канал — Связи через B2B-партнёра.**
+(a) B2B-Связь инициируется B2B-Пользователем на основании рамочного договора, заключённого между SOS Expat и B2B-партнёром.
+(b) **Адаптация двух долгов**: долг « Связь » причитается **B2B-партнёром**; долг « Вознаграждение Помощника » остаётся причитающимся Пользователем Помощнику (за исключением принятия на себя партнёром).
+(c) **Различные тарифы Помощника B2C / B2B**: Помощник **прямо признаёт и принимает**, что чистое вознаграждение в B2B может отличаться (в большую или меньшую сторону) от вознаграждения в B2C. Канал и точная сумма **отображаются в его панели управления перед каждой Связью**. На него **не возлагается обязанность принятия**.
+(d) Рамочный B2B-договор **не противопоставляется Помощнику**.
+(e) Любое иное положение ОУС применяется к B2B-Связям.
+(f) **Действующие тарифы (для информации)**: **B2C: 30 € или 30 USD нетто** за принятую и выполненную Связь; **B2B: 20 € или 20 USD нетто**. Эти суммы являются ориентировочными; актуальный тариф доступен в панели управления. Любое изменение подчиняется уведомлению за 15 дней по ст. 7.11.
+
+7.11. **Изменение тарифа вознаграждения Помощника.** SOS Expat оставляет за собой право в любое время изменять тариф чистого вознаграждения Помощника (B2C, B2B или иной компонент). Любое изменение подчиняется **уведомлению за 15 дней** по ст. 2.4. В период уведомления Помощник может **расторгнуть без штрафа** или продолжать отказываться в каждом конкретном случае. **Связи, уже принятые до истечения уведомления, остаются оплачиваемыми по тарифу, действующему на дату принятия.** При отсутствии расторжения продолжение использования означает согласие.
 
 ---
 
@@ -1291,6 +1443,8 @@ For any question or legal request, please contact us:
 8.6. Помощник обрабатывает данные в соответствии с законодательством **Страны деятельности**.
 
 8.7. **Соответствие DSA.** Платформа функционирует как **посреднический сервис** в понимании **Регламента (ЕС) 2022/2065 (Закон о цифровых услугах)**. SOS Expat внедряет механизмы для сообщения о незаконном контенте и сотрудничает с компетентными органами в соответствии с DSA.
+
+8.8. **Санкции и эмбарго.** Доступ к Платформе и платёжным сервисам может быть **ограничен или заблокирован** в любой **стране или территории, подпадающей под глобальное эмбарго или комплексные ограничительные меры** в соответствии с применимыми законами (Поставщики платежей, ЕС, ООН, OFAC, HMT или любой иной компетентный орган). Актуальный список ведётся вышеуказанными органами и имеет силу; SOS Expat не составляет собственного геополитического списка. Помощник заявляет, что не значится ни в одном санкционном списке и соблюдает экспортный контроль.
 
 ---
 
@@ -1322,13 +1476,17 @@ For any question or legal request, please contact us:
 
 ## 11. Применимое право – Арбитраж – Эстонская юрисдикция – Коллективные иски
 
-11.1. **Материальное право**: для каждой Связи отношения **SOS Expat–Помощник** регулируются **законами Страны деятельности**, с учетом местного публичного порядка и обязательных международных норм. **В качестве дополняющего права и для толкования/действительности настоящих ОУС, а также для вопросов, не регулируемых правом Страны деятельности, применяется право Эстонии.**
+11.1. **Материальное право**: для каждой Связи отношения **SOS Expat–Помощник** регулируются **законами Страны деятельности**, с учетом местного публичного порядка и обязательных международных норм. **В качестве дополняющего права и для толкования/действительности настоящих ОУС, а также для вопросов, не регулируемых правом Страны деятельности, применяется право Эстонии.** Для устранения любой неясности, императивные нормы, применимые к деятельности Помощника в Стране деятельности (иммиграция, трудовое право / право независимого труда, налогообложение, защита потребителей, персональные данные, реклама/привлечение, безопасность лиц, отраслевая деонтология при необходимости), **считаются нормами публичного порядка** и **превалируют** над любым противоречащим или неоднозначным положением. Никакая статья не может предписывать поведение, противоречащее этим нормам; в случае конфликта Помощник воздерживается и без промедления информирует SOS Expat.
 
 11.2. **Обязательный арбитраж ICC**: любые споры между SOS Expat и Помощником решаются **окончательно** в соответствии с Регламентом арбитража **ICC**. **Место: Таллинн (Эстония)**. **Язык: французский.** Суд применяет **материальное право**, указанное в ст. 11.1. Процедура **конфиденциальная**.
 
 11.3. **Отказ от коллективных исков**: в пределах разрешенного законом любые коллективные/групповые/представительные иски исключены; только **индивидуальные претензии**.
 
 11.4. **Исключительная юрисдикция судов Эстонии**: для любых требований **не подлежащих арбитражу**, исполнения решений или срочных мер, эстонские суды (компетентные в Таллине) имеют **исключительную** юрисдикцию. Помощник отказывается от любых возражений о неподходящем форуме.
+
+11.5. **Обязательная предварительная медиация и определённые посредники (Регламент P2B).** Перед любым арбитражем добросовестные переговоры в течение **30 дней**. В соответствии со ст. 12 Регламента (ЕС) 2019/1150 SOS Expat определяет не менее двух (2) посредников: **(i) CMAP (cmap.fr); (ii) WIPO Arbitration and Mediation Center (wipo.int/amc)**. SOS Expat несёт **разумную часть** расходов. Неудача является предварительным условием для арбитража.
+
+11.6. **Срок исковой давности.** Любой иск Помощника против SOS Expat должен быть предъявлен в **наименьший из сроков: три (3) года** с момента события **и применимый законный срок** в юрисдикции Помощника, без снижения ниже минимального императивного локального срока, не подлежащего сокращению.
 
 ---
 
@@ -1350,7 +1508,19 @@ For any question or legal request, please contact us:
 
 ---
 
-## 13. Контакт
+## 13. Положения о международной защите
+
+13.1. **Конфиденциальность переписки и политика записи.** Переписка через Платформу (сообщения, телефонные звонки) является **конфиденциальной**.
+
+**Политика записи:**
+- (a) **По умолчанию** SOS Expat **НЕ записывает** аудио-содержимое звонков между Помощником и Пользователем. Сохраняются только **технические метаданные** (метка времени, длительность, идентификаторы, статус) для целей выставления счетов, борьбы с мошенничеством и разрешения технических споров;
+- (b) SOS Expat **не активирует никакой аудиозаписи без явного, предварительного и отдельного согласия Помощника И Пользователя**, выраженного до начала звонка отдельным положительным действием. Никакая запись не может быть инициирована в одностороннем порядке, за единственным исключением законного запроса от **компетентного судебного органа страны Помощника или Пользователя**;
+- (c) Хранение строго необходимое, максимум **6 месяцев** (за исключением судебного продления), в соответствии с GDPR и местными органами защиты данных;
+- (d) **Помощник сам обязуется** не записывать, полностью не транскрибировать, не разглашать и не использовать переписку в иных целях, кроме согласованной услуги, кроме как с письменного разрешения Пользователя или по требованию закона.
+
+---
+
+## 14. Контакт
 
 Для любых вопросов или юридических запросов свяжитесь с нами:
 `;
@@ -1359,7 +1529,7 @@ For any question or legal request, please contact us:
 
 **SOS Expat by WorldExpat OÜ** (यहाँ “**प्लेटफ़ॉर्म**”, “**SOS**”, “**हम**” के रूप में संदर्भित है)
 
-**संस्करण 3.1 – अंतिम अद्यतन: 25 अप्रैल 2026**
+**संस्करण 3.2 – अंतिम अद्यतन: 26 अप्रैल 2026**
 
 ---
 
@@ -1373,9 +1543,11 @@ For any question or legal request, please contact us:
 
 **स्थान/देश**: वह कानूनी क्षेत्र जिस पर उपयोगकर्ता का अनुरोध नेटवर्किंग के समय मुख्य रूप से आधारित है; यदि निर्दिष्ट नहीं है, तो अनुरोध के समय उपयोगकर्ता का निवास देश मान्य होगा।
 
-**नेटवर्किंग शुल्क**: प्लेटफ़ॉर्म द्वारा प्रत्येक नेटवर्किंग पर SOS को देय निश्चित शुल्क (धारा 7): **19 €** (EUR) या **25 $ USD**, स्थानीय मुद्रा/देश के अनुसार बदलाव संभव।
+**नेटवर्किंग शुल्क (Frais de Mise en relation)**: **उपयोगकर्ता द्वारा SOS Expat को देय** पारिश्रमिक, प्रत्येक नेटवर्किंग के लिए (धारा 7), जो प्लेटफ़ॉर्म द्वारा प्रदान की गई **केवल तकनीकी मिलान सेवा** के लिए है। यह शुल्क किसी भी रूप में Aidant के पारिश्रमिक का कमीशन, रिटोसेशन या साझाकरण नहीं है। इसकी राशि **लागू मूल्य सूची** में परिभाषित है, जो Aidant और उपयोगकर्ता के व्यक्तिगत क्षेत्र में उपलब्ध है। SOS Expat इस सूची को धारा 2.4 की शर्तों के अनुसार संशोधित कर सकता है।
 
 **भुगतान सेवा प्रदाता**: तृतीय पक्ष जो भुगतान प्रबंधित करता है और धन वितरित करता है।
+
+**B2B पार्टनर**: कोई भी कानूनी इकाई (कंपनी, संघ, म्यूचुअल, कर्मचारी समिति, संगठन, आदि) जिसने SOS Expat के साथ एक अलग फ्रेमवर्क समझौते का निष्कर्ष किया है, जिसमें यह प्रावधान है कि वह अपने सदस्यों, कर्मचारियों या लाभार्थियों ("**B2B उपयोगकर्ता**") के लिए नेटवर्किंग शुल्क का पूर्ण या आंशिक वित्तपोषण करेगी। **B2B नेटवर्किंग** एक नेटवर्किंग है जो ऐसे फ्रेमवर्क समझौते के तहत B2B उपयोगकर्ता द्वारा शुरू की गई है। इसके विपरीत, **B2C नेटवर्किंग** एक उपयोगकर्ता द्वारा शुरू की जाती है जो सीधे नेटवर्किंग शुल्क का भुगतान करता है।
 
 ---
 
@@ -1387,7 +1559,7 @@ For any question or legal request, please contact us:
 
 2.3. **इलेक्ट्रॉनिक सहमति (Click-wrap)।** पंजीकरण या प्लेटफ़ॉर्म का उपयोग शर्तों की स्वीकृति के रूप में माना जाएगा। SOS तकनीकी प्रमाण (समय-स्टैम्प, ID) रख सकता है।
 
-2.4. **परिवर्तन।** SOS भविष्य में प्रभावी रूप से शर्तें और शुल्क अद्यतन कर सकता है। प्लेटफ़ॉर्म का उपयोग जारी रखना स्वीकृति माना जाएगा।
+2.4. **परिवर्तन (P2B पूर्व-सूचना)।** SOS Expat किसी भी समय शर्तें और/या शुल्क सूची अद्यतन कर सकता है, बशर्ते कि **विनियमन (EU) 2019/1150 ("P2B") के अनुच्छेद 3 के अनुसार** एक स्थायी माध्यम पर **न्यूनतम पंद्रह (15) दिनों की पूर्व-सूचना** दी जाए। पूर्व-सूचना कम या समाप्त की जा सकती है: (i) कानून द्वारा अनिवार्य संशोधन; (ii) सुरक्षा/धोखाधड़ी रोकथाम के अनिवार्य कारण; (iii) आर्थिक प्रभाव के बिना सामग्री या टाइपोग्राफिक सुधार। पूर्व-सूचना अवधि के दौरान, Aidant **बिना दंड के समाप्त** कर सकता है। अन्यथा, निरंतर उपयोग = स्वीकृति।
 
 2.5. **पेशेवर क्षमता (B2B)।** Aidant घोषित करता है कि वह **केवल पेशेवर रूप से** कार्य कर रहा है; उपभोक्ता संरक्षण नियम लागू नहीं होंगे।
 
@@ -1407,6 +1579,8 @@ For any question or legal request, please contact us:
 
 3.6. **गोपनीयता।** Aidant उपयोगकर्ता डेटा सुरक्षित रखेगा और केवल कानूनी आवश्यकता या सहमति पर साझा करेगा।
 
+3.7. **Aidant के घोषणाएँ और गारंटियाँ।** प्लेटफ़ॉर्म पर पंजीकरण करते समय, Aidant घोषणा और गारंटी देता है कि: (a) वह **वयस्क** है और **पूर्ण कानूनी क्षमता** रखता है; (b) उसके पास या किसी भी सेवा से पहले उसके पास **हस्तक्षेप के देश के कानून द्वारा आवश्यक सभी अनुमतियाँ** होंगी (वीज़ा, कार्य परमिट, स्वतंत्र/स्व-उद्यमी पंजीकरण, कर पंजीकरण, क्षेत्रीय लाइसेंस); (c) वह **विनियमित पेशे से संबंधित कोई सेवा प्रदान नहीं करेगा** (वकील, नोटरी, डॉक्टर, लेखाकार, वित्तीय सलाहकार, रियल एस्टेट एजेंट...) बिना आवश्यक टाइटल/लाइसेंस के और उपयोगकर्ता को पुनर्निर्देशित करेगा; (d) उस पर **प्रैक्टिस से प्रतिबंध** नहीं है; (e) वह **किसी भी प्रतिबंध सूची** में नहीं है; (f) उसकी जानकारी **सटीक** है और अद्यतन की जाएगी; (g) वह प्रत्येक हस्तक्षेप के देश में अपनी गतिविधि पर लागू नियमों के अनुपालन की **पूरी जिम्मेदारी अकेला उठाता है**। कोई भी झूठा घोषणा गंभीर उल्लंघन है।
+
 ---
 
 ## 4. खाता, सत्यापन और सुरक्षा
@@ -1420,6 +1594,8 @@ For any question or legal request, please contact us:
 4.4. **निष्क्रियता।** 365 दिनों की निष्क्रियता के बाद, खाता स्वचालित रूप से निष्क्रिय किया जा सकता है। Aidant अपने दायित्वों को पूरा करने के बाद किसी भी समय अपना खाता बंद कर सकता है। SOS Expat शर्तों के उल्लंघन के लिए खाता निलंबित या समाप्त कर सकता है।
 
 4.5. **इलेक्ट्रॉनिक संचार।** Aidant इलेक्ट्रॉनिक माध्यमों (ईमेल, इन-ऐप अधिसूचनाएँ, प्लेटफ़ॉर्म पर प्रकाशन) के माध्यम से अधिसूचनाएँ प्राप्त करने की सहमति देता है।
+
+4.6. **आंतरिक शिकायत निवारण प्रणाली (P2B विनियमन)।** विनियमन (EU) 2019/1150 के अनुच्छेद 11 के अनुसार, SOS Expat Aidant को संपर्क फॉर्म (https://sos-expat.com/contact) के माध्यम से सुलभ **निःशुल्क आंतरिक शिकायत निवारण प्रणाली** प्रदान करता है। SOS Expat प्रतिबद्ध है: (i) **सात (7) कार्य दिवसों के भीतर रसीद की पुष्टि करें**; (ii) शिकायत को **गंभीरता और भेदभाव के बिना, उचित समय में** (आम तौर पर **तीस (30) दिन**) संबोधित करें; (iii) Aidant को **तर्कपूर्ण** परिणाम सूचित करें; (iv) वार्षिक **समग्र आंकड़े** बनाए रखें।
 
 ---
 
@@ -1447,9 +1623,15 @@ For any question or legal request, please contact us:
 
 ## 7. शुल्क, एकल भुगतान और कर
 
-7.1. **नेटवर्किंग शुल्क।** 19 € (EUR) या 25 $ (USD) प्रति नेटवर्किंग।
+7.1. **नेटवर्किंग शुल्क (प्लेटफ़ॉर्म का पारिश्रमिक)।** नेटवर्किंग शुल्क **केवल तकनीकी मिलान सेवा** के लिए पारिश्रमिक है जो SOS Expat द्वारा **उपयोगकर्ता** को प्रदान की जाती है। यह **उपयोगकर्ता द्वारा देय है, Aidant द्वारा नहीं**। इसकी राशि **लागू मूल्य सूची** में परिभाषित है, जो Aidant के व्यक्तिगत क्षेत्र में उपलब्ध है, प्रति नेटवर्किंग, करों के बिना और भुगतान सेवा प्रदाता के शुल्क के बिना। मूल्य सूची में कोई भी संशोधन धारा 2.4 की शर्तों के अनुसार होता है (न्यूनतम पंद्रह (15) दिन की पूर्व-सूचना)।
 
-7.2. **एकल भुगतान और वितरण।** भुगतान प्लेटफ़ॉर्म के माध्यम से किया जाता है; SOS Expat शुल्क काटकर शेष राशि Aidant को भेजेगा।
+7.2. **भुगतान का कानूनी लक्षण-वर्णन — दो अलग और स्वतंत्र ऋण।** उपयोगकर्ता द्वारा प्लेटफ़ॉर्म के माध्यम से किया गया भुगतान **कानूनी रूप से दो अलग और स्वतंत्र ऋणों** में विभाजित है, परिचालन सुविधा के कारण एकल संग्रह द्वारा निपटान के बावजूद:
+- (a) **"नेटवर्किंग" ऋण**: तकनीकी मिलान सेवा के लिए **उपयोगकर्ता द्वारा SOS Expat को देय राशि** (नेटवर्किंग शुल्क, धारा 7.1);
+- (b) **"Aidant पारिश्रमिक" ऋण**: उनके बीच सहमत सेवा के लिए **उपयोगकर्ता द्वारा Aidant को देय राशि**। सामग्री, गुणवत्ता, परिणाम, साथ ही विस्तृत बिलिंग, **विशेष रूप से** Aidant–उपयोगकर्ता संबंध के अंतर्गत आती है, प्लेटफ़ॉर्म के बाहर।
+
+**SOS Expat किसी भी कमीशन, रिटोसेशन, साझाकरण, प्रतिशत या Aidant के पारिश्रमिक के किसी भी अंश को न तो प्राप्त करता है, न मांगता है, न ही उसका हकदार है। नेटवर्किंग शुल्क SOS Expat का एकमात्र पारिश्रमिक है और विशेष रूप से (a) में संदर्भित उपयोगकर्ता ऋण से उत्पन्न होता है।**
+
+भाग (b) के लिए भुगतान सेवा प्रदाता, **Aidant के भुगतानकर्ता एजेंट** के रूप में कार्य करते हुए, बैंकिंग प्रसंस्करण शुल्क और, यदि लागू हो, मुद्रा रूपांतरण शुल्क की कटौती के बाद, Aidant को प्राप्त पारिश्रमिक भेजता है। **Aidant को प्राप्त होने वाली शुद्ध राशि उसके डैशबोर्ड में प्रत्येक लेनदेन से पहले और बाद में प्रदर्शित की जाती है।**
 
 7.3. **वापसी योग्य नहीं।** नेटवर्किंग शुल्क गैर-वापसी योग्य।
 
@@ -1460,6 +1642,32 @@ For any question or legal request, please contact us:
 7.6. **कर।** Aidant सभी लागू करों के लिए जिम्मेदार है।
 
 7.7. **मुआवजा।** SOS Expat दावे काटकर भुगतान समायोजित कर सकता है।
+
+7.8. **चैनल के अनुसार Aidant भुगतान की अवधि।** KYC प्रक्रिया के पूरा होने के अधीन:
+- (a) **B2C** (उपयोगकर्ता द्वारा सीधा भुगतान): पारिश्रमिक प्रदाता द्वारा **कॉल के तुरंत बाद भुगतान के लिए जारी किया जाता है** (आमतौर पर देश/खाते की परिपक्वता के अनुसार 1 से 7 कार्य दिवस);
+- (b) **B2B** (B2B पार्टनर द्वारा भुगतान): पार्टनर के विलंबित बिलिंग मॉडल (मासिक या "नेट-30") को देखते हुए, पारिश्रमिक कॉल के बाद **30 दिनों के भीतर** भुगतान किया जाता है;
+- (c) विवाद, KYC प्रगति में, या अन्य CGU परिस्थितियों के मामले में निलंबन संभव।
+
+7.9. **स्वचालित कर रिपोर्टिंग (DAC7 — EU 2021/514)।** यूरोपीय संघ के सदस्य राज्य में निवासी Aidant को सूचित किया जाता है कि SOS Expat, एक रिपोर्टिंग प्लेटफ़ॉर्म ऑपरेटर के रूप में, कर अधिकारियों को **वार्षिक रूप से रिपोर्ट करने के लिए बाध्य** है (निर्देश EU 2021/514 "DAC7"): नाम, पता, कर पहचानकर्ता (TIN), निवास का राज्य, प्राप्त कुल राशि और नेटवर्किंग की संख्या, तिमाही द्वारा। Aidant यह जानकारी प्रदान करता है और अद्यतन रखता है। डिफ़ॉल्ट = भुगतान निलंबन।
+
+7.10. **B2B चैनल — B2B पार्टनर के माध्यम से नेटवर्किंग।**
+(a) दायरा: SOS Expat और एक B2B पार्टनर के बीच निष्कर्षित फ्रेमवर्क समझौते के तहत B2B उपयोगकर्ता द्वारा शुरू की गई नेटवर्किंग।
+(b) दो ऋणों का अनुकूलन: "नेटवर्किंग" ऋण **B2B पार्टनर** द्वारा देय है; "Aidant पारिश्रमिक" ऋण उपयोगकर्ता द्वारा Aidant को देय रहता है (पार्टनर द्वारा कवर किए जाने को छोड़कर)।
+(c) **विशिष्ट B2C/B2B Aidant दरें — Aidant स्पष्ट रूप से इसे स्वीकार करता है।** B2B में शुद्ध पारिश्रमिक B2C से भिन्न हो सकता है। चैनल और सटीक राशि **प्रत्येक नेटवर्किंग से पहले उसके डैशबोर्ड में प्रदर्शित होती है**। उस पर **स्वीकृति की कोई बाध्यता नहीं** है।
+(d) B2B फ्रेमवर्क समझौता Aidant पर **लागू नहीं** है।
+(e) CGU की कोई अन्य धारा B2B नेटवर्किंग पर लागू होती है।
+(f) **लागू मूल्य सूची (सांकेतिक रूप से)**: **B2C: 30 € या 30 USD शुद्ध**; **B2B: 20 € या 20 USD शुद्ध**। अद्यतन सूची डैशबोर्ड में उपलब्ध है। कोई भी विकास धारा 7.11 की 15 दिन की पूर्व-सूचना के अधीन है।
+
+7.11. **Aidant पारिश्रमिक मूल्य सूची का संशोधन।** SOS Expat किसी भी समय Aidant की शुद्ध पारिश्रमिक सूची (B2C, B2B, या अन्य घटक) को **15 दिन की पूर्व-सूचना** (धारा 2.4) के साथ संशोधित करने का अधिकार रखता है। पूर्व-सूचना के दौरान: बिना दंड के समाप्ति या केस-बाय-केस इनकार। **पहले से स्वीकृत नेटवर्किंग = मूल दर।** पूर्व-सूचना के बाद निरंतर उपयोग = स्वीकृति।
+
+7.12. **प्रतिबंध और आर्थिक नाकाबंदी।** लागू कानूनों और विनियमों (विशेष रूप से भुगतान सेवा प्रदाताओं, यूरोपीय संघ, संयुक्त राष्ट्र, OFAC (संयुक्त राज्य अमेरिका), HMT (यूनाइटेड किंगडम) या किसी अन्य सक्षम प्राधिकारी) के तहत **वैश्विक नाकाबंदी या व्यापक प्रतिबंधात्मक उपायों के अधीन किसी भी देश या क्षेत्र** में प्लेटफ़ॉर्म और भुगतान सेवाओं तक पहुँच **प्रतिबंधित या अवरुद्ध** की जा सकती है। इन देशों और क्षेत्रों की अद्यतन सूची उपरोक्त अधिकारियों द्वारा रखी जाती है और प्रामाणिक है; SOS Expat अपनी स्वयं की भू-राजनीतिक सूची स्थापित नहीं करता है। Aidant घोषित करता है कि वह किसी भी प्रतिबंध सूची में नहीं है और लागू निर्यात नियंत्रणों का पालन करता है।
+
+7.13. **लंबित निधियाँ — प्रबंधन शुल्क और सक्षम अधिकारियों को स्थानांतरण।** यदि KYC 180 दिनों के भीतर पूरा नहीं हुआ है:
+- (a) उचित निश्चित प्रबंधन शुल्क, **10% तक सीमित**, सख्ती से वास्तविक प्रशासनिक लागत को कवर करते हैं;
+- (b) पृथक खाते में विस्तारित संरक्षण; Aidant किसी भी समय KYC पूरा कर सकता है;
+- (c) **5 वर्षों** के बाद, अवशिष्ट निधियों को **Aidant के निवास के देश के सक्षम प्राधिकारी** को अप्रयुक्त निधियों पर लागू नियमों के तहत स्थानांतरित किया जाता है (फ्रांस में Eckert कानून के तहत Caisse des dépôts; अमेरिका में unclaimed property कार्यक्रम; यूके में Dormant Assets Scheme; स्थानीय समकक्ष तंत्र)। **SOS Expat किसी भी स्थिति में इन अवशिष्ट निधियों को अपने अधिकार में नहीं लेता है।**
+
+विस्तारित संरक्षण के दौरान दावा: Aidant पूर्ण KYC के साथ एक तर्कपूर्ण अनुरोध भेज सकता है; **30 दिनों** के भीतर समीक्षा; केवल प्रबंधन शुल्क की कटौती (a)। फोर्स मेज्योर / चिकित्सा अक्षमता = SOS Expat के उचित विवेक पर शुल्क कम या समाप्त किए जा सकते हैं। इस धारा 7.13 की **स्पष्ट स्वीकृति** अनिवार्य है।
 
 ---
 
@@ -1509,13 +1717,17 @@ For any question or legal request, please contact us:
 
 ## 11. लागू कानून – पंचाट – एस्टोनियाई अधिकार क्षेत्र – सामूहिक मुकदमे
 
-11.1. **सामग्रीक कानून:** प्रत्येक नेटवर्किंग के लिए स्थान/देश का कानून लागू।
+11.1. **सामग्रीक कानून:** प्रत्येक नेटवर्किंग के लिए स्थान/देश का कानून लागू। किसी भी अस्पष्टता से बचने के लिए, हस्तक्षेप के देश में Aidant की गतिविधि पर लागू अनिवार्य नियम (आव्रजन, श्रम/स्वतंत्र कार्य कानून, कराधान, उपभोक्ता संरक्षण, व्यक्तिगत डेटा, विज्ञापन/प्रचार, व्यक्तियों की सुरक्षा, क्षेत्रीय आचार संहिताएँ जहाँ लागू हों) **सार्वजनिक व्यवस्था के माने जाते हैं** और इन CGU के किसी भी विपरीत या अस्पष्ट प्रावधान **पर प्रबल होते हैं**। CGU के किसी भी खंड को इस तरह से व्याख्या नहीं किया जा सकता है कि यह Aidant को इन नियमों के विपरीत आचरण अपनाने के लिए बाध्य या अधिकृत करता है; संघर्ष की स्थिति में, Aidant ऐसा करने से बचता है और तुरंत SOS Expat को सूचित करता है।
 
 11.2. **ICC पंचाट:** सभी विवाद अंतिम रूप से ICC नियमों के अनुसार। स्थान: टालिन, एस्टोनिया; भाषा: फ्रेंच।
 
 11.3. **सामूहिक मुकदमे का त्याग।**
 
 11.4. **एस्टोनियाई अदालती अधिकार।**
+
+11.5. **अनिवार्य पूर्व मध्यस्थता और पहचाने गए मध्यस्थ (P2B विनियमन)।** किसी भी पंचाट से पहले, **30 दिनों** तक सद्भावना से बातचीत। विनियमन (EU) 2019/1150 के अनुच्छेद 12 के अनुसार, SOS Expat कम से कम दो (2) मध्यस्थों की पहचान करता है: **(i) CMAP (cmap.fr); (ii) WIPO Arbitration and Mediation Center (wipo.int/amc)**। SOS Expat **उचित हिस्सा** शुल्क का वहन करता है। विफलता पंचाट से पहले की शर्त है।
+
+11.6. **पुरानी सीमा।** SOS Expat के विरुद्ध Aidant की कोई भी कार्रवाई **3 साल और Aidant के अधिकार क्षेत्र में लागू कानूनी अवधि के बीच की सबसे छोटी अवधि** के भीतर शुरू की जानी चाहिए, घटना के तथ्य से, स्थानीय अनिवार्य न्यूनतम से कम किए बिना।
 
 ---
 
@@ -1537,7 +1749,19 @@ For any question or legal request, please contact us:
 
 ---
 
-## 13. संपर्क
+## 13. संचार की गोपनीयता और रिकॉर्डिंग नीति
+
+प्लेटफ़ॉर्म के माध्यम से किए गए संचार (संदेश, फोन कॉल) **गोपनीय** हैं।
+
+**रिकॉर्डिंग नीति:**
+- (a) **डिफ़ॉल्ट रूप से**, SOS Expat Aidant और उपयोगकर्ता के बीच कॉल की **ऑडियो सामग्री रिकॉर्ड नहीं करता है**। केवल **तकनीकी मेटाडेटा** (टाइमस्टैम्प, अवधि, Twilio पहचानकर्ता, स्थिति) बिलिंग, धोखाधड़ी रोकथाम और तकनीकी विवाद समाधान के लिए रखा जाता है;
+- (b) SOS Expat **Aidant और उपयोगकर्ता दोनों की स्पष्ट, पूर्व और अलग सहमति के बिना कोई ऑडियो रिकॉर्डिंग सक्रिय नहीं करता है**, जो कॉल शुरू होने से पहले एक अलग सकारात्मक कार्रवाई द्वारा प्रकट होती है। SOS Expat द्वारा कोई भी रिकॉर्डिंग एकतरफा रूप से शुरू नहीं की जा सकती है, **Aidant या उपयोगकर्ता के देश के सक्षम न्यायिक प्राधिकारी से नियमित अनुरोध** के एकमात्र अपवाद के साथ;
+- (c) जब (b) के तहत असाधारण रूप से एक रिकॉर्डिंग सक्रिय की जाती है, तो इसे इसके उद्देश्य के लिए सख्ती से आवश्यक अवधि के लिए रखा जाता है, अधिकतम **6 महीने** की सीमा के भीतर (वर्तमान न्यायिक प्रक्रिया द्वारा अनिवार्य विस्तार को छोड़कर), GDPR और स्थानीय डेटा संरक्षण अधिकारियों की सिफारिशों के अनुसार;
+- (d) **Aidant स्वयं** सहमत प्रदर्शन के अलावा अन्य उद्देश्यों के लिए संचार रिकॉर्ड करने, पूरी तरह से ट्रांसक्राइब करने, प्रकट करने या उपयोग करने से बचता है, सिवाय उपयोगकर्ता के लिखित प्राधिकरण या कानूनी दायित्व के।
+
+---
+
+## 14. संपर्क
 
 सवाल या कानूनी मुद्दों के लिए हमसे संपर्क करें:
 `;
@@ -1549,7 +1773,7 @@ For any question or legal request, please contact us:
 **SOS Expat por WorldExpat OÜ** (la "**Plataforma**", "**SOS**", "**nosotros**")
 
 
-**Versión 3.1 – Última actualización: 25 de abril de 2026**
+**Versión 3.2 – Última actualización: 26 de abril de 2026**
 
 
 ---
@@ -1570,10 +1794,12 @@ For any question or legal request, please contact us:
 **País de Intervención** significa la jurisdicción principalmente dirigida por la solicitud del Usuario en el momento de la Conexión.
 
 
-**Tarifa de Conexión** significa **EUR 19** (si se paga en EUR) o **USD 25** (si se paga en USD), sujeta a cambios y/o **horarios locales** por país/moneda con efecto prospectivo.
+**Tarifa de Conexión / Gastos de Puesta en Contacto** : **remuneración debida por el Usuario a SOS Expat** por cada Puesta en Contacto (art. 7), en concepto del único servicio técnico de puesta en contacto prestado por la Plataforma. Estos gastos no constituyen en ningún caso una comisión, retrocesión o reparto de la remuneración del Asistente. Su importe se define en el **baremo vigente**, consultable en el espacio personal del Asistente y del Usuario. SOS Expat puede modificar este baremo en las condiciones previstas en el artículo 2.4.
 
 
 **Procesadores de Pago** son servicios de terceros que manejan recaudaciones y pagos.
+
+**Socio B2B** : toda persona jurídica (empresa, asociación, mutualidad, comité de empresa, organización, etc.) que haya celebrado con SOS Expat un contrato marco distinto que prevea que financia, total o parcialmente, los Gastos de Puesta en Contacto para sus miembros, empleados o beneficiarios (los « **Usuarios B2B** »). Una **Puesta en Contacto B2B** es una Puesta en Contacto activada por un Usuario B2B en virtud de dicho contrato marco. Por oposición, una **Puesta en Contacto B2C** es activada por un Usuario que paga directamente los Gastos de Puesta en Contacto.
 
 
 ---
@@ -1587,7 +1813,7 @@ For any question or legal request, please contact us:
 
 2.3. **Aceptación electrónica (click-wrap)** El registro y/o el uso de la Plataforma constituyen la aceptación de las CGU, la firma electrónica y el consentimiento contractual. SOS puede conservar pruebas técnicas (marca de tiempo, identificadores).
 
-2.4. **Modificaciones** SOS puede actualizar las CGU y/o las tablas de tarifas (por país/divisa) con efecto prospectivo mediante su publicación en la Plataforma. El uso continuado implica aceptación.
+2.4. **Modificaciones (preaviso P2B).** SOS Expat puede actualizar las CGU y/o el baremo de tarifas en cualquier momento, sujeto a un **preaviso mínimo de quince (15) días** notificado al Asistente en soporte duradero (correo electrónico a la dirección registrada y publicación en el espacio personal), conforme al artículo 3 del Reglamento (UE) 2019/1150 (« P2B »). El preaviso puede reducirse o suprimirse: (i) cuando la modificación venga impuesta por la ley o por una decisión de autoridad competente; (ii) por razones imperiosas de seguridad o prevención del fraude; o (iii) para correcciones materiales o tipográficas sin incidencia económica. Durante el período de preaviso, el Asistente puede **rescindir sin penalización** su relación con la Plataforma. A falta de rescisión, la continuación del uso de la Plataforma a la expiración del preaviso constituye aceptación.
 
 2.5. **Capacidad profesional (B2B)** El Asistente declara actuar exclusivamente con fines profesionales; los regímenes de protección al consumidor no se aplican a la relación entre SOS Expat y el Asistente.
 
@@ -1610,6 +1836,17 @@ For any question or legal request, please contact us:
 
 3.6. **Confidencialidad** El Asistente debe proteger la información de los Usuarios y abstenerse de divulgarla, salvo obligación legal o consentimiento expreso.
 
+3.7. **Declaraciones y garantías del Asistente.** Al registrarse en la Plataforma, el Asistente declara y garantiza expresamente que:
+- (a) Es **mayor de edad** según el derecho de su país de residencia y dispone de la **plena capacidad jurídica** para contratar y ejercer su actividad;
+- (b) Dispone, o se compromete a disponer **antes de toda prestación**, de **todas las autorizaciones** requeridas por el derecho del País de Intervención para ejercer su actividad (visado, permiso de trabajo, registro de actividad independiente / autónomo / freelance / micro-empresa según los países, identificación fiscal y social, licencias sectoriales en su caso);
+- (c) **No prestará ningún servicio relativo a una profesión regulada** (abogado, notario, médico, experto contable, asesor financiero o de inversiones, agente inmobiliario, etc.) sin tener el título/la licencia local requerida; orienta al Usuario hacia un profesional debidamente habilitado cuando una cuestión corresponda a tal profesión;
+- (d) **No está sujeto a una prohibición de ejercer** una actividad profesional o comercial;
+- (e) No figura en **ninguna lista de sanciones** internacional (OFAC/SDN, UE, ONU, HMT);
+- (f) Toda la información facilitada en el momento del registro es **exacta, completa y actualizada** y se compromete a **informar inmediatamente** a SOS Expat de cualquier cambio que las afecte;
+- (g) **Asume en exclusiva la integridad de la responsabilidad** vinculada al cumplimiento, en cada País de Intervención, de las normas aplicables a su actividad.
+
+Toda declaración falsa constituye una violación grave de las CGU que puede conllevar la suspensión inmediata o la rescisión de la cuenta, sin perjuicio de cualquier acción de reparación.
+
 ---
 
 
@@ -1624,6 +1861,8 @@ For any question or legal request, please contact us:
 4.4. **Inactividad y rescisión.** Tras **365 días de inactividad**, la cuenta podrá ser desactivada automáticamente previo aviso. El Asistente puede cerrar su cuenta en cualquier momento una vez cumplidas sus obligaciones pendientes. SOS Expat puede suspender o rescindir una cuenta por incumplimiento de los Términos, sin perjuicio de otros recursos.
 
 4.5. **Comunicaciones electrónicas.** El Asistente consiente en recibir cualquier notificación relacionada con los Términos por medios electrónicos (correo electrónico, notificación in-app, publicación en la Plataforma).
+
+4.6. **Sistema interno de tramitación de reclamaciones (Reglamento P2B).** Conforme al artículo 11 del Reglamento (UE) 2019/1150, SOS Expat pone a disposición del Asistente un **sistema interno de tramitación de reclamaciones gratuito**, accesible mediante el formulario de contacto (https://sos-expat.com/contact). SOS Expat se compromete a: (i) **acusar recibo** en el plazo de **siete (7) días hábiles**; (ii) tramitar la reclamación **con seriedad y sin discriminación, en un plazo razonable** (en regla general **treinta (30) días**); (iii) comunicar al Asistente el resultado **motivado**; (iv) llevar **estadísticas agregadas** anuales.
 
 ---
 
@@ -1656,9 +1895,15 @@ For any question or legal request, please contact us:
 ## 7. Tarifas, Pago Único e Impuestos
 
 
-7.1. **Gastos de Puesta en Contacto (tarifa fija).** **19 € (EUR)** o **25 $ (USD)** por cada Puesta en Contacto, sin incluir impuestos ni las comisiones del Proveedor de pagos. SOS Expat puede modificar estos importes y/o publicar **tarifas locales** por país o moneda, con **efecto prospectivo.**
+7.1. **Gastos de Puesta en Contacto (remuneración de la Plataforma).** Los Gastos de Puesta en Contacto remuneran **exclusivamente el servicio técnico de puesta en contacto** prestado por SOS Expat al **Usuario**. Son **debidos por el Usuario**, y **no por el Asistente**. Su importe se define en el **baremo tarifario vigente**, consultable en el espacio personal del Asistente, por Puesta en Contacto, sin incluir impuestos ni comisiones del Proveedor de pagos. Cualquier modificación del baremo se efectúa en las condiciones del artículo 2.4 (preaviso mínimo quince (15) días).
 
-7.2. **Pago único y distribución.** El Usuario realiza **un solo pago** a través de la Plataforma que cubre (i) la **remuneración del Asistente** (según lo acordado) y (ii) los **Gastos de Puesta en Contacto** de SOS Expat. SOS Expat (o su Proveedor) recibe el pago, **deduce** sus comisiones y luego **transfiere** el saldo al Asistente. El Asistente **autoriza** dichas deducciones y distribuciones.
+7.2. **Calificación jurídica del pago — dos deudas distintas e independientes.** El pago efectuado por el Usuario a través de la Plataforma se descompone **jurídicamente en dos deudas distintas e independientes**, a pesar de su liquidación mediante un único cobro por razones de comodidad operativa:
+- (a) **Deuda « Puesta en Contacto »**: importe **debido por el Usuario a SOS Expat** en concepto del servicio técnico de puesta en contacto (Gastos de Puesta en Contacto, art. 7.1);
+- (b) **Deuda « Remuneración del Asistente »**: importe **debido por el Usuario al Asistente** en concepto de la prestación convenida entre ellos. El contenido, la calidad, el resultado, así como la facturación detallada, corresponden **exclusivamente** a la relación Asistente–Usuario, fuera de la Plataforma.
+
+**SOS Expat no percibe, no reclama y no tiene derecho a ninguna comisión, retrocesión, reparto, porcentaje o fracción alguna de la remuneración del Asistente. Los Gastos de Puesta en Contacto constituyen la única remuneración de SOS Expat y proceden exclusivamente de la deuda del Usuario contemplada en (a).**
+
+El Proveedor de pagos, actuando para la parte (b) en calidad de **agente pagador del Asistente**, transfiere a este la remuneración percibida, previa deducción únicamente de los gastos bancarios de tramitación y, en su caso, de los gastos de conversión de divisa. **El importe neto que percibirá el Asistente se muestra en su panel de control antes y después de cada transacción.**
 
 7.3. **Exigibilidad y no reembolso.** Los Gastos de Puesta en Contacto son **exigibles desde** el momento de la Puesta en Contacto y **no son reembolsables** (salvo por decisión comercial discrecional de SOS Expat en caso de fallo exclusivamente atribuible a la Plataforma y **dentro de los límites permitidos por la ley**).
 
@@ -1669,6 +1914,23 @@ For any question or legal request, please contact us:
 7.6. **Impuestos.** El Asistente sigue siendo responsable de **todos los impuestos aplicables** (IVA, impuesto sobre la renta, seguridad social, etc.). SOS Expat recaudará y/o remitirá, cuando sea necesario, el IVA o su **equivalente local** correspondiente a los Gastos de Puesta en Contacto.
 
 7.7. **Compensación.** SOS Expat podrá compensar cualquier suma debida por el Asistente con cualquier suma pagadera al mismo.
+
+7.8. **Plazos de pago del Asistente según el canal.** Sujeto a la finalización del proceso KYC (artículo 8):
+- (a) **Puestas en Contacto B2C** (pago directo por el Usuario): la remuneración se ordena en pago **inmediatamente al finalizar la llamada** por el Proveedor de pagos, únicamente sujeto a los plazos técnicos (típicamente de 1 a 7 días hábiles según el país y la madurez de la cuenta);
+- (b) **Puestas en Contacto B2B** (pago por el Socio B2B): habida cuenta del modelo de facturación diferida del Socio (mensual o « net-30 »), la remuneración se abona **en un plazo de treinta (30) días** tras la llamada;
+- (c) Suspensión posible en caso de litigio, reclamación, KYC en curso u otra circunstancia prevista en las CGU.
+
+7.9. **Declaración fiscal automática (Directiva DAC7 — UE 2021/514).** El Asistente residente en un Estado miembro de la UE queda informado de que SOS Expat, en su condición de operador de plataforma declarante, está obligada a **declarar anualmente** a las autoridades fiscales competentes (a título de la Directiva (UE) 2021/514 « DAC7 ») las informaciones relativas a los Asistentes residentes en la UE: nombre, dirección, identificador fiscal (TIN), Estado de residencia, importe total percibido a través de la Plataforma y número de Puestas en Contacto, por trimestre. El Asistente facilita y mantiene actualizadas esas informaciones. La omisión puede conllevar la suspensión de los pagos.
+
+7.10. **Canal B2B — Puestas en Contacto a través de un Socio B2B.**
+(a) Una Puesta en Contacto B2B es activada por un Usuario B2B en virtud de un contrato marco celebrado entre SOS Expat y un Socio B2B.
+(b) **Adaptación de las dos deudas**: la deuda « Puesta en Contacto » es debida por el **Socio B2B**; la deuda « Remuneración del Asistente » sigue siendo debida por el Usuario al Asistente (salvo asunción por el Socio).
+(c) **Tarifas Asistente distintas B2C / B2B**: el Asistente **reconoce y acepta expresamente** que la remuneración neta en B2B puede diferir (al alza o a la baja) de la de B2C. El canal y el importe exacto se **muestran en su panel de control antes de cada Puesta en Contacto**. **Ninguna obligación de aceptación** recae sobre él.
+(d) El contrato marco B2B **no es oponible al Asistente**.
+(e) Cualquier otra estipulación de las CGU se aplica a las Puestas en Contacto B2B.
+(f) **Baremos vigentes (a título indicativo)**: **B2C: 30 € o 30 USD neto** por Puesta en Contacto aceptada y ejecutada; **B2B: 20 € o 20 USD neto**. Estos importes son indicativos; el baremo actualizado puede consultarse en el panel de control. Toda evolución está sujeta al preaviso de 15 días del art. 7.11.
+
+7.11. **Modificación del baremo de remuneración del Asistente.** SOS Expat se reserva el derecho de modificar en cualquier momento el baremo de remuneración neta del Asistente (B2C, B2B u otro componente). Toda modificación está sujeta al **preaviso de 15 días** del artículo 2.4. Durante el preaviso, el Asistente puede **rescindir sin penalización** o seguir rechazando caso por caso. **Las Puestas en Contacto ya aceptadas antes de la expiración del preaviso siguen remuneradas a la tarifa vigente en la fecha de aceptación.** A falta de rescisión, el uso continuado constituye aceptación.
 
 ---
 
@@ -1688,6 +1950,8 @@ For any question or legal request, please contact us:
 8.6. El Asistente tratará los datos de acuerdo con la legislación del **País de Intervención.**
 
 8.7. **Conformidad con la DSA.** La Plataforma opera como **servicio intermediario** en el sentido del **Reglamento (UE) 2022/2065 (Ley de Servicios Digitales)**. SOS Expat implementa mecanismos para la notificación de contenidos ilícitos y coopera con las autoridades competentes de conformidad con la DSA.
+
+8.8. **Sanciones y embargos.** El acceso a la Plataforma y a los servicios de pago puede ser **restringido o bloqueado** en todo **país o territorio sujeto a un embargo global o a medidas restrictivas integrales** en virtud de las leyes aplicables (Proveedores de pago, UE, ONU, OFAC, HMT, o cualquier otra autoridad competente). La lista actualizada es mantenida por las autoridades antes mencionadas y prevalece; SOS Expat no establece su propia lista geopolítica. El Asistente declara no figurar en ninguna lista de sanciones y respetar los controles de exportación.
 
 ---
 
@@ -1723,13 +1987,17 @@ La **Plataforma**, sus **marcas, logotipos, bases de datos y contenidos** están
 
 ## 11. Ley Aplicable – Arbitraje – Tribunales Estonios – Acciones Colectivas
 
-11.1. **Derecho sustantivo:** para cada Conexión, la relación SOS Expat–Asistente se rige por las leyes del **País de Intervención**, sin perjuicio de las normas de orden público locales y de las normas internacionales imperativas. A modo supletorio y para la interpretación/validez de estos Términos y Condiciones, así como para cualquier cuestión no regulada por la ley del País de Intervención, se aplica el **derecho estonio**.
+11.1. **Derecho sustantivo:** para cada Conexión, la relación SOS Expat–Asistente se rige por las leyes del **País de Intervención**, sin perjuicio de las normas de orden público locales y de las normas internacionales imperativas. A modo supletorio y para la interpretación/validez de estos Términos y Condiciones, así como para cualquier cuestión no regulada por la ley del País de Intervención, se aplica el **derecho estonio**. Para evitar toda ambigüedad, las normas imperativas aplicables a la actividad del Asistente en el País de Intervención (inmigración, derecho del trabajo / del trabajo independiente, fiscalidad, protección al consumidor, datos personales, publicidad/captación, seguridad de las personas, deontologías sectoriales en su caso) se **consideran de orden público** y **prevalecen** sobre toda estipulación contraria o ambigua. Ninguna cláusula puede imponer un comportamiento contrario a estas normas; en caso de conflicto, el Asistente se abstiene e informa a SOS Expat sin demora.
 
 11.2. **Arbitraje obligatorio de la CCI:** cualquier disputa entre SOS Expat y el Asistente se resolverá **definitivamente** conforme al **Reglamento de Arbitraje de la CCI**. Sede: **Tallin (Estonia)**. Idioma: **francés**. El tribunal aplicará el derecho sustantivo definido en el art. 11.1. Procedimiento confidencial.
 
 11.3. **Renuncia a acciones colectivas:** en la medida permitida, se excluyen todas las acciones colectivas/de grupo/representativas; únicamente se admiten reclamaciones individuales.
 
 11.4. **Jurisdicción exclusiva de los tribunales de Estonia:** para cualquier asunto no arbitrable, ejecución de laudos o medidas urgentes, los tribunales estonios (**competentes en Tallin**) tendrán jurisdicción exclusiva. El Asistente renuncia a cualquier objeción por foro o inconveniencia de jurisdicción.
+
+11.5. **Mediación previa obligatoria y mediadores identificados (Reglamento P2B).** Antes de todo arbitraje, negociación de buena fe durante **30 días**. Conforme al artículo 12 del Reglamento (UE) 2019/1150, SOS Expat identifica al menos dos (2) mediadores: **(i) CMAP (cmap.fr); (ii) WIPO Arbitration and Mediation Center (wipo.int/amc)**. SOS Expat soporta una **parte razonable** de los gastos. El fracaso es previo al arbitraje.
+
+11.6. **Prescripción.** Toda acción del Asistente contra SOS Expat debe interponerse en el **plazo más breve entre tres (3) años** desde el hecho generador **y el plazo legal aplicable** en la jurisdicción del Asistente, sin reducir por debajo de un mínimo imperativo local no reducible.
 
 ---
 
@@ -1754,7 +2022,20 @@ La **Plataforma**, sus **marcas, logotipos, bases de datos y contenidos** están
 ---
 
 
-## 13. Contacto
+## 13. Cláusulas de protección internacional
+
+13.1. **Confidencialidad de las comunicaciones y política de grabación.** Las comunicaciones realizadas a través de la Plataforma (mensajes, llamadas telefónicas) son **confidenciales**.
+
+**Política de grabación:**
+- (a) **Por defecto**, SOS Expat **NO graba** el contenido audio de las llamadas entre Asistente y Usuario. Solo se conservan **metadatos técnicos** (marca de tiempo, duración, identificadores, estado) con fines de facturación, antifraude y resolución de litigios técnicos;
+- (b) SOS Expat **no activa ninguna grabación de audio sin el consentimiento explícito, previo y separado del Asistente Y del Usuario**, manifestado antes del inicio de la llamada por una acción positiva distinta. Ninguna grabación puede activarse unilateralmente, con la única excepción de un **requerimiento regular emanado de una autoridad judicial competente del país del Asistente o del Usuario**;
+- (c) Conservación estrictamente necesaria, máximo **6 meses** (salvo prórroga judicial), conforme al RGPD y a las autoridades locales de protección de datos;
+- (d) **El Asistente se prohíbe a sí mismo** grabar, transcribir íntegramente, divulgar o utilizar las comunicaciones para fines distintos a la prestación convenida, salvo autorización escrita del Usuario u obligación legal.
+
+---
+
+
+## 14. Contacto
 
 
 Para cualquier pregunta o solicitud legal, contáctenos:
@@ -1764,7 +2045,7 @@ Para cualquier pregunta o solicitud legal, contáctenos:
 
 **SOS Expat von WorldExpat OÜ** (estnische Gesellschaft, Registernr. 16885621, Sitz: Harju maakond, Tallinn, Kesklinna linnaosa, Tornimäe tn 3/5/7, 10145, Estland) – nachfolgend die « **Plattform** », « **SOS** », « **wir** »
 
-**Version 3.1 – Letzte Aktualisierung: 25. April 2026**
+**Version 3.2 – Letzte Aktualisierung: 26. April 2026**
 
 ---
 
@@ -1780,9 +2061,11 @@ Para cualquier pregunta o solicitud legal, contáctenos:
 
 **Einsatzland**: die Rechtsordnung, auf die sich die Nutzeranfrage zum Zeitpunkt der Vermittlung hauptsächlich bezieht. Fehlt eine solche, gilt das Wohnsitzland des Nutzers zum Zeitpunkt der Anfrage; bei mehreren Jurisdiktionen gilt diejenige, die dem Gegenstand der Anfrage am engsten verbunden ist.
 
-**Vermittlungsgebühr**: Gebühr, die SOS für jede Vermittlung geschuldet wird (Art. 7): **19 €** bei Zahlung in **EUR** oder **25 $ USD** bei Zahlung in **USD**; SOS Expat kann diese Beträge ändern und/oder lokale Tarife nach Land/Währung veröffentlichen, mit prospektiver Wirkung.
+**Vermittlungsgebühr**: **vom Nutzer an SOS Expat geschuldete Vergütung** für jede Vermittlung (Art. 7), für den ausschließlich technischen Vermittlungsdienst der Plattform. Diese Gebühr stellt in keinem Fall eine Provision, Rückerstattung oder Aufteilung der Vergütung des Helfers dar. Ihr Betrag ist im **gültigen Tarifverzeichnis** festgelegt, das im persönlichen Bereich des Helfers und des Nutzers einsehbar ist. SOS Expat kann dieses Tarifverzeichnis unter den in Artikel 2.5 vorgesehenen Bedingungen ändern.
 
 **Zahlungsdienstleister**: Dritte, die für den Einzug der einmaligen Zahlung des Nutzers und die Verteilung der Gelder genutzt werden.
+
+**B2B-Partner**: jede juristische Person (Unternehmen, Verband, Krankenkasse, Betriebsrat, Organisation usw.), die mit SOS Expat einen gesonderten Rahmenvertrag geschlossen hat, der vorsieht, dass sie ganz oder teilweise die Vermittlungsgebühren für ihre Mitglieder, Mitarbeiter oder Begünstigten (die « **B2B-Nutzer** ») finanziert. Eine **B2B-Vermittlung** ist eine Vermittlung, die von einem B2B-Nutzer aufgrund eines solchen Rahmenvertrags ausgelöst wird. Eine **B2C-Vermittlung** wird hingegen von einem Nutzer ausgelöst, der die Vermittlungsgebühren direkt zahlt.
 
 **Sanktionslisten**: Listen von Personen, Einrichtungen oder Ländern, die Wirtschaftssanktionen oder Embargos unterliegen, insbesondere die Listen der OFAC (Vereinigte Staaten), der Europäischen Union, der Vereinten Nationen, des britischen Finanzministeriums (HMT) und jeder anderen zuständigen Behörde.
 
@@ -1798,7 +2081,7 @@ Para cualquier pregunta o solicitud legal, contáctenos:
 
 2.4. **Aufbewahrung der Annahmenachweise.** Gemäß DSGVO und den gesetzlichen Aufbewahrungspflichten bewahrt SOS Expat die Nachweise der AGB-Annahme für einen Zeitraum von **zehn (10) Jahren** ab dem Datum der Annahme auf, oder bis zum Abschluss eines laufenden Rechtsstreits, je nachdem, was zutrifft. Der Helfer kann auf schriftliche Anfrage über das Kontaktformular eine **Annahmebestätigung** mit den oben genannten Nachweiselementen erhalten. Diese Aufbewahrung beruht auf dem berechtigten Interesse von SOS Expat, im Streitfall über Beweise zu verfügen (Art. 6 Abs. 1 lit. f DSGVO), sowie auf der gesetzlichen Pflicht zur Aufbewahrung von Handelsverträgen.
 
-2.5. **Änderungen.** SOS kann die AGB und/oder die Gebührenordnung (nach Land/Währung) jederzeit mit prospektiver Wirkung nach Veröffentlichung auf der Plattform aktualisieren. Die fortgesetzte Nutzung gilt als Zustimmung. Bei wesentlichen Änderungen wird der Helfer aufgefordert, seine Annahme erneut zu bestätigen, die dann gemäß Artikel 2.3 erneut protokolliert wird.
+2.5. **Änderungen (P2B-Vorankündigung).** SOS Expat kann die AGB und/oder das Gebührenverzeichnis jederzeit aktualisieren, vorbehaltlich einer **Mindestvorankündigungsfrist von fünfzehn (15) Tagen**, die dem Helfer auf einem dauerhaften Datenträger (E-Mail an die registrierte Adresse und Veröffentlichung im persönlichen Bereich) gemäß Artikel 3 der Verordnung (EU) 2019/1150 (« P2B ») mitgeteilt wird. Die Vorankündigung kann verkürzt oder entfallen, wenn: (i) die Änderung gesetzlich oder durch Entscheidung einer zuständigen Behörde vorgeschrieben ist; (ii) zwingende Sicherheits- oder Betrugspräventionsgründe vorliegen; oder (iii) bei materiellen oder typografischen Korrekturen ohne wirtschaftliche Auswirkung. Während der Vorankündigungsfrist kann der Helfer seine Beziehung zur Plattform **ohne Vertragsstrafe kündigen**. Erfolgt keine Kündigung, gilt die fortgesetzte Nutzung der Plattform nach Ablauf der Vorankündigung als Zustimmung.
 
 2.6. **Berufliche Kapazität (B2B).** Der Helfer erklärt, ausschließlich zu beruflichen Zwecken zu handeln. Verbraucherschutzregelungen gelten nicht für die Beziehung zwischen SOS Expat und dem Helfer.
 
@@ -1831,7 +2114,9 @@ Para cualquier pregunta o solicitud legal, contáctenos:
 - (f) Er nicht wegen Straftaten **strafrechtlich verurteilt** wurde, die mit der Ausübung seiner Tätigkeit unvereinbar sind;
 - (g) Alle bei der Registrierung angegebenen Informationen **korrekt, vollständig und aktuell** sind;
 - (h) Er sich verpflichtet, SOS Expat **unverzüglich über Änderungen** zu informieren, die diese Erklärungen betreffen;
-- (i) Er das **tatsächliche Recht hat, seine Tätigkeit** in jedem der Länder auszuüben, die er bei der Registrierung oder später in seinem Profil als "Einsatzländer" ausgewählt hat. Die Auswahl eines Einsatzlandes, in dem der Helfer nicht zur Tätigkeitsausübung berechtigt ist, stellt einen **schwerwiegenden Verstoß** gegen diese AGB dar.
+- (i) Er das **tatsächliche Recht hat, seine Tätigkeit** in jedem der Länder auszuüben, die er bei der Registrierung oder später in seinem Profil als "Einsatzländer" ausgewählt hat. Die Auswahl eines Einsatzlandes, in dem der Helfer nicht zur Tätigkeitsausübung berechtigt ist, stellt einen **schwerwiegenden Verstoß** gegen diese AGB dar;
+- (j) Er **trägt allein die volle Verantwortung** für die Einhaltung der in jedem Einsatzland geltenden Vorschriften für seine Tätigkeit (Einwanderung, Arbeits-/Selbstständigkeitsrecht, Steuern, Verbraucherschutz, personenbezogene Daten, Werbung/Akquise, Personensicherheit, sektorale Berufsethik gegebenenfalls).
+
 Jede falsche Erklärung stellt einen schwerwiegenden Verstoß gegen die AGB dar, der zu einem sofortigen und endgültigen Ausschluss führen kann, unbeschadet etwaiger Schadensersatzansprüche.
 
 ---
@@ -1887,6 +2172,8 @@ Der Ausschluss ist **endgültig und unwiderruflich**. Ein ausgeschlossener Helfe
 
 4.13. **Elektronische Kommunikation.** Der Helfer erklärt sich damit einverstanden, alle Benachrichtigungen bezüglich der AGB, der Moderation und der Sperr-/Ausschlussmaßnahmen auf elektronischem Wege zu erhalten (E-Mail, In-App-Benachrichtigung, Veröffentlichung auf der Plattform). Der Helfer verpflichtet sich, eine gültige E-Mail-Adresse zu führen und seine Benachrichtigungen regelmäßig zu prüfen.
 
+4.14. **Internes Beschwerdebearbeitungssystem (P2B-Verordnung).** Gemäß Artikel 11 der Verordnung (EU) 2019/1150 stellt SOS Expat dem Helfer ein **kostenloses internes Beschwerdebearbeitungssystem** zur Verfügung, das über das Kontaktformular (https://sos-expat.com/contact) zugänglich ist. SOS Expat verpflichtet sich: (i) den **Eingang** innerhalb von **sieben (7) Werktagen** zu **bestätigen**; (ii) die Beschwerde **ernsthaft und diskriminierungsfrei innerhalb einer angemessenen Frist** (in der Regel **dreißig (30) Tage**) zu bearbeiten; (iii) dem Helfer das **begründete** Ergebnis mitzuteilen; (iv) jährliche **aggregierte Statistiken** zu führen.
+
 ---
 
 ## 5. Nutzungsregeln – Qualität, Verbote, Umgehungsverbot
@@ -1915,13 +2202,15 @@ Der Ausschluss ist **endgültig und unwiderruflich**. Ein ausgeschlossener Helfe
 
 ## 7. Gebühren, Einmalzahlung und Steuern
 
-7.1. **Vermittlungsgebühr (Pauschalbetrag).** Die Vermittlungsgebühr beträgt derzeit **19 € (EUR)** oder **25 $ (USD)** pro Vermittlung, exkl. Steuern und Zahlungsdienstleistergebühren. **Diese Beträge sind indikativ und können jederzeit geändert werden.** SOS Expat behält sich das Recht vor, diese Beträge zu ändern und/oder lokale Tarife nach Land/Währung zu veröffentlichen, mit prospektiver Wirkung nach Veröffentlichung auf der Plattform. Dem Helfer wird empfohlen, regelmäßig die aktuelle Gebührenordnung in seinem persönlichen Dashboard einzusehen.
+7.1. **Vermittlungsgebühr (Vergütung der Plattform).** Die Vermittlungsgebühr vergütet **ausschließlich den von SOS Expat dem Nutzer erbrachten technischen Vermittlungsdienst**. Sie ist **vom Nutzer geschuldet** und **nicht vom Helfer**. Ihr Betrag ist im **gültigen Tarifverzeichnis** festgelegt, das im persönlichen Bereich des Helfers einsehbar ist, pro Vermittlung, ohne Steuern und ohne Gebühren des Zahlungsdienstleisters. Jede Änderung des Tarifverzeichnisses erfolgt unter den Bedingungen des Artikels 2.5 (Mindestvorankündigung von fünfzehn (15) Tagen).
 
-7.2. **Preisstruktur für den Nutzer und Mittelverteilung.** Der dem Nutzer auf der Plattform angezeigte Preis **enthält** die Vermittlungsgebühr von SOS Expat. Der Nutzer leistet eine Einmalzahlung über die Plattform. **Die Mittelverteilung erfolgt wie folgt:**
-- (a) **Vom Nutzer gezahlter Betrag** = Vergütung des Helfers + Vermittlungsgebühr von SOS Expat;
-- (b) **An den Helfer überwiesener Nettobetrag** = Vom Nutzer gezahlter Betrag − Vermittlungsgebühr von SOS Expat − Bankgebühren des Zahlungsdienstleisters − Währungsumrechnungsgebühren (falls zutreffend).
+7.2. **Rechtliche Charakterisierung der Zahlung — zwei eigenständige und unabhängige Schulden.** Die vom Nutzer über die Plattform geleistete Zahlung gliedert sich **rechtlich in zwei eigenständige und unabhängige Schulden**, trotz ihrer Begleichung durch einen einzigen Einzug aus Gründen der operativen Bequemlichkeit:
+- (a) **Schuld « Vermittlung »**: Betrag, der **vom Nutzer an SOS Expat** für den technischen Vermittlungsdienst (Vermittlungsgebühr, Art. 7.1) geschuldet wird;
+- (b) **Schuld « Helfer-Vergütung »**: Betrag, der **vom Nutzer dem Helfer** für die zwischen ihnen vereinbarte Leistung geschuldet wird. Inhalt, Qualität, Ergebnis sowie die detaillierte Rechnungsstellung fallen **ausschließlich** in die Beziehung Helfer–Nutzer, außerhalb der Plattform.
 
-Der Helfer ermächtigt SOS Expat ausdrücklich, diese Abzüge vor jeder Überweisung vorzunehmen. **Der genaue Betrag, der an den Helfer überwiesen wird, wird in seinem Dashboard vor und nach jeder Transaktion angezeigt.**
+**SOS Expat erhebt, fordert und hat keinen Anspruch auf Provisionen, Rückerstattungen, Aufteilungen, Prozentsätze oder Bruchteile der Vergütung des Helfers. Die Vermittlungsgebühr stellt die einzige Vergütung von SOS Expat dar und stammt ausschließlich aus der unter (a) genannten Schuld des Nutzers.**
+
+Der Zahlungsdienstleister, der für den Teil (b) als **Zahlungsagent des Helfers** handelt, leitet diesem die erhaltene Vergütung weiter, abzüglich nur der Bearbeitungsbankgebühren und gegebenenfalls der Währungsumrechnungsgebühren. **Der Nettobetrag, den der Helfer erhalten wird, wird vor und nach jeder Transaktion in seinem Dashboard angezeigt.**
 
 7.3. **Bankgebühren des Zahlungsdienstleisters.** Der Zahlungsdienstleister — **Stripe Payments Europe Ltd.** (Irland, EU, PCI-DSS Level 1 zertifiziert) **oder PayPal (Europe) S.à r.l. et Cie, S.C.A.** (Luxemburg, EU, PCI-DSS zertifiziert), abhängig vom Wohnsitzland und Verfügbarkeit — erhebt Bearbeitungsgebühren für jede Transaktion. **Diese Bankgebühren gehen vollständig zulasten des Helfers** und werden automatisch von dem ihm überwiesenen Betrag abgezogen.
 
@@ -1933,13 +2222,28 @@ Der Helfer ermächtigt SOS Expat ausdrücklich, diese Abzüge vor jeder Überwei
 
 7.7. **Rückzahlung an den Nutzer.** Wird einem Nutzer eine Rückzahlung gewährt, wird diese vom Anteil des Helfers abgezogen: SOS Expat kann den entsprechenden Betrag mit zukünftigen Zahlungen an den Helfer verrechnen oder eine direkte Rückzahlung verlangen, falls keine Zahlungen ausstehen. Die Vermittlungsgebühr verbleibt bei SOS Expat, sofern nicht nach eigenem Ermessen anders entschieden.
 
-7.8. **Zahlungsfristen.** Vorbehaltlich des Abschlusses des KYC-Prozesses (Artikel 8) werden die Gelder innerhalb von **sieben (7) Werktagen** nach der Leistung an den Helfer überwiesen, es sei denn, es liegt ein Streitfall, eine Nutzerbeschwerde oder eine laufende Compliance-Prüfung vor.
+7.8. **Zahlungsfristen des Helfers nach Kanal.** Vorbehaltlich des Abschlusses des KYC-Prozesses (Artikel 8):
+- (a) **B2C-Vermittlungen** (direkte Zahlung durch den Nutzer): Die Vergütung wird **unmittelbar nach Anrufende** vom Zahlungsdienstleister angewiesen, vorbehaltlich nur der technischen Fristen (typischerweise 1 bis 7 Werktage je nach Land und Reife des Kontos);
+- (b) **B2B-Vermittlungen** (Zahlung durch den B2B-Partner): Aufgrund des differierten Abrechnungsmodells des Partners (monatlich oder « net-30 ») wird die Vergütung **innerhalb von dreißig (30) Tagen** nach dem Anruf gezahlt;
+- (c) Aussetzung möglich bei Streit, Beschwerde, laufendem KYC oder anderen in den AGB vorgesehenen Umständen.
 
 7.9. **Steuern.** Der Helfer bleibt **allein verantwortlich** für alle seine steuerlichen Verpflichtungen (Einkommensteuer, Umsatzsteuer, Sozialabgaben usw.) in seiner Wohnsitz- und/oder Tätigkeitsjurisdiktion. Die an den Helfer überwiesenen Beträge sind **Bruttobeträge**; der Helfer ist für die Anmeldung und Zahlung aller anfallenden Steuern verantwortlich. SOS Expat erhebt und führt, soweit gesetzlich vorgeschrieben, Umsatzsteuer/lokales Äquivalent nur auf die Vermittlungsgebühr ab.
 
 7.10. **Verrechnung.** SOS Expat kann jeden Betrag, den der Helfer schuldet (aufgrund einer Nutzererstattung, Strafe oder anderer Verpflichtung), mit jedem dem Helfer geschuldeten Betrag verrechnen.
 
 7.11. **Gebührentransparenz und Historie.** Der Helfer kann jederzeit in seinem persönlichen Dashboard einsehen: (i) vollständige Details zu jeder Transaktion, (ii) den vom Nutzer gezahlten Bruttobetrag, (iii) die abgezogene Vermittlungsgebühr, (iv) die Bankgebühren des Zahlungsdienstleisters, (v) ggf. Wechselgebühren, (vi) den überwiesenen oder zu überweisenden Nettobetrag und (vii) die Historie aller seiner Transaktionen. Diese Informationen werden während der gesamten Kontolaufzeit und **fünf (5) Jahre** nach dessen Schließung aufbewahrt und sind zugänglich.
+
+7.12. **Automatische Steuermeldung (Richtlinie DAC7 — EU 2021/514).** Der in einem EU-Mitgliedstaat ansässige Helfer wird darüber informiert, dass SOS Expat als meldende Plattformbetreiberin verpflichtet ist, den zuständigen Steuerbehörden **jährlich** (gemäß der Richtlinie (EU) 2021/514 « DAC7 ») die Informationen zu in der EU ansässigen Helfern zu melden: Name, Adresse, Steuer-Identifikationsnummer (TIN), Wohnsitzstaat, über die Plattform erhaltener Gesamtbetrag und Anzahl der Vermittlungen, pro Quartal. Der Helfer stellt diese Informationen zur Verfügung und hält sie aktuell. Bei Versäumnis kann eine Aussetzung der Zahlungen erfolgen.
+
+7.13. **B2B-Kanal — Vermittlungen über einen B2B-Partner.**
+(a) Eine B2B-Vermittlung wird von einem B2B-Nutzer aufgrund eines Rahmenvertrags zwischen SOS Expat und einem B2B-Partner ausgelöst.
+(b) **Anpassung der zwei Schulden**: die Schuld « Vermittlung » wird vom **B2B-Partner** geschuldet; die Schuld « Helfer-Vergütung » bleibt vom Nutzer dem Helfer geschuldet (sofern nicht vom Partner übernommen).
+(c) **Unterschiedliche Helfer-Tarife B2C / B2B**: Der Helfer **erkennt ausdrücklich an und akzeptiert**, dass die Nettovergütung im B2B-Kanal von der im B2C-Kanal abweichen kann (höher oder niedriger). Der Kanal und der genaue Betrag werden **vor jeder Vermittlung in seinem Dashboard angezeigt**. Es besteht **keine Annahmepflicht** für ihn.
+(d) Der B2B-Rahmenvertrag ist dem **Helfer nicht entgegenhaltbar**.
+(e) Jede andere Bestimmung der AGB findet auf B2B-Vermittlungen Anwendung.
+(f) **Geltende Tarife (zur Information)**: **B2C: 30 € oder 30 USD netto** pro angenommener und ausgeführter Vermittlung; **B2B: 20 € oder 20 USD netto**. Diese Beträge sind indikativ; das aktualisierte Tarifverzeichnis ist im Dashboard einsehbar. Jede Änderung unterliegt der 15-Tage-Vorankündigung gemäß Art. 7.14.
+
+7.14. **Änderung des Vergütungstarifs des Helfers.** SOS Expat behält sich das Recht vor, das Nettovergütungstarifverzeichnis des Helfers (B2C, B2B oder einen anderen Bestandteil) jederzeit zu ändern. Jede Änderung unterliegt der **15-Tage-Vorankündigung** gemäß Artikel 2.5. Während der Vorankündigung kann der Helfer **ohne Vertragsstrafe kündigen** oder weiterhin Vermittlungen einzeln ablehnen. **Die vor Ablauf der Vorankündigung bereits angenommenen Vermittlungen werden weiterhin zum am Tag der Annahme geltenden Tarif vergütet.** Erfolgt keine Kündigung, gilt die fortgesetzte Nutzung als Zustimmung.
 
 ---
 
@@ -1949,21 +2253,14 @@ Der Helfer ermächtigt SOS Expat ausdrücklich, diese Abzüge vor jeder Überwei
 
 8.2. SOS Expat kann Zahlungen bei Verdacht auf Betrug, Nichtkonformität oder aufgrund gesetzlicher Anordnung zurückhalten, verzögern oder stornieren.
 
-8.3. **Internationale Sanktionen und Embargos.** Der Helfer erklärt und garantiert:
+8.3. **Internationale Sanktionen.** Der Helfer erklärt und garantiert:
 - (a) Nicht direkt oder indirekt auf einer **Sanktionsliste** zu stehen (OFAC/SDN, EU, UN, HMT oder jede andere anwendbare Sanktionsliste);
 - (b) Nicht direkt oder indirekt im Eigentum oder unter der Kontrolle einer Person oder Einrichtung zu stehen, die auf einer Sanktionsliste steht;
-- (c) Kein Einwohner, Staatsangehöriger zu sein oder sich nicht in einem Land zu befinden, das einem **umfassenden Embargo** unterliegt (derzeit: Nordkorea, Iran, Syrien, Kuba, Regionen Krim/Donezk/Luhansk oder jedes andere später hinzugefügte Gebiet);
-- (d) Die Plattform nicht für Transaktionen zu nutzen, die sanktionierte Personen, Einrichtungen oder Länder betreffen;
-- (e) Alle geltenden **Exportkontrollgesetze** einzuhalten.
-SOS Expat behält sich das Recht vor, den Zugang zur Plattform in jedem von Sanktionen oder Embargos betroffenen Gebiet oder für jeden Helfer, der verdächtigt wird, gegen diese Bestimmungen zu verstoßen, **sofort zu beschränken oder zu sperren**, ohne Vorankündigung oder Entschädigung. SOS Expat kann auch verpflichtet sein, die Gelder des Helfers auf Anordnung einer zuständigen Behörde **einzufrieren**.
+- (c) Die Plattform nicht für Transaktionen zu nutzen, die sanktionierte Personen oder Einrichtungen betreffen;
+- (d) Alle geltenden **Exportkontrollgesetze** einzuhalten.
+SOS Expat kann verpflichtet sein, die Gelder des Helfers auf Anordnung einer zuständigen Behörde **einzufrieren**.
 
-8.4. **Ausführliche Liste der Sanktionsbehörden.** Die von SOS Expat berücksichtigten Sanktionslisten umfassen insbesondere:
-- (a) **OFAC** (Office of Foreign Assets Control, Vereinigte Staaten) – einschließlich der SDN-Liste (Specially Designated Nationals);
-- (b) **Europäische Union** – konsolidierte Sanktionsliste;
-- (c) **Vereinte Nationen** – Sicherheitsrats-Sanktionslisten;
-- (d) **HMT** (His Majesty's Treasury, Vereinigtes Königreich) – Konsolidierte Liste;
-- (e) Jede andere von einer zuständigen Behörde veröffentlichte Liste.
-Die aktuell von umfassenden Embargos betroffenen Länder sind: Nordkorea, Iran, Syrien, Kuba sowie die Regionen Krim, Donezk und Luhansk. Diese Liste kann sich entsprechend den internationalen Entwicklungen ändern.
+8.4. **Sanktionen und Embargos.** Der Zugang zur Plattform und zu den Zahlungsdiensten kann in jedem **Land oder Gebiet, das einem globalen Embargo oder umfassenden restriktiven Maßnahmen** nach den anwendbaren Gesetzen unterliegt (Zahlungsdienstleister, EU, UN, OFAC, HMT oder jede andere zuständige Behörde), **eingeschränkt oder gesperrt** werden. Die aktuelle Liste wird von den genannten Behörden geführt und ist maßgebend; SOS Expat erstellt keine eigene geopolitische Liste. Der Helfer erklärt, auf keiner Sanktionsliste zu stehen und die Exportkontrollen einzuhalten.
 
 ### Nicht beanspruchte Gelder und KYC-Verifizierung
 
@@ -1974,14 +2271,14 @@ Die aktuell von umfassenden Embargos betroffenen Länder sind: Nordkorea, Iran, 
 - Regelmäßige Erinnerungen zu senden (nach 7, 30, 60, 90, 120 und 150 Tagen);
 - Dem Helfer alle erforderlichen Mittel zur Verfügung zu stellen, um seine KYC-Verifizierung abzuschließen.
 
-8.7. **Nicht beanspruchte Gelder und Verfall.** Wird die KYC-Verifizierung nicht innerhalb von **einhundertachtzig (180) Tagen** ab der ersten zurückgehaltenen Zahlung abgeschlossen, und trotz der in Artikel 8.6 vorgesehenen Benachrichtigungen, gelten die Gelder als vom Helfer **aufgegeben**. Der Helfer erkennt ausdrücklich an und akzeptiert, dass:
-- (a) Nicht beanspruchte Gelder innerhalb dieser Frist endgültig von der Plattform als pauschale Entschädigung für Verwaltungs-, Aufbewahrungs- und Kontaktierungskosten erworben werden;
-- (b) Dieser Erwerb die von der Plattform für die Verwaltung nicht beanspruchter Gelder getragenen Verwaltungskosten kompensiert;
-- (c) Er ausdrücklich auf jeden Anspruch auf diese Gelder nach Ablauf der 180-Tage-Frist verzichtet.
+8.7. **Verlängerte Aufbewahrung der Gelder — Verwaltungsgebühren und Übertragung an die zuständigen Behörden.** Wird die KYC-Verifizierung nicht innerhalb von **einhundertachtzig (180) Tagen** abgeschlossen:
+- (a) Pauschale, angemessene Verwaltungsgebühren, **gedeckelt auf 10 %**, decken ausschließlich die Verwaltungskosten;
+- (b) Verlängerte Aufbewahrung auf einem Treuhandkonto; der Helfer kann jederzeit den KYC-Prozess abschließen;
+- (c) Nach Ablauf von **5 Jahren** Übertragung der Restgelder an die **zuständige Behörde des Wohnsitzlandes des Helfers** (Caisse des dépôts in Frankreich gemäß Eckert-Gesetz; Unclaimed-Property-Programme in den USA; Dormant Assets Scheme im UK; usw.). **SOS Expat eignet sich diese Gelder in keinem Fall an.**
 
-8.8. **Ausnahmsweiser Anspruch.** Abweichend von Artikel 8.7 kann der Helfer innerhalb von maximal **zwölf (12) Monaten** nach Ablauf der 180-Tage-Frist einen begründeten Anspruch geltend machen, nur in folgenden Fällen: dokumentierte medizinische Arbeitsunfähigkeit, ordnungsgemäß begründete höhere Gewalt oder technischer Fehler, der der Plattform zuzuschreiben ist. Die Plattform prüft den Antrag innerhalb von 30 Tagen und behält sich das Recht vor, den Anspruch anzunehmen oder abzulehnen. Im Falle der Annahme wird eine Bearbeitungsgebühr von **zwanzig Prozent (20%)** vom erstatteten Betrag einbehalten.
+8.8. **Anspruch während der verlängerten Aufbewahrung.** Der Helfer kann einen begründeten Antrag mit vollständigem KYC einreichen; Prüfung innerhalb von 30 Tagen; Abzug nur der Verwaltungsgebühren (a). Bei höherer Gewalt / dokumentierter medizinischer Arbeitsunfähigkeit können die Gebühren nach angemessenem Ermessen reduziert oder erlassen werden.
 
-8.9. **Ausdrückliche Annahme.** Mit der Registrierung auf der Plattform als Helfer erklärt dieser, die vorliegenden Bedingungen bezüglich nicht beanspruchter Gelder zur Kenntnis genommen zu haben und akzeptiert sie ausdrücklich. Diese Annahme stellt eine wesentliche und bestimmende Bedingung für den Zugang zum Anbieterstatus auf der Plattform dar.
+8.9. **Ausdrückliche Annahme.** Dieser Artikel 8 wird bei der Registrierung ausdrücklich akzeptiert.
 
 ---
 
@@ -2033,7 +2330,7 @@ Die Plattform, ihre Marken, Logos, Datenbanken und Inhalte sind geschützt. Es w
 
 ## 12. Anwendbares Recht – Schiedsgerichtsbarkeit – Estnische Gerichtsbarkeit – Sammelklagen
 
-12.1. **Anwendbares Recht.** Diese AGB, ihre Auslegung, Gültigkeit und Durchführung unterliegen ausschließlich dem **estnischen Recht** unter Ausschluss seiner Kollisionsnormen. Für Fragen bezüglich der Erbringung von Dienstleistungen in einem bestimmten Einsatzland gelten die dortigen zwingenden Vorschriften und öffentlichen Ordnung ergänzend, soweit sie zwingend sind.
+12.1. **Anwendbares Recht.** Diese AGB, ihre Auslegung, Gültigkeit und Durchführung unterliegen ausschließlich dem **estnischen Recht** unter Ausschluss seiner Kollisionsnormen. Für Fragen bezüglich der Erbringung von Dienstleistungen in einem bestimmten Einsatzland gelten die dortigen zwingenden Vorschriften und öffentlichen Ordnung ergänzend, soweit sie zwingend sind. Zur Vermeidung von Zweifeln gelten die zwingenden Vorschriften, die für die Tätigkeit des Helfers im Einsatzland gelten (Einwanderung, Arbeits-/Selbstständigkeitsrecht, Steuern, Verbraucherschutz, personenbezogene Daten, Werbung/Akquise, Personensicherheit, sektorale Berufsethik gegebenenfalls), als **zwingendes öffentliches Recht** und **gehen** jeder gegenteiligen oder mehrdeutigen Bestimmung **vor**. Keine Klausel kann ein Verhalten vorschreiben, das diesen Vorschriften zuwiderläuft; im Konfliktfall enthält sich der Helfer und informiert SOS Expat unverzüglich.
 
 12.2. **Verbindliches internationales Schiedsverfahren.** Jeder Streit, jede Meinungsverschiedenheit oder jeder Anspruch, der sich aus diesen AGB ergibt oder damit zusammenhängt, einschließlich ihrer Gültigkeit, Auslegung, Durchführung oder Beendigung, wird endgültig durch **Schiedsverfahren** gemäß der Schiedsgerichtsordnung der **Internationalen Handelskammer (ICC)** entschieden.
 - **Sitz des Schiedsverfahrens**: Tallinn, Estland;
@@ -2055,9 +2352,9 @@ Der Schiedsspruch ist für die Parteien **endgültig und bindend**. Die Parteien
 - (c) Verzichtet auf jede Einrede der fehlenden persönlichen Zuständigkeit;
 - (d) Akzeptiert, dass jede Zustellung an die auf der Plattform registrierte E-Mail-Adresse erfolgen kann.
 
-12.5. **Obligatorische vorherige Mediation.** Vor jedem Schiedsverfahren verpflichten sich die Parteien, zu versuchen, den Streit gütlich durch **Verhandlung in gutem Glauben** für einen Zeitraum von **dreißig (30) Tagen** ab schriftlicher Benachrichtigung über den Streit beizulegen. Diese Benachrichtigung muss per E-Mail mit Empfangsbestätigung an die Kontaktadresse der anderen Partei gesendet werden. Das Scheitern der Mediation ist Voraussetzung für die Einreichung eines Schiedsantrags.
+12.5. **Obligatorische vorherige Mediation und benannte Mediatoren (P2B-Verordnung).** Vor jedem Schiedsverfahren Verhandlung in gutem Glauben für **30 Tage**. Gemäß Artikel 12 der Verordnung (EU) 2019/1150 benennt SOS Expat mindestens zwei (2) Mediatoren: **(i) CMAP (cmap.fr); (ii) WIPO Arbitration and Mediation Center (wipo.int/amc)**. SOS Expat trägt einen **angemessenen Anteil** der Gebühren. Das Scheitern ist Voraussetzung für das Schiedsverfahren.
 
-12.6. **Verjährung.** Jede Klage oder jeder Anspruch des Helfers gegen SOS Expat muss innerhalb von **einem (1) Jahr** ab dem Eintritt des auslösenden Ereignisses erhoben werden, andernfalls ist er endgültig verjährt, soweit nach anwendbarem Recht zulässig.
+12.6. **Verjährung.** Jede Klage des Helfers gegen SOS Expat muss innerhalb der **kürzeren der Fristen von drei (3) Jahren** ab dem auslösenden Ereignis **und der gesetzlich anwendbaren Frist** in der Jurisdiktion des Helfers erhoben werden, ohne unterhalb eines lokal nicht reduzierbaren zwingenden Mindestmaßes zu unterschreiten.
 
 ---
 
@@ -2069,8 +2366,8 @@ Der Schiedsspruch ist für die Parteien **endgültig und bindend**. Die Parteien
 
 **Aufzeichnungsrichtlinie:**
 - (a) **Standardmäßig** zeichnet SOS Expat den Audio-Inhalt der Anrufe zwischen Helfer und Nutzer **NICHT auf**. Es werden nur **technische Metadaten** für Abrechnung, Betrugsbekämpfung und Lösung technischer Streitigkeiten gespeichert;
-- (b) SOS Expat **behält sich das Recht vor**, eine vorübergehende Audio-Aufzeichnung in streng begrenzten Fällen zu aktivieren (Betrugsverdacht, Missbrauchsmeldung, Gerichtsanordnung, Schutz lebenswichtiger Interessen). Die Parteien werden zu Beginn des Anrufs informiert;
-- (c) Wenn eine Aufzeichnung aktiviert wird, wird sie höchstens **sechs (6) Monate** aufbewahrt, gemäß DSGVO;
+- (b) SOS Expat **aktiviert keine Audio-Aufzeichnung ohne die ausdrückliche, vorherige und gesonderte Einwilligung des Helfers UND des Nutzers**, die vor Anrufbeginn durch eine eindeutige positive Handlung erteilt wird. Keine Aufzeichnung kann einseitig ausgelöst werden, mit der einzigen Ausnahme einer ordnungsgemäßen Anordnung einer **zuständigen Justizbehörde des Landes des Helfers oder des Nutzers**;
+- (c) Aufbewahrung strikt erforderlich, höchstens **6 Monate** (außer bei gerichtlicher Verlängerung), gemäß DSGVO und lokalen Datenschutzbehörden;
 - (d) **Der Helfer selbst ist verpflichtet**, die Gespräche nicht aufzuzeichnen, vollständig zu transkribieren, offenzulegen oder zu anderen Zwecken als der vereinbarten Dienstleistung zu verwenden, außer mit schriftlicher Genehmigung des Nutzers oder gesetzlicher Verpflichtung. Jeder Verstoß kann zur sofortigen Kontosperrung und zur zivil- und/oder strafrechtlichen Haftung des Helfers führen.
 
 13.3. **Abwerbeverbot.** Während der Laufzeit dieser AGB und **zwölf (12) Monate** nach deren Beendigung darf der Helfer Nutzer, die er über die Plattform kennengelernt hat, nicht direkt abwerben, um die Vermittlungsgebühren zu umgehen.
@@ -2122,7 +2419,7 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 **SOS Expat by WorldExpat OÜ（“**平台**”、“**SOS**”、“**我们**”） 
 
-**版本 3.1 – 最后更新：2026 年 4 月 25 日**
+**版本 3.2 – 最后更新：2026 年 4 月 26 日**
 
 ## 1. 定义
 
@@ -2134,9 +2431,11 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 **服务国家：** 在匹配时用户需求主要涉及的司法辖区；若无明确，则以请求日期的用户居住国为准。
 
-**匹配费用：** 每次匹配须向 SOS 支付的固定费用（见第 7 条）：以 欧元支付为 **€19**，以 美元支付为 **$25 USD**，金额可调整，或按国家/货币制定本地费率表，并具有前瞻性效力。
+**匹配费用（"Frais de Mise en relation"）：** **由用户向 SOS Expat 支付**的费用，针对每次匹配（第 7 条），仅作为平台所提供的技术匹配服务的对价。该费用在任何情况下均不构成对互助者报酬的佣金、回扣或分成。其金额由**现行费率表**确定，可在互助者及用户的个人账户中查询。SOS Expat 可按第 2.4 条规定的条件修改该费率表。
 
 **支付服务提供商：** 处理收款及资金分配的第三方服务。
+
+**B2B 合作伙伴：** 任何与 SOS Expat 签订框架合同的法人实体（企业、协会、互助会、企业委员会、组织等），合同约定其全部或部分承担其成员、员工或受益人（"**B2B 用户**"）的匹配费用。**B2B 匹配**是指由 B2B 用户在该框架合同下发起的匹配。相对地，**B2C 匹配**是指由用户直接支付匹配费用所发起的匹配。
 
 ---
 
@@ -2148,7 +2447,7 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 2.3. **电子接受（点击同意):** 注册和/或使用平台即表示接受本条款，构成电子签署与合同同意。SOS 可保留技术性证据（时间戳、标识符等）。
 
-2.4. **修改:** SOS 可通过在平台上发布方式更新条款和/或费率表（按国家/货币），更新具有前瞻性效力。继续使用即视为接受。
+2.4. **修改（P2B 预先通知）。** SOS Expat 可随时更新条款和/或费率表，但须按照欧盟 2019/1150 号条例（"P2B"）以持久载体（注册邮箱及个人账户公告）向互助者**至少提前 15 天通知**。在以下情况下可缩短或免除预先通知：(i) 法律或主管机关决定所要求的修改；(ii) 出于安全或防欺诈的紧迫原因；(iii) 不影响经济的实质性或排印更正。在预先通知期内，互助者可**无罚款解除**与平台的关系。如未解除，预先通知期满后继续使用即视为接受。
 
 2.5. **专业身份（B2B):** 互助者声明其仅为职业目的行事；消费者保护法律不适用于 SOS Expat–互助者关系。
 
@@ -2168,6 +2467,8 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 3.6. **保密性** 互助者应保护用户信息，除法律要求或经同意外，不得泄露。
 
+3.7. **互助者的声明与保证。** 互助者注册即明确声明并保证：(a) 其已成年且具有完全民事行为能力；(b) 其已取得或将在**任何服务提供之前**取得服务国家所要求的**所有授权**（签证、工作许可、个体经营/自由职业登记、税务登记、行业牌照）；(c) 其**不会提供任何属于受监管职业**（律师、公证员、医生、会计师、财务顾问、房地产经纪人等）的服务，除非持有所要求的资格证书；(d) 其未受到任何**禁止执业**处分；(e) 其未列入**任何制裁名单**（OFAC/SDN、欧盟、联合国、HMT）；(f) 其所提供的信息真实、完整并将持续更新；(g) 其独自承担遵守适用规则的全部责任。任何虚假声明构成严重违反本条款。
+
 ---
 
 ## 4. 账户、审查与安全
@@ -2181,6 +2482,8 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 4.4. **不活动。** 账户在365天不活动后可能会被自动停用。互助者可在履行义务后随时关闭其账户。SOS Expat 可因违反条款而暂停或终止账户。
 
 4.5. **电子通信。** 互助者同意通过电子方式（电子邮件、应用内通知、平台发布）接收通知。
+
+4.6. **内部投诉处理系统（P2B 条例）。** 根据欧盟 2019/1150 号条例第 11 条，SOS Expat 通过联系表单为互助者提供**免费的内部投诉处理系统**。SOS Expat 承诺：(i) 在 **7 个工作日内**确认收到任何投诉；(ii) 在合理期限内（通常为 **30 天**）以严肃、不歧视的方式处理投诉；(iii) 以清楚易懂的语言向互助者传达**附理由的**处理结果，并指明后续救济途径（第 11.5 条调解、第 11.2 条仲裁）；(iv) 保留有关该系统运行的**汇总统计数据**，每年公布。
 
 ---
 
@@ -2208,19 +2511,42 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 ## 7. 费用、单次付款与税务
 
-7.1. **匹配费用（固定费率）。 每次匹配收费 €19（欧元） 或 $25（美元）**，不含税及支付服务费用。SOS Expat 可调整金额及/或按国家/货币发布本地费率表，具前瞻性效力。
+7.1. **匹配费用（平台报酬）。** 匹配费用**仅**作为 SOS Expat 向**用户**提供的技术匹配服务的对价。该费用**由用户支付**，**不由互助者支付**。其金额由**现行费率表**确定，可在互助者个人账户中按匹配查询，不含税且不含支付服务提供商的费用。任何费率修改均按第 2.4 条的条件进行（最少 15 天预先通知）。
 
-7.2. **一次性支付与分配。** 用户通过平台进行一次性支付，涵盖 (i) 互助者报酬（双方约定）及 (ii) SOS Expat 的匹配费用。SOS Expat（或其服务商）收款后，扣除费用并将余额转给互助者。互助者授权此类扣除与分配。
+7.2. **付款的法律性质 — 两笔独立、互不依赖的债务：**
+- (a) **"匹配"债务**：由用户对 SOS Expat 应付；
+- (b) **"互助者报酬"债务**：由用户对互助者应付，针对相关服务，与平台无关。
 
-7.3. **应付且不退款。** 匹配费用自匹配达成即应付且不可退还（除非 SOS Expat 出于善意、且在法律允许范围内、因平台自身原因造成失败而决定退款）。
+**SOS Expat 不收取互助者报酬的任何佣金、分成或部分。** 匹配费用是 SOS Expat 唯一的报酬，仅来源于 (a) 项。
 
-7.4. **用户退款。** 若用户获批退款，该金额从互助者份额中扣除：SOS Expat 可抵扣/保留未来支付款，或在无未来支付时要求返还。匹配费用不退，除非 SOS Expat 自主决定。
+支付服务提供商作为 (b) 项的**互助者收款代理**，扣除银行费及兑换费后将净额转付给互助者。在每次交易前后，将在互助者控制台显示确切金额。
 
-7.5. **货币与兑换。** 平台可支持多种货币；可能适用服务商汇率及手续费。
+7.3. **互助者按渠道的付款时限。** 在 KYC 完成的前提下：
+- (a) **B2C**：通话**结束后立即**付款（根据国家及账户成熟度，1–7 个工作日）；
+- (b) **B2B**：通话后**30 天**付款（合作伙伴延期开票）；
+- (c) 因争议、KYC 或本条款所述其他情况而暂停。
 
-7.6. **税费。** 互助者自行承担所有适用税费（增值税、所得税、社保等）。SOS Expat 在必要时收取/代缴匹配费用相关增值税或同等税项。
+7.4. **DAC7 — 欧盟 2021/514 号指令。** 居住于欧盟的互助者：SOS Expat 须**每年向**税务机关申报（姓名、地址、TIN、所在国、收入总额、匹配次数，按季度划分）。互助者负责提供并保持更新。如未提供，可能暂停付款。
 
-7.7. **抵销。** SOS Expat 可将互助者所欠款项与其应收款项相互抵销。
+7.5. **B2B 渠道 — 通过 B2B 合作伙伴的匹配。**
+(a) 范围：B2B 用户根据框架合同发起的匹配。
+(b) 调整：**"匹配"债务**由 **B2B 合作伙伴**应付；**"互助者报酬"债务**由用户对互助者应付（除非合作伙伴承担）。
+(c) **B2C/B2B 互助者费率不同 — 互助者明确接受。** B2B 净报酬可能与 B2C 不同。每次匹配前会在控制台显示渠道及金额。互助者无任何接受义务。
+(d) B2B 框架合同**不能对抗**互助者。
+(e) 任何其他规定均适用于 B2B。
+(f) **现行费率表（参考）**：**B2C：30 欧元或 30 美元净额**；**B2B：20 欧元或 20 美元净额**。仅供参考；最新费率见控制台；任何变更适用 15 天预先通知（第 7.6 条）。
+
+7.6. **互助者报酬费率表的修改。** 任何修改（B2C/B2B/其他）均**适用 15 天预先通知**（第 2.4 条）。预先通知期内：可无罚款解除关系或逐案拒绝。已接受的匹配按原费率执行。预先通知期后继续使用即视为接受。
+
+7.7. **应付且不退款。** 匹配费用自匹配达成即应付且不可退还（除非 SOS Expat 出于善意、且在法律允许范围内、因平台自身原因造成失败而决定退款）。
+
+7.8. **用户退款。** 若用户获批退款，该金额从互助者份额中扣除：SOS Expat 可抵扣/保留未来支付款，或在无未来支付时要求返还。匹配费用不退，除非 SOS Expat 自主决定。
+
+7.9. **货币与兑换。** 平台可支持多种货币；可能适用服务商汇率及手续费。
+
+7.10. **税费。** 互助者自行承担所有适用税费（增值税、所得税、社保等）。SOS Expat 在必要时收取/代缴匹配费用相关增值税或同等税项。
+
+7.11. **抵销。** SOS Expat 可将互助者所欠款项与其应收款项相互抵销。
 
 ---
 
@@ -2232,13 +2558,24 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 8.3. 国际传输在必要时附带适当保障措施。
 
-8.4. **权利与联系。** 用户可通过平台的联系表单行使相关权利。
+8.4. **制裁与禁运。** 平台访问及支付服务在以下国家或地区可能被**限制或封锁**：根据适用法律法规，特别是支付服务提供商、欧盟、联合国、OFAC（美国）、HMT（英国）或任何其他主管机关，受**全面禁运或全面限制措施**约束的国家或地区。最新名单由前述机关维护并具有效力；SOS Expat 不建立或发布自己的地缘政治名单。互助者声明**不在任何国际制裁名单**（OFAC/SDN、欧盟、联合国、HMT）上，并**遵守适用的出口管制**。
 
-8.5. **安全。** 采取合理的技术和组织措施；数据泄露将依照适用法律通报。
+8.5. **权利与联系。** 用户可通过平台的联系表单行使相关权利。
 
-8.6. 互助者根据服务国家法律处理数据。
+8.6. **安全。** 采取合理的技术和组织措施；数据泄露将依照适用法律通报。
 
-8.7. **DSA 合规。** 平台作为**欧盟法规 2022/2065（数字服务法）**下的**中介服务**运营。SOS Expat 实施非法内容举报机制，并依据 DSA 与主管当局合作。
+8.7. 互助者根据服务国家法律处理数据。
+
+8.8. **DSA 合规。** 平台作为**欧盟法规 2022/2065（数字服务法）**下的**中介服务**运营。SOS Expat 实施非法内容举报机制，并依据 DSA 与主管当局合作。
+
+8.9. **延迟存放资金 — 费用与转交主管机关。** 如 KYC 在 180 天内未完成：
+- (a) 管理费**上限为 10%**，仅用于行政成本；
+- (b) 延长保管；KYC 可随时完成；
+- (c) 经过 **5 年**后，转交**互助者居住国的失踪资金主管机关**（法国通过 Eckert 法律的 Caisse des dépôts、美国 unclaimed property、英国 Dormant Assets）。**SOS Expat 不会占有该等资金。**
+
+8.10. **延长保管期间的索赔。** 附理由的请求 + 完整 KYC；30 天内审查；扣除 (a) 项费用。不可抗力 / 医疗无能力 = 费用可减少/取消。
+
+8.11. **第 8 条的明确接受。**
 
 ---
 
@@ -2270,13 +2607,17 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 ## 11. 适用法律 – 仲裁 – 爱沙尼亚司法管辖 – 集体诉讼放弃
 
-11.1. **实体法：** 每次匹配中，SOS Expat–互助者关系受服务国家法律管辖，受当地强制性法律及国际强制规范约束。补充适用及本条款的解释/效力或任何未被服务国家法律规制的事项，适用爱沙尼亚法。
+11.1. **实体法及当地强制规范的优先适用。** 每次匹配中，SOS Expat–互助者关系受**服务国家法律**管辖，受当地强制性规则及国际强制规范约束。**补充适用**及本条款的解释/效力或任何未被服务国家法律规制的事项，**爱沙尼亚法**适用。**为避免任何歧义**，适用于互助者在服务国家活动的强制性规则（移民、劳动法/独立工作法、税务、消费者保护、个人数据、广告/招揽、人身安全、行业职业道德规则）**视为公共秩序**，**优先于**本条款中任何相反或不明确的规定。条款中任何条款均不得被解释为强制或允许互助者采取违反这些规则的行为；如有冲突，互助者应避免并立即通知 SOS Expat。
 
 11.2. **强制 ICC 仲裁：** SOS Expat 与互助者的任何争议应根据国际商会仲裁规则（ICC）最终解决。仲裁地：爱沙尼亚塔林。 语言：法语。 仲裁庭适用第 11.1 条所述实体法。程序保密。
 
 11.3. **集体诉讼放弃：** 在法律允许范围内，任何集体/代表性诉讼均被排除；仅允许个人索赔。
 
 11.4. **爱沙尼亚法院专属管辖：** 对于不可仲裁事项、裁决执行或紧急措施，爱沙尼亚法院（塔林有管辖权）享有专属管辖权。互助者放弃任何关于法院选择或不便法院的异议。
+
+11.5. **强制性预先调解及指定调解员（P2B 条例）。** 任何仲裁前，双方应通过**善意谈判**尝试在自争议书面通知之日起 **30 天**内友好解决争议。根据欧盟 2019/1150 号条例第 12 条，SOS Expat 指定至少**两 (2) 位专业调解员**，独立且合理可及，互助者可从中选择：**(i) 巴黎调解与仲裁中心 (CMAP) — cmap.fr**；**(ii) WIPO 仲裁与调解中心（日内瓦）— wipo.int/amc**。SOS Expat 承担**合理部分的调解费用**，根据具体情况善意评估，特别是争议金额较小时。调解失败是提起仲裁请求的先决条件。
+
+11.6. **诉讼时效。** 互助者对 SOS Expat 提起的任何诉讼或索赔，必须在自事件发生起**三 (3) 年**与互助者所在司法辖区**适用法定期限**之间的**较短期限**内提起，否则丧失权利。本条款无意也无效力将时效缩短至当地强制最低期限以下。
 
 ---
 
@@ -2298,7 +2639,29 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 ---
 
-## 13. 联系方式
+## 13. 国际保护条款
+
+13.1. **反腐败。** 互助者承诺不向公职人员或私人提供、承诺或支付贿赂或不正当利益。其遵守适用的反腐败法律（FCPA、英国贿赂法、Sapin II 法等）。
+
+13.2. **沟通保密及录音政策。** 通过平台进行的沟通（消息、电话）均**保密**。
+
+**录音政策：**
+- (a) **默认情况下**，SOS Expat **不录制**互助者与用户之间通话的**音频内容**。仅保留**技术元数据**（时间戳、时长、Twilio 标识符、状态），用于计费、防欺诈和解决技术争议；
+- (b) **未经互助者和用户明确、事先且单独的同意**，不进行任何音频录制，且通话开始前需以单独的肯定行动表达。SOS Expat 不能单方面触发任何录音，唯一例外是相关国家**主管司法机关**的**合法调查请求**；
+- (c) 当例外情况下进行录音时，按 GDPR 及当地数据保护机关建议，保留期严格限于其目的所需，最长 **6 个月**（除非司法程序要求延长）；
+- (d) **互助者本人禁止**记录、完整转录、披露或将沟通用于约定服务以外的目的，除非用户书面授权或法律义务。任何违反可能导致立即暂停账户并引发互助者的民事和/或刑事责任。
+
+13.3. **不招揽。** 在条款有效期及终止后**12 个月**内，互助者承诺不直接招揽通过平台认识的用户以避免匹配费用。
+
+13.4. **互助者的专属责任。** 互助者对其提供的服务的质量、准确性和合法性**承担专属责任**。SOS Expat **不保证**互助者提供的建议、信息或服务，并对互助者服务给用户造成的任何损害**免责**。
+
+13.5. **无咨询关系。** SOS Expat **不是咨询公司**，亦非法律、税务、医疗或受监管服务的提供者。平台仅限于**匹配**。任何咨询关系**仅**在互助者与用户之间建立，**与** SOS Expat **无关**。
+
+13.6. **互助者-用户争议。** 互助者与用户之间的任何争议**仅**属于其直接关系。SOS Expat **不介入**这些争议，**不能**作为当事方、保证人或调解人**被追究**。
+
+---
+
+## 14. 联系方式
 
 如有任何问题或法律请求，请联系我们：
 `;
@@ -2308,7 +2671,7 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 **SOS Expat** هي خدمة تديرها **WorldExpat OÜ**، شركة مسجلة وفق القانون الإستوني (سجل الشركات رقم 16885621)، ومقرها الرئيسي في Harju maakond, Tallinn, Kesklinna linnaosa, Tornimäe tn 3/5/7, 10145، إستونيا (يُشار إليها فيما يلي بـ"**المنصة**" أو "**SOS**" أو "**SOS Expat**" أو "**نحن**").
 
-**الإصدار 3.1 – آخر تحديث: 25 أبريل 2026**
+**الإصدار 3.2 – آخر تحديث: 26 أبريل 2026**
 
 ---
 
@@ -2322,9 +2685,11 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 **بلد التدخل**: الولاية القضائية المستهدفة بشكل رئيسي بطلب المستخدم وقت التوصيل. في حال عدم التحديد، يُعتبر بلد إقامة المستخدم في تاريخ الطلب؛ وفي حالة تعدد الولايات القضائية، تُعتبر الولاية الأوثق صلة بموضوع الطلب.
 
-**رسوم التوصيل**: الرسوم الثابتة المستحقة لـ SOS عن كل توصيل (المادة 7): **19 يورو** إذا تم الدفع بـ **اليورو** أو **25 دولار أمريكي** إذا تم الدفع بـ **الدولار الأمريكي**، مع إمكانية تعديل هذه المبالغ و/أو نشر جداول تعرفة محلية حسب البلد/العملة، بأثر مستقبلي.
+**رسوم التوصيل**: المبلغ **المستحق من المستخدم لـ SOS Expat** عن كل توصيل (المادة 7)، مقابل خدمة التوصيل التقنية الوحيدة التي تقدمها المنصة. لا تشكل هذه الرسوم بأي حال من الأحوال عمولة أو حصة أو مشاركة في أتعاب المساعد. يحدد مبلغها في **جدول التعرفة الساري المفعول** المتاح للاطلاع في الفضاء الشخصي للمساعد والمستخدم. يجوز لـ SOS Expat تعديل هذا الجدول وفق الشروط المنصوص عليها في المادة 2.5.
 
 **مزود(و) الدفع**: الخدمات الخارجية المستخدمة لتحصيل الدفعة الموحدة من المستخدم وتوزيع الأموال.
+
+**شريك B2B**: أي شخص اعتباري (شركة، جمعية، تأمين تكافلي، لجنة عمالية، منظمة، إلخ) أبرم مع SOS Expat عقداً إطارياً ينص على تحمله، كلياً أو جزئياً، لرسوم التوصيل لصالح أعضائه أو موظفيه أو المستفيدين منه ("**مستخدمو B2B**"). **التوصيل B2B** هو توصيل يطلقه مستخدم B2B بموجب هذا العقد الإطاري. وعلى النقيض، **التوصيل B2C** هو توصيل يطلقه مستخدم يدفع رسوم التوصيل مباشرة.
 
 **قوائم العقوبات**: قوائم الأشخاص والكيانات والدول الخاضعة لعقوبات اقتصادية أو حظر، بما في ذلك قوائم مكتب مراقبة الأصول الأجنبية (OFAC) الأمريكي، والاتحاد الأوروبي، والأمم المتحدة، وخزانة صاحب الجلالة البريطانية (HMT)، وأي سلطة مختصة أخرى.
 
@@ -2340,7 +2705,7 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 2.4. **حفظ أدلة القبول.** وفقاً للائحة العامة لحماية البيانات (GDPR) والالتزامات القانونية للحفظ، تحتفظ SOS Expat بأدلة قبول الشروط لمدة **عشر (10) سنوات** من تاريخ القبول، أو حتى انتهاء أي نزاع قائم حسب الاقتضاء. يمكن للمساعد، بناءً على طلب كتابي عبر نموذج الاتصال، الحصول على **شهادة قبول** تتضمن عناصر الإثبات المذكورة أعلاه. يستند هذا الحفظ إلى المصلحة المشروعة لـ SOS Expat في امتلاك أدلة في حالة النزاع (المادة 6.1.و من GDPR) وإلى الالتزام القانوني بحفظ العقود التجارية.
 
-2.5. **التعديلات.** يجوز لـ SOS تحديث هذه الشروط و/أو جداول الرسوم (حسب البلد/العملة) في أي وقت، بأثر مستقبلي بعد النشر على المنصة. يُعد الاستمرار في الاستخدام قبولاً. في حالة إجراء تعديل جوهري، سيُدعى المساعد لإعادة تأكيد قبوله، والذي سيُتتبع مرة أخرى وفقاً لأحكام المادة 2.3.
+2.5. **التعديلات (إخطار مسبق وفقاً للائحة P2B).** يجوز لـ SOS Expat تحديث الشروط و/أو جدول التعرفة، شريطة الالتزام بـ **إخطار مسبق لا يقل عن 15 يوماً** على دعامة دائمة (البريد الإلكتروني المسجل والإشعار في الفضاء الشخصي)، وفقاً لأحكام لائحة الاتحاد الأوروبي 2019/1150 ("P2B"). يجوز تقصير مدة الإخطار المسبق أو الاستغناء عنها في الحالات التالية: (أ) التعديلات المفروضة بموجب التزام قانوني أو قرار من سلطة مختصة؛ (ب) لأسباب أمنية أو لمكافحة الاحتيال بصفة عاجلة؛ (ج) التصحيحات المادية أو الطباعية بدون أثر اقتصادي. خلال مدة الإخطار المسبق، يجوز للمساعد **إنهاء العلاقة دون أي عقوبة**. وفي حال عدم الإنهاء بعد انقضاء مدة الإخطار، يُعد الاستمرار في الاستخدام قبولاً للتعديلات.
 
 2.6. **الأهلية المهنية (B2B).** يُقر المساعد بأنه يتصرف **حصرياً لأغراض مهنية**؛ ولا تنطبق أنظمة حماية المستهلك على العلاقة بين SOS Expat والمساعد.
 
@@ -2428,6 +2793,8 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 4.12. **الاتصالات الإلكترونية.** يوافق المساعد على تلقي أي إشعار يتعلق بالشروط والإشراف وإجراءات التعليق/الحظر عبر الوسائل الإلكترونية (البريد الإلكتروني، الإشعارات داخل التطبيق، النشر على المنصة). يلتزم المساعد بالحفاظ على عنوان بريد إلكتروني صالح ومراجعة إشعاراته بانتظام.
 
+4.13. **النظام الداخلي لمعالجة الشكاوى (P2B).** وفقاً للمادة 11 من لائحة الاتحاد الأوروبي 2019/1150، تتيح SOS Expat للمساعدين **نظاماً داخلياً مجانياً** لمعالجة الشكاوى عبر نموذج الاتصال. تلتزم SOS Expat بـ: (أ) **الإقرار بالاستلام خلال 7 أيام عمل** لأي شكوى؛ (ب) معالجة الشكوى بشكل جاد وغير تمييزي خلال أجل معقول لا يتجاوز عادةً **30 يوماً**؛ (ج) إبلاغ المساعد بالنتيجة **مسببةً** بلغة واضحة، مع بيان وسائل الطعن المتاحة (الوساطة في المادة 12.5، التحكيم في المادة 12.2)؛ (د) الاحتفاظ بـ **إحصائيات مجمعة** سنوية حول تشغيل هذا النظام.
+
 ---
 
 ## 5. قواعد الاستخدام – الجودة، المحظورات، عدم التحايل
@@ -2454,13 +2821,15 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 ## 7. الرسوم والدفعة الموحدة والضرائب
 
-7.1. **رسوم التوصيل (السعر الثابت).** تبلغ رسوم التوصيل حالياً **19 يورو (EUR)** أو **25 دولار أمريكي (USD)** لكل توصيل، باستثناء الضرائب ورسوم مزود الدفع. **هذه المبالغ إرشادية وقابلة للتعديل في أي وقت.** تحتفظ SOS Expat بالحق في تعديل هذه المبالغ و/أو نشر جداول تعرفة محلية حسب البلد/العملة، بأثر مستقبلي بعد النشر على المنصة. يُدعى المساعد للاطلاع بانتظام على جدول التعرفة المعمول به المتاح في مساحته الشخصية.
+7.1. **رسوم التوصيل (أجرة المنصة).** تشكل رسوم التوصيل **حصرياً** المقابل المالي لخدمة التوصيل التقنية المقدمة من SOS Expat لـ **المستخدم**. هذه الرسوم **مستحقة من المستخدم**، **وليست من المساعد**. يحدد مبلغها في **جدول التعرفة الساري المفعول** المتاح في الفضاء الشخصي للمساعد لكل توصيل، باستثناء الضرائب ورسوم مزود الدفع. يتم أي تعديل لجدول التعرفة وفق الشروط المنصوص عليها في المادة 2.5 (إخطار مسبق لا يقل عن 15 يوماً).
 
-7.2. **هيكل السعر المعروض للعميل وتوزيع الأموال.** السعر المعروض للمستخدم على المنصة **يتضمن** رسوم التوصيل الخاصة بـ SOS Expat. يقوم المستخدم بدفعة موحدة عبر المنصة. **يتم توزيع الأموال كما يلي:**
-- (أ) **المبلغ المدفوع من المستخدم** = أتعاب المساعد + رسوم التوصيل لـ SOS Expat؛
-- (ب) **المبلغ الصافي المحول للمساعد** = المبلغ المدفوع من المستخدم − رسوم التوصيل لـ SOS Expat − الرسوم البنكية لمزود الدفع − رسوم تحويل العملة (عند الاقتضاء).
+7.2. **التوصيف القانوني للدفع — ديْنان مستقلان متمايزان لا يعتمد أحدهما على الآخر:**
+- (أ) **ديْن "التوصيل"**: مستحق من المستخدم لـ SOS Expat (المادة 7.1)؛
+- (ب) **ديْن "أتعاب المساعد"**: مستحق من المستخدم للمساعد مقابل الخدمة المقدمة، خارج المنصة.
 
-يفوض المساعد صراحةً SOS Expat بإجراء هذه الخصومات قبل أي تحويل. **يُعرض المبلغ الدقيق الذي سيُحول للمساعد في لوحة التحكم قبل وبعد كل معاملة.**
+**لا تتلقى SOS Expat أي عمولة أو حصة أو مشاركة أو جزء من أتعاب المساعد.** تشكل رسوم التوصيل الأجرة الوحيدة لـ SOS Expat، وتُقتطع حصرياً من (أ).
+
+يعمل مزود الدفع بصفته **وكيل تحصيل المساعد** فيما يخص (ب)؛ ويحول الصافي بعد خصم الرسوم البنكية ورسوم التحويل. يُعرض المبلغ الدقيق في لوحة التحكم قبل وبعد كل معاملة.
 
 7.3. **الرسوم البنكية لمزود الدفع.** يحصّل مزود الدفع (Stripe أو ما يعادله) رسوم معالجة على كل معاملة. **هذه الرسوم البنكية تقع بالكامل على عاتق المساعد** وتُخصم تلقائياً من المبلغ المحول إليه. تفاصيل هذه الرسوم متاحة في شروط مزود الدفع وفي لوحة تحكم المساعد لكل معاملة.
 
@@ -2472,13 +2841,28 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 7.7. **استرداد المستخدم.** إذا مُنح استرداد للمستخدم، فإنه يُحسم من حصة المساعد: يجوز لـ SOS Expat حجز/مقاصة المبلغ المقابل من المدفوعات المستقبلية للمساعد، أو طلب السداد المباشر إذا لم تكن هناك مدفوعات مستحقة. تظل رسوم التوصيل مكتسبة لـ SOS Expat، إلا بموجب قرار تقديري مخالف.
 
-7.8. **مواعيد الدفع.** بشرط إكمال عملية التحقق من الهوية (KYC) (المادة 8)، تُحول الأموال للمساعد خلال **سبعة (7) أيام عمل** بعد تقديم الخدمة، إلا في حالة وجود نزاع أو شكوى من المستخدم أو التحقق من الامتثال الجاري.
+7.8. **مواعيد دفع المساعد حسب القناة.** شريطة إكمال إجراءات KYC:
+- (أ) **B2C**: الدفع **فور انتهاء المكالمة** (من 1 إلى 7 أيام عمل حسب البلد ومستوى نضج الحساب)؛
+- (ب) **B2B**: الدفع **في غضون 30 يوماً** بعد المكالمة (فوترة مؤجلة لدى الشريك)؛
+- (ج) قد يتم تعليق الدفع في حالة وجود نزاع، أو إجراءات KYC جارية، أو أي ظرف آخر منصوص عليه في هذه الشروط.
 
 7.9. **الضرائب.** يظل المساعد **المسؤول الوحيد** عن جميع التزاماته الضريبية (ضريبة الدخل، ضريبة القيمة المضافة، الاشتراكات الاجتماعية، الرسوم المهنية، إلخ) في ولايته القضائية للإقامة و/أو الممارسة. المبالغ المحولة للمساعد هي **مبالغ إجمالية**؛ والمساعد مسؤول عن التصريح بجميع الضرائب المستحقة ودفعها. تحصّل SOS Expat وتحول، عند الاقتضاء بموجب القانون، ضريبة القيمة المضافة/ما يعادلها محلياً على رسوم التوصيل فقط.
 
 7.10. **المقاصة.** يجوز لـ SOS Expat مقاصة أي مبلغ مستحق عليها للمساعد (بموجب استرداد للمستخدم أو غرامة أو التزام آخر) مع أي مبلغ مستحق للمساعد.
 
 7.11. **الشفافية في التعرفة والسجل.** يمكن للمساعد في أي وقت الاطلاع في لوحة التحكم الشخصية على: (أ) التفاصيل الكاملة لكل معاملة، (ب) المبلغ الإجمالي المدفوع من المستخدم، (ج) رسوم التوصيل المخصومة، (د) الرسوم البنكية لمزود الدفع، (هـ) رسوم الصرف عند الاقتضاء، (و) المبلغ الصافي المحول أو المستحق التحويل، (ز) سجل جميع معاملاته. تُحفظ هذه المعلومات وتبقى متاحة طوال مدة الحساب و**خمس (5) سنوات** بعد إغلاقه.
+
+7.12. **DAC7 — لائحة الاتحاد الأوروبي 2021/514.** بالنسبة للمساعد المقيم في الاتحاد الأوروبي، يجب على SOS Expat أن **تُصرّح سنوياً** للسلطات الضريبية المختصة (وفقاً للتوجيه الأوروبي 2021/514): الاسم، العنوان، رقم التعريف الضريبي (TIN)، الدولة، إجمالي المبالغ المقبوضة، عدد عمليات التوصيل، مفصلة فصلياً. يلتزم المساعد بـ **تقديم وتحديث** هذه المعلومات. أي تقصير في ذلك قد يؤدي إلى تعليق المدفوعات.
+
+7.13. **قناة B2B — عمليات التوصيل عبر شريك B2B.**
+(أ) **النطاق**: عملية توصيل يطلقها مستخدم B2B بموجب العقد الإطاري المبرم بين الشريك B2B وSOS Expat.
+(ب) **التكييف**: ديْن "التوصيل" مستحق على **الشريك B2B** (وليس على المستخدم النهائي)؛ ديْن "أتعاب المساعد" مستحق على المستخدم للمساعد (ما لم يقم الشريك B2B بتحمله صراحةً في العقد الإطاري).
+(ج) **تعريفات أتعاب المساعد المتمايزة بين B2C وB2B — يقبل المساعد ذلك صراحةً.** قد تختلف الأتعاب الصافية للمساعد لكل توصيل B2B عن أتعاب التوصيل B2C. تُعرض القناة (B2B أو B2C) والمبلغ الصافي في لوحة التحكم قبل كل عملية توصيل، مما يتيح للمساعد رفض التوصيل دون أي عقوبة. لا يخضع المساعد لأي التزام بقبول عمليات التوصيل B2B.
+(د) **عدم القابلية للاحتجاج**: لا يكون العقد الإطاري المبرم بين الشريك B2B وSOS Expat **قابلاً للاحتجاج به** على المساعد، الذي يبقى محكوماً بهذه الشروط فقط.
+(هـ) أي حكم آخر من هذه الشروط (KYC، DAC7، الضرائب، التحكيم، إلخ) ينطبق دون تمييز على عمليات التوصيل B2B.
+(و) **جداول التعرفة الإرشادية الحالية**: **B2C: 30 يورو أو 30 دولار أمريكي صافي للمساعد**؛ **B2B: 20 يورو أو 20 دولار أمريكي صافي للمساعد**. هذه المبالغ إرشادية؛ يبقى جدول التعرفة المحدث المتاح في لوحة التحكم هو المرجع الوحيد. يخضع أي تعديل للإخطار المسبق المنصوص عليه في المادة 7.14.
+
+7.14. **تعديل جدول تعرفة أتعاب المساعد.** قد يتطور جدول تعرفة أتعاب المساعد (B2C، B2B، أو أي قناة أخرى)، شريطة الالتزام بـ **إخطار مسبق لا يقل عن 15 يوماً** على دعامة دائمة (المادة 2.5). خلال مدة الإخطار، يجوز للمساعد إنهاء العلاقة دون عقوبة، أو رفض عمليات التوصيل المعروضة بالتعرفة الجديدة كلٌّ على حدة. تظل عمليات التوصيل المقبولة قبل سريان مفعول التعديل خاضعة للتعرفة الأصلية. يُعد الاستمرار في الاستخدام بعد انقضاء مدة الإخطار قبولاً للتعرفة الجديدة.
 
 ---
 
@@ -2488,13 +2872,7 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 8.2. يجوز لـ SOS Expat تأجيل أو حجز أو إلغاء المدفوعات في حالة الاشتباه في الاحتيال أو عدم الامتثال أو الأمر القانوني.
 
-8.3. **العقوبات الدولية والحظر.** يُقر المساعد ويضمن:
-- (أ) عدم ظهوره، مباشرة أو غير مباشرة، على **قائمة عقوبات** (OFAC/SDN، الاتحاد الأوروبي، الأمم المتحدة، HMT، أو أي قائمة عقوبات أخرى معمول بها)؛
-- (ب) عدم امتلاكه أو سيطرته، مباشرة أو غير مباشرة، من قبل شخص أو كيان يظهر على قائمة عقوبات؛
-- (ج) عدم كونه مقيماً أو مواطناً أو متواجداً في بلد خاضع لـ **حظر شامل** (حالياً: كوريا الشمالية، إيران، سوريا، كوبا، مناطق القرم/دونيتسك/لوهانسك، أو أي إقليم آخر يُضاف لاحقاً)؛
-- (د) عدم استخدام المنصة لمعاملات تشمل أشخاصاً أو كيانات أو دولاً خاضعة للعقوبات؛
-- (هـ) الامتثال لجميع **قوانين الرقابة على الصادرات** المعمول بها.
-تحتفظ SOS Expat بالحق في **تقييد أو حظر الوصول فوراً** إلى المنصة في أي إقليم خاضع للعقوبات أو الحظر، أو لأي مساعد يُشتبه في انتهاكه لهذه الأحكام، دون إشعار مسبق أو تعويض. يجوز لـ SOS Expat أيضاً أن تكون ملزمة بـ **تجميد أموال** المساعد في حالة صدور أمر من سلطة مختصة.
+8.3. **العقوبات الدولية والحظر.** يجوز **تقييد أو حظر** الوصول إلى المنصة وخدمات الدفع في أي بلد أو إقليم خاضع، بموجب الأنظمة المعمول بها، **لحظر شامل أو تدابير تقييدية كاملة**، خاصة من قبل: مزودي الدفع، الاتحاد الأوروبي، الأمم المتحدة، مكتب مراقبة الأصول الأجنبية الأمريكي (OFAC)، خزانة صاحب الجلالة البريطانية (HMT)، أو أي سلطة مختصة أخرى. القائمة المعمول بها هي تلك التي تحتفظ بها السلطات المذكورة أعلاه؛ **لا تنشئ SOS Expat ولا تنشر قائمتها الجيوسياسية الخاصة**. يُقر المساعد ويضمن أنه لا يظهر على أي **قائمة عقوبات دولية** (OFAC/SDN، الاتحاد الأوروبي، الأمم المتحدة، HMT، أو غيرها) ويلتزم بـ **قوانين الرقابة على الصادرات** المعمول بها. تحتفظ SOS Expat بالحق في تقييد أو حظر الوصول فوراً لأي مساعد يُشتبه في انتهاكه لهذه الأحكام. يجوز لـ SOS Expat أيضاً أن تكون ملزمة بـ **تجميد أموال** المساعد في حالة صدور أمر من سلطة مختصة.
 
 8.4. **التزام إكمال عملية التحقق (KYC).** لاستلام المدفوعات الناتجة عن الخدمات المقدمة عبر المنصة، يلتزم المساعد بإكمال عملية التحقق من الهوية (KYC - اعرف عميلك) لدى شريكنا في الدفع Stripe في أقرب وقت ممكن بعد التسجيل. يُقر المساعد بأن عدم إكمال التحقق من الهوية يمنع تقنياً تحويل الأموال إلى حسابه البنكي.
 
@@ -2505,14 +2883,14 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 - إرسال تذكيرات منتظمة (في 7 أيام، 30 يوماً، 60 يوماً، 90 يوماً، 120 يوماً، و150 يوماً)؛
 - تزويد المساعد بجميع الوسائل اللازمة لإكمال التحقق من هويته.
 
-8.6. **الأموال غير المطالب بها والسقوط.** في حال عدم إكمال التحقق من الهوية خلال **مائة وثمانين (180) يوماً** من تاريخ أول دفعة معلقة، ورغم الإشعارات المنصوص عليها في المادة 8.5، تُعتبر الأموال **متخلى عنها** من قبل المساعد. يُقر المساعد ويقبل صراحةً أن:
-- (أ) الأموال غير المطالب بها خلال هذه الفترة ستؤول نهائياً للمنصة كتعويض جزافي عن تكاليف الإدارة والحفظ ومحاولات الاتصال؛
-- (ب) هذا الاكتساب هو مقابل التكاليف الإدارية التي تتحملها المنصة لإدارة الأموال غير المطالب بها؛
-- (ج) يتنازل صراحةً عن أي مطالبة بهذه الأموال بعد انقضاء فترة 180 يوماً.
+8.6. **الأموال المعلقة لفترة طويلة — رسوم الإدارة وتحويلها إلى السلطات المختصة.** في حال عدم إكمال إجراءات KYC خلال **مائة وثمانين (180) يوماً** من تاريخ أول دفعة معلقة، ورغم الإشعارات المنصوص عليها في المادة 8.5، تُطبق الأحكام التالية:
+- (أ) يجوز لـ SOS Expat اقتطاع **رسوم إدارة جزافية بحد أقصى 10% من المبلغ المعلق**، تغطي حصرياً التكاليف الإدارية الفعلية (إدارة الأموال، محاولات الاتصال، الحفظ المحاسبي)؛
+- (ب) تُحفظ الأموال لفترة طويلة في حساب ضمان؛ يجوز للمساعد إكمال التحقق من هويته في أي وقت لاسترداد المبلغ الصافي بعد خصم الرسوم المذكورة؛
+- (ج) بعد انقضاء **خمس (5) سنوات** بدون مطالبة، تُحوّل الأموال إلى **آلية الأموال الراكدة المختصة في بلد إقامة المساعد** (في فرنسا: Caisse des dépôts et consignations بموجب قانون Eckert؛ في الولايات المتحدة: unclaimed property مكتب الولاية المختصة؛ في المملكة المتحدة: مخطط Dormant Assets؛ أو الهيئة المعادلة في البلدان الأخرى). **لا تستحوذ SOS Expat على هذه الأموال لمصلحتها الخاصة**؛ وتلتزم بالاحتفاظ بإثباتات هذا التحويل وتسليمها للمساعد الذي يطلبها.
 
-8.7. **المطالبة الاستثنائية.** استثناءً من المادة 8.6، يجوز للمساعد تقديم طلب مطالبة مسبب خلال مدة أقصاها **اثنا عشر (12) شهراً** بعد انقضاء فترة 180 يوماً، فقط في الحالات التالية: عدم القدرة الطبية الموثقة، القوة القاهرة المبررة حسب الأصول، أو الخطأ التقني المنسوب للمنصة. ستدرس المنصة الطلب خلال 30 يوماً وتحتفظ بالحق في قبول أو رفض المطالبة. في حالة القبول، ستُحتجز رسوم معالجة قدرها **عشرون بالمائة (20%)** من المبلغ المسترد.
+8.7. **المطالبة خلال فترة الحفظ الطويلة.** خلال فترة الحفظ الطويلة (بين 180 يوماً و5 سنوات)، يجوز للمساعد تقديم طلب مطالبة عبر نموذج الاتصال، مرفقاً بـ: (أ) إثبات هويته الكامل وفق إجراءات KYC؛ (ب) المعلومات البنكية المحدثة. تدرس SOS Expat الطلب خلال أجل أقصاه **30 يوماً**، وتحول المبلغ الصافي بعد خصم رسوم الإدارة المنصوص عليها في المادة 8.6(أ). في حالة وجود **قوة قاهرة موثقة** أو **عدم قدرة طبية مثبتة**، يجوز تخفيض رسوم الإدارة أو إعفاؤها بناءً على دراسة كل حالة على حدة.
 
-8.8. **القبول الصريح.** بالتسجيل على المنصة كمساعد، يُقر بأنه اطلع على هذه الشروط المتعلقة بالأموال غير المطالب بها ويقبلها صراحةً. يُشكل هذا القبول شرطاً جوهرياً وحاسماً للوصول إلى وضع مقدم الخدمة على المنصة.
+8.8. **القبول الصريح للمادة 8.** بالتسجيل على المنصة كمساعد، يُقر بأنه اطلع على هذه الشروط المتعلقة بإدارة الأموال المعلقة وتحويلها للسلطات المختصة في حالة عدم المطالبة الطويلة، ويقبلها صراحةً. يُشكل هذا القبول شرطاً جوهرياً وحاسماً للوصول إلى وضع مقدم الخدمة على المنصة.
 
 8.9. **التعاون القانوني.** يلتزم المساعد بالتعاون مع SOS Expat والسلطات المختصة في حالة التحقيق المتعلق بغسل الأموال أو تمويل الإرهاب أو أي جريمة مالية أخرى.
 
@@ -2564,7 +2942,7 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 ## 12. القانون المطبق – التحكيم – الاختصاص القضائي الإستوني – الدعاوى الجماعية
 
-12.1. **القانون المطبق.** تخضع هذه الشروط وتفسيرها وصحتها وتنفيذها حصرياً لـ **القانون الإستوني**، باستثناء قواعد تنازع القوانين. بالنسبة للمسائل المتعلقة بتقديم الخدمات في بلد تدخل محدد، تُطبق القواعد المهنية وقواعد النظام العام المحلية لذلك البلد بشكل تكميلي بالقدر الذي تكون فيه آمرة.
+12.1. **القانون المطبق.** تخضع هذه الشروط وتفسيرها وصحتها وتنفيذها حصرياً لـ **القانون الإستوني**، باستثناء قواعد تنازع القوانين. بالنسبة للمسائل المتعلقة بتقديم الخدمات في بلد تدخل محدد، تُطبق القواعد المهنية وقواعد النظام العام المحلية لذلك البلد بشكل تكميلي بالقدر الذي تكون فيه آمرة. **لتجنب أي غموض**، فإن القواعد الآمرة المطبقة على نشاط المساعد في بلد التدخل (الهجرة، قانون العمل/العمل المستقل، الضرائب، حماية المستهلك، البيانات الشخصية، الإعلان/الاستقطاب، سلامة الأشخاص، الأخلاقيات المهنية القطاعية) **تُعتبر من النظام العام** و**لها الأسبقية** على أي حكم مخالف أو غامض من هذه الشروط. لا يجوز تفسير أي بند من هذه الشروط على أنه يفرض على المساعد أو يسمح له بسلوك مخالف لهذه القواعد؛ وفي حالة التعارض، يلتزم المساعد بالامتناع وإعلام SOS Expat فوراً.
 
 12.2. **التحكيم الدولي الإلزامي.** أي نزاع أو خلاف أو مطالبة ناشئة عن هذه الشروط أو متعلقة بها، بما في ذلك صحتها وتفسيرها وتنفيذها أو إنهائها، يُفصل فيها نهائياً بـ **التحكيم** وفقاً لنظام التحكيم لـ **غرفة التجارة الدولية (ICC)**.
 - **مقر التحكيم**: تالين، إستونيا؛
@@ -2586,9 +2964,9 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 - (ج) يتنازل عن أي اعتراض مبني على انعدام الاختصاص الشخصي؛
 - (د) يقبل أن أي تبليغ يمكن أن يتم على عنوان البريد الإلكتروني المسجل على المنصة.
 
-12.5. **الوساطة المسبقة الإلزامية.** قبل أي تحكيم، يلتزم الطرفان بمحاولة حل النزاع ودياً عن طريق **التفاوض بحسن نية** لمدة **ثلاثين (30) يوماً** من الإخطار الكتابي بالنزاع. يجب إرسال هذا الإخطار بالبريد الإلكتروني مع إشعار بالاستلام إلى عنوان الاتصال الخاص بالطرف الآخر. فشل الوساطة شرط مسبق لتقديم طلب التحكيم.
+12.5. **الوساطة المسبقة الإلزامية والوسطاء المعتمدون (P2B).** قبل أي تحكيم، يلتزم الطرفان بمحاولة حل النزاع ودياً عن طريق **التفاوض بحسن نية** لمدة **ثلاثين (30) يوماً** من الإخطار الكتابي بالنزاع. يجب إرسال هذا الإخطار بالبريد الإلكتروني مع إشعار بالاستلام إلى عنوان الاتصال الخاص بالطرف الآخر. وفقاً للمادة 12 من لائحة الاتحاد الأوروبي 2019/1150، تعين SOS Expat **وسيطين (2) محترفين على الأقل**، مستقلين ويمكن الوصول إليهما بتكلفة معقولة، يجوز للمساعد الاختيار من بينهم: **(i) مركز باريس للوساطة والتحكيم (CMAP) — cmap.fr**؛ **(ii) مركز التحكيم والوساطة التابع للويبو، جنيف — wipo.int/amc**. تتحمل SOS Expat **حصة معقولة من تكاليف الوساطة**، تُقدّر بحسن نية حسب الظروف، خاصة عندما تكون مبالغ النزاع متواضعة. فشل الوساطة شرط مسبق لتقديم طلب التحكيم.
 
-12.6. **التقادم.** يجب تقديم أي دعوى أو مطالبة من المساعد ضد SOS Expat خلال **سنة واحدة (1)** من تاريخ الواقعة المنشئة، وإلا سقط الحق نهائياً، بالقدر الذي يسمح به القانون المعمول به.
+12.6. **التقادم.** يجب تقديم أي دعوى أو مطالبة من المساعد ضد SOS Expat خلال **الأقصر من بين أجل ثلاث (3) سنوات** من تاريخ الواقعة المنشئة **والأجل القانوني** المعمول به في الولاية القضائية للمساعد، وإلا سقط الحق نهائياً. لا تهدف هذه الفقرة ولا يمكن أن تؤدي إلى تقصير أجل التقادم تحت الحد الأدنى الآمر المعمول به محلياً.
 
 ---
 
@@ -2600,8 +2978,8 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 **سياسة التسجيل:**
 - (a) **بشكل افتراضي**، **لا تسجل SOS Expat المحتوى الصوتي** للمكالمات بين المساعد والمستخدم. تُحفظ فقط **البيانات الوصفية التقنية** لأغراض الفوترة ومكافحة الاحتيال وحل النزاعات التقنية؛
-- (b) **تحتفظ SOS Expat بالحق** في تفعيل تسجيل صوتي مؤقت في حالات محدودة بشكل صارم (الاشتباه في احتيال، الإبلاغ عن إساءة، أمر قضائي، حماية المصالح الحيوية). سيتم إعلام الأطراف في بداية المكالمة؛
-- (c) عند تفعيل التسجيل، يُحفظ لمدة أقصاها **ستة (6) أشهر**، وفقاً للائحة العامة لحماية البيانات؛
+- (b) لا تقوم SOS Expat بتفعيل أي تسجيل **دون موافقة صريحة ومسبقة ومنفصلة من المساعد ومن المستخدم**، يتم التعبير عنها بفعل إيجابي مستقل قبل بدء المكالمة. لا يجوز لـ SOS Expat تفعيل أي تسجيل بشكل أحادي، ما عدا الاستثناء الوحيد المتعلق بـ **الطلب القانوني الصادر عن سلطة قضائية مختصة** في البلد المعني؛
+- (c) في حالة التسجيل بشكل استثنائي بموجب البند (b)، يقتصر الحفظ على ما هو ضروري لتحقيق الغرض، بحد أقصى **ستة (6) أشهر** (ما لم يكن التمديد القضائي مطلوباً)، وفقاً للائحة العامة لحماية البيانات وتوصيات السلطات المحلية لحماية البيانات؛
 - (d) **يلتزم المساعد بنفسه** بعدم تسجيل أو تدوين كامل أو إفشاء أو استخدام التبادلات لأغراض غير الخدمة المتفق عليها، إلا بإذن مكتوب من المستخدم أو التزام قانوني. أي مخالفة قد تؤدي إلى تعليق الحساب فوراً وإشراك المسؤولية المدنية و/أو الجنائية للمساعد.
 
 13.3. **عدم الاستقطاب.** خلال مدة هذه الشروط و**اثني عشر (12) شهراً** بعد إنهائها، يمتنع المساعد عن استقطاب المستخدمين الذين تعرف عليهم عبر المنصة مباشرةً لتجنب رسوم التوصيل.
@@ -2654,7 +3032,7 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 **SOS Expat by WorldExpat OÜ** (doravante denominado “**Plataforma**”, “**SOS**” ou “**nós**”)
 
-**Versão 3.1 – Última atualização: 25 de abril de 2026**
+**Versão 3.2 – Última atualização: 26 de abril de 2026**
 
 ---
 
@@ -2668,9 +3046,11 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 **Local / País**: a jurisdição legal à qual a solicitação do usuário se refere principalmente no momento do networking; se não especificado, será considerado o país de residência do usuário.
 
-**Taxa de Networking**: taxa fixa devida à SOS por cada ação de networking (Seção 7): **19 €** (EUR) ou **25 $ USD**, com possibilidade de ajustes conforme a moeda/local.
+**Taxa de Networking (Frais de Mise en relation)**: remuneração **devida pelo Usuário à SOS Expat** por cada ação de networking (Seção 7), a título do único serviço técnico de matchmaking fornecido pela Plataforma. Esta taxa não constitui de modo algum uma comissão, retrocessão ou partilha da remuneração do Aidant. O seu valor é definido na **tabela tarifária em vigor**, consultável no espaço pessoal do Aidant e do Usuário. A SOS Expat pode modificar esta tabela nas condições previstas no artigo 2.4.
 
 **Provedor de Pagamento**: terceiro responsável pelo processamento do pagamento e distribuição de fundos.
+
+**Parceiro B2B**: qualquer pessoa coletiva (empresa, associação, mútua, comissão de trabalhadores, organização, etc.) que tenha celebrado com a SOS Expat um contrato-quadro distinto prevendo que financiará, no todo ou em parte, as Taxas de Networking para os seus membros, colaboradores ou beneficiários (os "**Usuários B2B**"). Um **Networking B2B** é um networking iniciado por um Usuário B2B ao abrigo desse contrato-quadro. Por oposição, um **Networking B2C** é iniciado por um Usuário que paga diretamente a Taxa de Networking.
 
 ---
 
@@ -2682,7 +3062,7 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 2.3. **Consentimento eletrônico (Click-wrap).** O registro ou uso da Plataforma constitui aceitação destes Termos. A SOS pode manter provas técnicas (timestamp, ID, etc.).
 
-2.4. **Alterações.** A SOS pode atualizar termos e taxas no futuro; o uso continuado da Plataforma será considerado aceitação.
+2.4. **Alterações (pré-aviso P2B).** A SOS Expat pode atualizar os Termos e/ou a tabela de taxas a qualquer momento, mediante **pré-aviso mínimo de quinze (15) dias** em suporte duradouro, em conformidade com o artigo 3.º do Regulamento (UE) 2019/1150 ("P2B"). Pré-aviso reduzido ou suprimido: (i) imposição legal; (ii) segurança/anti-fraude; (iii) correções materiais sem impacto económico. Durante o pré-aviso, o Aidant pode **resolver sem penalização**. Caso contrário, uso continuado = aceitação.
 
 2.5. **Capacidade profissional (B2B).** O Aidant declara atuar **exclusivamente de forma profissional**; proteção ao consumidor não se aplica.
 
@@ -2702,6 +3082,8 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 3.6. **Confidencialidade.** O Aidant protegerá os dados do usuário e só os compartilhará mediante obrigação legal ou consentimento.
 
+3.7. **Declarações e garantias do Aidant.** Ao registar-se na Plataforma, o Aidant declara e garante que: (a) é **maior** e tem **plena capacidade jurídica**; (b) dispõe ou disporá **antes de qualquer prestação** de **todas as autorizações** exigidas pelo direito do País de Intervenção (visto, autorização de trabalho, registo freelancer/trabalhador independente, identificação fiscal, licenças setoriais); (c) **não prestará qualquer serviço relativo a uma profissão regulada** (advogado, notário, médico, contabilista, consultor financeiro, agente imobiliário...) sem o título/licença exigido e redirecionará o Usuário; (d) não está sujeito a **proibição de exercício**; (e) não consta de **qualquer lista de sanções**; (f) as suas informações são **exatas** e serão atualizadas; (g) **assume sozinho a responsabilidade integral** pelo cumprimento das regras aplicáveis à sua atividade em cada País de Intervenção. Qualquer falsa declaração constitui violação grave.
+
 ---
 
 ## 4. Conta, verificação e segurança
@@ -2715,6 +3097,8 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 4.4. **Inatividade.** Após 365 dias de inatividade, a conta poderá ser automaticamente desativada. O Aidant pode encerrar sua conta a qualquer momento após cumprir suas obrigações. A SOS Expat pode suspender ou encerrar contas por violação dos Termos.
 
 4.5. **Comunicações eletrônicas.** O Aidant consente em receber notificações por meios eletrônicos (e-mail, notificações no aplicativo, publicação na plataforma).
+
+4.6. **Sistema interno de tratamento de reclamações (Regulamento P2B).** Em conformidade com o artigo 11.º do Regulamento (UE) 2019/1150, a SOS Expat coloca à disposição do Aidant um **sistema interno de tratamento de reclamações gratuito**, acessível através do formulário de contacto (https://sos-expat.com/contact). A SOS Expat compromete-se a: (i) **acusar a receção** no prazo de **sete (7) dias úteis**; (ii) tratar a reclamação **com seriedade e sem discriminação, em prazo razoável** (regra geral **trinta (30) dias**); (iii) comunicar ao Aidant o resultado **fundamentado**; (iv) manter **estatísticas agregadas** anuais.
 
 ---
 
@@ -2742,9 +3126,15 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 
 ## 7. Taxas, pagamento único e impostos
 
-7.1. **Taxa de networking:** 19 € (EUR) ou 25 $ (USD) por conexão.
+7.1. **Taxa de Networking (remuneração da Plataforma).** A Taxa de Networking remunera **exclusivamente o serviço técnico de matchmaking** fornecido pela SOS Expat ao **Usuário**. É **devida pelo Usuário, e não pelo Aidant**. O seu valor é definido na **tabela tarifária em vigor**, consultável no espaço pessoal do Aidant, por networking, sem impostos e sem taxas do Provedor de Pagamento. Qualquer alteração à tabela ocorre nas condições do artigo 2.4 (pré-aviso mínimo de quinze (15) dias).
 
-7.2. **Pagamento único e distribuição.** Pagamentos são feitos via Plataforma; SOS Expat deduz a taxa e repassa o saldo ao Aidant.
+7.2. **Caracterização jurídica do pagamento — duas dívidas distintas e independentes.** O pagamento efetuado pelo Usuário através da Plataforma decompõe-se **juridicamente em duas dívidas distintas e independentes**, apesar da sua liquidação por uma cobrança única por razões de comodidade operacional:
+- (a) **Dívida "Networking"**: montante **devido pelo Usuário à SOS Expat** a título do serviço técnico de matchmaking (Taxa de Networking, art. 7.1);
+- (b) **Dívida "Remuneração Aidant"**: montante **devido pelo Usuário ao Aidant** a título da prestação acordada entre eles. O conteúdo, a qualidade, o resultado, bem como a faturação detalhada, são da **exclusiva** competência da relação Aidant–Usuário, fora da Plataforma.
+
+**A SOS Expat não recebe, não reclama e não tem direito a qualquer comissão, retrocessão, partilha, percentagem ou fração da remuneração do Aidant. A Taxa de Networking constitui a única remuneração da SOS Expat e provém exclusivamente da dívida do Usuário referida em (a).**
+
+O Provedor de Pagamento, agindo para a parte (b) na qualidade de **agente pagador do Aidant**, transfere para este a remuneração recebida, sob dedução das únicas comissões bancárias de processamento e, se aplicável, das taxas de conversão de moeda. **O montante líquido que o Aidant receberá é exibido no seu painel antes e depois de cada transação.**
 
 7.3. **Não reembolsável.** A taxa de networking não é reembolsável.
 
@@ -2755,6 +3145,32 @@ Für rechtliche oder sonstige Anfragen: **https://sos-expat.com/contact**
 7.6. **Impostos.** O Aidant é responsável por todos os impostos aplicáveis.
 
 7.7. **Indenização.** SOS Expat pode ajustar pagamentos para compensar reivindicações.
+
+7.8. **Prazos de pagamento do Aidant consoante o canal.** Sob reserva da conclusão do processo KYC:
+- (a) **B2C** (pagamento direto pelo Usuário): remuneração colocada em pagamento **imediatamente após a chamada** pelo Provedor (tipicamente 1 a 7 dias úteis consoante país/maturidade da conta);
+- (b) **B2B** (pagamento pelo Parceiro B2B): tendo em conta o modelo de faturação diferida do Parceiro (mensal ou "net-30"), remuneração paga **no prazo de 30 dias** após a chamada;
+- (c) Suspensão possível em caso de litígio, KYC em curso, ou outra circunstância dos Termos.
+
+7.9. **Declaração fiscal automática (DAC7 — UE 2021/514).** O Aidant residente num Estado-Membro da UE é informado de que a SOS Expat, como operador de plataforma declarante, está obrigada a **declarar anualmente** às autoridades fiscais (Diretiva UE 2021/514 "DAC7"): nome, morada, identificador fiscal (TIN), Estado de residência, montante total recebido e número de networkings, por trimestre. O Aidant fornece e mantém atualizadas estas informações. Falha = suspensão de pagamentos.
+
+7.10. **Canal B2B — Networkings via Parceiro B2B.**
+(a) Âmbito: networking iniciado por um Usuário B2B ao abrigo de contrato-quadro celebrado entre a SOS Expat e um Parceiro B2B.
+(b) Adaptação das duas dívidas: a dívida "Networking" é devida pelo **Parceiro B2B**; a dívida "Remuneração Aidant" continua devida pelo Usuário ao Aidant (salvo assunção pelo Parceiro).
+(c) **Tarifas Aidant distintas B2C/B2B — o Aidant aceita-o expressamente.** A remuneração líquida em B2B pode diferir da B2C. O canal e o montante exato são **exibidos no seu painel antes de cada networking**. **Nenhuma obrigação de aceitação** recai sobre ele.
+(d) Contrato-quadro B2B **não oponível** ao Aidant.
+(e) Qualquer outra estipulação dos Termos aplica-se aos networkings B2B.
+(f) **Tabelas em vigor (a título indicativo)**: **B2C: 30 € ou 30 USD líquidos**; **B2B: 20 € ou 20 USD líquidos**. A tabela atualizada é consultável no painel. Qualquer evolução está sujeita ao pré-aviso de 15 dias do art. 7.11.
+
+7.11. **Modificação da tabela de remuneração do Aidant.** A SOS Expat reserva-se o direito de modificar a qualquer momento a tabela de remuneração líquida do Aidant (B2C, B2B, ou outro componente) com **pré-aviso de 15 dias** (art. 2.4). Durante o pré-aviso: rescisão sem penalização ou recusa caso a caso. **Networkings já aceites = tarifa de origem.** Uso continuado após o pré-aviso = aceitação.
+
+7.12. **Sanções e embargos.** O acesso à Plataforma e aos serviços de pagamento pode ser **restringido ou bloqueado** em qualquer **país ou território sujeito a embargo global ou a medidas restritivas integrais** ao abrigo das leis aplicáveis (Provedores de Pagamento, UE, ONU, OFAC, HMT, ou qualquer outra autoridade competente). A lista atualizada é mantida pelas autoridades acima e faz fé; a SOS Expat não estabelece a sua própria lista geopolítica. O Aidant declara não constar de qualquer lista de sanções e respeitar os controlos de exportação.
+
+7.13. **Fundos em espera prolongada — taxas de gestão e transferência às autoridades competentes.** Se o KYC não for concluído em 180 dias:
+- (a) Taxas de gestão fixas razoáveis, **limitadas a 10%**, cobrindo estritamente os custos administrativos efetivos;
+- (b) Conservação prolongada em conta segregada; o Aidant pode concluir o KYC a qualquer momento;
+- (c) Após **5 anos**, transferência dos fundos residuais à **autoridade competente do país de residência do Aidant** ao abrigo das regras aplicáveis aos fundos não reclamados (Caisse des dépôts em França via lei Eckert; programas de unclaimed property nos EUA; Dormant Assets Scheme no Reino Unido; mecanismos locais equivalentes). **A SOS Expat não se apropria em caso algum destes fundos residuais.**
+
+Reclamação durante a conservação prolongada: o Aidant pode enviar pedido fundamentado + KYC completo; análise em **30 dias**; dedução apenas das taxas de gestão (a). Força maior / incapacidade médica = taxas reduzíveis ou suprimíveis a critério razoável da SOS Expat. **Aceitação expressa** deste artigo 7.13.
 
 ---
 
@@ -2804,13 +3220,17 @@ A Plataforma, marcas, logotipos, banco de dados e conteúdo são protegidos. O A
 
 ## 11. Lei aplicável – Arbitragem – Jurisdição estoniana – Ação coletiva
 
-11.1. **Lei aplicável:** para cada conexão, aplica-se a lei do país/local.
+11.1. **Lei aplicável:** para cada conexão, aplica-se a lei do país/local. Para evitar qualquer ambiguidade, as regras imperativas aplicáveis à atividade do Aidant no País de Intervenção (imigração, direito do trabalho/trabalho independente, fiscalidade, proteção do consumidor, dados pessoais, publicidade/prospeção, segurança das pessoas, deontologias setoriais quando aplicável) são **consideradas de ordem pública** e **prevalecem** sobre qualquer estipulação contrária ou ambígua dos presentes Termos. Nenhuma cláusula dos Termos pode ser interpretada como impondo ou autorizando o Aidant a adotar comportamento contrário a estas regras; em caso de conflito, o Aidant abstém-se e informa a SOS Expat sem demora.
 
 11.2. **Arbitragem ICC:** todas as disputas resolvidas conforme regras ICC. Local: Tallinn, Estônia; idioma: francês.
 
 11.3. **Renúncia à ação coletiva.**
 
 11.4. **Jurisdicional estoniana.**
+
+11.5. **Mediação prévia obrigatória e mediadores identificados (Regulamento P2B).** Antes de qualquer arbitragem, negociação de boa-fé durante **30 dias**. Em conformidade com o artigo 12.º do Regulamento (UE) 2019/1150, a SOS Expat identifica pelo menos dois (2) mediadores: **(i) CMAP (cmap.fr); (ii) WIPO Arbitration and Mediation Center (wipo.int/amc)**. A SOS Expat suporta uma **parte razoável** das despesas. O fracasso é prévio à arbitragem.
+
+11.6. **Prescrição.** Qualquer ação do Aidant contra a SOS Expat deve ser proposta no **prazo mais curto entre 3 anos** a contar do facto gerador **e o prazo legal aplicável** na jurisdição do Aidant, sem reduzir aquém de um mínimo imperativo local não reduzível.
 
 ---
 
@@ -2832,7 +3252,19 @@ A Plataforma, marcas, logotipos, banco de dados e conteúdo são protegidos. O A
 
 ---
 
-## 13. Contato
+## 13. Confidencialidade das comunicações e política de gravação
+
+As comunicações realizadas através da Plataforma (mensagens, chamadas telefónicas) são **confidenciais**.
+
+**Política de gravação:**
+- (a) **Por defeito**, a SOS Expat **NÃO grava o conteúdo áudio** das chamadas entre Aidant e Usuário. Apenas os **metadados técnicos** são conservados (timestamp, duração, identificadores Twilio, estado) para fins de faturação, anti-fraude e resolução de litígios técnicos;
+- (b) A SOS Expat **não ativa qualquer gravação áudio sem o consentimento explícito, prévio e separado do Aidant E do Usuário**, manifestado antes do início da chamada por ação positiva distinta. Nenhuma gravação pode ser desencadeada unilateralmente pela SOS Expat, com a única exceção de **requisição regular emanada de uma autoridade judicial competente do país do Aidant ou do Usuário**;
+- (c) Quando uma gravação é excecionalmente ativada no âmbito da alínea (b), é conservada pelo período estritamente necessário à sua finalidade, no limite máximo de **6 meses** (salvo prolongamento imposto por procedimento judicial em curso), em conformidade com o RGPD e as recomendações das autoridades locais de proteção de dados;
+- (d) **O Aidant abstém-se de** gravar, transcrever integralmente, divulgar ou utilizar as comunicações para outros fins que não a prestação acordada, salvo autorização escrita do Usuário ou obrigação legal.
+
+---
+
+## 14. Contato
 
 Para perguntas ou questões legais, entre em contato conosco:
 

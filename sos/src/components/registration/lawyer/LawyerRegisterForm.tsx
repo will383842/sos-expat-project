@@ -413,7 +413,7 @@ const LawyerRegisterForm: React.FC<LawyerRegisterFormProps> = ({
         preferredLanguage: form.preferredLanguage,
         termsAccepted: form.acceptTerms,
         termsAcceptedAt: new Date().toISOString(),
-        termsVersion: '3.0',
+        termsVersion: '3.2',
         termsType: 'terms_lawyers',
         termsAcceptanceMeta: {
           userAgent: navigator.userAgent,
