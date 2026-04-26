@@ -27,6 +27,7 @@ import {
 import { db } from '../config/firebase';
 import { getNamesByCountry } from '../data/names-by-country';
 import { countriesData } from '../data/countries';
+import { generateShortId, generateMultilingualSlugs } from '../utils/slugGenerator';
 
 // =============================================================================
 // PAYS CIBLES : ASIE (sauf Chine) + AUSTRALIE
@@ -769,19 +770,31 @@ export async function generateLawyersAsiaOceania(
 
       const practiceCountryCodes = profile.allCountries.map(c => c.code);
 
+      // SEO — shortId + slugs multilingues (alignés sur aaaProfileGenerator)
+      const shortId = generateShortId(uid);
+      const slugs = generateMultilingualSlugs({
+        firstName, lastName,
+        role: 'lawyer',
+        country: main.code,
+        languages: ['fr'],
+        specialties,
+        uid,
+      });
+
       const profileData: any = {
         // Identité
         uid, firstName, lastName, fullName, displayName: fullName, email,
         gender: 'male',
 
         // Contact — numéro standard SOS-Expat pour tous les profils AAA (convention projet)
-        phone: '+33743331201', phoneCountryCode: '+33',
+        phone: '+33743331201', phoneCountryCode: '+33', phoneNumber: '+33743331201',
 
         // Localisation
         country: main.code, currentCountry: main.code, residenceCountry: main.code,
         practiceCountries: practiceCountryCodes,
         operatingCountries: practiceCountryCodes,
         interventionCountries: practiceCountryCodes,
+        previousCountries: [],
 
         // Langues — FRANÇAIS UNIQUEMENT
         preferredLanguage: 'fr',
@@ -792,29 +805,40 @@ export async function generateLawyersAsiaOceania(
         profilePhoto: '',
         avatar: '',
 
-        // Flags AAA + visibilité
+        // Flags AAA + visibilité (alignés sur aaaProfileGenerator)
         isTestProfile: true,
         isAAA: true,
         isActive: true,
         isApproved: true,
         isVerified: true,
         isVerifiedEmail: true,
+        isEarlyProvider: false,
         approvalStatus: 'approved',
         validationStatus: 'approved',
         verificationStatus: 'approved',
-        isOnline: Math.random() > 0.6,
+        isOnline: false,
         isVisible: true,
         isVisibleOnMap: true,
         isCallable: true,
         isBanned: false,
         isSuspended: false,
         forcedAIAccess: true,
+        hasActiveSubscription: true,
+        subscriptionStatus: 'active',
+
+        // KYC — AAA délégué, pas de KYC requis
+        kycDelegated: true,
+        kycStatus: 'not_required',
+
+        // Payout AAA (mode interne par défaut, le pool est consolidé côté admin)
+        aaaPayoutMode: 'internal',
 
         // Dates
         createdAt: Timestamp.fromDate(createdAt),
         registrationDate: createdAt.toISOString(),
         updatedAt: serverTimestamp(),
         lastLoginAt: serverTimestamp(),
+        lastActivity: serverTimestamp(),
         approvedAt: Timestamp.fromDate(createdAt),
 
         // Rôle
@@ -823,23 +847,23 @@ export async function generateLawyersAsiaOceania(
         isSOS: true,
 
         // Affiliation
-        points: randomInt(50, 600),
+        points: 0,
+        totalEarnings: 0,
         affiliateCode: `LAW${main.code}${Math.random().toString(36).slice(2, 5).toUpperCase()}`,
+        referralBy: null,
 
-        // Bio — masculine (gender: 'male' garanti). Le platform UI affichera la version FR
-        // pour les utilisateurs francophones; l'objet bio reste structuré { fr, en }.
+        // Bio — l'UI lit `description` puis fallback sur `bio.fr`
         bio: { fr: bio, en: bio },
         description: bio,
 
-        // Disponibilité
+        // Disponibilité (par défaut hors-ligne, comme les profils AAA legacy)
         responseTime,
-        availability: 'available',
+        availability: 'offline',
 
-        // Stats
+        // Stats — totalCalls servira au taux de succès, on génère les call_sessions plus bas
         totalCalls,
         successfulCalls,
         successRate,
-        totalEarnings: Math.round(totalCalls * price * 0.7),
         averageRating: rating,
         rating,
         reviewCount,
@@ -865,6 +889,10 @@ export async function generateLawyersAsiaOceania(
 
         // Validation
         needsVerification: false,
+
+        // SEO
+        shortId,
+        slugs,
       };
 
       // Écriture users
@@ -877,8 +905,8 @@ export async function generateLawyersAsiaOceania(
         profileCompleted: true,
       });
 
-      // Carte UI
-      await setDoc(doc(db, 'ui_profile_cards', uid), {
+      // Carte UI (URL SEO via slug FR si disponible)
+      const cardData = {
         id: uid, uid,
         title: fullName,
         subtitle: 'Avocat',
@@ -888,9 +916,34 @@ export async function generateLawyersAsiaOceania(
         reviewCount,
         languages: ['fr'],
         specialties,
-        href: `/profile/${uid}`,
+        shortId,
+        slugs,
+        href: slugs.fr ? `/${slugs.fr}` : `/profile/${uid}`,
         createdAt: serverTimestamp(),
-      });
+      };
+      await setDoc(doc(db, 'ui_profile_cards', uid), cardData);
+      await setDoc(doc(db, 'ui_profile_carousel', uid), cardData);
+
+      // Sessions d'appel pour cohérence des stats (totalCalls écrit ci-dessus)
+      for (let k = 0; k < totalCalls; k++) {
+        const callDate = new Date(createdAt.getTime() + randomInt(1, Math.max(1, daysSinceCreation)) * 24 * 60 * 60 * 1000);
+        const callDuration = randomInt(15, 45) * 60;
+        const callEndDate = new Date(callDate.getTime() + callDuration * 1000);
+        await addDoc(collection(db, 'call_sessions'), {
+          metadata: {
+            providerId: uid,
+            providerName: fullName,
+            clientId: `client_aaa_${main.code}_${k + 1}`,
+            clientName: `Client ${k + 1}`,
+          },
+          status: 'completed',
+          duration: callDuration,
+          callType: 'video',
+          createdAt: Timestamp.fromDate(callDate),
+          startedAt: Timestamp.fromDate(callDate),
+          endedAt: Timestamp.fromDate(callEndDate),
+        });
+      }
 
       // Avis contextualisés par pays + spécialité du profil. Unicité globale garantie.
       const cityFr = CITIES_FR[main.code] || main.nameFr;
@@ -1101,8 +1154,16 @@ export interface VerifyReport {
   okComplete: number;
   missingDescription: Array<{ uid: string; country?: string }>;
   missingReviews: Array<{ uid: string; expected: number; actual: number; country?: string }>;
+  missingShortIdSlugs: Array<{ uid: string; country?: string }>;
+  missingCarousel: Array<{ uid: string; country?: string }>;
+  missingCallSessions: Array<{ uid: string; expected: number; actual: number; country?: string }>;
+  needFieldAlignment: Array<{ uid: string; country?: string; fields: string[] }>;
   fixedDescription: number;
   reviewsAdded: number;
+  shortIdSlugsFixed: number;
+  carouselFixed: number;
+  callSessionsAdded: number;
+  fieldsAligned: number;
   errors: number;
   message: string;
 }
@@ -1125,10 +1186,30 @@ export async function verifyAaaProfilesAsiaOceania(
   let okComplete = 0;
   let fixedDescription = 0;
   let reviewsAdded = 0;
+  let shortIdSlugsFixed = 0;
+  let carouselFixed = 0;
+  let callSessionsAdded = 0;
+  let fieldsAligned = 0;
   let errors = 0;
   const missingDescription: Array<{ uid: string; country?: string }> = [];
   const missingReviews: Array<{ uid: string; expected: number; actual: number; country?: string }> = [];
+  const missingShortIdSlugs: Array<{ uid: string; country?: string }> = [];
+  const missingCarousel: Array<{ uid: string; country?: string }> = [];
+  const missingCallSessions: Array<{ uid: string; expected: number; actual: number; country?: string }> = [];
+  const needFieldAlignment: Array<{ uid: string; country?: string; fields: string[] }> = [];
   const usedComments = new Set<string>();
+
+  // Champs et leur valeur cible pour s'aligner sur les profils AAA legacy
+  const ALIGNED_VALUES: Record<string, any> = {
+    aaaPayoutMode: 'internal',
+    kycDelegated: true,
+    kycStatus: 'not_required',
+    hasActiveSubscription: true,
+    subscriptionStatus: 'active',
+    forcedAIAccess: true,
+    isEarlyProvider: false,
+    referralBy: null,
+  };
 
   for (const d of usersSnap.docs) {
     scanned++;
@@ -1176,24 +1257,69 @@ export async function verifyAaaProfilesAsiaOceania(
       revIssue = true;
     }
 
-    if (!descIssue && !revIssue) {
+    // 3) Vérification shortId / slugs
+    const hasShortId = typeof p.shortId === 'string' && p.shortId.length > 0;
+    const hasSlugs = p.slugs && typeof p.slugs === 'object' && p.slugs.fr;
+    let slugIssue = false;
+    if (!hasShortId || !hasSlugs) {
+      missingShortIdSlugs.push({ uid: d.id, country: p.country });
+      slugIssue = true;
+    }
+
+    // 4) Vérification ui_profile_carousel
+    let carouselIssue = false;
+    try {
+      const carouselSnap = await getDoc(doc(db, 'ui_profile_carousel', d.id));
+      if (!carouselSnap.exists()) {
+        missingCarousel.push({ uid: d.id, country: p.country });
+        carouselIssue = true;
+      }
+    } catch (e) { errors++; }
+
+    // 5) Vérification call_sessions cohérentes avec totalCalls
+    const totalCallsExpected = Number(p.totalCalls || 0);
+    let callSessionsActual = 0;
+    let callIssue = false;
+    if (totalCallsExpected > 0) {
+      try {
+        const csSnap = await getDocs(query(
+          collection(db, 'call_sessions'),
+          where('metadata.providerId', '==', d.id),
+        ));
+        callSessionsActual = csSnap.size;
+        if (callSessionsActual < totalCallsExpected) {
+          missingCallSessions.push({ uid: d.id, expected: totalCallsExpected, actual: callSessionsActual, country: p.country });
+          callIssue = true;
+        }
+      } catch (e) { errors++; }
+    }
+
+    // 6) Vérification champs alignés (KYC, payout, subscription, etc.)
+    const fieldsToFix: string[] = [];
+    for (const [k, v] of Object.entries(ALIGNED_VALUES)) {
+      if (p[k] !== v) fieldsToFix.push(k);
+    }
+    let fieldIssue = false;
+    if (fieldsToFix.length > 0) {
+      needFieldAlignment.push({ uid: d.id, country: p.country, fields: fieldsToFix });
+      fieldIssue = true;
+    }
+
+    if (!descIssue && !revIssue && !slugIssue && !carouselIssue && !callIssue && !fieldIssue) {
       okComplete++;
       continue;
     }
 
     if (dryRun) continue;
 
-    // 3) Mode exécution : on corrige
+    // 7) Mode exécution : on corrige tout ce qui manque
     try {
-      // Fix description : copier bio.fr → description si description vide
+      // 7a) Fix description : copier bio.fr → description (ou inversement)
       if (descIssue) {
         const useStr = bioFr || descStr;
         if (useStr) {
           const updates: any = { description: useStr };
-          // Si bio.fr manque mais description existe, on remplit bio
-          if (!bioFr && descStr) {
-            updates.bio = { fr: descStr, en: descStr };
-          }
+          if (!bioFr && descStr) updates.bio = { fr: descStr, en: descStr };
           await updateDoc(doc(db, 'users', d.id), updates);
           const sosRef = doc(db, 'sos_profiles', d.id);
           const sosSnap = await getDoc(sosRef);
@@ -1202,7 +1328,62 @@ export async function verifyAaaProfilesAsiaOceania(
         }
       }
 
-      // Fix avis : compléter pour atteindre reviewCount
+      // 7b) Fix shortId / slugs
+      let appliedShortId = p.shortId as string | undefined;
+      let appliedSlugs = p.slugs as Record<string, string> | undefined;
+      if (slugIssue) {
+        appliedShortId = appliedShortId || generateShortId(d.id);
+        appliedSlugs = appliedSlugs && appliedSlugs.fr ? appliedSlugs : generateMultilingualSlugs({
+          firstName: p.firstName || 'Maitre',
+          lastName: p.lastName || '',
+          role: 'lawyer',
+          country: p.country || 'FR',
+          languages: ['fr'],
+          specialties: Array.isArray(p.specialties) ? p.specialties : [],
+          uid: d.id,
+        });
+        const updates = { shortId: appliedShortId, slugs: appliedSlugs };
+        await updateDoc(doc(db, 'users', d.id), updates);
+        const sosRef = doc(db, 'sos_profiles', d.id);
+        const sosSnap = await getDoc(sosRef);
+        if (sosSnap.exists()) await updateDoc(sosRef, updates);
+        shortIdSlugsFixed++;
+      }
+
+      // 7c) Fix carousel (créé avec les mêmes données que ui_profile_cards)
+      if (carouselIssue) {
+        const cardSnap = await getDoc(doc(db, 'ui_profile_cards', d.id));
+        const baseCard = cardSnap.exists() ? cardSnap.data() : {
+          id: d.id, uid: d.id,
+          title: p.fullName || `${p.firstName || ''} ${p.lastName || ''}`.trim(),
+          subtitle: 'Avocat',
+          country: targets.find(t => t.code === p.country)?.nameFr || p.country || '',
+          photo: p.profilePhoto || p.avatar || '',
+          rating: p.rating || 0,
+          reviewCount: expected,
+          languages: p.languages || ['fr'],
+          specialties: p.specialties || [],
+          shortId: appliedShortId,
+          slugs: appliedSlugs,
+          href: appliedSlugs?.fr ? `/${appliedSlugs.fr}` : `/profile/${d.id}`,
+          createdAt: serverTimestamp(),
+        };
+        await setDoc(doc(db, 'ui_profile_carousel', d.id), baseCard);
+        carouselFixed++;
+      }
+
+      // 7d) Fix champs alignés (en lot)
+      if (fieldIssue) {
+        const updates: any = {};
+        for (const k of fieldsToFix) updates[k] = ALIGNED_VALUES[k];
+        await updateDoc(doc(db, 'users', d.id), updates);
+        const sosRef = doc(db, 'sos_profiles', d.id);
+        const sosSnap = await getDoc(sosRef);
+        if (sosSnap.exists()) await updateDoc(sosRef, updates);
+        fieldsAligned++;
+      }
+
+      // 7e) Fix avis : compléter pour atteindre reviewCount
       if (revIssue) {
         const toAdd = expected - actual;
         const main = targets.find(t => t.code === p.country) || { code: p.country, nameFr: p.country, nameEn: p.country };
@@ -1261,6 +1442,37 @@ export async function verifyAaaProfilesAsiaOceania(
           await new Promise(r => setTimeout(r, 25));
         }
       }
+
+      // 7f) Fix call_sessions : compléter pour atteindre totalCalls
+      if (callIssue) {
+        const toAdd = totalCallsExpected - callSessionsActual;
+        const createdAtDate = p.createdAt && typeof p.createdAt.toDate === 'function'
+          ? p.createdAt.toDate()
+          : new Date('2026-02-15');
+        const daysSinceCreation = Math.max(1, Math.floor((Date.now() - createdAtDate.getTime()) / (1000 * 60 * 60 * 24)));
+
+        for (let k = 0; k < toAdd; k++) {
+          const callDate = new Date(createdAtDate.getTime() + randomInt(1, daysSinceCreation) * 24 * 60 * 60 * 1000);
+          const callDuration = randomInt(15, 45) * 60;
+          const callEndDate = new Date(callDate.getTime() + callDuration * 1000);
+          await addDoc(collection(db, 'call_sessions'), {
+            metadata: {
+              providerId: d.id,
+              providerName: p.fullName || `${p.firstName || ''} ${p.lastName || ''}`.trim(),
+              clientId: `client_aaa_fix_${d.id.slice(-8)}_${k + 1}`,
+              clientName: `Client ${callSessionsActual + k + 1}`,
+            },
+            status: 'completed',
+            duration: callDuration,
+            callType: 'video',
+            createdAt: Timestamp.fromDate(callDate),
+            startedAt: Timestamp.fromDate(callDate),
+            endedAt: Timestamp.fromDate(callEndDate),
+          });
+          callSessionsAdded++;
+          await new Promise(r => setTimeout(r, 25));
+        }
+      }
     } catch (err) {
       errors++;
     }
@@ -1270,10 +1482,12 @@ export async function verifyAaaProfilesAsiaOceania(
     mode: dryRun ? 'dry-run' : 'execute',
     scanned, inScope, okComplete,
     missingDescription, missingReviews,
-    fixedDescription, reviewsAdded, errors,
+    missingShortIdSlugs, missingCarousel, missingCallSessions, needFieldAlignment,
+    fixedDescription, reviewsAdded, shortIdSlugsFixed, carouselFixed, callSessionsAdded, fieldsAligned,
+    errors,
     message: dryRun
-      ? `${inScope} profil(s) en scope. ${missingDescription.length} sans description correcte, ${missingReviews.length} avec avis manquants. Pour corriger: verifyAaaProfilesAsiaOceania({ dryRun: false })`
-      : `${fixedDescription} description(s) corrigée(s), ${reviewsAdded} avis ajouté(s), ${errors} erreur(s)`,
+      ? `${inScope} profil(s) en scope. ${missingDescription.length} desc, ${missingReviews.length} avis, ${missingShortIdSlugs.length} slugs, ${missingCarousel.length} carousel, ${missingCallSessions.length} sessions, ${needFieldAlignment.length} champs. Pour corriger: verifyAaaProfilesAsiaOceania({ dryRun: false })`
+      : `Corrigé: desc=${fixedDescription}, avis=+${reviewsAdded}, slugs=${shortIdSlugsFixed}, carousel=${carouselFixed}, sessions=+${callSessionsAdded}, champs=${fieldsAligned}. ${errors} erreur(s)`,
   };
 }
 
