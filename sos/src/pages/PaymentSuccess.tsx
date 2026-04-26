@@ -297,9 +297,10 @@ const SuccessPayment: React.FC = () => {
      Retourne true si l'initialisation a réussi (données trouvées)
      ========================= */
   const initializeServiceData = useCallback((): boolean => {
-    // Priorité 1: Données de paymentData (sessionStorage, sauvegardées par CallCheckout)
-    if (paymentData?.amount && paymentData?.serviceType) {
-      const parsedAmount = parseFloat(String(paymentData.amount));
+    // Priorité 1: Données de paymentData (sessionStorage, sauvegardées par CallCheckout
+    // ou par BookingRequestB2B où amount=0 pour les appels SOS-Call gratuits)
+    if (paymentData?.serviceType && (paymentData.amount !== undefined || paymentData.isSosCallFree)) {
+      const parsedAmount = parseFloat(String(paymentData.amount ?? 0));
       setPaidAmount(Number.isNaN(parsedAmount) ? 0 : parsedAmount);
       setPaidServiceType(paymentData.serviceType);
       // Durées fixes basées sur le type de service
@@ -430,6 +431,37 @@ const SuccessPayment: React.FC = () => {
 
     fetchPaymentTimestamp();
   }, [paymentIntentId, isFullyReady]);
+
+  /* =========================
+     Timestamp pour le flux B2B SOS-Call (gratuit)
+     Aucun paiement → on ancre le compte à rebours sur paymentData.savedAt
+     pour que la page affiche immédiatement le timer 4 min.
+     ========================= */
+  useEffect(() => {
+    if (paymentTimestamp) return;
+    if (!paymentData?.isSosCallFree || !callId) return;
+
+    const sessionKey = `payment_timestamp_sos_${callId}`;
+    try {
+      const saved = sessionStorage.getItem(sessionKey);
+      if (saved) {
+        const ts = parseInt(saved, 10);
+        if (!Number.isNaN(ts)) {
+          setPaymentTimestamp(ts);
+          return;
+        }
+      }
+    } catch {}
+
+    const ts =
+      typeof paymentData.savedAt === "number"
+        ? paymentData.savedAt
+        : Date.now();
+    setPaymentTimestamp(ts);
+    try {
+      sessionStorage.setItem(sessionKey, String(ts));
+    } catch {}
+  }, [paymentData?.isSosCallFree, paymentData?.savedAt, callId, paymentTimestamp]);
 
   /* =========================
      Compte à rebours “ready_to_ring”
@@ -1218,7 +1250,7 @@ const SuccessPayment: React.FC = () => {
             {/* Badge statut — partner-contract banner replaces the "Paiement
                 effectué" badge when the call is covered by a B2B SOS-Call
                 contract (no payment was made). */}
-            {paymentData?.isSosCallFree && paymentData?.partnerName ? (
+            {paymentData?.isSosCallFree ? (
               <div className="inline-flex items-center space-x-3 bg-gradient-to-r from-emerald-500/30 to-green-500/30 backdrop-blur-sm rounded-full pl-6 pr-6 py-3 border border-emerald-400/40 mb-8">
                 <CheckCircle className="w-5 h-5 text-emerald-300" />
                 <span className="text-white font-semibold">
@@ -1227,7 +1259,7 @@ const SuccessPayment: React.FC = () => {
                       id: "success.partnerContract",
                       defaultMessage: "Appel pris en charge par {partnerName}",
                     },
-                    { partnerName: paymentData.partnerName }
+                    { partnerName: paymentData.partnerName || "votre partenaire" }
                   )}
                 </span>
                 <div className="w-2 h-2 bg-emerald-300 rounded-full animate-pulse" />
@@ -1494,7 +1526,9 @@ const SuccessPayment: React.FC = () => {
 
         {/* =========================
             SECTION RÉCAP “TOTAL PAYÉ + ÉCONOMIES”
+            Masquée pour les appels B2B SOS-Call (pas de paiement client).
             ========================= */}
+        {!paymentData?.isSosCallFree && (
         <section className="pb-4 bg-gray-950 mt-4">
           <div className="max-w-4xl mx-auto px-6">
             <div className="rounded-2xl border border-green-300/30 bg-green-50/90 p-4 md:p-5">
@@ -1673,6 +1707,7 @@ const SuccessPayment: React.FC = () => {
             )}
           </div>
         </section>
+        )}
 
         {/* Section Détails du service (ton bloc existant conservé) */}
         <section className="py-16 bg-gradient-to-b from-white to-gray-50">
@@ -1733,10 +1768,22 @@ const SuccessPayment: React.FC = () => {
                       {intl.formatMessage({ id: "success.price" })}:
                     </span>
 
-                    <span className="font-black text-2xl text-green-800">
-                      {C}
-                      {fmt(toNum(order?.amount || paidAmount))}
-                    </span>
+                    {paymentData?.isSosCallFree ? (
+                      <span className="font-bold text-green-800 text-right">
+                        {intl.formatMessage(
+                          {
+                            id: "success.partnerContract",
+                            defaultMessage: "Appel pris en charge par {partnerName}",
+                          },
+                          { partnerName: paymentData?.partnerName || "votre partenaire" }
+                        )}
+                      </span>
+                    ) : (
+                      <span className="font-black text-2xl text-green-800">
+                        {C}
+                        {fmt(toNum(order?.amount || paidAmount))}
+                      </span>
+                    )}
                     {/* <span className="font-black text-2xl text-green-800">
                       <span className="font-bold text-green-900">
                       {C}
