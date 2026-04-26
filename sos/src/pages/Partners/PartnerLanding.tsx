@@ -1691,7 +1691,7 @@ const PartnerLanding: React.FC = () => {
         ================================================================ */}
         {showContactModal && (
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 z-[90] flex items-center justify-center p-4"
             role="dialog"
             aria-modal="true"
             aria-labelledby="modal-heading"
