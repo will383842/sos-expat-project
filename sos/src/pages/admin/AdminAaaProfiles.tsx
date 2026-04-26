@@ -62,6 +62,7 @@ import { getSpecialtyLabel, mapLanguageToLocale } from '../../utils/specialtyMap
 
 // Import du script de génération massive d'avocats
 import { generateLawyersAllCountries } from '../../scripts/generateLawyersAllCountries';
+import { generateLawyersAsiaOceania } from '../../scripts/generateLawyersAsiaOceania';
 
 // ==========================================
 // 🔧 MIGRATION: Add forcedAIAccess to existing AAA profiles
@@ -134,6 +135,7 @@ async function migrateAaaProfilesForAIAccess(dryRun = true) {
 // Exposer les fonctions globalement pour la console
 if (typeof window !== 'undefined') {
   (window as any).generateLawyersAllCountries = generateLawyersAllCountries;
+  (window as any).generateLawyersAsiaOceania = generateLawyersAsiaOceania;
   (window as any).migrateSpecialtyCodes = {
     preview: previewMigration,
     migrateAll: migrateAllSpecialtyCodes,
