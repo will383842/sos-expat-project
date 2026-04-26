@@ -2259,12 +2259,30 @@ const BookingRequestB2CInner: React.FC = () => {
       if (!res.ok || data?.status !== 'access_granted') {
         const status = data?.status || 'not_found';
         const messages: Record<string, string> = {
-          code_invalid: 'Code non reconnu. Vérifiez votre saisie.',
-          not_found: "Code introuvable. Contactez votre partenaire si vous pensez avoir un accès.",
-          expired: 'Votre accès a expiré. Contactez votre partenaire.',
-          quota_reached: "Vous avez utilisé tous vos appels pour ce mois.",
-          agreement_inactive: 'Service temporairement indisponible. Contactez votre partenaire.',
-          rate_limited: 'Trop de tentatives. Réessayez dans quelques minutes.',
+          code_invalid: intl.formatMessage({
+            id: 'bookingRequest.sosCall.errors.codeInvalid',
+            defaultMessage: 'Code non reconnu. Vérifiez votre saisie.',
+          }),
+          not_found: intl.formatMessage({
+            id: 'bookingRequest.sosCall.errors.notFound',
+            defaultMessage: "Code introuvable. Contactez votre partenaire si vous pensez avoir un accès.",
+          }),
+          expired: intl.formatMessage({
+            id: 'bookingRequest.sosCall.errors.expired',
+            defaultMessage: 'Votre accès a expiré. Contactez votre partenaire.',
+          }),
+          quota_reached: intl.formatMessage({
+            id: 'bookingRequest.sosCall.errors.quotaReached',
+            defaultMessage: "Vous avez utilisé tous vos appels pour ce mois.",
+          }),
+          agreement_inactive: intl.formatMessage({
+            id: 'bookingRequest.sosCall.errors.agreementInactive',
+            defaultMessage: 'Service temporairement indisponible. Contactez votre partenaire.',
+          }),
+          rate_limited: intl.formatMessage({
+            id: 'bookingRequest.sosCall.errors.rateLimited',
+            defaultMessage: 'Trop de tentatives. Réessayez dans quelques minutes.',
+          }),
         };
         setSosCallError(messages[status] || messages.not_found);
         setSosCallValidated(false);
@@ -2278,7 +2296,10 @@ const BookingRequestB2CInner: React.FC = () => {
       setSosCallValidated(true);
       setSosCallError(null);
     } catch (err) {
-      setSosCallError("Impossible de vérifier le code. Vérifiez votre connexion.");
+      setSosCallError(intl.formatMessage({
+        id: 'bookingRequest.sosCall.errors.network',
+        defaultMessage: "Impossible de vérifier le code. Vérifiez votre connexion.",
+      }));
       setSosCallValidated(false);
     } finally {
       setSosCallChecking(false);
@@ -4768,17 +4789,35 @@ const BookingRequestB2CInner: React.FC = () => {
                       <CheckCircle className="w-7 h-7 text-green-600 flex-shrink-0 mt-0.5" />
                       <div className="flex-1">
                         <div className="font-bold text-green-900 text-lg">
-                          {sosCallPartnerName
-                            ? <>Appel pris en charge par <strong>{sosCallPartnerName}</strong></>
-                            : 'Appel pris en charge par votre partenaire'}
+                          {sosCallPartnerName ? (
+                            <FormattedMessage
+                              id="bookingRequest.sosCall.gated.title"
+                              defaultMessage="Appel pris en charge par <strong>{partnerName}</strong>"
+                              values={{
+                                partnerName: sosCallPartnerName,
+                                strong: (chunks) => <strong>{chunks}</strong>,
+                              }}
+                            />
+                          ) : (
+                            <FormattedMessage
+                              id="bookingRequest.sosCall.gated.titleNoPartner"
+                              defaultMessage="Appel pris en charge par votre partenaire"
+                            />
+                          )}
                         </div>
                         {sosCallPartnerName && (
                           <div className="text-sm text-green-800 mt-1">
-                            Aucun paiement ne vous sera demandé.
+                            <FormattedMessage
+                              id="bookingRequest.sosCall.gated.subtitle"
+                              defaultMessage="Aucun paiement ne vous sera demandé."
+                            />
                           </div>
                         )}
                         <div className="text-xs text-green-700 mt-2">
-                          Sélectionnez simplement le prestataire qui vous convient, remplissez vos coordonnées et déclenchez l'appel.
+                          <FormattedMessage
+                            id="bookingRequest.sosCall.gated.hint"
+                            defaultMessage="Sélectionnez simplement le prestataire qui vous convient, remplissez vos coordonnées et déclenchez l'appel."
+                          />
                         </div>
                       </div>
                     </div>
@@ -4795,11 +4834,16 @@ const BookingRequestB2CInner: React.FC = () => {
                     />
                     <div className="flex-1">
                       <div className="font-semibold text-blue-900">
-                        J'ai un code SOS-Call
+                        <FormattedMessage
+                          id="bookingRequest.sosCall.checkbox.label"
+                          defaultMessage="J'ai un code SOS-Call"
+                        />
                       </div>
                       <div className="text-sm text-blue-800 mt-1">
-                        Si votre entreprise, banque ou assurance vous a fourni un code personnel,
-                        votre appel est pris en charge par votre partenaire — pas de paiement.
+                        <FormattedMessage
+                          id="bookingRequest.sosCall.checkbox.description"
+                          defaultMessage="Si votre entreprise, banque ou assurance vous a fourni un code personnel, votre appel est pris en charge par votre partenaire — pas de paiement."
+                        />
                       </div>
                     </div>
                   </label>
@@ -4808,7 +4852,10 @@ const BookingRequestB2CInner: React.FC = () => {
                     <div className="mt-4 space-y-3">
                       <div>
                         <label className="block text-sm font-medium text-blue-900 mb-1">
-                          Votre code partenaire
+                          <FormattedMessage
+                            id="bookingRequest.sosCall.input.label"
+                            defaultMessage="Votre code partenaire"
+                          />
                         </label>
                         <div className="flex gap-2">
                           <input
@@ -4822,7 +4869,10 @@ const BookingRequestB2CInner: React.FC = () => {
                               }
                             }}
                             disabled={sosCallChecking || sosCallSubmitting}
-                            placeholder="XXX-2026-XXXXX"
+                            placeholder={intl.formatMessage({
+                              id: "bookingRequest.sosCall.input.placeholder",
+                              defaultMessage: "XXX-2026-XXXXX",
+                            })}
                             className="flex-1 px-3 py-2 rounded-lg border border-blue-300 bg-white text-blue-900 font-mono uppercase focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             autoComplete="off"
                             spellCheck={false}
@@ -4834,9 +4884,18 @@ const BookingRequestB2CInner: React.FC = () => {
                             className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm disabled:opacity-50"
                           >
                             {sosCallChecking ? (
-                              <span className="flex items-center gap-1"><Loader2 className="w-4 h-4 animate-spin" /> Vérification…</span>
+                              <span className="flex items-center gap-1">
+                                <Loader2 className="w-4 h-4 animate-spin" />{" "}
+                                <FormattedMessage
+                                  id="bookingRequest.sosCall.button.verifying"
+                                  defaultMessage="Vérification…"
+                                />
+                              </span>
                             ) : (
-                              'Vérifier'
+                              <FormattedMessage
+                                id="bookingRequest.sosCall.button.verify"
+                                defaultMessage="Vérifier"
+                              />
                             )}
                           </button>
                         </div>
@@ -4856,14 +4915,20 @@ const BookingRequestB2CInner: React.FC = () => {
                               }}
                               className="text-xs px-3 py-1.5 rounded-lg bg-white hover:bg-red-50 text-red-800 border border-red-300 font-medium"
                             >
-                              Réessayer
+                              <FormattedMessage
+                                id="bookingRequest.sosCall.button.retry"
+                                defaultMessage="Réessayer"
+                              />
                             </button>
                             <button
                               type="button"
                               onClick={() => toggleSosCallCheckbox(false)}
                               className="text-xs px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white border border-blue-700 font-semibold"
                             >
-                              Continuer sans code (payer l'appel)
+                              <FormattedMessage
+                                id="bookingRequest.sosCall.button.continueWithoutCode"
+                                defaultMessage="Continuer sans code (payer l'appel)"
+                              />
                             </button>
                           </div>
                         </div>
@@ -4877,12 +4942,27 @@ const BookingRequestB2CInner: React.FC = () => {
                         <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
                         <div className="flex-1">
                           <div className="font-semibold text-green-900">
-                            {sosCallPartnerName
-                              ? <>Code validé — appel pris en charge par <strong>{sosCallPartnerName}</strong></>
-                              : 'Code validé — appel pris en charge par votre partenaire'}
+                            {sosCallPartnerName ? (
+                              <FormattedMessage
+                                id="bookingRequest.sosCall.validated.title"
+                                defaultMessage="Code validé — appel pris en charge par <strong>{partnerName}</strong>"
+                                values={{
+                                  partnerName: sosCallPartnerName,
+                                  strong: (chunks) => <strong>{chunks}</strong>,
+                                }}
+                              />
+                            ) : (
+                              <FormattedMessage
+                                id="bookingRequest.sosCall.validated.titleNoPartner"
+                                defaultMessage="Code validé — appel pris en charge par votre partenaire"
+                              />
+                            )}
                           </div>
                           <div className="text-sm text-green-800 mt-1">
-                            Vous ne paierez rien.
+                            <FormattedMessage
+                              id="bookingRequest.sosCall.validated.subtitle"
+                              defaultMessage="Vous ne paierez rien."
+                            />
                           </div>
                           <div className="mt-3 flex flex-wrap gap-2">
                             <button
@@ -4890,14 +4970,20 @@ const BookingRequestB2CInner: React.FC = () => {
                               onClick={resetSosCallCode}
                               className="text-sm px-3 py-1.5 rounded-lg bg-white hover:bg-gray-50 text-green-800 border border-green-300 font-medium"
                             >
-                              Modifier le code
+                              <FormattedMessage
+                                id="bookingRequest.sosCall.button.modify"
+                                defaultMessage="Modifier le code"
+                              />
                             </button>
                             <button
                               type="button"
                               onClick={() => toggleSosCallCheckbox(false)}
                               className="text-sm px-3 py-1.5 rounded-lg bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 font-medium"
                             >
-                              Annuler et payer l'appel
+                              <FormattedMessage
+                                id="bookingRequest.sosCall.button.cancel"
+                                defaultMessage="Annuler et payer l'appel"
+                              />
                             </button>
                           </div>
                         </div>
