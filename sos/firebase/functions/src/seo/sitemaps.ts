@@ -365,7 +365,7 @@ ${hreflangs}
         if (urlBlocksPage.length === 0) {
           // Page out of range — return empty valid sitemap
           res.set('Content-Type', 'application/xml; charset=utf-8');
-          res.set('Cache-Control', 'public, max-age=3600');
+          res.set('Cache-Control', 'public, max-age=21600');
           res.status(200).send(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>`);
           return;
         }
@@ -386,7 +386,7 @@ ${hreflangs}
       const xml = xmlParts.join('\n');
 
       res.set('Content-Type', 'application/xml; charset=utf-8');
-      res.set('Cache-Control', 'public, max-age=3600');
+      res.set('Cache-Control', 'public, max-age=21600');
       if (totalPages > 1) {
         res.set('X-Sitemap-Total-Pages', String(totalPages));
         res.set('X-Sitemap-Total-URLs', String(allUrlBlocks.length));
@@ -480,7 +480,7 @@ export const sitemapHelp = onRequest(
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
 </urlset>`;
         res.set('Content-Type', 'application/xml; charset=utf-8');
-        res.set('Cache-Control', 'public, max-age=3600');
+        res.set('Cache-Control', 'public, max-age=21600');
         res.status(200).send(emptyXml);
         console.log(`⚠️ Sitemap help articles: 0 articles publiés`);
         return;
@@ -571,7 +571,7 @@ ${hreflangs}
 
       const helpXml = [`<?xml version="1.0" encoding="UTF-8"?>`, `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"`, `        xmlns:xhtml="http://www.w3.org/1999/xhtml">`, ...helpPage, `</urlset>`].join('\n');
       res.set('Content-Type', 'application/xml; charset=utf-8');
-      res.set('Cache-Control', 'public, max-age=3600');
+      res.set('Cache-Control', 'public, max-age=21600');
       res.status(200).send(helpXml);
 
       console.log(`✅ Sitemap help: ${publishedDocs.length} articles, ${urlBlocks.length} URLs`);
@@ -663,7 +663,7 @@ ${hreflangs}
       const xml = urlBlocks.join('\n');
 
       res.set('Content-Type', 'application/xml; charset=utf-8');
-      res.set('Cache-Control', 'public, max-age=3600');
+      res.set('Cache-Control', 'public, max-age=21600');
       res.status(200).send(xml);
 
       console.log(`✅ Sitemap landing: ${snapshot.docs.length} pages`);
@@ -717,7 +717,7 @@ export const sitemapFaq = onRequest(
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
 </urlset>`;
         res.set('Content-Type', 'application/xml; charset=utf-8');
-        res.set('Cache-Control', 'public, max-age=3600');
+        res.set('Cache-Control', 'public, max-age=21600');
         res.status(200).send(emptyXml);
         console.log(`⚠️ Sitemap FAQ: 0 FAQs actives`);
         return;
@@ -791,7 +791,7 @@ ${hreflangs}
       const xml = urlBlocks.join('\n');
 
       res.set('Content-Type', 'application/xml; charset=utf-8');
-      res.set('Cache-Control', 'public, max-age=3600');
+      res.set('Cache-Control', 'public, max-age=21600');
       res.status(200).send(xml);
 
       console.log(`✅ Sitemap FAQ: ${snapshot.docs.length} FAQs (${snapshot.docs.length * LANGUAGES.length} URLs)`);
@@ -1059,7 +1059,7 @@ ${hreflangs}
       const xml = urlBlocks.join('\n');
 
       res.set('Content-Type', 'application/xml; charset=utf-8');
-      res.set('Cache-Control', 'public, max-age=3600');
+      res.set('Cache-Control', 'public, max-age=21600');
       res.status(200).send(xml);
 
       const langLabel = filterLang ? ` (lang=${filterLang})` : ' (all langs)';
@@ -1216,7 +1216,7 @@ ${sitemapBlocks.join('\n')}
 </sitemapindex>`;
 
       res.set('Content-Type', 'application/xml; charset=utf-8');
-      res.set('Cache-Control', 'public, max-age=3600');
+      res.set('Cache-Control', 'public, max-age=21600');
       res.status(200).send(xml);
 
       console.log(`✅ Master sitemap index: ${sitemapBlocks.length} unique sitemaps (${blogCount} from blog, ${sitemapBlocks.length - blogCount} from Firebase)`);

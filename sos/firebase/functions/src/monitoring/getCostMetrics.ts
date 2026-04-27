@@ -11,9 +11,10 @@
  * @admin-only Cette fonction est reservee aux administrateurs
  */
 
-import * as functions from 'firebase-functions/v1';
+import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import * as admin from 'firebase-admin';
 import { logger } from 'firebase-functions';
+import { ALLOWED_ORIGINS } from '../lib/functionConfigs';
 
 // ============================================================================
 // TYPES
@@ -533,34 +534,37 @@ function generateCostAlerts(metrics: {
  * @param data.periodDays - Nombre de jours a analyser (defaut: 1 pour 24h)
  * @returns CostMetrics - Objet contenant toutes les metriques de couts
  */
-export const getCostMetrics = functions
-  .region('europe-west1')
-  .runWith({
-    memory: '256MB',
+export const getCostMetrics = onCall(
+  {
+    region: 'europe-west1',
+    memory: '256MiB',
+    cpu: 0.083,
     timeoutSeconds: 60,
-  })
-  .https.onCall(async (data, context): Promise<CostMetrics> => {
+    cors: ALLOWED_ORIGINS,
+  },
+  async (request): Promise<CostMetrics> => {
     // Verification d'authentification
-    if (!context.auth) {
-      throw new functions.https.HttpsError(
+    if (!request.auth) {
+      throw new HttpsError(
         'unauthenticated',
         'Authentication required'
       );
     }
 
     // Verification admin
-    const isAdmin = await verifyAdminAccess(context.auth.uid);
+    const isAdmin = await verifyAdminAccess(request.auth.uid);
     if (!isAdmin) {
-      throw new functions.https.HttpsError(
+      throw new HttpsError(
         'permission-denied',
         'Admin access required'
       );
     }
 
-    logger.info('[CostMetrics] Calculating cost metrics', { uid: context.auth.uid });
+    logger.info('[CostMetrics] Calculating cost metrics', { uid: request.auth.uid });
 
     try {
       // Determiner la periode d'analyse
+      const data = request.data;
       const periodDays = data?.periodDays || 1;
       const periodEnd = new Date();
       const periodStart = new Date();
@@ -668,15 +672,16 @@ export const getCostMetrics = functions
           timestamp: admin.firestore.Timestamp.fromDate(a.timestamp),
         })),
         calculatedAt: admin.firestore.Timestamp.now(),
-        calculatedBy: context.auth.uid,
+        calculatedBy: request.auth.uid,
       });
 
       return metrics;
     } catch (error) {
       logger.error('[CostMetrics] Error calculating metrics:', error);
-      throw new functions.https.HttpsError(
+      throw new HttpsError(
         'internal',
         'Failed to calculate cost metrics'
       );
     }
-  });
+  }
+);

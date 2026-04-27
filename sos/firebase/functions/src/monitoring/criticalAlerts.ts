@@ -12,13 +12,14 @@
  */
 
 import { onSchedule } from 'firebase-functions/v2/scheduler';
-import * as functions from 'firebase-functions/v1';
+import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import * as admin from 'firebase-admin';
 import { logger } from 'firebase-functions';
 // fetch is available natively in Node.js 22 - no import needed
 import nodemailer from 'nodemailer';
 import { EMAIL_USER, EMAIL_PASS } from '../lib/secrets';
 import { ADMIN_ALERT_EMAILS } from '../lib/constants';
+import { ALLOWED_ORIGINS } from '../lib/functionConfigs';
 
 // ============================================================================
 // LAZY INITIALIZATION
@@ -556,17 +557,22 @@ export const cleanupOldAlerts = onSchedule(
 /**
  * Admin callable pour obtenir les alertes actives
  */
-export const getActiveAlerts = functions
-  .region('europe-west1')
-  .https.onCall(async (_data, context) => {
-    if (!context.auth) {
-      throw new functions.https.HttpsError('unauthenticated', 'Authentication required');
+export const getActiveAlerts = onCall(
+  {
+    region: 'europe-west1',
+    memory: '256MiB',
+    cpu: 0.083,
+    cors: ALLOWED_ORIGINS,
+  },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'Authentication required');
     }
 
-    const userDoc = await admin.firestore().collection('users').doc(context.auth.uid).get();
+    const userDoc = await admin.firestore().collection('users').doc(request.auth.uid).get();
     const userData = userDoc.data();
     if (userData?.role !== 'admin') {
-      throw new functions.https.HttpsError('permission-denied', 'Admin access required');
+      throw new HttpsError('permission-denied', 'Admin access required');
     }
 
     try {
@@ -586,30 +592,36 @@ export const getActiveAlerts = functions
       };
     } catch (error: unknown) {
       const err = error instanceof Error ? error : new Error(String(error));
-      throw new functions.https.HttpsError('internal', err.message);
+      throw new HttpsError('internal', err.message);
     }
-  });
+  }
+);
 
 /**
  * Admin callable pour acknowledger une alerte
  */
-export const acknowledgeAlert = functions
-  .region('europe-west1')
-  .https.onCall(async (data, context) => {
-    if (!context.auth) {
-      throw new functions.https.HttpsError('unauthenticated', 'Authentication required');
+export const acknowledgeAlert = onCall(
+  {
+    region: 'europe-west1',
+    memory: '256MiB',
+    cpu: 0.083,
+    cors: ALLOWED_ORIGINS,
+  },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'Authentication required');
     }
 
-    const userDoc = await admin.firestore().collection('users').doc(context.auth.uid).get();
+    const userDoc = await admin.firestore().collection('users').doc(request.auth.uid).get();
     const userData = userDoc.data();
     if (userData?.role !== 'admin') {
-      throw new functions.https.HttpsError('permission-denied', 'Admin access required');
+      throw new HttpsError('permission-denied', 'Admin access required');
     }
 
-    const { alertId } = data as { alertId: string };
+    const { alertId } = request.data as { alertId: string };
 
     if (!alertId) {
-      throw new functions.https.HttpsError('invalid-argument', 'alertId is required');
+      throw new HttpsError('invalid-argument', 'alertId is required');
     }
 
     try {
@@ -618,31 +630,38 @@ export const acknowledgeAlert = functions
         .doc(alertId)
         .update({
           acknowledged: true,
-          acknowledgedBy: context.auth.uid,
+          acknowledgedBy: request.auth.uid,
           acknowledgedAt: admin.firestore.Timestamp.now()
         });
 
       return { success: true, alertId };
     } catch (error: unknown) {
       const err = error instanceof Error ? error : new Error(String(error));
-      throw new functions.https.HttpsError('internal', err.message);
+      throw new HttpsError('internal', err.message);
     }
-  });
+  }
+);
 
 /**
  * Admin callable pour obtenir un résumé de santé du système
  */
-export const getSystemHealthSummary = functions
-  .region('europe-west1')
-  .https.onCall(async (_data, context) => {
-    if (!context.auth) {
-      throw new functions.https.HttpsError('unauthenticated', 'Authentication required');
+export const getSystemHealthSummary = onCall(
+  {
+    region: 'europe-west1',
+    memory: '256MiB',
+    cpu: 0.083,
+    timeoutSeconds: 60,
+    cors: ALLOWED_ORIGINS,
+  },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'Authentication required');
     }
 
-    const userDoc = await admin.firestore().collection('users').doc(context.auth.uid).get();
+    const userDoc = await admin.firestore().collection('users').doc(request.auth.uid).get();
     const userData = userDoc.data();
     if (userData?.role !== 'admin') {
-      throw new functions.https.HttpsError('permission-denied', 'Admin access required');
+      throw new HttpsError('permission-denied', 'Admin access required');
     }
 
     const db = admin.firestore();
@@ -739,6 +758,7 @@ export const getSystemHealthSummary = functions
       };
     } catch (error: unknown) {
       const err = error instanceof Error ? error : new Error(String(error));
-      throw new functions.https.HttpsError('internal', err.message);
+      throw new HttpsError('internal', err.message);
     }
-  });
+  }
+);

@@ -8,8 +8,7 @@
  */
 
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
-import * as functionsV1 from "firebase-functions/v1";
-import { HttpsError, onCall } from "firebase-functions/v2/https";
+import { HttpsError, onCall, onRequest } from "firebase-functions/v2/https";
 import { ALLOWED_ORIGINS } from "../lib/functionConfigs";
 
 // ============================================================================
@@ -718,10 +717,14 @@ export const adminResetMessageTemplatesToDefaults = onCall(
  * HTTP function to initialize message templates on deploy
  * Can be called manually or as part of deployment scripts
  */
-export const initializeMessageTemplates = functionsV1
-  .region("europe-west1")
-  .runWith({ memory: "256MB" })
-  .https.onRequest(async (req, res) => {
+export const initializeMessageTemplates = onRequest(
+  {
+    region: "europe-west1",
+    memory: "256MiB",
+    cpu: 0.083,
+    invoker: "public",
+  },
+  async (req, res) => {
     // Only allow POST requests
     if (req.method !== "POST") {
       res.status(405).send("Method not allowed");
@@ -744,4 +747,5 @@ export const initializeMessageTemplates = functionsV1
       console.error("Error initializing message templates:", error);
       res.status(500).json({ success: false, error: String(error) });
     }
-  });
+  }
+);

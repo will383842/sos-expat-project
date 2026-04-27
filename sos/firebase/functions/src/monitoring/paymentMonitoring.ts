@@ -10,10 +10,11 @@
  */
 
 import { onSchedule } from 'firebase-functions/v2/scheduler';
-import * as functions from 'firebase-functions/v1';
+import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import * as admin from 'firebase-admin';
 import { logger as functionsLogger } from 'firebase-functions';
 import { logger } from '../utils/productionLogger';
+import { ALLOWED_ORIGINS } from '../lib/functionConfigs';
 
 // =====================
 // CONFIGURATION
@@ -703,14 +704,19 @@ export const cleanupOldPaymentAlerts = onSchedule(
 /**
  * Obtenir les alertes de paiement actives
  */
-export const getPaymentAlerts = functions
-  .region('europe-west1')
-  .https.onCall(async (data, context) => {
-    if (!context.auth) {
-      throw new functions.https.HttpsError('unauthenticated', 'Authentication required');
+export const getPaymentAlerts = onCall(
+  {
+    region: 'europe-west1',
+    memory: '256MiB',
+    cpu: 0.083,
+    cors: ALLOWED_ORIGINS,
+  },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'Authentication required');
     }
 
-    const { resolved = false, limit = 50 } = data as { resolved?: boolean; limit?: number };
+    const { resolved = false, limit = 50 } = request.data as { resolved?: boolean; limit?: number };
 
     try {
       const alerts = await db().collection(CONFIG.ALERTS_COLLECTION)
@@ -728,49 +734,61 @@ export const getPaymentAlerts = functions
         count: alerts.size
       };
     } catch (error) {
-      throw new functions.https.HttpsError('internal', 'Failed to get alerts');
+      throw new HttpsError('internal', 'Failed to get alerts');
     }
-  });
+  }
+);
 
 /**
  * Résoudre une alerte de paiement
  */
-export const resolvePaymentAlert = functions
-  .region('europe-west1')
-  .https.onCall(async (data, context) => {
-    if (!context.auth) {
-      throw new functions.https.HttpsError('unauthenticated', 'Authentication required');
+export const resolvePaymentAlert = onCall(
+  {
+    region: 'europe-west1',
+    memory: '256MiB',
+    cpu: 0.083,
+    cors: ALLOWED_ORIGINS,
+  },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'Authentication required');
     }
 
-    const { alertId } = data as { alertId: string };
+    const { alertId } = request.data as { alertId: string };
     if (!alertId) {
-      throw new functions.https.HttpsError('invalid-argument', 'alertId is required');
+      throw new HttpsError('invalid-argument', 'alertId is required');
     }
 
     try {
       await db().collection(CONFIG.ALERTS_COLLECTION).doc(alertId).update({
         resolved: true,
         resolvedAt: admin.firestore.Timestamp.now(),
-        resolvedBy: context.auth.uid
+        resolvedBy: request.auth.uid
       });
 
       return { success: true };
     } catch (error) {
-      throw new functions.https.HttpsError('internal', 'Failed to resolve alert');
+      throw new HttpsError('internal', 'Failed to resolve alert');
     }
-  });
+  }
+);
 
 /**
  * Obtenir les métriques de paiement récentes
  */
-export const getPaymentMetrics = functions
-  .region('europe-west1')
-  .https.onCall(async (data, context) => {
-    if (!context.auth) {
-      throw new functions.https.HttpsError('unauthenticated', 'Authentication required');
+export const getPaymentMetrics = onCall(
+  {
+    region: 'europe-west1',
+    memory: '256MiB',
+    cpu: 0.083,
+    cors: ALLOWED_ORIGINS,
+  },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'Authentication required');
     }
 
-    const { days = 7 } = data as { days?: number };
+    const { days = 7 } = request.data as { days?: number };
 
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
@@ -790,6 +808,7 @@ export const getPaymentMetrics = functions
         count: metrics.size
       };
     } catch (error) {
-      throw new functions.https.HttpsError('internal', 'Failed to get metrics');
+      throw new HttpsError('internal', 'Failed to get metrics');
     }
-  });
+  }
+);

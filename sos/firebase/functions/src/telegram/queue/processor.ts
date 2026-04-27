@@ -287,7 +287,7 @@ async function processMessage(
 export const processTelegramQueue = onSchedule(
   {
     region: 'europe-west3',
-    schedule: '*/10 * * * *', // Every 10 minutes (optimized from 5min - saves ~50% invocations)
+    schedule: '*/15 * * * *', // Every 15 minutes (optimized from 10min - saves ~33% invocations, capacity still sufficient: 4 cycles/h × 25 batch = 100 msg/h)
     timeZone: 'Europe/Paris',
     memory: '256MiB',
     cpu: 0.083,

@@ -14,10 +14,11 @@
  */
 
 import { onSchedule } from 'firebase-functions/v2/scheduler';
-import * as functions from 'firebase-functions/v1';
+import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import * as admin from 'firebase-admin';
 import { logger as functionsLogger } from 'firebase-functions';
 import { ADMIN_ALERT_EMAILS } from '../lib/constants';
+import { ALLOWED_ORIGINS } from '../lib/functionConfigs';
 // fetch is available natively in Node.js 22 - no import needed
 
 // ============================================================================
@@ -1009,14 +1010,19 @@ export const cleanupFunctionalData = onSchedule(
 /**
  * Obtenir les alertes fonctionnelles actives
  */
-export const getFunctionalAlerts = functions
-  .region('europe-west1')
-  .https.onCall(async (data, context) => {
-    if (!context.auth) {
-      throw new functions.https.HttpsError('unauthenticated', 'Authentication required');
+export const getFunctionalAlerts = onCall(
+  {
+    region: 'europe-west1',
+    memory: '256MiB',
+    cpu: 0.083,
+    cors: ALLOWED_ORIGINS,
+  },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'Authentication required');
     }
 
-    const { resolved = false, limit = 50 } = data as { resolved?: boolean; limit?: number };
+    const { resolved = false, limit = 50 } = request.data as { resolved?: boolean; limit?: number };
 
     try {
       const alerts = await db().collection(CONFIG.ALERTS_COLLECTION)
@@ -1036,48 +1042,60 @@ export const getFunctionalAlerts = functions
         count: alerts.size
       };
     } catch (error) {
-      throw new functions.https.HttpsError('internal', 'Failed to get alerts');
+      throw new HttpsError('internal', 'Failed to get alerts');
     }
-  });
+  }
+);
 
 /**
  * Résoudre une alerte fonctionnelle
  */
-export const resolveFunctionalAlert = functions
-  .region('europe-west1')
-  .https.onCall(async (data, context) => {
-    if (!context.auth) {
-      throw new functions.https.HttpsError('unauthenticated', 'Authentication required');
+export const resolveFunctionalAlert = onCall(
+  {
+    region: 'europe-west1',
+    memory: '256MiB',
+    cpu: 0.083,
+    cors: ALLOWED_ORIGINS,
+  },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'Authentication required');
     }
 
-    const { alertId, resolution } = data as { alertId: string; resolution?: string };
+    const { alertId, resolution } = request.data as { alertId: string; resolution?: string };
 
     if (!alertId) {
-      throw new functions.https.HttpsError('invalid-argument', 'alertId is required');
+      throw new HttpsError('invalid-argument', 'alertId is required');
     }
 
     try {
       await db().collection(CONFIG.ALERTS_COLLECTION).doc(alertId).update({
         resolved: true,
         resolvedAt: admin.firestore.Timestamp.now(),
-        resolvedBy: context.auth.uid,
+        resolvedBy: request.auth.uid,
         resolution: resolution || 'Resolved by admin'
       });
 
       return { success: true };
     } catch (error) {
-      throw new functions.https.HttpsError('internal', 'Failed to resolve alert');
+      throw new HttpsError('internal', 'Failed to resolve alert');
     }
-  });
+  }
+);
 
 /**
  * Obtenir le résumé de santé fonctionnelle
  */
-export const getFunctionalHealthSummary = functions
-  .region('europe-west1')
-  .https.onCall(async (_data, context) => {
-    if (!context.auth) {
-      throw new functions.https.HttpsError('unauthenticated', 'Authentication required');
+export const getFunctionalHealthSummary = onCall(
+  {
+    region: 'europe-west1',
+    memory: '256MiB',
+    cpu: 0.083,
+    cors: ALLOWED_ORIGINS,
+  },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'Authentication required');
     }
 
     try {
@@ -1129,28 +1147,35 @@ export const getFunctionalHealthSummary = functions
         checkedAt: new Date().toISOString()
       };
     } catch (error) {
-      throw new functions.https.HttpsError('internal', 'Failed to get health summary');
+      throw new HttpsError('internal', 'Failed to get health summary');
     }
-  });
+  }
+);
 
 /**
  * Déclencher manuellement une vérification fonctionnelle
  */
-export const triggerFunctionalCheck = functions
-  .region('europe-west1')
-  .https.onCall(async (data, context) => {
-    if (!context.auth) {
-      throw new functions.https.HttpsError('unauthenticated', 'Authentication required');
+export const triggerFunctionalCheck = onCall(
+  {
+    region: 'europe-west1',
+    memory: '256MiB',
+    cpu: 0.083,
+    timeoutSeconds: 300,
+    cors: ALLOWED_ORIGINS,
+  },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'Authentication required');
     }
 
     // Vérifier que c'est un admin
-    const userDoc = await db().collection('users').doc(context.auth.uid).get();
+    const userDoc = await db().collection('users').doc(request.auth.uid).get();
     const userData = userDoc.data();
     if (userData?.role !== 'admin') {
-      throw new functions.https.HttpsError('permission-denied', 'Admin access required');
+      throw new HttpsError('permission-denied', 'Admin access required');
     }
 
-    const { checkType = 'all' } = data as { checkType?: 'all' | 'critical' | 'signup' | 'booking' | 'tracking' | 'payment' };
+    const { checkType = 'all' } = request.data as { checkType?: 'all' | 'critical' | 'signup' | 'booking' | 'tracking' | 'payment' };
 
     try {
       switch (checkType) {
@@ -1182,6 +1207,7 @@ export const triggerFunctionalCheck = functions
 
       return { success: true, checkType };
     } catch (error) {
-      throw new functions.https.HttpsError('internal', 'Check failed');
+      throw new HttpsError('internal', 'Check failed');
     }
-  });
+  }
+);

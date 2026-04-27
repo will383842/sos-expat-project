@@ -43,7 +43,7 @@ const BATCH_SAFE_LIMIT = 450;
 
 export const aaaBusySimulation = scheduler.onSchedule(
   {
-    schedule: 'every 4 minutes',
+    schedule: 'every 8 minutes',
     timeZone: 'Europe/Paris',
     region: 'europe-west3',
     memory: '256MiB',

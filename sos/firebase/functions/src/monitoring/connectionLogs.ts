@@ -823,21 +823,29 @@ export async function logServiceConnection(
 // ============================================================================
 
 /**
- * V1 wrapper for logConnection
+ * V1 wrapper for logConnection (migrated to v2 — same exported name preserved for backward compatibility)
  */
-export const logConnectionV1 = functions
-  .region(CONFIG.REGION)
-  .https.onCall(async (data: LogConnectionInput, context) => {
+export const logConnectionV1 = onCall(
+  {
+    region: CONFIG.REGION,
+    cpu: 0.083,
+    memory: '256MiB',
+    timeoutSeconds: 30,
+    cors: ALLOWED_ORIGINS,
+  },
+  async (request) => {
+    const data = request.data as LogConnectionInput;
+
     // Validate required fields
     if (!data.eventType || !data.service || !data.action) {
-      throw new functions.https.HttpsError(
+      throw new HttpsError(
         'invalid-argument',
         'eventType, service, and action are required'
       );
     }
 
-    const userId = data.userId || context.auth?.uid || null;
-    const userEmail = data.userEmail || context.auth?.token?.email || null;
+    const userId = data.userId || request.auth?.uid || null;
+    const userEmail = data.userEmail || request.auth?.token?.email || null;
 
     try {
       const logId = await createConnectionLog({
@@ -849,9 +857,10 @@ export const logConnectionV1 = functions
       return { success: true, logId };
     } catch (error) {
       const err = error instanceof Error ? error : new Error(String(error));
-      throw new functions.https.HttpsError('internal', err.message);
+      throw new HttpsError('internal', err.message);
     }
-  });
+  }
+);
 
 // ============================================================================
 // EXPORTS

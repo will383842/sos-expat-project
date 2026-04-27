@@ -12,11 +12,12 @@
  * Rétention : 3 ans (obligation légale GDPR)
  */
 
-import * as functions from 'firebase-functions/v1';
+import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import * as admin from 'firebase-admin';
 import { logger } from 'firebase-functions';
 import { makeStripeClient } from '../StripeManager';
 import { getStripeSecretKey } from '../lib/stripe';
+import { ALLOWED_ORIGINS } from '../lib/functionConfigs';
 
 // ============================================================================
 // CONFIGURATION
@@ -360,15 +361,20 @@ export async function createGDPRRequest(
 /**
  * Utilisateur demande l'export de ses données (Article 20 GDPR)
  */
-export const requestDataExport = functions
-  .region('europe-west1')
-  .https.onCall(async (data, context) => {
-    if (!context.auth) {
-      throw new functions.https.HttpsError('unauthenticated', 'Authentication required');
+export const requestDataExport = onCall(
+  {
+    region: 'europe-west1',
+    memory: '256MiB',
+    cpu: 0.083,
+    cors: ALLOWED_ORIGINS,
+  },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'Authentication required');
     }
 
-    const userId = context.auth.uid;
-    const { language = 'fr' } = (data || {}) as { language?: string };
+    const userId = request.auth.uid;
+    const { language = 'fr' } = (request.data || {}) as { language?: string };
     const db = admin.firestore();
 
     try {
@@ -381,7 +387,7 @@ export const requestDataExport = functions
         .get();
 
       if (!existingRequest.empty) {
-        throw new functions.https.HttpsError(
+        throw new HttpsError(
           'already-exists',
           getTranslation('exportAlreadyExists', language)
         );
@@ -396,25 +402,31 @@ export const requestDataExport = functions
       };
 
     } catch (error: unknown) {
-      if (error instanceof functions.https.HttpsError) throw error;
+      if (error instanceof HttpsError) throw error;
       const err = error instanceof Error ? error : new Error(String(error));
       logger.error('[GDPR] Export request failed:', err);
-      throw new functions.https.HttpsError('internal', err.message);
+      throw new HttpsError('internal', err.message);
     }
-  });
+  }
+);
 
 /**
  * Utilisateur demande la suppression de son compte (Article 17 GDPR)
  */
-export const requestAccountDeletion = functions
-  .region('europe-west1')
-  .https.onCall(async (data, context) => {
-    if (!context.auth) {
-      throw new functions.https.HttpsError('unauthenticated', 'Authentication required');
+export const requestAccountDeletion = onCall(
+  {
+    region: 'europe-west1',
+    memory: '256MiB',
+    cpu: 0.083,
+    cors: ALLOWED_ORIGINS,
+  },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'Authentication required');
     }
 
-    const userId = context.auth.uid;
-    const { reason, language = 'fr' } = data as { reason?: string; language?: string };
+    const userId = request.auth.uid;
+    const { reason, language = 'fr' } = request.data as { reason?: string; language?: string };
     const db = admin.firestore();
 
     try {
@@ -427,7 +439,7 @@ export const requestAccountDeletion = functions
         .get();
 
       if (!existingRequest.empty) {
-        throw new functions.https.HttpsError(
+        throw new HttpsError(
           'already-exists',
           getTranslation('deletionAlreadyExists', language)
         );
@@ -460,25 +472,31 @@ export const requestAccountDeletion = functions
       };
 
     } catch (error: unknown) {
-      if (error instanceof functions.https.HttpsError) throw error;
+      if (error instanceof HttpsError) throw error;
       const err = error instanceof Error ? error : new Error(String(error));
       logger.error('[GDPR] Deletion request failed:', err);
-      throw new functions.https.HttpsError('internal', err.message);
+      throw new HttpsError('internal', err.message);
     }
-  });
+  }
+);
 
 /**
  * Utilisateur consulte l'historique d'accès à ses données (Article 15 GDPR)
  */
-export const getMyDataAccessHistory = functions
-  .region('europe-west1')
-  .https.onCall(async (data, context) => {
-    if (!context.auth) {
-      throw new functions.https.HttpsError('unauthenticated', 'Authentication required');
+export const getMyDataAccessHistory = onCall(
+  {
+    region: 'europe-west1',
+    memory: '256MiB',
+    cpu: 0.083,
+    cors: ALLOWED_ORIGINS,
+  },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'Authentication required');
     }
 
-    const userId = context.auth.uid;
-    const { limit: queryLimit = 50 } = data as { limit?: number };
+    const userId = request.auth.uid;
+    const { limit: queryLimit = 50 } = request.data as { limit?: number };
     const db = admin.firestore();
 
     try {
@@ -493,15 +511,15 @@ export const getMyDataAccessHistory = functions
 
       return {
         logs: auditLogs.docs.map(doc => {
-          const data = doc.data();
+          const docData = doc.data();
           return {
             id: doc.id,
-            timestamp: data.timestamp?.toDate?.()?.toISOString(),
-            eventType: data.eventType,
-            actorType: data.actorType,
-            action: data.action,
-            dataFields: data.dataFields,
-            success: data.success
+            timestamp: docData.timestamp?.toDate?.()?.toISOString(),
+            eventType: docData.eventType,
+            actorType: docData.actorType,
+            action: docData.action,
+            dataFields: docData.dataFields,
+            success: docData.success
           };
         }),
         total: auditLogs.size
@@ -510,22 +528,28 @@ export const getMyDataAccessHistory = functions
     } catch (error: unknown) {
       const err = error instanceof Error ? error : new Error(String(error));
       logger.error('[GDPR] Get access history failed:', err);
-      throw new functions.https.HttpsError('internal', err.message);
+      throw new HttpsError('internal', err.message);
     }
-  });
+  }
+);
 
 /**
  * Utilisateur met à jour ses préférences de consentement
  */
-export const updateConsentPreferences = functions
-  .region('europe-west1')
-  .https.onCall(async (data, context) => {
-    if (!context.auth) {
-      throw new functions.https.HttpsError('unauthenticated', 'Authentication required');
+export const updateConsentPreferences = onCall(
+  {
+    region: 'europe-west1',
+    memory: '256MiB',
+    cpu: 0.083,
+    cors: ALLOWED_ORIGINS,
+  },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'Authentication required');
     }
 
-    const userId = context.auth.uid;
-    const { consents, language = 'fr' } = data as {
+    const userId = request.auth.uid;
+    const { consents, language = 'fr' } = request.data as {
       consents: {
         marketing?: boolean;
         analytics?: boolean;
@@ -568,9 +592,10 @@ export const updateConsentPreferences = functions
     } catch (error: unknown) {
       const err = error instanceof Error ? error : new Error(String(error));
       logger.error('[GDPR] Update consent failed:', err);
-      throw new functions.https.HttpsError('internal', err.message);
+      throw new HttpsError('internal', err.message);
     }
-  });
+  }
+);
 
 // ============================================================================
 // ADMIN FUNCTIONS
@@ -579,20 +604,25 @@ export const updateConsentPreferences = functions
 /**
  * Admin: Liste les demandes GDPR en attente
  */
-export const listGDPRRequests = functions
-  .region('europe-west1')
-  .https.onCall(async (data, context) => {
-    if (!context.auth) {
-      throw new functions.https.HttpsError('unauthenticated', 'Authentication required');
+export const listGDPRRequests = onCall(
+  {
+    region: 'europe-west1',
+    memory: '256MiB',
+    cpu: 0.083,
+    cors: ALLOWED_ORIGINS,
+  },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'Authentication required');
     }
 
-    const userDoc = await admin.firestore().collection('users').doc(context.auth.uid).get();
+    const userDoc = await admin.firestore().collection('users').doc(request.auth.uid).get();
     const userData = userDoc.data();
     if (userData?.role !== 'admin') {
-      throw new functions.https.HttpsError('permission-denied', 'Admin access required');
+      throw new HttpsError('permission-denied', 'Admin access required');
     }
 
-    const { status = 'pending', limit: queryLimit = 50 } = data as {
+    const { status = 'pending', limit: queryLimit = 50 } = request.data as {
       status?: string;
       limit?: number;
     };
@@ -612,7 +642,7 @@ export const listGDPRRequests = functions
       // Log l'accès admin
       await logAuditEvent(
         'ADMIN_ACCESS',
-        context.auth.uid,
+        request.auth.uid,
         'admin',
         'gdpr_requests',
         `Listed ${requests.size} GDPR requests`,
@@ -629,28 +659,34 @@ export const listGDPRRequests = functions
 
     } catch (error: unknown) {
       const err = error instanceof Error ? error : new Error(String(error));
-      throw new functions.https.HttpsError('internal', err.message);
+      throw new HttpsError('internal', err.message);
     }
-  });
+  }
+);
 
 /**
  * Admin: Traite une demande GDPR
  */
-export const processGDPRRequest = functions
-  .region('europe-west1')
-  .runWith({ timeoutSeconds: 540, memory: '1GB' })
-  .https.onCall(async (data, context) => {
-    if (!context.auth) {
-      throw new functions.https.HttpsError('unauthenticated', 'Authentication required');
+export const processGDPRRequest = onCall(
+  {
+    region: 'europe-west1',
+    memory: '1GiB',
+    cpu: 1,
+    timeoutSeconds: 540,
+    cors: ALLOWED_ORIGINS,
+  },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'Authentication required');
     }
 
-    const userDoc = await admin.firestore().collection('users').doc(context.auth.uid).get();
+    const userDoc = await admin.firestore().collection('users').doc(request.auth.uid).get();
     const userData = userDoc.data();
     if (userData?.role !== 'admin') {
-      throw new functions.https.HttpsError('permission-denied', 'Admin access required');
+      throw new HttpsError('permission-denied', 'Admin access required');
     }
 
-    const { requestId, action, notes } = data as {
+    const { requestId, action, notes } = request.data as {
       requestId: string;
       action: 'approve' | 'reject';
       notes?: string;
@@ -662,13 +698,13 @@ export const processGDPRRequest = functions
       const requestDoc = await db.collection('gdpr_requests').doc(requestId).get();
 
       if (!requestDoc.exists) {
-        throw new functions.https.HttpsError('not-found', 'Request not found');
+        throw new HttpsError('not-found', 'Request not found');
       }
 
-      const request = requestDoc.data() as GDPRDataRequest;
+      const gdprRequest = requestDoc.data() as GDPRDataRequest;
 
-      if (request.status !== 'pending') {
-        throw new functions.https.HttpsError(
+      if (gdprRequest.status !== 'pending') {
+        throw new HttpsError(
           'failed-precondition',
           'Request already processed'
         );
@@ -678,18 +714,18 @@ export const processGDPRRequest = functions
         await requestDoc.ref.update({
           status: 'rejected',
           processedAt: admin.firestore.Timestamp.now(),
-          processedBy: context.auth.uid,
+          processedBy: request.auth.uid,
           notes
         });
 
         await logAuditEvent(
           'ADMIN_ACCESS',
-          context.auth.uid,
+          request.auth.uid,
           'admin',
           'gdpr_request',
-          `Rejected GDPR ${request.requestType} request`,
+          `Rejected GDPR ${gdprRequest.requestType} request`,
           {
-            targetUserId: request.userId,
+            targetUserId: gdprRequest.userId,
             resourceId: requestId,
             metadata: { action: 'reject', notes }
           }
@@ -701,13 +737,13 @@ export const processGDPRRequest = functions
       // Traiter la demande selon le type
       await requestDoc.ref.update({ status: 'processing' });
 
-      if (request.requestType === 'export') {
+      if (gdprRequest.requestType === 'export') {
         // Collecter toutes les données de l'utilisateur
-        const exportData = await collectUserData(request.userId);
+        const exportData = await collectUserData(gdprRequest.userId);
 
         // Sauvegarder dans Storage
         const storage = admin.storage().bucket();
-        const exportPath = `gdpr_exports/${request.userId}/${requestId}.json`;
+        const exportPath = `gdpr_exports/${gdprRequest.userId}/${requestId}.json`;
         const file = storage.file(exportPath);
 
         await file.save(JSON.stringify(exportData, null, 2), {
@@ -723,7 +759,7 @@ export const processGDPRRequest = functions
         await requestDoc.ref.update({
           status: 'completed',
           processedAt: admin.firestore.Timestamp.now(),
-          processedBy: context.auth.uid,
+          processedBy: request.auth.uid,
           downloadUrl: signedUrl,
           expiresAt: admin.firestore.Timestamp.fromDate(
             new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
@@ -731,30 +767,30 @@ export const processGDPRRequest = functions
           notes
         });
 
-        await logDataExport(request.userId, 'full', Object.keys(exportData));
+        await logDataExport(gdprRequest.userId, 'full', Object.keys(exportData));
 
-      } else if (request.requestType === 'deletion') {
+      } else if (gdprRequest.requestType === 'deletion') {
         // Anonymiser/supprimer les données utilisateur
-        await anonymizeUserData(request.userId);
+        await anonymizeUserData(gdprRequest.userId);
 
         await requestDoc.ref.update({
           status: 'completed',
           processedAt: admin.firestore.Timestamp.now(),
-          processedBy: context.auth.uid,
+          processedBy: request.auth.uid,
           notes
         });
 
-        await logAccountDeletion(context.auth.uid, 'admin', request.userId, notes);
+        await logAccountDeletion(request.auth.uid, 'admin', gdprRequest.userId, notes);
       }
 
       await logAuditEvent(
         'ADMIN_ACCESS',
-        context.auth.uid,
+        request.auth.uid,
         'admin',
         'gdpr_request',
-        `Processed GDPR ${request.requestType} request`,
+        `Processed GDPR ${gdprRequest.requestType} request`,
         {
-          targetUserId: request.userId,
+          targetUserId: gdprRequest.userId,
           resourceId: requestId,
           metadata: { action: 'approve' }
         }
@@ -762,40 +798,46 @@ export const processGDPRRequest = functions
 
       return {
         success: true,
-        message: `GDPR ${request.requestType} request processed successfully`
+        message: `GDPR ${gdprRequest.requestType} request processed successfully`
       };
 
     } catch (error: unknown) {
-      if (error instanceof functions.https.HttpsError) throw error;
+      if (error instanceof HttpsError) throw error;
       const err = error instanceof Error ? error : new Error(String(error));
       logger.error('[GDPR] Process request failed:', err);
-      throw new functions.https.HttpsError('internal', err.message);
+      throw new HttpsError('internal', err.message);
     }
-  });
+  }
+);
 
 /**
  * Admin: Consulte l'audit trail d'un utilisateur
  */
-export const getUserAuditTrail = functions
-  .region('europe-west1')
-  .https.onCall(async (data, context) => {
-    if (!context.auth) {
-      throw new functions.https.HttpsError('unauthenticated', 'Authentication required');
+export const getUserAuditTrail = onCall(
+  {
+    region: 'europe-west1',
+    memory: '256MiB',
+    cpu: 0.083,
+    cors: ALLOWED_ORIGINS,
+  },
+  async (request) => {
+    if (!request.auth) {
+      throw new HttpsError('unauthenticated', 'Authentication required');
     }
 
-    const userDoc = await admin.firestore().collection('users').doc(context.auth.uid).get();
+    const userDoc = await admin.firestore().collection('users').doc(request.auth.uid).get();
     const userData = userDoc.data();
     if (userData?.role !== 'admin') {
-      throw new functions.https.HttpsError('permission-denied', 'Admin access required');
+      throw new HttpsError('permission-denied', 'Admin access required');
     }
 
-    const { userId, limit: queryLimit = 100 } = data as { userId: string; limit?: number };
+    const { userId, limit: queryLimit = 100 } = request.data as { userId: string; limit?: number };
 
     try {
       // Log l'accès admin à l'audit trail
       await logAuditEvent(
         'ADMIN_ACCESS',
-        context.auth.uid,
+        request.auth.uid,
         'admin',
         'audit_trail',
         `Viewed audit trail for user ${userId}`,
@@ -819,9 +861,10 @@ export const getUserAuditTrail = functions
 
     } catch (error: unknown) {
       const err = error instanceof Error ? error : new Error(String(error));
-      throw new functions.https.HttpsError('internal', err.message);
+      throw new HttpsError('internal', err.message);
     }
-  });
+  }
+);
 
 // ============================================================================
 // HELPER FUNCTIONS
