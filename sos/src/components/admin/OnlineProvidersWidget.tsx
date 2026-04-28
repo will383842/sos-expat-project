@@ -23,6 +23,7 @@ import {
   limit,
 } from 'firebase/firestore';
 import { db } from '../../config/firebase';
+import { useTabVisibility } from '../../hooks/useTabVisibility';
 
 interface ProviderStats {
   totalProviders: number;
@@ -57,16 +58,15 @@ const OnlineProvidersWidget: React.FC<OnlineProvidersWidgetProps> = ({
   const [isLive, setIsLive] = useState(true);
   const [lowProviderAlert, setLowProviderAlert] = useState(false);
   const mountedRef = useRef(true);
+  const isVisible = useTabVisibility();
 
   // Configuration des seuils d'alerte
   const MIN_PROVIDERS_THRESHOLD = 2;
 
   useEffect(() => {
+    if (!isVisible) return;
     mountedRef.current = true;
 
-    // ✅ OPTIMISATION COÛTS GCP: Polling 30s au lieu de onSnapshot
-    // Économie estimée: ~95% de lectures en moins (~3-5€/mois d'économie)
-    // Pour un dashboard admin, 30s de délai est acceptable
     const fetchOnlineProviders = async () => {
       if (!mountedRef.current) return;
 
@@ -130,7 +130,7 @@ const OnlineProvidersWidget: React.FC<OnlineProvidersWidgetProps> = ({
       mountedRef.current = false;
       clearInterval(interval);
     };
-  }, []);
+  }, [isVisible]);
 
   if (isLoading) {
     return (

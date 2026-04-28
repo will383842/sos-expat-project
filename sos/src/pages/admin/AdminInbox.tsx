@@ -30,6 +30,7 @@ import {
   doc,
 } from 'firebase/firestore';
 import { db } from '../../config/firebase';
+import { useTabVisibility } from '../../hooks/useTabVisibility';
 import AdminLayout from '../../components/admin/AdminLayout';
 import toast from 'react-hot-toast';
 import {
@@ -324,8 +325,11 @@ const AdminInbox: React.FC = () => {
     }
   }, []);
 
+  const isVisible = useTabVisibility();
+
   // ---- ACTIVE items real-time listeners ----
   useEffect(() => {
+    if (!isVisible) return;
     const unsubs: (() => void)[] = [];
 
     const addListener = (
@@ -419,10 +423,11 @@ const AdminInbox: React.FC = () => {
     ));
 
     return () => unsubs.forEach((u) => u());
-  }, [buildItem]);
+  }, [buildItem, isVisible]);
 
   // ---- ARCHIVED items listener (loaded on demand) ----
   useEffect(() => {
+    if (!isVisible) return;
     if (viewMode !== 'archived') return;
     setLoadingArchived(true);
     const unsubs: (() => void)[] = [];
@@ -508,7 +513,7 @@ const AdminInbox: React.FC = () => {
     ));
 
     return () => unsubs.forEach((u) => u());
-  }, [viewMode, buildItem]);
+  }, [viewMode, buildItem, isVisible]);
 
   // ---- Helpers ----
   const sortByDate = (a: InboxItem, b: InboxItem) => {

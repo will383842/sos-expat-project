@@ -22,6 +22,7 @@ import {
   limit,
 } from 'firebase/firestore';
 import { db } from '../../config/firebase';
+import { useTabVisibility } from '../../hooks/useTabVisibility';
 
 // Types
 interface ProviderLocation {
@@ -106,13 +107,12 @@ const ProvidersMapWidget: React.FC<ProvidersMapWidgetProps> = ({ compact = false
   const [isExpanded, setIsExpanded] = useState(!compact);
   const [sortBy, setSortBy] = useState<'total' | 'online' | 'name'>('online');
   const mountedRef = useRef(true);
+  const isVisible = useTabVisibility();
 
   useEffect(() => {
+    if (!isVisible) return;
     mountedRef.current = true;
 
-    // ✅ OPTIMISATION COÛTS GCP: Polling 60s au lieu de onSnapshot
-    // Économie estimée: ~95% de lectures en moins (~5-8€/mois d'économie)
-    // Pour une carte admin, 60s de délai est largement acceptable
     const fetchProviders = async () => {
       if (!mountedRef.current) return;
 
@@ -187,7 +187,7 @@ const ProvidersMapWidget: React.FC<ProvidersMapWidgetProps> = ({ compact = false
       mountedRef.current = false;
       clearInterval(interval);
     };
-  }, []);
+  }, [isVisible]);
 
   // Trier les locations
   const sortedLocations = useMemo(() => {

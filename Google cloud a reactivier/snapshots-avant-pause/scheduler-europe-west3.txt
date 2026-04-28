@@ -1,0 +1,89 @@
+firebase-schedule-stripeReconciliation-europe-west3	0 4 * * *	ENABLED
+firebase-schedule-runFunctionalHealthCheck-europe-west3	0 9,18 * * *	ENABLED
+firebase-schedule-notificationRetry-europe-west3	0 */4 * * *	ENABLED
+firebase-schedule-checkProviderInactivity-europe-west3	every 15 minutes	ENABLED
+firebase-schedule-quarterlyRestoreTest-europe-west3	0 2 1 1,4,7,10 *	ENABLED
+firebase-schedule-aggregateProviderStats-europe-west3	0 * * * *	ENABLED
+firebase-schedule-bloggerFinalizeMonthlyRankings-europe-west3	0 2 1 * *	ENABLED
+firebase-schedule-bloggerUpdateMonthlyRankings-europe-west3	0 0 * * *	ENABLED
+firebase-schedule-chatterEmailInactivityReminder-europe-west3	every 24 hours	ENABLED
+firebase-schedule-collectDailyPaymentMetrics-europe-west3	0 6 * * *	ENABLED
+firebase-schedule-runCriticalFunctionalCheck-europe-west3	0 */4 * * *	ENABLED
+firebase-schedule-aaaBusySimulation-europe-west3	every 8 minutes	ENABLED
+firebase-schedule-monitorTelegramUsage-europe-west3	0 9 * * *	ENABLED
+firebase-schedule-processDunningQueue-europe-west3	0 */4 * * *	ENABLED
+firebase-schedule-checkBudgetAlertsScheduled-europe-west3	0 0,6,12,18 * * *	ENABLED
+firebase-schedule-cleanupTempStorageFiles-europe-west3	every day 03:00	ENABLED
+firebase-schedule-cleanupOldAuthBackups-europe-west3	0 4 1 * *	ENABLED
+firebase-schedule-telegramDailyReport-europe-west3	0 19 * * *	ENABLED
+firebase-schedule-scheduledCleanup-europe-west3	0 3 * * 0	ENABLED
+firebase-schedule-checkPastDueSubscriptions-europe-west3	0 9 * * *	ENABLED
+firebase-schedule-cleanupOldBackups-europe-west3	0 4 * * 0	ENABLED
+firebase-schedule-sendWeeklyThresholdReport-europe-west3	0 9 * * 1	ENABLED
+firebase-schedule-releasePartnerPendingCommissions-europe-west3	15 * * * *	ENABLED
+firebase-schedule-unifiedReleaseHeldCommissions-europe-west3	30 * * * *	ENABLED
+firebase-schedule-checkThresholdsDaily-europe-west3	0 6 * * *	ENABLED
+firebase-schedule-scheduledPayPalReminders-europe-west3	0 10 * * *	ENABLED
+firebase-schedule-adminAlertsDigestDaily-europe-west3	0 9 * * *	ENABLED
+firebase-schedule-sendMonthlyStats-europe-west3	0 8 1 * *	ENABLED
+firebase-schedule-consolidatedReleaseCommissions-europe-west3	30 * * * *	ENABLED
+firebase-schedule-backupStorageToDR-europe-west3	0 5 * * *	ENABLED
+firebase-schedule-cleanupUncapturedPayPalOrders-europe-west3	0 */6 * * *	ENABLED
+firebase-schedule-scheduledProcessUnclaimedFunds-europe-west3	0 6 * * *	ENABLED
+firebase-schedule-chatterAggregateActivityFeed-europe-west3	0 * * * *	ENABLED
+firebase-schedule-iaProspectSyncFieldsCron-europe-west3	0 3 * * *	ENABLED
+firebase-schedule-iaProspectResubscribeAfterCancel-europe-west3	0 10 * * *	ENABLED
+firebase-schedule-reconcileSubscriptions-europe-west3	0 4 * * 0	ENABLED
+firebase-schedule-processWebhookDLQ-europe-west3	0 * * * *	ENABLED
+firebase-schedule-runPaymentHealthCheck-europe-west3	0 */4 * * *	ENABLED
+firebase-schedule-cleanupExpiredDocuments-europe-west3	0 3 * * *	ENABLED
+firebase-schedule-runMonthlyDRTest-europe-west3	0 6 1 * *	ENABLED
+firebase-schedule-processBacklinkEngineDLQ-europe-west3	every 30 minutes	ENABLED
+firebase-schedule-updatePartnerMonthlyStats-europe-west3	0 2 * * *	ENABLED
+firebase-schedule-cleanupExpiredWithdrawalConfirmations-europe-west3	every 30 minutes	ENABLED
+firebase-schedule-consolidatedValidateCommissions-europe-west3	0 * * * *	ENABLED
+firebase-schedule-detectInactiveChattersCron-europe-west3	every 24 hours	ENABLED
+firebase-schedule-sendTrustpilotOutreach-europe-west3	0 10 * * 3	ENABLED
+firebase-schedule-retryOutilSync-europe-west3	0 8 * * *	ENABLED
+firebase-schedule-chatterCreateWeeklyChallenge-europe-west3	5 0 * * 1	ENABLED
+firebase-schedule-sendQuotaAlerts-europe-west3	0 10 * * *	ENABLED
+firebase-schedule-crossRoleMonthlyTop3-europe-west3	0 1 1 * *	ENABLED
+firebase-schedule-bloggerDeactivateExpiredRecruitments-europe-west3	0 1 * * *	ENABLED
+firebase-schedule-monthlySecretsConfigBackup-europe-west3	0 2 1 * *	ENABLED
+firebase-schedule-aiTaxWatch-europe-west3	0 10 1 1,7 *	ENABLED
+firebase-schedule-consolidatedDailyEmails-europe-west3	0 8 * * *	ENABLED
+firebase-schedule-scheduledKYCReminders-europe-west3	0 10 * * *	ENABLED
+firebase-schedule-resetMonthlyQuotas-europe-west3	0 1 * * *	ENABLED
+firebase-schedule-resetBillingCycleQuotas-europe-west3	0 1 * * *	ENABLED
+firebase-schedule-processTelegramQueue-europe-west3	*/15 * * * *	ENABLED
+firebase-schedule-systemHealthCheck-europe-west3	0 8,20 * * *	ENABLED
+firebase-schedule-processTelegramCampaigns-europe-west3	*/10 * * * *	ENABLED
+firebase-schedule-fetchDailyExchangeRates-europe-west3	0 16 * * 1-5	ENABLED
+firebase-schedule-consolidatedDailyMonitoring-europe-west3	0 8 * * *	ENABLED
+firebase-schedule-chatterUpdateChallengeLeaderboard-europe-west3	0 * * * *	ENABLED
+firebase-schedule-chatterEndWeeklyChallenge-europe-west3	55 23 * * 0	ENABLED
+firebase-schedule-sendWeeklyStats-europe-west3	0 8 * * 1	ENABLED
+firebase-schedule-backupFirebaseAuth-europe-west3	0 3 * * *	ENABLED
+firebase-schedule-morningBackup-europe-west3	0 3 * * *	ENABLED
+firebase-schedule-cleanupWebhookDLQ-europe-west3	0 4 * * 0	ENABLED
+firebase-schedule-paymentProcessAutomaticPayments-europe-west3	every 15 minutes	ENABLED
+firebase-schedule-paymentDataCleanup-europe-west3	0 */6 * * *	ENABLED
+firebase-schedule-chatterTierBonusCheck-europe-west3	0 3 * * *	ENABLED
+firebase-schedule-pendingTransfersMonitorScheduled-europe-west3	0 */6 * * *	ENABLED
+firebase-schedule-sendChatterDripMessages-europe-west3	0 10 * * *	ENABLED
+firebase-schedule-cleanupVatCache-europe-west3	0 3 * * *	ENABLED
+firebase-schedule-paymentReconcileStuckWithdrawals-europe-west3	0 */6 * * *	ENABLED
+firebase-schedule-checkServiceBalances-europe-west3	0 2,6,10,14,18,22 * * *	ENABLED
+firebase-schedule-cleanupOrphanedAgentTasks-europe-west3	0 8 * * *	ENABLED
+firebase-schedule-dailyCrossRegionBackup-europe-west3	0 4 * * 0	ENABLED
+firebase-schedule-monitorTwilioCrypto-europe-west3	0 18 * * *	ENABLED
+firebase-schedule-cleanupOrphanedSessions-europe-west3	0 * * * *	ENABLED
+firebase-schedule-consolidatedSecurityDaily-europe-west3	0 3 * * *	ENABLED
+firebase-schedule-cleanupDRBackups-europe-west3	0 5 * * 1	ENABLED
+firebase-schedule-escrowMonitoringDaily-europe-west3	0 8 * * *	ENABLED
+firebase-schedule-consolidatedWeeklyCleanup-europe-west3	0 3 * * 0	ENABLED
+firebase-schedule-processScheduledTransfers-europe-west3	0 2 * * *	ENABLED
+firebase-schedule-affiliateReleaseHeldCommissions-europe-west3	0 * * * *	ENABLED
+firebase-schedule-stuckPaymentsRecovery-europe-west3	*/30 * * * *	ENABLED
+firebase-schedule-cleanupExpiredTrials-europe-west3	0 2 * * *	ENABLED
+firebase-schedule-unifiedAutoMigrateAffiliateCodes-europe-west3	0 3 * * *	ENABLED

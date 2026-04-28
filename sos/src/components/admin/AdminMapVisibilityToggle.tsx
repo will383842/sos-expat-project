@@ -1,6 +1,7 @@
 import React from 'react';
 import { doc, updateDoc, onSnapshot, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../config/firebase';
+import { useTabVisibility } from '../../hooks/useTabVisibility';
 
 interface Props {
   userId: string;
@@ -9,8 +10,10 @@ interface Props {
 
 export default function AdminMapVisibilityToggle({ userId, className = '' }: Props) {
   const [checked, setChecked] = React.useState<boolean>(true);
+  const isVisible = useTabVisibility();
 
   React.useEffect(() => {
+    if (!isVisible) return;
     if (!userId) return;
     const ref = doc(db, 'sos_profiles', userId);
     return onSnapshot(ref, (snap) => {
@@ -19,7 +22,7 @@ export default function AdminMapVisibilityToggle({ userId, className = '' }: Pro
     }, (err) => {
       console.error('[AdminMapVisibilityToggle] Snapshot error:', err);
     });
-  }, [userId]);
+  }, [userId, isVisible]);
 
   const onToggle = async (next: boolean) => {
     await updateDoc(doc(db, 'sos_profiles', userId), {

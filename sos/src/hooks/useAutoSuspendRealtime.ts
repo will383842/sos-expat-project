@@ -131,10 +131,16 @@ export function useAutoSuspendRealtime(
     // Écouter aussi la visibilité de la page
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
-        // Page redevient visible, reprendre si suspendu
         if (isSuspendedDueToInactivity) {
           resumeRealtime();
         }
+      } else {
+        setIsRealtimeActive(false);
+        setIsSuspendedDueToInactivity(true);
+        if (suspendTimeoutRef.current) {
+          clearTimeout(suspendTimeoutRef.current);
+        }
+        onSuspend?.();
       }
     };
     document.addEventListener('visibilitychange', handleVisibilityChange);

@@ -21,6 +21,7 @@ import LoadingSpinner from '@/components/common/LoadingSpinner';
 import AdminLayout from '../../../components/admin/AdminLayout';
 import { collection, query, where, orderBy, limit, onSnapshot, Timestamp } from 'firebase/firestore';
 import { db } from '../../../config/firebase';
+import { useTabVisibility } from '../../../hooks/useTabVisibility';
 import { useAuth } from '../../../contexts/useAuth';
 import { useNavigate } from 'react-router-dom';
 
@@ -114,8 +115,11 @@ export function PaymentsMonitoringDashboard() {
     }
   };
 
+  const isVisible = useTabVisibility();
+
   // Real-time subscription to payments
   useEffect(() => {
+    if (!isVisible) return;
     setLoading(true);
 
     const startDate = getTimeRangeDate(timeRange);
@@ -163,7 +167,7 @@ export function PaymentsMonitoringDashboard() {
     );
 
     return () => unsubscribe();
-  }, [timeRange]);
+  }, [timeRange, isVisible]);
 
   // Calculate statistics
   const calculateStats = (paymentsData: PaymentRecord[]) => {

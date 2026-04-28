@@ -29,6 +29,7 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { db } from '../../config/firebase';
+import { useTabVisibility } from '../../hooks/useTabVisibility';
 import { useAuth } from '../../contexts/AuthContext';
 import { User } from '../../contexts/types';
 
@@ -57,7 +58,10 @@ const ProfileValidation: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   // Charger les profils en attente
+  const isVisible = useTabVisibility();
+
   useEffect(() => {
+    if (!isVisible) return;
     const q = query(
       collection(db, 'users'),
       where('role', 'in', ['lawyer', 'expat']),
@@ -65,13 +69,13 @@ const ProfileValidation: React.FC = () => {
       orderBy('createdAt', 'desc')
     );
 
-    const unsubscribe = onSnapshot(q, 
+    const unsubscribe = onSnapshot(q,
       (snapshot) => {
         const profiles = snapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
         })) as PendingProfile[];
-        
+
         setPendingProfiles(profiles);
         setLoading(false);
       },
@@ -83,7 +87,7 @@ const ProfileValidation: React.FC = () => {
     );
 
     return () => unsubscribe();
-  }, []);
+  }, [isVisible]);
 
   // Auto-clear messages
   useEffect(() => {

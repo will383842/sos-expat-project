@@ -16,6 +16,7 @@ import {
   Timestamp,
 } from 'firebase/firestore';
 import { db } from '@/config/firebase';
+import { useTabVisibility } from '@/hooks/useTabVisibility';
 import { useAuth } from '@/contexts/AuthContext';
 import type {
   LandingRole,
@@ -118,7 +119,10 @@ const AdminLandingPages: React.FC = () => {
   // FIRESTORE LISTENER
   // ============================================================================
 
+  const isVisible = useTabVisibility();
+
   useEffect(() => {
+    if (!isVisible) return;
     const unsubscribe = onSnapshot(
       collection(db, 'country_landing_configs'),
       (snapshot) => {
@@ -132,7 +136,7 @@ const AdminLandingPages: React.FC = () => {
       () => setLoading(false),
     );
     return unsubscribe;
-  }, []);
+  }, [isVisible]);
 
   // ============================================================================
   // HELPERS

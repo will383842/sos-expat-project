@@ -1,0 +1,14 @@
+firebase-schedule-aggregateDailyAnalytics-europe-west1	0 1 * * *	ENABLED
+firebase-schedule-chatterNotifyInactiveMembers-europe-west1	0 10 * * *	ENABLED
+firebase-schedule-chatterNotifyNearTop3-europe-west1	0 18 * * *	ENABLED
+firebase-schedule-cleanupAuditLogs-europe-west1	0 4 1 * *	ENABLED
+firebase-schedule-cleanupCloudRunRevisions-europe-west1	0 3 * * 0	ENABLED
+firebase-schedule-cleanupOldAnalytics-europe-west1	0 2 * * 0	ENABLED
+firebase-schedule-notifyExpiringPromotions-europe-west1	every day 08:00	ENABLED
+firebase-schedule-scheduledAIKeyHealthCheck-europe-west1	0 8 * * *	ENABLED
+firebase-schedule-scheduledBulkIndexing-europe-west1	0 9 * * *	ENABLED
+firebase-schedule-scheduledSeoHealthCheck-europe-west1	0 10 * * 1	ENABLED
+firebase-schedule-scheduledSitemapPing-europe-west1	0 8 * * *	ENABLED
+firebase-schedule-scheduledWarmSsrCache-europe-west1	0 */20 * * *	ENABLED
+firebase-schedule-sendFilingReminders-europe-west1	0 9 * * *	ENABLED
+firebase-schedule-seoHealthCheck-europe-west1	0 8 * * *	ENABLED
