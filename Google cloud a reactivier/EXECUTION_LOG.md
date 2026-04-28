@@ -17,7 +17,8 @@
 | C2 | Pause crons (europe-west1 + us-central1) | 4 | ✅ Done |
 | D | Réduction fréquence crons | 4 | ✅ Done |
 | E | Optim admin dashboard (visibility guards) | 9 fichiers | ✅ Done |
-| **TOTAL** | | **48 actions** | ✅ |
+| F | Crons additionnels (Outil-sos-expat + paymentDataCleanup + Logging retention) | 4 | ✅ Done |
+| **TOTAL** | | **52 actions** | ✅ |
 
 ---
 
@@ -170,6 +171,60 @@ git checkout -- sos/src/hooks/useTabVisibility.ts sos/src/hooks/useAutoSuspendRe
 
 ---
 
+## 📋 PHASE F — Crons additionnels + Cloud Logging retention
+
+**Découverte audit** : Outil-sos-expat est sur un projet GCP **séparé** (`outils-sos-expat`), facture distincte de `sos-urgently-ac307`.
+
+### Outil-sos-expat (projet `outils-sos-expat`, eu-west1)
+
+| Job | Avant | Après | Économie |
+|---|---|---|---|
+| `cleanupStuckMessages` | every 15 min (96/jour) | every 1 hour (24/jour) | -75% invocations |
+| `archiveExpiredConversations` | every 1 hour (24/jour) | every 6 hours (4/jour) | -83% invocations |
+
+### sos-urgently-ac307 (eu-west3)
+
+| Job | Avant | Après | Économie |
+|---|---|---|---|
+| `paymentDataCleanup` | `0 */6 * * *` (4/jour) | `0 2 * * *` (1/jour) | -75% invocations |
+
+### Cloud Logging retention
+
+| Bucket | Avant | Après | Économie |
+|---|---|---|---|
+| `_Default` (sos-urgently-ac307) | 30 jours | 7 jours | ~-77% storage logs |
+
+### Réactivation Phase F
+
+```bash
+# Outil-sos-expat (restaurer fréquences originales)
+gcloud scheduler jobs update http firebase-schedule-cleanupStuckMessages-europe-west1 --location=europe-west1 --project=outils-sos-expat --schedule="every 15 minutes"
+gcloud scheduler jobs update http firebase-schedule-archiveExpiredConversations-europe-west1 --location=europe-west1 --project=outils-sos-expat --schedule="every 1 hours"
+
+# sos paymentDataCleanup
+gcloud scheduler jobs update http firebase-schedule-paymentDataCleanup-europe-west3 --location=europe-west3 --project=sos-urgently-ac307 --schedule="0 */6 * * *"
+
+# Logging retention
+gcloud logging buckets update _Default --location=global --project=sos-urgently-ac307 --retention-days=30
+```
+
+**Économie totale Phase F : ~10-20 €/mois** (logs + crons réduits)
+
+---
+
+## 🔍 AUDIT EN COURS — À investiguer plus tard
+
+**381 composite indexes Firestore** sur `sos-urgently-ac307`. Potentiel d'économie 5-30 €/mois si certains sont inutilisés (à supprimer prudemment).
+
+Pour identifier les indexes inutilisés :
+1. Console GCP → Firestore → Indexes → onglet "Composite"
+2. Pour chaque index, vérifier "Last used" (si dispo)
+3. Si jamais utilisé en 30+ jours → candidat à suppression
+
+**À NE PAS FAIRE en aveugle** — supprimer un index actif casse la query qui en dépend.
+
+---
+
 ## 📋 PHASE D — Réduction fréquence (sans pause)
 
 | Job | Région | Avant | Après | Économie |
@@ -246,8 +301,10 @@ gcloud scheduler jobs update http firebase-schedule-processBacklinkEngineDLQ-eur
 |---|---|
 | Pause 34 Cloud Scheduler jobs (Cloud Scheduler + reads Firestore évités) | ~5-8 € |
 | Désactivation PITR Firestore | ~14 € |
-| Réduction fréquence 4 crons | ~5-10 € |
-| **TOTAL** | **~25-32 €/mois** |
+| Réduction fréquence 4 crons (Phase D) | ~5-10 € |
+| Phase E - Visibility guards admin frontend | ~10-20 € |
+| Phase F - Crons Outil + paymentDataCleanup + Logging 30j→7j | ~10-20 € |
+| **TOTAL** | **~45-70 €/mois** |
 
 **Facture mars 2026 : 158,50 €**
 **Facture estimée après pause : ~125-130 €**
