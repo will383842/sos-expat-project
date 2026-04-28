@@ -88,7 +88,7 @@ export function getTrafficSourceForRegistration(): {
 
   if (!ts && !meta.fbp && !meta.fbc) return undefined;
 
-  return {
+  const raw = {
     utmSource: ts?.utm_source,
     utmMedium: ts?.utm_medium,
     utmCampaign: ts?.utm_campaign,
@@ -102,4 +102,9 @@ export function getTrafficSourceForRegistration(): {
     sessionId: ts?.session_id,
     userCountry: ts?.user_country,
   };
+
+  // Firestore rejette les valeurs undefined — on filtre avant d'écrire
+  return Object.fromEntries(
+    Object.entries(raw).filter(([, v]) => v !== undefined)
+  ) as ReturnType<typeof getTrafficSourceForRegistration>;
 }

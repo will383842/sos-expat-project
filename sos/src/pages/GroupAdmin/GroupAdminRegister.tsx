@@ -194,7 +194,7 @@ const GroupAdminRegister: React.FC = () => {
           groupDescription: data.groupDescription || undefined,
           recruitmentCode: data.referralCode || referralCodeFromUrl || undefined,
           referralCapturedAt: getStoredReferral('groupAdmin')?.capturedAt || new Date().toISOString(),
-          trafficSource: getTrafficSourceForRegistration(),
+          ...(() => { const ts = getTrafficSourceForRegistration(); return ts ? { trafficSource: ts } : {}; })(),
           acceptTerms: data.acceptTerms,
           termsAcceptedAt: data.termsAcceptedAt,
           termsVersion: data.termsVersion,

@@ -491,7 +491,7 @@ const InfluencerRegisterForm: React.FC<InfluencerRegisterFormProps> = ({
           platforms: formData.platforms,
           recruitmentCode: formData.referralCode || undefined,
           referralCapturedAt: getStoredReferral('influencer')?.capturedAt || new Date().toISOString(),
-          trafficSource: getTrafficSourceForRegistration(),
+          ...(() => { const ts = getTrafficSourceForRegistration(); return ts ? { trafficSource: ts } : {}; })(),
           termsAcceptedAt: new Date().toISOString(),
           termsVersion: "3.0",
           termsType: "terms_influencers",

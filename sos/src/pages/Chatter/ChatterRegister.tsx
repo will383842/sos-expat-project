@@ -241,7 +241,7 @@ const ChatterRegister: React.FC = () => {
           additionalLanguages: data.additionalLanguages,
           recruitmentCode: data.referralCode || undefined,
           referralCapturedAt: getStoredReferral('chatter')?.capturedAt || new Date().toISOString(),
-          trafficSource: getTrafficSourceForRegistration(),
+          ...(() => { const ts = getTrafficSourceForRegistration(); return ts ? { trafficSource: ts } : {}; })(),
           // ✅ TRACKING CGU - Preuve légale d'acceptation (eIDAS/RGPD)
           acceptTerms: data.acceptTerms,
           termsAcceptedAt: data.termsAcceptedAt,

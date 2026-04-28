@@ -509,7 +509,7 @@ const BloggerRegister: React.FC = () => {
           definitiveRoleAcknowledged: formData.definitiveRoleAcknowledged,
           recruitmentCode: formData.referralCode || undefined,
           referralCapturedAt: getStoredReferral('blogger')?.capturedAt || new Date().toISOString(),
-          trafficSource: getTrafficSourceForRegistration(),
+          ...(() => { const ts = getTrafficSourceForRegistration(); return ts ? { trafficSource: ts } : {}; })(),
           termsAcceptedAt: new Date().toISOString(),
           termsVersion: "3.0",
           termsType: "terms_bloggers",
