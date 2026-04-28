@@ -849,15 +849,22 @@ export class TwilioCallManager {
     logger.info(`📞 [${execId}]   TEST_BYPASS_VALIDATIONS: ${BYPASS_VALIDATIONS}`);
     logger.info(`📞 [${execId}]   call_sessions.payment.status: "${callSession.payment?.status}"`);
 
+    // B2B SOS-Call sessions have isSosCallFree=true and no payment.intentId/status — bypass validation
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const sessionAnyExec = callSession as any;
+    const isSosCallFreeExec =
+      sessionAnyExec.isSosCallFree === true ||
+      callSession.metadata?.isSosCallFree === true;
+
     // P0 FIX: Pass call_sessions.payment.status as fallback for validatePaymentStatus
-    const paymentValid = BYPASS_VALIDATIONS
+    const paymentValid = BYPASS_VALIDATIONS || isSosCallFreeExec
       ? true
       : await this.validatePaymentStatus(
           callSession.payment.intentId,
           callSession.payment.status // Fallback status from call_sessions
         );
 
-    logger.info(`📞 [${execId}] STEP 4: Payment validation result: ${paymentValid ? '✅ VALID' : '❌ INVALID'}`);
+    logger.info(`📞 [${execId}] STEP 4: Payment validation result: ${paymentValid ? '✅ VALID' : '❌ INVALID'}${isSosCallFreeExec ? ' (B2B free — bypassed)' : ''}`);
 
     prodLogger.debug('TWILIO_PAYMENT_CHECK', `[${execId}] Payment validation`, {
       execId,
@@ -865,7 +872,8 @@ export class TwilioCallManager {
       paymentIntentId: callSession.payment?.intentId,
       sessionPaymentStatus: callSession.payment?.status,
       paymentValid,
-      bypassed: BYPASS_VALIDATIONS,
+      bypassed: BYPASS_VALIDATIONS || isSosCallFreeExec,
+      isSosCallFree: isSosCallFreeExec,
     });
 
     if (!paymentValid) {

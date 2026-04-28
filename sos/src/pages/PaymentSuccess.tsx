@@ -555,7 +555,8 @@ const SuccessPayment: React.FC = () => {
 
   useEffect(() => {
     // P0 FIX: Attendre que l'auth soit prête avant d'écouter Firestore
-    if (!callId || !isFullyReady) return;
+    // B2B SOS-Call: unauthenticated users cannot read call_sessions (Firestore rules) — skip
+    if (!callId || !isFullyReady || paymentData?.isSosCallFree) return;
 
     const ref = doc(db, "call_sessions", callId);
     let retryTimeout: NodeJS.Timeout | null = null;
@@ -1321,8 +1322,8 @@ const SuccessPayment: React.FC = () => {
               </div>
             )}
 
-            {/* Session Load Error */}
-            {sessionLoadError && (
+            {/* Session Load Error — hidden for B2B SOS-Call (no payment, session read blocked) */}
+            {sessionLoadError && !paymentData?.isSosCallFree && (
               <div className="mb-8 p-6 bg-orange-500/20 border border-orange-400/30 rounded-2xl backdrop-blur-sm">
                 <div className="flex items-start gap-4">
                   <div className="p-2 bg-orange-500/30 rounded-full">

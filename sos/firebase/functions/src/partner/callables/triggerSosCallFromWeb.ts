@@ -4,6 +4,7 @@ import * as admin from 'firebase-admin';
 import {
   PARTNER_ENGINE_URL_SECRET,
   PARTNER_ENGINE_API_KEY_SECRET,
+  ENCRYPTION_KEY,
   getPartnerEngineUrl,
   getPartnerEngineApiKey,
 } from '../../lib/secrets';
@@ -386,7 +387,7 @@ async function finalizeCall(args: {
 export const triggerSosCallFromWeb = onCall(
   {
     ...partnerConfig,
-    secrets: [PARTNER_ENGINE_URL_SECRET, PARTNER_ENGINE_API_KEY_SECRET],
+    secrets: [PARTNER_ENGINE_URL_SECRET, PARTNER_ENGINE_API_KEY_SECRET, ENCRYPTION_KEY],
     timeoutSeconds: 30,
   },
   async (request: CallableRequest<TriggerSosCallRequest>) => {
