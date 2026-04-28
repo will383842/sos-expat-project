@@ -1009,6 +1009,15 @@ const ProviderProfile: React.FC = () => {
     services: string[];
   } | null>(null);
 
+  // B2B SOS-Call: client avec token partenaire — même logique que BookingRequest.tsx
+  const [isGatedB2B] = useState<boolean>(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("sosCallToken")) return true;
+      return !!sessionStorage.getItem("sosCall.token");
+    } catch { return false; }
+  });
+
   // État pour le wizard d'authentification rapide
   const [showAuthWizard, setShowAuthWizard] = useState(false);
 
@@ -2059,7 +2068,7 @@ const ProviderProfile: React.FC = () => {
       return;
     }
 
-    if (user) {
+    if (user || isGatedB2B) {
       navigate(target, {
         state: {
           selectedProvider: provider,
@@ -2072,7 +2081,7 @@ const ProviderProfile: React.FC = () => {
       sessionStorage.setItem('loginRedirect', `/booking-request/${providerIdentifier}`);
       setShowAuthWizard(true);
     }
-  }, [provider, user, authInitialized, navigate, onlineStatus]);
+  }, [provider, user, authInitialized, navigate, onlineStatus, isGatedB2B]);
 
   // Callback quand l'authentification réussit via le wizard
   const handleAuthSuccess = useCallback(() => {
@@ -3299,21 +3308,27 @@ const ProviderProfile: React.FC = () => {
                           </>
                         )}
                       </button>
-                      {/* Prix sous le CTA mobile */}
-                      <p className="mt-2 text-center text-sm text-white/60">
-                        {bookingPrice ? formatEUR(bookingPrice.eur) : "—"}
-                        {bookingPrice?.duration ? ` / ${bookingPrice.duration} ${minutesLabel}` : ""}
-                        {isOnCall && (
-                          <span className="ml-2 text-amber-300 font-medium">
-                            · <FormattedMessage id="providerProfile.onCallMessage" />
-                          </span>
-                        )}
-                        {!onlineStatus.isOnline && !isOnCall && (
-                          <span className="ml-2 text-white/40">
-                            · <FormattedMessage id="providerProfile.offline" />
-                          </span>
-                        )}
-                      </p>
+                      {/* Prix sous le CTA mobile — masqué pour clients B2B partenaires */}
+                      {isGatedB2B ? (
+                        <p className="mt-2 text-center text-sm text-green-300 font-medium">
+                          ✓ Appel inclus — aucun paiement requis
+                        </p>
+                      ) : (
+                        <p className="mt-2 text-center text-sm text-white/60">
+                          {bookingPrice ? formatEUR(bookingPrice.eur) : "—"}
+                          {bookingPrice?.duration ? ` / ${bookingPrice.duration} ${minutesLabel}` : ""}
+                          {isOnCall && (
+                            <span className="ml-2 text-amber-300 font-medium">
+                              · <FormattedMessage id="providerProfile.onCallMessage" />
+                            </span>
+                          )}
+                          {!onlineStatus.isOnline && !isOnCall && (
+                            <span className="ml-2 text-white/40">
+                              · <FormattedMessage id="providerProfile.offline" />
+                            </span>
+                          )}
+                        </p>
+                      )}
 
                       {/* Prestataires alternatifs sous le CTA quand offline — mobile uniquement */}
                       {!onlineStatus.isOnline && !isOnCall && relatedProviders.filter(rp => rp.isOnline).length > 0 && (
@@ -3411,31 +3426,40 @@ const ProviderProfile: React.FC = () => {
                         <span><FormattedMessage id="callIn5Min" /></span>
                       </div>
 
-                      {/* Prix */}
-                      <div className="mt-4">
-                        {bookingPrice?.hasDiscount ? (
-                          <>
-                            <div className="text-gray-400 line-through text-lg">
-                              {formatEUR(bookingPrice.originalEur)}
-                            </div>
-                            <div className="text-3xl sm:text-4xl font-black text-red-600">
-                              {formatEUR(bookingPrice.eur)}
-                            </div>
-                            {bookingPrice.promoCode && (
-                              <div className="text-xs text-green-600 font-semibold mt-1">
-                                Code {bookingPrice.promoCode} (-{formatEUR(bookingPrice.discountEur)})
-                              </div>
-                            )}
-                          </>
-                        ) : (
-                          <div className="text-3xl sm:text-4xl font-black text-gray-900">
-                            {bookingPrice ? formatEUR(bookingPrice.eur) : "—"}
-                          </div>
-                        )}
-                        <div className="text-gray-500 text-sm mt-1">
-                          {bookingPrice ? `(${formatUSD(bookingPrice.usd)})` : ""}
+                      {/* Prix — masqué pour les clients B2B partenaires */}
+                      {isGatedB2B ? (
+                        <div className="mt-4 bg-green-50 border border-green-200 rounded-2xl px-4 py-3">
+                          <p className="text-green-700 font-semibold text-sm">✓ Appel inclus</p>
+                          <p className="text-green-600 text-xs mt-1">
+                            Votre abonnement partenaire couvre cet appel.<br />Aucun paiement requis.
+                          </p>
                         </div>
-                      </div>
+                      ) : (
+                        <div className="mt-4">
+                          {bookingPrice?.hasDiscount ? (
+                            <>
+                              <div className="text-gray-400 line-through text-lg">
+                                {formatEUR(bookingPrice.originalEur)}
+                              </div>
+                              <div className="text-3xl sm:text-4xl font-black text-red-600">
+                                {formatEUR(bookingPrice.eur)}
+                              </div>
+                              {bookingPrice.promoCode && (
+                                <div className="text-xs text-green-600 font-semibold mt-1">
+                                  Code {bookingPrice.promoCode} (-{formatEUR(bookingPrice.discountEur)})
+                                </div>
+                              )}
+                            </>
+                          ) : (
+                            <div className="text-3xl sm:text-4xl font-black text-gray-900">
+                              {bookingPrice ? formatEUR(bookingPrice.eur) : "—"}
+                            </div>
+                          )}
+                          <div className="text-gray-500 text-sm mt-1">
+                            {bookingPrice ? `(${formatUSD(bookingPrice.usd)})` : ""}
+                          </div>
+                        </div>
+                      )}
 
                       <div className="text-gray-600 text-sm mt-1 flex items-center justify-center gap-1">
                         <Clock size={14} aria-hidden="true" />
