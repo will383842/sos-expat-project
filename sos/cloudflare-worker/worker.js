@@ -1311,7 +1311,13 @@ const EDGE_CACHE_ENABLED = true;
 // forced repeated version bumps (v3→v16) whenever poisoning was observed.
 // Bumping to v17 invalidates all prior entries so the first fresh fetch lands
 // under the new partitioned key.
-const EDGE_CACHE_VERSION = 'v17';
+// v18 (2026-05-01, noindex fix): provider profile pages were stuck with
+// `noindex` in the cached SSR (commit ab9b5a7e fixed shouldNoindex from
+// `!isApproved || !isVisible` to `=== false` since isVisible is never set
+// on providerData → all approved profiles were noindex'd by mistake). The
+// fix is in main but the Worker's caches.default layer kept serving the
+// pre-fix HTML. Bumping invalidates all entries globally.
+const EDGE_CACHE_VERSION = 'v18';
 
 const EDGE_CACHE_TTL = {
   SSR_OK: 86400,   // 24h for valid pages
