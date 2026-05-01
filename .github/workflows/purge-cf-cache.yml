@@ -1,0 +1,36 @@
+name: Purge Cloudflare Cache
+
+on:
+  workflow_dispatch:
+    inputs:
+      scope:
+        description: 'What to purge'
+        required: true
+        default: 'everything'
+        type: choice
+        options:
+          - everything
+          - blog-articles
+
+jobs:
+  purge:
+    name: Purge Edge Cache
+    runs-on: ubuntu-latest
+    steps:
+      - name: Purge Cloudflare cache
+        run: |
+          if [ "${{ github.event.inputs.scope }}" = "everything" ]; then
+            DATA='{"purge_everything":true}'
+          else
+            DATA='{"hosts":["sos-expat.com"]}'
+          fi
+          RESP=$(curl -sw "\n%{http_code}" -X POST \
+            "https://api.cloudflare.com/client/v4/zones/${{ secrets.CF_ZONE_ID }}/purge_cache" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data "$DATA")
+          BODY=$(echo "$RESP" | head -n-1)
+          CODE=$(echo "$RESP" | tail -n1)
+          echo "HTTP $CODE"
+          echo "$BODY"
+          [ "$CODE" = "200" ] || exit 1
