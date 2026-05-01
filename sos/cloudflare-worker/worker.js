@@ -1330,7 +1330,14 @@ const EDGE_CACHE_ENABLED = true;
 // propagation window when Firebase still returned 404 from stale L1. Even
 // after L1 fix, Worker kept serving cached 404s. Bumping to v20 invalidates
 // these stale 404 entries globally.
-const EDGE_CACHE_VERSION = 'v20';
+// v21 (2026-05-01, +120min): even after v20, country listing pages returned
+// 404 because cold Puppeteer renders take 45-65s but worker SSR fetch
+// timeout was 25s → fetch aborted → catch fallback to Cloudflare Pages
+// → 404 (SPA routes don't exist as static files) → cached 10min as 404.
+// Fix: bumped fetch timeout from 25s → 50s (Cloudflare Worker max safe)
+// in the SSR fetch above. Bumping cache version to v21 to invalidate the
+// 404 entries that accumulated during the 25s-timeout era.
+const EDGE_CACHE_VERSION = 'v21';
 
 const EDGE_CACHE_TTL = {
   SSR_OK: 86400,   // 24h for valid pages
@@ -3058,7 +3065,7 @@ async function handleSSR(request, pathname, url, userAgent, ctx) {
 
   // ── L0 MISS → fetch from Firebase SSR (L1 memory + L2 Firestore) ──
   const ssrAbort = new AbortController();
-  const ssrTimer = setTimeout(() => ssrAbort.abort(), 25000); // 25s hard timeout
+  const ssrTimer = setTimeout(() => ssrAbort.abort(), 50000); // 50s hard timeout (cold Puppeteer renders take 45-65s)
 
   try {
     // Build the SSR URL with the original path
