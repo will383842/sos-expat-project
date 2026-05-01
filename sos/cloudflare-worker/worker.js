@@ -1324,7 +1324,13 @@ const EDGE_CACHE_ENABLED = true;
 // renderForBotsV2 (DEPLOY_MARKER bump → cold restart → L1 wiped) AND
 // purging Firestore ssr_cache (L2). Bumping Worker to v19 to discard the
 // poisoned v18 entries created during the propagation window.
-const EDGE_CACHE_VERSION = 'v19';
+// v20 (2026-05-01, +90min): country listing pages (/fr-fr/avocats/cambodge/,
+// /en-us/lawyers/indonesia/, etc.) returned 404 on Worker but 200 on Firebase
+// direct. Cause: SSR_404 cache (TTL 600s) got poisoned during the v18→v19
+// propagation window when Firebase still returned 404 from stale L1. Even
+// after L1 fix, Worker kept serving cached 404s. Bumping to v20 invalidates
+// these stale 404 entries globally.
+const EDGE_CACHE_VERSION = 'v20';
 
 const EDGE_CACHE_TTL = {
   SSR_OK: 86400,   // 24h for valid pages
