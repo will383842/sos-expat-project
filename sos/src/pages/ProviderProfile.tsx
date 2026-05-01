@@ -2706,8 +2706,8 @@ const ProviderProfile: React.FC = () => {
   })();
 
   // Pre-compute noindex outside JSX to avoid TS inference issues
-  // Only noindex profiles that are completely broken (not approved or not visible)
-  const shouldNoindex: boolean = !provider?.isApproved || !provider?.isVisible;
+  // Only noindex profiles explicitly rejected (=== false), not profiles with missing fields
+  const shouldNoindex: boolean = provider?.isApproved === false || provider?.isVisible === false;
 
   const OG_LOCALE_MAP: Record<string, string> = {
     fr: 'fr_FR', en: 'en_US', es: 'es_ES', de: 'de_DE', pt: 'pt_PT',
