@@ -1317,7 +1317,14 @@ const EDGE_CACHE_ENABLED = true;
 // on providerData → all approved profiles were noindex'd by mistake). The
 // fix is in main but the Worker's caches.default layer kept serving the
 // pre-fix HTML. Bumping invalidates all entries globally.
-const EDGE_CACHE_VERSION = 'v18';
+// v19 (2026-05-01, +30min): v18 bumped the Worker cache key but Firebase's
+// renderForBotsV2 had its own L1 memoryCache on 3 warm instances still
+// serving the pre-fix HTML — so the Worker MISS on v18 fetched stale HTML
+// from Firebase and re-cached it under v19. Fixed by redeploying
+// renderForBotsV2 (DEPLOY_MARKER bump → cold restart → L1 wiped) AND
+// purging Firestore ssr_cache (L2). Bumping Worker to v19 to discard the
+// poisoned v18 entries created during the propagation window.
+const EDGE_CACHE_VERSION = 'v19';
 
 const EDGE_CACHE_TTL = {
   SSR_OK: 86400,   // 24h for valid pages
