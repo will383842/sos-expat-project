@@ -1,0 +1,161 @@
+Querying Firestore...
+Total approved+visible+active lawyers: 77
+================================================================================
+AVOCATS À SOUMETTRE DANS GSC — Asie-Pacifique (12 pays)
+================================================================================
+
+Total avocats approuvés/visibles/actifs (lawyer): 77
+  └─ Profils AAA (test) exclus: 76
+  └─ Avocats réels intervenant dans les 12 pays cibles: 0
+
+--------------------------------------------------------------------------------
+
+📋 SECTION 1 — PAGES LISTE PAYS (à soumettre en priorité)
+   Une page liste indexée = TOUS les avocats du pays bénéficient.
+
+  [AU] Australie (3 avocats)
+    https://sos-expat.com/fr-fr/avocat/australie/
+    https://sos-expat.com/en-us/lawyers/australia/
+  [KH] Cambodge (1 avocat)
+    https://sos-expat.com/fr-fr/avocat/cambodge/
+    https://sos-expat.com/en-us/lawyers/cambodia/
+  [ID] Indonésie (2 avocats)
+    https://sos-expat.com/fr-fr/avocat/indonesie/
+    https://sos-expat.com/en-us/lawyers/indonesia/
+  [JP] Japon (2 avocats)
+    https://sos-expat.com/fr-fr/avocat/japon/
+    https://sos-expat.com/en-us/lawyers/japan/
+  [LA] Laos (1 avocat)
+    https://sos-expat.com/fr-fr/avocat/laos/
+    https://sos-expat.com/en-us/lawyers/laos/
+  [MY] Malaisie (2 avocats)
+    https://sos-expat.com/fr-fr/avocat/malaisie/
+    https://sos-expat.com/en-us/lawyers/malaysia/
+  [MM] Myanmar (Birmanie) (1 avocat)
+    https://sos-expat.com/fr-fr/avocat/myanmar/
+    https://sos-expat.com/en-us/lawyers/myanmar/
+  [PH] Philippines (2 avocats)
+    https://sos-expat.com/fr-fr/avocat/philippines/
+    https://sos-expat.com/en-us/lawyers/philippines/
+  [SG] Singapour (2 avocats)
+    https://sos-expat.com/fr-fr/avocat/singapour/
+    https://sos-expat.com/en-us/lawyers/singapore/
+  [TW] Taïwan (1 avocat)
+    https://sos-expat.com/fr-fr/avocat/taiwan/
+    https://sos-expat.com/en-us/lawyers/taiwan/
+  [TH] Thaïlande (2 avocats)
+    https://sos-expat.com/fr-fr/avocat/thailande/
+    https://sos-expat.com/en-us/lawyers/thailand/
+  [VN] Vietnam (2 avocats)
+    https://sos-expat.com/fr-fr/avocat/vietnam/
+    https://sos-expat.com/en-us/lawyers/vietnam/
+
+--------------------------------------------------------------------------------
+
+👤 SECTION 2 — FICHES AVOCATS INDIVIDUELLES
+   Une URL FR + une URL EN par avocat (les 7 autres langues sont
+   découvertes via les hreflang, pas besoin de les soumettre).
+
+
+### Australie [AU] — 3 avocats
+
+  • James Smith (pays principal) [AAA test]
+    FR: https://sos-expat.com/fr-fr/avocat-australie/james-sant-rembour-m6tqwm
+    EN: https://sos-expat.com/en-us/lawyer-australia/james-sant-rembour-m6tqwm
+  • James Wilson (pays principal) [AAA test]
+    FR: https://sos-expat.com/fr-fr/avocat-au/james-creation-entreprise-4ghmkg
+    EN: https://sos-expat.com/en-us/lawyer-au/james-business-creation-4ghmkg
+  • Miguel López (pays principal) [AAA test]
+    FR: https://sos-expat.com/fr-fr/avocat-au/miguel-creation-entreprise-xfbj59
+    EN: https://sos-expat.com/en-us/lawyer-au/miguel-business-creation-xfbj59
+
+### Cambodge [KH] — 1 avocat
+
+  • Jasmijn Olsen (intervention — basé en TH) [AAA test]
+    FR: https://sos-expat.com/fr-fr/avocat-thailande/jasmijn-aerien-9kv9h6
+    EN: https://sos-expat.com/en-us/lawyer-thailand/jasmijn-flights-9kv9h6
+
+### Indonésie [ID] — 2 avocats
+
+  • Stefan Weber (intervention — basé en SG) [AAA test]
+    FR: https://sos-expat.com/fr-fr/avocat-singapour/stefan-investissement-3bsnjy
+    EN: https://sos-expat.com/en-us/lawyer-singapore/stefan-investment-3bsnjy
+  • Mei Wong (intervention — basé en SG) [AAA test]
+    FR: https://sos-expat.com/fr-fr/avocat-sg/mei-retraite-mngm3c
+    EN: https://sos-expat.com/en-us/lawyer-sg/mei-pension-mngm3c
+
+### Japon [JP] — 2 avocats
+
+  • Yuki Tanaka (pays principal) [AAA test]
+    FR: https://sos-expat.com/fr-fr/avocat-jp/yuki-fiscal-t8j2rs
+    EN: https://sos-expat.com/en-us/lawyer-jp/yuki-tax-t8j2rs
+  • Richard Williams (pays principal) [AAA test]
+    FR: https://sos-expat.com/fr-fr/avocat-sb/richard-contrats-travail-mfa7sf
+    EN: https://sos-expat.com/en-us/lawyer-sb/richard-work-contracts-mfa7sf
+
+### Laos [LA] — 1 avocat
+
+  • Jasmijn Olsen (intervention — basé en TH) [AAA test]
+    FR: https://sos-expat.com/fr-fr/avocat-thailande/jasmijn-aerien-9kv9h6
+    EN: https://sos-expat.com/en-us/lawyer-thailand/jasmijn-flights-9kv9h6
+
+### Malaisie [MY] — 2 avocats
+
+  • Stefan Weber (intervention — basé en SG) [AAA test]
+    FR: https://sos-expat.com/fr-fr/avocat-singapour/stefan-investissement-3bsnjy
+    EN: https://sos-expat.com/en-us/lawyer-singapore/stefan-investment-3bsnjy
+  • Mei Wong (intervention — basé en SG) [AAA test]
+    FR: https://sos-expat.com/fr-fr/avocat-sg/mei-retraite-mngm3c
+    EN: https://sos-expat.com/en-us/lawyer-sg/mei-pension-mngm3c
+
+### Myanmar (Birmanie) [MM] — 1 avocat
+
+  • Jasmijn Olsen (intervention — basé en TH) [AAA test]
+    FR: https://sos-expat.com/fr-fr/avocat-thailande/jasmijn-aerien-9kv9h6
+    EN: https://sos-expat.com/en-us/lawyer-thailand/jasmijn-flights-9kv9h6
+
+### Philippines [PH] — 2 avocats
+
+  • Stefan Weber (intervention — basé en SG) [AAA test]
+    FR: https://sos-expat.com/fr-fr/avocat-singapour/stefan-investissement-3bsnjy
+    EN: https://sos-expat.com/en-us/lawyer-singapore/stefan-investment-3bsnjy
+  • Mei Wong (intervention — basé en SG) [AAA test]
+    FR: https://sos-expat.com/fr-fr/avocat-sg/mei-retraite-mngm3c
+    EN: https://sos-expat.com/en-us/lawyer-sg/mei-pension-mngm3c
+
+### Singapour [SG] — 2 avocats
+
+  • Stefan Weber (pays principal) [AAA test]
+    FR: https://sos-expat.com/fr-fr/avocat-singapour/stefan-investissement-3bsnjy
+    EN: https://sos-expat.com/en-us/lawyer-singapore/stefan-investment-3bsnjy
+  • Mei Wong (pays principal) [AAA test]
+    FR: https://sos-expat.com/fr-fr/avocat-sg/mei-retraite-mngm3c
+    EN: https://sos-expat.com/en-us/lawyer-sg/mei-pension-mngm3c
+
+### Taïwan [TW] — 1 avocat
+
+  • Wei Zhang (intervention — basé en HK) [AAA test]
+    FR: https://sos-expat.com/fr-fr/avocat-hk/wei-creation-entreprise-fg5bq5
+    EN: https://sos-expat.com/en-us/lawyer-hk/wei-business-creation-fg5bq5
+
+### Thaïlande [TH] — 2 avocats
+
+  • Jasmijn Olsen (pays principal) [AAA test]
+    FR: https://sos-expat.com/fr-fr/avocat-thailande/jasmijn-aerien-9kv9h6
+    EN: https://sos-expat.com/en-us/lawyer-thailand/jasmijn-flights-9kv9h6
+  • Weera Saetang (pays principal) [AAA test]
+    FR: https://sos-expat.com/fr-fr/avocat-th/weera-divorce-s5vzpg
+    EN: https://sos-expat.com/en-us/lawyer-th/weera-divorce-s5vzpg
+
+### Vietnam [VN] — 2 avocats
+
+  • Jasmijn Olsen (intervention — basé en TH) [AAA test]
+    FR: https://sos-expat.com/fr-fr/avocat-thailande/jasmijn-aerien-9kv9h6
+    EN: https://sos-expat.com/en-us/lawyer-thailand/jasmijn-flights-9kv9h6
+  • Kien Bach (pays principal) [AAA test]
+    FR: https://sos-expat.com/fr-fr/avocat-vn/kien-optimisation-fiscale-58amrf
+    EN: https://sos-expat.com/en-us/lawyer-vn/kien-tax-optimization-58amrf
+
+================================================================================
+FIN — copier les URLs ci-dessus dans GSC → Inspection URL → Demander indexation
+================================================================================

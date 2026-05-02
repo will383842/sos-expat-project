@@ -708,6 +708,77 @@ export const scheduledBulkIndexing = onSchedule(
       console.log(`📚 Ajout articles aide: total ${urlsToSubmit.length} URLs`);
     }
 
+    // Add country listing pages (e.g. /fr-fr/avocats/cambodge) to the cycle.
+    // Uses a separate cursor (lastListingIdx) so listings rotate independently
+    // of profiles. Listings are derived only from countries that have ≥1
+    // indexable provider, so we never submit empty pages that would noindex.
+    let nextListingIdx = state?.lastListingIdx || 0;
+    if (urlsToSubmit.length < DAILY_QUOTA) {
+      try {
+        const allProfilesSnap = await db.collection('sos_profiles')
+          .where('isVisible', '==', true)
+          .where('isApproved', '==', true)
+          .where('isActive', '==', true)
+          .get();
+
+        const countriesByRole: Record<'lawyer' | 'expat', Set<string>> = {
+          lawyer: new Set(),
+          expat: new Set(),
+        };
+        allProfilesSnap.forEach(d => {
+          const p = d.data();
+          const role: 'lawyer' | 'expat' = (p.type === 'lawyer') ? 'lawyer' : 'expat';
+          if (p.country) countriesByRole[role].add(String(p.country).toUpperCase());
+          const opCountries = p.operatingCountries;
+          if (Array.isArray(opCountries)) {
+            for (const c of opCountries) {
+              if (c) countriesByRole[role].add(String(c).toUpperCase());
+            }
+          }
+        });
+
+        const allListings: Array<{ role: 'lawyer' | 'expat'; country: string }> = [];
+        for (const role of ['lawyer', 'expat'] as const) {
+          const sortedCountries = Array.from(countriesByRole[role]).sort();
+          for (const country of sortedCountries) {
+            allListings.push({ role, country });
+          }
+        }
+
+        let listingIdx = nextListingIdx >= allListings.length ? 0 : nextListingIdx;
+        const startIdx = listingIdx;
+        let listingsAdded = 0;
+
+        while (urlsToSubmit.length < DAILY_QUOTA && listingIdx < allListings.length) {
+          const { role, country } = allListings[listingIdx];
+          const rolePaths = ROLE_PATHS[role];
+          if (rolePaths) {
+            for (const lang of LANG_CODES) {
+              if (urlsToSubmit.length >= DAILY_QUOTA) break;
+              const locale = DEFAULT_LOCALES[lang];
+              const rolePath = rolePaths[lang];
+              const countrySlug = getCountrySlug(country, lang);
+              if (locale && rolePath && countrySlug) {
+                const url = `${SITE_URL}/${locale}/${rolePath}/${countrySlug}`;
+                if (!urlsToSubmit.includes(url)) {
+                  urlsToSubmit.push(url);
+                }
+              }
+            }
+          }
+          listingIdx++;
+          listingsAdded++;
+        }
+
+        nextListingIdx = listingIdx >= allListings.length ? 0 : listingIdx;
+
+        console.log(`🌍 Pages liste pays ajoutées: ${listingsAdded} pays traités (idx ${startIdx}→${listingIdx}/${allListings.length}), total ${urlsToSubmit.length} URLs`);
+      } catch (err) {
+        // Non-blocking: if listing generation fails, profile URLs are still submitted
+        console.error(`⚠️ Erreur génération URLs pages liste pays (non bloquant): ${(err as Error).message}`);
+      }
+    }
+
     if (urlsToSubmit.length === 0) {
       console.log('⏭️ Aucune URL à soumettre (profils sans slugs)');
       return;
@@ -726,6 +797,7 @@ export const scheduledBulkIndexing = onSchedule(
     const newTotal = isCycleReset ? urlsToSubmit.length : totalSubmitted + urlsToSubmit.length;
     const stateToSave: Record<string, unknown> = {
       lastProcessedId: lastId,
+      lastListingIdx: nextListingIdx,
       totalSubmitted: newTotal,
       lastRunAt: admin.firestore.FieldValue.serverTimestamp(),
       lastBatchSize: urlsToSubmit.length,
