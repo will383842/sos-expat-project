@@ -5,7 +5,11 @@
 
 // fetch is available natively in Node.js 22 - no import needed
 
-const INDEXNOW_KEY = 'sosexpat2025indexnowkey';
+// Rotated 2026-05-02: previous key 'sosexpat2025indexnowkey' was rejected
+// by IndexNow API with 403 "UserForbiddedToAccessSite" even after Bing
+// Webmaster verification of the domain. New 32-char hex key generated
+// fresh; old key file kept in /public/ for backward compatibility (no harm).
+const INDEXNOW_KEY = 'a583452061da4fa742dd9f224cd92a92';
 const SITE_HOST = 'sos-expat.com';
 const SITE_URL = `https://${SITE_HOST}`;
 
