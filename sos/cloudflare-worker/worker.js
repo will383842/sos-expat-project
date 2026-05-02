@@ -1348,7 +1348,13 @@ const EDGE_CACHE_ENABLED = true;
 // bumping DEPLOY_MARKER + redeploying renderForBotsV2 (cold restart wipes
 // all L1 caches) AND bumping Worker to v23 to discard the v22 entries
 // poisoned with stale Firebase output.
-const EDGE_CACHE_VERSION = 'v23';
+// v24 (2026-05-02, +1h): sitemap-index master cleanup — added filter in
+// Firebase sitemaps.ts to exclude countries-{lang}.xml + priority-{lang}.xml
+// (18 broken sub-sitemaps emitted by Laravel blog that return 404 on the
+// server, causing Bing/Google to lose trust in the index). Firebase
+// returns 673 sub-sitemaps (down from 682). Bumping Worker invalidates
+// the cached v23 sitemap-index that still listed the broken entries.
+const EDGE_CACHE_VERSION = 'v24';
 
 const EDGE_CACHE_TTL = {
   SSR_OK: 86400,   // 24h for valid pages
