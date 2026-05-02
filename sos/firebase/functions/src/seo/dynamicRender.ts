@@ -69,7 +69,7 @@ const SSR_CACHE_COLLECTION = 'ssr_cache';
 // schema change that must propagate but SSR keeps serving pre-change HTML).
 // Exported so TypeScript's noUnusedLocals doesn't block the build (the value is
 // intentionally read only by Firebase's source-hash diff, not by the runtime).
-export const DEPLOY_MARKER = '2026-05-01-v4-noindex-fix-shouldNoindex';
+export const DEPLOY_MARKER = '2026-05-02-v5-bing-meta-tag-cache-purge';
 
 // L1: In-memory cache (fast, same instance — lost on cold start).
 //

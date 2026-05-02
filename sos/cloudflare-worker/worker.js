@@ -1337,7 +1337,18 @@ const EDGE_CACHE_ENABLED = true;
 // Fix: bumped fetch timeout from 25s → 50s (Cloudflare Worker max safe)
 // in the SSR fetch above. Bumping cache version to v21 to invalidate the
 // 404 entries that accumulated during the 25s-timeout era.
-const EDGE_CACHE_VERSION = 'v21';
+// v22 (2026-05-02): added <meta name="msvalidate.01"> to index.html for
+// Bing Webmaster verification. Worker cache had pre-meta-tag /en-us and
+// /fr-fr renders → Bing's verifier didn't find the tag, returning
+// "Unexpected error". Bumping invalidates pre-tag cached HTML so all
+// locale homepages re-render with the verification tag.
+// v23 (2026-05-02, +20min): v22 bump alone insufficient because Firebase
+// renderForBotsV2 had stale L1 memoryCache on 3 warm instances → 4/5 test
+// requests served the old HTML without msvalidate.01 tag. Fixed by
+// bumping DEPLOY_MARKER + redeploying renderForBotsV2 (cold restart wipes
+// all L1 caches) AND bumping Worker to v23 to discard the v22 entries
+// poisoned with stale Firebase output.
+const EDGE_CACHE_VERSION = 'v23';
 
 const EDGE_CACHE_TTL = {
   SSR_OK: 86400,   // 24h for valid pages
