@@ -298,9 +298,37 @@
   <link rel="preload" href="/hero-home.webp" as="image" type="image/webp" />
   <link rel="preload" href="/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/fonts/Inter-roman.var.woff2" as="font" type="font/woff2" crossorigin />
-  <!-- Traductions préchargées : FR (majorité) + EN (fallback universel). fetch() dans App.tsx les trouvera déjà en cache. -->
-  <link rel="preload" href="/helper/fr.json" as="fetch" crossorigin />
+  <!-- Traductions préchargées : EN (fallback universel) + langue détectée depuis l'URL/localStorage.
+       Évite de télécharger fr.json (~860KB) à 80% des visiteurs non-FR.
+       Logique alignée sur detectLanguageFromURL() de main.tsx pour garantir le hit cache. -->
   <link rel="preload" href="/helper/en.json" as="fetch" crossorigin />
+  <script>
+    (function () {
+      try {
+        var path = window.location.pathname;
+        var match = path.match(/^\/([a-z]{2})-[a-z]{2}(\/|$)/);
+        var lang = null;
+        if (match) {
+          lang = match[1];
+          if (lang === 'zh') lang = 'ch'; // mapping interne
+        } else {
+          try {
+            lang = localStorage.getItem('sos_language') || localStorage.getItem('app:lang');
+          } catch (e) {}
+        }
+        // Si la langue détectée est valide et != en, preload son JSON
+        var SUPPORTED = ['fr','es','de','ru','pt','ch','zh','hi','ar'];
+        if (lang && SUPPORTED.indexOf(lang) !== -1) {
+          var link = document.createElement('link');
+          link.rel = 'preload';
+          link.as = 'fetch';
+          link.href = '/helper/' + lang + '.json';
+          link.crossOrigin = 'anonymous';
+          document.head.appendChild(link);
+        }
+      } catch (e) {}
+    })();
+  </script>
 
   <!-- 🌐 MULTILINGUAL FONTS (chargées uniquement pour les langues qui en ont besoin) -->
   <!-- ⚡ PERF: preconnect supprimé ici (déjà couvert par dns-prefetch line 267) — Lighthouse flag >4 preconnects -->

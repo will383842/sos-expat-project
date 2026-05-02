@@ -12,8 +12,16 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 const AdminRoutesV2 = lazy(() => import('@/components/admin/AdminRoutesV2'));
 import { trackEvent, setUserId, setUserProperties } from './utils/ga4';
-import MetaPageViewTracker from './components/common/MetaPageViewTracker';
-import InternationalTracker from './components/analytics/InternationalTracker';
+// ✅ PERF: Lazy-loaded — composants side-effect only (renvoient null), retirés du
+// main bundle pour économiser leurs transitive imports (react-intl, GA4 utils).
+// Catch dynamic import failure → no-op component (le tracker est non-critique).
+const noopComponent = { default: () => null };
+const MetaPageViewTracker = lazy(() =>
+  import('./components/common/MetaPageViewTracker').catch(() => noopComponent)
+);
+const InternationalTracker = lazy(() =>
+  import('./components/analytics/InternationalTracker').catch(() => noopComponent)
+);
 import { setMetaPixelUserData, applyMetaPixelUserData, clearMetaPixelUserData } from './utils/metaPixel';
 import { captureTrafficSource } from './utils/trafficSource';
 import { devLog } from './utils/devLog';
@@ -1265,8 +1273,10 @@ const App: React.FC = () => {
         <LocaleRouter>
           {/* P1-1 FIX: Track page views for GA4 analytics */}
           <PageViewTracker />
-          {/* Meta Pixel: Track page views for Facebook/Meta ads */}
-          <MetaPageViewTracker />
+          {/* Meta Pixel: Track page views for Facebook/Meta ads (lazy — composant side-effect) */}
+          <Suspense fallback={null}>
+            <MetaPageViewTracker />
+          </Suspense>
           {/* Meta Pixel: Advanced Matching - send user data for better retargeting */}
           <MetaPixelUserTracker />
           {/* Traffic Source: Capture UTM parameters for ad attribution */}
@@ -1275,8 +1285,10 @@ const App: React.FC = () => {
           <ReferralCodeCapture />
           {/* AFFILIATE: Keep ?ref= visible in URL across ALL navigation */}
           <AffiliateRefSync />
-          {/* GA4: International user properties + content groups */}
-          <InternationalTracker />
+          {/* GA4: International user properties + content groups (lazy — composant side-effect) */}
+          <Suspense fallback={null}>
+            <InternationalTracker />
+          </Suspense>
           <div className={`App ${isMobile ? "mobile-layout" : "desktop-layout"}`}>
             <DefaultHelmet pathname={location.pathname} />
 
