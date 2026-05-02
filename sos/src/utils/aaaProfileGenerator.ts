@@ -239,6 +239,7 @@ const NAME_TO_ISO: Record<string, string> = {
   'Royaume-Uni': 'GB', 'Russie': 'RU', 'Sénégal': 'SN', 'Singapour': 'SG', 'Suède': 'SE',
   'Suisse': 'CH', 'Thaïlande': 'TH', 'Tunisie': 'TN', 'Turquie': 'TR', 'Ukraine': 'UA',
   'Vietnam': 'VN', 'Afrique du Sud': 'ZA', 'Arabie Saoudite': 'SA',
+  'Birmanie': 'MM', 'Myanmar': 'MM', 'Laos': 'LA',
 };
 
 export const getCountryCode = (countryName: string): string => {
