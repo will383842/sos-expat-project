@@ -650,6 +650,14 @@ export const scheduledBulkIndexing = onSchedule(
       const profile = doc.data();
       lastId = doc.id;
 
+      // Skip admin profiles: they pass isApproved+isVisible+isActive filters but
+      // ProviderProfile.tsx serves 404+noindex for role=admin (e.g. founder
+      // accounts marked visible for internal reasons). Submitting them just
+      // wastes Google API quota and creates soft-404 signals.
+      if (profile.role === 'admin' || profile.isAdmin === true) {
+        continue;
+      }
+
       // Prioriser l'URL française (la plus importante pour SEO)
       const slugs = profile.slugs as Record<string, string> | undefined;
       if (slugs?.fr) {
