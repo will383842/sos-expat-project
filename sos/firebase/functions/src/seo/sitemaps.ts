@@ -1187,7 +1187,12 @@ export const sitemapIndex = onRequest(
           // sub-sitemaps and losing trust in the index. The proper fix is
           // server-side in the Laravel blog's SeoController, but until then
           // this filter keeps the index clean.
-          const BROKEN_SUBSITEMAP_RE = /\/sitemaps\/(countries|priority)-[a-z]{2}\.xml(\.gz)?$/i;
+          //
+          // 2026-05-02 (+1h): also excluded /sitemap-news.xml — Laravel emits
+          // an empty <urlset></urlset> (0 <url> children), which Bing rejects
+          // as malformed ("Balise XML manquante : url"). Once Laravel
+          // populates Google News articles, this exclusion can be removed.
+          const BROKEN_SUBSITEMAP_RE = /\/sitemaps\/(countries|priority)-[a-z]{2}\.xml(\.gz)?$|\/sitemap-news\.xml$/i;
 
           const blockRegex = /<sitemap>\s*<loc>([^<]+)<\/loc>\s*(?:<lastmod>([^<]+)<\/lastmod>\s*)?<\/sitemap>/g;
           let match: RegExpExecArray | null;

@@ -1354,7 +1354,14 @@ const EDGE_CACHE_ENABLED = true;
 // server, causing Bing/Google to lose trust in the index). Firebase
 // returns 673 sub-sitemaps (down from 682). Bumping Worker invalidates
 // the cached v23 sitemap-index that still listed the broken entries.
-const EDGE_CACHE_VERSION = 'v24';
+// v25 (2026-05-02, +2h): /sitemap-news.xml is empty (urlset with 0 <url>
+// children) which Bing rejects as malformed XML ("Balise url manquante").
+// Excluded it from the master index in sitemaps.ts. Bumping Worker so the
+// cached v24 sitemap-index doesn't keep advertising it.
+// v26 (2026-05-02, +2h30): v25 cache entry got created during the brief
+// window when Firebase still served the pre-fix sitemap-index → poisoned
+// the v25 key. Bumping to v26 to invalidate.
+const EDGE_CACHE_VERSION = 'v26';
 
 const EDGE_CACHE_TTL = {
   SSR_OK: 86400,   // 24h for valid pages
