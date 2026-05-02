@@ -181,13 +181,34 @@ function formatDateShort(date: Date): string {
   }).format(date);
 }
 
-function tsToDate(ts: Timestamp | undefined): Date {
-  return ts?.toDate?.() || new Date(0);
+// Robuste face aux 2 formats : Timestamp client SDK (avec .toDate()) et JSON brut
+// renvoyé par les callables v2 ({ _seconds, _nanoseconds } ou { seconds, nanoseconds }).
+// Accepte aussi Date, string ISO et number (millisecondes) par sécurité.
+function tsToDate(ts: unknown): Date {
+  if (!ts) return new Date(0);
+  if (ts instanceof Date) return ts;
+  if (typeof ts === 'number') return new Date(ts);
+  if (typeof ts === 'string') {
+    const d = new Date(ts);
+    return isNaN(d.getTime()) ? new Date(0) : d;
+  }
+  if (typeof ts === 'object') {
+    const o = ts as { toDate?: () => Date; _seconds?: number; _nanoseconds?: number; seconds?: number; nanoseconds?: number };
+    if (typeof o.toDate === 'function') {
+      try { return o.toDate(); } catch { /* fallthrough */ }
+    }
+    const s = o._seconds ?? o.seconds;
+    const n = o._nanoseconds ?? o.nanoseconds ?? 0;
+    if (typeof s === 'number') return new Date(s * 1000 + Math.floor(n / 1e6));
+  }
+  return new Date(0);
 }
 
-function formatTimestamp(ts: Timestamp | undefined): string {
+function formatTimestamp(ts: unknown): string {
   if (!ts) return 'N/A';
-  return formatDateFull(ts.toDate());
+  const d = tsToDate(ts);
+  if (d.getTime() === 0) return 'N/A';
+  return formatDateFull(d);
 }
 
 // ============================================================================
