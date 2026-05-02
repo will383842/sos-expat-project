@@ -3401,6 +3401,23 @@ async function handleRequest(request, env, ctx) {
     return handleCachePurge(request, env);
   }
 
+  // 2026-05-02: /sitemap-news.xml is served by Laravel as an empty <urlset>
+  // (0 <url> children) since the blog has no recent news posts. Both Bing
+  // Webmaster Tools and Google Search Console reject it as malformed XML
+  // ("Balise XML manquante : url"). Returning 410 Gone here so engines that
+  // cached the URL drop it from their lists. Once the blog publishes news
+  // articles in the last 48h, we can remove this and let Laravel serve it.
+  if (pathname === '/sitemap-news.xml') {
+    return new Response('Sitemap removed: no news content currently published.', {
+      status: 410,
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Cache-Control': 'public, max-age=3600',
+        'X-Worker-Active': 'true',
+      },
+    });
+  }
+
   const blogRedirect = handleBlogCrossLocaleRedirects(pathname, url);
   if (blogRedirect) return blogRedirect;
 
