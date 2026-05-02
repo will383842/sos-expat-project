@@ -1178,13 +1178,24 @@ export const sitemapIndex = onRequest(
           // Blog_sos-expat_frontend/app/Http/Controllers/SeoController.php).
           // Honouring them here signals to GSC which sub-sitemaps actually
           // changed since its last crawl.
+          // Patterns of broken sub-sitemaps emitted by the Laravel blog's
+          // sitemap.xml that don't actually exist on the server (return 404
+          // or fall through to the SPA HTML). Confirmed broken on 2026-05-02
+          // for /sitemaps/countries-{lang}.xml and /sitemaps/priority-{lang}.xml
+          // (all 9 langs each = 18 broken entries). Excluding them from the
+          // master index prevents Bing/Google from registering 404s on the
+          // sub-sitemaps and losing trust in the index. The proper fix is
+          // server-side in the Laravel blog's SeoController, but until then
+          // this filter keeps the index clean.
+          const BROKEN_SUBSITEMAP_RE = /\/sitemaps\/(countries|priority)-[a-z]{2}\.xml(\.gz)?$/i;
+
           const blockRegex = /<sitemap>\s*<loc>([^<]+)<\/loc>\s*(?:<lastmod>([^<]+)<\/lastmod>\s*)?<\/sitemap>/g;
           let match: RegExpExecArray | null;
           while ((match = blockRegex.exec(blogXml)) !== null) {
             const url = match[1].trim();
             const blogLastmod = (match[2] || '').trim();
             // Safety: only include URLs that point to our canonical domain
-            if (url.startsWith(SITE_URL)) {
+            if (url.startsWith(SITE_URL) && !BROKEN_SUBSITEMAP_RE.test(url)) {
               const before = seenUrls.size;
               // Keep only the YYYY-MM-DD date portion to match Firebase
               // sub-sitemaps' format (sitemaps.org accepts both full W3C
