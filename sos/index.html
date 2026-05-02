@@ -628,9 +628,13 @@
     })();
   </script>
 
-  <!-- 🔥 SCRIPT POUR SUPPRIMER LE LOADING - Optimisé -->
+  <!-- 🔥 SCRIPT POUR SUPPRIMER LE LOADING -->
   <script>
-    // Supprime le loading quand React est monté OU après timeout de sécurité
+    // ✅ UNE seule source de vérité : l'événement app-mounted dispatché par React
+    //    APRÈS le premier paint utile et le chargement des polices.
+    //    Le MutationObserver précédent retirait le splash dès que #root recevait
+    //    un enfant (~700-1200ms), bien avant le paint réel (1.1-7s à froid),
+    //    laissant la molette d'onglet visible pendant ce trou → effet de saut.
     (function () {
       var loading = document.getElementById('app-loading');
       var removed = false;
@@ -644,25 +648,10 @@
         }, 300);
       }
 
-      // Écouter l'événement personnalisé de React (si émis par App)
       window.addEventListener('app-mounted', removeLoading);
 
-      // Observer le DOM pour détecter quand #root a du contenu
-      if (window.MutationObserver) {
-        var root = document.getElementById('root');
-        if (root) {
-          var observer = new MutationObserver(function (mutations) {
-            if (root.children.length > 0) {
-              observer.disconnect();
-              removeLoading();
-            }
-          });
-          observer.observe(root, { childList: true });
-        }
-      }
-
-      // Fallback: timeout de sécurité (3s max)
-      setTimeout(removeLoading, 3000);
+      // Filet de sécurité si React plante ou prend > 5s
+      setTimeout(removeLoading, 5000);
     })();
   </script>
 

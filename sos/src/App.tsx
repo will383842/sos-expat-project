@@ -976,11 +976,24 @@ const App: React.FC = () => {
 
   // Signal pour react-snap que le rendu est terminé
   useEffect(() => {
-    // Marquer la page comme prête pour react-snap
+    // Marquer la page comme prête pour react-snap (immédiat — react-snap n'attend pas les frames)
     document.body.setAttribute('data-react-snap-ready', 'true');
 
-    // Signal pour le loading screen
-    window.dispatchEvent(new Event('app-mounted'));
+    // Signal pour le loading screen — DIFFÉRÉ jusqu'à ce que le contenu soit
+    // réellement peint (fonts.ready + double rAF) pour éviter de retirer le
+    // splash avant le 1er paint utile et laisser la molette d'onglet visible.
+    const dispatch = () => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          window.dispatchEvent(new Event('app-mounted'));
+        });
+      });
+    };
+    if (typeof document !== 'undefined' && document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(dispatch).catch(dispatch);
+    } else {
+      dispatch();
+    }
   }, []);
 
   // Core Web Vitals → GA4 (LCP, CLS, INP, FCP, TTFB)
