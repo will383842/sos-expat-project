@@ -103,15 +103,92 @@ export const getPricingConfig = async (): Promise<PricingConfig> => {
 };
 
 /**
- * Récupère les montants pour un service et devise spécifiques
+ * Récupère les montants pour un service et devise spécifiques.
+ *
+ * Tient compte de l'override admin actif (`admin_config/pricing.overrides`)
+ * pour rester aligné avec `utils/paymentValidators.ts:getPricingConfig` utilisé
+ * par Stripe. Sans cela, PayPal rejetait avec "Amount mismatch" pendant qu'une
+ * promo admin (ex. 1€) était active : Stripe acceptait, PayPal refusait.
  */
 export const getServiceAmounts = async (
   serviceType: 'lawyer' | 'expat',
   currency: 'eur' | 'usd' = 'eur'
 ): Promise<ServiceConfig> => {
+  // Lecture brute du doc Firestore pour accéder aux overrides (la map d'overrides
+  // ne fait pas partie du type PricingConfig).
+  try {
+    const configDoc = await firestore.doc('admin_config/pricing').get();
+    const raw = configDoc.exists ? (configDoc.data() as Record<string, unknown>) : null;
+
+    if (raw) {
+      const ovTable = (raw.overrides as Record<string, unknown> | undefined)?.[serviceType] as
+        | Record<string, OverrideEntry>
+        | undefined;
+      const ov = ovTable?.[currency];
+
+      const now = Date.now();
+      const startsAt = toMillis(ov?.startsAt);
+      const endsAt = toMillis(ov?.endsAt);
+      const overrideActive =
+        ov?.enabled === true &&
+        (startsAt ? now >= startsAt : true) &&
+        (endsAt ? now <= endsAt : true);
+
+      if (overrideActive && typeof ov?.totalAmount === 'number') {
+        const standardCfg = (raw[serviceType] as PricingConfig['lawyer'] | undefined)?.[currency]
+          ?? DEFAULT_PRICING_CONFIG[serviceType][currency];
+        const total = ov.totalAmount;
+        const conn = typeof ov.connectionFeeAmount === 'number' ? ov.connectionFeeAmount : 0;
+        const providerAmt = typeof ov.providerAmount === 'number'
+          ? ov.providerAmount
+          : Math.max(0, total - conn);
+        return {
+          totalAmount: total,
+          connectionFeeAmount: conn,
+          providerAmount: providerAmt,
+          duration: standardCfg.duration,
+          currency,
+        };
+      }
+    }
+  } catch (err) {
+    console.error('[pricingService] override lookup failed, falling back to standard pricing:', err);
+  }
+
+  // Standard (sans override actif) — comportement historique
   const config = await getPricingConfig();
   return config[serviceType][currency];
 };
+
+/**
+ * Structure d'un override admin tel que persisté dans `admin_config/pricing.overrides`.
+ * Synchronisée avec `utils/paymentValidators.ts:PricingOverride`.
+ */
+interface OverrideEntry {
+  enabled?: boolean;
+  startsAt?: unknown;
+  endsAt?: unknown;
+  totalAmount?: number;
+  connectionFeeAmount?: number;
+  providerAmount?: number;
+  stackableWithCoupons?: boolean;
+}
+
+/**
+ * Convertit un Firestore Timestamp / number en millisecondes.
+ * Synchronisé avec `utils/paymentValidators.ts:toMillis`.
+ */
+function toMillis(v: unknown): number | undefined {
+  if (typeof v === 'number') return v;
+  if (v && typeof v === 'object') {
+    const ts = v as { seconds?: number; toDate?: () => Date };
+    if (typeof ts.toDate === 'function') {
+      try { return ts.toDate()!.getTime(); } catch { /* ignore */ }
+    }
+    if (typeof ts.seconds === 'number') return ts.seconds * 1000;
+  }
+  return undefined;
+}
 
 /**
  * Valide et calcule les montants pour une transaction

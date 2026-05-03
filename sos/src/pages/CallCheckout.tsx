@@ -3602,9 +3602,33 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({
       // Navigate with React Router (no full page reload — setTimeout removed so navigate works)
       // Fallback to window.location.href if navigate() fails
       console.log("🚀 [NAVIGATION] Navigating to:", targetUrl);
+
+      // P0 HOTFIX 2026-05-03: hard fallback if React Router silently fails to change the URL.
+      // Symptôme observé en prod : Stripe charge OK + createAndScheduleCall OK + Twilio call OK,
+      // mais l'utilisateur reste sur la page checkout (navigate() résout sans erreur mais l'URL
+      // ne change pas). Causes possibles : Suspense boundary qui throw silencieusement,
+      // race condition setState/navigate, lazy chunk failure. Avec ce filet, on force la
+      // navigation hard si l'URL n'a pas changé après 1500 ms.
+      const expectedSlug = translatedSlug;
+      const fallbackTimer = window.setTimeout(() => {
+        try {
+          if (!window.location.pathname.includes(expectedSlug)) {
+            console.warn(
+              "🚨 [NAVIGATION] navigate() didn't change URL after 1500ms — forcing window.location.replace",
+              { expected: targetUrl, current: window.location.pathname }
+            );
+            window.location.replace(targetUrl);
+          }
+        } catch (e) {
+          // ne pas masquer un éventuel succès silencieux
+          console.warn("[NAVIGATION] fallback check failed:", e);
+        }
+      }, 1500);
+
       try {
         navigate(targetUrl, { replace: true });
       } catch (navErr) {
+        window.clearTimeout(fallbackTimer);
         console.warn("⚠️ [NAVIGATION] navigate() failed, falling back to window.location.href:", navErr);
         window.location.href = targetUrl;
       }
