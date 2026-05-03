@@ -206,6 +206,7 @@ export const generateMultiDashboardAiResponse = onCall<
   },
   async (request) => {
     const { bookingId, providerId, clientName, clientCurrentCountry, clientLanguages, serviceType, providerType, title } = request.data;
+    const invocationStartedAt = Date.now();
 
     logger.info("[generateMultiDashboardAiResponse] Request received", {
       bookingId,
@@ -218,12 +219,98 @@ export const generateMultiDashboardAiResponse = onCall<
       throw new HttpsError("invalid-argument", "Missing required fields: bookingId, providerId, clientName");
     }
 
+    // ============================================================================
+    // OUT-MUL-012 PHASE 1 — Shadow audit log (observability only, NO gating)
+    //
+    // This callable currently has no auth check, no quota enforcement, and no
+    // moderation. Phase 1 (this commit) just records every invocation so we can
+    // observe real-world usage for 3-7 days BEFORE deciding what to gate in
+    // phase 2 — and identify any pre-existing exploitation pattern from the logs.
+    //
+    // Strictly fire-and-forget: any failure here MUST NOT break the callable
+    // (the legitimate flow continues unchanged in shadow mode).
+    // ============================================================================
+    const callerUid = request.auth?.uid || null;
+    const callerEmail = (request.auth?.token as { email?: string } | undefined)?.email || null;
+    const callerHasAuth = !!request.auth;
+    let callerIsLinkedToProvider = false;
+    try {
+      if (callerUid) {
+        const sosDb = getSosFirestore();
+        const callerSnap = await sosDb.collection("users").doc(callerUid).get();
+        const callerData = callerSnap.data();
+        const linked = callerData?.linkedProviderIds;
+        callerIsLinkedToProvider =
+          Array.isArray(linked) && linked.includes(providerId);
+      }
+    } catch {
+      // Silent — auth flag check is best-effort, must not break the callable
+    }
+
+    // Suspicion heuristics — surface obvious abuse vectors in audit logs
+    const suspicionFlags: string[] = [];
+    if (!callerHasAuth) suspicionFlags.push("no_auth");
+    if (callerHasAuth && !callerIsLinkedToProvider && callerUid !== providerId) {
+      suspicionFlags.push("caller_not_linked_to_provider");
+    }
+
     // Check if provider is multi-provider (optional check)
     const isMulti = await checkIfMultiProvider(providerId);
     logger.info("[generateMultiDashboardAiResponse] Multi-provider check", {
       providerId,
       isMulti,
     });
+
+    if (!isMulti && callerHasAuth && !callerIsLinkedToProvider) {
+      suspicionFlags.push("provider_not_multi_and_caller_unrelated");
+    }
+
+    const writeShadowAudit = async (outcome: {
+      success: boolean;
+      tokensUsed?: number;
+      model?: string;
+      responseLength?: number;
+      errorMessage?: string;
+    }): Promise<void> => {
+      try {
+        await admin
+          .firestore()
+          .collection("audit_logs")
+          .add({
+            action: "multi_dashboard_ai_generation_shadow",
+            resourceType: "ai_callable",
+            resourceId: bookingId,
+            providerId,
+            // Caller identity — null entries are themselves a signal
+            callerUid,
+            callerEmail,
+            callerHasAuth,
+            callerIsLinkedToProvider,
+            // Suspicion flags — empty array = looks legitimate
+            suspicionFlags,
+            isSuspicious: suspicionFlags.length > 0,
+            // Provider context
+            isMultiProvider: isMulti,
+            // Outcome
+            success: outcome.success,
+            tokensUsed: outcome.tokensUsed ?? null,
+            model: outcome.model ?? null,
+            responseLength: outcome.responseLength ?? null,
+            errorMessage: outcome.errorMessage ?? null,
+            // Timing
+            durationMs: Date.now() - invocationStartedAt,
+            timestamp: admin.firestore.FieldValue.serverTimestamp(),
+            // Source
+            source: "generateMultiDashboardAiResponse_shadow_phase1",
+            shadowPhase: 1,
+          });
+      } catch (auditErr) {
+        // Shadow mode: NEVER throw, NEVER block. The legitimate flow wins.
+        logger.warn("[generateMultiDashboardAiResponse] Shadow audit log failed (non-blocking)", {
+          err: auditErr instanceof Error ? auditErr.message : String(auditErr),
+        });
+      }
+    };
 
     try {
       // Generate AI response
@@ -241,6 +328,15 @@ export const generateMultiDashboardAiResponse = onCall<
         model: aiResult.model,
         tokensUsed: aiResult.tokensUsed,
         responseLength: aiResult.text.length,
+        suspicionFlags,
+      });
+
+      // Shadow audit log — fire after success, do not await failure (best-effort)
+      void writeShadowAudit({
+        success: true,
+        tokensUsed: aiResult.tokensUsed,
+        model: aiResult.model,
+        responseLength: aiResult.text.length,
       });
 
       return {
@@ -255,7 +351,10 @@ export const generateMultiDashboardAiResponse = onCall<
       logger.error("[generateMultiDashboardAiResponse] Failed to generate AI response", {
         bookingId,
         error: errorMessage,
+        suspicionFlags,
       });
+
+      void writeShadowAudit({ success: false, errorMessage });
 
       return {
         success: false,
