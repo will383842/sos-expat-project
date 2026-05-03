@@ -23,6 +23,7 @@ import { logger } from "firebase-functions";
 import * as admin from "firebase-admin";
 // P0 FIX: Import secrets from centralized secrets.ts - NEVER call defineSecret() here!
 import { OUTIL_SYNC_API_KEY, getOutilIngestEndpoint } from "../lib/secrets";
+import { forwardEventToEngine } from "../telegram/forwardToEngine";
 
 // URL loaded from environment/config via centralized secrets.ts
 
@@ -362,6 +363,17 @@ export const retryOutilSync = onSchedule(
             retryCount: newRetryCount,
           });
           logger.error("[retryOutilSync] ❌ Max retries atteint pour:", bookingId);
+          // OUT-OPS-009 — DLQ alert: surface to admin via Telegram engine when a sync
+          // dies in queue after exhausting retries. Fire-and-forget (never throws).
+          forwardEventToEngine("outil_sync_dlq", undefined, {
+            bookingId,
+            retryCount: newRetryCount,
+            lastError: result.error || "unknown",
+            failedAt: new Date().toISOString(),
+          }).catch(() => {
+            // forwardEventToEngine already swallows errors, but defensive catch
+            // here in case future versions throw — must NOT fail the cron.
+          });
         } else {
           // Planifier le prochain retry avec backoff exponentiel
           const backoffMinutes = Math.pow(2, newRetryCount) * 5; // 5, 10, 20 minutes
