@@ -29,6 +29,10 @@ interface UserAccessData {
   freeTrialUntil?: FirebaseFirestore.Timestamp | null;
   role?: string;
   email?: string;
+  // OUT-OPS-001 (audit 2026-05-03): set by `syncFromOutil` when an admin
+  // change came from Outil. Used here to skip the back-sync and break the
+  // SOS → Outil → SOS bounce that otherwise costs 2-3 cycles per change.
+  lastSyncFromOutil?: FirebaseFirestore.Timestamp;
 }
 
 interface SyncAccessPayload {
@@ -106,6 +110,17 @@ export async function handleUserAccessUpdated(event: any) {
 
     if (!afterData) {
       logger.warn("[onUserAccessUpdated] Pas de donnees after pour:", uid);
+      return;
+    }
+
+    // OUT-OPS-001 (audit 2026-05-03): si lastSyncFromOutil a été bumped par
+    // ce write, c'est que l'update vient de syncFromOutil (Outil → SOS) — on
+    // skip pour éviter de re-pousser vers Outil et fermer le cycle inutile.
+    // Aligne le guard déjà présent dans syncSosProfilesToOutil.ts:198-204.
+    const beforeLastSync = beforeData?.lastSyncFromOutil;
+    const afterLastSync = afterData.lastSyncFromOutil;
+    if (afterLastSync && beforeLastSync !== afterLastSync) {
+      logger.debug("[onUserAccessUpdated] Skip — update came from Outil (lastSyncFromOutil bumped):", uid);
       return;
     }
 
