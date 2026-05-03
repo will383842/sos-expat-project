@@ -17,6 +17,8 @@ import { getTemplate } from "./templates";
 import { getRouting, isRateLimited } from "./routing";
 import { render } from "./render";
 import { Channel, TemplatesByEvent, RoutingPerEvent } from "./types";
+// PII-safe logging (RGPD)
+import { maskPhone } from "../utils/phoneSanitizer";
 
 // IMPORTS DES PROVIDERS
 import { sendZoho } from "./providers/email/zohoSmtp";
@@ -173,7 +175,7 @@ async function sendOne(
     console.log(`📱 [SMS] ========================================`);
     console.log(`📱 [SMS] SMS REQUEST RECEIVED`);
     console.log(`📱 [SMS]   eventId: ${eventId}`);
-    console.log(`📱 [SMS]   to: ${evt.to?.phone || ctx?.user?.phoneNumber || "NO_PHONE"}`);
+    console.log(`📱 [SMS]   to: ${maskPhone(evt.to?.phone || ctx?.user?.phoneNumber || "")}`);
     console.log(`📱 [SMS]   allowed events: ${SMS_ALLOWED_EVENTS.join(", ")}`);
     console.log(`📱 [SMS]   is allowed: ${SMS_ALLOWED_EVENTS.includes(eventId)}`);
 

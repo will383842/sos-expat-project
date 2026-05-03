@@ -13,6 +13,8 @@ import { scheduleProviderAvailableTask } from "./lib/tasks";
 import { setProviderAvailable } from "./callables/providerStatusManager";
 // 🔒 Phone number encryption
 import { encryptPhoneNumber, decryptPhoneNumber } from "./utils/encryption";
+// PII-safe logging: never log raw phone numbers (RGPD)
+import { maskPhone } from "./utils/phoneSanitizer";
 // 🌐 i18n for notification language resolution
 import { resolveLang } from "./notificationPipeline/i18n";
 // P1-13: Sync atomique payments <-> call_sessions
@@ -1340,7 +1342,7 @@ export class TwilioCallManager {
         const fromNumber = getTwilioPhoneNumber();
         // P0 CRITICAL FIX: Use dedicated Cloud Run URL instead of base + function name
         const twilioCallWebhookUrl = getTwilioCallWebhookUrl();
-        logger.info(`📞 [${retryId}]   fromNumber: ${fromNumber}`);
+        logger.info(`📞 [${retryId}]   fromNumber: ${maskPhone(fromNumber)}`);
         logger.info(`📞 [${retryId}]   statusCallback (Cloud Run): ${twilioCallWebhookUrl}`);
 
         logger.info(`📞 [${retryId}] STEP C: Creating Twilio call via API...`);
@@ -1352,8 +1354,8 @@ export class TwilioCallManager {
         }
 
         logger.info(`📞 [${retryId}]   twilioClient.calls.create({`);
-        logger.info(`📞 [${retryId}]     to: ${phoneNumber.substring(0, 6)}****,`);
-        logger.info(`📞 [${retryId}]     from: ${fromNumber},`);
+        logger.info(`📞 [${retryId}]     to: ${maskPhone(phoneNumber)},`);
+        logger.info(`📞 [${retryId}]     from: ${maskPhone(fromNumber)},`);
         logger.info(`📞 [${retryId}]     timeout: ${CALL_CONFIG.CALL_TIMEOUT},`);
         logger.info(`📞 [${retryId}]     machineDetection: "Enable",`);
         logger.info(`📞 [${retryId}]     url: ${amdTwimlUrl.substring(0, 50)}...`);
@@ -1427,8 +1429,8 @@ export class TwilioCallManager {
         logger.info(`📞 [${retryId}] STEP D: Twilio API response received in ${twilioApiDuration}ms`);
         logger.info(`📞 [${retryId}]   call.sid: ${call.sid}`);
         logger.info(`📞 [${retryId}]   call.status: ${call.status}`);
-        logger.info(`📞 [${retryId}]   call.to: ${call.to}`);
-        logger.info(`📞 [${retryId}]   call.from: ${call.from}`);
+        logger.info(`📞 [${retryId}]   call.to: ${maskPhone(call.to)}`);
+        logger.info(`📞 [${retryId}]   call.from: ${maskPhone(call.from)}`);
         logger.info(`📞 [${retryId}]   call.direction: ${call.direction}`);
         logger.info(`📞 [${retryId}]   call.dateCreated: ${call.dateCreated}`);
 

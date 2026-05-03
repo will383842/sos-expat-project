@@ -31,6 +31,8 @@ import { META_CAPI_TOKEN, trackCAPIPurchase, UserData } from "./metaConversionsA
 import { sendPaymentNotifications, ENCRYPTION_KEY, OUTIL_SYNC_API_KEY } from "./notifications/paymentNotifications";
 // P0 FIX: Import encryptPhoneNumber for Twilio call compatibility (phones must be encrypted in call_sessions)
 import { encryptPhoneNumber } from "./utils/encryption";
+// PII-safe logging: never log raw phones / paypal emails (RGPD)
+import { sanitizePayload } from "./utils/phoneSanitizer";
 // P0 FIX 2026-02-12: Cancel ALL affiliate commissions on refund (6 systems)
 import { cancelCommissionsForCallSession as cancelChatterCommissions } from "./chatter/services/chatterCommissionService";
 import { cancelCommissionsForCallSession as cancelInfluencerCommissions } from "./influencer/services/influencerCommissionService";
@@ -2802,7 +2804,8 @@ export const createPayPalOrderHttp = onRequest(
     } = req.body;
 
     // DEBUG: Log tous les paramètres reçus
-    console.log(`[PAYPAL DEBUG] Request body:`, JSON.stringify(req.body, null, 2));
+    // PII-safe: clientPhone / providerPhone / paypalEmail are masked before logging.
+    console.log(`[PAYPAL DEBUG] Request body:`, JSON.stringify(sanitizePayload(req.body), null, 2));
     console.log(`[PAYPAL DEBUG] Auth UID: ${auth.uid}`);
 
     prodLogger.info('PAYPAL_ORDER_HTTP_START', `[${requestId}] Creating PayPal order (HTTP)`, {

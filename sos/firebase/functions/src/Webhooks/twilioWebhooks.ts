@@ -16,6 +16,8 @@ import voicePromptsJson from '../content/voicePrompts.json';
 // P0 FIX: Import call region from centralized config - dedicated region for call functions
 import { CALL_FUNCTIONS_REGION } from '../configs/callRegion';
 import { captureError } from '../config/sentry';
+// PII-safe logging: never log raw phones / auth headers (RGPD)
+import { sanitizePayload } from '../utils/phoneSanitizer';
 
 // Helper function to get intro text based on participant type and language
 function getIntroText(participant: "provider" | "client", langKey: string): string {
@@ -266,7 +268,7 @@ export const twilioCallWebhook = onRequest(
         errorStack: error instanceof Error ? error.stack?.split('\n').slice(0, 5).join(' | ') : 'N/A',
         twilioCode: (error as any)?.code || 'N/A',
         twilioStatus: (error as any)?.status || 'N/A',
-        requestBody: JSON.stringify(req.body || {}).slice(0, 500),
+        requestBody: JSON.stringify(sanitizePayload(req.body || {})).slice(0, 500),
         timestamp: new Date().toISOString(),
       };
 
@@ -1336,7 +1338,7 @@ export const twilioAmdTwiml = onRequest(
       logger.info(`🎯 [${amdId}] 📋 FULL REQUEST DATA:`);
       logger.info(`🎯 [${amdId}]   req.method: ${req.method}`);
       logger.info(`🎯 [${amdId}]   req.query: ${JSON.stringify(req.query)}`);
-      logger.info(`🎯 [${amdId}]   req.body: ${JSON.stringify(req.body || {})}`);
+      logger.info(`🎯 [${amdId}]   req.body: ${JSON.stringify(sanitizePayload(req.body || {}))}`);
       logger.info(`🎯 [${amdId}]   All AnsweredBy values: body=${req.body?.AnsweredBy}, query=${req.query.AnsweredBy}`);
 
       // ===== PRODUCTION TEST LOG =====
@@ -1962,7 +1964,7 @@ export const twilioAmdTwiml = onRequest(
         errorMessage: error instanceof Error ? error.message : String(error),
         errorName: error instanceof Error ? error.name : 'Unknown',
         errorStack: error instanceof Error ? error.stack?.split('\n').slice(0, 5).join(' | ') : 'N/A',
-        requestBody: JSON.stringify(req.body || {}).slice(0, 500),
+        requestBody: JSON.stringify(sanitizePayload(req.body || {})).slice(0, 500),
         timestamp: new Date().toISOString(),
       };
 

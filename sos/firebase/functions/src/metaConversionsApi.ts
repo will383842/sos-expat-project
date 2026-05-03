@@ -17,17 +17,25 @@
 import { createHash } from "crypto";
 import { logger } from "firebase-functions/v2";
 import Stripe from "stripe";
-import { META_CAPI_TOKEN } from "./lib/secrets";
+import { META_CAPI_TOKEN, getMetaPixelId } from "./lib/secrets";
 
 // ============================================================================
 // Configuration
 // ============================================================================
 
-/** Meta Pixel ID */
-const META_PIXEL_ID = "1494539620587456";
+/**
+ * Meta Pixel ID — resolved at runtime from the META_PIXEL_ID Firebase Param
+ * (defineString) with env-var fallback. P1 FIX 2026-05-03: was hardcoded.
+ * Cf. audit_results_2026-05-03.md BUG-002.
+ */
+function getPixelId(): string {
+  return getMetaPixelId();
+}
 
-/** Meta Conversions API endpoint */
-const META_CAPI_ENDPOINT = `https://graph.facebook.com/v18.0/${META_PIXEL_ID}/events`;
+/** Meta Conversions API endpoint (resolved per-call so Pixel ID changes take effect without redeploy). */
+function getCapiEndpoint(): string {
+  return `https://graph.facebook.com/v18.0/${getPixelId()}/events`;
+}
 
 // Re-export for backward compatibility
 export { META_CAPI_TOKEN };
@@ -569,7 +577,7 @@ async function sendCAPIEventInternal(
   }
 
   try {
-    const response = await fetch(META_CAPI_ENDPOINT, {
+    const response = await fetch(getCapiEndpoint(), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -1293,7 +1301,8 @@ export async function trackStripePurchase(
 // Exports
 // ============================================================================
 
-export {
-  META_PIXEL_ID,
-  META_CAPI_ENDPOINT,
-};
+// P1 FIX 2026-05-03: Pixel ID + endpoint are now resolved at call time so a Pixel
+// rotation only requires updating the META_PIXEL_ID env/param (no code redeploy).
+// Old `META_PIXEL_ID` / `META_CAPI_ENDPOINT` string constants are NOT exported any
+// more — callers must use these functions or import getMetaPixelId from lib/secrets.
+export { getPixelId, getCapiEndpoint };

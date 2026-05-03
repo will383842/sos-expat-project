@@ -8,6 +8,8 @@ import { beginOutboundCallForSession } from "../services/twilioCallManagerAdapte
 import { logError } from "../utils/logs/logError";
 import { logCallRecord } from "../utils/logs/logCallRecord";
 import { captureError } from "../config/sentry";
+// PII-safe logging: never log raw phones / X-Task-Auth header (RGPD + secret hygiene)
+import { sanitizePayload } from "../utils/phoneSanitizer";
 
 // P0 FIX: Import from centralized secrets - NEVER call defineSecret() here!
 import {
@@ -33,8 +35,9 @@ export async function runExecuteCallTask(req: Request, res: Response): Promise<v
   try {
     logger.info('🔍 [executeCallTask] === DÉBUT EXÉCUTION ===');
     logger.info('🔍 [executeCallTask] Method:', req.method);
-    logger.info('🔍 [executeCallTask] Headers:', JSON.stringify(req.headers, null, 2));
-    logger.info('🔍 [executeCallTask] Raw Body:', req.body);
+    // X-Task-Auth + cookies are stripped by sanitizePayload to avoid leaking auth tokens.
+    logger.info('🔍 [executeCallTask] Headers:', JSON.stringify(sanitizePayload(req.headers), null, 2));
+    logger.info('🔍 [executeCallTask] Raw Body:', sanitizePayload(req.body));
 
     // ✅ ÉTAPE 1: Authentification Cloud Tasks
     const authHeader = req.get("X-Task-Auth") || "";
@@ -65,7 +68,7 @@ export async function runExecuteCallTask(req: Request, res: Response): Promise<v
       hasBody: !!req.body,
       bodyKeys: Object.keys(requestBody),
       callSessionId: callSessionId || 'MISSING',
-      fullPayload: JSON.stringify(requestBody, null, 2)
+      fullPayload: JSON.stringify(sanitizePayload(requestBody), null, 2)
     });
 
     if (!callSessionId) {

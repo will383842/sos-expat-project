@@ -27,7 +27,11 @@ declare global {
   }
 }
 
-export const PIXEL_ID = '1494539620587456';
+// P1 FIX 2026-05-03: Pixel ID is now configurable via VITE_META_PIXEL_ID env var
+// (audit_results_2026-05-03.md BUG-002 — default Pixel returns 404 from Graph API).
+// Note: index.html still hardcodes the same value because Vite does not template-replace
+// raw <script> blocks; rotating the Pixel requires editing index.html in addition to .env.
+export const PIXEL_ID = (import.meta.env.VITE_META_PIXEL_ID as string | undefined)?.trim() || '1494539620587456';
 
 // ============================================================================
 // Utilitaires de validation et normalisation

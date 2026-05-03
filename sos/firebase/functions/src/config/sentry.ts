@@ -12,6 +12,11 @@
 // LAZY IMPORT: @sentry/node takes ~2.3s to load — import lazily to avoid deployment timeout
 // import * as Sentry from "@sentry/node";
 import type { SeverityLevel, Event, EventHint } from "@sentry/node";
+// P1 FIX 2026-05-03: Read DSN from the SENTRY_DSN Firebase Secret (centralized in lib/secrets.ts)
+// instead of process.env.SENTRY_DSN_BACKEND. The previous env-var name never existed in Secret
+// Manager, so initSentry() always took the "DSN not configured" branch and 30+ services ran
+// blind in prod (cf. audit_results_2026-05-03.md BUG-001).
+import { SENTRY_DSN } from "../lib/secrets";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let Sentry: any = null;
 function getSentry() {
@@ -47,8 +52,21 @@ export function initSentry(): void {
     return;
   }
 
-  // Get DSN from environment variable (set in Firebase console or .env)
-  const dsn = process.env.SENTRY_DSN_BACKEND;
+  // P1 FIX 2026-05-03: resolution order = (1) Firebase Secret SENTRY_DSN, (2) env vars
+  // for backward compatibility. The function MUST list SENTRY_DSN in its `secrets:` array
+  // for the Secret to be readable here — see lib/secrets.ts:SENTRY_DSN exports.
+  let dsn: string | undefined;
+  try {
+    const secretValue = SENTRY_DSN.value()?.trim();
+    if (secretValue && secretValue.length > 0) {
+      dsn = secretValue;
+    }
+  } catch {
+    // Secret not in this function's `secrets:` array, fall through to env
+  }
+  if (!dsn) {
+    dsn = (process.env.SENTRY_DSN || process.env.SENTRY_DSN_BACKEND || "").trim() || undefined;
+  }
 
   if (!dsn) {
     console.info("[Sentry Backend] DSN not configured - monitoring disabled");

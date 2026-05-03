@@ -152,6 +152,49 @@ export const FLUTTERWAVE_SECRETS = [
 
 export const META_CAPI_TOKEN = defineSecret("META_CAPI_TOKEN");
 
+/**
+ * Meta Pixel ID — public value (visible in browser-side Pixel code), so it's a
+ * Firebase Param (defineString), not a Secret. Override per-environment by
+ * setting `META_PIXEL_ID=<id>` in `.env` or via `firebase functions:config:set`.
+ *
+ * P1 FIX 2026-05-03: was hardcoded as `1494539620587456` in metaConversionsApi.ts
+ * — that Pixel returns 404 from Graph API (deleted/disabled in Meta Business
+ * Manager) → 100 % of Lead/Purchase events have been failing for ≥ 7 days
+ * (cf. audit_results_2026-05-03.md BUG-002). The default below is kept for
+ * backward compat, but production must override with a valid Pixel.
+ */
+export const META_PIXEL_ID_PARAM = defineString("META_PIXEL_ID", {
+  default: "1494539620587456",
+  description: "Meta Pixel ID for Conversions API (CAPI) — REPLACE with active Pixel from Meta Business Manager",
+});
+
+/**
+ * Resolution order: defineString param → process.env.META_PIXEL_ID → fallback.
+ * Logs a warning if we end up using the broken default Pixel (so the misconfig
+ * is loud in logs even when Sentry is disabled).
+ */
+let _metaPixelWarningEmitted = false;
+export function getMetaPixelId(): string {
+  let value = "";
+  try {
+    value = META_PIXEL_ID_PARAM.value()?.trim() ?? "";
+  } catch { /* not bound — fall through */ }
+  if (!value) {
+    value = (process.env.META_PIXEL_ID || "").trim();
+  }
+  if (!value) {
+    value = "1494539620587456";
+  }
+  if (value === "1494539620587456" && !_metaPixelWarningEmitted) {
+    _metaPixelWarningEmitted = true;
+    console.warn(
+      "[Meta CAPI] ⚠️  Using default Pixel ID 1494539620587456 — this Pixel returned 404 from Graph API on 2026-05-03. " +
+      "Set META_PIXEL_ID env/param to a live Pixel before relying on CAPI. See audit_results_2026-05-03.md BUG-002."
+    );
+  }
+  return value;
+}
+
 /** Meta CAPI secrets for function config */
 export const META_CAPI_SECRETS = [META_CAPI_TOKEN];
 
@@ -230,6 +273,15 @@ export const OUTIL_SERVICE_ACCOUNT_KEY = defineSecret("OUTIL_SERVICE_ACCOUNT_KEY
 // ============================================================================
 
 export const SENTRY_DSN = defineSecret("SENTRY_DSN");
+
+/**
+ * Standalone observability secrets — include this array (or just SENTRY_DSN)
+ * in any function's `secrets:` config so initSentry() can resolve the DSN.
+ * P1 FIX 2026-05-03: SENTRY_DSN was previously only in ALL_SECRETS, which most
+ * functions don't import → DSN unreadable at runtime → "DSN not configured" log
+ * on 30+ services (cf. audit_results_2026-05-03.md BUG-001).
+ */
+export const OBSERVABILITY_SECRETS = [SENTRY_DSN];
 
 // ============================================================================
 // EMAIL MARKETING (MailWizz + GA4)
@@ -1019,28 +1071,34 @@ export const CALL_FUNCTION_SECRETS = [
   ...TWILIO_SECRETS,
   TASKS_AUTH_SECRET,
   ENCRYPTION_KEY,
+  // P1 FIX 2026-05-03: include SENTRY_DSN so initSentry() resolves at runtime
+  SENTRY_DSN,
 ];
 
 /** All secrets for payment/Stripe functions */
 export const PAYMENT_FUNCTION_SECRETS = [
   ...STRIPE_SECRETS,
+  SENTRY_DSN,
 ];
 
 /** All secrets for Wise affiliate payout functions */
 export const WISE_PAYOUT_SECRETS = [
   ...WISE_SECRETS,
   ENCRYPTION_KEY,
+  SENTRY_DSN,
 ];
 
 /** All secrets for Flutterwave mobile money payout functions */
 export const FLUTTERWAVE_PAYOUT_SECRETS = [
   ...FLUTTERWAVE_SECRETS,
   ENCRYPTION_KEY,
+  SENTRY_DSN,
 ];
 
 /** All secrets for Telegram notification functions */
 export const TELEGRAM_NOTIFICATION_SECRETS = [
   ...TELEGRAM_SECRETS,
+  SENTRY_DSN,
 ];
 
 // ============================================================================

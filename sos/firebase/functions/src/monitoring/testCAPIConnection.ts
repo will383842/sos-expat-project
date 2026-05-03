@@ -13,6 +13,7 @@ import {
   hashUserData,
   generateEventId,
 } from '../metaConversionsApi';
+import { getMetaPixelId } from '../lib/secrets';
 import { ALLOWED_ORIGINS } from '../lib/functionConfigs';
 
 const REGION = 'europe-west1';
@@ -74,7 +75,7 @@ export const testCAPIConnection = onRequest(
           details: {
             eventId: '',
             tokenConfigured: false,
-            pixelId: '1494539620587456',
+            pixelId: getMetaPixelId(),
             error: 'Le secret META_CAPI_TOKEN n\'est pas configure dans Firebase',
           },
         };
@@ -120,7 +121,7 @@ export const testCAPIConnection = onRequest(
             eventsReceived: result.eventsReceived,
             fbtraceId: result.fbtraceId,
             tokenConfigured: true,
-            pixelId: '1494539620587456',
+            pixelId: getMetaPixelId(),
           },
         };
 
@@ -135,7 +136,7 @@ export const testCAPIConnection = onRequest(
             error: result.error,
             fbtraceId: result.fbtraceId,
             tokenConfigured: true,
-            pixelId: '1494539620587456',
+            pixelId: getMetaPixelId(),
           },
         };
 
@@ -153,7 +154,7 @@ export const testCAPIConnection = onRequest(
           eventId: '',
           error: errorMessage,
           tokenConfigured: false,
-          pixelId: '1494539620587456',
+          pixelId: getMetaPixelId(),
         },
       };
 
