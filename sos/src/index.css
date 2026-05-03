@@ -909,49 +909,37 @@ body.wizard-scroll-lock {
   100% { background-position: -200% 0; }
 }
 
-/* PayPal field container - styled wrapper */
+/* PayPal field container - filled style 2026 (Apple-like, single rectangle) */
 .paypal-field-wrapper {
   position: relative;
   display: flex;
-  align-items: center;
-  border: 2px solid #e5e7eb;
-  border-radius: 0.5rem;
-  background-color: #ffffff;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  align-items: stretch;
+  background-color: #f3f4f6;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
   overflow: hidden;
-  height: 44px;
-}
-
-.paypal-field-wrapper:hover {
-  border-color: #d1d5db;
+  height: 48px;
+  isolation: isolate; /* contain l'iframe pour empêcher tout débordement visuel */
 }
 
 .paypal-field-wrapper:focus-within {
+  background-color: #ffffff;
   border-color: #ef4444;
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.18);
 }
 
 .paypal-field-wrapper.has-error {
-  border-color: #ef4444;
   background-color: #fef2f2;
+  border-color: #ef4444;
 }
 
-.paypal-field-wrapper .field-icon {
-  padding-left: 12px;
-  padding-right: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #9ca3af;
-  flex-shrink: 0;
-  height: 100%;
-}
-
-/* PayPal field inner content - full width */
+/* PayPal field inner content - pleine largeur, sans rectangle visible */
 .paypal-field-wrapper .paypal-field-inner {
   flex: 1;
   height: 100%;
   min-width: 0;
+  background: transparent;
 }
 
 /* PayPal iframe styles - CRITICAL for card field interaction */
@@ -962,47 +950,33 @@ body.wizard-scroll-lock {
   z-index: 1;
 }
 
-/* Remove PayPal's internal wrapper borders - keep only our custom wrapper border */
-/* PayPal SDK generates various wrapper divs with their own borders that create double-border effect */
-.paypal-field-inner > div,
-.paypal-field-inner > div > div,
-.paypal-field-inner > div > div > div,
-.paypal-field-inner [class*="card-field"],
-.paypal-field-inner [class*="paypal-card"],
-.paypal-field-inner [class*="eligible"],
-.paypal-field-inner [class*="container"],
-.paypal-field-inner [class*="wrapper"],
-.paypal-field-wrapper > div,
-.paypal-field-wrapper > div > div {
+/* Aplatir TOUS les wrappers générés par le SDK PayPal pour ne garder qu'un seul rectangle (le nôtre) */
+.paypal-field-inner *,
+.paypal-field-wrapper > * {
   border: none !important;
   border-width: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  outline: none !important;
-}
-
-/* Target all descendant divs inside paypal fields to remove any borders */
-.paypal-field-inner div,
-.paypal-field-wrapper div:not(.field-icon) {
-  border: none !important;
+  background-color: transparent !important;
   box-shadow: none !important;
   outline: none !important;
 }
 
 .paypal-field-inner iframe,
 .paypal-field-wrapper iframe {
-  border: none !important;
+  border: 0 !important;
   background: transparent !important;
   pointer-events: auto !important;
   position: relative !important;
   z-index: 10 !important;
   width: 100% !important;
   height: 100% !important;
-  min-height: 44px !important;
+  min-height: 48px !important;
   outline: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: block !important;
 }
 
 /* Ensure PayPal card fields container allows interaction */
@@ -1053,11 +1027,46 @@ body.wizard-scroll-lock {
   font-size: 0.875rem;
 }
 
-/* Responsive adjustments - hauteur fixe pour cohérence avec les styles PayPal iframe */
+/* Responsive : hauteur fixe identique pour cohérence avec line-height interne PayPal */
 @media (min-width: 640px) {
   .paypal-field-wrapper {
-    height: 44px; /* Même hauteur que mobile pour aligner avec PayPal input styles */
+    height: 48px;
   }
+}
+
+/* ============================================
+   STRIPE ELEMENTS - même design filled que PayPal
+   ============================================ */
+.stripe-field-wrapper {
+  display: flex;
+  align-items: center;
+  background-color: #f3f4f6;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  height: 48px;
+  padding: 0 14px;
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  isolation: isolate;
+}
+
+.stripe-field-wrapper:focus-within {
+  background-color: #ffffff;
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.18);
+}
+
+/* Stripe Element occupe la pleine largeur du wrapper */
+.stripe-field-wrapper > .StripeElement,
+.stripe-field-wrapper > div {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+}
+
+/* État erreur (Stripe ajoute la classe StripeElement--invalid) */
+.stripe-field-wrapper:has(.StripeElement--invalid) {
+  background-color: #fef2f2;
+  border-color: #ef4444;
 }
 
 /* ============================================

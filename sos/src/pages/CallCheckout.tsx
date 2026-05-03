@@ -10,11 +10,8 @@ import React, {
 import {
   ArrowLeft,
   Clock,
-  Shield,
   AlertCircle,
-  CreditCard,
   Lock,
-  Calendar,
   Info,
 } from "lucide-react";
 import { useLocaleNavigate } from "../multilingual-system";
@@ -53,7 +50,7 @@ import { formatCurrency } from "../utils/localeFormatters";
 import { getDateLocale } from "../utils/formatters";
 import { normalizeCountryToCode } from "../utils/countryUtils";
 import { usePaymentGateway } from "../hooks/usePaymentGateway";
-import { PayPalPaymentForm, GatewayIndicator } from "../components/payment";
+import { PayPalPaymentForm } from "../components/payment";
 import { PaymentFeedback } from "../components/payment/PaymentFeedback";
 import { ConfirmModal } from "../components/ui/ConfirmModal";
 // PayPalScriptProvider est fourni par PayPalContext au niveau CallCheckoutWrapper.tsx
@@ -2554,138 +2551,62 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
               <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center space-x-3 shadow-sm">
                 <div className="animate-spin rounded-full h-5 w-5 border-2 border-blue-600 border-t-transparent" />
                 <span className="text-blue-700 font-medium">
-                  {language === "fr" ? "Vérification bancaire en cours..." :
-                   language === "es" ? "Verificación bancaria en curso..." :
-                   language === "de" ? "Bankverifizierung läuft..." :
-                   "Bank verification in progress..."}
+                  <FormattedMessage
+                    id="checkout.threeDSCheck"
+                    defaultMessage="Vérification bancaire en cours..."
+                  />
                 </span>
               </div>
             )}
 
-            {/* ========== PROGRESSIVE DISCLOSURE: UX SIMPLIFIÉE ========== */}
-
-            {/* OPTION 1: Apple Pay / Google Pay (si disponible) */}
+            {/* 1. Express checkout — Apple Pay / Google Pay en haut */}
             {canMakePaymentRequest && paymentRequest && !isProcessing && (
-              <div className="space-y-4">
-                {/* Bouton Apple Pay / Google Pay - PRINCIPAL */}
-                <div>
-                  <p className="text-sm text-gray-600 mb-2 text-center">
-                    {language === "fr" ? "Paiement rapide et sécurisé" :
-                     language === "es" ? "Pago rápido y seguro" :
-                     language === "de" ? "Schnelle und sichere Zahlung" :
-                     "Fast and secure payment"}
-                  </p>
-                  <PaymentRequestButtonElement
-                    options={{
-                      paymentRequest,
-                      style: {
-                        paymentRequestButton: {
-                          type: "default",
-                          theme: "dark",
-                          height: "52px",
-                        },
+              <div className="space-y-3">
+                <PaymentRequestButtonElement
+                  options={{
+                    paymentRequest,
+                    style: {
+                      paymentRequestButton: {
+                        type: "default",
+                        theme: "dark",
+                        height: "48px",
                       },
-                    }}
-                  />
-                </div>
-
-                {/* Séparateur "ou" entre Apple Pay et carte */}
-                <div className="flex items-center my-2">
-                  <div className="flex-1 border-t border-gray-200"></div>
-                  <span className="px-3 text-sm text-gray-400">
-                    {language === "fr" ? "ou" :
-                     language === "es" ? "o" :
-                     language === "de" ? "oder" :
-                     "or"}
-                  </span>
-                  <div className="flex-1 border-t border-gray-200"></div>
+                    },
+                  }}
+                />
+                <div className="relative py-1">
+                  <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                    <div className="w-full border-t border-gray-200"></div>
+                  </div>
+                  <div className="relative flex justify-center">
+                    <span className="px-2 bg-white text-gray-400 text-[11px] font-medium uppercase tracking-wider">
+                      <FormattedMessage id="payment.orPayByCard" defaultMessage="ou par carte" />
+                    </span>
+                  </div>
                 </div>
               </div>
             )}
 
-            {/* OPTION 2: Champs de carte (toujours visible) */}
-                {/* Label simple et clair */}
-                <div className="flex items-center space-x-2 mb-3">
-                  <CreditCard className="w-5 h-5 text-gray-500" />
-                  <span className="text-sm font-medium text-gray-700">
-                    {language === "fr" ? "Informations de carte" :
-                     language === "es" ? "Información de tarjeta" :
-                     language === "de" ? "Karteninformationen" :
-                     "Card information"}
-                  </span>
-                </div>
-
+            {/* 2. Champs carte — design filled, sans header ni icônes redondantes */}
             {isMobile ? (
-              /* Mobile: Un seul champ unifié (numéro + date + CVC) */
-              <div className="space-y-2" aria-live="polite">
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <CreditCard
-                      className="h-4 w-4 text-gray-400"
-                      aria-hidden="true"
-                    />
-                  </div>
-                  <div className="pl-10 pr-3 py-3.5 border-2 border-gray-200 rounded-lg bg-white focus-within:border-red-500 focus-within:ring-2 focus-within:ring-red-500/20 transition-all duration-200 hover:border-gray-300">
-                    <CardElement options={singleCardElementOptions} />
-                  </div>
-                </div>
+              <div className="stripe-field-wrapper" aria-live="polite">
+                <CardElement options={singleCardElementOptions} />
               </div>
             ) : (
-              <>
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-600">
-                    {t("card.number")}
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <CreditCard
-                        className="h-4 w-4 text-gray-400"
-                        aria-hidden="true"
-                      />
-                    </div>
-                    <div className="pl-10 pr-3 py-3.5 border-2 border-gray-200 rounded-lg bg-white focus-within:border-red-500 focus-within:ring-2 focus-within:ring-red-500/20 transition-all duration-200 hover:border-gray-300">
-                      <CardNumberElement options={cardElementOptions} />
-                    </div>
+              <div className="space-y-2">
+                <div className="stripe-field-wrapper">
+                  <CardNumberElement options={cardElementOptions} />
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="stripe-field-wrapper">
+                    <CardExpiryElement options={cardElementOptions} />
+                  </div>
+                  <div className="stripe-field-wrapper">
+                    <CardCvcElement options={cardElementOptions} />
                   </div>
                 </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-600">
-                      {t("card.expiry")}
-                    </label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Calendar
-                          className="h-4 w-4 text-gray-400"
-                          aria-hidden="true"
-                        />
-                      </div>
-                      <div className="pl-10 pr-3 py-3.5 border-2 border-gray-200 rounded-lg bg-white focus-within:border-red-500 focus-within:ring-2 focus-within:ring-red-500/20 transition-all duration-200 hover:border-gray-300">
-                        <CardExpiryElement options={cardElementOptions} />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-600">
-                      {t("card.cvc")}
-                    </label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Shield
-                          className="h-4 w-4 text-gray-400"
-                          aria-hidden="true"
-                        />
-                      </div>
-                      <div className="pl-10 pr-3 py-3.5 border-2 border-gray-200 rounded-lg bg-white focus-within:border-red-500 focus-within:ring-2 focus-within:ring-red-500/20 transition-all duration-200 hover:border-gray-300">
-                        <CardCvcElement options={cardElementOptions} />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </>
+              </div>
             )}
-            {/* ========== FIN PROGRESSIVE DISCLOSURE ========== */}
           </div>
 
           {/* Compact fee breakdown link */}
@@ -2728,99 +2649,73 @@ const PaymentForm: React.FC<PaymentFormProps> = React.memo(
             <div className="flex items-center gap-2 p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-sm">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
               <span>
-                {language === "fr"
-                  ? "Ce prestataire n'est plus disponible actuellement. Veuillez réessayer plus tard."
-                  : "This provider is currently unavailable. Please try again later."}
+                <FormattedMessage
+                  id="checkout.providerUnavailable"
+                  defaultMessage="Ce prestataire n'est plus disponible actuellement. Veuillez réessayer plus tard."
+                />
               </span>
             </div>
           )}
 
-          {/* Reassurance message */}
-          <p className="text-center text-xs text-gray-500 mt-3 mb-1 px-2">
-            <Shield className="w-3 h-3 inline-block mr-1 -mt-0.5 text-green-600" aria-hidden="true" />
+          {/* Bouton primaire — montant inclus */}
+          <button
+            type="button"
+            disabled={!stripe || !elements || isProcessing || providerOffline}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (!stripe || !elements) return;
+              try {
+                handlePaymentSubmit(e as unknown as React.FormEvent);
+              } catch (err) {
+                console.error("[Stripe] submit error", err);
+              }
+            }}
+            className={
+              "w-full h-12 rounded-xl font-semibold text-base text-white transition-all " +
+              "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 " +
+              "active:scale-[0.98] touch-manipulation flex items-center justify-center gap-2 " +
+              (!stripe || !elements || isProcessing || providerOffline
+                ? "bg-gray-300 cursor-not-allowed"
+                : "bg-gradient-to-r from-red-500 to-orange-500 shadow-lg shadow-red-500/30")
+            }
+            aria-label={`${intl.formatMessage({ id: "checkout.btn.pay" })} ${formatCurrency(adminPricing.totalAmount, serviceCurrency.toUpperCase(), {
+              language,
+              minimumFractionDigits: 2,
+            })}`}
+          >
+            {!stripe || !elements ? (
+              <>
+                <div className="animate-spin rounded-full border-2 border-white border-t-transparent w-4 h-4" />
+                <span>
+                  <FormattedMessage id="payment.loading" defaultMessage="Chargement..." />
+                </span>
+              </>
+            ) : isProcessing ? (
+              <>
+                <div className="animate-spin rounded-full border-2 border-white border-t-transparent w-4 h-4" />
+                <span>
+                  <FormattedMessage id="payment.processing" defaultMessage="Traitement..." />
+                </span>
+              </>
+            ) : (
+              <>
+                <Lock className="w-4 h-4" aria-hidden="true" />
+                <span>
+                  {intl.formatMessage({ id: "checkout.btn.pay" })}{" "}
+                  {formatCurrency(adminPricing.totalAmount, serviceCurrency.toUpperCase(), {
+                    language,
+                    minimumFractionDigits: 2,
+                  })}
+                </span>
+              </>
+            )}
+          </button>
+
+          {/* Réassurance compacte (info utile : auth-only avant l'appel) */}
+          <p className="text-center text-[11px] text-gray-500 mt-2 px-2">
             {intl.formatMessage({ id: "checkout.reassurance", defaultMessage: "Vous ne serez débité qu'après la mise en relation avec votre expert" })}
           </p>
-
-          {/* Pay button - sticky on mobile */}
-          <div
-            className="sticky bottom-0 -mx-4 px-4 py-3 bg-white/95 backdrop-blur-sm border-t border-gray-100 mt-1 z-10 md:relative md:mx-0 md:px-0 md:py-0 md:bg-transparent md:backdrop-blur-none md:border-0 md:mt-1 md:z-auto"
-            style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
-          >
-            <button
-              type="button"
-              disabled={!stripe || !elements || isProcessing || providerOffline}
-              onClick={(e) => {
-                // VERSION 7 - Alerte à CHAQUE clic
-                console.log("[DEBUG] " + "🟡 BOUTON CLIQUÉ!\n\nStripe: " + (stripe ? "✅" : "❌") + "\nElements: " + (elements ? "✅" : "❌") + "\nisProcessing: " + isProcessing);
-
-                e.preventDefault();
-                e.stopPropagation();
-
-                if (!stripe || !elements) {
-                  console.log("[DEBUG] " + "⚠️ Stripe pas prêt. Attendez...");
-                  return;
-                }
-
-                console.log("[DEBUG] " + "🚀 Lancement du paiement...");
-
-                try {
-                  handlePaymentSubmit(e as unknown as React.FormEvent);
-                } catch (err) {
-                  console.log("[DEBUG] " + "❌ ERREUR: " + (err instanceof Error ? err.message : String(err)));
-                }
-              }}
-              className={
-                "w-full py-4 rounded-2xl font-bold text-lg text-white transition-all " +
-                "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 " +
-                "active:scale-[0.98] touch-manipulation relative overflow-hidden min-h-[60px] " +
-                (!stripe || !elements || isProcessing || providerOffline
-                  ? "bg-gray-400 cursor-not-allowed opacity-60"
-                  : "bg-gradient-to-r from-red-500 to-orange-500 shadow-lg shadow-red-500/30")
-              }
-              aria-label={`${intl.formatMessage({ id: "checkout.btn.pay" })} ${formatCurrency(adminPricing.totalAmount, serviceCurrency.toUpperCase(), {
-                language,
-                minimumFractionDigits: 2,
-              })}`}
-            >
-              {!stripe || !elements ? (
-                <div className="flex items-center justify-center space-x-2">
-                  <div className="animate-spin rounded-full border-2 border-white border-t-transparent w-5 h-5" />
-                  <span>
-                    {language === "fr" ? "Chargement..." : "Loading..."}
-                  </span>
-                </div>
-              ) : isProcessing ? (
-                <div className="flex items-center justify-center space-x-2">
-                  <div className="animate-spin rounded-full border-2 border-white border-t-transparent w-5 h-5" />
-                  <span>
-                    {language === "fr" ? "Traitement..." : "Processing..."}
-                  </span>
-                </div>
-              ) : (
-                <div className="flex items-center justify-center space-x-2">
-                  <Lock className="w-5 h-5" aria-hidden="true" />
-                  <span>
-                    {intl.formatMessage({ id: "checkout.btn.pay" })}{" "}
-                    {formatCurrency(adminPricing.totalAmount, serviceCurrency.toUpperCase(), {
-                      language,
-                      minimumFractionDigits: 2,
-                    })}
-                  </span>
-                </div>
-              )}
-            </button>
-
-            <div className="flex items-center justify-center mt-2">
-              <div className="flex items-center space-x-2 bg-green-50 px-3 py-1.5 rounded-full border border-green-200">
-                <Shield className="w-3 h-3 text-green-600" aria-hidden={true} />
-                <span className="text-xs font-medium text-gray-700">Stripe</span>
-                <div
-                  className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"
-                  aria-hidden={true}
-                />
-              </div>
-            </div>
-          </div>
         </form>
 
         {/* Modale de confirmation */}
@@ -3823,22 +3718,19 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({
             </div>
           )}
 
-          <div className="mb-4">
+          <div className="flex items-center justify-between mb-3">
             <button
               onClick={goBack}
-              className="flex items-center gap-2 text-red-600 hover:text-red-700 mb-3 transition-colors text-base font-medium focus:outline-none focus:ring-2 focus:ring-red-500 rounded-xl p-3 -ml-3 touch-manipulation active:scale-[0.98] min-h-[48px]"
+              className="flex items-center gap-1.5 text-red-600 hover:text-red-700 transition-colors text-sm font-medium focus:outline-none focus:ring-2 focus:ring-red-500 rounded-lg p-2 -ml-2 touch-manipulation active:scale-[0.98] min-h-[40px]"
               aria-label={t("ui.back")}
             >
-              <ArrowLeft size={20} aria-hidden={true} />
+              <ArrowLeft size={18} aria-hidden={true} />
               <span>{t("ui.back")}</span>
             </button>
-
-            <div className="text-center">
-              <h1 className="text-xl font-bold text-gray-900 mb-1">
-                {t("ui.securePayment")}
-              </h1>
-              <p className="text-gray-600 text-sm">{t("ui.payToStart")}</p>
-            </div>
+            <h1 className="text-base font-bold text-gray-900 flex items-center gap-1.5">
+              <Lock size={14} className="text-green-600" aria-hidden={true} />
+              {t("ui.securePayment")}
+            </h1>
           </div>
 
           <section className="bg-white rounded-xl shadow-md border p-4 mb-4">
@@ -3948,62 +3840,39 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({
             </div>
           </section>
 
-          {/* Social proof + availability indicator */}
+          {/* Currency toggle compact + availabilité inline */}
           <div className="flex items-center justify-between px-1 mb-3 text-xs">
-            <div className="flex items-center gap-1.5 text-gray-500">
-              <span className="text-yellow-500">⭐</span>
-              <span className="font-medium">4.8</span>
-              <span>— 1 200+ {intl.formatMessage({ id: "checkout.successfulCalls", defaultMessage: "appels réussis" })}</span>
-            </div>
             <div className="flex items-center gap-1.5">
-              <span className="relative flex h-2.5 w-2.5">
+              <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
               </span>
               <span className="text-green-600 font-medium">
                 {intl.formatMessage({ id: "checkout.availableNow", defaultMessage: "Disponible maintenant" })}
               </span>
             </div>
-          </div>
-
-          {/* Currency toggle - compact */}
-          <div className="flex items-center justify-center gap-2 mb-4 text-sm">
-            <button
-              onClick={() => setSelectedCurrency("eur")}
-              className={`px-3 py-1.5 rounded-full font-medium transition-all ${
-                selectedCurrency === "eur"
-                  ? "bg-red-500 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
-            >
-              EUR €
-            </button>
-            <button
-              onClick={() => setSelectedCurrency("usd")}
-              className={`px-3 py-1.5 rounded-full font-medium transition-all ${
-                selectedCurrency === "usd"
-                  ? "bg-red-500 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
-            >
-              USD $
-            </button>
+            <div className="inline-flex items-center bg-gray-100 rounded-full p-0.5">
+              <button
+                onClick={() => setSelectedCurrency("eur")}
+                aria-pressed={selectedCurrency === "eur"}
+                className={`px-2.5 py-1 rounded-full text-xs font-medium transition-all ${
+                  selectedCurrency === "eur" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500"
+                }`}
+              >€</button>
+              <button
+                onClick={() => setSelectedCurrency("usd")}
+                aria-pressed={selectedCurrency === "usd"}
+                className={`px-2.5 py-1 rounded-full text-xs font-medium transition-all ${
+                  selectedCurrency === "usd" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500"
+                }`}
+              >$</button>
+            </div>
           </div>
 
           <section className="bg-white rounded-xl shadow-md overflow-hidden">
             <div className="p-4">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg">
-                  <CreditCard
-                    className="w-4 h-4 text-white"
-                    aria-hidden={true}
-                  />
-                </div>
-                <h4 className="text-lg font-bold text-gray-900">Paiement</h4>
-              </div>
-
               {error && (
-                <div ref={errorRef}>
+                <div ref={errorRef} className="mb-3">
                   <PaymentFeedback
                     error={error}
                     onDismiss={() => setError("")}
@@ -4013,15 +3882,7 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({
                 </div>
               )}
 
-              {/*
-                P0 FIX: Le système de paiement s'adapte au pays du provider
-                - Pays Stripe (46): Le client paie via Stripe (CB/Apple Pay/Google Pay)
-                - Pays PayPal (151): Le client paie via PayPal (Guest Checkout = CB aussi)
-                Le provider reçoit automatiquement sur son compte (Stripe ou PayPal)
-              */}
-              <div className="mb-4">
-                <GatewayIndicator gateway={isPayPalOnly ? "paypal" : "stripe"} />
-              </div>
+              {/* Pas d'indicateur de gateway : les boutons natifs (PayPal / Apple Pay) sont explicites */}
 
               {/* Affichage du formulaire de paiement selon le gateway */}
               {gatewayLoading ? (
