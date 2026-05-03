@@ -15,7 +15,7 @@ import { trackEvent, setUserId, setUserProperties } from './utils/ga4';
 // ✅ PERF: Lazy-loaded — composants side-effect only (renvoient null), retirés du
 // main bundle pour économiser leurs transitive imports (react-intl, GA4 utils).
 // Catch dynamic import failure → no-op component (le tracker est non-critique).
-const noopComponent = { default: () => null };
+const noopComponent: { default: React.ComponentType } = { default: () => null };
 const MetaPageViewTracker = lazy(() =>
   import('./components/common/MetaPageViewTracker').catch(() => noopComponent)
 );
