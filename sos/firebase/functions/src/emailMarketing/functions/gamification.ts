@@ -4,6 +4,8 @@ import { MailwizzAPI } from "../utils/mailwizz";
 import { mapUserToMailWizzFields } from "../utils/fieldMapper";
 import { logGA4Event } from "../utils/analytics";
 import { getLanguageCode } from "../config";
+// P1 FIX 2026-05-03 (round 4): SENTRY_DSN for handleMilestoneReached initSentry resolution.
+import { SENTRY_DSN } from "../../lib/secrets";
 
 /**
  * FUNCTION: Handle Milestone Reached
@@ -24,6 +26,8 @@ export const handleMilestoneReached = onDocumentUpdated(
     maxInstances: 10,
     minInstances: 0,
     concurrency: 1,
+    // P1 FIX 2026-05-03 (round 4): wire SENTRY_DSN so initSentry() resolves.
+    secrets: [SENTRY_DSN],
   },
   async (event) => {
     const before = event.data?.before.data();

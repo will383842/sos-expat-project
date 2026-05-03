@@ -6,6 +6,8 @@ import { logGA4Event, logTrustpilotEvent } from "../utils/analytics";
 import { getLanguageCode } from "../config";
 // P2-2 FIX: Unified payment status checks
 import { isPaymentCompleted } from "../../utils/paymentStatusUtils";
+// P1 FIX 2026-05-03 (round 4): SENTRY_DSN for handleEarningCredited initSentry resolution.
+import { SENTRY_DSN } from "../../lib/secrets";
 
 
 /**
@@ -920,6 +922,8 @@ export const handleEarningCredited = onDocumentUpdated(
     cpu: 0.167,
     // P0 HOTFIX 2026-05-03: bump 256→512MiB. OOM observé 258 MiB.
     memory: "512MiB",
+    // P1 FIX 2026-05-03 (round 4): wire SENTRY_DSN so initSentry() resolves.
+    secrets: [SENTRY_DSN],
   },
   async (event) => {
     const before = event.data?.before.data();

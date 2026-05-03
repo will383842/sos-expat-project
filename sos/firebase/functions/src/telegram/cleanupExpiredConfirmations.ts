@@ -14,7 +14,7 @@ import * as scheduler from "firebase-functions/v2/scheduler";
 import { getFirestore, Timestamp, FieldValue } from "firebase-admin/firestore";
 import { getApps, initializeApp } from "firebase-admin/app";
 import { logger } from "firebase-functions/v2";
-import { TELEGRAM_SECRETS } from "../lib/secrets";
+import { TELEGRAM_SECRETS, SENTRY_DSN } from "../lib/secrets";
 import {
   TelegramWithdrawalConfirmation,
   editMessageText,
@@ -34,7 +34,8 @@ export const cleanupExpiredWithdrawalConfirmations = scheduler.onSchedule(
     memory: "256MiB",
     cpu: 0.083,
     timeoutSeconds: 120,
-    secrets: [...TELEGRAM_SECRETS],
+    // P1 FIX 2026-05-03 (round 4): SENTRY_DSN added so initSentry() resolves.
+    secrets: [...TELEGRAM_SECRETS, SENTRY_DSN],
   },
   async () => {
     ensureInitialized();
