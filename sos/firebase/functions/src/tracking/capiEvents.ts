@@ -23,6 +23,8 @@ import {
   UserData,
 } from '../metaConversionsApi';
 import { ALLOWED_ORIGINS } from '../lib/functionConfigs';
+// P1 FIX 2026-05-03: SENTRY_DSN added so initSentry() resolves at runtime.
+import { SENTRY_DSN } from '../lib/secrets';
 
 const REGION = 'europe-west1';
 
@@ -113,7 +115,7 @@ export const trackCAPIEvent = onRequest(
     memory: "512MiB",
     cors: ALLOWED_ORIGINS,
     maxInstances: 10,
-    secrets: [META_CAPI_TOKEN],
+    secrets: [META_CAPI_TOKEN, SENTRY_DSN],
   },
   async (req, res) => {
     // Only POST

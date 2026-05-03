@@ -3,6 +3,7 @@ import * as admin from "firebase-admin";
 // import { resolveLang } from "./i18n";
 
 // P0 FIX: Import secrets from centralized secrets.ts - NEVER call defineSecret() here!
+// P1 FIX 2026-05-03: SENTRY_DSN added so initSentry() resolves at runtime.
 import {
   EMAIL_USER,
   EMAIL_PASS,
@@ -10,6 +11,7 @@ import {
   TWILIO_AUTH_TOKEN,
   TWILIO_PHONE_NUMBER,
   TELEGRAM_BOT_TOKEN,
+  SENTRY_DSN,
 } from "../lib/secrets";
 
 // 📤 IMPORTS DES MODULES
@@ -379,6 +381,7 @@ export const onMessageEventCreate = onDocumentCreated(
       TWILIO_AUTH_TOKEN,
       TWILIO_PHONE_NUMBER,
       TELEGRAM_BOT_TOKEN,
+      SENTRY_DSN,
     ],
   },
   async (event) => {

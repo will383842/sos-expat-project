@@ -5,6 +5,8 @@ import { logError } from '../utils/logs/logError';
 // P0 FIX: Import call region from centralized config - dedicated region for call functions
 import { CALL_FUNCTIONS_REGION } from '../configs/callRegion';
 import { validateTwilioWebhookSignature, TWILIO_AUTH_TOKEN_SECRET, TWILIO_ACCOUNT_SID_SECRET } from '../lib/twilio';
+// P1 FIX 2026-05-03: SENTRY_DSN added so initSentry() resolves at runtime.
+import { SENTRY_DSN } from '../lib/secrets';
 
 // Helper to escape XML
 function escapeXml(s: string): string {
@@ -122,7 +124,7 @@ export const providerNoAnswerTwiML = onRequest(
     minInstances: 0,
     concurrency: 1,
     // P0 FIX: Add secrets for Twilio signature validation
-    secrets: [TWILIO_AUTH_TOKEN_SECRET, TWILIO_ACCOUNT_SID_SECRET]
+    secrets: [TWILIO_AUTH_TOKEN_SECRET, TWILIO_ACCOUNT_SID_SECRET, SENTRY_DSN]
   },
   async (req: Request, res: Response) => {
     try {

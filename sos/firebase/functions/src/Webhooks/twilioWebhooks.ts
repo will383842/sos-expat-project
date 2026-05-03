@@ -11,7 +11,8 @@ import { Request } from 'firebase-functions/v2/https';
 import { validateTwilioWebhookSignature, TWILIO_AUTH_TOKEN_SECRET, TWILIO_ACCOUNT_SID_SECRET } from '../lib/twilio';
 import { setProviderBusy } from '../callables/providerStatusManager';
 // P0 FIX: Import secrets from centralized secrets.ts - NEVER call defineSecret() here!
-import { TASKS_AUTH_SECRET, STRIPE_SECRET_KEY_LIVE, STRIPE_SECRET_KEY_TEST } from '../lib/secrets';
+// P1 FIX 2026-05-03: SENTRY_DSN added so initSentry() resolves on each deployed function.
+import { TASKS_AUTH_SECRET, STRIPE_SECRET_KEY_LIVE, STRIPE_SECRET_KEY_TEST, SENTRY_DSN } from '../lib/secrets';
 import voicePromptsJson from '../content/voicePrompts.json';
 // P0 FIX: Import call region from centralized config - dedicated region for call functions
 import { CALL_FUNCTIONS_REGION } from '../configs/callRegion';
@@ -96,7 +97,7 @@ export const twilioCallWebhook = onRequest(
     // P0 CRITICAL FIX: Add Twilio secrets for signature validation + hangup calls to voicemail
     // P0 FIX 2026-01-18: Added TASKS_AUTH_SECRET for scheduleProviderAvailableTask (provider cooldown)
     // P0 FIX 2026-01-30: Added Stripe secrets for payment capture after successful call
-    secrets: [TWILIO_AUTH_TOKEN_SECRET, TWILIO_ACCOUNT_SID_SECRET, TASKS_AUTH_SECRET, STRIPE_SECRET_KEY_LIVE, STRIPE_SECRET_KEY_TEST]
+    secrets: [TWILIO_AUTH_TOKEN_SECRET, TWILIO_ACCOUNT_SID_SECRET, TASKS_AUTH_SECRET, STRIPE_SECRET_KEY_LIVE, STRIPE_SECRET_KEY_TEST, SENTRY_DSN]
   },
   async (req: Request, res: Response) => {
     const requestId = `twilio-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -1248,7 +1249,7 @@ export const twilioRecordingWebhook = onRequest(
     minInstances: 0,
     concurrency: 1,
     // P0 FIX: Add secrets for Twilio signature validation
-    secrets: [TWILIO_AUTH_TOKEN_SECRET, TWILIO_ACCOUNT_SID_SECRET]
+    secrets: [TWILIO_AUTH_TOKEN_SECRET, TWILIO_ACCOUNT_SID_SECRET, SENTRY_DSN]
   },
   async (req: Request, res: Response) => {
     // P0 SECURITY: Validate Twilio signature even for disabled endpoint
@@ -1287,7 +1288,7 @@ export const twilioAmdTwiml = onRequest(
     minInstances: 1,  // P0 FIX 2026-03-03: Restored to 1 — cold start causes crypto validation to use blocking default (true) → 403 → Twilio hangs up. This is the FIRST callback when client answers, cold start is UNACCEPTABLE.
     concurrency: 1,
     // P0 FIX: Add secrets for Twilio signature validation
-    secrets: [TWILIO_AUTH_TOKEN_SECRET, TWILIO_ACCOUNT_SID_SECRET]
+    secrets: [TWILIO_AUTH_TOKEN_SECRET, TWILIO_ACCOUNT_SID_SECRET, SENTRY_DSN]
   },
   async (req: Request, res: Response) => {
     const amdId = `amd_${Date.now().toString(36)}`;
@@ -2007,7 +2008,7 @@ export const twilioGatherResponse = onRequest(
     minInstances: 1,  // P0 FIX 2026-03-03: Restored to 1 — this handles DTMF confirmation (press 1). Cold start → crypto validation default blocking → 403 → call drops when user presses 1.
     concurrency: 1,
     // P0 FIX: Add secrets for Twilio signature validation
-    secrets: [TWILIO_AUTH_TOKEN_SECRET, TWILIO_ACCOUNT_SID_SECRET]
+    secrets: [TWILIO_AUTH_TOKEN_SECRET, TWILIO_ACCOUNT_SID_SECRET, SENTRY_DSN]
   },
   async (req: Request, res: Response) => {
     const gatherId = `gather_${Date.now().toString(36)}`;

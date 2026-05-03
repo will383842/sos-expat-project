@@ -49,6 +49,8 @@ import {
   STRIPE_CONNECT_WEBHOOK_SECRET_LIVE,
   ENCRYPTION_KEY,
   OUTIL_SYNC_API_KEY,
+  // P1 FIX 2026-05-03: SENTRY_DSN added so initSentry() resolves at runtime.
+  SENTRY_DSN,
 } from "../lib/secrets";
 
 // Meta Conversions API (CAPI) - for Facebook Ads attribution
@@ -1114,6 +1116,7 @@ export const stripeWebhook = onRequest(
       ENCRYPTION_KEY,
       OUTIL_SYNC_API_KEY,
       META_CAPI_TOKEN,
+      SENTRY_DSN,
     ],
     concurrency: 1,
     timeoutSeconds: 120, // P1-2 FIX 2026-02-23: 60->120s

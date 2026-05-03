@@ -64,6 +64,7 @@ import { setGlobalOptions } from "firebase-functions/v2";
 
 // P0 FIX: Import ALL secrets from centralized secrets.ts
 // NEVER call defineSecret() in this file - it causes credential conflicts!
+// P1 FIX 2026-05-03: SENTRY_DSN added so initSentry() resolves at runtime.
 import {
   EMAIL_USER,
   EMAIL_PASS,
@@ -77,6 +78,7 @@ import {
   OUTIL_API_KEY,
   OUTIL_SYNC_API_KEY,
   MOTIVATION_ENGINE_WEBHOOK_SECRET,
+  SENTRY_DSN,
 } from "./lib/secrets";
 
 // P0 FIX 2026-02-04: Import call region from centralized config - dedicated region for call functions
@@ -942,7 +944,7 @@ export const executeCallTask = onRequest(
     minInstances: 0,  // P0 FIX 2026-02-12: Reduced to 0 due to CPU quota exhaustion (208 services in europe-west3)
     concurrency: 1,   // P0 FIX: Set to 1 to allow fractional CPU (concurrency > 1 requires cpu >= 1)
     // Secrets: TASKS_AUTH_SECRET for Cloud Tasks auth + Twilio + ENCRYPTION_KEY + Stripe/PayPal (for refunds/voids)
-    secrets: [TASKS_AUTH_SECRET, ENCRYPTION_KEY, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER, STRIPE_SECRET_KEY_LIVE, STRIPE_SECRET_KEY_TEST, PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET],
+    secrets: [TASKS_AUTH_SECRET, ENCRYPTION_KEY, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER, STRIPE_SECRET_KEY_LIVE, STRIPE_SECRET_KEY_TEST, PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, SENTRY_DSN],
   },
   (req, res) => runExecuteCallTask(req as any, res as any)
 );

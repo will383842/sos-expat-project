@@ -50,6 +50,7 @@ import { PAYMENT_FUNCTIONS_REGION } from "./configs/callRegion";
 import { ALLOWED_ORIGINS } from "./lib/functionConfigs";
 
 // P0 FIX: Import secrets from centralized secrets.ts - NEVER call defineSecret() here!
+// P1 FIX 2026-05-03: SENTRY_DSN added so initSentry() resolves at runtime.
 import {
   PAYPAL_CLIENT_ID,
   PAYPAL_CLIENT_SECRET,
@@ -59,6 +60,7 @@ import {
   PAYPAL_MODE,
   PAYPAL_SECRETS,
   TASKS_AUTH_SECRET,
+  SENTRY_DSN,
   getPayPalMode,
   getPayPalClientId,
   getPayPalClientSecret,
@@ -2652,7 +2654,7 @@ export const createPayPalOnboardingLink = onCall(
   {
     region: PAYMENT_FUNCTIONS_REGION,
     cpu: 0.083,
-    secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, PAYPAL_PARTNER_ID],
+    secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, PAYPAL_PARTNER_ID, SENTRY_DSN],
   },
   async (request) => {
     if (!request.auth) {
@@ -2698,7 +2700,7 @@ export const checkPayPalMerchantStatus = onCall(
   {
     region: PAYMENT_FUNCTIONS_REGION,
     cpu: 0.083,
-    secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, PAYPAL_PARTNER_ID],
+    secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, PAYPAL_PARTNER_ID, SENTRY_DSN],
   },
   async (request) => {
     if (!request.auth) {
@@ -2757,7 +2759,7 @@ export const createPayPalOrderHttp = onRequest(
     memory: "256MiB",  // FIX: 512MiB needs cpu>=0.5, reduced to 256MiB
     cpu: 0.083,
     // P0 FIX: Added ENCRYPTION_KEY for phone number encryption (Twilio compatibility)
-    secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, PAYPAL_PARTNER_ID, PAYPAL_PLATFORM_MERCHANT_ID, ENCRYPTION_KEY],
+    secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, PAYPAL_PARTNER_ID, PAYPAL_PLATFORM_MERCHANT_ID, ENCRYPTION_KEY, SENTRY_DSN],
     cors: ALLOWED_ORIGINS,
   },
   async (req, res) => {
@@ -3041,7 +3043,7 @@ export const capturePayPalOrderHttp = onRequest(
     maxInstances: 15,
     memory: "256MiB",  // FIX: 512MiB needs cpu>=0.5, reduced to 256MiB
     cpu: 0.083,
-    secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET],
+    secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, SENTRY_DSN],
     cors: ALLOWED_ORIGINS,
   },
   async (req, res) => {
@@ -3161,7 +3163,7 @@ export const authorizePayPalOrderHttp = onRequest(
     memory: "256MiB",  // FIX: 512MiB needs cpu>=0.5, reduced to 256MiB
     cpu: 0.083,
     // P0 FIX: Added ENCRYPTION_KEY and OUTIL_SYNC_API_KEY for sendPaymentNotifications
-    secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, TASKS_AUTH_SECRET, ENCRYPTION_KEY, OUTIL_SYNC_API_KEY],
+    secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, TASKS_AUTH_SECRET, ENCRYPTION_KEY, OUTIL_SYNC_API_KEY, SENTRY_DSN],
     cors: ALLOWED_ORIGINS,
   },
   async (req, res) => {
@@ -3335,7 +3337,7 @@ export const createPayPalOrder = onCall(
   {
     region: PAYMENT_FUNCTIONS_REGION,
     cpu: 0.083,
-    secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, PAYPAL_PARTNER_ID, PAYPAL_PLATFORM_MERCHANT_ID],
+    secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, PAYPAL_PARTNER_ID, PAYPAL_PLATFORM_MERCHANT_ID, SENTRY_DSN],
     cors: ALLOWED_ORIGINS,
   },
   async (request) => {
@@ -3490,7 +3492,7 @@ export const capturePayPalOrder = onCall(
   {
     region: PAYMENT_FUNCTIONS_REGION,
     cpu: 0.083,
-    secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET],
+    secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, SENTRY_DSN],
     cors: ALLOWED_ORIGINS,
   },
   async (request) => {
@@ -3753,7 +3755,7 @@ export const paypalWebhook = onRequest(
     // P0 CRITICAL FIX: Allow unauthenticated access for PayPal webhooks (Cloud Run requires explicit public access)
     invoker: "public",
     cpu: 0.083,
-    secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, PAYPAL_WEBHOOK_ID, META_CAPI_TOKEN],
+    secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, PAYPAL_WEBHOOK_ID, META_CAPI_TOKEN, SENTRY_DSN],
   },
   async (req, res) => {
     console.log("🔔 [PAYPAL] Webhook received");
@@ -4879,7 +4881,7 @@ export const createPayPalPayout = onCall(
   {
     region: PAYMENT_FUNCTIONS_REGION,
     cpu: 0.083,
-    secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET],
+    secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, SENTRY_DSN],
   },
   async (request) => {
     if (!request.auth) {
@@ -4939,7 +4941,7 @@ export const checkPayPalPayoutStatus = onCall(
   {
     region: PAYMENT_FUNCTIONS_REGION,
     cpu: 0.083,
-    secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET],
+    secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, SENTRY_DSN],
   },
   async (request) => {
     if (!request.auth) {

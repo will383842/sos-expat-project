@@ -26,6 +26,8 @@ import {
   META_CAPI_TOKEN,
   CAPIEventResult,
 } from "../metaConversionsApi";
+// P1 FIX 2026-05-03: SENTRY_DSN added so initSentry() resolves at runtime.
+import { SENTRY_DSN } from "../lib/secrets";
 
 // ============================================================================
 // Types
@@ -277,7 +279,7 @@ export const onBookingRequestCreatedTrackLead = onDocumentCreated(
     document: "booking_requests/{requestId}",
     region: "europe-west3",
     cpu: 0.083,
-    secrets: [META_CAPI_TOKEN],
+    secrets: [META_CAPI_TOKEN, SENTRY_DSN],
   },
   async (event) => {
     const requestId = event.params.requestId;
@@ -424,7 +426,7 @@ export const onUserCreatedTrackRegistration = onDocumentCreated(
     document: "users/{uid}",
     region: "europe-west3",
     cpu: 0.083,
-    secrets: [META_CAPI_TOKEN],
+    secrets: [META_CAPI_TOKEN, SENTRY_DSN],
   },
   handleCAPIRegistration
 );
@@ -443,7 +445,7 @@ export const onCallSessionPaymentAuthorized = onDocumentUpdated(
     // P0 HOTFIX 2026-05-03: bump 256→512MiB + cpu 0.083→0.167. OOM observé 264 MiB.
     memory: "512MiB",
     cpu: 0.167,
-    secrets: [META_CAPI_TOKEN],
+    secrets: [META_CAPI_TOKEN, SENTRY_DSN],
   },
   async (event) => {
     const sessionId = event.params.sessionId;
@@ -537,7 +539,7 @@ export const onContactSubmittedTrackLead = onDocumentCreated(
     document: "contact_submissions/{submissionId}",
     region: "europe-west3",
     cpu: 0.083,
-    secrets: [META_CAPI_TOKEN],
+    secrets: [META_CAPI_TOKEN, SENTRY_DSN],
   },
   async (event) => {
     const submissionId = event.params.submissionId;
@@ -646,7 +648,7 @@ export const onCallSessionPaymentCaptured = onDocumentUpdated(
     // P0 HOTFIX 2026-05-03: bump 256→512MiB + cpu 0.083→0.167. OOM observé 264 MiB.
     memory: "512MiB",
     cpu: 0.167,
-    secrets: [META_CAPI_TOKEN],
+    secrets: [META_CAPI_TOKEN, SENTRY_DSN],
   },
   async (event) => {
     const sessionId = event.params.sessionId;
