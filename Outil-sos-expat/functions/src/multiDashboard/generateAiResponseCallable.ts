@@ -1,13 +1,28 @@
 /**
  * =============================================================================
- * MULTI DASHBOARD - Generate AI Response (Callable)
+ * MULTI DASHBOARD - Generate AI Response (Callable)  ⚠️ DEAD CODE — NOT EXPORTED
  * =============================================================================
  *
- * Callable function that generates an AI response for a booking_request.
- * Called from the SOS frontend after creating a booking_request.
+ * 🛑 NE PAS RÉ-EXPORTER tel quel. Audit 2026-05-03 (OUT-MUL-012) :
+ *   - Cette callable n'a JAMAIS été déployée en prod outils-sos-expat
+ *   - 0 frontend caller dans tout le repo (grep exhaustif)
+ *   - Elle est codée SANS check `request.auth`, SANS quota, SANS modération,
+ *     SANS audit log, et avec un CORS large (`sos-expat.com` au lieu de
+ *     `multi.sos-expat.com` uniquement)
  *
- * This allows generating AI responses even though the booking_request
- * is stored in a different Firebase project (sos-urgently-ac307).
+ * Avant tout ré-export futur, il FAUT y ajouter (cf. fix shadow phase 1
+ * dans le commit b17c595d puis le fix complet documenté dans
+ * RAPPORT-AUDIT-OUTIL-IA-MULTI-DASHBOARD-2026-05-03.md §3.2 OUT-MUL-012) :
+ *   1. `if (!request.auth) throw HttpsError("unauthenticated")`
+ *   2. `await checkProviderAIStatus(providerId)` — rejet si quota dépassé
+ *   3. Vérifier `request.auth.uid` correspond au prestataire OU à un account
+ *      owner avec `linkedProviderIds.includes(providerId)` côté SOS
+ *   4. `moderateInput()` + `moderateOutput()`
+ *   5. Audit log `audit_logs.action == "multi_dashboard_ai_generation"`
+ *   6. CORS strict : `["https://multi.sos-expat.com"]` uniquement
+ *
+ * Callable function that generates an AI response for a booking_request.
+ * (was) called from the SOS frontend after creating a booking_request.
  *
  * IMPORTANT: This function reads from sos-urgently-ac307 (main SOS project).
  */
