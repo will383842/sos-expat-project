@@ -5861,6 +5861,14 @@
         { "fieldPath": "payment.status", "order": "ASCENDING" },
         { "fieldPath": "payment.availableFromDate", "order": "ASCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "partner_subscribers",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "firebaseUid", "order": "ASCENDING" },
+        { "fieldPath": "status", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": [

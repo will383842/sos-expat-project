@@ -349,6 +349,18 @@ export const createAndScheduleCallHTTPS = onCall(
           'Le prestataire sélectionné n\'est pas disponible actuellement.'
         );
       }
+      // AUDIT FIX 2026-05-03: Block reservation of unapproved/hidden providers via deep-link.
+      // isVisible=false indique un profil non-approuvé par l'admin (ou désactivé). Sans ce
+      // check, un client peut réserver via API directe un provider qui n'apparaît pas en
+      // listing public (manipulation URL). isVisible est explicitement false ; default=true
+      // (i.e. les anciens docs sans le champ restent réservables).
+      if (providerData?.isVisible === false) {
+        console.error(`❌ [${requestId}] Provider not visible (unapproved/hidden): ${providerId.substring(0, 8)}...`);
+        throw new HttpsError(
+          'failed-precondition',
+          'Le prestataire sélectionné n\'est pas disponible actuellement.'
+        );
+      }
       // m2 AUDIT FIX: Check provider online/availability status before scheduling call
       // P0 FIX: Only reject for offline status here. The 'busy' check is handled atomically
       // by setProviderBusy() via Firestore transaction (prevents race conditions).

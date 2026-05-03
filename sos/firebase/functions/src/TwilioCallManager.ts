@@ -2120,6 +2120,45 @@ export class TwilioCallManager {
         }
       }
 
+      // AUDIT FIX 2026-05-03: Alerte admin spécifique pour B2B SOS-Call no_answer.
+      // Contrairement au B2C où le client peut relancer (et son paiement est annulé),
+      // un client B2B SOS-Call n'a aucune visibilité sur l'échec et son code/session
+      // est consommé. Sans alerte, l'incident est invisible côté ops. Cette alerte
+      // permet une intervention manuelle (rappel client, suggestion d'un autre provider)
+      // en attendant l'implémentation d'un vrai retry automatique vers un autre provider
+      // du même type (lawyer/expat).
+      if (reason === "provider_no_answer" && callSession.metadata?.isSosCallFree === true) {
+        try {
+          const providerId = callSession.providerId || null;
+          const clientUid = callSession.clientId || null;
+          const subscriberToken = callSession.metadata?.sosCallSessionToken || null;
+          const partnerSubscriberId = callSession.metadata?.partnerSubscriberId ?? null;
+          const providerType = callSession.metadata?.providerType || (callSession as any).providerType || null;
+
+          await this.db.collection('admin_alerts').add({
+            type: 'b2b_call_no_answer',
+            severity: 'high',
+            sessionId,
+            providerId,
+            providerType,
+            clientUid,
+            partnerSubscriberId,
+            subscriberToken,
+            message: 'B2B SOS-Call: provider did not answer. No automatic retry — manual follow-up needed (call client, try another provider of same type).',
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            handled: false,
+          });
+          logger.warn(`🚨 [B2B][${sessionId}] Provider no_answer for SOS-Call — admin alert created`, {
+            sessionId,
+            providerId,
+            partnerSubscriberId,
+          });
+        } catch (b2bAlertError) {
+          logger.error(`⚠️ Failed to create B2B no_answer alert (non-blocking):`, b2bAlertError);
+          // Non-blocking: ne pas casser handleCallFailure si la collection admin_alerts a un souci
+        }
+      }
+
       // 🆕 NEW: Notify provider when CLIENT doesn't answer (after 3 attempts)
       if (reason === "client_no_answer") {
         try {

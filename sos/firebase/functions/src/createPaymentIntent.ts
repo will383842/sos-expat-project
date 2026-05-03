@@ -770,6 +770,46 @@ export const createPaymentIntent = onCall(
 
       // P1 FIX: Rate limit Firestore-based (persistant entre redeploys)
       const db = admin.firestore();
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // 🛡️ GARDE B2B (audit 2026-05-03): Bloquer si le client est subscriber actif
+      // d'un partenaire. Un client B2B bénéficie du forfait mensuel payé par son
+      // partenaire et ne doit JAMAIS payer directement. Si on arrive ici malgré le
+      // routing frontend séparé (BookingRequestB2B), c'est un deep-link ou une
+      // manipulation d'URL — on refuse et on redirige vers le flow SOS-Call gratuit.
+      // Source de vérité : collection partner_subscribers (sync depuis Partner Engine).
+      // ═══════════════════════════════════════════════════════════════════════════
+      try {
+        const subscriberQuery = await db
+          .collection('partner_subscribers')
+          .where('firebaseUid', '==', userId)
+          .where('status', 'in', ['registered', 'active'])
+          .limit(1)
+          .get();
+
+        if (!subscriberQuery.empty) {
+          const subscriberDoc = subscriberQuery.docs[0];
+          const subscriberData = subscriberDoc.data();
+          if (subscriberData.agreementPaused !== true) {
+            prodLogger.warn('PAYMENT_BLOCKED_B2B', `[${requestId}] B2B subscriber attempted direct payment`, {
+              userId: maskId(userId),
+              partnerId: subscriberData.partnerId,
+              subscriberToken: subscriberDoc.id,
+            });
+            throw new HttpsError(
+              'failed-precondition',
+              "Vous bénéficiez d'un forfait partenaire — appel gratuit. Utilisez votre code SOS-Call pour passer un appel."
+            );
+          }
+        }
+      } catch (b2bGuardErr) {
+        // Re-throw HttpsError, log et fail-open sur les autres erreurs (ne pas bloquer un B2C légitime si Firestore down)
+        if (b2bGuardErr instanceof HttpsError) throw b2bGuardErr;
+        prodLogger.warn('B2B_GUARD_ERROR', `[${requestId}] B2B guard query failed (fail-open)`, {
+          error: b2bGuardErr instanceof Error ? b2bGuardErr.message : String(b2bGuardErr),
+        });
+      }
+
       prodLogger.debug('PAYMENT_STEP', `[${requestId}] Vérification rate limit pour ${userId}`);
       const rl = await checkRateLimitFirestore(userId, db);
       if (!rl.allowed) {
