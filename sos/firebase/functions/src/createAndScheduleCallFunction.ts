@@ -167,9 +167,15 @@ async function calculateProviderEarnings(
 export const createAndScheduleCallHTTPS = onCall(
   {
     region: 'europe-west1',
-    memory: '256MiB',
-    cpu: 0.083,
-    maxInstances: 3,
+    // P0 HOTFIX 2026-05-03: 256→512MiB. Aligné avec le bump createPaymentIntent ;
+    // 10+ writes Firestore + Cloud Tasks + decrypt phone tirent près de la limite,
+    // OOM observé sur d'autres handlers similaires (twilioCallWebhook 257 MiB).
+    memory: '512MiB',
+    // P0 HOTFIX 2026-05-03: 0.083→0.167. Gen2 ratio cap pour 512MiB (cf. 58c059b3).
+    cpu: 0.167,
+    // P0 HOTFIX 2026-05-03: 3→20. Cf. createPaymentIntent — 3 instances bloquaient
+    // les bookings simultanés en queue Cloud Run avec timeout 90s à la clé.
+    maxInstances: 20,
     minInstances: 1,
     concurrency: 1,
     timeoutSeconds: 90, // P1-2 FIX 2026-02-23: 60→90s — 10+ Firestore writes + Cloud Tasks scheduling

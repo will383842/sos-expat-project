@@ -55,7 +55,11 @@ export const twilioConferenceWebhook = onRequest(
     region: CALL_FUNCTIONS_REGION,
     // P0 CRITICAL FIX 2026-02-04: Allow unauthenticated access for Twilio webhooks (Cloud Run requires explicit public access)
     invoker: "public",
-    memory: '256MiB',
+    // P0 HOTFIX 2026-05-03: 256→512MiB. OOM kill observé en prod (257 MiB used) ;
+    // ce webhook orchestre handleCallCompletion / handleEarlyDisconnection → processRefund.
+    // Sans cette mémoire, court appel <60s → OOM → Twilio joue erreur par défaut +
+    // le PaymentIntent reste stuck en requires_capture (pas de cancel/refund déclenché).
+    memory: '512MiB',
     cpu: 0.25,          // P0 FIX 2026-03-03: Restored from 0.083 — does Stripe payment capture (TLS crypto) + Firestore transactions. 0.083 caused capture timeouts.
     timeoutSeconds: 540, // P1 FIX: 9 minutes — payment capture + Stripe API calls can be slow
     maxInstances: 10,  // P0 FIX: Increased for better scalability during peak

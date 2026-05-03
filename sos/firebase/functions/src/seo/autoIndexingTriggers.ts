@@ -106,8 +106,11 @@ export const onProfileUpdated = onDocumentUpdated(
   {
     document: 'sos_profiles/{profileId}',
     region: REGION,
-    memory: '256MiB',
-    cpu: 0.083,
+    // P0 HOTFIX 2026-05-03: bump 256→512MiB + cpu 0.083→0.167. OOM récurrent depuis 2026-04-29
+    // (256 MiB exceeded with 256 MiB used). Le bundle SEO + Firestore + cache invalidation tape
+    // pile à la limite. C'est la fonction la plus fréquemment OOM-killée du projet.
+    memory: '512MiB',
+    cpu: 0.167,
     timeoutSeconds: 60,
   },
   async (event) => {

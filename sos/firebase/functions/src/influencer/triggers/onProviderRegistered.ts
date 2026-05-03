@@ -252,8 +252,9 @@ export const influencerOnProviderCallCompleted = onDocumentUpdated(
   {
     document: "call_sessions/{sessionId}",
     region: "europe-west3",
-    memory: "256MiB",
-    cpu: 0.083,
+    // P0 HOTFIX 2026-05-03: bump 256→512MiB + cpu 0.083→0.167. OOM observé 265 MiB.
+    memory: "512MiB",
+    cpu: 0.167,
     timeoutSeconds: 60,
   },
   async (event) => {

@@ -387,7 +387,9 @@ export const onCallSessionPaymentAuthorizedTrackGoogleAdsCheckout = onDocumentUp
   {
     document: "call_sessions/{sessionId}",
     region: "europe-west3",
-    cpu: 0.083,
+    // P0 HOTFIX 2026-05-03: bump 256→512MiB + cpu 0.083→0.167. OOM observé 263 MiB.
+    memory: "512MiB",
+    cpu: 0.167,
     secrets: GOOGLE_ADS_SECRETS,
   },
   async (event) => {

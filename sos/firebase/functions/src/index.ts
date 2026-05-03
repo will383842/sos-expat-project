@@ -973,8 +973,10 @@ export const busySafetyTimeoutTask = onRequest(
   {
     region: CALL_FUNCTIONS_REGION,
     timeoutSeconds: 30,
-    memory: "256MiB" as const,
-    cpu: 0.083,
+    // P0 HOTFIX 2026-05-03: 256→512MiB. OOM observé 264 MiB.
+    memory: "512MiB" as const,
+    // P0 HOTFIX 2026-05-03: 0.083→0.167. Gen2 ratio cap pour 512MiB (cf. 58c059b3).
+    cpu: 0.167,
     maxInstances: 10,
     minInstances: 0,
     concurrency: 1,

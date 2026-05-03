@@ -17,7 +17,11 @@ export const handleCallCompleted = onDocumentUpdated(
   {
     document: "call_sessions/{sessionId}",
     region: "europe-west3",
-    cpu: 0.083,
+    // P0 HOTFIX 2026-05-03: 0.083→0.167. Gen2 ratio cap pour 512MiB (cf. 58c059b3).
+    cpu: 0.167,
+    // P0 HOTFIX 2026-05-03: bump explicit 512MiB. OOM observé 261 MiB. Default Cloud
+    // Functions est 256 MiB et ne suffit pas avec firebase-admin + email templates loaded.
+    memory: "512MiB",
   },
   async (event) => {
     const before = event.data?.before.data();
@@ -912,7 +916,10 @@ export const handleEarningCredited = onDocumentUpdated(
   {
     document: "users/{userId}",
     region: "europe-west3",
-    cpu: 0.083,
+    // P0 HOTFIX 2026-05-03: 0.083→0.167. Gen2 ratio cap pour 512MiB (cf. 58c059b3).
+    cpu: 0.167,
+    // P0 HOTFIX 2026-05-03: bump 256→512MiB. OOM observé 258 MiB.
+    memory: "512MiB",
   },
   async (event) => {
     const before = event.data?.before.data();

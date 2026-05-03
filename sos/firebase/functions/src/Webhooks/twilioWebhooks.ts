@@ -80,8 +80,13 @@ export const twilioCallWebhook = onRequest(
     region: CALL_FUNCTIONS_REGION,
     // P0 CRITICAL FIX 2026-02-04: Allow unauthenticated access for Twilio webhooks (Cloud Run requires explicit public access)
     invoker: "public",
-    memory: '256MiB',
-    cpu: 0.083,
+    // P0 HOTFIX 2026-05-03: 256→512MiB. OOM kill observé en prod (257 MiB used) qui
+    // faisait que Twilio recevait 5xx de notre webhook → jouait son message par défaut
+    // "Un problème technique est survenu...nous sommes désolés pour ce désagrément"
+    // ET l'appel ne déclenchait plus processRefund → PI stuck en requires_capture.
+    memory: '512MiB',
+    // P0 HOTFIX 2026-05-03: 0.083→0.167. Gen2 ratio cap (cf. partnerConfig 58c059b3).
+    cpu: 0.167,
     maxInstances: 10,  // P1 FIX: Increased from 3 for better scalability
     minInstances: 1,   // P0 FIX 2026-02-23: Restored to 1 — cold start on real-time Twilio webhook is unacceptable
     timeoutSeconds: 90, // P1-2 FIX 2026-02-23: Explicit 90s — validation + Firestore + Cloud Tasks scheduling

@@ -93,7 +93,9 @@ const CORS_ORIGINS = [
 export const syncFromOutil = onRequest(
   {
     region: "europe-west3",
-    cpu: 0.083,
+    // P0 HOTFIX 2026-05-03: bump 256→512MiB + cpu 0.083→0.167. OOM observé 262 MiB.
+    memory: "512MiB",
+    cpu: 0.167,
     cors: CORS_ORIGINS,
     secrets: [SOS_SYNC_API_KEY],
     timeoutSeconds: 30,

@@ -43,8 +43,11 @@ export const consolidatedOnCallCompleted = onDocumentUpdated(
   {
     document: "call_sessions/{sessionId}",
     region: "europe-west3",
-    memory: "256MiB",  // FIX: 512MiB needs cpu>=0.5, reduced to 256MiB
-    cpu: 0.083,
+    // P0 HOTFIX 2026-05-03: 256→512MiB + cpu 0.083→0.167. Le commentaire précédent était
+    // incorrect : 512MiB n'exige pas cpu>=0.5 mais cpu>=0.167 (gen2 ratio cap, cf. 58c059b3).
+    // OOM observé 261-263 MiB sur ce trigger qui orchestre 4+ tâches post-call.
+    memory: "512MiB",
+    cpu: 0.167,
     timeoutSeconds: 120,
   },
   async (event) => {

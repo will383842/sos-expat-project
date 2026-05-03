@@ -266,8 +266,10 @@ export const releasePartnerPendingCommissions = onSchedule(
     schedule: "15 * * * *", // Every hour at minute 15
     timeZone: "UTC",
     region: "europe-west3",
-    memory: "256MiB",
-    cpu: 0.083,
+    // P0 HOTFIX 2026-05-03: bump 256→512MiB + cpu 0.083→0.167. OOM observé 267 MiB
+    // (le plus gros dépassement de la fournée, 11 MiB au-dessus de la limite).
+    memory: "512MiB",
+    cpu: 0.167,
     timeoutSeconds: 300,
     retryCount: 3,
   },

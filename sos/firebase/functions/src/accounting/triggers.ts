@@ -22,8 +22,12 @@ import { fetchAndStoreDailyRates, fetchAndStoreHistoricalRates } from './ecbExch
 
 const TRIGGER_CONFIG = {
   region: 'europe-west3',
-  memory: '256MiB' as const,
-  cpu: 0.083,
+  // P0 HOTFIX 2026-05-03: 256→512MiB. OOM kill observé en prod sur onProviderTransferCompleted
+  // (260 MiB used). Le bundle accounting (entries + commissions + invoices) tape juste au-dessus
+  // de 256 MiB. Sweep mémoire global suite à OOMs sur 30+ fonctions le 2026-05-03.
+  memory: '512MiB' as const,
+  // P0 HOTFIX 2026-05-03: 0.083→0.167. Gen2 ratio cap pour 512MiB (cf. 58c059b3).
+  cpu: 0.167,
   timeoutSeconds: 60,
 };
 

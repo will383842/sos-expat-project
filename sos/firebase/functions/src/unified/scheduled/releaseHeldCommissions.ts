@@ -17,8 +17,9 @@ export const unifiedReleaseHeldCommissions = onSchedule(
   {
     schedule: "30 * * * *", // Every hour at :30 (offset from legacy at :00)
     region: "europe-west3",
-    memory: "256MiB",
-    cpu: 0.083,
+    // P0 HOTFIX 2026-05-03: bump 256→512MiB + cpu 0.083→0.167. OOM observé 257 MiB.
+    memory: "512MiB",
+    cpu: 0.167,
     timeoutSeconds: 300,
     retryCount: 3,
   },

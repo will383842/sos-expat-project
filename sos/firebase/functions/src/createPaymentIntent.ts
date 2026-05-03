@@ -79,12 +79,24 @@ function getLimits() {
    ──────────────────────────────────────────────────────────────────────────── */
 const FUNCTION_OPTIONS = {
   region: PAYMENT_FUNCTIONS_REGION,
-  memory: '256MiB' as const,
-  cpu: 0.083,
+  // P0 HOTFIX 2026-05-03: 256→512MiB. OOM kill observé en prod (Cloud Run stderr:
+  // "Memory limit of 256 MiB exceeded with 261 MiB used" → "container instance was
+  // terminated"), causant un échec silencieux côté frontend pendant que le user
+  // attendait sur la page de paiement. Stripe SDK + Firestore + 40+ ops + multiple
+  // imports tirent juste un poil au-dessus de 256MiB. Aligné avec le bump similaire
+  // sur partnerConfig (commit 58c059b3) et le pattern des autres fonctions lourdes.
+  memory: '512MiB' as const,
+  // P0 HOTFIX 2026-05-03: 0.083→0.167. Gen2 Cloud Run impose cpu>=0.167 quand
+  // memory>=512MiB (sinon deploy fail). Cf. commit 58c059b3 partnerConfig.
+  cpu: 0.167,
   concurrency: 1,
   timeoutSeconds: 120, // P1-2 FIX 2026-02-23: 60→120s — 40+ Firestore ops + Stripe API calls need margin
   minInstances: 0,  // P0 FIX 2026-02-12: Reduced to 0 due to CPU quota exhaustion (208 services in europe-west3)
-  maxInstances: 3,
+  // P0 HOTFIX 2026-05-03: 3→20. Bottleneck observé : avec concurrency:1 et maxInstances:3,
+  // au-delà de 3 paiements simultanés le 4e+ se mettait en queue Cloud Run et timeoutait
+  // (120s). Cloud Run ne pré-alloue pas les instances ; ce max est juste un plafond pour
+  // les pics. Aligné avec maxInstances:15 utilisé sur les HTTP PayPal (PayPalManager.ts:2754).
+  maxInstances: 20,
   cors: ALLOWED_ORIGINS,
 };
 
