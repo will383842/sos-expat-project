@@ -92,6 +92,9 @@ export { syncProvider, syncProvidersBulk } from "./syncProvider";
 // Reverse Sync: Providers to SOS
 export { onProviderUpdated } from "./syncProvidersToSos";
 
+// Audit: AI settings change monitoring (OUT-SEC-010 soft mode)
+export { onAISettingsWritten } from "./auditAISettings";
+
 // Scheduled Tasks (P0.3: Audit + Cleanup)
 export {
   cleanupOldConversations,
