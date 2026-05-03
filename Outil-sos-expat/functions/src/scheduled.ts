@@ -129,6 +129,15 @@ export const cleanupStuckMessages = onSchedule(
   {
     schedule: "every 15 minutes", // Optimized from 5min - stuck messages are >5min old anyway
     region: "europe-west1",
+    // P0 HOTFIX 2026-05-03: bump 256→512MiB. Default 256MiB triggered
+    // OOM-adjacent failures on the collectionGroup("messages") scan once the
+    // collection grew past a threshold. 9 FAILED_PRECONDITION observed at
+    // 13:00 UTC. The index `messages.processing + timestamp` exists in
+    // firestore.indexes.json:119-126, so the failure is either a transient
+    // pressure issue or a single-field exemption — bumping memory mitigates
+    // the former and is safe for the latter.
+    memory: "512MiB",
+    timeoutSeconds: 540,
   },
   async () => {
     const db = admin.firestore();

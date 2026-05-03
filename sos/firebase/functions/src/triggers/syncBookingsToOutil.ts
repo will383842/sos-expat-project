@@ -311,7 +311,11 @@ export const retryOutilSync = onSchedule(
     timeZone: "Europe/Paris",
     secrets: [OUTIL_SYNC_API_KEY],
     timeoutSeconds: 120,
-    cpu: 0.083,
+    // P0 HOTFIX 2026-05-03: bump 256→512MiB + cpu 0.083→0.167. OOM observé
+    // 262 MiB le 2026-05-03 06:00 UTC. Aligne sur le bump déjà fait pour
+    // syncFromOutil (cf. syncFromOutil.ts:97).
+    memory: "512MiB",
+    cpu: 0.167,
   },
   async () => {
     const db = admin.firestore();
