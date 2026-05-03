@@ -267,7 +267,10 @@ service cloud.firestore {
     }
 
     match /config/{configId} {
-      allow read: if isSignedIn();
+      // OUT-SEC-002 (audit 2026-05-03): restreint la lecture à admin uniquement.
+      // Audit grep a confirmé 0 caller frontend ET 0 caller backend pour cette
+      // collection — la rule "tout user authentifié" n'avait aucun usage légitime.
+      allow read: if isAdmin();
       allow write: if isAdmin();
     }
 
