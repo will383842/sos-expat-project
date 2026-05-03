@@ -192,7 +192,64 @@ export const createBookingFromRequest = onCall<
         });
       }
 
-      // 4. Create booking in Outil inside a transaction keyed on a deterministic
+      // 4a. Ensure provider doc exists in Outil with AI access. Without this,
+      // `aiOnBookingCreated` reads `providers/{providerId}` → not found →
+      // `aiSkippedReason: "provider_not_found"` and the multi-dashboard polling
+      // tops out at 25s with `aiPending:true`, leaving the agency manager stuck
+      // on "Initialisation du chat IA…". Mirrors the pattern already used by
+      // `triggerAiFromBookingRequest` (sibling callable, lines 213-247).
+      // Pulls provider info from the SOS doc when available so the Outil
+      // provider has correct name / type / country instead of placeholders.
+      const outilProviderRef = outilDb.collection("providers").doc(providerId);
+      const outilProviderSnap = await outilProviderRef.get();
+
+      if (!outilProviderSnap.exists) {
+        // Look up provider details from SOS for richer Outil profile data
+        let sosProviderData: FirebaseFirestore.DocumentData | undefined;
+        try {
+          const sosProviderSnap = await sosDb.collection("providers").doc(providerId).get();
+          if (sosProviderSnap.exists) {
+            sosProviderData = sosProviderSnap.data();
+          }
+        } catch (lookupErr) {
+          logger.warn("[createBookingFromRequest] SOS provider lookup failed (non-blocking)", {
+            providerId,
+            error: lookupErr instanceof Error ? lookupErr.message : String(lookupErr),
+          });
+        }
+
+        await outilProviderRef.set({
+          name: bookingRequestData.providerName || sosProviderData?.name || null,
+          email: bookingRequestData.providerEmail || sosProviderData?.email || null,
+          type: bookingRequestData.providerType || sosProviderData?.type || "lawyer",
+          providerType: bookingRequestData.providerType || sosProviderData?.type || "lawyer",
+          country: bookingRequestData.providerCountry || sosProviderData?.country || null,
+          active: true,
+          // Multi-dashboard providers are agency-managed, granted AI access by default
+          forcedAIAccess: true,
+          aiCallsUsed: 0,
+          aiCallsLimit: -1,
+          source: "multi-dashboard-auto-create",
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+          updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+
+        logger.info("[createBookingFromRequest] Provider auto-created in Outil", {
+          providerId,
+          fromSosLookup: !!sosProviderData,
+        });
+      } else if (outilProviderSnap.data()?.forcedAIAccess !== true) {
+        // Existing provider but AI access not forced — grant it for multi-dashboard
+        await outilProviderRef.update({
+          forcedAIAccess: true,
+          updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+        logger.info("[createBookingFromRequest] Provider AI access granted in Outil", {
+          providerId,
+        });
+      }
+
+      // 4b. Create booking in Outil inside a transaction keyed on a deterministic
       // doc ID built from bookingRequestId + providerId. If two concurrent calls
       // race, only the first wins the create; the second sees the doc exist and
       // reuses it. Prevents the dual-booking race observed in prod logs.
