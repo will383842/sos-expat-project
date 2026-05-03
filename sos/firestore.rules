@@ -1856,11 +1856,15 @@ service cloud.firestore {
     // ================= CONVERSATIONS (IA TOOL) =================
     // Historique des conversations IA entre clients et prestataires
     match /conversations/{conversationId} {
-      // Lecture: client, provider concerné, ou admin
+      // Lecture: client, provider concerné, agency_manager pour ses providers liés, ou admin
+      // OUT-MUL-020 (audit 2026-05-03): aligné sur booking_requests qui utilise déjà
+      // hasAgencyAccessToProvider — un agency_manager doit pouvoir voir les conversations
+      // de SES providers liés (pas des autres) pour le multi-dashboard.
       allow read: if isAuthenticated() &&
                   (resource.data.clientId == request.auth.uid ||
                    resource.data.providerId == request.auth.uid ||
-                   isAdmin());
+                   isAdmin() ||
+                   hasAgencyAccessToProvider(resource.data.providerId));
 
       // Création: le clientId doit correspondre à l'utilisateur authentifié
       // P1 SECURITY FIX: Empêche l'usurpation d'identité dans les conversations
@@ -1878,11 +1882,13 @@ service cloud.firestore {
 
       // Sous-collection messages
       match /messages/{messageId} {
-        // Lecture: participants de la conversation parent
+        // Lecture: participants de la conversation parent (incl. agency_manager pour
+        // ses providers liés, cohérence avec la rule parent)
         allow read: if isAuthenticated() &&
                     (get(/databases/$(database)/documents/conversations/$(conversationId)).data.clientId == request.auth.uid ||
                      get(/databases/$(database)/documents/conversations/$(conversationId)).data.providerId == request.auth.uid ||
-                     isAdmin());
+                     isAdmin() ||
+                     hasAgencyAccessToProvider(get(/databases/$(database)/documents/conversations/$(conversationId)).data.providerId));
 
         // Création: participants authentifiés
         allow create: if isAuthenticated() &&
