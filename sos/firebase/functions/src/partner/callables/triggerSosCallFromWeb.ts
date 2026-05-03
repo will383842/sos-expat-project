@@ -5,6 +5,7 @@ import {
   PARTNER_ENGINE_URL_SECRET,
   PARTNER_ENGINE_API_KEY_SECRET,
   ENCRYPTION_KEY,
+  OUTIL_SYNC_API_KEY,
   getPartnerEngineUrl,
   getPartnerEngineApiKey,
 } from '../../lib/secrets';
@@ -13,6 +14,7 @@ import { partnerConfig } from '../../lib/functionConfigs';
 import { decryptPhoneNumber } from '../../utils/encryption';
 import { getCountryName } from '../../utils/countryUtils';
 import { getB2BProviderAmount } from '../../services/pricingService';
+import { syncCallSessionToOutil } from '../../notifications/paymentNotifications';
 
 /**
  * SOS-Call web trigger callable (called from sos-call.sos-expat.com Blade page).
@@ -371,6 +373,63 @@ async function finalizeCall(args: {
     })
   );
 
+  // Non-blocking sync to Outil IA so the provider gets the same AI pre-analysis
+  // as a B2C booking. The B2B flow bypasses Stripe (no webhook → no automatic
+  // syncCallSessionToOutil call), so we wire it directly here. Failures must
+  // NOT break the call scheduling.
+  try {
+    const debugId = `b2b_${callSessionRef.id.slice(0, 8)}_${Date.now().toString(36)}`;
+    const baseTitle = providerType === 'lawyer' ? 'Consultation avocat' : 'Consultation expat';
+    const partnerLabel = sessionData.partner_name || 'Partenaire';
+    const csForOutilSync: FirebaseFirestore.DocumentData = {
+      // Client info — B2B clients only have first name + phone (no last name / email)
+      clientFirstName: sessionData.client_first_name || 'Client',
+      clientName: sessionData.client_first_name || 'Client',
+      clientPhone,
+      clientCurrentCountry: clientCountry || null,
+      clientLanguages: clientLanguage ? [clientLanguage] : ['fr'],
+      // Request details
+      title: `[B2B] ${baseTitle}`,
+      description: `Appel pris en charge par ${partnerLabel} (forfait B2B mensuel — le client ne paie rien).`,
+      serviceType: providerType === 'lawyer' ? 'lawyer_call' : 'expat_call',
+      // Provider info
+      providerId,
+      providerType,
+      providerName:
+        `${providerData.firstName || ''} ${providerData.lastName || ''}`.trim() ||
+        providerData.name ||
+        null,
+      providerCountry: providerData.country || null,
+      // Timing
+      scheduledAt: admin.firestore.Timestamp.fromMillis(Date.now() + 240 * 1000),
+      // No payment — B2B is partner-funded
+      payment: { amount: 0 },
+    };
+    // Fire-and-forget so a slow Outil response never blocks the SMS / Cloud Task.
+    syncCallSessionToOutil(callSessionRef.id, csForOutilSync, debugId, {
+      source: 'sos-call-b2b-partner',
+      metadata: {
+        isSosCallFree: true,
+        partnerId: sessionData.partner_firebase_id || null,
+        partnerName: sessionData.partner_name || null,
+        agreementId: sessionData.agreement_id || null,
+        subscriberId: sessionData.subscriber_id || null,
+        sosCallSessionToken,
+        triggeredFromWeb: true,
+      },
+    }).catch((err) =>
+      logger.warn('[triggerSosCallFromWeb] Outil sync failed (non-blocking)', {
+        callSessionId: callSessionRef.id,
+        err: err instanceof Error ? err.message : String(err),
+      })
+    );
+  } catch (syncErr) {
+    logger.warn('[triggerSosCallFromWeb] Outil sync setup failed (non-blocking)', {
+      callSessionId: callSessionRef.id,
+      err: syncErr instanceof Error ? syncErr.message : String(syncErr),
+    });
+  }
+
   return {
     success: true,
     callSessionId: callSessionRef.id,
@@ -387,7 +446,7 @@ async function finalizeCall(args: {
 export const triggerSosCallFromWeb = onCall(
   {
     ...partnerConfig,
-    secrets: [PARTNER_ENGINE_URL_SECRET, PARTNER_ENGINE_API_KEY_SECRET, ENCRYPTION_KEY],
+    secrets: [PARTNER_ENGINE_URL_SECRET, PARTNER_ENGINE_API_KEY_SECRET, ENCRYPTION_KEY, OUTIL_SYNC_API_KEY],
     timeoutSeconds: 30,
   },
   async (request: CallableRequest<TriggerSosCallRequest>) => {

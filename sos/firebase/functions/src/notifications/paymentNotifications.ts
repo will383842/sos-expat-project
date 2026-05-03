@@ -41,13 +41,26 @@ function formatLanguages(languages: string[] | undefined): string {
 // Outil ingest endpoint - loaded from environment/config via centralized secrets.ts
 
 /**
- * Sync call_session to Outil-sos-expat AFTER payment is validated
- * This triggers the AI system to process the booking
+ * Sync call_session to Outil-sos-expat AFTER payment is validated (B2C)
+ * OR after a B2B partner-funded session is created (no Stripe webhook fires
+ * for B2B `isSosCallFree:true`, so the caller — `triggerSosCallFromWeb` —
+ * passes `overrides` to mark provenance and trace partner attribution).
+ *
+ * Optional `overrides` lets the caller:
+ *   - override `payload.source` (default "sos-expat-payment-validated")
+ *   - extend `payload.metadata` with arbitrary B2B context (partnerId, agreementId, …)
+ *
+ * Backward-compatible: existing callers (Stripe + PayPal) pass 3 args and
+ * keep the legacy behaviour unchanged.
  */
 export async function syncCallSessionToOutil(
   callSessionId: string,
   cs: FirebaseFirestore.DocumentData,
-  debugId: string
+  debugId: string,
+  overrides?: {
+    source?: string;
+    metadata?: Record<string, unknown>;
+  }
 ): Promise<void> {
   try {
     // P0 FIX: Trim secret value to remove trailing CRLF
@@ -151,7 +164,7 @@ export async function syncCallSessionToOutil(
       hasActiveSubscription: providerAccessInfo.hasActiveSubscription,
 
       // Source tracking
-      source: "sos-expat-payment-validated",
+      source: overrides?.source || "sos-expat-payment-validated",
       externalId: callSessionId,
       metadata: {
         callSessionId,
@@ -159,6 +172,7 @@ export async function syncCallSessionToOutil(
         amount: cs?.payment?.amount,
         scheduledAt: cs?.scheduledAt?.toDate?.()?.toISOString(),
         syncedAfterPayment: true,
+        ...(overrides?.metadata || {}),
       },
     };
 
