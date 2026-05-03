@@ -1,6 +1,6 @@
 // src/utils/metaPixel.ts
 // Utilitaire Meta Pixel complet pour SPA React
-// Pixel ID: 1494539620587456
+// Pixel ID: 2204016713738311 (reverted 2026-05-03 — voir BUG-002 audit_results)
 // Respects GDPR: uses fbq consent grant/revoke + geo-consent from index.html
 
 import { generateSharedEventId } from './sharedEventId';
@@ -27,11 +27,14 @@ declare global {
   }
 }
 
-// P1 FIX 2026-05-03: Pixel ID is now configurable via VITE_META_PIXEL_ID env var
-// (audit_results_2026-05-03.md BUG-002 — default Pixel returns 404 from Graph API).
-// Note: index.html still hardcodes the same value because Vite does not template-replace
-// raw <script> blocks; rotating the Pixel requires editing index.html in addition to .env.
-export const PIXEL_ID = (import.meta.env.VITE_META_PIXEL_ID as string | undefined)?.trim() || '1494539620587456';
+// P1 FIX 2026-05-03 (round 3): revert to working Pixel 2204016713738311.
+// Diagnostic Graph API live (cf. audit_results_2026-05-03.md BUG-002):
+//   - Pixel 1494539620587456 (in code since commit a81c9d58 Mar 18) → 404 "does not exist"
+//   - Pixel 2204016713738311 (previous, restored here) → ✅ events_received OK via current
+//     META_CAPI_TOKEN (System User scope read_ads_dataset_quality, target_ids match)
+// Pixel ID is also configurable via VITE_META_PIXEL_ID for staging/dev overrides.
+// Note: index.html still hardcodes the same value (Vite does not template raw <script>).
+export const PIXEL_ID = (import.meta.env.VITE_META_PIXEL_ID as string | undefined)?.trim() || '2204016713738311';
 
 // ============================================================================
 // Utilitaires de validation et normalisation

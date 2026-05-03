@@ -164,7 +164,7 @@ export const META_CAPI_TOKEN = defineSecret("META_CAPI_TOKEN");
  * backward compat, but production must override with a valid Pixel.
  */
 export const META_PIXEL_ID_PARAM = defineString("META_PIXEL_ID", {
-  default: "1494539620587456",
+  default: "2204016713738311",
   description: "Meta Pixel ID for Conversions API (CAPI) — REPLACE with active Pixel from Meta Business Manager",
 });
 
@@ -183,9 +183,9 @@ export function getMetaPixelId(): string {
     value = (process.env.META_PIXEL_ID || "").trim();
   }
   if (!value) {
-    value = "1494539620587456";
+    value = "2204016713738311";
   }
-  if (value === "1494539620587456" && !_metaPixelWarningEmitted) {
+  if (value === "2204016713738311" && !_metaPixelWarningEmitted) {
     _metaPixelWarningEmitted = true;
     console.warn(
       "[Meta CAPI] ⚠️  Using default Pixel ID 1494539620587456 — this Pixel returned 404 from Graph API on 2026-05-03. " +
