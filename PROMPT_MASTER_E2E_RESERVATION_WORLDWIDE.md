@@ -2,7 +2,7 @@
 
 *Version 1.0 — 2026-05-03 — Couvre 100 % du parcours client→prestataire→SOS-Expat*
 
-> **Objectif unique** : démontrer, fichier:ligne à l'appui, que **TOUS** les flux possibles de réservation d'un prestataire (avocat ou expat) fonctionnent **à la perfection, sans aucune erreur, dans le monde entier, en production**, pour les **2 typologies de clients** (B2C normal + B2B SOS-Call) et les **4 modes de paiement** (Stripe Card, Apple Pay, Google Pay, PayPal) + le **mode sans paiement** (B2B).
+> **Objectif unique** : démontrer, fichier:ligne à l'appui, que **TOUS** les flux possibles de réservation d'un prestataire (avocat ou expat) fonctionnent **à la perfection, sans aucune erreur, dans le monde entier, en production**, pour les **2 grandes catégories de clients** (B2C + B2B SOS-Call), détaillées en **5 sous-cas client** (cf. `<scope_global>` section A), et les **5 modes de paiement** (Stripe Card, Apple Pay, Google Pay, PayPal, B2B Free — cf. section B).
 >
 > **Périmètre** : de la première visite anonyme du site → inscription/connexion → sélection prestataire → BookingRequest → paiement (ou absence de paiement B2B) → planification appel → conférence Twilio → fin d'appel → capture/refund → commission affilié → payout prestataire → reversement SOS-Expat → notifications → factures.
 >
@@ -45,7 +45,7 @@ Si une vérification nécessite une action mutative pour conclure → tu marques
 
 **Coût total de l'audit : $0**. Aucun frais Stripe/PayPal/Twilio. Aucun impact prod.
 
-**Exception unique** : tu peux écrire dans `audit_artifacts_<DATE>/`, `audit_results_<DATE>.md` et `audit_e2e_complete_<DATE>.md` à la racine du repo. Ce sont tes livrables.
+**Exception unique** : tu peux écrire dans le dossier `audit_artifacts_<DATE>/` (artefacts intermédiaires JSON/CSV/MD) et le fichier `audit_e2e_complete_<DATE>.md` (rapport final unique) à la racine du repo. Ce sont tes seuls livrables autorisés.
 </critical_warning>
 
 ---
@@ -90,20 +90,24 @@ Ce raisonnement reste dans le rapport pour traçabilité.
   - Telegram Engine (`engine-telegram-sos-expat.life-expat.com`) — 3 bots (main / inbox / withdrawals), 12 events
   - Zoho Mail (notifications transactionnelles)
 
-## Contexte récent à VÉRIFIER déployé (2026-05-03 fixes)
+## Contexte récent à VÉRIFIER déployé (2026-05-03 fixes — commits réels)
 
-Tu DOIS confirmer en lecture (`gcloud run services describe`) que ces 8 fixes sont en prod :
+Tu DOIS confirmer en lecture (`gcloud run services describe` + `git show <hash>`) que ces 10 fixes sont effectivement déployés en prod :
 
-1. 16 fonctions bumpées 256→512 MiB + cpu 0.083→0.167
-2. 2 fonctions `maxInstances: 3→20` (`createPaymentIntent`, `createAndScheduleCallHTTPS`)
-3. Fix PayPal : `services/pricingService.getServiceAmounts` lit les overrides admin (commit `c003fefb`)
-4. Fix frontend : `CallCheckout.tsx:handlePaymentSuccess` fallback `window.location.replace()` après 1500 ms (commit `8f60adc2` ou voisin)
-5. Sentry DSN câblé dans `secrets` array de chaque fonction (commit `467dc3a9`)
-6. Sync SOS↔Outil : skip push SOS→Outil quand update vient d'Outil (commit `8f60adc2`)
-7. Garde-fou `noopComponent` typé `React.ComponentType` (commit `7ef5885d`)
-8. `generateMultiDashboardAiResponse` unexported (commit `fe7185f2`)
+1. **Mémoire 16 fonctions bumpées 256→512 MiB + cpu 0.083→0.167** + `maxInstances: 3→20` sur `createPaymentIntent` et `createAndScheduleCallHTTPS` → commit `0634ce58` (`fix(infra): bump memory 256→512MiB on 16 OOM-prone Functions + raise maxInstances on payment bottlenecks`)
+2. **Bumps additionnels 256→512 MiB** sur `retryOutilSync` (SOS) + `cleanupStuckMessages` (Outil) → commit `72f5a397`
+3. **Fix PayPal `getServiceAmounts` overrides admin + fallback nav frontend `CallCheckout.tsx`** (`window.location.replace()` après 1500 ms) → commit unique `c003fefb` (`fix(payment): PayPal respects admin overrides + frontend nav fallback`)
+4. **Sentry DSN câblé + masquage PII + Meta Pixel ID configurable** (round 1) → commit `26853903`
+5. **Sentry DSN câblé dans `secrets` array de chaque fonction** (round 2) → commit `467dc3a9`
+6. **Sync SOS↔Outil : skip push SOS→Outil quand update vient d'Outil** (anti-bounce loop) → commit `8f60adc2`
+7. **Alerte Telegram engine quand Outil sync exhausts retries** → commit `1e0bfd92`
+8. **Auto-create provider doc dans Outil avant booking** → commit `b3b1e342`
+9. **Trigger AI sync vers Outil pour SOS-Call B2B sessions** → commit `839b965c`
+10. **Garde-fou `noopComponent` typé `React.ComponentType`** → commit `7ef5885d`
+11. **`generateMultiDashboardAiResponse` unexported** (security-incomplete dead code) → commit `fe7185f2`
+12. **Shadow audit log sur `generateMultiDashboardAiResponse`** + soft monitoring AI settings → commits `b17c595d` + `dca9dd89`
 
-Tu vérifies via `gcloud run services describe` + grep code, **JAMAIS via test live**.
+Tu vérifies via `git show <hash>` + `gcloud run services describe` + grep code, **JAMAIS via test live**.
 
 ## Identifiants utiles (référence dans logs et Firestore — lecture seule)
 
@@ -187,7 +191,7 @@ Client_country × Provider_country × Currency × Gateway × Service × Client_t
 = 10 000 cellules → réduire à 50 cellules « must-have » par triage Pareto
 ```
 
-Tu produis la matrice 50 lignes × 6 colonnes (cf. Phase 7).
+Tu produis la matrice 50 lignes × 11 colonnes (cf. Phase 9).
 
 </scope_global>
 
@@ -218,7 +222,7 @@ Tu produis la matrice 50 lignes × 6 colonnes (cf. Phase 7).
    │  ├─ QuickAuthWizard (inscription rapide pendant flow)
    │  ├─ EmailFirstAuth (email-first puis password)
    │  └─ Login dédié (Login.tsx) ou Register (Register.tsx, RegisterClient.tsx)
-   │     └─ Méthodes : email/pwd, Google OAuth, Apple OAuth, magic link
+   │     └─ Méthodes à confirmer : email/pwd ✅, Google OAuth ✅, Apple OAuth ✅, magic link ❓ (à vérifier supporté ou non), phone OTP ❓
    ▼
 [ÉTAPE 5] BookingRequest (collecte données réservation)
    │  ├─ B2C : BookingRequest.tsx → titre, description, pays, téléphone, langue
@@ -616,7 +620,22 @@ Filtrer `payments` Firestore où `metadata.payment_method_type IN ('apple_pay', 
 - Taux de succès vs Stripe Card classique
 - Erreurs spécifiques (Payment Request API non supportée, carte non configurée, etc.)
 
-#### 5.2 — Distribution observée
+#### 5.2 — Disputes / chargebacks Stripe
+
+```bash
+curl -s -u "$STRIPE_KEY:" "https://api.stripe.com/v1/disputes?limit=50" \
+  > audit_artifacts_$DATE_REF/stripe_recent_disputes.json
+```
+
+Pour chaque dispute :
+- Reason (`fraudulent`, `product_not_received`, `unrecognized`, etc.)
+- Status (`needs_response`, `under_review`, `won`, `lost`)
+- Amount + currency
+- Croiser avec `call_sessions/{sessionId}` correspondant : appel a-t-il bien eu lieu ? `billingDuration ≥ 60 s` ?
+- Réponse SOS-Expat fournie en temps voulu ?
+- Compter chargebacks sur 90 j → ratio chargeback. Si > 0.75 % → risque programme Stripe Excessive Chargeback (alerte P0).
+
+#### 5.3 — Distribution observée
 
 | Métrique | p50 | p95 | p99 |
 |----------|-----|-----|-----|
@@ -841,15 +860,16 @@ Pour chaque appel terminé sur 30 j :
 
 **Output** : `audit_artifacts_<DATE>/phase11_notifications.md`
 
-#### 11.1 — Email Zoho
+#### 11.1 — Email transactionnel (Zoho ou SMTP direct)
 
 Pour chaque `payment.status='succeeded'` sur 7 j, vérifier dans logs :
 - Email confirmation envoyé au client
 - Email notification envoyé au provider
-- Pas de bounce / undelivered
+- Pas de bounce / undelivered (codes SMTP 5xx)
 - Templates corrects par langue (9 langues)
+- **Mécanisme d'envoi à confirmer** : Zoho API ? SMTP direct ? SendGrid ? — grep `nodemailer|@sendgrid|zoho` dans backend
 
-Vérifier mémoire `project_mailflow_warmup.md` : 5 inboxes presse@ identiques, sni_map TLS, fix relayhost.
+⚠️ **Ne pas confondre avec mémoire `project_mailflow_warmup.md`** — celle-ci concerne uniquement l'outbound presse@* (campagnes email cold), PAS le transactionnel SOS-Expat. Les deux flux sont indépendants.
 
 #### 11.2 — SMS Twilio
 
@@ -909,10 +929,11 @@ Compter dans logs Cloud Run sur 30 j :
 | Capture réussie ≥ 60 s | `Paiement capture avec succes` | ? | ? | normal |
 | `provider_no_answer` 3 retries | `failed_provider_no_answer` | ? | ? | normal si rare |
 | `client_no_answer` 3 retries | `failed_client_no_answer` | ? | ? | normal si rare |
-| PayPal `Amount mismatch` (ancien bug) | `[PAYPAL_DEBUG] STEP 5 FAILED: Amount mismatch` | ? | ? | doit être 0 après fix `c003fefb` |
-| Stripe stuck-on-page | présence du fallback `window.location.replace` | ? | ? | doit être effective après fix `8f60adc2` |
-| Sentry DSN missing | `Sentry Backend] DSN not configured` | ? | ? | doit être 0 après fix `467dc3a9` |
-| Bouclage sync SOS↔Outil | logs sync infinis | ? | ? | doit être 0 après fix `8f60adc2` |
+| PayPal `Amount mismatch` (ancien bug) | `[PAYPAL_DEBUG] STEP 5 FAILED: Amount mismatch` | ? | ? | doit être 0 après fix `c003fefb` (postérieur au commit) |
+| Stripe stuck-on-page | utilisateur reste bloqué sur `/checkout` après `payment_intent.succeeded` (delta `succeeded_at` → navigation suivante > 5 s) | ? | ? | fallback `window.location.replace` après 1500 ms doit être effectif (commit `c003fefb`) |
+| Sentry DSN missing | `[Sentry Backend] DSN not configured` | ? | ? | doit être 0 après fix `467dc3a9` (round 2) + `26853903` (round 1) |
+| Bouclage sync SOS↔Outil | même `documentId` repassant > 3 fois en 60 s dans logs `[SYNC] SOS→Outil` puis `[SYNC] Outil→SOS` | ? | ? | doit être 0 après fix `8f60adc2` |
+| Outil sync exhausts retries (post-bounce-fix) | alerte Telegram engine `[SYNC EXHAUSTED]` | ? | ? | observable mais ne doit pas être fréquent (commit `1e0bfd92`) |
 | Quota partenaire dépassé | `quota_exceeded` | ? | ? | guard OK |
 | Code partenaire invalide | `invalid_partner_code` | ? | ? | guard OK |
 | KYC provider incomplet | `transfer_data invalid destination` | ? | ? | doit être traité (fallback Platform Escrow) |
@@ -1008,13 +1029,15 @@ Le rapport DOIT être à `audit_e2e_complete_<DATE>.md` à la racine du repo, av
 
 ## Résumé exécutif (300 mots max, lisible PM non-tech)
 - Périmètre couvert : X/14 phases (Z%)
-- 5 typologies CLIENT couvertes : oui/non par typologie
-- 5 modes PAIEMENT couverts : oui/non par mode
-- 7 typologies PROVIDER couvertes : oui/non par type
+- 5 typologies CLIENT couvertes : oui/non par typologie (C1 B2C standard, C2 B2C affilié, C3 coupon, C4 B2B, C5 QuickAuth)
+- 5 modes PAIEMENT couverts : oui/non par mode (P1 Stripe Card, P2 Apple Pay, P3 Google Pay, P4 PayPal, P5 B2B Free)
+- 7 typologies PROVIDER couvertes : oui/non par type (R1 Lawyer Stripe, R2 Expat Stripe, R3 KYC incomplet, R4 PayPal-only, R5 AAA, R6 Multi-prestataire, R7 Suspendu)
 - Matrice cross-pays : N combinaisons critiques observées en succès / M total
 - Bugs P0 (bloquants production worldwide) : N
 - Bugs P1 (importants) : N
 - Bugs P2 (mineurs) : N
+- Ratio dispute/chargeback Stripe 90 j : X.XX % (alerte P0 si > 0.75 %)
+- 12 fixes 2026-05-03 déployés : N/12 confirmés
 - Verdict production-readiness mondial : ✅ READY / ⚠️ READY WITH GAPS / ❌ NOT READY
 - Top 3 actions urgentes
 - Coût total de l'audit : $0
@@ -1256,6 +1279,15 @@ Le rapport est **INVALIDE** si :
 **Cas 10 : Discordance entre `payments` Firestore et Stripe Dashboard.**
 → Bug P0 (data sync). Documente. NE corrige PAS.
 
+**Cas 11 : Un fichier référencé dans le prompt n'existe pas (file not found).**
+→ Vérifier d'abord avec `Glob` que le fichier n'a pas été renommé/déplacé. Si confirmé absent → marquer `MISSING — fichier référencé absent du repo` dans phase 1.3. Ne pas inventer de chemin alternatif. Continuer l'audit avec les fichiers existants.
+
+**Cas 12 : Une mémoire utilisateur référencée n'existe plus.**
+→ Lire `C:\Users\willi\.claude\projects\C--Users-willi-Documents-Projets-VS-CODE-sos-expat-project\memory\MEMORY.md` pour vérifier. Si absente, traiter comme info manquante (pas comme bug).
+
+**Cas 13 : Tu trouves un commit hash différent de celui cité dans le prompt.**
+→ Faire confiance à `git log` (source de vérité). Documenter la divergence dans phase 0 bootstrap. Le prompt peut contenir un hash obsolète si rebase/squash a eu lieu.
+
 </ambiguous_cases>
 
 ---
@@ -1426,7 +1458,8 @@ Avant de produire `audit_e2e_complete_<DATE>.md`, l'agent doit cocher :
 - [ ] Le verdict production-readiness mondial est explicite (READY / READY WITH GAPS / NOT READY)
 - [ ] La self-review (annexe F) est non triviale (≥ 5 angles morts identifiés)
 - [ ] Le rapport est en français (cf. mémoire User Preferences)
-- [ ] Les 8 fixes du 2026-05-03 ont été vérifiés déployés
+- [ ] Les 12 fixes du 2026-05-03 (cf. `<context>` Contexte récent) ont été vérifiés déployés via `git show <hash>` + `gcloud run revisions list`
+- [ ] Le ratio dispute/chargeback Stripe sur 90 j est < 0.75 % (sinon alerte P0)
 - [ ] Aucun secret/credential en clair dans le rapport
 
 </final_checklist>

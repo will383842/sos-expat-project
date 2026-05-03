@@ -39,6 +39,18 @@ src/multilingual-system/sitemaps/global/sitemap-index.xml
 src/multilingual-system/sitemaps/global/sitemap-index.xml.gz
 
 # ================================
+# Audit artifacts — large gcloud/curl dumps not meant for git.
+# Keep tracked .md reports (e.g. journey_user.md, audit_results_*.md).
+# ================================
+audit_artifacts_*/logs_*.json
+audit_artifacts_*/ooms_*.json
+audit_artifacts_*/exports_*.txt
+audit_artifacts_*/cloud_run_*.csv
+all_sitemaps.txt
+press_api.json
+tsc_out.txt
+
+# ================================
 # Environment & secrets
 # ================================
 .env
