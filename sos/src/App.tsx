@@ -100,6 +100,7 @@ const ExpatCall = lazy(() => import('./pages/ExpatCall'));
 const CallCheckout = lazy(() => import('./pages/CallCheckoutWrapper'));
 const BookingRequest = lazy(() => import('./pages/BookingRequest'));
 const PaymentSuccess = lazy(() => import('./pages/PaymentSuccess'));
+const ReviewRequestPage = lazy(() => import('./pages/ReviewRequestPage'));
 const ProviderProfile = lazy(() => import('./pages/ProviderProfile'));
 const Pricing = lazy(() => import('./pages/Pricing'));
 
@@ -531,6 +532,7 @@ const protectedUserRoutes: RouteConfig[] = [
   },
   { path: "/booking-request", component: BookingRequest, protected: true, translated: "booking-request" },
   { path: "/payment-success", component: PaymentSuccess, protected: true, translated: "payment-success" },
+  { path: "/review/:requestId", component: ReviewRequestPage, protected: true },
   {
     path: "/dashboard/messages",
     component: DashboardMessages,

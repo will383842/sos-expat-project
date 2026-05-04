@@ -2039,6 +2039,7 @@ export { providerCatalogFeed } from './providerCatalogFeed';
 export {
   handleReviewSubmitted,
   handleReviewRequestCreated,
+  sendReviewRequestReminders,
   handleCallCompleted,
   handlePaymentReceived,
   handlePaymentFailed,

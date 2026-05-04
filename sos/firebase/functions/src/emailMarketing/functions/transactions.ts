@@ -1,4 +1,5 @@
 import { onDocumentCreated, onDocumentUpdated } from "firebase-functions/v2/firestore";
+import { onSchedule } from "firebase-functions/v2/scheduler";
 import * as admin from "firebase-admin";
 import { MailwizzAPI } from "../utils/mailwizz";
 import { mapUserToMailWizzFields } from "../utils/fieldMapper";
@@ -494,7 +495,7 @@ export const handleReviewRequestCreated = onDocumentCreated(
             EXPERT_NAME: providerName,
             DURATION: (callDuration || 0).toString(),
             SERVICE_TYPE: serviceType || "",
-            REVIEW_URL: "https://sos-expat.com/dashboard",
+            REVIEW_URL: `https://sos-expat.com/review/${requestId}`,
             CALL_ID: callSessionId,
           },
         });
@@ -537,6 +538,154 @@ export const handleReviewRequestCreated = onDocumentCreated(
       console.log(`✅ Review request processed: ${requestId} (call ${callSessionId})`);
     } catch (error: any) {
       console.error(`❌ Error in handleReviewRequestCreated for ${requestId}:`, error);
+    }
+  }
+);
+
+/**
+ * FUNCTION 3-ter: Send Review Request Reminders (J+3)
+ * Schedule: daily at 10:00 UTC.
+ *
+ * Picks up reviews_requests where:
+ *   - emailSent === true
+ *   - reminderEmailSent !== true
+ *   - emailSentAt is between [now - 4 days, now - 3 days]
+ *
+ * For each, skips if a review has been submitted, otherwise sends a reminder
+ * via TR_CLI_review-reminder_{lang} and marks reminderEmailSent.
+ *
+ * Capped at 200 docs per run as a safety net.
+ */
+export const sendReviewRequestReminders = onSchedule(
+  {
+    schedule: "0 10 * * *",
+    region: "europe-west3",
+    timeZone: "UTC",
+    memory: "256MiB",
+    cpu: 0.083,
+  },
+  async () => {
+    const db = admin.firestore();
+    const now = Date.now();
+    const fourDaysAgo = admin.firestore.Timestamp.fromMillis(now - 4 * 24 * 60 * 60 * 1000);
+    const threeDaysAgo = admin.firestore.Timestamp.fromMillis(now - 3 * 24 * 60 * 60 * 1000);
+
+    let processed = 0;
+    let sent = 0;
+    let skipped = 0;
+
+    try {
+      const candidates = await db
+        .collection("reviews_requests")
+        .where("emailSent", "==", true)
+        .where("emailSentAt", ">=", fourDaysAgo)
+        .where("emailSentAt", "<=", threeDaysAgo)
+        .limit(200)
+        .get();
+
+      if (candidates.empty) {
+        console.log("[sendReviewRequestReminders] No candidates found.");
+        return;
+      }
+
+      const mailwizz = new MailwizzAPI();
+
+      for (const docSnap of candidates.docs) {
+        processed++;
+        const data = docSnap.data();
+        const requestId = docSnap.id;
+
+        if (data.reminderEmailSent === true) {
+          skipped++;
+          continue;
+        }
+
+        const { clientId, providerId, callSessionId } = data;
+        if (!clientId || !providerId || !callSessionId) {
+          skipped++;
+          continue;
+        }
+
+        try {
+          // Idempotency: skip if review already submitted
+          const reviewSnap = await db
+            .collection("reviews")
+            .where("callId", "==", callSessionId)
+            .where("clientId", "==", clientId)
+            .limit(1)
+            .get();
+
+          if (!reviewSnap.empty) {
+            await docSnap.ref.update({
+              reminderEmailSkipped: true,
+              reminderEmailSkippedReason: "review_already_submitted",
+              reminderEmailSkippedAt: admin.firestore.FieldValue.serverTimestamp(),
+            });
+            skipped++;
+            continue;
+          }
+
+          const [clientDoc, providerDoc] = await Promise.all([
+            db.collection("users").doc(clientId).get(),
+            db.collection("users").doc(providerId).get(),
+          ]);
+
+          if (!clientDoc.exists) {
+            skipped++;
+            continue;
+          }
+
+          const client = clientDoc.data();
+          const provider = providerDoc.exists ? providerDoc.data() : null;
+          const lang =
+            data.emailLanguage ||
+            getLanguageCode(
+              client?.language || client?.preferredLanguage || client?.lang || "en"
+            );
+          const providerName =
+            provider?.firstName || provider?.name || (data.serviceType === "lawyer_call" ? "votre avocat" : "votre expert expatrié");
+
+          const clientFields = mapUserToMailWizzFields(client!, clientId);
+
+          await mailwizz.sendTransactional({
+            to: client?.email || clientId,
+            template: `TR_CLI_review-reminder_${lang}`,
+            customFields: {
+              ...clientFields,
+              EXPERT_NAME: providerName,
+              REVIEW_URL: `https://sos-expat.com/review/${requestId}`,
+            },
+          });
+
+          await docSnap.ref.update({
+            reminderEmailSent: true,
+            reminderEmailSentAt: admin.firestore.FieldValue.serverTimestamp(),
+          });
+
+          await logGA4Event("review_reminder_email_sent", {
+            user_id: clientId,
+            provider_id: providerId,
+            call_id: callSessionId,
+            email_language: String(lang).toLowerCase(),
+          });
+
+          sent++;
+        } catch (perDocError: any) {
+          console.error(`[sendReviewRequestReminders] error on ${requestId}:`, perDocError);
+          await docSnap.ref
+            .update({
+              reminderEmailError: perDocError?.message || String(perDocError),
+              reminderEmailErrorAt: admin.firestore.FieldValue.serverTimestamp(),
+            })
+            .catch(() => {});
+        }
+      }
+
+      console.log(
+        `[sendReviewRequestReminders] processed=${processed}, sent=${sent}, skipped=${skipped}`
+      );
+    } catch (error: any) {
+      console.error("[sendReviewRequestReminders] fatal error:", error);
     }
   }
 );
