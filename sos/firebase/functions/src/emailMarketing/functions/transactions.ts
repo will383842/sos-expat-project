@@ -395,6 +395,153 @@ export const handleReviewSubmitted = onDocumentCreated(
 );
 
 /**
+ * FUNCTION 3-bis: Handle Review Request Created
+ * Trigger: onCreate on reviews_requests/{requestId}
+ *
+ * Sent when TwilioCallManager.createReviewRequest fires after a successful call
+ * (duration >= MIN_CALL_DURATION = 60s and payment captured).
+ * Asks the client to leave a review by linking to the dashboard.
+ *
+ * Skips if the client has already submitted a review for this call (idempotency).
+ * Marks the request with emailSent/emailSentAt to support a future J+3 reminder cron.
+ */
+export const handleReviewRequestCreated = onDocumentCreated(
+  {
+    document: "reviews_requests/{requestId}",
+    region: "europe-west3",
+    cpu: 0.083,
+  },
+  async (event) => {
+    const reviewRequest = event.data?.data();
+    const requestId = event.params.requestId;
+
+    if (!reviewRequest || !event.data) {
+      console.warn(`⚠️ No review request data for ${requestId}`);
+      return;
+    }
+
+    const { clientId, providerId, callSessionId, callDuration, serviceType, bothConnected } =
+      reviewRequest;
+
+    if (!clientId || !providerId || !callSessionId) {
+      console.warn(`⚠️ Invalid review request data: ${requestId}`);
+      return;
+    }
+
+    // Defense in depth: backend already enforces 60s + bothConnected, but re-check.
+    if (!bothConnected || (callDuration || 0) < 60) {
+      console.log(
+        `⏭️ Skipping review request email for ${requestId}: bothConnected=${bothConnected}, duration=${callDuration}s`
+      );
+      return;
+    }
+
+    try {
+      // Idempotency: don't send if a review already exists for this call.
+      const existingReview = await admin
+        .firestore()
+        .collection("reviews")
+        .where("callId", "==", callSessionId)
+        .where("clientId", "==", clientId)
+        .limit(1)
+        .get();
+
+      if (!existingReview.empty) {
+        console.log(`⏭️ Review already submitted for call ${callSessionId}, skipping email.`);
+        await event.data.ref.update({
+          emailSkipped: true,
+          emailSkippedReason: "review_already_submitted",
+          emailSkippedAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+        return;
+      }
+
+      const mailwizz = new MailwizzAPI();
+
+      // Get client + provider in parallel
+      const [clientDoc, providerDoc] = await Promise.all([
+        admin.firestore().collection("users").doc(clientId).get(),
+        admin.firestore().collection("users").doc(providerId).get(),
+      ]);
+
+      if (!clientDoc.exists) {
+        console.warn(`⚠️ Client ${clientId} not found for review request ${requestId}`);
+        return;
+      }
+
+      const client = clientDoc.data();
+      const provider = providerDoc.exists ? providerDoc.data() : null;
+
+      const lang = getLanguageCode(
+        client?.language || client?.preferredLanguage || client?.lang || "en"
+      );
+
+      const isLawyer = serviceType === "lawyer_call";
+      const providerName =
+        provider?.firstName ||
+        provider?.name ||
+        (isLawyer ? "votre avocat" : "votre expert expatrié");
+
+      const clientFields = mapUserToMailWizzFields(client!, clientId);
+
+      // Send review request email
+      try {
+        await mailwizz.sendTransactional({
+          to: client?.email || clientId,
+          template: `TR_CLI_review-request_${lang}`,
+          customFields: {
+            ...clientFields,
+            EXPERT_NAME: providerName,
+            DURATION: (callDuration || 0).toString(),
+            SERVICE_TYPE: serviceType || "",
+            REVIEW_URL: "https://sos-expat.com/dashboard",
+            CALL_ID: callSessionId,
+          },
+        });
+
+        await event.data.ref.update({
+          emailSent: true,
+          emailSentAt: admin.firestore.FieldValue.serverTimestamp(),
+          emailLanguage: lang,
+        });
+
+        await logGA4Event("review_request_email_sent", {
+          user_id: clientId,
+          provider_id: providerId,
+          call_id: callSessionId,
+          email_language: lang.toLowerCase(),
+        });
+      } catch (emailError: any) {
+        console.error(`❌ Error sending review request email:`, emailError);
+        await event.data.ref.update({
+          emailError: emailError?.message || String(emailError),
+          emailErrorAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
+      }
+
+      // In-app notification for client
+      try {
+        await admin.firestore().collection("inapp_notifications").add({
+          uid: clientId,
+          type: "review_request",
+          title: "⭐ Comment s'est passé votre appel ?",
+          message: `Partagez votre expérience avec ${providerName} en quelques secondes`,
+          link: "/dashboard",
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+          read: false,
+        });
+      } catch (notifError) {
+        console.error(`❌ Error creating in-app notification:`, notifError);
+      }
+
+      console.log(`✅ Review request processed: ${requestId} (call ${callSessionId})`);
+    } catch (error: any) {
+      console.error(`❌ Error in handleReviewRequestCreated for ${requestId}:`, error);
+    }
+  }
+);
+
+/**
  * FUNCTION 4: Handle Payment Received
  * Trigger: onCreate on payments/{paymentId}
  */

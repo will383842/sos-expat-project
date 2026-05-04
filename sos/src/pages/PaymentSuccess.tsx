@@ -676,7 +676,8 @@ const SuccessPayment: React.FC = () => {
 
       // P2-1 FIX: Lire conference.billingDuration (champ réel dans call_sessions)
       const actualDuration = data?.conference?.billingDuration || data?.actualDuration || data?.duration || 0;
-      const MIN_DURATION_FOR_REVIEW = 300; // 5 minutes
+      // Aligné sur MIN_CALL_DURATION backend (TwilioCallManager) — seuil métier de facturation/reviews_requests.
+      const MIN_DURATION_FOR_REVIEW = 60;
       if (data?.status === "completed" && !reviewModelShown && actualDuration >= MIN_DURATION_FOR_REVIEW) {
         console.log(`🔵 [SUCCESS_PAGE_DEBUG] Call completed with duration ${actualDuration}s, showing review modal in 1.5s`);
         setTimeout(() => {

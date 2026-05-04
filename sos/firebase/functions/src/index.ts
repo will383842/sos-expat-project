@@ -2038,6 +2038,7 @@ export { providerCatalogFeed } from './providerCatalogFeed';
 // handleUserRegistration,  // → consolidatedOnUserCreated
 export {
   handleReviewSubmitted,
+  handleReviewRequestCreated,
   handleCallCompleted,
   handlePaymentReceived,
   handlePaymentFailed,
