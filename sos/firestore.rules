@@ -187,6 +187,16 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
+    // ================= REVIEWS_REQUESTS COLLECTION =================
+    // Created by Cloud Functions (TwilioCallManager) after a successful call.
+    // The owning client must read its own request to render /review/:requestId.
+    match /reviews_requests/{requestId} {
+      allow read: if isAdmin()
+                  || (isAuthenticated() && resource.data.clientId == request.auth.uid);
+      // Writes are reserved to Cloud Functions (Admin SDK bypasses rules).
+      allow write: if false;
+    }
+
     // ================= CALLS/CALL_SESSIONS COLLECTION =================
     match /calls/{callId} {
       allow read: if isAuthenticated() &&
