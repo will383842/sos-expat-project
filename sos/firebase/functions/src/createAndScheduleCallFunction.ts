@@ -23,6 +23,8 @@ import {
   TASKS_AUTH_SECRET,
   OUTIL_SYNC_API_KEY,
   getOutilIngestEndpoint,
+  PARTNER_ENGINE_URL_SECRET,
+  PARTNER_ENGINE_API_KEY_SECRET,
 } from './lib/secrets';
 // P3 FIX: Import country utils for converting ISO codes to full names
 import { getCountryName } from './utils/countryUtils';
@@ -180,8 +182,8 @@ export const createAndScheduleCallHTTPS = onCall(
     concurrency: 1,
     timeoutSeconds: 90, // P1-2 FIX 2026-02-23: 60→90s — 10+ Firestore writes + Cloud Tasks scheduling
     cors: ALLOWED_ORIGINS,
-    // Secrets: encryption + Stripe + Cloud Tasks + Outil sync
-    secrets: [ENCRYPTION_KEY, STRIPE_SECRET_KEY_TEST, STRIPE_SECRET_KEY_LIVE, TASKS_AUTH_SECRET, OUTIL_SYNC_API_KEY],
+    // Secrets: encryption + Stripe + Cloud Tasks + Outil sync + Partner Engine (B2B SOS-Call check-session)
+    secrets: [ENCRYPTION_KEY, STRIPE_SECRET_KEY_TEST, STRIPE_SECRET_KEY_LIVE, TASKS_AUTH_SECRET, OUTIL_SYNC_API_KEY, PARTNER_ENGINE_URL_SECRET, PARTNER_ENGINE_API_KEY_SECRET],
   },
   async (request: CallableRequest<CreateCallRequest>) => {
     const requestId = `call_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
