@@ -3456,8 +3456,16 @@ const BookingRequestB2CInner: React.FC = () => {
               }));
             } catch { /* ignore */ }
 
+            // FIX 2026-05-04: ajout de sosCall=1 + partnerName en query params pour
+            // que PaymentSuccess puisse détecter le mode B2B même si sessionStorage
+            // est cleaned-up (auto-cleanup 30s) ou si l'user F5/relance la page.
             const successSlug = getTranslatedRouteSlug('payment-success', language as any);
-            navigate(`/${successSlug}${callId ? `?callId=${encodeURIComponent(callId)}` : ''}`, { replace: true });
+            const successParamsB2C = new URLSearchParams();
+            if (callId) successParamsB2C.set('callId', callId);
+            successParamsB2C.set('sosCall', '1');
+            if (sosCallPartnerName) successParamsB2C.set('partnerName', sosCallPartnerName);
+            const successQs = successParamsB2C.toString();
+            navigate(`/${successSlug}${successQs ? `?${successQs}` : ''}`, { replace: true });
             return;
           } catch (err) {
             console.error('[BookingRequest] SOS-Call free scheduling failed', err);
@@ -3808,8 +3816,14 @@ const BookingRequestB2CInner: React.FC = () => {
             }));
           } catch { /* ignore */ }
 
+          // FIX 2026-05-04: ajout de sosCall=1 + partnerName en query params (cf. branche desktop)
           const successSlug = getTranslatedRouteSlug('payment-success', language as any);
-          navigate(`/${successSlug}${callId ? `?callId=${encodeURIComponent(callId)}` : ''}`, { replace: true });
+          const successParamsMobile = new URLSearchParams();
+          if (callId) successParamsMobile.set('callId', callId);
+          successParamsMobile.set('sosCall', '1');
+          if (sosCallPartnerName) successParamsMobile.set('partnerName', sosCallPartnerName);
+          const successQsMobile = successParamsMobile.toString();
+          navigate(`/${successSlug}${successQsMobile ? `?${successQsMobile}` : ''}`, { replace: true });
           return;
         } catch (err) {
           console.error('[BookingRequest mobile] SOS-Call free scheduling failed', err);
