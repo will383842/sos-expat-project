@@ -3484,6 +3484,10 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({
           // P0 FIX 2026-02-02: Ajouter les données de service pour initialisation rapide
           serviceType: service?.serviceType,
           amount: adminPricing?.totalAmount,
+          // P0 FIX 2026-05-04: Persist currency to avoid mistracking USD as EUR in
+          // Google Ads / Meta Pixel when the orders Firestore doc isn't loaded yet
+          // (race between sessionStorage-driven tracking useEffect and onSnapshot retry).
+          currency: service?.currency || 'eur',
           duration: adminPricing?.duration,
           providerRole: provider?.role || provider?.type,
           savedAt: Date.now()

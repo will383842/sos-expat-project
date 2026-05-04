@@ -522,7 +522,7 @@ const ExpatRegisterForm: React.FC<ExpatRegisterFormProps> = ({
         trackMetaComplete({ content_name: 'expat_registration', status: 'completed', country: form.currentPresenceCountry, eventID: metaEventId });
         trackAdRegistration({ contentName: 'expat_registration' });
         setMetaPixelUserData({ email: sanitizeEmail(form.email), firstName: sanitizeString(form.firstName), lastName: sanitizeString(form.lastName), country: form.currentPresenceCountry });
-        await setGoogleAdsUserData({ email: form.email, firstName: form.firstName, lastName: form.lastName, country: form.currentPresenceCountry });
+        await setGoogleAdsUserData({ email: form.email, phone: form.phone, firstName: form.firstName, lastName: form.lastName, country: form.currentPresenceCountry });
         trackGoogleAdsSignUp({ method: 'email', content_name: 'expat_registration', country: form.currentPresenceCountry });
         clearStoredReferral('client');
         clearUnifiedReferral();
@@ -572,7 +572,7 @@ const ExpatRegisterForm: React.FC<ExpatRegisterFormProps> = ({
       trackMetaComplete({ content_name: 'expat_registration', status: 'completed', country: form.currentPresenceCountry, eventID: metaEventId });
       trackAdRegistration({ contentName: 'expat_registration' });
       setMetaPixelUserData({ email: sanitizeEmail(form.email), firstName: sanitizeString(form.firstName), lastName: sanitizeString(form.lastName), country: form.currentPresenceCountry });
-      setGoogleAdsUserData({ email: form.email, firstName: form.firstName, lastName: form.lastName, country: form.currentPresenceCountry });
+      await setGoogleAdsUserData({ email: form.email, phone: form.phone, firstName: form.firstName, lastName: form.lastName, country: form.currentPresenceCountry });
       trackGoogleAdsSignUp({ method: 'email', content_name: 'expat_registration', country: form.currentPresenceCountry });
       clearStoredReferral('client');
       clearUnifiedReferral();

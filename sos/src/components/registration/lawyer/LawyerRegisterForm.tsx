@@ -518,7 +518,7 @@ const LawyerRegisterForm: React.FC<LawyerRegisterFormProps> = ({
         trackMetaComplete({ content_name: 'lawyer_registration', status: 'completed', country: form.currentCountry, eventID: metaEventId });
         trackAdRegistration({ contentName: 'lawyer_registration' });
         setMetaPixelUserData({ email: sanitizeEmail(form.email), firstName: fn, lastName: ln, country: form.currentCountry });
-        await setGoogleAdsUserData({ email: form.email, firstName: fn, lastName: ln, country: form.currentCountry });
+        await setGoogleAdsUserData({ email: form.email, phone: form.phone, firstName: fn, lastName: ln, country: form.currentCountry });
         trackGoogleAdsSignUp({ method: 'email', content_name: 'lawyer_registration', country: form.currentCountry });
         clearStoredReferral('client');
         clearUnifiedReferral();
@@ -568,7 +568,7 @@ const LawyerRegisterForm: React.FC<LawyerRegisterFormProps> = ({
       trackMetaComplete({ content_name: 'lawyer_registration', status: 'completed', country: form.currentCountry, eventID: metaEventId });
       trackAdRegistration({ contentName: 'lawyer_registration' });
       setMetaPixelUserData({ email: sanitizeEmail(form.email), firstName: fn, lastName: ln, country: form.currentCountry });
-      setGoogleAdsUserData({ email: form.email, firstName: fn, lastName: ln, country: form.currentCountry });
+      await setGoogleAdsUserData({ email: form.email, phone: form.phone, firstName: fn, lastName: ln, country: form.currentCountry });
       trackGoogleAdsSignUp({ method: 'email', content_name: 'lawyer_registration', country: form.currentCountry });
       clearStoredReferral('client');
       clearUnifiedReferral();

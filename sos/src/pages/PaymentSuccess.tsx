@@ -1069,7 +1069,14 @@ const SuccessPayment: React.FC = () => {
   }, [callId, user?.uid, invoiceGenerated, language, paidAmount, paidDuration, paymentIntentId, isFullyReady, pricing]);
 
   // Devise / symbole (pour le bloc order)
-  const orderCurrency: Currency = (order?.currency as Currency) ?? "eur";
+  // P0 FIX 2026-05-04: Lire la devise depuis sessionStorage `paymentData.currency`
+  // en fallback de l'order Firestore. Sans ce fallback, un paiement USD via PayPal
+  // (151 pays) tracké AVANT que l'order soit chargé (race condition onSnapshot)
+  // était mistracké comme EUR, faussant le ROAS Smart Bidding multi-devise.
+  const orderCurrency: Currency =
+    (order?.currency as Currency) ??
+    (paymentData?.currency as Currency) ??
+    "eur";
 
   /* =========================
      META PIXEL - TRACKING PURCHASE
@@ -1080,6 +1087,12 @@ const SuccessPayment: React.FC = () => {
   useEffect(() => {
     // Ne tracker qu'une seule fois et seulement si on a les donnees necessaires
     if (purchaseTracked) return;
+    // P1 FIX 2026-05-04: Wait for Firebase Auth to finish hydrating before
+    // tracking. Without this, a slow auth init (iOS PayPal full-redirect, F5,
+    // lazy chunk) could fire Purchase BEFORE user is loaded — resulting in
+    // setGoogleAdsUserData being skipped (guarded by `if (user?.email)`) and
+    // Enhanced Conversions being sent with no user identifiers.
+    if (!isFullyReady) return;
     // Skip Meta/Google Ads Purchase tracking for B2B SOS-Call (free for the
     // client — partner foots the bill). Without this guard, a F5 mid-countdown
     // would surface paidAmount=49 from the selectedProvider fallback and emit
@@ -1133,8 +1146,10 @@ const SuccessPayment: React.FC = () => {
         if (user?.email) {
           await setGoogleAdsUserData({
             email: user.email,
+            phone: user.phoneNumber || undefined,
             firstName: user.displayName?.split(' ')[0],
             lastName: user.displayName?.split(' ').slice(1).join(' '),
+            country: urlCountry?.toUpperCase() || undefined,
           });
         }
         trackGoogleAdsPurchase({
@@ -1184,7 +1199,7 @@ const SuccessPayment: React.FC = () => {
         callId,
       });
     }
-  }, [order?.amount, paidAmount, orderId, callId, isLawyer, orderCurrency, purchaseTracked, paymentData?.isSosCallFree]);
+  }, [order?.amount, paidAmount, orderId, callId, isLawyer, orderCurrency, purchaseTracked, paymentData?.isSosCallFree, isFullyReady, user?.email, user?.phoneNumber, urlCountry]);
 
   const C = orderCurrency === "eur" ? "€" : "$";
 
