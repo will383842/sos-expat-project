@@ -59,6 +59,11 @@ export interface MobileBookingContextValue {
   setLanguagesSpoken: (langs: Array<{ code: string; name: string; nativeName?: string }>) => void;
   hasLanguageMatch: boolean;
   setHasLanguageMatch: (match: boolean) => void;
+
+  // SOS-Call section: pre-rendered JSX from the parent (BookingRequestB2CInner)
+  // so its state/handlers stay in the parent. The mobile Step 6 renders it
+  // before the CGU checkbox when provided.
+  sosCallSection?: React.ReactNode;
 }
 
 const MobileBookingContext = createContext<MobileBookingContextValue | null>(null);
@@ -76,11 +81,13 @@ const STEP_FIELDS: Record<number, (keyof BookingFormData)[]> = {
 interface MobileBookingProviderProps {
   children: React.ReactNode;
   defaultValues?: Partial<BookingFormData>;
+  sosCallSection?: React.ReactNode;
 }
 
 export const MobileBookingProvider: React.FC<MobileBookingProviderProps> = ({
   children,
   defaultValues = {},
+  sosCallSection,
 }) => {
   // Form setup
   const form = useForm<BookingFormData>({
@@ -235,6 +242,7 @@ export const MobileBookingProvider: React.FC<MobileBookingProviderProps> = ({
     setLanguagesSpoken,
     hasLanguageMatch,
     setHasLanguageMatch,
+    sosCallSection,
   }), [
     form,
     currentStep,
@@ -253,6 +261,7 @@ export const MobileBookingProvider: React.FC<MobileBookingProviderProps> = ({
     triggerHaptic,
     languagesSpoken,
     hasLanguageMatch,
+    sosCallSection,
   ]);
 
   return (

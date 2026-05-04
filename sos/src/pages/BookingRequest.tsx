@@ -4007,6 +4007,211 @@ const BookingRequestB2CInner: React.FC = () => {
       }
     };
 
+    // SOS-Call B2B section JSX, pre-rendered with parent state/handlers via closure.
+    // Passed to the mobile wizard through MobileBookingProvider context so Step 6
+    // can render it before the CGU checkbox without owning any SOS-Call state.
+    const sosCallSectionMobile = (
+      <div className="mb-3">
+        {sosCallGatedMode ? (
+          <div className="rounded-2xl border-2 border-green-300 bg-gradient-to-br from-green-50 to-emerald-50 p-4">
+            <div className="flex items-start gap-3">
+              <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
+              <div className="flex-1 min-w-0">
+                <div className="font-bold text-green-900">
+                  {sosCallPartnerName ? (
+                    <FormattedMessage
+                      id="bookingRequest.sosCall.gated.title"
+                      defaultMessage="Appel pris en charge par <strong>{partnerName}</strong>"
+                      values={{
+                        partnerName: sosCallPartnerName,
+                        strong: (chunks) => <strong>{chunks}</strong>,
+                      }}
+                    />
+                  ) : (
+                    <FormattedMessage
+                      id="bookingRequest.sosCall.gated.titleNoPartner"
+                      defaultMessage="Appel pris en charge par votre partenaire"
+                    />
+                  )}
+                </div>
+                {sosCallPartnerName && (
+                  <div className="text-xs text-green-800 mt-1">
+                    <FormattedMessage
+                      id="bookingRequest.sosCall.gated.subtitle"
+                      defaultMessage="Aucun paiement ne vous sera demandé."
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="rounded-2xl border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50 p-3">
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={hasSosCallCode}
+                onChange={(e) => toggleSosCallCheckbox(e.target.checked)}
+                disabled={sosCallSubmitting}
+                className="mt-0.5 w-5 h-5 rounded border-blue-400 text-blue-600 focus:ring-blue-500 flex-shrink-0"
+              />
+              <div className="flex-1 min-w-0">
+                <div className="font-semibold text-blue-900 text-sm">
+                  <FormattedMessage
+                    id="bookingRequest.sosCall.checkbox.label"
+                    defaultMessage="J'ai un code SOS-Call"
+                  />
+                </div>
+                <div className="text-xs text-blue-800 mt-0.5">
+                  <FormattedMessage
+                    id="bookingRequest.sosCall.checkbox.description"
+                    defaultMessage="Si votre entreprise, banque ou assurance vous a fourni un code personnel, votre appel est pris en charge par votre partenaire — pas de paiement."
+                  />
+                </div>
+              </div>
+            </label>
+
+            {hasSosCallCode && !sosCallValidated && (
+              <div className="mt-3 space-y-2">
+                <div>
+                  <label className="block text-xs font-medium text-blue-900 mb-1">
+                    <FormattedMessage
+                      id="bookingRequest.sosCall.input.label"
+                      defaultMessage="Votre code partenaire"
+                    />
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={sosCallCodeInput}
+                      onChange={(e) => setSosCallCodeInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          validateSosCallCode();
+                        }
+                      }}
+                      disabled={sosCallChecking || sosCallSubmitting}
+                      placeholder={intl.formatMessage({
+                        id: "bookingRequest.sosCall.input.placeholder",
+                        defaultMessage: "XXX-2026-XXXXX",
+                      })}
+                      className="flex-1 min-w-0 px-3 py-2 rounded-lg border border-blue-300 bg-white text-blue-900 font-mono uppercase text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      autoComplete="off"
+                      spellCheck={false}
+                    />
+                    <button
+                      type="button"
+                      onClick={validateSosCallCode}
+                      disabled={sosCallChecking || !sosCallCodeInput.trim()}
+                      className="px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold text-sm disabled:opacity-50 flex-shrink-0"
+                    >
+                      {sosCallChecking ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <FormattedMessage
+                          id="bookingRequest.sosCall.button.verify"
+                          defaultMessage="Vérifier"
+                        />
+                      )}
+                    </button>
+                  </div>
+                </div>
+                {sosCallError && (
+                  <div className="p-2 rounded-lg bg-red-50 border border-red-200 text-xs text-red-800">
+                    <div className="flex items-start gap-2">
+                      <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                      <div className="flex-1 min-w-0">{sosCallError}</div>
+                    </div>
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSosCallError(null);
+                          setSosCallCodeInput('');
+                        }}
+                        className="text-xs px-2 py-1 rounded bg-white hover:bg-red-50 text-red-800 border border-red-300 font-medium"
+                      >
+                        <FormattedMessage
+                          id="bookingRequest.sosCall.button.retry"
+                          defaultMessage="Réessayer"
+                        />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => toggleSosCallCheckbox(false)}
+                        className="text-xs px-2 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white border border-blue-700 font-semibold"
+                      >
+                        <FormattedMessage
+                          id="bookingRequest.sosCall.button.continueWithoutCode"
+                          defaultMessage="Continuer sans code (payer l'appel)"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {hasSosCallCode && sosCallValidated && (
+              <div className="mt-3 p-3 rounded-xl bg-green-50 border-2 border-green-200">
+                <div className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold text-green-900 text-sm">
+                      {sosCallPartnerName ? (
+                        <FormattedMessage
+                          id="bookingRequest.sosCall.validated.title"
+                          defaultMessage="Code validé — appel pris en charge par <strong>{partnerName}</strong>"
+                          values={{
+                            partnerName: sosCallPartnerName,
+                            strong: (chunks) => <strong>{chunks}</strong>,
+                          }}
+                        />
+                      ) : (
+                        <FormattedMessage
+                          id="bookingRequest.sosCall.validated.titleNoPartner"
+                          defaultMessage="Code validé — appel pris en charge par votre partenaire"
+                        />
+                      )}
+                    </div>
+                    <div className="text-xs text-green-800 mt-0.5">
+                      <FormattedMessage
+                        id="bookingRequest.sosCall.validated.subtitle"
+                        defaultMessage="Vous ne paierez rien."
+                      />
+                    </div>
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      <button
+                        type="button"
+                        onClick={resetSosCallCode}
+                        className="text-xs px-2 py-1 rounded bg-white hover:bg-gray-50 text-green-800 border border-green-300 font-medium"
+                      >
+                        <FormattedMessage
+                          id="bookingRequest.sosCall.button.modify"
+                          defaultMessage="Modifier le code"
+                        />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => toggleSosCallCheckbox(false)}
+                        className="text-xs px-2 py-1 rounded bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 font-medium"
+                      >
+                        <FormattedMessage
+                          id="bookingRequest.sosCall.button.cancel"
+                          defaultMessage="Annuler et payer l'appel"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    );
+
     return (
       <Layout showFooter={false}>
         {/* SEO */}
@@ -4032,6 +4237,7 @@ const BookingRequestB2CInner: React.FC = () => {
             acceptTerms: getValues('acceptTerms'),
             clientLanguages: languagesSpoken.map(l => l.code),
           }}
+          sosCallSection={sosCallSectionMobile}
         >
           <MobileWizardInner
             provider={provider}

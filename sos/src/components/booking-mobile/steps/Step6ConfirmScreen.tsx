@@ -8,7 +8,7 @@ import { resolveCountryName, OTHER_COUNTRY } from '@/data/countries';
 
 export const Step6ConfirmScreen: React.FC = () => {
   const intl = useIntl();
-  const { form, provider, isLawyer, displayEUR, displayDuration } = useMobileBooking();
+  const { form, provider, isLawyer, displayEUR, displayDuration, sosCallSection } = useMobileBooking();
   const { control, watch, formState: { errors } } = form;
 
   const firstName = watch('firstName');
@@ -104,6 +104,9 @@ export const Step6ConfirmScreen: React.FC = () => {
           <p className="text-xl font-bold text-red-600">{displayEUR.toFixed(2)}€</p>
         </div>
       </div>
+
+      {/* SOS-Call B2B section (rendered with parent state via context) */}
+      {sosCallSection}
 
       {/* Terms checkbox */}
       <div className={`p-4 rounded-xl border-2 mb-4 ${watch('acceptTerms') ? 'border-green-400 bg-green-50' : 'border-amber-400 bg-amber-50'}`}>
