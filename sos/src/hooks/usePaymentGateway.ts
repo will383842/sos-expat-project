@@ -31,22 +31,34 @@ const PAYPAL_ONLY_COUNTRIES = new Set([
   "LS", "LR", "LY", "MG", "MW", "ML", "MR", "MU", "MA", "MZ", "NA", "NE", "NG",
   "RW", "ST", "SN", "SC", "SL", "SO", "ZA", "SS", "SD", "TZ", "TG", "TN", "UG",
   "ZM", "ZW",
-  // ASIE (38 pays) - P0-2 FIX: Ajout CN, KZ, TR qui manquaient
+  // ASIE (37 pays) - P0-2 FIX: Ajout CN, KZ, TR qui manquaient
+  // 2026-05-04: KP retiré (embargo)
   "AF", "BD", "BT", "CN", "IN", "KH", "KZ", "LA", "MM", "NP", "PK", "LK", "TJ", "TM", "TR", "UZ", "VN",
-  "MN", "KP", "KG", "PS", "YE", "OM", "QA", "KW", "BH", "JO", "LB", "AM",
+  "MN", "KG", "PS", "YE", "OM", "QA", "KW", "BH", "JO", "LB", "AM",
   "AZ", "GE", "MV", "BN", "TL", "PH", "ID", "TW", "KR",
-  // AMERIQUE LATINE & CARAIBES (30 pays) - 2026-05-04: Ajout CL, PE, UY
-  "AR", "BO", "CL", "CO", "CU", "EC", "PE", "PY", "SV", "GT", "HN", "NI", "SR", "UY", "VE",
+  // AMERIQUE LATINE & CARAIBES (29 pays) - 2026-05-04: Ajout CL, PE, UY ; CU retiré (embargo)
+  "AR", "BO", "CL", "CO", "EC", "PE", "PY", "SV", "GT", "HN", "NI", "SR", "UY", "VE",
   "HT", "DO", "JM", "TT", "BB", "BS", "BZ", "GY", "PA", "CR", "AG", "DM", "GD", "KN", "LC", "VC",
-  // EUROPE DE L'EST & BALKANS (14 pays) - GI est dans Stripe
-  "BY", "MD", "UA", "RS", "BA", "MK", "ME", "AL", "XK", "RU", "AD", "MC",
+  // EUROPE DE L'EST & BALKANS (12 pays) - 2026-05-04: BY/RU retirés (embargo)
+  "MD", "UA", "RS", "BA", "MK", "ME", "AL", "XK", "AD", "MC",
   "SM", "VA",
   // OCEANIE & PACIFIQUE (16 pays) - 2026-05-04: Ajout WF
   "FJ", "PG", "SB", "VU", "WS", "TO", "KI", "FM", "MH", "PW", "NR", "TV", "NC",
   "PF", "GU", "WF",
-  // MOYEN-ORIENT (7 pays)
-  "IQ", "IR", "SY", "SA",
+  // MOYEN-ORIENT (5 pays) - 2026-05-04: IR/SY retirés (embargo)
+  "IQ", "SA",
 ]);
+
+// 2026-05-04: Comprehensive sanctions — both Stripe and PayPal refuse these
+// jurisdictions. Reject up-front rather than letting the user reach payment
+// and watch the gateway return a generic refusal.
+export const EMBARGOED_COUNTRIES = new Set([
+  "CU", "IR", "KP", "SY", "RU", "BY",
+]);
+
+export function isEmbargoedCountry(code: string): boolean {
+  return EMBARGOED_COUNTRIES.has((code || "").toUpperCase().trim());
+}
 
 // French overseas territories that use the euro and are administratively part
 // of France — they share the FR Stripe Connect path. Normalized before lookup.

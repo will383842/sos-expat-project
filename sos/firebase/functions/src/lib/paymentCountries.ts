@@ -119,23 +119,25 @@ export const PAYPAL_ONLY_COUNTRIES = new Set([
   "RW", "ST", "SN", "SC", "SL", "SO", "ZA", "SS", "SD", "TZ", "TG", "TN", "UG",
   "ZM", "ZW",
 
-  // ===== ASIE (38 pays - non couverts par Stripe) =====
+  // ===== ASIE (37 pays - non couverts par Stripe) =====
   // P1-1 FIX: Ajout CN (Chine), TR (Turquie), KZ (Kazakhstan) qui manquaient
+  // 2026-05-04: KP (Corée du Nord) déplacé vers EMBARGOED_COUNTRIES
   "AF", "BD", "BT", "CN", "IN", "KH", "KZ", "LA", "MM", "NP", "PK", "LK", "TJ", "TM", "TR", "UZ", "VN",
-  "MN", "KP", "KG", "PS", "YE", "OM", "QA", "KW", "BH", "JO", "LB", "AM", "AZ", "GE",
+  "MN", "KG", "PS", "YE", "OM", "QA", "KW", "BH", "JO", "LB", "AM", "AZ", "GE",
   "MV", "BN", "TL", "PH", "ID", "TW", "KR",
 
-  // ===== AMERIQUE LATINE & CARAIBES (30 pays) =====
+  // ===== AMERIQUE LATINE & CARAIBES (29 pays) =====
   // P1-1 FIX: Ajout AR (Argentine) et CO (Colombie) qui manquaient
   // 2026-05-04 FIX: Ajout CL, PE, UY qui manquaient
-  "AR", "BO", "CL", "CO", "CU", "EC", "PE", "PY", "SV", "GT", "HN", "NI", "SR", "UY", "VE",
+  // 2026-05-04: CU (Cuba) déplacé vers EMBARGOED_COUNTRIES (US OFAC)
+  "AR", "BO", "CL", "CO", "EC", "PE", "PY", "SV", "GT", "HN", "NI", "SR", "UY", "VE",
   "HT", "DO", "JM", "TT", "BB", "BS", "BZ", "GY", "PA", "CR",
   "AG", "DM", "GD", "KN", "LC", "VC",
 
-  // ===== EUROPE DE L'EST & BALKANS (14 pays non Stripe) =====
-  // Note: BY et RU sont inclus mais pourraient être sanctionnés
+  // ===== EUROPE DE L'EST & BALKANS (12 pays non Stripe) =====
   // Note: GI (Gibraltar) est supporté par Stripe, donc pas ici
-  "BY", "MD", "UA", "RS", "BA", "MK", "ME", "AL", "XK", "RU",
+  // 2026-05-04: BY et RU déplacés vers EMBARGOED_COUNTRIES (sanctions US/EU)
+  "MD", "UA", "RS", "BA", "MK", "ME", "AL", "XK",
   "AD", "MC", "SM", "VA",
 
   // ===== OCEANIE & PACIFIQUE (16 pays) =====
@@ -144,9 +146,46 @@ export const PAYPAL_ONLY_COUNTRIES = new Set([
   "FJ", "PG", "SB", "VU", "WS", "TO", "KI", "FM", "MH", "PW",
   "NR", "TV", "NC", "PF", "GU", "WF",
 
-  // ===== MOYEN-ORIENT (7 pays restants) =====
-  "IQ", "IR", "SY", "SA",
+  // ===== MOYEN-ORIENT (5 pays restants) =====
+  // 2026-05-04: IR (Iran) et SY (Syrie) déplacés vers EMBARGOED_COUNTRIES
+  "IQ", "SA",
 ]);
+
+// =============================================================================
+// EMBARGOED / SANCTIONED COUNTRIES (rejected at registration + payment)
+// =============================================================================
+// These countries are blocked under comprehensive US OFAC sanctions and/or
+// equivalent EU restrictions. PayPal and Stripe both refuse to process
+// transactions to or from these jurisdictions, so accepting them in our
+// routing lists creates a silent-failure UX (user signs up, payments
+// systematically fail at the gateway). We reject them up-front instead.
+//
+// Note on Crimea: not an ISO 3166-1 alpha-2 code (it's a region of UA).
+// PayPal and Stripe enforce Crimea sanctions via address/IP at their layer;
+// we cannot enforce it from a 2-letter code list.
+//
+// Note on RU/BY: sanctions are partial and case-by-case (some payments
+// allowed for non-listed entities). We treat them as fully blocked here for
+// simplicity — if business requires it, move them back to PAYPAL_ONLY and
+// rely on PayPal/Stripe's own per-transaction enforcement.
+
+export const EMBARGOED_COUNTRIES = new Set([
+  "CU", // Cuba — US OFAC + EU
+  "IR", // Iran — US OFAC + EU + UN
+  "KP", // North Korea — UN + US OFAC + EU
+  "SY", // Syria — US OFAC + EU
+  "RU", // Russia — US/EU sanctions since 2022 (treated as full block here)
+  "BY", // Belarus — US/EU sanctions since 2022 (treated as full block here)
+]);
+
+/**
+ * Check whether a country is under comprehensive sanctions.
+ * Use this BEFORE the gateway routing to fail fast with a clear UX.
+ */
+export function isEmbargoedCountry(countryCode: string): boolean {
+  if (!countryCode) return false;
+  return EMBARGOED_COUNTRIES.has(countryCode.toUpperCase().trim());
+}
 
 // =============================================================================
 // HELPER FUNCTIONS
@@ -161,6 +200,17 @@ export function getRecommendedPaymentGateway(countryCode: string): PaymentGatewa
   // 2026-05-04: normalize French overseas territories (BL, GF, GP, MF, MQ, PM,
   // RE, YT) to "FR" so they route through Stripe like mainland France.
   const normalized = normalizeCountryCode(countryCode);
+
+  // Embargoed countries should never reach this function (validateCountryCode
+  // rejects them earlier). If they somehow do, we throw rather than silently
+  // route to PayPal — silent routing would create a dead-end UX where the user
+  // hits payment and gets a generic refusal from the gateway.
+  if (EMBARGOED_COUNTRIES.has(normalized)) {
+    throw new Error(
+      `EMBARGO: Country "${normalized}" is under comprehensive sanctions; ` +
+      'no gateway accepts it. Validate the country before routing.'
+    );
+  }
 
   if (STRIPE_SUPPORTED_COUNTRIES.has(normalized)) {
     return "stripe";
@@ -178,10 +228,13 @@ export function isStripeSupported(countryCode: string): boolean {
 }
 
 /**
- * Vérifie si un pays est PayPal-only
+ * Vérifie si un pays est PayPal-only.
+ * Embargoed countries return false (they're neither Stripe nor PayPal — they're
+ * blocked entirely; callers should check isEmbargoedCountry separately).
  */
 export function isPayPalOnly(countryCode: string): boolean {
   const normalized = normalizeCountryCode(countryCode);
+  if (EMBARGOED_COUNTRIES.has(normalized)) return false;
   return PAYPAL_ONLY_COUNTRIES.has(normalized) || !STRIPE_SUPPORTED_COUNTRIES.has(normalized);
 }
 
@@ -235,6 +288,13 @@ export function isValidCountryCode(countryCode: string): boolean {
     return false;
   }
 
+  // 2026-05-04: Embargoed countries are rejected up-front. Their payments
+  // would silently fail at PayPal/Stripe, so accepting them at the API
+  // boundary just creates dead users.
+  if (EMBARGOED_COUNTRIES.has(trimmed)) {
+    return false;
+  }
+
   // 2026-05-04: French overseas territories (BL, GF, GP, MF, MQ, PM, RE, YT)
   // are accepted at this validation layer and normalized to FR downstream.
   const normalized = normalizeCountryCode(trimmed);
@@ -255,6 +315,14 @@ export function isValidCountryCode(countryCode: string): boolean {
 export function validateCountryCode(countryCode: string, context?: string): void {
   if (!isValidCountryCode(countryCode)) {
     const contextMsg = context ? ` during ${context}` : '';
+    const upper = (countryCode || '').toUpperCase().trim();
+    if (EMBARGOED_COUNTRIES.has(upper)) {
+      throw new Error(
+        `EMBARGO: Country "${upper}"${contextMsg} is under comprehensive ` +
+        'international sanctions and cannot be used as a service country. ' +
+        'Both Stripe and PayPal refuse transactions for this jurisdiction.'
+      );
+    }
     throw new Error(
       `P0 VALIDATION ERROR: Invalid country code "${countryCode}"${contextMsg}. ` +
       'Country code must be a valid ISO 3166-1 alpha-2 code (e.g., "FR", "US") ' +
