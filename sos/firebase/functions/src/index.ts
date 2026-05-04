@@ -2643,6 +2643,11 @@ interface CreateUserDocumentData {
 export const createUserDocument = onCall(
   {
     ...emergencyConfig,
+    // P0 FIX 2026-05-04: éviter le cold start (~15-30s) à chaque login Google.
+    // Cette fonction est appelée à chaque création de compte/login Google ; un cold start
+    // bloquait l'arrivée du document users/{uid}, déclenchant le polling 20× dans
+    // AuthContext.tsx. Override LOCAL uniquement (emergencyConfig partagé reste minInstances:0).
+    minInstances: 1,
     timeoutSeconds: 30,
   },
   wrapCallableFunction(

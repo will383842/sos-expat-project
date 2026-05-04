@@ -1296,12 +1296,15 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
           devWarn("🔐 [AuthContext] Cloud Function peut encore être en cours d'exécution...");
 
           // ✅ FIX RACE CONDITION: Retry polling avec backoff progressif
-          // La Cloud Function peut prendre jusqu'à 10-15s sur réseau lent
+          // P0 FIX 2026-05-04: MAX_RETRIES réduit 20→8 (budget polling ~8.4s vs ~15-20s).
+          // Combiné au fix `minInstances:1` sur createUserDocument côté Functions, le doc
+          // arrive normalement en 1-3s ; 8 retries donnent largement la marge sans bloquer
+          // l'UX en cas d'échec réel. Si on revient à des cold starts longs, augmenter ici.
           if (!firstSnapArrived.current) {
-            const MAX_RETRIES = 20; // 20 retries
+            const MAX_RETRIES = 8; // 8 retries (était 20)
             const BASE_DELAY = 300; // Commence à 300ms
             const MAX_DELAY = 1500; // Max 1.5s entre retries
-            // Total max: ~15-20 secondes
+            // Total max: ~8.4s (300+450+675+1012+1500+1500+1500+1500)
 
             devLog("🔄 [AuthContext] Démarrage du polling avec backoff progressif...");
 
@@ -1363,7 +1366,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
               }
             }
 
-            // Après tous les retries (~15-20s), le document n'existe toujours pas
+            // Après tous les retries (~8s avec MAX_RETRIES=8), le document n'existe toujours pas
             devError("❌ [AuthContext] Document toujours absent après " + MAX_RETRIES + " retries (~" + Math.round(totalWaitTime/1000) + "s)");
             cancelAllFallbacks(); // ✅ FIX: Annuler tous les timeouts même en cas d'échec
 
