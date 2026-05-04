@@ -1,21 +1,31 @@
-// Stripe Connect supported countries (44 countries)
+// Stripe Connect supported countries (46 countries)
 // Source: https://stripe.com/global
 // Synced with sos/firebase/functions/src/lib/paymentCountries.ts
+// 2026-05-04: Added IL (Israel, since 2024) and IS (Iceland, since 2022).
 
 import { countriesData } from '@/data/countries';
 
 export const STRIPE_SUPPORTED_COUNTRIES = new Set([
   // North America
   'US', 'CA',
-  // Europe (32)
-  'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GI', 'GR', 'HU', 'IE', 'IT',
+  // Europe (34) - 2026-05-04 added IS
+  'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GI', 'GR', 'HU', 'IE', 'IS', 'IT',
   'LV', 'LI', 'LT', 'LU', 'MT', 'NL', 'NO', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'CH', 'GB',
   // Asia-Pacific (7)
   'AU', 'HK', 'JP', 'MY', 'NZ', 'SG', 'TH',
-  // Middle East (1)
-  'AE',
+  // Middle East (2) - 2026-05-04 added IL
+  'AE', 'IL',
   // Latin America (2)
   'BR', 'MX',
+]);
+
+// 2026-05-04: French overseas territories (DOM/COM in EUR zone) — these ISO
+// codes are technically separate from "FR" but use the euro and the underlying
+// Stripe Connect account is created with country="FR". Treat them as Stripe-
+// supported so the registration form doesn't reject providers from these
+// territories.
+const FRENCH_OVERSEAS_EUR = new Set([
+  'BL', 'GF', 'GP', 'MF', 'MQ', 'PM', 'RE', 'YT',
 ]);
 
 // Get ISO country code from localized country name
@@ -53,7 +63,10 @@ export const getCountryCode = (countryName: string): string => {
 };
 
 export const isCountrySupportedByStripe = (countryCode: string): boolean => {
-  return STRIPE_SUPPORTED_COUNTRIES.has(countryCode.toUpperCase());
+  const upper = countryCode.toUpperCase();
+  // Treat French overseas territories as Stripe-supported (they map to FR).
+  if (FRENCH_OVERSEAS_EUR.has(upper)) return true;
+  return STRIPE_SUPPORTED_COUNTRIES.has(upper);
 };
 
 export const getCountryNameFromCode = (code: string, lang: string): string => {
