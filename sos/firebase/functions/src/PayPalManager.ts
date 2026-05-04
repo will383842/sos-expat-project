@@ -764,15 +764,17 @@ export class PayPalManager {
     // We only set payment_source.card on the card flow because doing so on the
     // PayPal Buttons flow would lock the order to card-only and break wallet
     // payments worldwide.
+    //
+    // P0 FIX 2026-05-04: Do NOT also set payment_source.card.experience_context
+    // when application_context already has return_url/cancel_url — PayPal now
+    // rejects with INCOMPATIBLE_PARAMETER_VALUE: "The value of the field is
+    // incompatible/redundant with other fields in the order." The URLs from
+    // application_context are inherited automatically into the card flow.
     if (data.paymentMethod === "card") {
       orderData.payment_source = {
         card: {
           attributes: {
             verification: { method: "SCA_WHEN_REQUIRED" },
-          },
-          experience_context: {
-            return_url: `${PAYPAL_CONFIG.RETURN_URL}?sessionId=${data.callSessionId}`,
-            cancel_url: `${PAYPAL_CONFIG.CANCEL_URL}?sessionId=${data.callSessionId}`,
           },
         },
       };
