@@ -2381,6 +2381,10 @@ export class TwilioCallManager {
       // - Si payment.status === "authorized" → PaymentIntent en état requires_capture → CANCEL
       // - Si payment.status === "captured" → PaymentIntent capturé → REFUND
       const paymentStatus = callSession.payment.status;
+      // P0 FIX 2026-05-04: effectivePaymentStatus is paymentStatus by default, but the Stripe
+      // branch may resolve "processing" → "authorized"/"captured" by querying the live PI.
+      // The post-action newStatus calculation reads this so cancel→cancelled, capture→refunded.
+      let effectivePaymentStatus = paymentStatus;
       let result: { success: boolean; error?: string };
 
       logger.info(`💸 [${refundDebugId}] Payment status: ${paymentStatus}`);
@@ -2443,7 +2447,43 @@ export class TwilioCallManager {
         }
       } else {
         // ===== STRIPE REFUND/CANCEL =====
-        if (paymentStatus === "authorized") {
+        // P0 FIX 2026-05-04: When local payment.status="processing" (transient lock claimed by
+        // handleCallCompletion / handleCallFailure), the underlying PI status is unknown — could
+        // be requires_capture (authorize done, never captured) OR succeeded (captured but flag
+        // not flipped yet). The previous code fell into the "else" branch and returned silently,
+        // leaving the PI stuck in requires_capture and the client's pre-auth alive for ~7 days.
+        // We now resolve the *real* status from Stripe and route accordingly.
+        // Cast to string: "processing" is a runtime transient lock not in the PaymentStatus union.
+        if ((paymentStatus as string) === "processing" && callSession.payment.intentId) {
+          try {
+            const piStatus = await stripeManager.getPaymentIntentStatus(callSession.payment.intentId);
+            const realStatus = piStatus?.status || "";
+            logger.info(`💳 [STRIPE] [${refundDebugId}] Local status="processing" → real PI status="${realStatus}"`);
+            if (realStatus === "requires_capture" || realStatus === "requires_action" || realStatus === "requires_confirmation" || realStatus === "requires_payment_method") {
+              effectivePaymentStatus = "authorized";
+            } else if (realStatus === "succeeded") {
+              effectivePaymentStatus = "captured";
+            } else if (realStatus === "canceled") {
+              // Already cancelled in Stripe — sync local status and exit.
+              logger.info(`💳 [STRIPE] [${refundDebugId}] PI already canceled in Stripe — syncing local status`);
+              const paymentId = callSession.paymentId || callSession.payment.intentId;
+              await syncPaymentStatus(this.db, paymentId, sessionId, {
+                status: "cancelled",
+                refundedAt: admin.firestore.FieldValue.serverTimestamp(),
+                refundReason: reason,
+              });
+              return;
+            } else {
+              logger.warn(`💳 [STRIPE] [${refundDebugId}] Unhandled real PI status="${realStatus}" — skipping`);
+              return;
+            }
+          } catch (retrieveErr) {
+            logger.error(`💳 [STRIPE] [${refundDebugId}] Failed to retrieve PI status, falling back to skip:`, retrieveErr);
+            return;
+          }
+        }
+
+        if (effectivePaymentStatus === "authorized") {
           // Paiement NON capturé → Annuler (pas rembourser)
           logger.info(`💳 [STRIPE] Annulation paiement non-capturé ${sessionId} - raison: ${reason}`);
           result = await stripeManager.cancelPayment(
@@ -2451,7 +2491,7 @@ export class TwilioCallManager {
             "requested_by_customer",
             sessionId
           );
-        } else if (paymentStatus === "captured") {
+        } else if (effectivePaymentStatus === "captured") {
           // Paiement CAPTURÉ → Rembourser
           logger.info(`💳 [STRIPE] Remboursement paiement capturé ${sessionId} - raison: ${reason}`);
           result = await stripeManager.refundPayment(
@@ -2461,7 +2501,7 @@ export class TwilioCallManager {
           );
         } else {
           // Statut inconnu ou déjà traité
-          logger.info(`⚠️ [STRIPE] Paiement ${sessionId} déjà traité ou statut inconnu: ${paymentStatus}`);
+          logger.info(`⚠️ [STRIPE] Paiement ${sessionId} déjà traité ou statut inconnu: ${effectivePaymentStatus}`);
           return;
         }
       }
@@ -2471,7 +2511,8 @@ export class TwilioCallManager {
         // PayPal authorized → "voided" (we called voidAuthorization)
         // Stripe authorized → "cancelled" (we called cancelPayment)
         // Both captured → "refunded"
-        const newStatus = paymentStatus === "authorized"
+        // P0 FIX 2026-05-04: Use effectivePaymentStatus (resolved from live PI when local was "processing")
+        const newStatus = effectivePaymentStatus === "authorized" || (isPayPal && paymentStatus === "pending")
           ? (isPayPal ? "voided" : "cancelled")
           : "refunded";
 
@@ -2685,29 +2726,38 @@ export class TwilioCallManager {
       }
 
       // P3-8 FIX: Notification post-appel au client (réactivé)
+      // P0 FIX 2026-05-04: Only send "call.completed" if the call lasted long enough to be captured.
+      // For calls < MIN_CALL_DURATION, processRefund will send "call.refund.early_disconnect" with
+      // the refund amount instead — sending both was confusing the client (felt like the call was
+      // billed AND refunded at the same time).
       const minutes = Math.floor(duration / 60);
       const seconds = duration % 60;
-      logger.info(`[TwilioCallManager] Call completed, duration: ${minutes}m${seconds}s — sending notification`);
-      try {
-        const clientId = callSession.metadata?.clientId || callSession.clientId;
-        if (clientId) {
-          const clientNotification = {
-            eventId: "call.completed",
-            locale: callSession.metadata?.clientLanguages?.[0] || "fr",
-            to: { uid: clientId },
-            context: {
-              sessionId,
-              DURATION: `${minutes}m${seconds}s`,
-            },
-            createdAt: admin.firestore.FieldValue.serverTimestamp(),
-            status: "pending",
-          };
-          await this.db.collection("message_events").add(clientNotification);
-          logger.info(`📨 [${completionId}] Post-call notification created for client ${clientId}`);
+      const willBeCaptured = duration >= CALL_CONFIG.MIN_CALL_DURATION;
+      logger.info(`[TwilioCallManager] Call completed, duration: ${minutes}m${seconds}s, willBeCaptured: ${willBeCaptured}`);
+      if (willBeCaptured) {
+        try {
+          const clientId = callSession.metadata?.clientId || callSession.clientId;
+          if (clientId) {
+            const clientNotification = {
+              eventId: "call.completed",
+              locale: callSession.metadata?.clientLanguages?.[0] || "fr",
+              to: { uid: clientId },
+              context: {
+                sessionId,
+                DURATION: `${minutes}m${seconds}s`,
+              },
+              createdAt: admin.firestore.FieldValue.serverTimestamp(),
+              status: "pending",
+            };
+            await this.db.collection("message_events").add(clientNotification);
+            logger.info(`📨 [${completionId}] Post-call notification created for client ${clientId}`);
+          }
+        } catch (notifError) {
+          // Non-blocking: ne pas faire échouer la completion si la notification échoue
+          logger.error(`⚠️ [${completionId}] Failed to send post-call notification (non-blocking):`, notifError);
         }
-      } catch (notifError) {
-        // Non-blocking: ne pas faire échouer la completion si la notification échoue
-        logger.error(`⚠️ [${completionId}] Failed to send post-call notification (non-blocking):`, notifError);
+      } else {
+        logger.info(`📨 [${completionId}] Skipping "call.completed" notification — refund flow will notify client instead`);
       }
 
       // P0 DEBUG 2026-02-02: Enhanced PayPal logging

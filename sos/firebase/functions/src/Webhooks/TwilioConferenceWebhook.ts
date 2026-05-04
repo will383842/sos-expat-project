@@ -985,8 +985,21 @@ async function handleParticipantLeave(sessionId: string, body: TwilioConferenceW
     // This is fairer to the client - they shouldn't pay for time when they were alone
     //
     // Same fix as handleConferenceEnd - use overlap duration between both participants
+    //
+    // P0 FIX 2026-05-04: Use Twilio's body.Timestamp (event time, sent by Twilio) instead of
+    // new Date() (webhook reception time). The webhook can take 1–5s to reach Cloud Functions
+    // due to network propagation + cold-starts; using new Date() can shave 5s off the calculated
+    // billing duration and tip a 60s call into "early disconnect" territory, leaving the PI stuck.
     const session = await twilioCallManager.getCallSession(sessionId);
-    const leaveTime = new Date();
+    const twilioEventTimestamp = body.Timestamp ? new Date(body.Timestamp) : null;
+    const leaveTime = twilioEventTimestamp && !isNaN(twilioEventTimestamp.getTime())
+      ? twilioEventTimestamp
+      : new Date();
+    if (twilioEventTimestamp && !isNaN(twilioEventTimestamp.getTime())) {
+      logger.info(`👋 [${leaveId}]   📅 Using Twilio body.Timestamp for billing: ${leaveTime.toISOString()}`);
+    } else {
+      logger.info(`👋 [${leaveId}]   ⚠️ body.Timestamp missing/invalid, falling back to new Date()`);
+    }
     let billingDuration = 0;
 
     const clientConnectedAt = session?.participants.client.connectedAt;
