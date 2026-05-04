@@ -245,6 +245,9 @@ ArabicFlag.displayName = "ArabicFlag";
 // CONFIGURATION
 // ============================================================================
 
+// Full catalogue — kept for `currentLanguage` lookup so users who already
+// have an es/de/ru/pt/zh/hi/ar locale stored still see their flag rendered
+// correctly in the trigger button.
 const SUPPORTED_LANGUAGES: readonly Language[] = [
   { code: "fr", name: "French", nativeName: "Français", flag: <FrenchFlag /> },
   { code: "en", name: "English", nativeName: "English", flag: <BritishFlag /> },
@@ -256,6 +259,15 @@ const SUPPORTED_LANGUAGES: readonly Language[] = [
   { code: "hi", name: "Hindi", nativeName: "हिन्दी", flag: <HindiFlag /> },
   { code: "ar", name: "Arabic", nativeName: "العربية", flag: <ArabicFlag /> },
 ] as const;
+
+// Languages actually offered in the header dropdown. Aligned with the blog's
+// TranslationService::LANGUAGES (FR+EN since 2026-05-02) so users don't switch
+// to a locale where the blog destinations are empty / stale. SPA UI itself
+// remains translated in all 9 languages — only the picker is constrained.
+const ACTIVE_LANGUAGE_CODES: readonly string[] = ['fr', 'en'];
+const SELECTABLE_LANGUAGES: readonly Language[] = SUPPORTED_LANGUAGES.filter(
+  (l) => ACTIVE_LANGUAGE_CODES.includes(l.code)
+);
 
 const LEFT_NAVIGATION_ITEMS: readonly NavigationItem[] = [
   {
@@ -926,7 +938,7 @@ const LanguageDropdown = memo<LanguageDropdownProps>(function LanguageDropdown({
             role="listbox"
             aria-label={selectLanguageLabel}
           >
-            {SUPPORTED_LANGUAGES.map((lang) => (
+            {SELECTABLE_LANGUAGES.map((lang) => (
               <button
                 key={lang.code}
                 onClick={() => handleLanguageChange(lang.code)}
@@ -983,7 +995,7 @@ const LanguageDropdown = memo<LanguageDropdownProps>(function LanguageDropdown({
           role="listbox"
           aria-label={selectLanguageLabel}
         >
-          {SUPPORTED_LANGUAGES.map((lang) => (
+          {SELECTABLE_LANGUAGES.map((lang) => (
             <button
               key={lang.code}
               onClick={() => handleLanguageChange(lang.code)}
