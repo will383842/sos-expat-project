@@ -69,7 +69,9 @@ export const Step6ConfirmScreen: React.FC = () => {
           </span>
           <span className="font-medium text-right">{clientPhone}</span>
         </div>
-        {descriptionPreview && (
+        {/* Détail de la demande masqué (2026-05-04) — JSX conservé via `false &&` pour
+            préserver la référence à descriptionPreview/description et leurs subscriptions. */}
+        {false && descriptionPreview && (
           <>
             <div className="border-t border-gray-200 pt-3">
               <p className="text-gray-500 mb-1">
@@ -81,34 +83,7 @@ export const Step6ConfirmScreen: React.FC = () => {
         )}
       </div>
 
-      {/* Provider + Price */}
-      <div className="bg-red-50 rounded-xl p-4 mb-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          {provider?.avatar ? (
-            <img
-              src={provider.avatar}
-              alt={provider.name || ''}
-              className="w-10 h-10 rounded-full object-cover"
-            />
-          ) : (
-            <div className="w-10 h-10 rounded-full bg-red-200 flex items-center justify-center text-red-600 font-bold">
-              {provider?.name?.charAt(0) || '?'}
-            </div>
-          )}
-          <div>
-            <p className="font-semibold text-gray-900">{provider?.name}</p>
-            <p className="text-xs text-gray-500">{providerTypeLabel} • {displayDuration} min</p>
-          </div>
-        </div>
-        <div className="text-right">
-          <p className="text-xl font-bold text-red-600">{displayEUR.toFixed(2)}€</p>
-        </div>
-      </div>
-
-      {/* SOS-Call B2B section (rendered with parent state via context) */}
-      {sosCallSection}
-
-      {/* Terms checkbox */}
+      {/* Terms checkbox — placée AVANT la section SOS-Call (2026-05-04) pour visibilité above-the-fold */}
       <div className={`p-4 rounded-xl border-2 mb-4 ${watch('acceptTerms') ? 'border-green-400 bg-green-50' : 'border-amber-400 bg-amber-50'}`}>
         <div className="flex items-start gap-3">
           <Controller
@@ -138,6 +113,33 @@ export const Step6ConfirmScreen: React.FC = () => {
         {errors.acceptTerms && (
           <p className="mt-2 text-sm text-red-600">{String(errors.acceptTerms.message)}</p>
         )}
+      </div>
+
+      {/* SOS-Call B2B section (rendered with parent state via context) — APRÈS la case CGU */}
+      {sosCallSection}
+
+      {/* Provider + Price */}
+      <div className="bg-red-50 rounded-xl p-4 mb-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          {provider?.avatar ? (
+            <img
+              src={provider.avatar}
+              alt={provider.name || ''}
+              className="w-10 h-10 rounded-full object-cover"
+            />
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-red-200 flex items-center justify-center text-red-600 font-bold">
+              {provider?.name?.charAt(0) || '?'}
+            </div>
+          )}
+          <div>
+            <p className="font-semibold text-gray-900">{provider?.name}</p>
+            <p className="text-xs text-gray-500">{providerTypeLabel} • {displayDuration} min</p>
+          </div>
+        </div>
+        <div className="text-right">
+          <p className="text-xl font-bold text-red-600">{displayEUR.toFixed(2)}€</p>
+        </div>
       </div>
 
       {/* Payment reassurance */}
