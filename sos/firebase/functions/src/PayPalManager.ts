@@ -266,6 +266,14 @@ interface CreateSimpleOrderData {
   serviceType?: "lawyer" | "expat";
   // Tracking metadata for Meta CAPI and UTM attribution
   trackingMetadata?: Record<string, string>;
+  // Hint from the client SDK telling which PayPal flow will pay the order.
+  // - "paypal": leave the order generic (any funding source allowed) → keeps
+  //             the PayPal Buttons flow working in every supported country.
+  // - "card":   the order will be paid through Advanced Card Fields. We add
+  //             payment_source.card with verification.method=SCA_WHEN_REQUIRED
+  //             so PSD2 (EEA) cards can complete 3D Secure. Cards issued in
+  //             regions without SCA mandates are unaffected.
+  paymentMethod?: "paypal" | "card";
 }
 
 /**
@@ -723,7 +731,7 @@ export class PayPalManager {
     // Ordre simple: l'argent va à SOS-Expat, pas de split automatique
     // AUTHORIZE flow: comme Stripe, on prend seulement une autorisation
     // La capture se fait après 1 minute d'appel (60s), sinon on void l'autorisation
-    const orderData = {
+    const orderData: Record<string, unknown> = {
       intent: "AUTHORIZE",
       purchase_units: [
         {
@@ -745,6 +753,30 @@ export class PayPalManager {
         cancel_url: `${PAYPAL_CONFIG.CANCEL_URL}?sessionId=${data.callSessionId}`,
       },
     };
+
+    // Card-only orders: declare PSD2/SCA contingencies so EEA-issued cards can
+    // run the 3D Secure challenge. Without this, banks regulated by PSD2
+    // systematically decline (the card has funds but the issuer requires SCA
+    // and PayPal has no instruction to challenge). Outside the EEA the value
+    // SCA_WHEN_REQUIRED is a no-op, which keeps the flow frictionless for
+    // cards from the rest of the world.
+    //
+    // We only set payment_source.card on the card flow because doing so on the
+    // PayPal Buttons flow would lock the order to card-only and break wallet
+    // payments worldwide.
+    if (data.paymentMethod === "card") {
+      orderData.payment_source = {
+        card: {
+          attributes: {
+            verification: { method: "SCA_WHEN_REQUIRED" },
+          },
+          experience_context: {
+            return_url: `${PAYPAL_CONFIG.RETURN_URL}?sessionId=${data.callSessionId}`,
+            cancel_url: `${PAYPAL_CONFIG.CANCEL_URL}?sessionId=${data.callSessionId}`,
+          },
+        },
+      };
+    }
 
     console.log(`🔶 [PAYPAL_DEBUG] Calling PayPal API to create order (AUTHORIZE intent)...`);
     const response = await this.apiRequest<PayPalOrder>(
@@ -2792,6 +2824,14 @@ export const createPayPalOrderHttp = onRequest(
       providerId,
       serviceType,
       description,
+      // Payment method hint from the client SDK ("paypal" | "card").
+      // - "paypal": PayPal wallet flow → backend keeps the order generic so any
+      //             PayPal-supported funding source can pay it.
+      // - "card":   Advanced Card Fields flow → backend adds payment_source.card
+      //             with SCA_WHEN_REQUIRED so PSD2 cards can complete 3D Secure
+      //             (no friction added on cards from regions where SCA is not
+      //             mandated).
+      paymentMethod,
       // P1 FIX: Title for SMS notifications to provider
       title,
       // P1 FIX: Client country for SMS notifications to provider
@@ -2959,6 +2999,9 @@ export const createPayPalOrderHttp = onRequest(
       const manager = new PayPalManager();
       console.log(`🔷 [PAYPAL_DEBUG] STEP 6: Using SIMPLE flow with email: ${providerData.paypalEmail || 'UNDEFINED'}`);
 
+      const normalizedPaymentMethod: "paypal" | "card" =
+        paymentMethod === "card" ? "card" : "paypal";
+
       const result = await manager.createSimpleOrder({
         callSessionId,
         amount: serverPricing.totalAmount,
@@ -2984,6 +3027,7 @@ export const createPayPalOrderHttp = onRequest(
         // P0 FIX CRITICAL: serviceType required for pricing calculation during capture
         serviceType: normalizedServiceType,
         trackingMetadata: trackingMetadata as Record<string, string> | undefined,
+        paymentMethod: normalizedPaymentMethod,
       });
       console.log(`✅ [PAYPAL_DEBUG] STEP 6: OK - SIMPLE order created, orderId=${result?.orderId}`);
 

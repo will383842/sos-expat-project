@@ -8,6 +8,7 @@ import {
   PayPalCVVField,
   usePayPalCardFields,
   usePayPalScriptReducer,
+  DISPATCH_ACTION,
 } from "@paypal/react-paypal-js";
 import { auth, getCloudRunUrl } from "../../config/firebase";
 import { AlertCircle, CheckCircle, Lock } from "lucide-react";
@@ -239,8 +240,24 @@ export const PayPalPaymentForm: React.FC<PayPalPaymentFormProps> = ({
   onCancel,
   disabled = false,
 }) => {
-  const [{ isPending, isRejected }] = usePayPalScriptReducer();
+  const [scriptState, dispatch] = usePayPalScriptReducer();
+  const { isPending, isRejected } = scriptState;
   const [isProcessing, setIsProcessing] = useState(false);
+
+  // Worldwide compatibility: keep the SDK currency aligned with the order currency.
+  // The PayPalScriptProvider boots in EUR; when the user toggles to USD (or any other
+  // supported currency), reload the SDK so PayPal does not reject the order with
+  // CURRENCY_NOT_SUPPORTED.
+  useEffect(() => {
+    const desiredCurrency = (currency || "EUR").toUpperCase();
+    const currentCurrency = (scriptState.options?.currency as string | undefined)?.toUpperCase();
+    if (currentCurrency && currentCurrency !== desiredCurrency) {
+      dispatch({
+        type: DISPATCH_ACTION.RESET_OPTIONS,
+        value: { ...scriptState.options, currency: desiredCurrency },
+      });
+    }
+  }, [currency, dispatch, scriptState.options]);
   const [paymentStatus, setPaymentStatus] = useState<"idle" | "processing" | "success" | "error">("idle");
   const [errorCode, setErrorCode] = useState<string>("");
   const [paymentMethod, setPaymentMethod] = useState<"card" | "paypal" | null>(null);
@@ -290,7 +307,12 @@ export const PayPalPaymentForm: React.FC<PayPalPaymentFormProps> = ({
 
   // Création de l'ordre PayPal (utilisé par les deux méthodes)
   // Utilise la version HTTP de la fonction pour éviter les problèmes CORS
-  const createOrder = useCallback(async (): Promise<string> => {
+  // `paymentMethodHint` lets the backend know whether the order will be paid via
+  // PayPal wallet (no `payment_source` restriction → keeps PayPal button working
+  // worldwide) or via the advanced Card Fields (adds `payment_source.card` with
+  // SCA_WHEN_REQUIRED so PSD2 cards in the EEA pass 3DS without forcing friction
+  // on cards from regions where SCA is not mandated).
+  const createOrder = useCallback(async (paymentMethodHint: "paypal" | "card"): Promise<string> => {
     try {
       setIsProcessing(true);
       setPaymentStatus("processing");
@@ -324,6 +346,7 @@ export const PayPalPaymentForm: React.FC<PayPalPaymentFormProps> = ({
             currency: currency.toUpperCase(),
             providerId,
             clientId,
+            paymentMethod: paymentMethodHint,
             // P0 FIX: Phone numbers required for Twilio call
             clientPhone,
             providerPhone,
@@ -372,6 +395,13 @@ export const PayPalPaymentForm: React.FC<PayPalPaymentFormProps> = ({
       throw error;
     }
   }, [amount, currency, providerId, callSessionId, clientId, description, serviceType, platformFee, providerAmount, clientPhone, providerPhone, clientLanguages, providerLanguages, bookingData]);
+
+  // Two thin wrappers so each PayPal SDK component creates an order tagged with its
+  // payment source. The PayPal Buttons flow MUST stay generic (no `payment_source`)
+  // so PayPal wallet payments work worldwide; the Card Fields flow adds 3DS/SCA
+  // configuration server-side.
+  const createPayPalOrder = useCallback(() => createOrder("paypal"), [createOrder]);
+  const createCardOrder = useCallback(() => createOrder("card"), [createOrder]);
 
   // Autorisation après approbation (AUTHORIZE flow comme Stripe)
   // L'autorisation bloque les fonds mais ne les capture pas encore
@@ -674,7 +704,7 @@ export const PayPalPaymentForm: React.FC<PayPalPaymentFormProps> = ({
             tagline: false,
           }}
           disabled={disabled || isProcessing}
-          createOrder={createOrder}
+          createOrder={createPayPalOrder}
           onApprove={onApprove}
           onError={handleError}
           onCancel={handleCancel}
@@ -696,7 +726,7 @@ export const PayPalPaymentForm: React.FC<PayPalPaymentFormProps> = ({
       {/* 3. Champs carte — sans header redondant */}
       <div className={`transition-opacity duration-200 ${disabled || isProcessing ? "opacity-50" : ""}`}>
         <PayPalCardFieldsProvider
-          createOrder={createOrder}
+          createOrder={createCardOrder}
           onApprove={onCardApprove}
           onError={handleError}
           // On demande au SDK PayPal de rendre ses inputs internes sans bordure
