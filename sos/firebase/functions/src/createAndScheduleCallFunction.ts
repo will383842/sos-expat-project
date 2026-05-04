@@ -672,6 +672,8 @@ export const createAndScheduleCallHTTPS = onCall(
         clientLanguages: clientLanguages || ['fr'],
         providerLanguages: providerLanguages || ['fr'],
         providerCountry: providerData?.country || '',
+        // FIX 2026-05-04: B2B SOS-Call marker — skip paymentIntentId/amount validation downstream
+        isSosCallFree,
       });
 
       console.log(`✅ [${requestId}] Session d'appel créée avec succès - ID: ${callSession.id}`);

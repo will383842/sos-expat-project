@@ -592,6 +592,7 @@ export class TwilioCallManager {
     clientLanguages?: string[];
     providerLanguages?: string[];
     providerCountry?: string;
+    isSosCallFree?: boolean; // FIX 2026-05-04: B2B free call marker — skip payment validations
   }): Promise<CallSessionState> {
     try {
       const BYPASS_VALIDATIONS = process.env.FUNCTIONS_EMULATOR === "true" && process.env.TEST_BYPASS_VALIDATIONS === "1";
@@ -600,7 +601,9 @@ export class TwilioCallManager {
           "Paramètres requis manquants: sessionId, providerId, clientId"
         );
       }
-      if (!BYPASS_VALIDATIONS) {
+      if (!BYPASS_VALIDATIONS && !params.isSosCallFree) {
+        // FIX 2026-05-04: skipper la validation paiement pour B2B SOS-Call free call
+        // (forfait partenaire — pas de PaymentIntent Stripe).
         if (!params.paymentIntentId || !params.amount || params.amount <= 0) {
           throw new Error("Informations de paiement invalides");
         }

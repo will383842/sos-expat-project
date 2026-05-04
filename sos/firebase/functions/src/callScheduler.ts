@@ -29,8 +29,8 @@ interface CreateCallParams {
   clientPhone: string;
   serviceType: 'lawyer_call' | 'expat_call';
   providerType: 'lawyer' | 'expat';
-  paymentIntentId: string;
-  amount: number; // ✅ EN EUROS (unités réelles)
+  paymentIntentId?: string; // optionnel pour B2B SOS-Call (forfait partenaire, pas de PaymentIntent Stripe)
+  amount?: number; // ✅ EN EUROS — optionnel pour B2B SOS-Call (appel gratuit, amount=0)
   delayMinutes?: number;
   requestId?: string;
   clientLanguages?: string[];
@@ -44,6 +44,10 @@ interface CreateCallParams {
   currency?: 'eur' | 'usd' | 'EUR' | 'USD';
   platformAmountCents?: number;
   platformFeePercent?: number;
+
+  // FIX 2026-05-04: B2B SOS-Call free call marker. Quand true, skip les validations
+  // paymentIntentId/amount (forfait partenaire — pas de transaction Stripe).
+  isSosCallFree?: boolean;
 }
 
 // Interface pour les statistiques de planification
@@ -405,14 +409,19 @@ export const createCallSession = async (
     console.log(`💰 Montant (EUROS): ${params.amount} pour ${params.serviceType}`);
 
     // ✅ VALIDATION AMÉLIORÉE - Champs obligatoires avec messages spécifiques
-    const requiredFields = {
+    // FIX 2026-05-04: pour B2B SOS-Call (isSosCallFree=true), paymentIntentId et amount
+    // sont optionnels (forfait partenaire, pas de transaction Stripe). Les autres
+    // champs (providerId, clientId, phones) restent toujours requis.
+    const requiredFields: Record<string, unknown> = {
       providerId: params.providerId,
       clientId: params.clientId,
       providerPhone: params.providerPhone,
       clientPhone: params.clientPhone,
-      paymentIntentId: params.paymentIntentId,
-      amount: params.amount
     };
+    if (!params.isSosCallFree) {
+      requiredFields.paymentIntentId = params.paymentIntentId;
+      requiredFields.amount = params.amount;
+    }
 
     const missingFields = Object.entries(requiredFields)
       .filter(([, value]) => !value || (typeof value === 'string' && value.trim() === ''))
@@ -423,22 +432,24 @@ export const createCallSession = async (
       throw new Error(`Paramètres obligatoires manquants pour créer l'appel: ${missingFields.join(', ')}`);
     }
 
-    // ✅ Validation montant numérique
-    if (typeof params.amount !== 'number' || isNaN(params.amount) || params.amount <= 0) {
-      console.error(`❌ [createCallSession] Montant invalide:`, {
-        amount: params.amount,
-        type: typeof params.amount
-      });
-      throw new Error(`Montant invalide: ${params.amount} (type: ${typeof params.amount})`);
-    }
+    // ✅ Validation montant numérique — skipped pour B2B SOS-Call (amount=0/undefined OK)
+    if (!params.isSosCallFree) {
+      if (typeof params.amount !== 'number' || isNaN(params.amount) || params.amount <= 0) {
+        console.error(`❌ [createCallSession] Montant invalide:`, {
+          amount: params.amount,
+          type: typeof params.amount
+        });
+        throw new Error(`Montant invalide: ${params.amount} (type: ${typeof params.amount})`);
+      }
 
-    // ✅ Validation min/max (toujours en euros)
-    if (params.amount < 0.50) {
-      throw new Error('Montant minimum de 0.50€ requis');
-    }
-    if (params.amount > 500) {
-      throw new Error('Montant maximum de 500€ dépassé');
-    }
+      // ✅ Validation min/max (toujours en euros)
+      if (params.amount < 0.50) {
+        throw new Error('Montant minimum de 0.50€ requis');
+      }
+      if (params.amount > 500) {
+        throw new Error('Montant maximum de 500€ dépassé');
+      }
+    } // end if (!params.isSosCallFree) — fin des validations montant skipées pour B2B free call
 
     // ✅ VALIDATION NUMÉROS DE TÉLÉPHONE
     const phoneRegex = /^\+[1-9]\d{8,14}$/;
@@ -474,12 +485,15 @@ export const createCallSession = async (
       clientPhone: params.clientPhone,
       serviceType: params.serviceType,
       providerType: params.providerType,
-      paymentIntentId: params.paymentIntentId,
-      amount: params.amount, // ✅ euros
+      // FIX 2026-05-04: pour B2B SOS-Call (isSosCallFree=true), substituer un marker
+      // synthétique car TwilioCallManager.createCallSession exige string/number stricts.
+      paymentIntentId: params.paymentIntentId || (params.isSosCallFree ? `sos_call_free_${sessionId}` : ''),
+      amount: params.amount ?? 0, // ✅ euros (0 pour B2B free call)
       requestId: params.requestId,
       clientLanguages: params.clientLanguages,
       providerLanguages: params.providerLanguages,
-      providerCountry: params.providerCountry});
+      providerCountry: params.providerCountry,
+      isSosCallFree: params.isSosCallFree});
 
     await logCallRecord({
       callId: sessionId,
