@@ -5815,7 +5815,7 @@
   "bookingRequest.mobile.step6.subtitle": "Revisa tu información antes de pagar",
   "bookingRequest.mobile.step6.title": "Confirma tu solicitud",
   "bookingRequest.other": "Otro",
-  "bookingRequest.paymentReassurance": "Esto es solo una solicitud de autorización. Su tarjeta solo será cobrada después de conectarse con su experto.",
+  "bookingRequest.paymentReassurance": "El importe está reservado (preautorizado) en su tarjeta, aún no cobrado. Cobro definitivo solo después de la conexión con su experto. Si la conexión falla, la reserva se libera inmediatamente.",
   "bookingRequest.paymentReassurance.title": "Pago seguro",
   "bookingRequest.personal": "Nos conocemos",
   "bookingRequest.placeholders.description": "Explica tu situación: contexto, preguntas precisas, objetivos, plazos… (mín. 30 caracteres)",

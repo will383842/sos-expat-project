@@ -5815,7 +5815,7 @@
   "bookingRequest.mobile.step6.subtitle": "भुगतान से पहले अपनी जानकारी की समीक्षा करें",
   "bookingRequest.mobile.step6.title": "अपने अनुरोध की पुष्टि करें",
   "bookingRequest.other": "अन्य",
-  "bookingRequest.paymentReassurance": "यह केवल एक प्राधिकरण अनुरोध है। आपके कार्ड से राशि तभी काटी जाएगी जब आप अपने विशेषज्ञ से जुड़ जाएंगे।",
+  "bookingRequest.paymentReassurance": "राशि आपके कार्ड पर आरक्षित (पूर्व-अधिकृत) है, अभी काटी नहीं गई है। अंतिम कटौती केवल विशेषज्ञ से जुड़ने के बाद होगी। यदि कनेक्शन विफल हो, तो आरक्षण तुरंत जारी कर दिया जाता है।",
   "bookingRequest.paymentReassurance.title": "सुरक्षित भुगतान",
   "bookingRequest.personal": "आइए परिचय करें",
   "bookingRequest.placeholders.description": "अपनी स्थिति बताएं: संदर्भ, विशिष्ट प्रश्न, उद्देश्य, समय सीमा… (न्यूनतम 30 अक्षर)",

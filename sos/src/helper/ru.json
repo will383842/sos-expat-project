@@ -5815,7 +5815,7 @@
   "bookingRequest.mobile.step6.subtitle": "Проверьте информацию перед оплатой",
   "bookingRequest.mobile.step6.title": "Подтвердите запрос",
   "bookingRequest.other": "Другое",
-  "bookingRequest.paymentReassurance": "Это только запрос авторизации. С вашей карты будет списана сумма только после связи с экспертом.",
+  "bookingRequest.paymentReassurance": "Сумма зарезервирована (предварительно авторизована) на вашей карте, но ещё не списана. Окончательное списание только после соединения с экспертом. В случае неудачи резерв немедленно освобождается.",
   "bookingRequest.paymentReassurance.title": "Безопасная оплата",
   "bookingRequest.personal": "Знакомство",
   "bookingRequest.placeholders.description": "Объясните ситуацию: контекст, конкретные вопросы, цели, сроки… (мин. 30 символов)",

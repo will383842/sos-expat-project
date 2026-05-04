@@ -5815,7 +5815,7 @@
   "bookingRequest.mobile.step6.subtitle": "付款前确认您的信息",
   "bookingRequest.mobile.step6.title": "确认您的请求",
   "bookingRequest.other": "其他",
-  "bookingRequest.paymentReassurance": "这只是一个授权请求。您的卡只有在与专家连接后才会被扣款。",
+  "bookingRequest.paymentReassurance": "金额已在您的卡上预留（预授权），尚未扣款。仅在与专家成功连接后才会正式扣款。如连接失败，预留立即释放。",
   "bookingRequest.paymentReassurance.title": "安全支付",
   "bookingRequest.personal": "相互认识",
   "bookingRequest.placeholders.description": "解释您的情况：背景、具体问题、目标、时间限制…（至少30个字符）",

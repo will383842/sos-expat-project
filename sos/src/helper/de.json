@@ -5815,7 +5815,7 @@
   "bookingRequest.mobile.step6.subtitle": "Überprüfen Sie Ihre Angaben vor der Zahlung",
   "bookingRequest.mobile.step6.title": "Bestätigen Sie Ihre Anfrage",
   "bookingRequest.other": "Andere",
-  "bookingRequest.paymentReassurance": "Dies ist nur eine Autorisierungsanfrage. Ihre Karte wird erst belastet, wenn Sie mit Ihrem Experten verbunden sind.",
+  "bookingRequest.paymentReassurance": "Der Betrag ist auf Ihrer Karte reserviert (vorautorisiert), aber noch nicht abgebucht. Endgültige Abbuchung erst nach der Verbindung mit Ihrem Experten. Bei Fehlschlag wird die Reservierung sofort freigegeben.",
   "bookingRequest.paymentReassurance.title": "Sichere Zahlung",
   "bookingRequest.personal": "Wir lernen uns kennen",
   "bookingRequest.placeholders.description": "Erklären Sie Ihre Situation: Kontext, genaue Fragen, Ziele, Fristen… (min. 30 Zeichen)",

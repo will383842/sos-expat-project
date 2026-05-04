@@ -5815,7 +5815,7 @@
   "bookingRequest.mobile.step6.subtitle": "راجع معلوماتك قبل الدفع",
   "bookingRequest.mobile.step6.title": "تأكيد طلبك",
   "bookingRequest.other": "أخرى",
-  "bookingRequest.paymentReassurance": "هذا مجرد طلب تفويض. لن يتم خصم أي مبلغ من بطاقتك إلا بعد الاتصال بخبيرك.",
+  "bookingRequest.paymentReassurance": "المبلغ محجوز (مفوّض مسبقاً) على بطاقتك، ولم يُخصم بعد. الخصم النهائي يتم فقط بعد الاتصال بخبيرك. في حال فشل الاتصال، يُحرَّر الحجز فوراً.",
   "bookingRequest.paymentReassurance.title": "دفع آمن",
   "bookingRequest.personal": "لنتعرف عليك",
   "bookingRequest.placeholders.description": "اشرح وضعك: السياق، الأسئلة المحددة، الأهداف، المواعيد النهائية… (30 حرفًا على الأقل)",
