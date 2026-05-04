@@ -3137,7 +3137,10 @@ const BookingRequestB2CInner: React.FC = () => {
       if (user?.email) {
         await setGoogleAdsUserData({
           email: user.email,
+          phone: data.clientPhone || user?.phoneNumber || undefined,
           firstName: user.displayName?.split(' ')[0],
+          lastName: user.displayName?.split(' ').slice(1).join(' '),
+          country: bookingRequest.clientCurrentCountry || undefined,
         });
       }
 
@@ -3877,7 +3880,10 @@ const BookingRequestB2CInner: React.FC = () => {
         if (user?.email) {
           await setGoogleAdsUserData({
             email: user.email,
-            firstName: user.displayName?.split(' ')[0],
+            phone: bookingRequest.clientPhone || undefined,
+            firstName: bookingRequest.clientFirstName || user.displayName?.split(' ')[0],
+            lastName: bookingRequest.clientLastName || user.displayName?.split(' ').slice(1).join(' '),
+            country: bookingRequest.clientCurrentCountry || undefined,
           });
         }
 

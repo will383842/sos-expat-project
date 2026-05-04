@@ -294,7 +294,7 @@ const ChatterRegister: React.FC = () => {
       });
 
       // Google Ads: Enhanced Conversions + SignUp tracking
-      await setGoogleAdsUserData({ email: data.email, firstName: data.firstName, lastName: data.lastName, country: data.country });
+      await setGoogleAdsUserData({ email: data.email, phone: fullPhone, firstName: data.firstName, lastName: data.lastName, country: data.country });
       trackGoogleAdsSignUp({ method: 'email', content_name: 'chatter_registration', country: data.country });
     } catch (err: unknown) {
       console.error('[ChatterRegister] Error:', err);

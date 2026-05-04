@@ -401,7 +401,7 @@ const ClientRegisterForm: React.FC<ClientRegisterFormProps> = ({
       setMetaPixelUserData({ email: sanitizeEmail(form.email), firstName: capitalFirst, lastName: capitalLast, country: phoneCountry });
 
       // Google Ads: Enhanced Conversions + SignUp tracking
-      await setGoogleAdsUserData({ email: form.email, firstName: capitalFirst, lastName: capitalLast, country: phoneCountry });
+      await setGoogleAdsUserData({ email: form.email, phone: form.phone, firstName: capitalFirst, lastName: capitalLast, country: phoneCountry });
       trackGoogleAdsSignUp({ method: 'email', content_name: 'client_registration', country: phoneCountry });
 
       setIsRedirecting(true);
