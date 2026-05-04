@@ -128,11 +128,11 @@ export const Step6ConfirmScreen: React.FC = () => {
             )}
           />
           <label htmlFor="acceptTerms" className="text-sm text-gray-700">
-            {intl.formatMessage({ id: 'bookingRequest.fields.accept' })}
+            {intl.formatMessage({ id: 'bookingRequest.fields.accept', defaultMessage: "J'accepte les " })}
             <Link target="_blank" to="/cgu-clients" className="text-red-600 underline font-medium">
-              {intl.formatMessage({ id: 'bookingRequest.cgu' })}
+              {intl.formatMessage({ id: 'bookingRequest.cgu', defaultMessage: 'CGU Clients' })}
             </Link>
-            {intl.formatMessage({ id: 'bookingRequest.fields.andConfirm' })}
+            {intl.formatMessage({ id: 'bookingRequest.fields.andConfirm', defaultMessage: ' et confirme que les informations sont exactes.' })}
           </label>
         </div>
         {errors.acceptTerms && (
