@@ -241,6 +241,13 @@ export {
   onPaymentRecordUpdated,
 } from "./triggers/onPaymentError";
 
+// 2026-05-04: Per-country payment failure alerts (instant) + daily digest
+export {
+  onPaymentFailureCountryAlert,
+  onStripePaymentFailureCountryAlert,
+} from "./triggers/onPaymentFailureCountryAlert";
+export { paymentHealthDailyDigest } from "./scheduled/paymentHealthDailyDigest";
+
 // Dispute handling - MOVED to Webhooks/stripeWebhookHandler.ts
 
 // P0 FIX: Export admin dispute functions
