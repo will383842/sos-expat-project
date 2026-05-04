@@ -218,16 +218,44 @@ export function UnifiedUserProvider({ children }: { children: ReactNode }) {
 
       setUser(firebaseUser);
 
-      if (!firebaseUser?.email) {
+      if (!firebaseUser) {
         resetState();
         setLoading(false);
         return;
       }
 
       // Vérifier admin et subscription via Custom Claims (SSO depuis SOS)
+      // FIX: Lire les claims AVANT de décider si on doit resetState — un SSO via
+      // signInWithCustomToken peut ne pas avoir d'email Firebase Auth (le claim
+      // email du token n'écrit PAS firebaseUser.email). On accepte l'auth si on
+      // a des claims valides (provider/admin/multiDashboardAccess/forcedAccess).
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let claims: { [key: string]: any } = {};
       try {
         const tokenResult = await firebaseUser.getIdTokenResult();
-        const claims = tokenResult.claims;
+        claims = tokenResult.claims;
+      } catch (claimErr) {
+        console.warn("[UnifiedUser] Impossible de lire les claims:", claimErr);
+      }
+
+      const ssoClaimEmail = typeof claims.email === "string" ? claims.email : null;
+      const hasProviderClaim =
+        claims.provider === true ||
+        claims.role === "provider" ||
+        claims.multiDashboardAccess === true;
+      const hasAdminClaim =
+        claims.admin === true ||
+        claims.role === "admin" ||
+        claims.role === "superadmin";
+
+      // Si pas d'email ET pas de claim utile, on ne peut rien faire
+      if (!firebaseUser.email && !ssoClaimEmail && !hasProviderClaim && !hasAdminClaim) {
+        resetState();
+        setLoading(false);
+        return;
+      }
+
+      try {
 
         if (import.meta.env.DEV) {
           console.debug("[UnifiedUser] Token claims:", claims);
@@ -339,7 +367,10 @@ export function UnifiedUserProvider({ children }: { children: ReactNode }) {
 
       // Chercher le provider - PRIORITÉ: UID d'abord, puis email (fallback legacy)
       try {
-        const emailLower = firebaseUser.email.toLowerCase();
+        // FIX: firebaseUser.email peut être null après signInWithCustomToken (le claim
+        // email du token n'écrit PAS Firebase Auth). On utilise alors l'email des claims
+        // SSO comme fallback pour la query legacy par email.
+        const emailLower = (firebaseUser.email || ssoClaimEmail || "").toLowerCase();
         let providerDoc = null;
         let providerData = null;
 
@@ -351,7 +382,7 @@ export function UnifiedUserProvider({ children }: { children: ReactNode }) {
           providerDoc = { id: providerByUidSnap.id, ...providerByUidSnap.data() };
           providerData = providerByUidSnap.data();
           if (import.meta.env.DEV) console.log("[UnifiedUser] Provider trouvé par UID:", firebaseUser.uid);
-        } else {
+        } else if (emailLower) {
           // 2. FALLBACK: Chercher par email (pour compatibilité legacy)
           const providersQuery = query(
             collection(db, "providers"),
@@ -371,8 +402,7 @@ export function UnifiedUserProvider({ children }: { children: ReactNode }) {
           const data = providerData;
 
           if (data.active !== false) {
-            setProviderId(providerDoc.id);
-            setProviderProfile({
+            const profile: ProviderProfile = {
               id: providerDoc.id,
               email: data.email || emailLower,
               name: data.name || "Sans nom",
@@ -385,8 +415,18 @@ export function UnifiedUserProvider({ children }: { children: ReactNode }) {
               aiCallsLimit: data.aiCallsLimit,
               aiCallsUsed: data.aiCallsUsed,
               aiQuota: data.aiQuota,
-            });
+            };
+            setProviderId(providerDoc.id);
+            setProviderProfile(profile);
             setIsProvider(true);
+
+            // FIX: Pré-remplir linkedProviders + activeProvider pour les SSO
+            // providers sans doc `users/{uid}` (typique du flow multi-dashboard).
+            // Le user listener élargira linkedProviders si linkedProviderIds est
+            // peuplé, mais en attendant ConversationDetail/etc. ont besoin
+            // d'activeProvider non-null pour fonctionner.
+            setLinkedProviders((prev) => (prev.length === 0 ? [profile] : prev));
+            setActiveProvider((prev) => prev || profile);
 
             // AUTO-CREATE USER DOCUMENT if it doesn't exist
             // Required for Firestore rules (isAssignedProvider checks users/{uid})

@@ -795,7 +795,7 @@ export default function ConversationDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { activeProvider, linkedProviders } = useProvider();
-  const { isAdmin } = useAuth();
+  const { isAdmin, user, loading: authLoading } = useAuth();
 
   const [booking, setBooking] = useState<Booking | null>(null);
   const [conversation, setConversation] = useState<Conversation | null>(null);
@@ -819,6 +819,20 @@ export default function ConversationDetail() {
   // Load booking - FIX: Use onSnapshot for real-time updates (detect when AI trigger completes)
   useEffect(() => {
     if (!id) return;
+
+    // FIX: Reset error/loading at the start of every effect run. Without this,
+    // a stale error from a previous run (e.g. activeProvider not yet loaded)
+    // persists even after the retry succeeds.
+    setError(null);
+    setLoading(true);
+
+    // FIX: In multi-dashboard SSO, the custom token uid IS the providerId
+    // (cf. generateMultiDashboardOutilToken.ts:200 — auth.createCustomToken(providerId, ...)).
+    // So when activeProvider hasn't loaded yet (race with auth context), we can
+    // safely fall back to user.uid. Without this fallback the page errors out
+    // on the very first render, before UnifiedUserContext finishes setting
+    // activeProvider, and the error never clears.
+    const providerIdForBooking = activeProvider?.id || (isFromMultiDashboard ? user?.uid : undefined);
 
     // Mock data for dev mode
     if (isDevMock && id.startsWith("booking-")) {
@@ -882,10 +896,11 @@ export default function ConversationDetail() {
 
       if (!foundInCollection) {
         // Strategy 3: Auto-create booking from multi-dashboard booking_request
-        if (isFromMultiDashboard && activeProvider?.id) {
+        if (isFromMultiDashboard && providerIdForBooking) {
           console.log("[ConversationDetail] 🚀 Creating booking from multi-dashboard request...", {
             bookingRequestId: originalBookingRequestId || id,
-            providerId: activeProvider.id,
+            providerId: providerIdForBooking,
+            usedFallback: !activeProvider?.id,
           });
 
           try {
@@ -896,7 +911,7 @@ export default function ConversationDetail() {
 
             const result = await createBooking({
               bookingRequestId: originalBookingRequestId || id,
-              providerId: activeProvider.id,
+              providerId: providerIdForBooking,
             });
 
             if (result.data.success && result.data.bookingId) {
@@ -915,11 +930,23 @@ export default function ConversationDetail() {
             setLoading(false);
             return;
           }
+        } else if (isFromMultiDashboard && authLoading) {
+          // FIX: Auth context still loading — don't error, the effect will re-run
+          // when activeProvider/user becomes available (deps include both).
+          console.log("[ConversationDetail] ⏳ Auth still loading, deferring booking lookup", {
+            id,
+            authLoading,
+            hasActiveProvider: !!activeProvider?.id,
+            hasUserUid: !!user?.uid,
+          });
+          return;
         } else {
           console.error("[ConversationDetail] ❌ Booking not found", {
             id,
             isFromMultiDashboard,
             originalBookingRequestId,
+            hasActiveProvider: !!activeProvider?.id,
+            hasUserUid: !!user?.uid,
           });
           setError(t("dossierDetail.notFound"));
           setLoading(false);
@@ -977,7 +1004,9 @@ export default function ConversationDetail() {
     return () => {
       if (unsubscribe) unsubscribe();
     };
-  }, [id, isAdmin, activeProvider?.id, linkedProviders, t, isDevMock]);
+    // FIX: include user?.uid and authLoading so the effect re-runs when SSO
+    // auth context finishes hydrating and providerIdForBooking becomes valid.
+  }, [id, isAdmin, activeProvider?.id, linkedProviders, t, isDevMock, user?.uid, authLoading, isFromMultiDashboard]);
 
   // Load conversation - FIX: Simplified logic since booking is now real-time
   useEffect(() => {
