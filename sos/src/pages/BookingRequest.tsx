@@ -3769,7 +3769,14 @@ const BookingRequestB2CInner: React.FC = () => {
               if (!result?.data?.success) {
                 throw new Error(result?.data?.message || 'SCHEDULE_FAILED');
               }
-              callId = result.data.callId;
+              // FIX 2026-05-04: createAndScheduleCall renvoie `sessionId`/`callSessionId`
+              // (pas `callId`) → tomber sur sessionId puis callSessionId pour rester
+              // tolérant si la signature back évolue. Sans callId résolu ici, le navigate
+              // partait sans ?callId=… et PaymentSuccess restait bloqué sur "Récupération
+              // des informations" (paymentTimestamp jamais set car callId undefined).
+              callId = (result.data as { callId?: string; sessionId?: string; callSessionId?: string })?.callId
+                || (result.data as { sessionId?: string })?.sessionId
+                || (result.data as { callSessionId?: string })?.callSessionId;
             }
           } catch (callableErr) {
             const raw = callableErr instanceof Error ? callableErr.message : String(callableErr);
