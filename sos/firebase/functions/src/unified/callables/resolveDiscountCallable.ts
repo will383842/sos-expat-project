@@ -36,8 +36,9 @@ export const resolveAffiliateDiscountCallable = onCall<
 >(
   {
     region: "europe-west3",
-    memory: "256MiB",
-    cpu: 0.083,
+    // P0 FIX 2026-05-04: 256MiB OOM at startup → 500 to client during checkout flow.
+    memory: "512MiB",
+    cpu: 0.5,
   },
   async (request) => {
     // Auth required

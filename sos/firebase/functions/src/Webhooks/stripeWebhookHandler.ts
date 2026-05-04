@@ -1104,8 +1104,11 @@ export const stripeWebhook = onRequest(
   {
     region: "europe-west3", // Coherence avec createPaymentIntent (payments en west3)
     invoker: "public", // P0 CRITICAL FIX: Allow unauthenticated access for Stripe webhooks
-    memory: "256MiB",
-    cpu: 0.25,          // P0 FIX 2026-03-03: Restored from 0.083 — processes Stripe events with Firestore batch writes, Meta CAPI, encryption. 0.083 = extreme throttle.
+    // P0 FIX 2026-05-04: 256MiB OOM at startup ("Memory limit of 256 MiB exceeded") was
+    // dropping Stripe webhooks → payment_intent.* events not processed → captures lost.
+    // Bump to 512MiB (requires cpu>=0.5 per Cloud Run constraints).
+    memory: "512MiB",
+    cpu: 0.5,
     secrets: [
       STRIPE_SECRET_KEY_TEST,
       STRIPE_SECRET_KEY_LIVE,

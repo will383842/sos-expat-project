@@ -573,8 +573,9 @@ export const paymentProcessAutomaticPayments = onSchedule(
   {
     schedule: "every 15 minutes",
     region: "europe-west3",
-    memory: "256MiB",  // FIX: 512MiB needs cpu>=0.5, reduced to 256MiB
-    cpu: 0.083,
+    // P0 FIX 2026-05-04: 256MiB OOM at startup — auto-payments scheduled job kept crashing.
+    memory: "512MiB",
+    cpu: 0.5,
     timeoutSeconds: 300, // 5 minutes
     secrets: [...WISE_SECRETS, ...FLUTTERWAVE_SECRETS, ENCRYPTION_KEY],
   },

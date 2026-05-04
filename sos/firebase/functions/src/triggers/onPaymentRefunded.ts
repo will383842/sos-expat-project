@@ -32,8 +32,9 @@ export const onPaymentRefunded = onDocumentUpdated(
   {
     document: "payments/{paymentId}",
     region: "europe-west3",
-    memory: "256MiB",
-    cpu: 0.083,
+    // P0 FIX 2026-05-04: 256MiB OOM at startup — refund triggers were missed.
+    memory: "512MiB",
+    cpu: 0.5,
     timeoutSeconds: 120,
   },
   async (event) => {

@@ -33,17 +33,19 @@ const db = getFirestore();
 
 const REGION = 'europe-west3';
 
+// P0 FIX 2026-05-04: 256MiB OOM at startup ("Memory limit of 256 MiB exceeded with 265 MiB used")
+// → containers crashed and the threshold tracking was missed. 512MiB requires cpu>=0.5.
 const standardConfig = {
   region: REGION,
-  memory: '256MiB' as const,
-  cpu: 0.083,
+  memory: '512MiB' as const,
+  cpu: 0.5,
   maxInstances: 10,
 };
 
 const scheduledConfig = {
   region: REGION,
-  memory: '256MiB' as const,
-  cpu: 0.083,
+  memory: '512MiB' as const,
+  cpu: 0.5,
   maxInstances: 1,
   timeoutSeconds: 300,
 };
