@@ -967,10 +967,35 @@ export default function ConversationDetail() {
 
             // Access control check
             if (!isAdmin && bookingData.providerId) {
-              const hasAccess = linkedProviders.some(p => p.id === bookingData.providerId) ||
-                                activeProvider?.id === bookingData.providerId;
+              // FIX: en SSO multi-dashboard, le custom token a uid === providerId
+              // (cf. generateMultiDashboardOutilToken.ts:200 createCustomToken(providerId, ...)).
+              // Sans ce fallback, la check rate quand activeProvider/linkedProviders
+              // ne sont pas encore hydratés par UnifiedUserContext (race au mount/refresh).
+              // Firestore rules vérifient déjà l'autorisation côté serveur — si le
+              // doc a été lu, l'utilisateur est autorisé. Cette check frontend est
+              // une UX de garde-fou, pas une frontière de sécurité.
+              const hasAccess =
+                user?.uid === bookingData.providerId ||
+                linkedProviders.some(p => p.id === bookingData.providerId) ||
+                activeProvider?.id === bookingData.providerId;
 
               if (!hasAccess) {
+                // Si on est encore en cours de chargement de l'auth context,
+                // ne pas trancher — on rejouera quand activeProvider/linkedProviders
+                // seront hydratés (l'effect a ces deps).
+                if (authLoading) {
+                  console.log("[ConversationDetail] ⏳ Access check deferred — auth still loading", {
+                    bookingProviderId: bookingData.providerId,
+                    userUid: user?.uid,
+                  });
+                  return;
+                }
+                console.warn("[ConversationDetail] 🚫 Access denied", {
+                  bookingProviderId: bookingData.providerId,
+                  userUid: user?.uid,
+                  activeProviderId: activeProvider?.id,
+                  linkedProvidersCount: linkedProviders.length,
+                });
                 setError(t("dossierDetail.accessDenied"));
                 setLoading(false);
                 return;
