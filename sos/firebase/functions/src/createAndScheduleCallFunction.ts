@@ -38,7 +38,7 @@ interface CreateCallRequest {
   serviceType: 'lawyer_call' | 'expat_call';
   providerType: 'lawyer' | 'expat';
   paymentIntentId: string;
-  amount: number; // Montant total du paiement
+  amount?: number; // Montant total du paiement — optionnel pour B2B SOS-Call (forfait partenaire, appel gratuit)
   currency?: 'EUR' | 'USD' | 'eur' | 'usd'; // Devise du paiement
   delayMinutes?: number; // ✅ Garde le champ pour compatibilité mais ne l'utilise plus
   clientLanguages?: string[];
@@ -242,7 +242,7 @@ export const createAndScheduleCallHTTPS = onCall(
         serviceType,
         providerType,
         paymentIntentId,
-        amount,
+        amount = 0, // Default 0 pour B2B SOS-Call (forfait partenaire, appel gratuit) — non-B2B est rejeté par la validation amount<=0 plus bas
         currency: requestCurrency, // Devise du paiement (EUR ou USD)
         callSessionId,
         delayMinutes = 5, // ✅ Garde pour compatibilité mais ne sera plus utilisé
@@ -423,40 +423,50 @@ export const createAndScheduleCallHTTPS = onCall(
       // ========================================
       // 5. VALIDATION DES MONTANTS EN EUROS
       // ========================================
-      if (typeof amount !== 'number' || isNaN(amount) || amount <= 0) {
-        console.error(`❌ [${requestId}] Montant invalide:`, { amount, type: typeof amount });
-        throw new HttpsError(
-          'invalid-argument',
-          `Montant invalide: ${amount} (type: ${typeof amount})`
-        );
-      }
+      // FIX 2026-05-04: skip amount validation for B2B SOS-Call (forfait partenaire,
+      // appel gratuit). La pré-validation ligne 297 documente déjà que amount est
+      // optionnel quand sosCallSessionToken est fourni — propager la condition ici.
+      // Sans ce skip, le frontend (BookingRequest.tsx:3743 createAndScheduleCall avec
+      // sosCallSessionToken) ne passe pas amount → undefined → HttpsError 400
+      // "Montant invalide: undefined".
+      if (!sosCallSessionToken) {
+        if (typeof amount !== 'number' || isNaN(amount) || amount <= 0) {
+          console.error(`❌ [${requestId}] Montant invalide:`, { amount, type: typeof amount });
+          throw new HttpsError(
+            'invalid-argument',
+            `Montant invalide: ${amount} (type: ${typeof amount})`
+          );
+        }
 
-      if (amount > 500) {
-        console.error(`❌ [${requestId}] Montant trop élevé:`, amount);
-        throw new HttpsError(
-          'invalid-argument',
-          'Montant maximum de 500€ dépassé.'
-        );
-      }
+        if (amount > 500) {
+          console.error(`❌ [${requestId}] Montant trop élevé:`, amount);
+          throw new HttpsError(
+            'invalid-argument',
+            'Montant maximum de 500€ dépassé.'
+          );
+        }
 
-      if (amount < 0.50) {
-        console.error(`❌ [${requestId}] Montant trop faible:`, amount);
-        throw new HttpsError(
-          'invalid-argument',
-          'Montant minimum de 0.50€ requis.'
-        );
-      }
+        if (amount < 0.50) {
+          console.error(`❌ [${requestId}] Montant trop faible:`, amount);
+          throw new HttpsError(
+            'invalid-argument',
+            'Montant minimum de 0.50€ requis.'
+          );
+        }
 
-      // ✅ Validation cohérence montant/service avec tolérance élargie
-      const expectedAmountEuros = serviceType === 'lawyer_call' ? 49 : 19;
-      const tolerance = 15; // 15€ de tolérance
-      
-      if (Math.abs(amount - expectedAmountEuros) > tolerance) {
-        console.warn(`⚠️ [${requestId}] Montant inhabituel: reçu ${amount}€, attendu ${expectedAmountEuros}€ pour ${serviceType}`);
-        // ✅ Ne pas bloquer, juste logger pour audit
-      }
+        // ✅ Validation cohérence montant/service avec tolérance élargie
+        const expectedAmountEuros = serviceType === 'lawyer_call' ? 49 : 19;
+        const tolerance = 15; // 15€ de tolérance
 
-      console.log(`✅ [${requestId}] Montant validé: ${amount}€`);
+        if (Math.abs(amount - expectedAmountEuros) > tolerance) {
+          console.warn(`⚠️ [${requestId}] Montant inhabituel: reçu ${amount}€, attendu ${expectedAmountEuros}€ pour ${serviceType}`);
+          // ✅ Ne pas bloquer, juste logger pour audit
+        }
+
+        console.log(`✅ [${requestId}] Montant validé: ${amount}€`);
+      } else {
+        console.log(`💎 [${requestId}] B2B SOS-Call détecté (sosCallSessionToken présent) — validation montant skipped (forfait partenaire)`);
+      }
 
       // ========================================
       // 6. VALIDATION DES NUMÉROS DE TÉLÉPHONE AVEC assertE164
