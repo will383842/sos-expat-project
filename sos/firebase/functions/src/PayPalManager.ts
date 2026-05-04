@@ -5023,7 +5023,10 @@ export const checkPayPalPayoutStatus = onCall(
 export const getRecommendedPaymentGateway = onCall(
   {
     region: PAYMENT_FUNCTIONS_REGION,
-    cpu: 0.083,
+    // P0 FIX 2026-05-04: bump from default 256MiB to avoid the OOM-at-startup
+    // pattern observed on payment-path functions. cpu>=0.5 required >256MiB.
+    memory: "512MiB",
+    cpu: 0.5,
     cors: ALLOWED_ORIGINS,
   },
   async (request) => {

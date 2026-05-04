@@ -657,8 +657,11 @@ export const onProviderCreated = onDocumentCreated(
   {
     document: "sos_profiles/{uid}",
     region: "europe-west3",
-    memory: "256MiB",      // FIX: 512MiB needs cpu>=0.5, reduced to 256MiB (Stripe API works fine with 256MiB)
-    cpu: 0.083,
+    // P0 FIX 2026-05-04: bumped to 512MiB+cpu0.5 — same OOM-at-startup pattern as
+    // other payment-path functions; provider creation triggers Stripe Connect
+    // onboarding, so OOM here means new providers cannot receive payouts.
+    memory: "512MiB",
+    cpu: 0.5,
     timeoutSeconds: 300,   // P1 FIX: Explicit 5-min timeout (Stripe account creation can be slow)
     secrets: [STRIPE_SECRET_KEY_TEST, STRIPE_SECRET_KEY_LIVE, META_CAPI_TOKEN],
   },

@@ -74,6 +74,11 @@ function createStripeInstance(): { stripe: Stripe; mode: 'live' | 'test' } | nul
 export const createStripeAccount = onCall<CreateAccountData>(
   {
     region: "europe-west1",
+    // P0 FIX 2026-05-04: bumped to 512MiB+cpu0.5 — same OOM-at-startup pattern as
+    // other payment-path functions. Stripe Connect onboarding goes through here
+    // so failure breaks new provider activation.
+    memory: "512MiB",
+    cpu: 0.5,
     // ✅ P0 FIX: Use centralized secrets from lib/secrets.ts
     secrets: [STRIPE_SECRET_KEY_TEST, STRIPE_SECRET_KEY_LIVE],
   },
