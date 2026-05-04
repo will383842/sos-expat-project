@@ -269,6 +269,11 @@ export const PayPalPaymentForm: React.FC<PayPalPaymentFormProps> = ({
   // The PayPal SDK can fire onError AFTER onApprove has already succeeded
   // (race condition when order is AUTHORIZED but SDK expects COMPLETED)
   const paymentSucceededRef = useRef(false);
+  // 2026-05-04: Track in-flight authorize calls. iOS Safari + PayPal SDK race
+  // where the SDK fires onError DURING our authorize fetch (5–8 s round trip)
+  // — we suppress these because the backend will tell us the truth via the
+  // fetch result. Reset to false on terminal states (success/error/cancel).
+  const authorizingRef = useRef(false);
 
   // Safety timeout: if SDK is still pending after 15 seconds, show error
   useEffect(() => {
@@ -408,6 +413,9 @@ export const PayPalPaymentForm: React.FC<PayPalPaymentFormProps> = ({
   // La capture se fait côté serveur après 2 minutes d'appel
   // Si l'appel dure moins de 2 minutes, l'autorisation est annulée (void)
   const authorizeOrder = useCallback(async (orderId: string, payerId?: string): Promise<void> => {
+    // 2026-05-04: Mark authorize as in-flight so handleError can ignore late
+    // SDK errors during our fetch. Reset in finally.
+    authorizingRef.current = true;
     try {
       // Obtenir le token d'authentification Firebase
       const currentUser = auth.currentUser;
@@ -466,6 +474,7 @@ export const PayPalPaymentForm: React.FC<PayPalPaymentFormProps> = ({
       setErrorCode(code);
       onError(error instanceof Error ? error : new Error(getTranslatedErrorMessage(code)));
     } finally {
+      authorizingRef.current = false;
       setIsProcessing(false);
     }
   }, [callSessionId, onSuccess, onError, intl]);
@@ -487,6 +496,15 @@ export const PayPalPaymentForm: React.FC<PayPalPaymentFormProps> = ({
     // The SDK can fire onError AFTER onApprove resolved successfully (race condition)
     if (paymentSucceededRef.current) {
       console.warn("⚠️ [PayPal] Ignoring late onError - payment already succeeded:", err);
+      return;
+    }
+    // 2026-05-04: Suppress onError that fires DURING our authorize fetch.
+    // iOS Safari + PayPal SDK can fire onError mid-fetch (5–8 s) — let the
+    // fetch result decide. If the fetch ultimately fails, authorizeOrder's
+    // catch will surface the right error; if it succeeds, paymentSucceededRef
+    // gates the normal handleError path on the next frame.
+    if (authorizingRef.current) {
+      console.warn("⚠️ [PayPal] Suppressing onError during in-flight authorize fetch:", err);
       return;
     }
     if (import.meta.env.DEV) {

@@ -149,7 +149,13 @@ export async function syncCallSessionToOutil(
       title: cs?.metadata?.title || cs?.title || "Consultation",
       description: cs?.description,
       serviceType: cs?.metadata?.serviceType || cs?.serviceType,
-      priority: "normal",
+      // 2026-05-04: Outil-sos-expat ingest API rejects "normal" — accepted enum
+      // is 'low' | 'medium' | 'high' | 'urgent' | 'critical'. The HTTP 400 was
+      // logged as an error which then made the iOS PayPal SDK fire a late
+      // onError before our authorizeOrder fetch resolved → user saw a false
+      // "Erreur lors du paiement PayPal" while the payment had already
+      // succeeded server-side.
+      priority: "medium",
 
       // Provider info
       providerId,
