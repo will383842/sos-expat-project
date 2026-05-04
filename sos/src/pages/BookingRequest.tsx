@@ -2321,7 +2321,7 @@ const BookingRequestB2CInner: React.FC = () => {
   ], [intl]);
 
   // Refs pour scroll ciblé (en cas d'erreur globale)
-  const refFirstName = useRef<HTMLDivElement | null>(null);
+  // refFirstName supprimé avec le champ firstName desktop (2026-05-04)
   const refCountry = useRef<HTMLDivElement | null>(null);
   const refDesc = useRef<HTMLDivElement | null>(null);
   const refLangs = useRef<HTMLDivElement | null>(null);
@@ -2779,7 +2779,8 @@ const BookingRequestB2CInner: React.FC = () => {
   const validFlags: Record<string, boolean> = useMemo(() => {
     const values = getValues();
     const hasDesc = values.description.trim().length >= 30;
-    const hasFirst = values.firstName.trim().length > 0;
+    // firstName plus exigé (2026-05-04) — alignement avec le wizard mobile qui ne
+    // demande pas le prénom. Auto-pré-rempli depuis le profil auth si disponible.
     const hasCountry = values.currentCountry.trim().length > 0;
     const otherOk =
       values.currentCountry !== OTHER_COUNTRY ? true : !!values.autrePays?.trim();
@@ -2799,7 +2800,6 @@ const BookingRequestB2CInner: React.FC = () => {
     const sharedLang = hasLanguageMatchRealTime;
 
     return {
-      firstName: hasFirst,
       description: hasDesc,
       currentCountry: hasCountry,
       autrePays: otherOk,
@@ -2821,8 +2821,8 @@ const BookingRequestB2CInner: React.FC = () => {
   const getStepValidationFlags = useCallback((step: number): boolean => {
     const v = validFlags;
     switch (step) {
-      case 1: // Personal Info: firstName (pays auto-rempli du wizard)
-        return v.firstName;
+      case 1: // Personal Info: firstName retiré (2026-05-04) → étape valide par défaut
+        return true;
       case 2: // Request Details: description
         return v.description;
       case 3: // Contact + Terms: phone, accept (langues auto-remplies du wizard)
@@ -2991,7 +2991,7 @@ const BookingRequestB2CInner: React.FC = () => {
     const pairs: Array<
       [boolean, React.MutableRefObject<HTMLDivElement | null>, string]
     > = [
-      [!v.firstName, refFirstName, 'firstName'],
+      // firstName retiré 2026-05-04 (alignement mobile/desktop)
       [!v.currentCountry || !v.autrePays, refCountry, 'country'],
       [!v.description, refDesc, 'description'],
       [!v.langs || !v.sharedLang, refLangs, 'langs'],
@@ -4450,49 +4450,12 @@ const BookingRequestB2CInner: React.FC = () => {
                   title={intl.formatMessage({ id: "bookingRequest.personal" })}
                 />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* Prénom */}
-                  <div ref={refFirstName}>
-                    <label className="block text-sm font-semibold text-gray-800 mb-1">
-                      {/* {t.fields.firstName}{" "} */}
-                      {intl.formatMessage({
-                        id: "bookingRequest.fields.firstName",
-                      })}
-                      <span className="text-red-500">*</span>
-                    </label>
-                    <Controller
-                      control={control}
-                      name="firstName"
-                      rules={{
-                        required: intl.formatMessage({
-                          id: "bookingRequest.validators.firstName",
-                        }),
-                      }}
-                      render={({ field }) => (
-                        <input
-                          {...field}
-                          className={inputClass(inputHas("firstName"))}
-                          placeholder={intl.formatMessage({
-                            id: "bookingRequest.placeholders.firstName",
-                          })}
-                          maxLength={50}
-                        />
-                      )}
-                    />
-                    <FieldSuccess
-                      show={!errors.firstName && Boolean(watch("firstName"))}
-                    >
-                      Parfait ! ✨
-                    </FieldSuccess>
-                    {errors.firstName && (
-                      <p className="mt-1 text-sm text-red-600">
-                        {String(errors.firstName.message)}
-                      </p>
-                    )}
-                  </div>
-
-                </div>
-
+                {/* firstName field — supprimé 2026-05-04 (alignement mobile/desktop).
+                    Le champ reste dans le form schema (BookingFormData.firstName) et est
+                    auto-pré-rempli depuis user.firstName via useEffect ligne ~2353. Si
+                    l'utilisateur n'a pas de firstName en profil, la valeur reste vide :
+                    booking_requests.clientFirstName='' (non bloquant côté backend ; les
+                    SMS/emails utilisent un fallback vide propre). */}
                 {/* Nationalité - Supprimée pour simplifier le parcours mobile */}
                 {/* Le champ reste dans le formulaire mais n'est plus affiché ni requis */}
 
@@ -5372,11 +5335,7 @@ const BookingRequestB2CInner: React.FC = () => {
                       )}
                       {!validFlags.accept && <div>• {t.validators.accept}</div>} */}
 
-                      {!validFlags.firstName && (
-                        <div>
-                          • {intl.formatMessage({ id: "validators.firstName" })}
-                        </div>
-                      )}
+                      {/* validFlags.firstName retiré 2026-05-04 (alignement mobile/desktop) */}
                       {!validFlags.description && (
                         <div>
                           •{" "}
