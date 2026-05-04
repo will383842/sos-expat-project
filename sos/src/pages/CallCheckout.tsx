@@ -3938,7 +3938,11 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({
                     onError={handlePaymentError}
                     isProcessing={isProcessing}
                     setIsProcessing={(p) => {
-                      setError("");
+                      // P0 FIX 2026-05-04: Only clear the error when STARTING a new attempt.
+                      // Previous code cleared on every call, which wiped the error message
+                      // immediately after setError() in the catch block — user sees button
+                      // turn orange again with no error displayed (silent failure UX).
+                      if (p) setError("");
                       setIsProcessing(p);
                     }}
                     isMobile={isMobile}
