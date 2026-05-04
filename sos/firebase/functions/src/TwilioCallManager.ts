@@ -2397,7 +2397,22 @@ export class TwilioCallManager {
         // ===== PAYPAL REFUND/CANCEL =====
         logger.info(`💳 [PAYPAL] Traitement remboursement/annulation ${sessionId} - raison: ${reason}`);
 
-        if (paymentStatus === "authorized" || paymentStatus === "pending") {
+        // P0 FIX 2026-05-04: Same bug as Stripe — if payment.status="processing" (transient lock
+        // claimed by handleCallCompletion), the explicit if/else falls through to the muted return.
+        // For PayPal, voidAuthorization is idempotent: if the order is ALREADY_CAPTURED it tells us,
+        // and if ALREADY_VOIDED it also tells us. So we map "processing" → "authorized" path
+        // (try void). If the order had been captured, we route to refund via paypalCaptureId.
+        if ((paymentStatus as string) === "processing") {
+          if (callSession.payment.paypalCaptureId) {
+            logger.info(`💳 [PAYPAL] Local status="processing" + paypalCaptureId present → routing to refund path`);
+            effectivePaymentStatus = "captured";
+          } else {
+            logger.info(`💳 [PAYPAL] Local status="processing" + no paypalCaptureId → routing to void path`);
+            effectivePaymentStatus = "authorized";
+          }
+        }
+
+        if (effectivePaymentStatus === "authorized" || effectivePaymentStatus === "pending") {
           // P0 FIX: PayPal ordre non capturé → VOID l'autorisation pour libérer les fonds client
           const paypalOrderId = callSession.payment.paypalOrderId;
           if (!paypalOrderId) {
@@ -2423,7 +2438,7 @@ export class TwilioCallManager {
               result = { success: false, error: "Void failed - order will expire automatically in 29 days" };
             }
           }
-        } else if (paymentStatus === "captured" && callSession.payment.paypalCaptureId) {
+        } else if (effectivePaymentStatus === "captured" && callSession.payment.paypalCaptureId) {
           // PayPal: paiement capturé → rembourser via captureId
           const { PayPalManager } = await import("./PayPalManager");
           const paypalManager = new PayPalManager();
@@ -2442,7 +2457,7 @@ export class TwilioCallManager {
             result = { success: false, error: paypalError instanceof Error ? paypalError.message : "PayPal refund failed" };
           }
         } else {
-          logger.info(`⚠️ [PAYPAL] Paiement ${sessionId} déjà traité ou statut inconnu: ${paymentStatus}`);
+          logger.info(`⚠️ [PAYPAL] Paiement ${sessionId} déjà traité ou statut inconnu: ${effectivePaymentStatus} (raw: ${paymentStatus})`);
           return;
         }
       } else {
