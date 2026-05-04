@@ -2788,8 +2788,11 @@ export const createPayPalOrderHttp = onRequest(
     minInstances: 1,
     // P0 FIX: Increased maxInstances and memory to prevent rate limiting
     maxInstances: 15,
-    memory: "256MiB",  // FIX: 512MiB needs cpu>=0.5, reduced to 256MiB
-    cpu: 0.083,
+    // P0 FIX 2026-05-04: 256MiB OOM at startup (logs: "Memory limit of 256 MiB exceeded with
+    // 269 MiB used") → containers crashed before serving requests, returning 500 to PayPal SDK.
+    // 512MiB requires cpu>=0.5 per Cloud Run constraints.
+    memory: "512MiB",
+    cpu: 0.5,
     // P0 FIX: Added ENCRYPTION_KEY for phone number encryption (Twilio compatibility)
     secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, PAYPAL_PARTNER_ID, PAYPAL_PLATFORM_MERCHANT_ID, ENCRYPTION_KEY, SENTRY_DSN],
     cors: ALLOWED_ORIGINS,
@@ -3085,8 +3088,9 @@ export const capturePayPalOrderHttp = onRequest(
     // CORS works fine on cold start (cors: ALLOWED_ORIGINS handles it)
     minInstances: 0,
     maxInstances: 15,
-    memory: "256MiB",  // FIX: 512MiB needs cpu>=0.5, reduced to 256MiB
-    cpu: 0.083,
+    // P0 FIX 2026-05-04: same OOM at startup as createPayPalOrderHttp — bump to 512MiB.
+    memory: "512MiB",
+    cpu: 0.5,
     secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, SENTRY_DSN],
     cors: ALLOWED_ORIGINS,
   },
@@ -3204,8 +3208,9 @@ export const authorizePayPalOrderHttp = onRequest(
     minInstances: 1,
     // P0 FIX: Increased maxInstances and memory to prevent rate limiting
     maxInstances: 15,
-    memory: "256MiB",  // FIX: 512MiB needs cpu>=0.5, reduced to 256MiB
-    cpu: 0.083,
+    // P0 FIX 2026-05-04: same OOM at startup as createPayPalOrderHttp — bump to 512MiB.
+    memory: "512MiB",
+    cpu: 0.5,
     // P0 FIX: Added ENCRYPTION_KEY and OUTIL_SYNC_API_KEY for sendPaymentNotifications
     secrets: [PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, TASKS_AUTH_SECRET, ENCRYPTION_KEY, OUTIL_SYNC_API_KEY, SENTRY_DSN],
     cors: ALLOWED_ORIGINS,
