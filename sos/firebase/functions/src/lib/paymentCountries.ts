@@ -40,6 +40,9 @@ export const STRIPE_SUPPORTED_COUNTRIES = new Set([
   "HK", // Hong Kong
   "HU", // Hungary
   "IE", // Ireland
+  // 2026-05-04: Israel + Iceland are officially supported by Stripe Connect
+  "IL", // Israel (Stripe Connect since 2024)
+  "IS", // Iceland (Stripe Connect since 2022)
   "IT", // Italy
   "JP", // Japan
   "LV", // Latvia
@@ -68,6 +71,41 @@ export const STRIPE_SUPPORTED_COUNTRIES = new Set([
 ]);
 
 // =============================================================================
+// FRENCH OVERSEAS TERRITORIES (DOM/COM in EUR zone)
+// =============================================================================
+// These ISO codes are technically separate from "FR" but the territories use
+// the euro and are administratively French — the Stripe Connect account is
+// created with country="FR". We normalize them to FR before routing so
+// providers/clients in DOM-TOM are not silently rejected by validateCountryCode.
+//
+// New Caledonia (NC), French Polynesia (PF), Wallis-Futuna (WF) use the CFP
+// franc (XPF), not EUR — those stay routed via PayPal (NC and PF already are,
+// WF added below).
+
+const FRENCH_OVERSEAS_EUR = new Set([
+  "BL", // Saint-Barthélemy
+  "GF", // French Guiana
+  "GP", // Guadeloupe
+  "MF", // Saint-Martin (French part)
+  "MQ", // Martinique
+  "PM", // Saint-Pierre-et-Miquelon
+  "RE", // Réunion
+  "YT", // Mayotte
+]);
+
+/**
+ * Normalize a country code: French overseas territories that use EUR are
+ * mapped to "FR" so they go through the Stripe Connect FR flow. All other
+ * codes are returned uppercase, untouched.
+ */
+export function normalizeCountryCode(countryCode: string): string {
+  if (!countryCode) return countryCode;
+  const upper = countryCode.toUpperCase().trim();
+  if (FRENCH_OVERSEAS_EUR.has(upper)) return "FR";
+  return upper;
+}
+
+// =============================================================================
 // PAYPAL-ONLY COUNTRIES (150+ pays)
 // =============================================================================
 // Ces pays NE supportent PAS Stripe Connect et doivent utiliser PayPal
@@ -87,9 +125,10 @@ export const PAYPAL_ONLY_COUNTRIES = new Set([
   "MN", "KP", "KG", "PS", "YE", "OM", "QA", "KW", "BH", "JO", "LB", "AM", "AZ", "GE",
   "MV", "BN", "TL", "PH", "ID", "TW", "KR",
 
-  // ===== AMERIQUE LATINE & CARAIBES (27 pays) =====
+  // ===== AMERIQUE LATINE & CARAIBES (30 pays) =====
   // P1-1 FIX: Ajout AR (Argentine) et CO (Colombie) qui manquaient
-  "AR", "BO", "CO", "CU", "EC", "SV", "GT", "HN", "NI", "PY", "SR", "VE",
+  // 2026-05-04 FIX: Ajout CL, PE, UY qui manquaient
+  "AR", "BO", "CL", "CO", "CU", "EC", "PE", "PY", "SV", "GT", "HN", "NI", "SR", "UY", "VE",
   "HT", "DO", "JM", "TT", "BB", "BS", "BZ", "GY", "PA", "CR",
   "AG", "DM", "GD", "KN", "LC", "VC",
 
@@ -99,9 +138,11 @@ export const PAYPAL_ONLY_COUNTRIES = new Set([
   "BY", "MD", "UA", "RS", "BA", "MK", "ME", "AL", "XK", "RU",
   "AD", "MC", "SM", "VA",
 
-  // ===== OCEANIE & PACIFIQUE (15 pays) =====
+  // ===== OCEANIE & PACIFIQUE (16 pays) =====
+  // 2026-05-04 FIX: Ajout WF (Wallis-et-Futuna) — French collectivity using XPF
+  // (not EUR), so it cannot share the FR-Stripe path; routed via PayPal.
   "FJ", "PG", "SB", "VU", "WS", "TO", "KI", "FM", "MH", "PW",
-  "NR", "TV", "NC", "PF", "GU",
+  "NR", "TV", "NC", "PF", "GU", "WF",
 
   // ===== MOYEN-ORIENT (7 pays restants) =====
   "IQ", "IR", "SY", "SA",
@@ -117,7 +158,9 @@ export const PAYPAL_ONLY_COUNTRIES = new Set([
 export type PaymentGateway = "stripe" | "paypal";
 
 export function getRecommendedPaymentGateway(countryCode: string): PaymentGateway {
-  const normalized = countryCode.toUpperCase();
+  // 2026-05-04: normalize French overseas territories (BL, GF, GP, MF, MQ, PM,
+  // RE, YT) to "FR" so they route through Stripe like mainland France.
+  const normalized = normalizeCountryCode(countryCode);
 
   if (STRIPE_SUPPORTED_COUNTRIES.has(normalized)) {
     return "stripe";
@@ -131,14 +174,14 @@ export function getRecommendedPaymentGateway(countryCode: string): PaymentGatewa
  * Vérifie si un pays supporte Stripe Connect
  */
 export function isStripeSupported(countryCode: string): boolean {
-  return STRIPE_SUPPORTED_COUNTRIES.has(countryCode.toUpperCase());
+  return STRIPE_SUPPORTED_COUNTRIES.has(normalizeCountryCode(countryCode));
 }
 
 /**
  * Vérifie si un pays est PayPal-only
  */
 export function isPayPalOnly(countryCode: string): boolean {
-  const normalized = countryCode.toUpperCase();
+  const normalized = normalizeCountryCode(countryCode);
   return PAYPAL_ONLY_COUNTRIES.has(normalized) || !STRIPE_SUPPORTED_COUNTRIES.has(normalized);
 }
 
@@ -180,17 +223,21 @@ export function isValidCountryCode(countryCode: string): boolean {
     return false;
   }
 
-  const normalized = countryCode.toUpperCase().trim();
+  const trimmed = countryCode.toUpperCase().trim();
 
   // Must be exactly 2 characters
-  if (normalized.length !== 2) {
+  if (trimmed.length !== 2) {
     return false;
   }
 
   // Must only contain letters A-Z
-  if (!/^[A-Z]{2}$/.test(normalized)) {
+  if (!/^[A-Z]{2}$/.test(trimmed)) {
     return false;
   }
+
+  // 2026-05-04: French overseas territories (BL, GF, GP, MF, MQ, PM, RE, YT)
+  // are accepted at this validation layer and normalized to FR downstream.
+  const normalized = normalizeCountryCode(trimmed);
 
   // Must be in one of our supported country lists
   return STRIPE_SUPPORTED_COUNTRIES.has(normalized) ||

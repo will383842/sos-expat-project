@@ -21,6 +21,7 @@ interface UsePaymentGatewayReturn {
 
 // Liste des pays PayPal-only (cache local pour éviter les appels inutiles)
 // P0-2 FIX: Synchronisée avec paymentCountries.ts du backend (2024-01-19)
+// 2026-05-04 FIX: Ajout CL, PE, UY, WF
 // IMPORTANT: Si vous modifiez cette liste, mettez également à jour:
 // - sos/firebase/functions/src/lib/paymentCountries.ts (backend)
 const PAYPAL_ONLY_COUNTRIES = new Set([
@@ -34,18 +35,29 @@ const PAYPAL_ONLY_COUNTRIES = new Set([
   "AF", "BD", "BT", "CN", "IN", "KH", "KZ", "LA", "MM", "NP", "PK", "LK", "TJ", "TM", "TR", "UZ", "VN",
   "MN", "KP", "KG", "PS", "YE", "OM", "QA", "KW", "BH", "JO", "LB", "AM",
   "AZ", "GE", "MV", "BN", "TL", "PH", "ID", "TW", "KR",
-  // AMERIQUE LATINE & CARAIBES (27 pays) - P0-2 FIX: Ajout AR, CO qui manquaient
-  "AR", "BO", "CO", "CU", "EC", "SV", "GT", "HN", "NI", "PY", "SR", "VE", "HT", "DO", "JM",
-  "TT", "BB", "BS", "BZ", "GY", "PA", "CR", "AG", "DM", "GD", "KN", "LC", "VC",
+  // AMERIQUE LATINE & CARAIBES (30 pays) - 2026-05-04: Ajout CL, PE, UY
+  "AR", "BO", "CL", "CO", "CU", "EC", "PE", "PY", "SV", "GT", "HN", "NI", "SR", "UY", "VE",
+  "HT", "DO", "JM", "TT", "BB", "BS", "BZ", "GY", "PA", "CR", "AG", "DM", "GD", "KN", "LC", "VC",
   // EUROPE DE L'EST & BALKANS (14 pays) - GI est dans Stripe
   "BY", "MD", "UA", "RS", "BA", "MK", "ME", "AL", "XK", "RU", "AD", "MC",
   "SM", "VA",
-  // OCEANIE & PACIFIQUE (15 pays)
+  // OCEANIE & PACIFIQUE (16 pays) - 2026-05-04: Ajout WF
   "FJ", "PG", "SB", "VU", "WS", "TO", "KI", "FM", "MH", "PW", "NR", "TV", "NC",
-  "PF", "GU",
+  "PF", "GU", "WF",
   // MOYEN-ORIENT (7 pays)
   "IQ", "IR", "SY", "SA",
 ]);
+
+// French overseas territories that use the euro and are administratively part
+// of France — they share the FR Stripe Connect path. Normalized before lookup.
+const FRENCH_OVERSEAS_EUR = new Set([
+  "BL", "GF", "GP", "MF", "MQ", "PM", "RE", "YT",
+]);
+
+function normalizeCountryCode(code: string): string {
+  const upper = (code || "").toUpperCase().trim();
+  return FRENCH_OVERSEAS_EUR.has(upper) ? "FR" : upper;
+}
 
 // Cache pour éviter les appels répétés
 const gatewayCache = new Map<string, PaymentGateway>();
@@ -71,7 +83,9 @@ export function usePaymentGateway(providerCountryCode: string | undefined): UseP
       return;
     }
 
-    const countryCode = providerCountryCode.toUpperCase();
+    // 2026-05-04: French overseas territories (BL, GF, GP, MF, MQ, PM, RE, YT)
+    // are normalized to "FR" so they go through Stripe like mainland France.
+    const countryCode = normalizeCountryCode(providerCountryCode);
 
     // Vérifier le cache d'abord
     if (gatewayCache.has(countryCode)) {
