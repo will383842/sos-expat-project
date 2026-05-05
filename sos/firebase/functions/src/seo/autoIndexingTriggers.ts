@@ -1275,7 +1275,10 @@ async function warmPath(path: string): Promise<boolean> {
 
 export const scheduledWarmSsrCache = onSchedule(
   {
-    // Toutes les 20h — cache SSR dure 24h, on précauffe avant expiration
+    // Toutes les 20h — cache SSR dure 24h, on précauffe avant expiration.
+    // Audit 2026-05-05 : on garde 1 run/20h (économie) mais on TRIPLE la
+    // couverture par run via parallélisme 3 (vs séquentiel avant) + sleep
+    // batch réduit (1s vs 2s/URL). Coût marginal estimé < 1€/mois.
     schedule: '0 */20 * * *',
     region: REGION,
     memory: '512MiB',
@@ -1283,6 +1286,8 @@ export const scheduledWarmSsrCache = onSchedule(
     timeoutSeconds: 540, // 9 min max
   },
   async () => {
+    const startTime = Date.now();
+
     // 1. Récupérer toutes les pages depuis le sitemap (auto-mis à jour, inclut les futures pages)
     let paths: string[] = [];
     try {
@@ -1293,16 +1298,60 @@ export const scheduledWarmSsrCache = onSchedule(
       return;
     }
 
-    // 2. Préchauffer séquentiellement (2s entre chaque pour ne pas saturer renderForBotsV2)
+    // 2. Préchauffer en parallèle par batches (audit 2026-05-05)
+    //    AVANT : séquentiel + sleep 2s/URL → ~17-77 URLs warmes par run de 540s
+    //    APRÈS : parallélisme 3 + sleep 1s/batch → ~80-150 URLs warmes par run
+    //    Pourquoi pas plus haut : renderForBotsV2 a minInstances=3, parallélisme
+    //    plus élevé sature les instances chaudes et déclenche cold starts.
+    //    Pourquoi sleep 1s : laisser le SSR souffler entre batches (Puppeteer peut
+    //    avoir une queue interne de pages, on évite l'OOM).
+    const CONCURRENCY = 3;
+    const BATCH_DELAY_MS = 1000;
+    const MAX_RUN_DURATION_MS = 510_000; // 8.5 min — laisse 30s de marge avant timeout 540s
+
     let success = 0;
     let errors = 0;
-    for (const path of paths) {
-      const ok = await warmPath(path);
-      if (ok) success++; else errors++;
-      await new Promise(resolve => setTimeout(resolve, 2000));
+    let processed = 0;
+    const errorsByPath: string[] = [];
+
+    for (let i = 0; i < paths.length; i += CONCURRENCY) {
+      // Garde-fou timeout : si on approche du timeout function, on s'arrête proprement
+      if (Date.now() - startTime > MAX_RUN_DURATION_MS) {
+        console.warn(`[SSR Warm] Timeout approchant après ${processed}/${paths.length} URLs, arrêt préventif`);
+        break;
+      }
+
+      const batch = paths.slice(i, i + CONCURRENCY);
+      // Promise.all en lieu de séquentiel : 3× plus de URLs par seconde
+      const results = await Promise.all(batch.map(async (p) => {
+        const ok = await warmPath(p);
+        return { path: p, ok };
+      }));
+
+      for (const { path, ok } of results) {
+        processed++;
+        if (ok) {
+          success++;
+        } else {
+          errors++;
+          if (errorsByPath.length < 10) errorsByPath.push(path);
+        }
+      }
+
+      // Sleep entre batches (pas après le dernier)
+      if (i + CONCURRENCY < paths.length) {
+        await new Promise(resolve => setTimeout(resolve, BATCH_DELAY_MS));
+      }
     }
 
-    console.log(`[SSR Warm] Terminé — ${success}/${paths.length} OK, ${errors} erreurs`);
+    const durationMs = Date.now() - startTime;
+    console.log(
+      `[SSR Warm] Terminé en ${(durationMs / 1000).toFixed(1)}s — ` +
+      `${success}/${processed} OK, ${errors} erreurs (sur ${paths.length} URLs disponibles)`
+    );
+    if (errorsByPath.length > 0) {
+      console.warn(`[SSR Warm] Premiers paths en erreur : ${errorsByPath.join(', ')}`);
+    }
   }
 );
 
