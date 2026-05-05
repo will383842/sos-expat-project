@@ -96,6 +96,30 @@ function getHreflangCode(lang: string): string {
   return HREFLANG_MAP[lang] || lang;
 }
 
+// Slugs traduits pour le path FAQ — aligné avec worker.js ROUTE_LANG_SLUGS
+// (worker.js:2795). Audit 2026-05-05 : avant ce fix, sitemapFaq émettait
+// `${locale}/faq/${slug}` pour TOUTES les langues, ce qui produisait des 301
+// pour ES/PT/RU/ZH/HI/AR car leurs slugs FAQ canoniques diffèrent de "faq".
+// Test live confirme :
+//   /pt-pt/faq/X  → 301 → /pt-pt/perguntas-frequentes/X
+//   /ru-ru/faq/X  → 301 → /ru-ru/voprosy-otvety/X
+//   /zh-cn/faq/X  → 301 → /zh-cn/changjian-wenti/X
+//   /hi-in/faq/X  → 301 → /hi-in/aksar-puche-jaane-wale-sawal/X
+const FAQ_SLUGS: Record<string, string> = {
+  fr: 'faq',
+  en: 'faq',
+  de: 'faq',
+  es: 'preguntas-frecuentes',
+  pt: 'perguntas-frequentes',
+  ru: 'voprosy-otvety',
+  ch: 'changjian-wenti',
+  hi: 'aksar-puche-jaane-wale-sawal',
+  ar: 'al-asila-al-shaiya',
+};
+function getFaqSlug(lang: string): string {
+  return FAQ_SLUGS[lang] || FAQ_SLUGS['fr'];
+}
+
 /**
  * Détecte si un slug a un préfixe de langue interne (ex: "ch-setting-prices" -> "ch")
  * Utilisé pour n'indexer les articles non-traduits que dans leur langue native
@@ -765,21 +789,27 @@ export const sitemapFaq = onRequest(
           const slug = getSlug(lang);
           // Use locale format: lang-country (e.g., "hi-in", "fr-fr")
           const locale = getLocaleString(lang);
-          const url = `${SITE_URL}/${locale}/faq/${slug}`;
+          // SEO FIX 2026-05-05 : utiliser le slug FAQ traduit par langue (cf. FAQ_SLUGS).
+          // Avant ce fix, "faq" était hardcodé → 301 sur ES/PT/RU/ZH/HI/AR.
+          const faqSeg = getFaqSlug(lang);
+          const url = `${SITE_URL}/${locale}/${faqSeg}/${slug}`;
 
-          // Génère tous les hreflang
+          // Génère tous les hreflang (chaque alternate utilise le slug FAQ traduit
+          // de SA propre langue — ex: hreflang ru-RU pointe vers .../voprosy-otvety/...)
           const hreflangs = LANGUAGES.map(hrefLang => {
             const hrefSlug = getSlug(hrefLang);
             const hrefLocale = getLocaleString(hrefLang);
-            return `    <xhtml:link rel="alternate" hreflang="${getHreflangCode(hrefLang)}" href="${escapeXml(`${SITE_URL}/${hrefLocale}/faq/${hrefSlug}`)}"/>`;
+            const hrefFaqSeg = getFaqSlug(hrefLang);
+            return `    <xhtml:link rel="alternate" hreflang="${getHreflangCode(hrefLang)}" href="${escapeXml(`${SITE_URL}/${hrefLocale}/${hrefFaqSeg}/${hrefSlug}`)}"/>`;
           }).join('\n');
 
-          // x-default uses French locale
+          // x-default uses French locale (slug FAQ FR = "faq")
           const defaultLocale = getLocaleString('fr');
+          const defaultFaqSeg = getFaqSlug('fr');
           urlBlocks.push(`  <url>
     <loc>${escapeXml(url)}</loc>
 ${hreflangs}
-    <xhtml:link rel="alternate" hreflang="x-default" href="${escapeXml(`${SITE_URL}/${defaultLocale}/faq/${getSlug('fr')}`)}"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="${escapeXml(`${SITE_URL}/${defaultLocale}/${defaultFaqSeg}/${getSlug('fr')}`)}"/>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <lastmod>${faq.updatedAt?.toDate?.()?.toISOString?.()?.split('T')[0] || today}</lastmod>
