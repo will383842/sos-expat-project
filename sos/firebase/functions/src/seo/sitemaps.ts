@@ -896,16 +896,61 @@ const NAME_TO_ISO: Record<string, string> = {
  */
 const COUNTRY_SLUGS = COUNTRY_SLUG_TRANSLATIONS;
 
-/** Role paths per language for lawyers */
+/** Role paths per language for lawyers — DEPRECATED 2026-05-05 (cf. ANNUAIRE_SLUGS).
+ *  Conservé pour rétrocompatibilité au cas où d'autres modules s'en serviraient. */
 const LAWYER_PATHS: Record<string, string> = {
   fr: 'avocats', en: 'lawyers', es: 'abogados', de: 'anwaelte',
   pt: 'advogados', ru: 'advokaty', ch: 'lushi', ar: 'muhamun', hi: 'vakil',
 };
 
-/** Role paths per language for expats */
+/** Role paths per language for expats — DEPRECATED 2026-05-05 (cf. ANNUAIRE_SLUGS). */
 const EXPAT_PATHS: Record<string, string> = {
   fr: 'expatries', en: 'expats', es: 'expatriados', de: 'expats',
   pt: 'expatriados', ru: 'expaty', ch: 'haiwai', ar: 'mughtaribun', hi: 'videshi',
+};
+
+/**
+ * SEO FIX 2026-05-05 (audit Bug #1) — Slug "annuaire" canonique unifié par langue.
+ * Aligné avec :
+ *   - worker.js:2797 ROUTE_LANG_SLUGS['annuaire']
+ *   - Blog Laravel directory.xml (generateDirectorySitemap, SeoController.php:2236)
+ *
+ * Avant ce fix, sitemapCountryListings émettait `/{lang}-{defaultCountry}/{lawyer-or-expat-path}/{country}`
+ * (ex: /de-de/expats/burkina-faso) qui produisait 2-3 redirects en cascade :
+ *   1. Worker legacyLPRedirect : "expats" → "verzeichnis" (slug DE canonique)
+ *   2. Blog Laravel : /de-de/verzeichnis/X → /de-bf/verzeichnis/X (country-aware)
+ * Résultat : ~3580 URLs déclarées dans listings-{lang}.xml faisaient toutes 301
+ * (~1 020 URLs en mauvaise hygiène GSC).
+ *
+ * Après ce fix : émet directement /{lang}-{countryISO}/{annuaire-slug}/{country-slug}
+ * (ex: /de-bf/verzeichnis/burkina-faso) qui répond 200 OK directement.
+ *
+ * Tests live confirmant le format canonique sur 9 langs × 8 pays (audit 2026-05-05) :
+ *   /fr-bf/annuaire/burkina-faso     → 200
+ *   /de-bf/verzeichnis/burkina-faso  → 200
+ *   /en-no/directory/norway          → 200
+ *   /es-mx/directorio/mexico         → 200
+ *   /pt-br/diretorio/brasil          → 200
+ *   /ru-th/spravochnik/tailand       → 200
+ *   /zh-th/minglu/taiguo             → 200
+ *   /ar-th/dalil/tailand             → 200
+ *   /hi-th/nirdeshika/thailand       → 200
+ *
+ * Conséquence : disparition de la séparation lawyer/expat dans les sitemaps Firebase
+ * (cohérent avec le Blog Laravel directory.xml qui unifie déjà les deux).
+ * Volume sitemap diminue de ~50% (1 URL par pays au lieu de 2) — mais c'étaient
+ * des URLs en 301 anyway, sans valeur SEO.
+ */
+const ANNUAIRE_SLUGS: Record<string, string> = {
+  fr: 'annuaire',
+  en: 'directory',
+  es: 'directorio',
+  de: 'verzeichnis',
+  pt: 'diretorio',
+  ru: 'spravochnik',
+  ch: 'minglu',
+  ar: 'dalil',
+  hi: 'nirdeshika',
 };
 
 /**
@@ -1019,19 +1064,29 @@ export const sitemapCountryListings = onRequest(
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">`);
 
-      // ✅ Filter: only country×type combos with ≥ minProviders qualified providers
-      const qualifiedEntries = Array.from(countryTypeCounts.entries())
+      // SEO FIX 2026-05-05 (audit Bug #1) : déduplication par pays (sum lawyer + expat counts).
+      // Avant ce fix, on émettait 2 URLs par pays par langue (une pour lawyers, une pour
+      // expats). Désormais on unifie sur le slug "annuaire" (cf. ANNUAIRE_SLUGS), donc
+      // 1 URL par pays par langue. Le total des providers (lawyer + expat) est utilisé
+      // pour le filtrage minProviders et la priorité dynamique.
+      const countryTotals = new Map<string, number>();
+      for (const [entry, count] of countryTypeCounts.entries()) {
+        const iso = entry.split('_')[0];
+        countryTotals.set(iso, (countryTotals.get(iso) || 0) + count);
+      }
+      const qualifiedCountries = Array.from(countryTotals.entries())
         .filter(([, count]) => count >= minProviders)
         .sort((a, b) => a[0].localeCompare(b[0]));
 
-      let urlCount = 0;
-      let skippedNoSlug = 0;
+      // Compteur historique (pour log compatible)
+      const qualifiedEntries = Array.from(countryTypeCounts.entries())
+        .filter(([, count]) => count >= minProviders);
       const excludedByThreshold = countryTypeCounts.size - qualifiedEntries.length;
 
-      qualifiedEntries.forEach(([entry, providerCount]) => {
-        const [isoCode, type] = entry.split('_');
-        const rolePaths = type === 'lawyer' ? LAWYER_PATHS : EXPAT_PATHS;
+      let urlCount = 0;
+      let skippedNoSlug = 0;
 
+      qualifiedCountries.forEach(([isoCode, providerCount]) => {
         // Skip countries that aren't in COUNTRY_SLUGS at all — emitting a URL
         // for them would only be possible via an ISO-code fallback (e.g.
         // /lawyers/cu), which 301-redirects to the canonical and shows up in
@@ -1042,35 +1097,44 @@ export const sitemapCountryListings = onRequest(
           return;
         }
 
-        // Dynamic priority based on provider count
+        // Dynamic priority based on total provider count (lawyer + expat)
         const priority = providerCount >= 5 ? '0.9' : '0.7';
+
+        // Country ISO en lowercase — utilisé dans la locale URL (cluster country-aware)
+        const countryIsoLower = isoCode.toLowerCase();
 
         languagesToGenerate.forEach(lang => {
           const countrySlug = getCountrySlug(isoCode, lang);
           if (!countrySlug) return; // skip URLs for languages that lack a canonical slug
 
-          const locale = getLocaleString(lang);
-          const rolePath = rolePaths[lang] || rolePaths['en'];
-          const url = `${SITE_URL}/${locale}/${rolePath}/${countrySlug}`;
+          // SEO FIX 2026-05-05 : URL canonique = lang + ISO du pays cible (cluster country-aware)
+          // + slug "annuaire" traduit (au lieu de "expats"/"lawyers"/etc. qui font 301).
+          // Ex: /de-bf/verzeichnis/burkina-faso (200 OK) au lieu de
+          // /de-de/expats/burkina-faso (301 → /de-de/verzeichnis/X → /de-bf/verzeichnis/X)
+          const urlLang = lang === 'ch' ? 'zh' : lang;
+          const localeForUrl = `${urlLang}-${countryIsoLower}`;
+          const annuaireSlug = ANNUAIRE_SLUGS[lang] || ANNUAIRE_SLUGS['en'];
+          const url = `${SITE_URL}/${localeForUrl}/${annuaireSlug}/${countrySlug}`;
 
-          // Hreflang reciprocity: only emit alternates for languages that have
-          // their own canonical slug — silently dropping a hreflang is safer
-          // than pointing it at a redirecting URL.
+          // Hreflang reciprocity: tous les alternates utilisent le MÊME countryISO
+          // (cluster country-aware cohérent). Skip langues qui n'ont pas de slug pays.
           const hreflangs = LANGUAGES
             .map(hrefLang => {
               const hrefCountrySlug = getCountrySlug(isoCode, hrefLang);
               if (!hrefCountrySlug) return null;
-              const hrefLocale = getLocaleString(hrefLang);
-              const hrefRolePath = rolePaths[hrefLang] || rolePaths['en'];
-              return `    <xhtml:link rel="alternate" hreflang="${getHreflangCode(hrefLang)}" href="${escapeXml(`${SITE_URL}/${hrefLocale}/${hrefRolePath}/${hrefCountrySlug}`)}"/>`;
+              const hrefUrlLang = hrefLang === 'ch' ? 'zh' : hrefLang;
+              const hrefLocale = `${hrefUrlLang}-${countryIsoLower}`;
+              const hrefAnnuaireSlug = ANNUAIRE_SLUGS[hrefLang] || ANNUAIRE_SLUGS['en'];
+              return `    <xhtml:link rel="alternate" hreflang="${getHreflangCode(hrefLang)}" href="${escapeXml(`${SITE_URL}/${hrefLocale}/${hrefAnnuaireSlug}/${hrefCountrySlug}`)}"/>`;
             })
             .filter((s): s is string => s !== null)
             .join('\n');
 
-          const defaultLocale = getLocaleString('fr');
-          const defaultRolePath = rolePaths['fr'] || rolePaths['en'];
-          const defaultCountrySlug = getCountrySlug(isoCode, 'fr')!; // gated above
-          const xDefaultUrl = `${SITE_URL}/${defaultLocale}/${defaultRolePath}/${defaultCountrySlug}`;
+          // x-default → version FR du même pays (country-aware aussi)
+          const xDefaultLocale = `fr-${countryIsoLower}`;
+          const xDefaultAnnuaireSlug = ANNUAIRE_SLUGS['fr'];
+          const xDefaultCountrySlug = getCountrySlug(isoCode, 'fr')!; // gated above
+          const xDefaultUrl = `${SITE_URL}/${xDefaultLocale}/${xDefaultAnnuaireSlug}/${xDefaultCountrySlug}`;
 
           urlBlocks.push(`  <url>
     <loc>${escapeXml(url)}</loc>
