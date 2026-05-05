@@ -292,6 +292,38 @@
 /fr-fr/how-it-works /fr-fr/comment-ca-marche 301
 
 # =============================================
+# Source key 'sos-call' → slug traduit canonique par locale (audit 2026-05-05)
+# 'sos-call' est la CLÉ INTERNE dans worker.js ROUTE_LANG_SLUGS, pas un slug
+# public d'une locale. Tout lien externe ou indexé /xx-yy/sos-call/* doit
+# rediriger vers le slug traduit. Sans ces règles : SSR Puppeteer renvoyait
+# 404 (vrai marker data-page-not-found) tandis que SPA humain renvoyait 200
+# (route SPA non reconnue → index.html). Cloaking de fait, observé sur
+# /fr-fr/sos-call/ avec 404 Googlebot vs 200 Chrome (CF-Cache HIT, age 327s).
+# Slugs canoniques par locale (worker.js:2783 ROUTE_LANG_SLUGS) :
+#   fr=sos-appel, en=emergency-call, es=llamada-emergencia, de=notruf,
+#   ru=ekstrenniy-zvonok, pt=chamada-emergencia, zh=jinji-dianhua,
+#   hi=aapatkaalin-call, ar=mukalama-tawariy
+# =============================================
+/fr-fr/sos-call/* /fr-fr/sos-appel/:splat 301
+/fr-fr/sos-call /fr-fr/sos-appel 301
+/en-us/sos-call/* /en-us/emergency-call/:splat 301
+/en-us/sos-call /en-us/emergency-call 301
+/es-es/sos-call/* /es-es/llamada-emergencia/:splat 301
+/es-es/sos-call /es-es/llamada-emergencia 301
+/de-de/sos-call/* /de-de/notruf/:splat 301
+/de-de/sos-call /de-de/notruf 301
+/ru-ru/sos-call/* /ru-ru/ekstrenniy-zvonok/:splat 301
+/ru-ru/sos-call /ru-ru/ekstrenniy-zvonok 301
+/pt-pt/sos-call/* /pt-pt/chamada-emergencia/:splat 301
+/pt-pt/sos-call /pt-pt/chamada-emergencia 301
+/zh-cn/sos-call/* /zh-cn/jinji-dianhua/:splat 301
+/zh-cn/sos-call /zh-cn/jinji-dianhua 301
+/hi-in/sos-call/* /hi-in/aapatkaalin-call/:splat 301
+/hi-in/sos-call /hi-in/aapatkaalin-call 301
+/ar-sa/sos-call/* /ar-sa/mukalama-tawariy/:splat 301
+/ar-sa/sos-call /ar-sa/mukalama-tawariy 301
+
+# =============================================
 # Underscore slug fixes (Cat B) — old format with _ instead of -
 # =============================================
 /en-us/terms_expats /en-us/terms-expats 301

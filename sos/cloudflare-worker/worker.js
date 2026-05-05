@@ -1361,7 +1361,19 @@ const EDGE_CACHE_ENABLED = true;
 // v26 (2026-05-02, +2h30): v25 cache entry got created during the brief
 // window when Firebase still served the pre-fix sitemap-index → poisoned
 // the v25 key. Bumping to v26 to invalidate.
-const EDGE_CACHE_VERSION = 'v26';
+// v27 (2026-05-05, audit Vague 1): cumulative purge after 3 fixes:
+//   1. Vary: User-Agent retiré sur legacyLPRedirect301 (L1836) +
+//      handleBlogProxy (L2232) → cache CDN défragmenté côté humain.
+//      Anciennes entrées avaient Vary, nouvelles non → besoin purge complète.
+//   2. /xx-yy/sos-call/* → slug traduit via _redirects (alignement bot/humain).
+//      Anciennes 404 SSR cachées 1h → bump force re-render avec 301.
+//   3. _headers Cache-Control retiré du catch-all /* → corrige duplication
+//      "public, max-age=0, must-revalidate, public, max-age=0, must-revalidate"
+//      observée sur homepage et robots.txt. Cached responses avaient le header
+//      malformé → bump force re-fetch propre.
+// Cumulé : audit critique 23 avr → 3 mai (chute crawl -86%) demande un
+// reset propre du cache pour mesurer l'effet des fixes sans pollution résiduelle.
+const EDGE_CACHE_VERSION = 'v27';
 
 const EDGE_CACHE_TTL = {
   SSR_OK: 86400,   // 24h for valid pages
@@ -1826,6 +1838,9 @@ const LEGACY_SEGMENT_ALIAS = {
 };
 
 function legacyLPRedirect301(locationUrl) {
+  // Note 2026-05-05: 'Vary: User-Agent, Accept-Language' retiré ici —
+  // la response 301 vers la même URL est servie identiquement à tous les UA,
+  // donc Vary fragmentait inutilement le cache CDN sans aucun bénéfice.
   return new Response(null, {
     status: 301,
     headers: {
@@ -1833,7 +1848,6 @@ function legacyLPRedirect301(locationUrl) {
       'X-Worker-Active': 'true',
       'X-Worker-Redirect': 'legacy-lp',
       'Cache-Control': 'public, max-age=86400',
-      'Vary': 'User-Agent, Accept-Language',
     },
   });
 }
@@ -2226,10 +2240,11 @@ async function handleBlogProxy(request, pathname, url, ctx) {
       blogHeaders.delete('Pragma');
       blogHeaders.delete('Expires');
       blogHeaders.delete('Set-Cookie'); // Remove Laravel session cookies (XSRF-TOKEN, session)
-      // SEO FIX 2026-04-22 (P0-A): signal downstream caches that the body
-      // can depend on UA/locale in the future (currently identical bot/human
-      // but Vary future-proofs against Laravel negotiated responses).
-      blogHeaders.set('Vary', 'User-Agent, Accept-Language');
+      // Vary retiré 2026-05-05 : Blog Laravel ne fait actuellement AUCUNE
+      // réponse différenciée par UA (vérifié — `grep -rn 'userAgent\|HTTP_USER_AGENT'`
+      // dans Blog_sos-expat_frontend/app/ ne retourne que des logs analytics).
+      // Vary fragmentait inutilement le cache CDN par UA. Si Laravel ajoute
+      // un jour de l'UA-aware logic, restaurer Vary ici.
     }
 
     // FIX: Rewrite blog origin in HTML body so all internal links, canonical tags,

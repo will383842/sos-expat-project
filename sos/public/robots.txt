@@ -224,8 +224,10 @@ Disallow: /
 # rapport aux sub-sitemaps découverts uniquement via le master.
 Sitemap: https://sos-expat.com/sitemap-index.xml
 
-# Google News (top stories, articles récents <48h)
-Sitemap: https://sos-expat.com/sitemap-news.xml
+# Google News sitemap retiré 2026-05-05 — le worker renvoie 410 Gone
+# (cf. worker.js:3410, blog Laravel servait un urlset vide).
+# À restaurer ici quand le blog publiera de nouveau des articles <48h
+# ET que le worker arrêtera de servir 410.
 
 # Core content — high-value sub-sitemaps (top 25 par volume/qualité)
 Sitemap: https://sos-expat.com/sitemap-static.xml
