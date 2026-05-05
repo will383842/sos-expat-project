@@ -3443,6 +3443,41 @@ async function handleRequest(request, env, ctx) {
   const legacyLPRedirect = handleLegacyLPRedirect(pathname, url);
   if (legacyLPRedirect) return legacyLPRedirect;
 
+  // 2026-05-05 audit: Source key 'sos-call' is the INTERNAL canonical key
+  // in worker.js:2783 ROUTE_LANG_SLUGS — it is NOT a public slug for any
+  // locale. Translated slugs per locale: fr=sos-appel, en=emergency-call,
+  // es=llamada-emergencia, de=notruf, ru=ekstrenniy-zvonok,
+  // pt=chamada-emergencia, zh=jinji-dianhua, hi=aapatkaalin-call,
+  // ar=mukalama-tawariy.
+  // Why intercept in Worker (not just _redirects): bots bypass Cloudflare
+  // Pages _redirects entirely (Worker routes them to handleSSR Firebase
+  // Function before Pages is consulted). Without this Worker-level redirect,
+  // /xx-yy/sos-call/* returns 404 to Googlebot (SSR Puppeteer detects
+  // data-page-not-found marker on the SPA NotFound route) while humans
+  // would receive 200/301 via _redirects → cloaking by status code.
+  const SOS_CALL_TRANSLATIONS = {
+    fr: 'sos-appel', en: 'emergency-call', es: 'llamada-emergencia',
+    de: 'notruf', ru: 'ekstrenniy-zvonok', pt: 'chamada-emergencia',
+    zh: 'jinji-dianhua', hi: 'aapatkaalin-call', ar: 'mukalama-tawariy',
+  };
+  const sosCallMatch = pathname.match(/^\/([a-z]{2})-[a-z]{2}\/sos-call(\/.*)?$/);
+  if (sosCallMatch) {
+    const lang = sosCallMatch[1];
+    const translated = SOS_CALL_TRANSLATIONS[lang];
+    if (translated) {
+      const newPath = pathname.replace(/\/sos-call(\/|$)/, `/${translated}$1`);
+      return new Response(null, {
+        status: 301,
+        headers: {
+          'Location': `${url.origin}${newPath}${url.search}`,
+          'Cache-Control': 'public, max-age=86400',
+          'X-Worker-Active': 'true',
+          'X-Worker-Redirect': 'sos-call-translation',
+        },
+      });
+    }
+  }
+
   if (isBlogProxyPath(pathname)) {
     return handleBlogProxy(request, pathname, url, ctx);
   }
