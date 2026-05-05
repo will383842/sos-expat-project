@@ -1383,7 +1383,18 @@ const EDGE_CACHE_ENABLED = true;
 // Bump pour invalider sitemap-index.xml v27 + sub-sitemaps faq.xml +
 // images-country-{lang}.xml qui pourraient encore servir les anciennes
 // URLs en redirect.
-const EDGE_CACHE_VERSION = 'v28';
+// v30 (2026-05-05, REVERT Bug #1 fix v29) : le fix Bug #1 v29 (URLs
+// country-aware unifiées sur slug 'annuaire' pour sitemapCountryListings)
+// a introduit des 404 sur les couples (lang, country) où Blog Laravel n'a
+// pas le contenu country-aware (testé : 30% des URLs ZH/DE étaient 404
+// alors qu'avant le fix l'ancien format /zh-cn/lushi/X servait 200 OK).
+// REVERT du fix v29 pour éliminer la régression. Le sitemap revient à
+// l'ancien format /{lang}-{defaultCountry}/{lawyer-or-expat}/{country}.
+// Bug #1 reste ouvert : nécessite mapping précis de quels pays sont
+// supportés country-aware par Blog Laravel pour chaque langue avant tout
+// futur patch (premium TH/VN/JP/MY/RU/... vs secondary CZ/ET/AT/BF/...).
+// Bump pour invalider les caches v29 qui contiennent les URLs cassées.
+const EDGE_CACHE_VERSION = 'v30';
 
 const EDGE_CACHE_TTL = {
   SSR_OK: 86400,   // 24h for valid pages
