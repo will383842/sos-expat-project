@@ -158,8 +158,10 @@ export async function runBusySafetyTimeoutTask(req: Request, res: Response): Pro
 
       console.log(`🛡️ [${debugId}] Call session status: ${sessionStatus}`);
 
-      // If session is still active, don't release the provider
-      const activeStatuses = ['pending', 'scheduled', 'provider_connecting', 'client_connecting', 'both_connecting', 'active'];
+      // If session is still active, don't release the provider.
+      // 'pending' / 'scheduled' retirés : à 10min, ces statuts indiquent un backend crashed,
+      // pas une session vraiment active. Sinon le provider reste busy jusqu'au cleanup horaire.
+      const activeStatuses = ['provider_connecting', 'client_connecting', 'both_connecting', 'active'];
       if (activeStatuses.includes(sessionStatus)) {
         console.log(`✅ [${debugId}] Call session is still active (${sessionStatus}) - no action needed`);
         res.status(200).json({

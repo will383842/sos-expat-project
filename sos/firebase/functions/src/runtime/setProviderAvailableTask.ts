@@ -137,12 +137,17 @@ export async function runSetProviderAvailableTask(req: Request, res: Response): 
 
     await logError("setProviderAvailableTask", error);
 
-    // Return 200 to prevent Cloud Tasks retry (we've logged the error)
-    res.status(200).json({
+    // Distinguer erreurs permanentes (provider not found, payload invalide) des erreurs
+    // transientes (Firestore timeout, network) : retourner 500 sur transient → Cloud Tasks
+    // réessaie avec backoff. Sinon le provider reste busy jusqu'au filet 10min.
+    const errMsg = error instanceof Error ? error.message : String(error);
+    const isPermanent = /not.?found|invalid|missing|unauthorized/i.test(errMsg);
+
+    res.status(isPermanent ? 200 : 500).json({
       success: false,
       providerId,
-      error: error instanceof Error ? error.message : "Unknown error",
-      handled: true,
+      error: errMsg,
+      handled: isPermanent,
       duration
     });
   }

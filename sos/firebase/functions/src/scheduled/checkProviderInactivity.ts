@@ -231,7 +231,10 @@ async function releaseStuckBusyProviders(db: admin.firestore.Firestore): Promise
           const sessionDoc = await db.collection('call_sessions').doc(callSessionId).get();
           if (sessionDoc.exists) {
             const sessionStatus = sessionDoc.data()?.status;
-            const activeStatuses = ['pending', 'scheduled', 'provider_connecting', 'client_connecting', 'both_connecting', 'active'];
+            // Une session stuck en 'pending'/'scheduled' depuis >15min = backend crashed avant
+            // que Twilio démarre. On ne la considère plus active sinon le provider reste busy
+            // jusqu'au cleanup horaire.
+            const activeStatuses = ['provider_connecting', 'client_connecting', 'both_connecting', 'active'];
             sessionStillActive = activeStatuses.includes(sessionStatus);
 
             if (sessionStillActive) {

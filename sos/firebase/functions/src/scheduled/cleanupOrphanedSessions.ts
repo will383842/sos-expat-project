@@ -572,15 +572,30 @@ export const cleanupOrphanedSessions = scheduler.onSchedule(
         now - THRESHOLDS.PROVIDER_BUSY_TIMEOUT
       );
 
-      // Trouver les prestataires en "busy" depuis trop longtemps
-      const busyProviders = await db
-        .collection('sos_profiles')
-        .where('availability', '==', 'busy')
-        .where('busySince', '<', busyCutoff)
-        .limit(50)
-        .get();
+      // Trouver les prestataires en "busy" depuis trop longtemps.
+      // BUG FIX 2026-05-05: Query BOTH `users` AND `sos_profiles` car la désynchro
+      // entre les deux peut laisser un provider busy dans une collection mais pas l'autre
+      // (ex: sos_profiles n'existait pas au moment de setProviderBusy → seul users est busy).
+      const [busyProvidersProfiles, busyProvidersUsers] = await Promise.all([
+        db.collection('sos_profiles')
+          .where('availability', '==', 'busy')
+          .where('busySince', '<', busyCutoff)
+          .limit(50)
+          .get(),
+        db.collection('users')
+          .where('availability', '==', 'busy')
+          .where('busySince', '<', busyCutoff)
+          .limit(50)
+          .get(),
+      ]);
 
-      console.log(`Found ${busyProviders.size} providers busy > 2 hours`);
+      // Dédupliquer par ID
+      const busyMap = new Map();
+      busyProvidersProfiles.docs.forEach(d => busyMap.set(d.id, d));
+      busyProvidersUsers.docs.forEach(d => { if (!busyMap.has(d.id)) busyMap.set(d.id, d); });
+      const busyProviders = { docs: Array.from(busyMap.values()), size: busyMap.size };
+
+      console.log(`Found ${busyProviders.size} providers busy > 2 hours (sos_profiles=${busyProvidersProfiles.size}, users=${busyProvidersUsers.size}, dédupliqués)`);
 
       for (const doc of busyProviders.docs) {
         try {

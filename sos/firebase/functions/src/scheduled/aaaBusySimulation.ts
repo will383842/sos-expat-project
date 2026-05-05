@@ -4,7 +4,7 @@ import * as admin from 'firebase-admin';
 /**
  * AAA Busy Simulation — Simule de l'activité sur la plateforme
  *
- * Cette fonction scheduled tourne toutes les 4 minutes et :
+ * Cette fonction scheduled tourne toutes les 8 minutes et :
  * 1. Lit la config admin_config/aaa_busy_simulation (si enabled=false → STOP)
  * 2. Libère les profils AAA dont la simulation busy a expiré (> busyDurationMinutes)
  * 3. Met en busy de nouveaux profils AAA aléatoires pour maintenir simultaneousBusy actifs
@@ -71,7 +71,7 @@ export const aaaBusySimulation = scheduler.onSchedule(
       // Résoudre min/max avec fallback sur l'ancien champ simultaneousBusy
       const busyMin = config.simultaneousBusyMin ?? config.simultaneousBusy ?? DEFAULT_CONFIG.simultaneousBusyMin;
       const busyMax = config.simultaneousBusyMax ?? config.simultaneousBusy ?? DEFAULT_CONFIG.simultaneousBusyMax;
-      // Nombre cible aléatoire à chaque exécution → variation naturelle (3, 4, 5, ou 6)
+      // Nombre cible aléatoire à chaque exécution → variation naturelle dans l'intervalle [min, max]
       const targetBusy = Math.floor(Math.random() * (busyMax - busyMin + 1)) + busyMin;
 
       console.log(`🤖 [AAA Simulation] Démarrage — target: ${targetBusy} busy (range ${busyMin}-${busyMax}), durée: ${config.busyDurationMinutes}min`);
