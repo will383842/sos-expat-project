@@ -606,22 +606,19 @@ export const renderForBotsV2 = onRequest(
     // fallback was /en-us, which made Googlebot without Accept-Language
     // (or with unmapped languages) land on an English redirect that
     // contradicted x-default — a soft-404-ish signal.
+    //
+    // SEO FIX 2026-05-05 (audit Vague 2 Fix 6) : pour TOUS les bots,
+    // forcer la cible /fr-fr indépendamment d'Accept-Language. Googlebot
+    // crawle quasi-exclusivement depuis Mountain View, CA → envoie
+    // Accept-Language: en-US,en → recevait /en-us avant. Site
+    // francophone-majoritaire + x-default = /fr-fr → Googlebot doit
+    // converger vers /fr-fr comme entry canonique. Les humains continuent
+    // de passer par RootLocaleRedirect côté SPA (pas affecté par cette
+    // function — handleSPAFallback dans worker.js). Coût : Googlebot US
+    // reçoit /fr-fr au lieu de /en-us, mais /en-us reste indexable
+    // directement via ses propres backlinks et liens internes.
     if (requestPath === '/') {
-      const ROOT_LOCALE_MAP: Record<string, string> = {
-        'fr': '/fr-fr',
-        'en': '/en-us',
-        'es': '/es-es',
-        'de': '/de-de',
-        'pt': '/pt-pt',
-        'ru': '/ru-ru',
-        'zh': '/zh-cn',
-        'hi': '/hi-in',
-        'ar': '/ar-sa',
-      };
-      const acceptLanguage = req.headers['accept-language'] || '';
-      const primaryLang = acceptLanguage.split(',')[0]?.split(';')[0]?.split('-')[0]?.toLowerCase() || '';
-      const targetLocale = ROOT_LOCALE_MAP[primaryLang] || '/fr-fr';
-      res.redirect(301, `${SITE_URL}${targetLocale}`);
+      res.redirect(301, `${SITE_URL}/fr-fr`);
       return;
     }
 
