@@ -1373,7 +1373,17 @@ const EDGE_CACHE_ENABLED = true;
 //      malformé → bump force re-fetch propre.
 // Cumulé : audit critique 23 avr → 3 mai (chute crawl -86%) demande un
 // reset propre du cache pour mesurer l'effet des fixes sans pollution résiduelle.
-const EDGE_CACHE_VERSION = 'v27';
+// v28 (2026-05-05, audit Vague 3) : purge sitemap caches après 2 fixes :
+//   - sitemapFaq Firebase : slug FAQ traduit par langue (avant: "faq" hardcodé →
+//     6/9 langues servaient 301). Test direct cloud function = OK, mais
+//     Worker cache l'ancienne version sur /sitemaps/faq.xml.
+//   - generateImageBankCountrySitemap Blog Laravel : URL country-aware
+//     /{lang}-{countryISO}/... au lieu de /{lang}-{defaultCountry}/...
+//     (déployé via CI/CD GitHub Actions sur push to main).
+// Bump pour invalider sitemap-index.xml v27 + sub-sitemaps faq.xml +
+// images-country-{lang}.xml qui pourraient encore servir les anciennes
+// URLs en redirect.
+const EDGE_CACHE_VERSION = 'v28';
 
 const EDGE_CACHE_TTL = {
   SSR_OK: 86400,   // 24h for valid pages
