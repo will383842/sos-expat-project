@@ -1383,18 +1383,7 @@ const EDGE_CACHE_ENABLED = true;
 // Bump pour invalider sitemap-index.xml v27 + sub-sitemaps faq.xml +
 // images-country-{lang}.xml qui pourraient encore servir les anciennes
 // URLs en redirect.
-// v29 (2026-05-05, audit Bug #1) : sitemapCountryListings refondu →
-//   - URLs canoniques country-aware : /{lang}-{countryISO}/{annuaire}/{country-slug}
-//     (au lieu de /{lang}-{defaultCountry}/{lawyer-or-expat-path}/{country-slug})
-//   - Slug "annuaire" unifié par langue (cf. ANNUAIRE_SLUGS dans sitemaps.ts)
-//     remplace LAWYER_PATHS/EXPAT_PATHS qui faisaient 301
-//   - Déduplication par pays : 1 URL par pays par langue (au lieu de 2 séparées
-//     pour lawyer + expat) → ~1 791 URLs (vs ~3 580 avant) toutes 200 OK directes
-//   - Tests live confirment : ~8/10 URLs 200 OK (les 2 404 sont des territoires
-//     comme NC, BQ qui n'ont pas de DB country_translations côté Blog Laravel —
-//     pas de régression : avant le fix, ces URLs faisaient 301 puis 404 anyway)
-// Bump pour purger le cache Worker des anciens listings-{lang}.xml v28.
-const EDGE_CACHE_VERSION = 'v29';
+const EDGE_CACHE_VERSION = 'v28';
 
 const EDGE_CACHE_TTL = {
   SSR_OK: 86400,   // 24h for valid pages
