@@ -10,7 +10,7 @@
  * =============================================================================
  */
 
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useProvider, useAuth } from "../../contexts/UnifiedUserContext";
 import { useLanguage } from "../../hooks/useLanguage";
@@ -797,6 +797,20 @@ export default function ConversationDetail() {
   const { activeProvider, linkedProviders } = useProvider();
   const { isAdmin, user, loading: authLoading } = useAuth();
 
+  // FIX 2026-05-06: clé stable pour utiliser linkedProviders en dep d'useEffect
+  // sans re-trigger sur chaque rebuild référentiel (cf. UnifiedUserContext setter).
+  // Le ref donne accès à la valeur la plus récente DANS le callback onSnapshot
+  // (closure-safe), tandis que la key (string) déclenche un re-run uniquement
+  // quand l'ensemble réel des providers liés change.
+  const linkedProvidersKey = useMemo(
+    () => linkedProviders.map((p) => p.id).sort().join(","),
+    [linkedProviders]
+  );
+  const linkedProvidersRef = useRef(linkedProviders);
+  useEffect(() => {
+    linkedProvidersRef.current = linkedProviders;
+  }, [linkedProviders]);
+
   const [booking, setBooking] = useState<Booking | null>(null);
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -858,6 +872,12 @@ export default function ConversationDetail() {
     let unsubscribe: (() => void) | null = null;
     let foundInCollection: string | null = null;
     let actualBookingId: string = id;
+    // FIX 2026-05-06: cancellation flag pour gérer la course async.
+    // Sans ce flag, si l'effect cleanup s'exécute avant que setupBookingListener
+    // termine, on assigne `unsubscribe` après le cleanup → listener orphelin
+    // jamais nettoyé. Combiné à une dep instable (ex: `t` non memoisé), créait
+    // une cascade exponentielle de listeners zombies.
+    let cancelled = false;
 
     const setupBookingListener = async () => {
       // Strategy 1: Direct lookup in 'bookings' collection
@@ -957,6 +977,10 @@ export default function ConversationDetail() {
       // Store the booking source for conversation creation logic
       setBookingSource(foundInCollection as "bookings" | "booking_requests");
 
+      // FIX 2026-05-06: si l'effect a été cleanup pendant qu'on attendait
+      // les awaits ci-dessus, ne PAS créer de listener — il serait orphelin.
+      if (cancelled) return;
+
       // Setup real-time listener on the found booking
       const docRef = doc(db, foundInCollection, actualBookingId);
       unsubscribe = onSnapshot(
@@ -976,7 +1000,7 @@ export default function ConversationDetail() {
               // une UX de garde-fou, pas une frontière de sécurité.
               const hasAccess =
                 user?.uid === bookingData.providerId ||
-                linkedProviders.some(p => p.id === bookingData.providerId) ||
+                linkedProvidersRef.current.some(p => p.id === bookingData.providerId) ||
                 activeProvider?.id === bookingData.providerId;
 
               if (!hasAccess) {
@@ -994,7 +1018,7 @@ export default function ConversationDetail() {
                   bookingProviderId: bookingData.providerId,
                   userUid: user?.uid,
                   activeProviderId: activeProvider?.id,
-                  linkedProvidersCount: linkedProviders.length,
+                  linkedProvidersCount: linkedProvidersRef.current.length,
                 });
                 setError(t("dossierDetail.accessDenied"));
                 setLoading(false);
@@ -1027,17 +1051,24 @@ export default function ConversationDetail() {
     setupBookingListener();
 
     return () => {
+      cancelled = true;
       if (unsubscribe) unsubscribe();
     };
     // FIX: include user?.uid and authLoading so the effect re-runs when SSO
     // auth context finishes hydrating and providerIdForBooking becomes valid.
-  }, [id, isAdmin, activeProvider?.id, linkedProviders, t, isDevMock, user?.uid, authLoading, isFromMultiDashboard]);
+    // `t` est stable (useCallback dans useLanguage) — safe en dep.
+    // `linkedProvidersKey` (string memoizée) au lieu de `linkedProviders` (array)
+    // pour ne re-trigger que sur changement réel d'ensemble — la valeur courante
+    // est lue via `linkedProvidersRef.current` dans le callback.
+  }, [id, isAdmin, activeProvider?.id, linkedProvidersKey, t, isDevMock, user?.uid, authLoading, isFromMultiDashboard]);
 
   // Load conversation - FIX: Simplified logic since booking is now real-time
   useEffect(() => {
     if (!id || !booking) return;
 
     let unsubMessages: (() => void) | null = null;
+    // FIX 2026-05-06: cancellation flag pour la course async (cf. premier useEffect).
+    let cancelled = false;
 
     // Mock data for dev mode
     if (isDevMock && id.startsWith("booking-")) {
@@ -1149,6 +1180,7 @@ export default function ConversationDetail() {
           // FIX: Use booking.id (the actual Outil booking ID) — in multi-dashboard mode the route
           // `id` is the SOS booking_request ID and doc(db, "bookings", id) does not exist,
           // which caused the chat to stay stuck on "Initialisation du chat IA...".
+          if (cancelled) return;
           const bookingRef = doc(db, "bookings", booking.id);
           unsubMessages = onSnapshot(bookingRef, (bookingSnap) => {
             if (bookingSnap.exists()) {
@@ -1184,6 +1216,8 @@ export default function ConversationDetail() {
 
       // FIX: Only setup messages listener if we have a convId
       if (!convId) return;
+      // FIX 2026-05-06: cancellation guard pour la course async.
+      if (cancelled) return;
 
       // Setup real-time listener for messages
       const messagesQuery = query(
@@ -1227,6 +1261,7 @@ export default function ConversationDetail() {
     setupConversation().catch(console.error);
 
     return () => {
+      cancelled = true;
       if (unsubMessages) unsubMessages();
     };
   }, [id, booking, bookingSource, isDevMock]);

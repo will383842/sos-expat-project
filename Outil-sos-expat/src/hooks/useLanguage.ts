@@ -84,15 +84,14 @@ export function useLanguage(
   const namespace = mode === "admin" ? "admin" : "provider";
   const { t: rawT, i18n } = useTranslation([namespace, "common"]);
 
-  // Create a t function that tries namespace first, then falls back to common
-  const t = (key: string, options?: Record<string, unknown>) => {
-    // If key already has a namespace (contains :), use it as-is
+  // Stable identity across renders — without useCallback, every render creates
+  // a new `t` reference, which causes infinite effect re-runs in any consumer
+  // that lists `t` in their useEffect deps (cf. ConversationDetail leak 2026-05-06).
+  const t = useCallback<TFunction>((key, options) => {
     if (key.includes(":")) {
       return rawT(key, options as Record<string, unknown>);
     }
-    // Try namespace first, then common
     const result = rawT(`${namespace}:${key}`, options as Record<string, unknown>);
-    // If not found in namespace (returns the key), try common
     if (result === `${namespace}:${key}` || result === key) {
       const commonResult = rawT(`common:${key}`, options as Record<string, unknown>);
       if (commonResult !== `common:${key}`) {
@@ -100,7 +99,7 @@ export function useLanguage(
       }
     }
     return result;
-  };
+  }, [rawT, namespace]);
 
   // Déterminer les langues disponibles selon le mode
   const availableLanguages =

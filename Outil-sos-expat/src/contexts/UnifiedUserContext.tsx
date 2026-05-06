@@ -713,7 +713,22 @@ export function UnifiedUserProvider({ children }: { children: ReactNode }) {
               }
             }
 
-            setLinkedProviders(providers);
+            // FIX 2026-05-06: shallow-compare avant setState pour préserver
+            // l'identité référentielle quand le contenu n'a pas changé.
+            // Sans ce compare, chaque snapshot du doc user rebuild un NOUVEAU
+            // tableau via Promise.all → setLinkedProviders avec nouvelle identité
+            // → re-render des consumers → cascade infinie de listeners zombies
+            // dans les useEffect qui ont `linkedProviders` en dep
+            // (cf. ConversationDetail leak 2026-05-06).
+            setLinkedProviders((prev) => {
+              if (
+                prev.length === providers.length &&
+                prev.every((p, i) => p.id === providers[i]?.id)
+              ) {
+                return prev;
+              }
+              return providers;
+            });
 
             // Définir provider actif
             if (providers.length > 0 && !activeProvider) {
