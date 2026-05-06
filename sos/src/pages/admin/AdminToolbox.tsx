@@ -20,7 +20,7 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Bot, Briefcase, Building2, Database, ExternalLink, Eye, Flame, GripVertical, Headphones, ImageIcon, Link2, Mail, MessageSquare, PhoneCall, Send, Server, Settings, Target, Users, UserSearch, Wrench } from "lucide-react";
+import { Bot, Briefcase, Building2, Database, ExternalLink, Eye, Factory, Flame, GripVertical, Headphones, ImageIcon, Link2, Mail, MessageSquare, PhoneCall, Send, Server, Settings, Target, Users, UserSearch, Wrench } from "lucide-react";
 
 const BACKLINK_ENGINE_URL = "https://backlinks.life-expat.com";
 const MAILWIZZ_FRONTEND_URL = "https://mail.sos-expat.com";
@@ -39,6 +39,7 @@ const IMAGE_BANK_URL = "https://sos-expat.com/admin/image-bank";
 const PARTNER_ENGINE_ADMIN_URL = "https://admin.sos-expat.com";
 const SOS_CALL_URL = "https://sos-call.sos-expat.com";
 const PARTNER_ENGINE_API_URL = "https://partner-engine.sos-expat.com";
+const WEBFACTORY_URL = "https://factory.sos-expat.com";
 
 const STORAGE_KEY = "admin-toolbox-order";
 
@@ -226,6 +227,15 @@ const defaultTools: ToolCard[] = [
     icon: <Headphones className="h-8 w-8" />,
     color: "bg-slate-700",
     status: "live",
+  },
+  {
+    id: "webfactory",
+    titleKey: "WebFactory",
+    descriptionKey: "Usine de fabrication de plateformes web Laravel 12 + Filament v4 — pipeline 7 étapes, 24-48h de l'idée au site déployé",
+    url: WEBFACTORY_URL,
+    icon: <Factory className="h-8 w-8" />,
+    color: "bg-fuchsia-700",
+    status: "coming-soon",
   },
 ];
 
