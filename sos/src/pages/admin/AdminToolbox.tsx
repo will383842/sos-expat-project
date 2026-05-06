@@ -39,7 +39,7 @@ const IMAGE_BANK_URL = "https://sos-expat.com/admin/image-bank";
 const PARTNER_ENGINE_ADMIN_URL = "https://admin.sos-expat.com";
 const SOS_CALL_URL = "https://sos-call.sos-expat.com";
 const PARTNER_ENGINE_API_URL = "https://partner-engine.sos-expat.com";
-const WEBFACTORY_URL = "https://factory.sos-expat.com";
+const WEBFACTORY_URL = "http://localhost/admin";
 
 const STORAGE_KEY = "admin-toolbox-order";
 
@@ -230,12 +230,12 @@ const defaultTools: ToolCard[] = [
   },
   {
     id: "webfactory",
-    titleKey: "WebFactory",
-    descriptionKey: "Usine de fabrication de plateformes web Laravel 12 + Filament v4 — pipeline 7 étapes, 24-48h de l'idée au site déployé",
+    titleKey: "WebFactory (local)",
+    descriptionKey: "Usine de fabrication de plateformes web Laravel 12 + Filament v4 — instance locale Docker, lance `make.cmd up` dans Outils_communication\\webfactory-app",
     url: WEBFACTORY_URL,
     icon: <Factory className="h-8 w-8" />,
     color: "bg-fuchsia-700",
-    status: "coming-soon",
+    status: "live",
   },
 ];
 
