@@ -59,6 +59,40 @@ export const AI_CONFIG = {
   }
 } as const;
 
+// =============================================================================
+// OVERRIDES PAR MODE D'OUTPUT (2026-05-04)
+// =============================================================================
+// Le mode 'assist_provider' génère une note collègue à collègue pendant un
+// appel client. Il faut une température BASSE (déterminisme juridique/factuel)
+// et un max_tokens BAS (forcer la concision physiquement, pas seulement par
+// l'instruction prompt).
+// Le mode 'draft_for_client' génère la 1ʳᵉ réponse au client final : ton plus
+// chaleureux, structure complète → on garde les valeurs « confortables ».
+
+export const AI_MODE_OVERRIDES = {
+  draft_for_client: {
+    claude: {
+      temperature: AI_CONFIG.CLAUDE.TEMPERATURE,    // 0.25
+      maxTokens: AI_CONFIG.CLAUDE.MAX_TOKENS,        // 2000
+    },
+    openai: {
+      temperature: AI_CONFIG.OPENAI.TEMPERATURE,     // 0.3
+      maxTokens: AI_CONFIG.OPENAI.MAX_TOKENS,        // 2000
+    },
+  },
+  assist_provider: {
+    claude: {
+      temperature: 0.15,   // déterminisme renforcé (références juridiques)
+      maxTokens: 1400,     // 🆕 +500 vs 900 — laisse la place au double bloc
+                           // (NOTE TECHNIQUE + À DIRE AU CLIENT)
+    },
+    openai: {
+      temperature: 0.2,    // déterminisme renforcé
+      maxTokens: 1400,     // idem
+    },
+  },
+} as const;
+
 // Types dérivés de la configuration
 export type OpenAIConfig = typeof AI_CONFIG.OPENAI;
 export type ClaudeConfig = typeof AI_CONFIG.CLAUDE;

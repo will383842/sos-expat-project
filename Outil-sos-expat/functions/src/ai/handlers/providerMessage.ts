@@ -249,7 +249,15 @@ export const aiOnProviderMessage = onDocumentCreated(
       logger.info("[AI] Provider language for response", { providerId, providerLanguage });
 
       // Get INTELLIGENT conversation history (preserves initial context + recent)
-      const history = await buildConversationHistory(db, conversationId, convo);
+      // 🆕 mode='assist_provider' : nettoyage 1ʳᵉ réponse DRAFT (P1)
+      const history = await buildConversationHistory(
+        db,
+        conversationId,
+        convo,
+        undefined,
+        undefined,
+        "assist_provider"
+      );
 
       // ═══════════════════════════════════════════════════════════════════════════
       // 🆕 THINKING LOGS: Callback pour écrire les étapes en temps réel
@@ -282,6 +290,10 @@ export const aiOnProviderMessage = onDocumentCreated(
       };
 
       // Create service and call AI with enriched context (including provider language)
+      // 🆕 2026-05-04 : mode = 'assist_provider'
+      // L'avocat / expert pose une question à l'IA pendant son appel client.
+      // Le prompt utilisé est dense, télégraphique, sans sections client.
+      // Le ROLE_GUARD interdit explicitement à l'IA de répondre "consultez un avocat".
       const service = createService();
       const response = await service.chat(
         history,
@@ -295,6 +307,7 @@ export const aiOnProviderMessage = onDocumentCreated(
           specialties: convo.bookingContext?.specialties,
           providerLanguage,  // 🆕 Force AI to respond in provider's language
         },
+        "assist_provider",
         onThinking  // 🆕 Passer le callback pour les logs temps réel
       );
 

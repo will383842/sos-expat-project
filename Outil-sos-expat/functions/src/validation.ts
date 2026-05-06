@@ -252,7 +252,12 @@ export const AISettingsSchema = z.object({
   perplexityTemperature: z.number().min(0).max(1).default(0.2),
   maxOutputTokens: z.number().min(100).max(8000).default(3000),
 
-  // Prompts personnalisés
+  // 🆕 2026-05-04 — Champs DEPRECATED.
+  // Le pipeline IA utilise désormais les prompts canoniques de `ai/prompts/`
+  // sélectionnés selon AIMode (draft_for_client / assist_provider).
+  // On accepte toujours l'input pour ne pas casser un éventuel client admin
+  // existant, mais `getAISettings()` ignore ces champs côté lecture et logge
+  // un warning. À retirer du schema dès que le client admin est mis à jour.
   lawyerSystemPrompt: z.string().max(20000).optional(),
   expertSystemPrompt: z.string().max(20000).optional(),
 

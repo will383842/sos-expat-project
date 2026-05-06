@@ -308,6 +308,10 @@ export const aiOnBookingCreated = onDocumentCreated(
       });
 
       const service = createService();
+      // 🆕 2026-05-04 : mode = 'draft_for_client'
+      // C'est la PREMIÈRE réponse de la conversation — son destinataire est le
+      // CLIENT FINAL (le particulier qui a réservé). Le prompt est donc structuré,
+      // chaleureux, complet (sections, vouvoiement). Cf. lawyer.ts/expert.ts.
       const response = await service.chat(
         [{ role: "user", content: userMessage }],
         providerType,
@@ -320,7 +324,8 @@ export const aiOnBookingCreated = onDocumentCreated(
           bookingTitle: booking.title,
           specialties: booking.providerSpecialties,
           providerLanguage,
-        }
+        },
+        "draft_for_client"
       );
 
       logger.info(`✅ [AI-DEBUG-${debugId}] STEP 9: AI RESPONSE GENERATED`, {

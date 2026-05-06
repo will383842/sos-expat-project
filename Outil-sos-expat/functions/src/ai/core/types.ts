@@ -16,6 +16,20 @@ export type ProviderType = "lawyer" | "expat";
 export type LLMProvider = "claude" | "gpt" | "perplexity";
 export type UrgencyLevel = "low" | "medium" | "high" | "critical";
 
+/**
+ * AIMode — distingue les deux usages radicalement différents de l'IA :
+ *
+ * - "draft_for_client" : pré-génération de la 1ʳᵉ réponse au moment du booking.
+ *   L'output est destiné à être lu par le CLIENT FINAL via le prestataire.
+ *   Format : sections, vouvoiement, rassurant, structure complète.
+ *
+ * - "assist_provider" : conversation avocat/expert ↔ IA pendant l'appel.
+ *   L'output est destiné AU PRESTATAIRE LUI-MÊME (collègue à collègue).
+ *   Format : dense, technique, télégraphique, pas d'emojis ni de sections.
+ *   L'IA NE redirige JAMAIS le prestataire vers un autre avocat/expert.
+ */
+export type AIMode = "draft_for_client" | "assist_provider";
+
 // =============================================================================
 // PARAMÈTRES IA (Firestore)
 // =============================================================================
@@ -36,8 +50,20 @@ export interface AISettings {
   claudeModel?: string;
   temperature: number;
   maxOutputTokens: number;
+  /**
+   * @deprecated 2026-05-04 — n'est plus consommé par le pipeline IA.
+   * Les prompts canoniques sont dans `prompts/lawyer.ts` et `prompts/expert.ts`,
+   * sélectionnés selon `AIMode`. `getAISettings()` ignore ces champs et logge
+   * un warning s'ils sont remplis dans Firestore.
+   */
   systemPrompt: string;
+  /**
+   * @deprecated 2026-05-04 — n'est plus consommé. Cf. systemPrompt ci-dessus.
+   */
   lawyerSystemPrompt?: string;
+  /**
+   * @deprecated 2026-05-04 — n'est plus consommé. Cf. systemPrompt ci-dessus.
+   */
   expertSystemPrompt?: string;
   usePerplexityForFactual: boolean;
   perplexityTemperature: number;

@@ -7,6 +7,7 @@
  */
 
 import * as admin from "firebase-admin";
+import { logger } from "firebase-functions";
 import { AI_CONFIG } from "../core/config";
 import { countriesData, type CountryData } from "../../data/countries";
 
@@ -867,10 +868,46 @@ export async function getAISettings(): Promise<AISettings> {
       return DEFAULT_AI_SETTINGS;
     }
 
-    const data = settingsDoc.data();
+    const data = settingsDoc.data() || {};
+
+    // 🆕 2026-05-04 — P2 : Garde-fou contre les prompts overrides Firestore.
+    // Les champs `lawyerSystemPrompt` / `expertSystemPrompt` / `systemPrompt` ne
+    // sont PLUS consommés par le pipeline IA depuis la mise en place du dual-mode
+    // (lawyer.ts / expert.ts portent les prompts canoniques, paramétrés par AIMode).
+    // Si ces champs sont remplis dans Firestore, c'est probablement du legacy
+    // (admin qui a édité un ancien doc). On loggue pour qu'on puisse les nettoyer.
+    if (data.lawyerSystemPrompt && String(data.lawyerSystemPrompt).trim().length > 0) {
+      logger.warn(
+        "[getAISettings] settings/ai.lawyerSystemPrompt is non-empty but is " +
+        "no longer consumed by the AI pipeline (deprecated since dual-mode rollout 2026-05-04). " +
+        "Clean it from Firestore to avoid confusion.",
+        { length: String(data.lawyerSystemPrompt).length }
+      );
+    }
+    if (data.expertSystemPrompt && String(data.expertSystemPrompt).trim().length > 0) {
+      logger.warn(
+        "[getAISettings] settings/ai.expertSystemPrompt is non-empty but is " +
+        "no longer consumed by the AI pipeline (deprecated since dual-mode rollout 2026-05-04). " +
+        "Clean it from Firestore to avoid confusion.",
+        { length: String(data.expertSystemPrompt).length }
+      );
+    }
+    if (data.systemPrompt && String(data.systemPrompt).trim().length > 0) {
+      logger.warn(
+        "[getAISettings] settings/ai.systemPrompt is non-empty but is " +
+        "no longer consumed by the AI pipeline (deprecated). " +
+        "Clean it from Firestore to avoid confusion.",
+        { length: String(data.systemPrompt).length }
+      );
+    }
+
+    // On retourne les settings SANS écraser nos defaults par les overrides de prompt.
+    // Tout le reste (model, temperature, replyOnBookingCreated, etc.) reste pris en compte.
+    const { lawyerSystemPrompt: _lsp, expertSystemPrompt: _esp, systemPrompt: _sp, ...safeData } = data;
+    void _lsp; void _esp; void _sp;
     return {
       ...DEFAULT_AI_SETTINGS,
-      ...data
+      ...safeData,
     } as AISettings;
   } catch {
     return DEFAULT_AI_SETTINGS;
@@ -1044,7 +1081,7 @@ export function sanitizeBookingData(booking: {
 // RÉCUPÉRATION INTELLIGENTE DE L'HISTORIQUE (conversations longues 30+ min)
 // =============================================================================
 
-import type { LLMMessage, ConversationData } from "../core/types";
+import type { LLMMessage, ConversationData, AIMode } from "../core/types";
 
 /**
  * Construit l'historique de conversation intelligent pour les conversations longues.
@@ -1062,7 +1099,11 @@ export async function buildConversationHistory(
   conversationId: string,
   convoData: ConversationData,
   maxMessages: number = AI_CONFIG.MAX_HISTORY_MESSAGES,
-  keepFirstMessages: number = AI_CONFIG.ALWAYS_KEEP_FIRST_MESSAGES
+  keepFirstMessages: number = AI_CONFIG.ALWAYS_KEEP_FIRST_MESSAGES,
+  // 🆕 2026-05-04 : mode passé par l'appelant (assist_provider par défaut).
+  // En mode assist, la 1ʳᵉ réponse IA (qui était au format DRAFT pour le client)
+  // est résumée pour ne pas polluer le ton "collègue à collègue" attendu.
+  mode: AIMode = "assist_provider"
 ): Promise<LLMMessage[]> {
   const messagesRef = db
     .collection("conversations")
@@ -1156,6 +1197,41 @@ export async function buildConversationHistory(
       role: "system" as const,
       content: `[RÉSUMÉ DE LA CONVERSATION PRÉCÉDENTE]\n${convoData.conversationSummary}`
     });
+  }
+
+  // 🆕 2026-05-04 — P1 : Transformation 1ʳᵉ réponse DRAFT en mode assist_provider
+  //
+  // Pourquoi : la toute 1ʳᵉ réponse IA d'une conversation a été générée en mode
+  // 'draft_for_client' (longue, structurée, vouvoiement, sections 📋 💰 ⏱️…).
+  // Quand le prestataire pose ENSUITE des questions à l'IA pendant l'appel
+  // (mode assist_provider), revoir cette réponse-client en historique pousse
+  // le modèle à imiter ce style → réponses bavardes au lieu de notes denses.
+  //
+  // Solution : on remplace ce 1er message assistant par un message système
+  // contenant un RÉSUMÉ de la réponse (300 caractères) + un rappel de cadrage.
+  // Le modèle SAIT toujours ce qui a été dit au client, mais ne reproduit pas
+  // le format. Le bookingContext (RAPPEL CONTEXTE en head) reste intact.
+  if (mode === "assist_provider") {
+    const firstAssistantIdx = history.findIndex(m => m.role === "assistant");
+    if (firstAssistantIdx >= 0) {
+      const draftContent = history[firstAssistantIdx].content || "";
+      // Résumé compact : on retire les emojis de section + on tronque à 300 chars.
+      const compact = draftContent
+        .replace(/^[\s*]*[📋📖🌍💰⏱️📚🤝⚠️➡️✅📝📍📞📄💡🌐]\s*[A-ZÀ-ÿ ]+/gmu, "")
+        .replace(/\n{3,}/g, "\n\n")
+        .trim();
+      const truncated = compact.length > 300
+        ? compact.slice(0, 300).trim() + "…"
+        : compact;
+      history[firstAssistantIdx] = {
+        role: "system" as const,
+        content:
+          `[Première réponse IA pré-générée — déjà transmise au client (résumé) :\n` +
+          `"${truncated}"\n` +
+          `Tu es désormais en assistance directe au PRESTATAIRE. ` +
+          `Réponds en mode collègue à collègue (dense, télégraphique, sans sections client).]`,
+      };
+    }
   }
 
   return history;

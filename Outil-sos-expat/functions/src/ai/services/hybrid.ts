@@ -11,12 +11,13 @@
  */
 
 import { logger } from "firebase-functions";
-import type { HybridResponse, LLMMessage, ProviderType, AIRequestContext, ConfidenceInfo, ConfidenceLevel, ThinkingCallback, ThinkingLog } from "../core/types";
+import type { HybridResponse, LLMMessage, ProviderType, AIRequestContext, AIMode, ConfidenceInfo, ConfidenceLevel, ThinkingCallback, ThinkingLog } from "../core/types";
 import { ClaudeProvider } from "../providers/claude";
 import { OpenAIProvider } from "../providers/openai";
 import { PerplexityProvider, isFactualQuestion } from "../providers/perplexity";
 import { getSystemPrompt, buildPromptForProvider } from "../prompts";
 import { withExponentialBackoff, getAISettings } from "./utils";
+import { AI_MODE_OVERRIDES } from "../core/config";
 import type { AISettings } from "../core/types";
 
 // =============================================================================
@@ -615,20 +616,28 @@ export class HybridAIService {
 
   /**
    * Point d'entrée principal - route vers le bon LLM selon le contexte
-   * @param onThinking - Callback optionnel pour afficher les étapes en temps réel
+   *
+   * @param mode "draft_for_client" → réponse pré-générée pour le client (booking).
+   *             "assist_provider"   → assistance à l'avocat/expert pendant l'appel.
+   *             Default 'assist_provider' (cas le plus fréquent : interactive chat).
+   * @param onThinking Callback optionnel pour afficher les étapes en temps réel
    */
   async chat(
     messages: LLMMessage[],
     providerType: ProviderType,
     context?: AIRequestContext,
+    mode: AIMode = "assist_provider",
     onThinking?: ThinkingCallback
   ): Promise<HybridResponse> {
     const userMessage = this.getLastUserMessage(messages);
     // AUDIT-FIX P1: Use buildPromptForProvider when context is available
     // to inject booking context (client name, country, subject) into the system prompt
+    // 🆕 2026-05-04 : on propage le `mode` pour que le system prompt soit
+    // radicalement différent selon que la réponse est pour le client final ou
+    // pour le prestataire lui-même.
     const systemPrompt = context
-      ? buildPromptForProvider(providerType, context)
-      : getSystemPrompt(providerType);
+      ? buildPromptForProvider(providerType, context, mode)
+      : getSystemPrompt(providerType, mode);
     let stepOrder = 0;
 
     // Helper pour envoyer un log de réflexion
@@ -718,7 +727,8 @@ export class HybridAIService {
         systemPrompt,
         searchContext,
         citations,  // Passer les citations pour injection
-        useClaude
+        useClaude,
+        mode  // 🆕 mode → calcul temperature / maxTokens adaptés
       );
 
       // 🆕 Log: Finalisation
@@ -940,11 +950,15 @@ CRITICAL RULES:
     systemPrompt: string,
     searchContext: string,
     citations: string[] | undefined,
-    preferClaude: boolean
+    preferClaude: boolean,
+    mode: AIMode = "assist_provider"
   ): Promise<{ content: string; model: string; provider: "claude" | "gpt"; fallbackUsed: boolean; usage?: { inputTokens: number; outputTokens: number } }> {
     const modelOverrides = await this.getModelOverrides();
     const modelFor = (name: "claude" | "openai"): string | undefined =>
       name === "claude" ? modelOverrides.claudeModel : modelOverrides.openaiModel;
+    // 🆕 2026-05-04 : surcharges de température / max_tokens selon le mode
+    const modeOverrides = AI_MODE_OVERRIDES[mode];
+    const paramsFor = (name: "claude" | "openai") => modeOverrides[name];
     // Injecter le contexte de recherche comme message user (pas dans le system prompt)
     // pour éviter de gonfler le prompt système à chaque requête
     const messagesWithSearch = [...messages];
@@ -983,12 +997,15 @@ CRITICAL RULES:
     if (primaryProvider.isAvailable() && !primaryCircuit.isOpen()) {
       try {
         logger.info(`[HybridAI] Tentative avec ${primaryProvider.name} (circuit: ${primaryCircuit.getState()})`);
+        const primaryParams = paramsFor(primaryProviderName);
         const result = await Promise.race([
           withExponentialBackoff(
             () => primaryProvider.chat({
               messages: messagesWithSearch,
               systemPrompt,
               model: modelFor(primaryProviderName),
+              temperature: primaryParams.temperature,
+              maxTokens: primaryParams.maxTokens,
             }),
             { logContext: `[${primaryProvider.name}] Primary` }
           ),
@@ -1020,12 +1037,15 @@ CRITICAL RULES:
     if (fallbackProvider.isAvailable() && !fallbackCircuit.isOpen()) {
       try {
         logger.info(`[HybridAI] Fallback vers ${fallbackProvider.name} (circuit: ${fallbackCircuit.getState()})`);
+        const fallbackParams = paramsFor(fallbackProviderName);
         const result = await Promise.race([
           withExponentialBackoff(
             () => fallbackProvider.chat({
               messages: messagesWithSearch,
               systemPrompt,
               model: modelFor(fallbackProviderName),
+              temperature: fallbackParams.temperature,
+              maxTokens: fallbackParams.maxTokens,
             }),
             { logContext: `[${fallbackProvider.name}] Fallback` }
           ),

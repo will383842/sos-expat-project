@@ -431,7 +431,15 @@ export const aiChatStream = onRequest(
             providerLanguage = await getProviderLanguage(convoData.providerId);
             logger.info("[aiChatStream] Provider language", { providerId, providerLanguage });
           }
-          history = await buildConversationHistory(db, conversationId, convoData);
+          // 🆕 mode='assist_provider' : nettoyage 1ʳᵉ réponse DRAFT (P1)
+          history = await buildConversationHistory(
+            db,
+            conversationId,
+            convoData,
+            undefined,
+            undefined,
+            "assist_provider"
+          );
         }
       } else {
         // FIX: Add status and lastMessageAt for frontend compatibility
@@ -492,8 +500,9 @@ export const aiChatStream = onRequest(
       sendProgress("analyzing", 3, "Analyse juridique en cours...");
 
       // Detect intent and inject guidance before user message
+      // 🆕 2026-05-04 : streaming = assist_provider (le prestataire chatte avec l'IA)
       const intent = detectIntent(safeMessage, history);
-      const intentGuidance = getIntentGuidance(intent);
+      const intentGuidance = getIntentGuidance(intent, "assist_provider");
       if (intentGuidance) {
         history.push({ role: "system", content: intentGuidance });
       }
@@ -748,23 +757,30 @@ function buildSystemPrompt(
 ): string {
   // AUDIT-FIX: Use the real prompts (lawyer.ts/expert.ts) instead of a simplified local version
   // This ensures streaming responses have the same quality as non-streaming ones
+  // 🆕 2026-05-04 : mode = 'assist_provider'
+  // Le streaming est utilisé exclusivement quand le prestataire chatte avec l'IA.
+  // Le prompt utilisé est celui d'assistance au prestataire (dense, télégraphique).
   const ctx = convoData?.bookingContext;
 
   if (ctx) {
     // Use buildPromptForProvider which injects full booking context + all quality rules
-    return buildPromptForProvider(providerType, {
+    return buildPromptForProvider(
       providerType,
-      country: ctx.country,
-      clientName: ctx.clientName,
-      nationality: ctx.nationality,
-      category: ctx.category,
-      urgency: ctx.urgency,
-      bookingTitle: ctx.title,
-      specialties: ctx.specialties,
-      providerLanguage,
-    });
+      {
+        providerType,
+        country: ctx.country,
+        clientName: ctx.clientName,
+        nationality: ctx.nationality,
+        category: ctx.category,
+        urgency: ctx.urgency,
+        bookingTitle: ctx.title,
+        specialties: ctx.specialties,
+        providerLanguage,
+      },
+      "assist_provider"
+    );
   }
 
   // Fallback: no booking context, use base prompt
-  return getSystemPrompt(providerType);
+  return getSystemPrompt(providerType, "assist_provider");
 }

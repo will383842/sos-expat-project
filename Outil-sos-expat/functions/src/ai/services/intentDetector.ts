@@ -7,7 +7,7 @@
  * Injecte une instruction de longueur dans le prompt avant l'appel LLM.
  */
 
-import type { LLMMessage } from "../core/types";
+import type { LLMMessage, AIMode } from "../core/types";
 
 // =============================================================================
 // TYPES
@@ -82,14 +82,46 @@ export function detectIntent(
  * Retourne une instruction à injecter comme message système juste avant
  * le dernier message user, pour guider la longueur de la réponse.
  * Retourne null si aucune contrainte spéciale n'est nécessaire.
+ *
+ * 🆕 2026-05-04 : la guidance dépend du mode :
+ *   - assist_provider → consignes télégraphiques (collègue à collègue)
+ *   - draft_for_client → consignes plus structurées (réponse client)
  */
-export function getIntentGuidance(intent: MessageIntent): string | null {
+export function getIntentGuidance(
+  intent: MessageIntent,
+  mode: AIMode = "assist_provider"
+): string | null {
+  if (mode === "assist_provider") {
+    switch (intent) {
+      case "confirmation":
+        // Pas de double bloc utile pour un simple "ok merci"
+        return "[INSTRUCTION: Le prestataire confirme. Réponse 1 ligne max, pas de blocs NOTE TECHNIQUE / À DIRE AU CLIENT.]";
+
+      case "contact_request":
+        // Pour des coordonnées brutes le prestataire les transmettra lui-même
+        return "[INSTRUCTION: Le prestataire demande un contact officiel (organisme, ambassade, consulat, juridiction — JAMAIS un avocat / expert). Réponds en télégraphique: nom · téléphone · site, c'est tout. Pas de blocs NOTE TECHNIQUE / À DIRE AU CLIENT (le prestataire transmettra les coordonnées telles quelles).]";
+
+      case "follow_up":
+        return "[INSTRUCTION: Question de suivi. Réponds UNIQUEMENT à ce qui est demandé, en respectant le format à 2 blocs (NOTE TECHNIQUE + À DIRE AU CLIENT). Pas de répétition du contexte précédent. Pas de salutation.]";
+
+      case "factual_short":
+        return "[INSTRUCTION: Question courte. Format à 2 blocs OBLIGATOIRE : NOTE TECHNIQUE (1-3 lignes denses : chiffre/article/délai + source) puis À DIRE AU CLIENT (2-3 phrases en langage clair, vouvoiement). Pas de \"contactez un avocat\".]";
+
+      case "legal_analysis":
+        return "[INSTRUCTION: Analyse juridique demandée. Format à 2 blocs OBLIGATOIRE : NOTE TECHNIQUE complète (5-15 lignes) puis À DIRE AU CLIENT (3-6 phrases, langage accessible, jargon expliqué). Pas d'emojis décoratifs côté note, pas de sections client (📋💰).]";
+
+      case "complex_analysis":
+        return "[INSTRUCTION: Cas complexe. Format à 2 blocs OBLIGATOIRE : NOTE TECHNIQUE structurée si utile (mais pas en sections client style 📋💰⏱️) puis À DIRE AU CLIENT (4-8 phrases progressives qui guident le client, avec une action concrète à la fin).]";
+    }
+  }
+
+  // Mode draft_for_client — guidance historique adaptée à la rédaction client
   switch (intent) {
     case "confirmation":
       return "[INSTRUCTION: Le prestataire confirme ou remercie. Réponse très courte (1-2 lignes max). Pas de nouveau contenu sauf si une question est implicite.]";
 
     case "contact_request":
-      return "[INSTRUCTION: Le prestataire demande un contact/numéro/adresse. Donne UNIQUEMENT les coordonnées demandées (nom + téléphone + site web). Pas d'analyse, pas de sections.]";
+      return "[INSTRUCTION: Le prestataire demande un contact officiel (organisme, ambassade, consulat — JAMAIS un avocat / expert tiers). Donne le nom + téléphone + site web, sans analyse superflue.]";
 
     case "follow_up":
       return "[INSTRUCTION: Question de suivi. Réponds UNIQUEMENT à ce qui est demandé. Ne répète RIEN de tes réponses précédentes. Pas de réintroduction du contexte.]";
@@ -98,11 +130,9 @@ export function getIntentGuidance(intent: MessageIntent): string | null {
       return "[INSTRUCTION: Question factuelle courte. Réponse en 3-8 lignes max avec la source si juridique. Pas de sections sauf si vraiment nécessaire.]";
 
     case "legal_analysis":
-      // Pas de contrainte de longueur — laisser l'IA développer
-      return null;
+      return null; // laisser développer
 
     case "complex_analysis":
-      // Pas de contrainte de longueur — laisser l'IA développer
-      return null;
+      return null; // laisser développer
   }
 }

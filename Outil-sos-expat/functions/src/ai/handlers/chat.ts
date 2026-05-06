@@ -290,7 +290,15 @@ export const aiChat = onRequest(
           }
 
           // Load INTELLIGENT history (preserves initial context + recent)
-          history = await buildConversationHistory(db, conversationId, convoData);
+          // 🆕 mode='assist_provider' : nettoyage 1ʳᵉ réponse DRAFT (P1)
+          history = await buildConversationHistory(
+            db,
+            conversationId,
+            convoData,
+            undefined,
+            undefined,
+            "assist_provider"
+          );
         }
       } else {
         // FIX: Add status and lastMessageAt for frontend compatibility
@@ -346,8 +354,9 @@ export const aiChat = onRequest(
       }
 
       // Detect intent BEFORE adding user message to history (needs previous messages only)
+      // 🆕 2026-05-04 : guidance d'intent dépend du mode (assist_provider ici).
       const intent = detectIntent(safeMessage, history);
-      const intentGuidance = getIntentGuidance(intent);
+      const intentGuidance = getIntentGuidance(intent, "assist_provider");
 
       // Inject intent guidance as system message if applicable
       if (intentGuidance) {
@@ -377,18 +386,26 @@ export const aiChat = onRequest(
       logger.info("[aiChat] Intent detected", { intent, hasGuidance: !!intentGuidance });
 
       // Call AI with enriched context (including language + nationality)
+      // 🆕 2026-05-04 : mode = 'assist_provider'
+      // Le endpoint aiChat est utilisé par les UIs où le prestataire interagit
+      // directement avec l'IA. L'output doit être dense et adressé au prestataire.
       const service = createService();
-      const response = await service.chat(history, providerType, {
+      const response = await service.chat(
+        history,
         providerType,
-        country: convoData?.bookingContext?.country,
-        clientName: convoData?.bookingContext?.clientName,
-        nationality: convoData?.bookingContext?.nationality,
-        category: convoData?.bookingContext?.category,
-        urgency: convoData?.bookingContext?.urgency,
-        specialties: convoData?.bookingContext?.specialties,
-        bookingTitle: convoData?.bookingContext?.title,
-        providerLanguage,
-      });
+        {
+          providerType,
+          country: convoData?.bookingContext?.country,
+          clientName: convoData?.bookingContext?.clientName,
+          nationality: convoData?.bookingContext?.nationality,
+          category: convoData?.bookingContext?.category,
+          urgency: convoData?.bookingContext?.urgency,
+          specialties: convoData?.bookingContext?.specialties,
+          bookingTitle: convoData?.bookingContext?.title,
+          providerLanguage,
+        },
+        "assist_provider"
+      );
 
       // P0 FIX: Modération de l'output IA
       let outputFlagged = false;
