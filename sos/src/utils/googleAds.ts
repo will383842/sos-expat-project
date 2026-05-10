@@ -12,6 +12,16 @@ declare global {
     gtag: (...args: unknown[]) => void;
     __googleAdsMarketingGranted?: boolean;
     googleAdsDiagnostic?: () => void;
+    __sosAds?: {
+      conversionId: string | undefined;
+      labels: Record<string, string | undefined>;
+      isEnabled: boolean;
+      isInitialized: boolean;
+      hasConsent: () => boolean;
+      gtagAvailable: () => boolean;
+      gclid: () => string | null;
+      events: Array<{ event: string; ts: number; params: Record<string, unknown> }>;
+    };
   }
 }
 
@@ -27,6 +37,15 @@ const CONVERSION_LABELS = {
   signup: import.meta.env.VITE_GOOGLE_ADS_SIGNUP_LABEL as string | undefined,
   checkout: import.meta.env.VITE_GOOGLE_ADS_CHECKOUT_LABEL as string | undefined,
 } as const;
+
+// Live debug surface — survives terser drop_console.
+// Inspect in DevTools console: __sosAds (config + isInitialized + last 20 events).
+// hasConsent / gtagAvailable / gclid are functions, call them: __sosAds.hasConsent()
+const _recordAdsEvent = (event: string, params: Record<string, unknown>): void => {
+  if (typeof window === 'undefined' || !window.__sosAds) return;
+  window.__sosAds.events.unshift({ event, ts: Date.now(), params });
+  if (window.__sosAds.events.length > 20) window.__sosAds.events.length = 20;
+};
 
 // ============================================================================
 // Utilitaires de validation et normalisation
@@ -253,6 +272,8 @@ export const initializeGoogleAds = (): void => {
       // Ne pas envoyer de page_view automatique pour les conversions
       send_page_view: false,
     });
+
+    if (window.__sosAds) window.__sosAds.isInitialized = true;
 
     if (process.env.NODE_ENV === 'development') {
       console.log('%c[GoogleAds] Initialized:', 'color: #4285F4; font-weight: bold', GOOGLE_ADS_CONVERSION_ID);
@@ -523,6 +544,7 @@ export const trackGoogleAdsPurchase = (params: {
         // Enhanced Conversions
         ...readStoredUserData(),
       });
+      _recordAdsEvent('purchase', { value: params.value, currency: params.currency, transaction_id: params.transaction_id || params.order_id || eventID });
     }
 
     // Event GA4 purchase (pour le remarketing)
@@ -582,6 +604,7 @@ export const trackGoogleAdsLead = (params?: {
         // Enhanced Conversions
         ...readStoredUserData(),
       });
+      _recordAdsEvent('lead', { value: params?.value || 0, currency: params?.currency || 'EUR', country });
     }
 
     // Event GA4 generate_lead
@@ -628,6 +651,7 @@ export const trackGoogleAdsBeginCheckout = (params?: {
         value: params?.value || 0,
         currency: params?.currency || 'EUR',
       });
+      _recordAdsEvent('begin_checkout', { value: params?.value || 0, currency: params?.currency || 'EUR', country });
     }
 
     // Event GA4 begin_checkout
@@ -710,6 +734,7 @@ export const trackGoogleAdsSignUp = (params?: {
         // Enhanced Conversions
         ...readStoredUserData(),
       });
+      _recordAdsEvent('signup', { method: params?.method || 'email', content_name: params?.content_name, country });
     }
 
     // Event GA4 sign_up
@@ -908,6 +933,22 @@ export const googleAdsDiagnostic = (): void => {
 // Exposer la fonction de diagnostic globalement
 if (typeof window !== 'undefined') {
   window.googleAdsDiagnostic = googleAdsDiagnostic;
+
+  // Live debug surface — survives terser drop_console.
+  // In DevTools console: type `__sosAds` to inspect config + isInitialized + last 20 events.
+  // hasConsent / gtagAvailable / gclid are functions: __sosAds.hasConsent()
+  if (!window.__sosAds) {
+    window.__sosAds = {
+      conversionId: GOOGLE_ADS_CONVERSION_ID,
+      labels: { ...CONVERSION_LABELS },
+      isEnabled: isGoogleAdsEnabled(),
+      isInitialized: false,
+      hasConsent: hasMarketingConsent,
+      gtagAvailable: isGtagAvailable,
+      gclid: getGoogleClickId,
+      events: [],
+    };
+  }
 }
 
 // Export default
