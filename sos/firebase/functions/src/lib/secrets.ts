@@ -170,10 +170,11 @@ export const META_PIXEL_ID_PARAM = defineString("META_PIXEL_ID", {
 
 /**
  * Resolution order: defineString param → process.env.META_PIXEL_ID → fallback.
- * Logs a warning if we end up using the broken default Pixel (so the misconfig
- * is loud in logs even when Sentry is disabled).
+ * Warns only if we end up using the legacy broken Pixel (1494539620587456),
+ * which should not happen since the param/env defaults to the live one.
  */
 let _metaPixelWarningEmitted = false;
+const LEGACY_BROKEN_PIXEL = "1494539620587456";
 export function getMetaPixelId(): string {
   let value = "";
   try {
@@ -185,10 +186,10 @@ export function getMetaPixelId(): string {
   if (!value) {
     value = "2204016713738311";
   }
-  if (value === "2204016713738311" && !_metaPixelWarningEmitted) {
+  if (value === LEGACY_BROKEN_PIXEL && !_metaPixelWarningEmitted) {
     _metaPixelWarningEmitted = true;
     console.warn(
-      "[Meta CAPI] ⚠️  Using default Pixel ID 1494539620587456 — this Pixel returned 404 from Graph API on 2026-05-03. " +
+      `[Meta CAPI] Using legacy Pixel ID ${LEGACY_BROKEN_PIXEL} — this Pixel returned 404 from Graph API on 2026-05-03. ` +
       "Set META_PIXEL_ID env/param to a live Pixel before relying on CAPI. See audit_results_2026-05-03.md BUG-002."
     );
   }

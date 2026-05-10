@@ -142,6 +142,9 @@ export interface GoogleAdsEventResult {
   orderId?: string;
   partialFailures?: string[];
   error?: string;
+  /** True when the call was intentionally skipped (e.g. backend disabled via env var) */
+  skipped?: boolean;
+  skipReason?: string;
 }
 
 // ============================================================================
@@ -509,6 +512,19 @@ export async function sendConversionEvent(
   }
 ): Promise<GoogleAdsEventResult> {
   const logPrefix = "[Google Ads Conversion]";
+
+  // Backend tracking kill-switch. Set GOOGLE_ADS_BACKEND_DISABLED=true on the
+  // function runtime to silence OAuth errors when the backend secrets point to
+  // a stale/abandoned OAuth client (the frontend gtag pipeline keeps tracking).
+  // See memory project_google_ads_switch_2026_04_24 (Option A).
+  if (process.env.GOOGLE_ADS_BACKEND_DISABLED === "true") {
+    return {
+      success: true,
+      skipped: true,
+      skipReason: "GOOGLE_ADS_BACKEND_DISABLED=true",
+      orderId: params.orderId,
+    };
+  }
 
   try {
     // Get secrets

@@ -44,7 +44,13 @@ import { logger } from "firebase-functions/v2";
 import { getApps, initializeApp } from "firebase-admin/app";
 
 // Secret imports (needed for the secrets array in trigger config)
-import { TELEGRAM_BOT_TOKEN, TELEGRAM_ENGINE_URL_SECRET, TELEGRAM_ENGINE_API_KEY_SECRET } from "../lib/secrets";
+import {
+  TELEGRAM_BOT_TOKEN,
+  TELEGRAM_ENGINE_URL_SECRET,
+  TELEGRAM_ENGINE_API_KEY_SECRET,
+  MAILWIZZ_API_KEY,
+  GA4_API_SECRET,
+} from "../lib/secrets";
 import { PARTNER_ENGINE_URL_SECRET, PARTNER_ENGINE_API_KEY_SECRET } from "../partner/triggers/forwardToPartnerEngine";
 import {
   GOOGLE_ADS_CUSTOMER_ID,
@@ -81,6 +87,8 @@ export const consolidatedOnUserCreated = onDocumentCreated(
       GOOGLE_ADS_CLIENT_ID,
       GOOGLE_ADS_CLIENT_SECRET,
       META_CAPI_TOKEN,
+      MAILWIZZ_API_KEY,
+      GA4_API_SECRET,
       PARTNER_ENGINE_URL_SECRET,
       PARTNER_ENGINE_API_KEY_SECRET,
     ],
