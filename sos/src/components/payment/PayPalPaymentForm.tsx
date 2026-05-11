@@ -49,6 +49,12 @@ interface PayPalPaymentFormProps {
   onSuccess: (details: PayPalSuccessDetails) => void;
   onError: (error: Error) => void;
   onCancel?: () => void;
+  // Appelé quand l'utilisateur clique "Réessayer" après une erreur. Le parent
+  // doit régénérer son `callSessionId` afin que le lockKey du duplicate
+  // detection backend (`paypal_${uid}_${providerId}_${amount}_${callSessionId}`)
+  // change : sinon le backend renvoie 409 pendant 3 minutes après la 1ère
+  // tentative échouée (PayPalManager.ts:2906-2934).
+  onRetry?: () => void;
   disabled?: boolean;
 }
 
@@ -157,27 +163,18 @@ const CardFieldsSubmitButton: React.FC<{
   onError?: (error: unknown) => void;
 }> = ({ isProcessing, disabled, formattedAmount, onSubmit, onError }) => {
   const { cardFieldsForm } = usePayPalCardFields();
-  const [isFormValid, setIsFormValid] = useState(false);
-
-  useEffect(() => {
-    if (!cardFieldsForm) return;
-    const checkValidity = async () => {
-      try {
-        const formState = await cardFieldsForm.getState();
-        setIsFormValid(formState.isFormValid);
-      } catch {
-        // ignore
-      }
-    };
-    checkValidity();
-    const interval = setInterval(checkValidity, 500);
-    return () => clearInterval(interval);
-  }, [cardFieldsForm]);
+  // iOS Safari autofill ("Carte de mon iPhone") injecte les valeurs directement
+  // dans les iframes PayPal hosted-fields sans déclencher les events `input`/
+  // `change` que le SDK écoute. Résultat : `cardFieldsForm.getState()` continue
+  // à retourner `isFormValid=false` même quand les champs SONT remplis. On a
+  // donc choisi de NE PAS gater le bouton sur isFormValid (le SDK valide à la
+  // soumission via cardFieldsForm.submit()).
 
   const handleClick = async () => {
     if (!cardFieldsForm) return;
-    const formState = await cardFieldsForm.getState();
-    if (!formState.isFormValid) return;
+    // iOS autofill workaround: ne PAS bloquer sur `getState().isFormValid`. Le
+    // SDK PayPal valide réellement à la soumission via cardFieldsForm.submit() ;
+    // si les champs sont effectivement invalides, onError remontera l'erreur.
     onSubmit();
     cardFieldsForm.submit().catch((err) => {
       if (import.meta.env.DEV) console.error("Card submit error:", err);
@@ -185,7 +182,10 @@ const CardFieldsSubmitButton: React.FC<{
     });
   };
 
-  const isButtonDisabled = disabled || isProcessing || !isFormValid;
+  // Bouton désactivé tant que le SDK n'est pas prêt (cardFieldsForm absent),
+  // ou que disabled/isProcessing est actif. On retire `!isFormValid` pour iOS
+  // autofill ; le clic reste toujours sûr (validation réelle au submit).
+  const isButtonDisabled = disabled || isProcessing || !cardFieldsForm;
 
   return (
     <button
@@ -238,6 +238,7 @@ export const PayPalPaymentForm: React.FC<PayPalPaymentFormProps> = ({
   onSuccess,
   onError,
   onCancel,
+  onRetry,
   disabled = false,
 }) => {
   const [scriptState, dispatch] = usePayPalScriptReducer();
@@ -530,6 +531,9 @@ export const PayPalPaymentForm: React.FC<PayPalPaymentFormProps> = ({
     setPaymentMethod(null);
     setIsProcessing(false);
     paymentSucceededRef.current = false;
+    // Demande au parent de régénérer le callSessionId pour contourner le
+    // duplicate detection backend (lockKey basé sur callSessionId, fenêtre 3 min).
+    onRetry?.();
   };
 
   // Loading state - skeleton compact (PayPal button + carte)

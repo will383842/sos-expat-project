@@ -439,15 +439,24 @@ const SuccessPayment: React.FC = () => {
   }, [paymentIntentId, isFullyReady]);
 
   /* =========================
-     Timestamp pour le flux B2B SOS-Call (gratuit)
-     Aucun paiement → on ancre le compte à rebours sur paymentData.savedAt
-     pour que la page affiche immédiatement le timer 4 min.
+     Timestamp fallback (TOUS flows : Stripe, PayPal, B2B SOS-Call)
+     Pourquoi : le useEffect principal au-dessus peut traîner (auth pas encore
+     fullyReady, doc payments/{id} pas encore créé pour PayPal car écrit côté
+     client après navigation, Firestore lent…). Pendant ce temps, le UI reste
+     bloqué sur le loader bleu "Chargement des infos de paiement" parce que
+     le rendu du timer dépend de `paymentTimestamp` (cf. ligne ~1390).
+     On ancre donc immédiatement le countdown sur `paymentData.savedAt` posé
+     par CallCheckout au moment de la nav. Le useEffect principal écrasera
+     ensuite avec le timestamp Firestore si dispo (mais c'est cosmétique :
+     l'écart est sub-seconde).
      ========================= */
   useEffect(() => {
     if (paymentTimestamp) return;
-    if (!paymentData?.isSosCallFree || !callId) return;
+    if (!paymentData?.savedAt) return;
 
-    const sessionKey = `payment_timestamp_sos_${callId}`;
+    const sessionKey = paymentData.isSosCallFree
+      ? `payment_timestamp_sos_${callId || "anon"}`
+      : `payment_timestamp_fallback_${paymentIntentId || callId || "anon"}`;
     try {
       const saved = sessionStorage.getItem(sessionKey);
       if (saved) {
@@ -467,7 +476,7 @@ const SuccessPayment: React.FC = () => {
     try {
       sessionStorage.setItem(sessionKey, String(ts));
     } catch {}
-  }, [paymentData?.isSosCallFree, paymentData?.savedAt, callId, paymentTimestamp]);
+  }, [paymentData?.isSosCallFree, paymentData?.savedAt, callId, paymentIntentId, paymentTimestamp]);
 
   /* =========================
      Compte à rebours “ready_to_ring”

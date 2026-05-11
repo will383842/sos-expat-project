@@ -2903,21 +2903,85 @@ export const createPayPalOrderHttp = onRequest(
       console.warn("[PAYPAL] Rate limit check failed, allowing request:", rlError);
     }
 
-    // ========== DUPLICATE DETECTION (payment_locks, 3-min window) ==========
+    // ========== DUPLICATE DETECTION (payment_locks, 30-sec window, state-aware) ==========
+    // 2026-05-11: Fenêtre réduite de 3 min → 30 s, et bypass si un order PayPal existe
+    // déjà pour ce callSessionId mais est dans un état terminal d'échec ou abandonné.
+    // Raison : un retry humain après "Erreur de paiement" (mauvais numéro, 3DS échoué,
+    // CB refusée…) prend souvent < 3 min, et bloquer l'user 3 min sur un faux doublon
+    // est une UX désastreuse. La fenêtre 30 s reste suffisante pour bloquer un vrai
+    // double-clic ou un replay rapide.
     const lockKey = `paypal_${auth.uid}_${providerId}_${amount}_${callSessionId}`;
     const lockRef = db.collection("payment_locks").doc(lockKey);
     try {
-      const LOCK_WINDOW_MS = 3 * 60 * 1000; // 3 minutes
+      const LOCK_WINDOW_MS = 30 * 1000; // 30 secondes (vs 3 min auparavant)
+      const ABANDONED_AGE_MS = 15 * 1000; // un order CREATED non finalisé après 15s = abandonné
+      const FAILED_TERMINAL_STATES = new Set([
+        "DECLINED",
+        "FAILED",
+        "VOIDED",
+        "CAPTURE_FAILED",
+        "AUTHORIZATION_FAILED",
+        "EXPIRED",
+      ]);
+
       const lockResult = await db.runTransaction(async (tx) => {
         const lockDoc = await tx.get(lockRef);
         const now = Date.now();
+
         if (lockDoc.exists) {
           const lockData = lockDoc.data();
-          if (lockData && (now - lockData.createdAt) < LOCK_WINDOW_MS) {
+          const lockAge = lockData ? now - (lockData.createdAt || 0) : Number.POSITIVE_INFINITY;
+
+          if (lockData && lockAge < LOCK_WINDOW_MS) {
+            // Lock encore actif. Vérifier l'état de l'order existant : si l'order
+            // précédent a échoué côté PayPal, c'est un retry légitime → on bypass.
+            const existingOrderId = lockData.orderId as string | undefined;
+            if (existingOrderId) {
+              const existingOrderSnap = await tx.get(
+                db.collection("paypal_orders").doc(existingOrderId)
+              );
+              const existingOrder = existingOrderSnap.data();
+              const existingStatus = existingOrder?.status as string | undefined;
+
+              if (existingStatus && FAILED_TERMINAL_STATES.has(existingStatus)) {
+                // Order précédent en échec → autoriser un nouveau
+                tx.set(lockRef, {
+                  createdAt: now,
+                  userId: auth.uid,
+                  providerId,
+                  amount,
+                  callSessionId,
+                  bypassedReason: `previous_${existingStatus}`,
+                });
+                return { isDuplicate: false, bypassedReason: existingStatus };
+              }
+
+              if (existingStatus === "CREATED" && lockAge > ABANDONED_AGE_MS) {
+                // Order créé mais jamais approuvé après 15s → abandonné par l'user
+                tx.set(lockRef, {
+                  createdAt: now,
+                  userId: auth.uid,
+                  providerId,
+                  amount,
+                  callSessionId,
+                  bypassedReason: "previous_abandoned",
+                });
+                return { isDuplicate: false, bypassedReason: "abandoned" };
+              }
+            }
+
+            // Vrai doublon (order actif AUTHORIZED/COMPLETED/PENDING ou trop récent)
             return { isDuplicate: true, existingOrderId: lockData.orderId };
           }
         }
-        tx.set(lockRef, { createdAt: now, userId: auth.uid, providerId, amount, callSessionId });
+
+        tx.set(lockRef, {
+          createdAt: now,
+          userId: auth.uid,
+          providerId,
+          amount,
+          callSessionId,
+        });
         return { isDuplicate: false };
       });
 
@@ -2926,11 +2990,16 @@ export const createPayPalOrderHttp = onRequest(
         res.status(409).json({ error: "Un paiement similaire est déjà en cours de traitement." });
         return;
       }
+
+      if (lockResult.bypassedReason) {
+        console.log(
+          `[PAYPAL] Lock bypass for ${auth.uid}, session ${callSessionId}, reason=${lockResult.bypassedReason}`
+        );
+      }
     } catch (lockError) {
-      // On failure, block for safety (duplicate payments are worse than a retry)
-      console.error("[PAYPAL] Duplicate check failed, blocking:", lockError);
-      res.status(500).json({ error: "Vérification de doublon impossible. Réessayez dans quelques secondes." });
-      return;
+      // On failure, allow the request (better than blocking a legitimate retry).
+      // Vrai doublon → PayPal lui-même refusera de capturer 2 fois le même montant.
+      console.warn("[PAYPAL] Duplicate check failed, allowing request:", lockError);
     }
 
     try {
@@ -3035,6 +3104,16 @@ export const createPayPalOrderHttp = onRequest(
         paymentMethod: normalizedPaymentMethod,
       });
       console.log(`✅ [PAYPAL_DEBUG] STEP 6: OK - SIMPLE order created, orderId=${result?.orderId}`);
+
+      // 2026-05-11: Stocker l'orderId dans le lock pour permettre le bypass
+      // state-aware au prochain retry (cf. duplicate detection ci-dessus).
+      try {
+        await lockRef.set({ orderId: result.orderId }, { merge: true });
+      } catch (lockUpdateErr) {
+        // Non-bloquant : si la maj du lock échoue, on perd juste le bypass
+        // intelligent au prochain retry, le retry passera quand même après 30s.
+        console.warn("[PAYPAL] Failed to attach orderId to lock (non-blocking):", lockUpdateErr);
+      }
 
       prodLogger.info('PAYPAL_ORDER_HTTP_SUCCESS', `[${requestId}] PayPal order created successfully (HTTP)`, {
         requestId,

@@ -3320,11 +3320,20 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({
   }, [error]);
 
   // ========================================
-  // P0 FIX: callSessionId stable pour PayPal (généré une seule fois)
+  // P0 FIX: callSessionId stable pour PayPal — régénéré au "Réessayer"
+  // pour contourner le duplicate detection backend (lockKey basé sur le
+  // callSessionId, fenêtre 3 min). Un double-clic dans la MÊME tentative
+  // garde le même sessionId → la sécurité anti-doublon reste effective.
   // ========================================
-  const [paypalCallSessionId] = useState<string>(() =>
+  const [paypalCallSessionId, setPaypalCallSessionId] = useState<string>(() =>
     `call_session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`
   );
+
+  const handlePayPalRetry = useCallback(() => {
+    setPaypalCallSessionId(
+      `call_session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`
+    );
+  }, []);
 
   // ========================================
   // P0 FIX: Fonction pour persister les données PayPal (comme Stripe)
@@ -3928,6 +3937,7 @@ const CallCheckout: React.FC<CallCheckoutProps> = ({
                     console.log("PayPal cancelled by user");
                     handlePaymentError(t("err.paypalCanceled.message"));
                   }}
+                  onRetry={handlePayPalRetry}
                   disabled={isProcessing}
                 />
               ) : (
