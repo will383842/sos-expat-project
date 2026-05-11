@@ -158,6 +158,15 @@
       "quota_exceeded": "Le quota mensuel d'appels IA est épuisé.",
       "ai_disabled": "L'assistant IA est actuellement désactivé.",
       "no_provider_id": "Identifiant prestataire manquant sur le dossier.",
+      "provider_not_found": "Profil prestataire introuvable dans l'outil IA.",
+      "provider_data_empty": "Données prestataire vides — profil à compléter.",
+      "error_checking_access": "Erreur technique lors de la vérification de l'accès IA.",
+      "error_checking_quota": "Erreur technique lors de la vérification du quota IA.",
+      "error_reserving_quota": "Erreur technique lors de la réservation du quota IA.",
+      "llm_quota_exceeded": "Le solde du compte API IA est épuisé — rechargez le crédit (Anthropic / OpenAI).",
+      "llm_auth_error": "Clé API IA invalide ou révoquée — vérifiez la configuration des secrets.",
+      "llm_timeout": "Le service IA n'a pas répondu à temps — réessayez dans quelques minutes.",
+      "llm_error": "Le service IA est temporairement indisponible — réessayez plus tard.",
       "unknown": "Raison inconnue — contactez le support."
     }
   },

@@ -159,6 +159,15 @@
       "quota_exceeded": "Monthly AI quota exhausted.",
       "ai_disabled": "The AI assistant is currently disabled.",
       "no_provider_id": "Provider ID missing on this booking.",
+      "provider_not_found": "Provider profile not found in the AI tool.",
+      "provider_data_empty": "Provider data is empty — profile needs completion.",
+      "error_checking_access": "Technical error while checking AI access.",
+      "error_checking_quota": "Technical error while checking AI quota.",
+      "error_reserving_quota": "Technical error while reserving AI quota.",
+      "llm_quota_exceeded": "The AI API account balance is exhausted — top up credit (Anthropic / OpenAI).",
+      "llm_auth_error": "AI API key invalid or revoked — check secret configuration.",
+      "llm_timeout": "The AI service did not respond in time — please try again in a few minutes.",
+      "llm_error": "The AI service is temporarily unavailable — please try again later.",
       "unknown": "Unknown reason — please contact support."
     }
   },
