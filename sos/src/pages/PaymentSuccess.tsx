@@ -479,6 +479,21 @@ const SuccessPayment: React.FC = () => {
   }, [paymentData?.isSosCallFree, paymentData?.savedAt, callId, paymentIntentId, paymentTimestamp]);
 
   /* =========================
+     Fallback ULTIME : si après 2 s on n'a toujours pas de paymentTimestamp,
+     forcer Date.now(). Garantit que le countdown démarre dans TOUS les cas
+     (sessionStorage perdu, auth lente, Firestore down, paymentData=null…).
+     Mieux vaut un timer 4 min calé sur l'arrivée sur la page qu'un loader
+     infini qui empêche l'user de voir que son paiement est passé.
+     ========================= */
+  useEffect(() => {
+    if (paymentTimestamp) return;
+    const forceTimer = setTimeout(() => {
+      setPaymentTimestamp((prev) => prev || Date.now());
+    }, 2000);
+    return () => clearTimeout(forceTimer);
+  }, [paymentTimestamp]);
+
+  /* =========================
      Compte à rebours “ready_to_ring”
      ========================= */
   useEffect(() => {
