@@ -133,6 +133,10 @@ export const consolidatedOnUserCreated = onDocumentCreated(
         const { handleSyncClaimsCreated } = await import("./syncRoleClaims");
         await handleSyncClaimsCreated(event);
       }),
+      safeRun("autoLinkAaaProvider", async () => {
+        const { handleAutoLinkAaaProvider } = await import("./autoLinkAaaProvider");
+        await handleAutoLinkAaaProvider(event);
+      }),
     ];
 
     // Legacy affiliate handler only when unified system is NOT active
