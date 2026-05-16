@@ -293,7 +293,6 @@ export const onStripePaymentFailureCountryAlert = onDocumentUpdated(
     memory: "256MiB",
     cpu: 0.083,
     timeoutSeconds: 60,
-    concurrency: 50,  // 2026-05-16 cost optim: payments/{id} multi-write victim, ~95% early-return (status check). Pack events.
   },
   async (event) => {
     const before = event.data?.before.data() as PaymentsDoc | undefined;

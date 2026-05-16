@@ -25,7 +25,7 @@ export const handleMilestoneReached = onDocumentUpdated(
     cpu: 0.083,
     maxInstances: 10,
     minInstances: 0,
-    concurrency: 80,  // 2026-05-16 cost optim: was 1 (explicit). users/{id} cascade victim, ~99% early-return. Pack events.
+    concurrency: 1,
     // P1 FIX 2026-05-03 (round 4): wire SENTRY_DSN so initSentry() resolves.
     secrets: [SENTRY_DSN],
   },
