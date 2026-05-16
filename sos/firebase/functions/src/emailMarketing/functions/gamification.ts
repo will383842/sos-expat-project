@@ -1,11 +1,11 @@
 import { onDocumentCreated, onDocumentUpdated } from "firebase-functions/v2/firestore";
 import * as admin from "firebase-admin";
-import { MailwizzAPI } from "../utils/mailwizz";
-import { mapUserToMailWizzFields } from "../utils/fieldMapper";
-import { logGA4Event } from "../utils/analytics";
 import { getLanguageCode } from "../config";
 // P1 FIX 2026-05-03 (round 4): SENTRY_DSN for handleMilestoneReached initSentry resolution.
 import { SENTRY_DSN } from "../../lib/secrets";
+// 2026-05-16 cost optim: lazy-load heavy modules below (after early-return) instead of top-level.
+// Reduces cold-start ~200-400ms × every early-return invocation (~99% of users/{id} triggers).
+// Loaded modules: MailwizzAPI, mapUserToMailWizzFields, logGA4Event.
 
 /**
  * FUNCTION: Handle Milestone Reached
@@ -21,11 +21,14 @@ export const handleMilestoneReached = onDocumentUpdated(
   {
     document: "users/{userId}",
     region: "europe-west3",
-    memory: "256MiB" as const,
-    cpu: 0.083,
+    // 2026-05-16 cost optim: was 256Mi/0.083cpu/concurrency:1 (215s/invoc observed = queue Eventarc).
+    // Switched to 512Mi/1cpu/concurrency:80 to pack the cascade users/{id} burst.
+    // Net: -60% expected on this trigger (worst cascade victim of the 13 cluster).
+    memory: "512MiB" as const,
+    cpu: 1,
     maxInstances: 10,
     minInstances: 0,
-    concurrency: 1,
+    concurrency: 80,
     // P1 FIX 2026-05-03 (round 4): wire SENTRY_DSN so initSentry() resolves.
     secrets: [SENTRY_DSN],
   },
@@ -47,6 +50,11 @@ export const handleMilestoneReached = onDocumentUpdated(
           before.lastMilestoneAt?.toMillis?.() !== after.lastMilestoneAt?.toMillis?.()));
 
     if (!milestoneChanged) return;
+
+    // Lazy-load heavy modules only after early-return passes.
+    const { MailwizzAPI } = await import("../utils/mailwizz");
+    const { mapUserToMailWizzFields } = await import("../utils/fieldMapper");
+    const { logGA4Event } = await import("../utils/analytics");
 
     try {
       const mailwizz = new MailwizzAPI();
@@ -123,6 +131,11 @@ export const handleBadgeUnlocked = onDocumentCreated(
         .get();
 
       if (!userDoc.exists) return;
+
+      // Lazy-load heavy modules only after early-returns pass.
+      const { MailwizzAPI } = await import("../utils/mailwizz");
+      const { mapUserToMailWizzFields } = await import("../utils/fieldMapper");
+      const { logGA4Event } = await import("../utils/analytics");
 
       const user = userDoc.data();
       const lang = getLanguageCode(

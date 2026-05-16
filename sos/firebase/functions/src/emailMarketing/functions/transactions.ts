@@ -1101,7 +1101,12 @@ export const handlePayoutThresholdReached = onDocumentUpdated(
   {
     document: "users/{userId}",
     region: "europe-west3",
-    cpu: 0.083,
+    // 2026-05-16 cost optim: users/{id} cascade victim (11 triggers fan-out).
+    // cpu:1 + memory:512Mi required by Gen2 for concurrency > 1.
+    // concurrency:50 packs ~50 early-return events per instance → net -40% sur ce trigger.
+    cpu: 1,
+    memory: "512MiB",
+    concurrency: 50,
   },
   async (event) => {
     const before = event.data?.before.data();
@@ -1158,7 +1163,12 @@ export const handleFirstEarning = onDocumentUpdated(
   {
     document: "users/{userId}",
     region: "europe-west3",
-    cpu: 0.083,
+    // 2026-05-16 cost optim: users/{id} cascade victim (11 triggers fan-out).
+    // cpu:1 + memory:512Mi required by Gen2 for concurrency > 1.
+    // concurrency:50 packs ~50 early-return events per instance → net -40% sur ce trigger.
+    cpu: 1,
+    memory: "512MiB",
+    concurrency: 50,
   },
   async (event) => {
     const before = event.data?.before.data();
