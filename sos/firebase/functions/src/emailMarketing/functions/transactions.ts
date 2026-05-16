@@ -767,6 +767,7 @@ export const handlePaymentFailed = onDocumentCreated(
     document: "payments/{paymentId}",
     region: "europe-west3",
     cpu: 0.083,
+    concurrency: 50,  // 2026-05-16 cost optim: early-return >90% (status != failed). Pack events per instance.
   },
   async (event) => {
     const payment = event.data?.data();
@@ -835,6 +836,7 @@ export const handlePayoutRequested = onDocumentCreated(
     document: "payouts/{payoutId}",
     region: "europe-west3",
     cpu: 0.083,
+    concurrency: 50,  // 2026-05-16 cost optim: email handler, early-return dominant. Pack events per instance.
   },
   async (event) => {
     const payout = event.data?.data();
@@ -900,6 +902,7 @@ export const handlePayoutSent = onDocumentUpdated(
     document: "payouts/{payoutId}",
     region: "europe-west3",
     cpu: 0.083,
+    concurrency: 50,  // 2026-05-16 cost optim: email handler, early-return dominant. Pack events per instance.
   },
   async (event) => {
     const before = event.data?.before.data();
@@ -1041,6 +1044,7 @@ export const handlePayoutFailed = onDocumentUpdated(
     document: "payouts/{payoutId}",
     region: "europe-west3",
     cpu: 0.083,
+    concurrency: 50,  // 2026-05-16 cost optim: email handler, early-return dominant. Pack events per instance.
   },
   async (event) => {
     const before = event.data?.before.data();
@@ -1102,6 +1106,7 @@ export const handlePayoutThresholdReached = onDocumentUpdated(
     document: "users/{userId}",
     region: "europe-west3",
     cpu: 0.083,
+    concurrency: 50,  // 2026-05-16 cost optim: users/{id} cascade victim, early-return >95%. Pack events per instance.
   },
   async (event) => {
     const before = event.data?.before.data();
@@ -1159,6 +1164,7 @@ export const handleFirstEarning = onDocumentUpdated(
     document: "users/{userId}",
     region: "europe-west3",
     cpu: 0.083,
+    concurrency: 50,  // 2026-05-16 cost optim: users/{id} cascade victim, early-return >95%. Pack events per instance.
   },
   async (event) => {
     const before = event.data?.before.data();
